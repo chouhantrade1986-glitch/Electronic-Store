@@ -4,11 +4,15 @@ const {
   dbPath,
   getSqliteDbPath
 } = require("../lib/db");
-const { importJsonSnapshotToSqlite } = require("../lib/sqliteStore");
+const {
+  importJsonSnapshotToSqlite,
+  summarizeNormalizationCoverage
+} = require("../lib/sqliteStore");
 
 function parseArgs(argv = []) {
   return {
-    apply: argv.includes("--apply")
+    apply: argv.includes("--apply"),
+    strictNormalization: argv.includes("--strict-normalization")
   };
 }
 
@@ -50,14 +54,24 @@ function main() {
 
   const snapshot = readJsonSnapshot(sourcePath);
   const summary = buildSummary(snapshot);
+  const normalizationCoverage = summarizeNormalizationCoverage(snapshot);
+
+  if (args.strictNormalization && !normalizationCoverage.fullyNormalized) {
+    throw new Error(`Snapshot is not fully normalized for SQLite migration. ${JSON.stringify({
+      unmanagedTopLevelKeys: normalizationCoverage.unmanagedTopLevelKeys,
+      unmanagedNestedKeysByParent: normalizationCoverage.unmanagedNestedKeysByParent
+    })}`);
+  }
 
   if (!args.apply) {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify({
       applyRequired: true,
+      strictNormalization: args.strictNormalization,
       sourcePath,
       targetPath: sqlitePath,
-      summary
+      summary,
+      normalizationCoverage
     }, null, 2));
     return;
   }
@@ -66,9 +80,11 @@ function main() {
   // eslint-disable-next-line no-console
   console.log(JSON.stringify({
     migrated: true,
+    strictNormalization: args.strictNormalization,
     sourcePath,
     targetPath: sqlitePath,
-    summary
+    summary,
+    normalizationCoverage
   }, null, 2));
 }
 

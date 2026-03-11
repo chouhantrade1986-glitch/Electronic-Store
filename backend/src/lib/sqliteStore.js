@@ -265,6 +265,75 @@ function isSqliteProviderEnabled() {
   return getDbProvider() === "sqlite";
 }
 
+function getManagedStateSchema() {
+  const topLevelSet = new Set();
+  const nestedByParent = new Map();
+
+  Object.values(MANAGED_TABLES).forEach((config) => {
+    const parentKey = String(config.key || "").trim();
+    if (!parentKey) {
+      return;
+    }
+    topLevelSet.add(parentKey);
+    if (!config.nestedKey) {
+      return;
+    }
+    if (!nestedByParent.has(parentKey)) {
+      nestedByParent.set(parentKey, new Set());
+    }
+    nestedByParent.get(parentKey).add(String(config.nestedKey));
+  });
+
+  const topLevelKeys = [...topLevelSet].sort();
+  const nestedKeysByParent = [...nestedByParent.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .reduce((accumulator, [parent, childSet]) => {
+      accumulator[parent] = [...childSet].sort();
+      return accumulator;
+    }, {});
+
+  return {
+    topLevelKeys,
+    nestedKeysByParent
+  };
+}
+
+function summarizeNormalizationCoverage(snapshot) {
+  const safeSnapshot = snapshot && typeof snapshot === "object" ? snapshot : {};
+  const schema = getManagedStateSchema();
+  const topLevelSet = new Set(schema.topLevelKeys);
+  const snapshotKeys = Object.keys(safeSnapshot);
+  const unmanagedTopLevelKeys = snapshotKeys
+    .filter((key) => !topLevelSet.has(String(key)))
+    .sort();
+
+  const unmanagedNestedKeysByParent = Object.entries(schema.nestedKeysByParent)
+    .reduce((accumulator, [parent, managedNestedKeys]) => {
+      const parentValue = safeSnapshot[parent];
+      if (!parentValue || typeof parentValue !== "object" || Array.isArray(parentValue)) {
+        return accumulator;
+      }
+      const managedSet = new Set(managedNestedKeys);
+      const unknownNested = Object.keys(parentValue)
+        .filter((child) => !managedSet.has(String(child)))
+        .sort();
+      if (unknownNested.length > 0) {
+        accumulator[parent] = unknownNested;
+      }
+      return accumulator;
+    }, {});
+
+  return {
+    managedTopLevelKeys: schema.topLevelKeys,
+    managedNestedKeysByParent: schema.nestedKeysByParent,
+    unmanagedTopLevelKeys,
+    unmanagedNestedKeysByParent,
+    fullyNormalized:
+      unmanagedTopLevelKeys.length === 0
+      && Object.keys(unmanagedNestedKeysByParent).length === 0
+  };
+}
+
 function getSqliteDbPath() {
   const raw = String(process.env.SQLITE_DB_PATH || "").trim();
   if (raw) {
@@ -704,11 +773,13 @@ module.exports = {
   bootstrapSqliteFromJsonFile,
   closeSqliteDb,
   getDbProvider,
+  getManagedStateSchema,
   getSqliteDb,
   getSqliteDbPath,
   importJsonSnapshotToSqlite,
   isSqliteProviderEnabled,
   readSqliteSnapshot,
+  summarizeNormalizationCoverage,
   sqliteSnapshotExists,
   writeSqliteSnapshot
 };

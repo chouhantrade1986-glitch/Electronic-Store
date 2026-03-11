@@ -127,3 +127,21 @@ test("bootstrapSqliteFromJsonFile imports legacy JSON when SQLite is empty", () 
     restore();
   }
 });
+
+test("summarizeNormalizationCoverage reports unmanaged top-level and nested keys", () => {
+  const summary = sqliteStore.summarizeNormalizationCoverage({
+    users: [],
+    products: [],
+    automationJobs: {
+      phoneVerificationReminder: { lastStatus: "idle" },
+      anotherJob: { enabled: true }
+    },
+    extraState: { value: 1 }
+  });
+
+  assert.equal(summary.fullyNormalized, false);
+  assert.deepEqual(summary.unmanagedTopLevelKeys, ["extraState"]);
+  assert.deepEqual(summary.unmanagedNestedKeysByParent, {
+    automationJobs: ["anotherJob"]
+  });
+});

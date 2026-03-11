@@ -113,6 +113,13 @@ cd backend
 npm run job:migrate:sqlite
 ```
 
+Dry run with strict normalization coverage check:
+
+```powershell
+cd backend
+npm run job:migrate:sqlite -- --strict-normalization
+```
+
 Apply migration from the current JSON snapshot:
 
 ```powershell
@@ -261,7 +268,7 @@ powershell -ExecutionPolicy Bypass -File .\copy-backend-env-secret.ps1
 
 ## Current Limitations
 
-- SQLite migration currently normalizes the entities listed above; remaining app state still persists through the shared app-state layer
+- Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
 - Production deployment still needs stronger user provisioning, monitoring, backups, and infra hardening
