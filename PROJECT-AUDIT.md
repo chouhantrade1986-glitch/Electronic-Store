@@ -40,7 +40,7 @@ Last updated: March 11, 2026
 1. Apply and verify GitHub branch protection (`main` + required check `smoke`).
 2. Add explicit smoke pre-run reset for OTP/session counters to eliminate cooldown flake risk.
 3. Expand SQLite normalization coverage for remaining JSON-only state.
-4. Add production guardrails checklist and implementation plan (monitoring + backups + operational policies).
+4. Execute production guardrails checklist and issue plan in [PRODUCTION-HARDENING-BACKLOG.md](./PRODUCTION-HARDENING-BACKLOG.md).
 
 ## Quick Status for Team
 

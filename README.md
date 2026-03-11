@@ -272,3 +272,7 @@ powershell -ExecutionPolicy Bypass -File .\copy-backend-env-secret.ps1
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
 - Production deployment still needs stronger user provisioning, monitoring, backups, and infra hardening
+
+Production hardening execution plan:
+
+- [PRODUCTION-HARDENING-BACKLOG.md](./PRODUCTION-HARDENING-BACKLOG.md)
