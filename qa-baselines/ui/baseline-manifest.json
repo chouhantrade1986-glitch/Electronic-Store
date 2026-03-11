@@ -1,18 +1,18 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-03-11T06:50:10Z",
+    "generatedAt":  "2026-03-11T08:22:38Z",
     "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
                   {
                       "name":  "qa-auth-browser.png",
-                      "bytes":  21260,
-                      "sha256":  "EE37D28AE77FFC1FF35FB0D3ABBCB05842479EAD41C58ACA2AFDCE4E52245E9C"
+                      "bytes":  9790,
+                      "sha256":  "39791B5B55B035D8279DF029B0EC5E35E12D1D5EACBB346FBB85D6D37A0A5C8C"
                   },
                   {
                       "name":  "qa-account-browser.png",
-                      "bytes":  33788,
-                      "sha256":  "DBEBE31DEE413448811157944526A70AFB47F171186C7483E53B37F5CF6D32A3"
+                      "bytes":  13699,
+                      "sha256":  "BABA2205A807FB5400E0ADC966348102BF7943C4B93F6DE0433C5540ACA0B41A"
                   },
                   {
                       "name":  "qa-invoice-browser.png",
@@ -21,13 +21,13 @@
                   },
                   {
                       "name":  "qa-checkout-browser.png",
-                      "bytes":  32250,
-                      "sha256":  "F1831EFF8062C007BC763AA53C8FCB878D63D04819E2540A3D487AC42EACCB54"
+                      "bytes":  13545,
+                      "sha256":  "B39B0C0AC0D5631EAD95E9FB43CD4FEE256D87D7FC8E1248CE2ADCC4A4294240"
                   },
                   {
                       "name":  "qa-orders-browser.png",
-                      "bytes":  32054,
-                      "sha256":  "89BD2B89C2CF7EEA79A5CCA3548FC71E63C0A31498690880505F971AE0423DD7"
+                      "bytes":  11244,
+                      "sha256":  "105C46634E2D8B6DEE6B2247F403E25648A6501992F76DE06226EE2DDEC84C1C"
                   },
                   {
                       "name":  "qa-wishlist-browser.png",

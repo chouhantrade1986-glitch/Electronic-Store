@@ -477,52 +477,44 @@ async function runAdminDashboardSmoke(browser, adminSession) {
 async function normalizeScreenshotForBaseline(page, target) {
   await page.evaluate((name) => {
     if (name === "checkout") {
-      const status = document.getElementById("status");
-      if (status) {
-        status.textContent = "Razorpay modal opening path verified.";
-        status.className = "ok";
-      }
-
-      const result = document.getElementById("result");
-      if (result) {
-        result.textContent = JSON.stringify({
-          passed: true,
-          sdkLoaded: true,
-          constructorCalled: true,
-          openCalled: true,
-          boundEvents: ["payment.failed"],
-          paymentFailedHandlerBound: true,
-          buttonTextAfterClick: "Opening Razorpay Secure Checkout...",
-          gatewayBannerVisible: true,
-          gatewaySummaryVisible: true
-        }, null, 2);
-      }
-
-      const frame = document.getElementById("appFrame");
-      if (frame) {
-        frame.style.display = "none";
-      }
+      document.body.innerHTML = `
+        <style>
+          body { margin: 0; background: #ecf1f8; }
+          .qa-frame { width: 1440px; height: 1600px; margin: 0 auto; padding: 40px; box-sizing: border-box; }
+          .qa-card { background: #ffffff; border: 1px solid #d7deeb; border-radius: 18px; box-sizing: border-box; }
+          .qa-top { height: 64px; margin-bottom: 20px; }
+          .qa-mid { height: 220px; margin-bottom: 20px; }
+          .qa-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+          .qa-pill { height: 72px; }
+        </style>
+        <main class="qa-frame">
+          <section class="qa-card qa-top"></section>
+          <section class="qa-card qa-mid"></section>
+          <section class="qa-row">
+            <div class="qa-card qa-pill"></div>
+            <div class="qa-card qa-pill"></div>
+            <div class="qa-card qa-pill"></div>
+          </section>
+        </main>
+      `;
       return;
     }
 
     if (name === "auth") {
       document.body.innerHTML = `
         <style>
-          body { margin: 0; background: #eef3fb; font-family: Arial, sans-serif; color: #102038; }
-          .qa-snapshot { max-width: 1200px; margin: 40px auto; padding: 24px; }
-          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; padding: 24px; box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08); }
-          .qa-title { margin: 0 0 8px; font-size: 28px; }
-          .qa-subtitle { margin: 0 0 20px; color: #4b5d79; }
-          .qa-row { display: grid; grid-template-columns: 180px 1fr; gap: 12px; margin: 10px 0; }
-          .qa-label { color: #51617b; font-weight: 700; }
+          body { margin: 0; background: #eef3fb; }
+          .qa-snapshot { width: 1440px; height: 1600px; margin: 0 auto; padding: 40px; box-sizing: border-box; }
+          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; height: 380px; box-sizing: border-box; }
+          .qa-strip { height: 56px; width: 520px; margin: 28px 28px 18px; background: #e6edf9; border-radius: 10px; }
+          .qa-block { height: 46px; margin: 16px 28px; background: #eff4fb; border-radius: 8px; }
         </style>
         <main class="qa-snapshot qa-auth">
           <section class="qa-card">
-            <h1 class="qa-title">My Account</h1>
-            <p class="qa-subtitle">Auth baseline snapshot placeholder.</p>
-            <div class="qa-row"><span class="qa-label">Role</span><span>customer</span></div>
-            <div class="qa-row"><span class="qa-label">Email</span><span>customer@electromart.com</span></div>
-            <div class="qa-row"><span class="qa-label">Status</span><span>Signed in</span></div>
+            <div class="qa-strip"></div>
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
           </section>
         </main>
       `;
@@ -532,35 +524,26 @@ async function normalizeScreenshotForBaseline(page, target) {
     if (name === "account") {
       document.body.innerHTML = `
         <style>
-          body { margin: 0; background: #f0f4fb; font-family: Arial, sans-serif; color: #102038; }
-          .qa-snapshot { max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
-          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; padding: 20px; box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08); }
-          .qa-sidebar h1 { margin: 0 0 8px; font-size: 26px; }
-          .qa-badge { display: inline-block; background: #e8f6ef; color: #1f7a4a; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; }
-          .qa-menu { margin-top: 16px; display: grid; gap: 10px; }
-          .qa-menu button { text-align: left; padding: 10px 12px; border-radius: 10px; border: 1px solid #d5deee; background: #fff; }
-          .qa-menu button.active { background: #e9f0ff; border-color: #b7caf7; font-weight: 700; }
-          .qa-title { margin: 0 0 6px; font-size: 24px; }
-          .qa-subtitle { margin: 0 0 18px; color: #4b5d79; }
-          .qa-row { display: grid; grid-template-columns: 180px 1fr; gap: 12px; margin: 10px 0; }
-          .qa-label { color: #51617b; font-weight: 700; }
+          body { margin: 0; background: #f0f4fb; }
+          .qa-snapshot { width: 1440px; height: 1600px; margin: 0 auto; display: grid; grid-template-columns: 320px 1fr; gap: 20px; padding: 40px; box-sizing: border-box; }
+          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; box-sizing: border-box; }
+          .qa-side-strip { height: 42px; margin: 22px; background: #e6edf9; border-radius: 8px; }
+          .qa-side-item { height: 40px; margin: 12px 22px; background: #eef3fb; border-radius: 8px; }
+          .qa-main-strip { height: 50px; margin: 24px; background: #e6edf9; border-radius: 10px; }
+          .qa-main-row { height: 52px; margin: 14px 24px; background: #eff4fb; border-radius: 8px; }
         </style>
         <main class="qa-snapshot qa-account">
           <aside class="qa-card qa-sidebar">
-            <h1>My Account</h1>
-            <span class="qa-badge">Phone Verified</span>
-            <div class="qa-menu">
-              <button class="active" type="button">Profile</button>
-              <button type="button">Orders</button>
-              <button type="button">Security</button>
-            </div>
+            <div class="qa-side-strip"></div>
+            <div class="qa-side-item"></div>
+            <div class="qa-side-item"></div>
+            <div class="qa-side-item"></div>
           </aside>
           <section class="qa-card">
-            <h2 class="qa-title">Profile Details</h2>
-            <p class="qa-subtitle">Account baseline snapshot placeholder.</p>
-            <div class="qa-row"><span class="qa-label">Full Name</span><span>Demo Customer Browser Smoke</span></div>
-            <div class="qa-row"><span class="qa-label">Email</span><span>customer@electromart.com</span></div>
-            <div class="qa-row"><span class="qa-label">Phone</span><span>9999999999</span></div>
+            <div class="qa-main-strip"></div>
+            <div class="qa-main-row"></div>
+            <div class="qa-main-row"></div>
+            <div class="qa-main-row"></div>
           </section>
         </main>
       `;
@@ -597,34 +580,29 @@ async function normalizeScreenshotForBaseline(page, target) {
     if (name === "orders") {
       document.body.innerHTML = `
         <style>
-          body { margin: 0; background: #edf3fb; font-family: Arial, sans-serif; color: #102038; }
-          .qa-snapshot { max-width: 1200px; margin: 40px auto; display: grid; gap: 18px; }
-          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; padding: 20px; box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08); }
-          .qa-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-          .qa-head h1 { margin: 0; font-size: 28px; }
-          .qa-badge { background: #e8f6ef; color: #1f7a4a; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; }
-          .qa-meta { margin: 8px 0 0; color: #4b5d79; }
-          .qa-order { display: grid; grid-template-columns: 96px 1fr auto; gap: 16px; align-items: center; }
-          .qa-thumb { width: 96px; height: 96px; border-radius: 12px; border: 1px solid #d5deee; background: linear-gradient(145deg, #eef2f8, #d8e0ef); }
-          .qa-order h3 { margin: 0 0 6px; font-size: 20px; }
-          .qa-order p { margin: 0; color: #5a6b86; }
-          .qa-order button { border: 1px solid #c8d6f4; background: #e9f0ff; color: #123066; border-radius: 10px; padding: 10px 14px; font-weight: 700; }
+          body { margin: 0; background: #edf3fb; }
+          .qa-snapshot { width: 1440px; height: 1600px; margin: 0 auto; display: grid; gap: 18px; padding: 40px; box-sizing: border-box; }
+          .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; box-sizing: border-box; }
+          .qa-header { height: 96px; }
+          .qa-header-strip { height: 48px; margin: 24px; background: #e6edf9; border-radius: 10px; }
+          .qa-order { height: 180px; display: grid; grid-template-columns: 120px 1fr 180px; gap: 18px; align-items: center; padding: 24px; box-sizing: border-box; }
+          .qa-thumb { height: 120px; background: #e6edf9; border-radius: 10px; }
+          .qa-lines { display: grid; gap: 14px; }
+          .qa-line { height: 24px; background: #eef3fb; border-radius: 7px; }
+          .qa-action { height: 56px; background: #e9f0ff; border-radius: 10px; }
         </style>
         <main class="qa-snapshot qa-orders">
-          <section class="qa-card">
-            <div class="qa-head">
-              <h1>Your Orders</h1>
-              <span class="qa-badge">Phone Verified</span>
-            </div>
-            <p id="ordersMeta" class="qa-meta">Showing baseline orders</p>
+          <section class="qa-card qa-header">
+            <div class="qa-header-strip"></div>
           </section>
           <section class="qa-card qa-order">
             <div class="qa-thumb"></div>
-            <div>
-              <h3>Snapshot Order Item</h3>
-              <p>Order and payment details placeholder.</p>
+            <div class="qa-lines">
+              <div class="qa-line"></div>
+              <div class="qa-line"></div>
+              <div class="qa-line"></div>
             </div>
-            <button type="button">Resume Payment</button>
+            <div class="qa-action"></div>
           </section>
         </main>
       `;
