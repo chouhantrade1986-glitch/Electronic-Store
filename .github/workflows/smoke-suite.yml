@@ -29,21 +29,22 @@ jobs:
             package-lock.json
             backend/package-lock.json
 
-      - name: Validate backend env secret
+      - name: Prepare backend env file
         shell: pwsh
         env:
           BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
         run: |
           if ([string]::IsNullOrWhiteSpace($env:BACKEND_ENV_FILE)) {
-            throw "Missing BACKEND_ENV_FILE secret. Store the full contents of backend/.env in this repository secret before running the smoke suite."
+            Copy-Item -Path backend/.env.example -Destination backend/.env -Force
+            $ciJwtSecret = "ci-smoke-" + [guid]::NewGuid().ToString("N")
+            (Get-Content -Path backend/.env -Raw) `
+              -replace '(?m)^JWT_SECRET=.*$', ("JWT_SECRET=" + $ciJwtSecret) `
+              | Set-Content -Path backend/.env -Encoding utf8NoBOM
+            Write-Host "BACKEND_ENV_FILE secret not set. Using backend/.env.example for smoke suite."
+          } else {
+            $env:BACKEND_ENV_FILE | Set-Content -Path backend/.env -Encoding utf8NoBOM
+            Write-Host "backend/.env written from BACKEND_ENV_FILE secret."
           }
-
-      - name: Write backend env file
-        shell: pwsh
-        env:
-          BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
-        run: |
-          $env:BACKEND_ENV_FILE | Set-Content -Path backend/.env -Encoding utf8NoBOM
 
       - name: Install root smoke dependencies
         shell: pwsh
