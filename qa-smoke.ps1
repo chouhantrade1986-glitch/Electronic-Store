@@ -137,34 +137,64 @@ function Wait-HttpAvailable {
 
 Copy-Item $dbPath $dbBackup -Force
 
-$backendJob = $null
-$frontendJob = $null
+$backendProcess = $null
+$frontendProcess = $null
+$tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
+$backendStdOutLog = Join-Path $tempRoot ("electromart-backend-stdout-" + [guid]::NewGuid().ToString() + ".log")
+$backendStdErrLog = Join-Path $tempRoot ("electromart-backend-stderr-" + [guid]::NewGuid().ToString() + ".log")
+$frontendStdOutLog = Join-Path $tempRoot ("electromart-frontend-stdout-" + [guid]::NewGuid().ToString() + ".log")
+$frontendStdErrLog = Join-Path $tempRoot ("electromart-frontend-stderr-" + [guid]::NewGuid().ToString() + ".log")
+$nodeExecutable = (Get-Command node -ErrorAction Stop).Source
 
 try {
-  $backendJob = Start-Job -ArgumentList $backendDir -ScriptBlock {
-    param([string]$jobBackendDir)
-    Set-Location $jobBackendDir
-    node src/server.js
-  }
-  $frontendJob = Start-Job -ArgumentList $root -ScriptBlock {
-    param([string]$jobRoot)
-    Set-Location $jobRoot
-    node qa-static-server.js
-  }
+  $backendProcess = Start-Process -FilePath $nodeExecutable `
+    -ArgumentList "src/server.js" `
+    -WorkingDirectory $backendDir `
+    -PassThru `
+    -WindowStyle Hidden `
+    -RedirectStandardOutput $backendStdOutLog `
+    -RedirectStandardError $backendStdErrLog
+  $frontendProcess = Start-Process -FilePath $nodeExecutable `
+    -ArgumentList "qa-static-server.js" `
+    -WorkingDirectory $root `
+    -PassThru `
+    -WindowStyle Hidden `
+    -RedirectStandardOutput $frontendStdOutLog `
+    -RedirectStandardError $frontendStdErrLog
 
   try {
     Wait-HttpAvailable -Url "http://127.0.0.1:4000/api/health" -TimeoutSeconds 30
     Wait-HttpAvailable -Url "http://127.0.0.1:5500/index.html" -TimeoutSeconds 30
   }
   catch {
-    $backendState = if ($backendJob) { [string]$backendJob.State } else { "not-started" }
-    $frontendState = if ($frontendJob) { [string]$frontendJob.State } else { "not-started" }
-    $backendOutput = if ($backendJob) { ((Receive-Job -Job $backendJob -Keep -ErrorAction SilentlyContinue | Out-String).Trim()) } else { "" }
-    $frontendOutput = if ($frontendJob) { ((Receive-Job -Job $frontendJob -Keep -ErrorAction SilentlyContinue | Out-String).Trim()) } else { "" }
+    $backendState = if ($backendProcess) {
+      if ($backendProcess.HasExited) { "Exited ($($backendProcess.ExitCode))" } else { "Running" }
+    } else { "not-started" }
+    $frontendState = if ($frontendProcess) {
+      if ($frontendProcess.HasExited) { "Exited ($($frontendProcess.ExitCode))" } else { "Running" }
+    } else { "not-started" }
+    $backendOutput = ""
+    if (Test-Path $backendStdErrLog) {
+      $backendOutput += (Get-Content -Path $backendStdErrLog -Raw -ErrorAction SilentlyContinue)
+    }
+    if (Test-Path $backendStdOutLog) {
+      if (-not [string]::IsNullOrWhiteSpace($backendOutput)) { $backendOutput += "`n" }
+      $backendOutput += (Get-Content -Path $backendStdOutLog -Raw -ErrorAction SilentlyContinue)
+    }
+    $frontendOutput = ""
+    if (Test-Path $frontendStdErrLog) {
+      $frontendOutput += (Get-Content -Path $frontendStdErrLog -Raw -ErrorAction SilentlyContinue)
+    }
+    if (Test-Path $frontendStdOutLog) {
+      if (-not [string]::IsNullOrWhiteSpace($frontendOutput)) { $frontendOutput += "`n" }
+      $frontendOutput += (Get-Content -Path $frontendStdOutLog -Raw -ErrorAction SilentlyContinue)
+    }
+    $backendOutput = [string]$backendOutput
+    $frontendOutput = [string]$frontendOutput
     $backendOutput = if ($backendOutput.Length -gt 2000) { $backendOutput.Substring(0, 2000) + "...(truncated)" } else { $backendOutput }
     $frontendOutput = if ($frontendOutput.Length -gt 2000) { $frontendOutput.Substring(0, 2000) + "...(truncated)" } else { $frontendOutput }
 
-    throw ("{0}`nBackendJobState: {1}`nBackendOutput: {2}`nFrontendJobState: {3}`nFrontendOutput: {4}" -f $_.Exception.Message, $backendState, $backendOutput, $frontendState, $frontendOutput)
+    throw ("{0}`nBackendProcessState: {1}`nBackendOutput: {2}`nFrontendProcessState: {3}`nFrontendOutput: {4}" -f $_.Exception.Message, $backendState, $backendOutput, $frontendState, $frontendOutput)
   }
 
   $result = [ordered]@{}
@@ -414,13 +444,16 @@ try {
   $result | ConvertTo-Json -Depth 10
 }
 finally {
-  if ($backendJob) {
-    Stop-Job $backendJob -ErrorAction SilentlyContinue | Out-Null
-    Remove-Job $backendJob -Force -ErrorAction SilentlyContinue | Out-Null
+  if ($backendProcess -and -not $backendProcess.HasExited) {
+    Stop-Process -Id $backendProcess.Id -Force -ErrorAction SilentlyContinue
   }
-  if ($frontendJob) {
-    Stop-Job $frontendJob -ErrorAction SilentlyContinue | Out-Null
-    Remove-Job $frontendJob -Force -ErrorAction SilentlyContinue | Out-Null
+  if ($frontendProcess -and -not $frontendProcess.HasExited) {
+    Stop-Process -Id $frontendProcess.Id -Force -ErrorAction SilentlyContinue
+  }
+  foreach ($logPath in @($backendStdOutLog, $backendStdErrLog, $frontendStdOutLog, $frontendStdErrLog)) {
+    if ($logPath -and (Test-Path $logPath)) {
+      Remove-Item -Path $logPath -Force -ErrorAction SilentlyContinue
+    }
   }
   if (Test-Path $dbBackup) {
     Copy-Item $dbBackup $dbPath -Force
