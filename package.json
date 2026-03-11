@@ -10,7 +10,9 @@
     "smoke:baseline:verify": "powershell -ExecutionPolicy Bypass -File .\\verify-visual-baseline.ps1",
     "smoke:install-browsers": "npx playwright install chromium",
     "cleanup:artifacts": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1 -Apply",
-    "cleanup:artifacts:dry": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1"
+    "cleanup:artifacts:dry": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1",
+    "branch:protect:main": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1",
+    "branch:protect:check": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1 -CheckOnly"
   },
   "devDependencies": {
     "playwright": "1.58.2"
