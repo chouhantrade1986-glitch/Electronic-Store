@@ -141,12 +141,14 @@ $backendJob = $null
 $frontendJob = $null
 
 try {
-  $backendJob = Start-Job -ScriptBlock {
-    Set-Location "c:\Users\Admin\Documents\GitHub\Electronic-Store\backend"
+  $backendJob = Start-Job -ArgumentList $backendDir -ScriptBlock {
+    param([string]$jobBackendDir)
+    Set-Location $jobBackendDir
     node src/server.js
   }
-  $frontendJob = Start-Job -ScriptBlock {
-    Set-Location "c:\Users\Admin\Documents\GitHub\Electronic-Store"
+  $frontendJob = Start-Job -ArgumentList $root -ScriptBlock {
+    param([string]$jobRoot)
+    Set-Location $jobRoot
     node qa-static-server.js
   }
 
