@@ -36,14 +36,25 @@ jobs:
         run: |
           if ([string]::IsNullOrWhiteSpace($env:BACKEND_ENV_FILE)) {
             Copy-Item -Path backend/.env.example -Destination backend/.env -Force
-            $ciJwtSecret = "ci-smoke-" + [guid]::NewGuid().ToString("N")
-            (Get-Content -Path backend/.env -Raw) `
-              -replace '(?m)^JWT_SECRET=.*$', ("JWT_SECRET=" + $ciJwtSecret) `
-              | Set-Content -Path backend/.env -Encoding utf8NoBOM
             Write-Host "BACKEND_ENV_FILE secret not set. Using backend/.env.example for smoke suite."
           } else {
             $env:BACKEND_ENV_FILE | Set-Content -Path backend/.env -Encoding utf8NoBOM
             Write-Host "backend/.env written from BACKEND_ENV_FILE secret."
+          }
+
+          $envContents = Get-Content -Path backend/.env -Raw
+          $jwtMatch = [regex]::Match($envContents, '(?m)^JWT_SECRET=(.*)$')
+          $jwtSecret = if ($jwtMatch.Success) { $jwtMatch.Groups[1].Value.Trim() } else { "" }
+          $disallowedJwtSecrets = @("", "dev-secret-change-me", "replace-with-strong-secret", "changeme")
+          if ($disallowedJwtSecrets -contains $jwtSecret) {
+            $ciJwtSecret = "ci-smoke-" + [guid]::NewGuid().ToString("N")
+            if ($jwtMatch.Success) {
+              $envContents = $envContents -replace '(?m)^JWT_SECRET=.*$', ("JWT_SECRET=" + $ciJwtSecret)
+            } else {
+              $envContents = $envContents.TrimEnd() + [Environment]::NewLine + "JWT_SECRET=" + $ciJwtSecret + [Environment]::NewLine
+            }
+            $envContents | Set-Content -Path backend/.env -Encoding utf8NoBOM
+            Write-Host "JWT_SECRET was missing/placeholder. Replaced with generated CI secret."
           }
 
       - name: Install root smoke dependencies
