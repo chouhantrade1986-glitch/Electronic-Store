@@ -131,6 +131,7 @@ jobs:
             if ([string]::IsNullOrWhiteSpace($verifyOutput)) {
               $verifyOutput = "Visual baseline verification failed without command output."
             }
+            $verifyOutput = [regex]::Replace($verifyOutput, "\r?\n+", " | ")
             if ($verifyOutput.Length -gt 4000) {
               $verifyOutput = $verifyOutput.Substring(0, 4000) + "...(truncated)"
             }
