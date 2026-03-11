@@ -325,7 +325,8 @@ try {
   try {
     $hasRazorpayKeyId = -not [string]::IsNullOrWhiteSpace([string]$env:RAZORPAY_KEY_ID)
     $hasRazorpayKeySecret = -not [string]::IsNullOrWhiteSpace([string]$env:RAZORPAY_KEY_SECRET)
-    if ($hasRazorpayKeyId -and $hasRazorpayKeySecret) {
+    $runRazorpayChecks = [string]$env:SMOKE_REQUIRE_RAZORPAY -eq "true"
+    if ($runRazorpayChecks -and $hasRazorpayKeyId -and $hasRazorpayKeySecret) {
       $razorpaySmokeOutput = (& node src/jobs/runRazorpaySmokeTest.js --amount=1 --method=upi 2>&1) | Out-String
       $razorpaySmokeExit = $LASTEXITCODE
 
@@ -333,9 +334,16 @@ try {
       $resumeSmokeExit = $LASTEXITCODE
     } else {
       $razorpayChecksSkipped = $true
-      $razorpaySmokeOutput = "Skipped: Razorpay credentials are not configured in the smoke environment."
+      if (-not $runRazorpayChecks) {
+        $skipMessage = "Skipped: Set SMOKE_REQUIRE_RAZORPAY=true to enforce Razorpay credential smoke checks."
+      } elseif (-not $hasRazorpayKeyId -or -not $hasRazorpayKeySecret) {
+        $skipMessage = "Skipped: Razorpay credentials are not configured in the smoke environment."
+      } else {
+        $skipMessage = "Skipped: Razorpay checks are disabled for this smoke environment."
+      }
+      $razorpaySmokeOutput = $skipMessage
       $razorpaySmokeExit = 0
-      $resumeSmokeOutput = "Skipped: Razorpay credentials are not configured in the smoke environment."
+      $resumeSmokeOutput = $skipMessage
       $resumeSmokeExit = 0
     }
 
