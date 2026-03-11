@@ -20,3 +20,6 @@ qa-static.log
 qa-*.png
 qa-*.pdf
 qa-*-dom.html
+
+# Keep locked visual baseline images versioned
+!qa-baselines/ui/*.png
