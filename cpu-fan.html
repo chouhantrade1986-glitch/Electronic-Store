@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPU (Fan) | ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="component-pages.css" />
+</head>
+<body data-page="cpu_fan">
+  <header class="page-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>components</small></a>
+      <form class="search-shell" role="search">
+        <input id="searchInput" type="search" placeholder="Search CPU (Fan)" aria-label="Search page products" />
+      </form>
+      <div class="top-links">
+        <a href="desktops.html">Computers</a>
+        <a href="products.html">Products</a>
+        <a href="pc-builder.html">PC Builder</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="sub-nav" aria-label="Component navigation">
+      <a href="barebone-desktop.html">Barebone Desktop</a>
+      <a href="branded-desktop.html">Branded Desktop</a>
+      <a href="cpu-processor.html">CPU</a>
+      <a href="cpu-fan.html">CPU Fan</a>
+      <a href="motherboard.html">Motherboard</a>
+      <a href="desktop-ram-memory.html">RAM</a>
+      <a href="graphics-card-gpu.html">GPU</a>
+      <a href="cabinet.html">Cabinet</a>
+      <a href="cabinet-fan.html">Cabinet Fan</a>
+      <a href="power-supply-smps.html">SMPS</a>
+      <a href="ups-ups-batteries.html">UPS</a>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="hero">
+      <p id="pageTitle" class="eyebrow">Component</p>
+      <h1 id="pageHeadline">Component Listing</h1>
+      <p id="pageSubtitle">Filtered product listing.</p>
+    </section>
+
+    <section class="filters" aria-label="Filter products">
+      <select id="brandFilter" aria-label="Filter brand">
+        <option value="all">All Brands</option>
+      </select>
+      <select id="segmentFilter" aria-label="Filter segment">
+        <option value="all">All Segments</option>
+        <option value="b2c">B2C</option>
+        <option value="b2b">B2B</option>
+      </select>
+      <select id="sortFilter" aria-label="Sort products">
+        <option value="relevance">Sort: Relevance</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating_desc">Top Rated</option>
+      </select>
+      <select id="quickNav" aria-label="Quick navigate" onchange="if(this.value) window.location.href=this.value;">
+        <option value="">Quick Navigate</option>
+        <option value="barebone-desktop.html">Barebone Desktop</option>
+        <option value="branded-desktop.html">Branded Desktop</option>
+        <option value="cpu-processor.html">CPU (Processor)</option>
+        <option value="cpu-fan.html">CPU (Fan)</option>
+        <option value="motherboard.html">Motherboard</option>
+        <option value="desktop-ram-memory.html">Desktop RAM</option>
+        <option value="graphics-card-gpu.html">Graphics Card</option>
+        <option value="cabinet.html">Cabinet</option>
+        <option value="cabinet-fan.html">Cabinet Fan</option>
+        <option value="power-supply-smps.html">Power Supply</option>
+        <option value="ups-ups-batteries.html">UPS Batteries</option>
+      </select>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="listTitle">Available Items</h2>
+        <p id="resultMeta">Showing 0 products</p>
+      </div>
+      <div id="itemGrid" class="item-grid"></div>
+    </section>
+  </main>
+
+  <script src="component-pages.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout Gateway QA</title>
+</head>
+<body>
+  <p id="status">Preparing checkout gateway QA...</p>
+  <script src="qa-auth-browser.js"></script>
+  <script>
+    const API_BASE_URL = "http://127.0.0.1:4000/api";
+    const AUTH_STORAGE_KEY = "electromart_auth_v1";
+    const CART_STORAGE_KEY = "electromart_cart_v1";
+    const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
+
+    async function requestJson(path, options = {}) {
+      const response = await fetch(`${API_BASE_URL}${path}`, options);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || `Request failed: ${response.status}`);
+      }
+      return data;
+    }
+
+    async function run() {
+      const status = document.getElementById("status");
+      try {
+        const auth = await window.QaAuthHelper.otpLogin(API_BASE_URL, "customer@electromart.com", "Customer@123");
+
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({
+          token: auth.token,
+          ...auth.user
+        }));
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ 1: 1 }));
+        localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify({
+          1: {
+            id: "1",
+            name: "AstraBook Pro 14",
+            price: 999,
+            image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
+          }
+        }));
+
+        status.textContent = "Redirecting to checkout...";
+        setTimeout(() => {
+          window.location.href = "checkout.html";
+        }, 300);
+      } catch (error) {
+        status.textContent = error && error.message ? error.message : "Failed to prepare checkout QA.";
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+name: Smoke Suite
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: smoke-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+
+      - name: Validate backend env secret
+        shell: pwsh
+        env:
+          BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:BACKEND_ENV_FILE)) {
+            throw "Missing BACKEND_ENV_FILE secret. Store the full contents of backend/.env in this repository secret before running the smoke suite."
+          }
+
+      - name: Write backend env file
+        shell: pwsh
+        env:
+          BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
+        run: |
+          $env:BACKEND_ENV_FILE | Set-Content -Path backend/.env -Encoding utf8NoBOM
+
+      - name: Install root smoke dependencies
+        shell: pwsh
+        run: npm ci
+
+      - name: Install Playwright browsers
+        shell: pwsh
+        run: npm run smoke:install-browsers
+
+      - name: Install backend dependencies
+        shell: pwsh
+        working-directory: backend
+        run: npm ci
+
+      - name: Run smoke suite
+        shell: cmd
+        run: run-smoke-suite.bat --reports-dir=qa-reports
+
+      - name: Verify visual baseline
+        shell: pwsh
+        run: npm run smoke:baseline:verify
+
+      - name: Upload smoke suite reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-suite-reports
+          path: qa-reports/
+          if-no-files-found: warn

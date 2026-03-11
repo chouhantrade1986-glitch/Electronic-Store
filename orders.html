@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="orders.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav top-nav--search">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">orders</span>
+      </a>
+      <form class="header-search" action="products.html" method="get">
+        <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-actions">
+        <a href="auth.html">Account</a>
+        <a href="cart.html">Cart</a>
+        <a href="products.html">Products</a>
+      </div>
+    </nav>
+    <nav class="sub-nav">
+      <a href="index.html">Home</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="mega-store.html">Mega Store</a>
+      <a href="terms-and-conditions.html">Customer Service</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+  </header>
+
+  <main class="orders-main">
+    <section class="orders-head">
+      <div class="orders-title-wrap">
+        <h1>Your Orders</h1>
+        <span id="ordersPhoneVerificationBadge" class="verification-badge pending">Phone Pending</span>
+      </div>
+      <div class="orders-controls">
+        <input id="orderSearch" type="search" placeholder="Search by order ID or product" aria-label="Search orders" />
+        <select id="statusFilter" aria-label="Filter by status">
+          <option value="all">All Status</option>
+          <option value="awaiting_payment">Awaiting Payment</option>
+          <option value="delivered">Delivered</option>
+          <option value="shipped">Shipped</option>
+          <option value="processing">Processing</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </section>
+
+    <p id="ordersMeta" class="orders-meta">Showing 0 orders</p>
+    <section class="order-updates-panel">
+      <div class="orders-head compact">
+        <div>
+          <h2>Recent Order Updates</h2>
+          <p id="orderNotificationsMeta" class="orders-meta">0 updates</p>
+        </div>
+        <button id="markAllOrderNotificationsReadBtn" type="button">Mark All Read</button>
+      </div>
+      <div id="orderNotificationsList" class="order-updates-list"></div>
+    </section>
+    <section id="ordersGrid" class="orders-grid"></section>
+  </main>
+
+  <script src="orders.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

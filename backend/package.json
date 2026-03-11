@@ -1,0 +1,34 @@
+{
+  "name": "electromart-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Electronic Store",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "npm run test:unit",
+    "test:unit": "node --test",
+    "test:smoke": "node ../qa-full-smoke.js --reports-dir=../qa-reports",
+    "job:create-admin": "node src/jobs/createRealAdminUser.js",
+    "job:phone-verification-reminders": "node src/jobs/runPhoneVerificationAutomation.js",
+    "job:phone-verification-reminders:dry": "node src/jobs/runPhoneVerificationAutomation.js --dry-run",
+    "job:seeded-demo-users": "node src/jobs/migrateSeededDemoUsers.js",
+    "job:migrate:sqlite": "node src/jobs/migrateJsonToSqlite.js",
+    "job:sanitize:wix-media": "node src/jobs/sanitizeWixMediaUrls.js",
+    "job:sanitize:wix-media:dry": "node src/jobs/sanitizeWixMediaUrls.js --dry-run",
+    "smoke:razorpay": "node src/jobs/runRazorpaySmokeTest.js",
+    "verify:razorpay-resume": "node src/jobs/verifyRazorpayResumeFlow.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^140.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

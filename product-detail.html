@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details - ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="product-detail.css?v=20260305c" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">ElectroMart</a>
+      <form class="search-form" action="products.html" method="get">
+        <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-links">
+        <a href="products.html">Products</a>
+        <a href="auth.html">Account</a>
+        <a href="orders.html">Orders</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+    <nav class="sub-nav" aria-label="Quick links">
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="mega-store.html">Mega Store</a>
+      <a href="terms-and-conditions.html">Customer Service</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Reviews</a>
+    </nav>
+  </header>
+
+  <main class="detail-main">
+    <p class="breadcrumbs"><a href="products.html">Products</a> &gt; <span id="crumbName">Product</span></p>
+
+    <section id="productDetail" class="product-detail" hidden>
+      <div class="product-media">
+        <div id="mediaThumbRail" class="thumb-rail"></div>
+        <img id="productImage" src="" alt="" />
+        <video id="productVideo" controls playsinline hidden></video>
+        <div id="imageZoomPane" class="image-zoom-pane" aria-hidden="true"></div>
+      </div>
+
+      <div class="product-info">
+        <h1 id="productName"></h1>
+        <p id="productBrand" class="muted"></p>
+        <p id="productRating" class="rating"></p>
+        <p class="seller-line">Visit the <span id="brandStoreLink">Store</span></p>
+        <hr />
+        <p id="productPrice" class="price"></p>
+        <p id="productListPrice" class="list-price"></p>
+        <p id="productDealMeta" class="deal-meta"></p>
+        <p id="productSegment" class="segment-pill"></p>
+        <p id="productStockMeta" class="stock-meta"></p>
+        <p id="productKeywordLine" class="keyword-line"></p>
+        <p id="productDescription" class="description"></p>
+        <h2>About this item</h2>
+        <ul id="productSpecs" class="spec-list"></ul>
+      </div>
+
+      <aside class="buy-box">
+        <p id="buyBoxPrice" class="buy-price"></p>
+        <p id="buyBoxMrp" class="buy-mrp"></p>
+        <p id="buyBoxSavings" class="buy-savings"></p>
+        <p id="deliveryText" class="delivery-text"></p>
+        <p id="availabilityText" class="availability in-stock"></p>
+        <section id="backInStockPanel" class="back-in-stock-panel" hidden>
+          <h3>Get Notified When Back in Stock</h3>
+          <p>Enter your details and we will notify you as soon as this product is available.</p>
+          <form id="backInStockForm" class="back-in-stock-form">
+            <input id="backInStockEmailInput" type="email" placeholder="Email address" required />
+            <input id="backInStockNameInput" type="text" placeholder="Name (optional)" />
+            <input id="backInStockQtyInput" type="number" min="1" max="999" step="1" value="1" />
+            <button id="backInStockSubmitBtn" type="submit">Notify Me</button>
+          </form>
+          <p id="backInStockMessage" class="back-in-stock-message"></p>
+        </section>
+        <label for="qtySelect">Qty:</label>
+        <select id="qtySelect">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <button id="addToCartBtn" type="button">Add to Cart</button>
+        <button id="wishlistBtn" type="button" class="secondary-btn">Save to Wishlist</button>
+        <a href="cart.html" class="buy-now-btn">Buy Now</a>
+        <a href="products.html" class="secondary-btn">Back to products</a>
+        <p class="secure-line">Secure transaction</p>
+      </aside>
+    </section>
+
+    <section id="relatedBlock" class="related-block" hidden>
+      <h2>Related products</h2>
+      <div id="relatedGrid" class="related-grid"></div>
+    </section>
+
+    <section id="offersBlock" class="detail-card" hidden>
+      <h2>Offers & Benefits</h2>
+      <div id="offersGrid" class="offers-grid"></div>
+    </section>
+
+    <section id="servicesBlock" class="detail-card" hidden>
+      <h2>Delivery, Returns & Services</h2>
+      <div class="service-grid">
+        <article class="service-item">
+          <h3>Delivery</h3>
+          <p id="serviceDeliveryText"></p>
+        </article>
+        <article class="service-item">
+          <h3>Returns</h3>
+          <p id="serviceReturnText"></p>
+        </article>
+        <article class="service-item">
+          <h3>Warranty</h3>
+          <p id="serviceWarrantyText"></p>
+        </article>
+        <article class="service-item">
+          <h3>Seller</h3>
+          <p id="serviceSellerText"></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="reviewsBlock" class="detail-card" hidden>
+      <h2>Customer Reviews</h2>
+      <div class="review-summary">
+        <p id="reviewHeadline" class="review-headline"></p>
+        <div id="reviewBars" class="review-bars"></div>
+      </div>
+    </section>
+
+    <section id="qaBlock" class="detail-card" hidden>
+      <h2>Questions & Answers</h2>
+      <div id="qaList" class="qa-list"></div>
+    </section>
+
+    <section class="detail-info-table" id="detailInfoTable" hidden>
+      <h2>Product information</h2>
+      <table>
+        <tr><th>SKU</th><td id="infoSku"></td></tr>
+        <tr><th>Brand</th><td id="infoBrand"></td></tr>
+        <tr><th>Category</th><td id="infoCategory"></td></tr>
+        <tr><th>Segment</th><td id="infoSegment"></td></tr>
+        <tr><th>Price</th><td id="infoPrice"></td></tr>
+        <tr><th>MRP</th><td id="infoListPrice"></td></tr>
+        <tr><th>Stock</th><td id="infoStock"></td></tr>
+        <tr><th>Status</th><td id="infoStatus"></td></tr>
+        <tr><th>Fulfillment</th><td id="infoFulfillment"></td></tr>
+        <tr><th>MOQ</th><td id="infoMoq"></td></tr>
+        <tr><th>Featured</th><td id="infoFeatured"></td></tr>
+        <tr><th>Keywords</th><td id="infoKeywords"></td></tr>
+        <tr><th>Rating</th><td id="infoRating"></td></tr>
+      </table>
+    </section>
+
+    <section id="missingState" class="missing-state" hidden>
+      <h2>Product not found</h2>
+      <p>This product may have been removed or the link is invalid.</p>
+      <a href="products.html">Go to product listing</a>
+    </section>
+  </main>
+
+    <div id="fullscreenViewer" class="fullscreen-viewer" hidden>
+    <div class="fullscreen-modal">
+      <button id="fullscreenCloseBtn" type="button" class="fullscreen-close" aria-label="Close viewer">&times;</button>
+      <div class="fullscreen-toolbar">
+        <div class="fullscreen-tabs" role="tablist" aria-label="Media type">
+          <button id="fsTabVideos" class="fullscreen-tab" type="button">VIDEOS</button>
+          <button id="fsTabImages" class="fullscreen-tab active" type="button">IMAGES</button>
+        </div>
+      </div>
+      <div class="fullscreen-main">
+        <div class="fullscreen-stage">
+          <img id="fullscreenImage" alt="Product media preview" />
+          <video id="fullscreenVideo" controls playsinline hidden></video>
+        </div>
+        <aside class="fullscreen-side">
+          <div class="fullscreen-side-head">
+            <div class="fullscreen-zoom-controls" aria-label="Zoom controls">
+              <button id="fsZoomInBtn" type="button" class="zoom-btn" aria-label="Zoom in">+</button>
+              <button id="fsZoomOutBtn" type="button" class="zoom-btn" aria-label="Zoom out">-</button>
+            </div>
+            <p id="fullscreenTitle" class="fullscreen-title"></p>
+          </div>
+          <div class="fullscreen-thumb-wrap">
+            <button id="fsThumbUpBtn" type="button" class="thumb-nav-btn" aria-label="Scroll thumbnails up">&#9650;</button>
+            <div id="fullscreenThumbs" class="fullscreen-thumbs"></div>
+            <button id="fsThumbDownBtn" type="button" class="thumb-nav-btn" aria-label="Scroll thumbnails down">&#9660;</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <script src="product-detail.js?v=20260305f"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>
+
+
+

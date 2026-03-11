@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Wishlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="wishlist.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav top-nav--search">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">wishlist</span>
+      </a>
+      <form class="search-form" action="products.html" method="get" role="search">
+        <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-links">
+        <a href="products.html">Products</a>
+        <a href="account.html">Account</a>
+        <a href="orders.html">Orders</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+    <nav class="sub-nav" aria-label="Quick links">
+      <a href="index.html">Home</a>
+      <a href="products.html">All Products</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="pc-builder.html">PC Builder</a>
+      <a href="wishlist.html" class="active">Wishlist</a>
+    </nav>
+  </header>
+
+  <main class="wishlist-main">
+    <section class="wishlist-head">
+      <div>
+        <h1>Your Wishlist</h1>
+        <p id="wishlistMeta">0 saved items</p>
+      </div>
+      <div class="wishlist-actions">
+        <a href="products.html" class="secondary-link">Continue shopping</a>
+      </div>
+    </section>
+
+    <section id="wishlistGrid" class="wishlist-grid"></section>
+  </main>
+
+  <script src="wishlist.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>

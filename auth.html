@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Sign In or Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="auth.css" />
+</head>
+  <body>
+    <header class="page-header">
+    <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+      <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+      <span class="brand-sub">.in</span>
+    </a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="faq.html">FAQ</a>
+      <select id="languageSelect" aria-label="Select language">
+        <option value="en">English - EN</option>
+        <option value="hi">हिन्दी - HI</option>
+        <option value="ta">தமிழ் - TA</option>
+        <option value="te">తెలుగు - TE</option>
+        <option value="kn">ಕನ್ನಡ - KN</option>
+        <option value="ml">മലയാളം - ML</option>
+        <option value="bn">বাংলা - BN</option>
+        <option value="mr">मराठी - MR</option>
+      </select>
+    </nav>
+  </header>
+
+  <main class="auth-main">
+    <section class="auth-panel">
+      <h1 id="authHeading">Sign in or create account</h1>
+      <p id="authSubheading">Access your orders, saved profile, and account settings.</p>
+      <section id="adminAccessCard" class="admin-access-card" hidden>
+        <div>
+          <strong id="adminAccessTitle">Admin access</strong>
+          <p id="adminAccessCopy">Use your admin account to open Seller Central and manage the store dashboard.</p>
+        </div>
+        <div class="admin-access-actions">
+          <a id="adminAccessPrimaryLink" class="auth-chip auth-chip-primary" href="admin.html">Admin Panel</a>
+          <a id="adminAccessSecondaryLink" class="auth-chip" href="index.html">Back to Store</a>
+        </div>
+      </section>
+
+      <div class="tab-row">
+        <button id="signinTab" class="tab-btn active" type="button">Sign In</button>
+        <button id="signupTab" class="tab-btn" type="button">Create Account</button>
+      </div>
+
+      <form id="signinForm" class="auth-form active">
+        <label>OTP Delivery
+          <select id="signinMethod" required>
+            <option value="email">Email</option>
+            <option value="mobile">Mobile Number</option>
+          </select>
+        </label>
+        <label>Email or Mobile
+          <input id="signinIdentifier" type="text" required />
+        </label>
+        <label>Password
+          <input id="signinPassword" type="password" required />
+        </label>
+        <div class="auth-inline-actions">
+          <button id="forgotPasswordBtn" class="auth-link-btn" type="button">Forgot password?</button>
+        </div>
+        <button id="generateOtpBtn" type="button">Send OTP</button>
+        <div id="signinOtpAssist" class="otp-assist" hidden>
+          <p id="signinOtpDestination" class="otp-assist-line"></p>
+          <p id="signinOtpTimer" class="otp-assist-line subtle"></p>
+        </div>
+        <label>Enter OTP
+          <input id="signinOtp" type="text" inputmode="numeric" maxlength="6" required />
+        </label>
+        <button type="submit">Login with OTP</button>
+      </form>
+
+      <form id="resetForm" class="auth-form">
+        <p class="auth-form-note">Reset your account password with a one-time OTP.</p>
+        <label>OTP Delivery
+          <select id="resetMethod" required>
+            <option value="email">Email</option>
+            <option value="mobile">Mobile Number</option>
+          </select>
+        </label>
+        <label>Email or Mobile
+          <input id="resetIdentifier" type="text" required />
+        </label>
+        <label>New Password
+          <input id="resetPassword" type="password" required />
+        </label>
+        <div class="auth-inline-actions">
+          <button id="backToSigninBtn" class="auth-link-btn" type="button">Back to sign in</button>
+        </div>
+        <button id="generateResetOtpBtn" type="button">Send Reset OTP</button>
+        <div id="resetOtpAssist" class="otp-assist" hidden>
+          <p id="resetOtpDestination" class="otp-assist-line"></p>
+          <p id="resetOtpTimer" class="otp-assist-line subtle"></p>
+        </div>
+        <label>Enter OTP
+          <input id="resetOtp" type="text" inputmode="numeric" maxlength="6" required />
+        </label>
+        <button type="submit">Reset Password</button>
+      </form>
+
+      <form id="signupForm" class="auth-form">
+        <label>Customer Name
+          <input id="signupName" type="text" required />
+        </label>
+        <label>Email ID
+          <input id="signupEmail" type="email" required />
+        </label>
+        <label>Mobile Number
+          <input id="signupMobile" type="tel" required />
+        </label>
+        <label>Password
+          <input id="signupPassword" type="password" required />
+        </label>
+        <label>Full Address
+          <textarea id="signupAddress" rows="3" required></textarea>
+        </label>
+        <label>OTP Delivery
+          <select id="signupOtpMethod" required>
+            <option value="email">Email</option>
+            <option value="mobile">Mobile Number</option>
+          </select>
+        </label>
+        <button id="generateSignupOtpBtn" type="button">Send OTP</button>
+        <div id="signupOtpAssist" class="otp-assist" hidden>
+          <p id="signupOtpDestination" class="otp-assist-line"></p>
+          <p id="signupOtpTimer" class="otp-assist-line subtle"></p>
+        </div>
+        <label>Enter OTP
+          <input id="signupOtp" type="text" inputmode="numeric" maxlength="6" required />
+        </label>
+        <button type="submit">Create Account</button>
+      </form>
+
+      <p id="authMessage" class="auth-message"></p>
+    </section>
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>

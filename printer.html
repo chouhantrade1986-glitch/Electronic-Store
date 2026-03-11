@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Printers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="printer.css" />
+</head>
+<body>
+  <header class="page-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>printers</small></a>
+      <form class="search-shell" role="search">
+        <input id="searchInput" type="search" placeholder="Search printers by brand, type, use case" aria-label="Search printers" />
+      </form>
+      <div class="top-links">
+        <a href="products.html">Products</a>
+        <a href="desktops.html">Computers</a>
+        <a href="laptop.html">Laptops</a>
+        <a href="printer.html" class="active-link">Printers</a>
+        <a href="auth.html">Account</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="sub-nav" aria-label="Printer navigation">
+      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+      <a href="printer.html" class="active">Printers</a>
+      <a href="desktops.html">Computers</a>
+      <a href="laptop.html">Laptops</a>
+      <a href="products.html">All Products</a>
+      <a href="todays-deals.html">Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+    <section id="deptMenu" class="dept-menu" aria-label="Printer departments">
+      <a href="printer.html">Inkjet Printers</a>
+      <a href="printer.html">Laser Printers</a>
+      <a href="printer.html">All-in-One Printers</a>
+      <a href="printer.html">Photo Printers</a>
+      <a href="printer.html">Label Printers</a>
+      <a href="printer.html">Printer Ink</a>
+      <a href="printer.html">Printer Toner</a>
+      <a href="printer.html">Scanner Units</a>
+      <a href="printer.html">Thermal Printers</a>
+    </section>
+  </header>
+
+  <main class="printer-main">
+    <section class="hero">
+      <p class="eyebrow">Printer Store</p>
+      <h1>Printers for Home, Office and Business</h1>
+      <p>Shop inkjet, laser and multifunction printers with bulk B2B options and fast delivery.</p>
+      <div class="hero-pills">
+        <span>Inkjet and Laser</span>
+        <span>Home and Office</span>
+        <span>Bulk B2B Options</span>
+      </div>
+    </section>
+
+    <section class="amazon-layout">
+      <aside class="panel refine-panel">
+        <div class="panel-head">
+          <h2>Refine Results</h2>
+          <p>Amazon style filters</p>
+        </div>
+        <section class="filters" aria-label="Filter printers">
+          <select id="segmentFilter" aria-label="Filter segment">
+            <option value="all">All Segments</option>
+            <option value="b2c">B2C</option>
+            <option value="b2b">B2B</option>
+          </select>
+          <select id="typeFilter" aria-label="Filter type">
+            <option value="all">All Types</option>
+            <option value="inkjet">Inkjet</option>
+            <option value="laser">Laser</option>
+            <option value="thermal">Thermal</option>
+          </select>
+          <select id="useFilter" aria-label="Filter use case">
+            <option value="all">All Use Cases</option>
+            <option value="home">Home</option>
+            <option value="office">Office</option>
+            <option value="commercial">Commercial</option>
+          </select>
+          <select id="sortFilter" aria-label="Sort printers">
+            <option value="relevance">Sort: Relevance</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating_desc">Top Rated</option>
+            <option value="best_value">Best Value</option>
+          </select>
+        </section>
+
+        <div class="rail-block">
+          <h3>All Departments</h3>
+          <div class="component-links">
+            <a href="printer.html">Inkjet Printers</a>
+            <a href="printer.html">Laser Printers</a>
+            <a href="printer.html">All-in-One Printers</a>
+            <a href="printer.html">Photo Printers</a>
+            <a href="printer.html">Label Printers</a>
+            <a href="printer.html">Printer Ink</a>
+            <a href="printer.html">Printer Toner</a>
+            <a href="printer.html">Thermal Printers</a>
+          </div>
+        </div>
+
+        <div class="rail-block promo-block">
+          <h3>Need Business Procurement?</h3>
+          <p>Get bulk pricing for office printer fleets.</p>
+          <a href="account.html" class="promo-link">Manage Business Profile</a>
+        </div>
+      </aside>
+
+      <section class="panel result-panel">
+        <div class="panel-head">
+          <h2>Printers</h2>
+          <p id="resultMeta">Showing 0 products</p>
+        </div>
+        <p class="result-note">Fast delivery options and business bulk pricing available.</p>
+        <div id="printerGrid" class="printer-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="printer.js"></script>
+  <script src="menu-manager.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Catalogs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="catalogs.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>catalogs</small></a>
+      <div class="header-links" aria-label="Quick links">
+        <a href="products.html">All Products</a>
+        <a href="admin-dashboard.html">Admin</a>
+        <a href="orders.html">Orders</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="catalogs-main">
+    <section class="hero">
+      <p class="crumbs">Store &gt; Catalogs</p>
+      <h1>Product Catalogs</h1>
+      <p>Catalog pages generated from your uploaded project products.</p>
+    </section>
+
+    <section class="catalog-section">
+      <div class="catalog-head">
+        <h2>Available Catalogs</h2>
+        <p id="catalogMeta">Loading catalogs...</p>
+      </div>
+      <div class="catalog-controls">
+        <input id="catalogSearchInput" type="search" placeholder="Search catalogs..." aria-label="Search catalogs" />
+        <select id="catalogSortSelect" aria-label="Sort catalogs">
+          <option value="count_desc">Most Products</option>
+          <option value="count_asc">Fewest Products</option>
+          <option value="name_asc">Name A-Z</option>
+          <option value="name_desc">Name Z-A</option>
+        </select>
+        <label class="catalog-toggle">
+          <input id="catalogHideSmall" type="checkbox" />
+          Hide 1-product catalogs
+        </label>
+      </div>
+      <div id="catalogGrid" class="catalog-grid"></div>
+    </section>
+  </main>
+
+  <script src="catalogs.js"></script>
+</body>
+</html>

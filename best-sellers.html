@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Best Sellers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="best-sellers.css" />
+</head>
+<body>
+  <header class="page-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>best sellers</small></a>
+      <form class="search-shell" role="search">
+        <input id="searchInput" type="search" placeholder="Search best sellers by product or category" aria-label="Search best sellers" />
+      </form>
+      <div class="top-links">
+        <a href="products.html">Products</a>
+        <a href="desktops.html">Computers</a>
+        <a href="laptop.html">Laptops</a>
+        <a href="printer.html">Printers</a>
+        <a href="auth.html">Account</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="sub-nav" aria-label="Best sellers navigation">
+      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+      <a href="best-sellers.html" class="active">Best Sellers</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="products.html">All Products</a>
+      <a href="desktops.html">Computers</a>
+      <a href="laptop.html">Laptops</a>
+      <a href="printer.html">Printers</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+    <section id="deptMenu" class="dept-menu" aria-label="Best seller categories">
+      <a href="best-sellers.html?category=laptop">Top Laptops</a>
+      <a href="best-sellers.html?category=mobile">Top Mobiles</a>
+      <a href="best-sellers.html?category=audio">Top Audio</a>
+      <a href="best-sellers.html?category=accessory">Top Accessories</a>
+    </section>
+  </header>
+
+  <main class="best-main">
+    <section class="hero">
+      <p class="eyebrow">Most Loved Products</p>
+      <h1>Best Sellers</h1>
+      <p>See what customers are buying most across top categories.</p>
+      <div class="hero-pills">
+        <span>Updated Weekly</span>
+        <span>Top Rated</span>
+        <span>Fast Delivery</span>
+      </div>
+    </section>
+
+    <section class="amazon-layout">
+      <aside class="panel refine-panel">
+        <div class="panel-head">
+          <h2>Refine Results</h2>
+          <p>Amazon style filters</p>
+        </div>
+
+        <section class="filters" aria-label="Filter best sellers">
+          <select id="categoryFilter" aria-label="Filter category">
+            <option value="all">All Categories</option>
+            <option value="laptop">Laptops</option>
+            <option value="mobile">Mobiles</option>
+            <option value="audio">Audio</option>
+            <option value="accessory">Accessories</option>
+          </select>
+          <select id="sortFilter" aria-label="Sort best sellers">
+            <option value="relevance">Sort: Relevance</option>
+            <option value="sold_desc">Most Sold</option>
+            <option value="rating_desc">Top Rated</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </section>
+
+        <div class="rail-block promo-block">
+          <h3>Best Seller Tip</h3>
+          <p>Open product details to compare ratings and delivery options before buying.</p>
+        </div>
+      </aside>
+
+      <section class="panel result-panel">
+        <div class="panel-head">
+          <h2>Customer Favorites</h2>
+          <p id="resultMeta">Showing 0 products</p>
+        </div>
+        <p class="result-note">Ranked by customer demand and ratings.</p>
+        <div id="bestGrid" class="best-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="best-sellers.js"></script>
+  <script src="menu-manager.js"></script>
+</body>
+</html>
+
+

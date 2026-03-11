@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Mega Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="mega-store.css" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="auth.html">Account</a>
+      <a href="orders.html">Orders</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+      <a href="cart.html">Cart <span id="cartCount">0</span></a>
+    </nav>
+  </header>
+
+  <main class="store-main">
+    <section class="hero">
+      <p class="eyebrow">Mega Store Experience</p>
+      <h1>Visit ElectroMart Mega Stores</h1>
+      <p>Discover premium showrooms, same-day pickup, demo zones, and business counters.</p>
+    </section>
+
+    <section class="filters">
+      <input id="storeSearch" type="search" placeholder="Search city or service" aria-label="Search stores" />
+      <select id="serviceFilter" aria-label="Filter by service">
+        <option value="all">All Services</option>
+        <option value="pickup">Same-day Pickup</option>
+        <option value="repair">Device Repair</option>
+        <option value="b2b">B2B Desk</option>
+        <option value="experience">Experience Zone</option>
+      </select>
+    </section>
+
+    <section class="store-panel">
+      <div class="panel-head">
+        <h2>Mega Store Locations</h2>
+        <p id="storeMeta">Showing 0 stores</p>
+      </div>
+      <div id="storeGrid" class="store-grid"></div>
+    </section>
+  </main>
+
+  <script src="mega-store.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Today's Deals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="todays-deals.css" />
+</head>
+<body>
+  <header class="page-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>today's deals</small></a>
+      <form class="search-shell" role="search">
+        <input id="searchInput" type="search" placeholder="Search deals by product or category" aria-label="Search deals" />
+      </form>
+      <div class="top-links">
+        <a href="products.html">Products</a>
+        <a href="desktops.html">Computers</a>
+        <a href="laptop.html">Laptops</a>
+        <a href="printer.html">Printers</a>
+        <a href="auth.html">Account</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="sub-nav" aria-label="Deals navigation">
+      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+      <a href="todays-deals.html" class="active">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="products.html">All Products</a>
+      <a href="desktops.html">Computers</a>
+      <a href="laptop.html">Laptops</a>
+      <a href="printer.html">Printers</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+    <section id="deptMenu" class="dept-menu" aria-label="Deal categories">
+      <a href="todays-deals.html?category=laptop">Laptop Deals</a>
+      <a href="todays-deals.html?category=mobile">Mobile Deals</a>
+      <a href="todays-deals.html?category=audio">Audio Deals</a>
+      <a href="todays-deals.html?category=accessory">Accessory Deals</a>
+    </section>
+  </header>
+
+  <main class="deals-main">
+    <section class="hero">
+      <p class="eyebrow">Limited Time Offers</p>
+      <h1>Today's Deals</h1>
+      <p>Grab flash discounts on top electronics before they expire.</p>
+      <div class="hero-pills">
+        <span>Daily Refresh</span>
+        <span>Top Categories</span>
+        <span>Fast Checkout</span>
+      </div>
+    </section>
+
+    <section class="amazon-layout">
+      <aside class="panel refine-panel">
+        <div class="panel-head">
+          <h2>Refine Results</h2>
+          <p>Amazon style filters</p>
+        </div>
+
+        <section class="filters" aria-label="Filter deals">
+          <select id="categoryFilter" aria-label="Filter category">
+            <option value="all">All Categories</option>
+            <option value="laptop">Laptops</option>
+            <option value="mobile">Mobiles</option>
+            <option value="audio">Audio</option>
+            <option value="accessory">Accessories</option>
+          </select>
+          <select id="sortFilter" aria-label="Sort deals">
+            <option value="relevance">Sort: Relevance</option>
+            <option value="discount_desc">Highest Discount</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </section>
+
+        <div class="rail-block promo-block">
+          <h3>Deal Tip</h3>
+          <p>Open product details and checkout quickly before stock runs out.</p>
+        </div>
+      </aside>
+
+      <section class="panel result-panel">
+        <div class="panel-head">
+          <h2>Best Deals Today</h2>
+          <p id="resultMeta">Showing 0 deals</p>
+        </div>
+        <p class="result-note">Limited-time pricing updates daily.</p>
+        <div id="dealsGrid" class="deals-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="todays-deals.js"></script>
+  <script src="menu-manager.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Tax Invoice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="invoice.css" />
+</head>
+<body>
+  <main class="invoice-main">
+    <header class="invoice-header no-print">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">.in</span>
+      </a>
+      <h1>Tax Invoice</h1>
+      <div class="invoice-actions">
+        <button id="duplicateBtn" type="button">Switch to Duplicate Copy</button>
+        <button id="printBtn" type="button">Print / Save PDF</button>
+        <a href="orders.html">Back to Orders</a>
+      </div>
+    </header>
+
+    <section id="invoiceCard" class="invoice-card" hidden>
+      <section class="bill-title">
+        <div class="bill-title-row">
+          <div>
+            <p class="bill-kicker">electromart.in</p>
+            <h2>Tax Invoice / Bill of Supply / Cash Memo</h2>
+            <p class="bill-subtitle">Sold by ElectroMart Retail Pvt. Ltd.</p>
+          </div>
+          <p id="copyLabel" class="copy-pill">Original for Recipient</p>
+        </div>
+      </section>
+
+      <section class="parties-grid">
+        <article class="box">
+          <h3>Supplier</h3>
+          <p id="sellerName">ElectroMart Retail Pvt. Ltd.</p>
+          <p id="sellerAddress">-</p>
+          <p><strong>GSTIN/UIN:</strong> <span id="sellerGstin">-</span></p>
+          <p><strong>PAN:</strong> <span id="sellerPan">-</span></p>
+          <p><strong>State:</strong> <span id="sellerState">-</span></p>
+        </article>
+        <article class="box">
+          <h3>Buyer (Bill To)</h3>
+          <p id="billName">Customer</p>
+          <p id="billAddress">-</p>
+          <p><strong>Email:</strong> <span id="billEmail">-</span></p>
+          <p><strong>Mobile:</strong> <span id="billMobile">-</span></p>
+          <p><strong>GSTIN/UIN:</strong> <span id="buyerGstin">URP</span></p>
+        </article>
+        <article class="box">
+          <h3>Invoice Details</h3>
+          <p><strong>Invoice No:</strong> <span id="invoiceNo">-</span></p>
+          <p><strong>Order ID:</strong> <span id="orderIdValue">-</span></p>
+          <p><strong>Invoice Date:</strong> <span id="invoiceDate">-</span></p>
+          <p><strong>Supply Date:</strong> <span id="supplyDate">-</span></p>
+          <p><strong>Due Date:</strong> <span id="dueDate">-</span></p>
+          <p><strong>Payment Method:</strong> <span id="paymentMethod">-</span></p>
+        </article>
+      </section>
+
+      <section class="supply-box">
+        <p><strong>Ship To / Place of Supply:</strong> <span id="shipAddress">-</span></p>
+        <p><strong>State:</strong> <span id="placeOfSupply">-</span></p>
+      </section>
+
+      <section class="delivery-grid">
+        <article class="box">
+          <h3>Delivery Schedule</h3>
+          <p><strong>Selected Slot:</strong> <span id="deliverySlotValue">-</span></p>
+          <p><strong>Expected Window:</strong> <span id="deliveryEtaValue">-</span></p>
+          <p id="reservationLine" hidden><strong>Reserved Until:</strong> <span id="reservationValue">-</span></p>
+          <p><strong>Tracking Ref:</strong> <span id="trackingRefValue">-</span></p>
+        </article>
+        <article class="box delivery-timeline-box">
+          <h3>Delivery Timeline</h3>
+          <div id="invoiceDeliveryTimeline" class="invoice-delivery-timeline"></div>
+        </article>
+      </section>
+
+      <div class="table-wrap">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Sl.</th>
+              <th>Description of Goods/Services</th>
+              <th>HSN/SAC</th>
+              <th>Qty</th>
+              <th>Rate</th>
+              <th>Taxable Value</th>
+              <th>CGST %</th>
+              <th>CGST Amt</th>
+              <th>SGST %</th>
+              <th>SGST Amt</th>
+              <th>IGST %</th>
+              <th>IGST Amt</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceItems"></tbody>
+        </table>
+      </div>
+
+      <section class="summary-grid">
+        <article class="box amount-words">
+          <h3>Amount Chargeable (in words)</h3>
+          <p id="amountWords">Rupees Zero Only</p>
+          <h3>Payment Terms</h3>
+          <p id="paymentTermsLine">Payment due by -</p>
+        </article>
+        <article class="box totals-box">
+          <p><span>Taxable Value:</span> <strong id="subtotalValue">Rs 0.00</strong></p>
+          <p id="discountRow" class="discount-row" hidden><span>Discount:</span> <strong id="discountValue">Rs 0.00</strong></p>
+          <p id="couponRow" class="coupon-row" hidden><span>Coupon:</span> <strong id="couponCodeValue">-</strong></p>
+          <p class="tax-row tax-row-cgst"><span>Total CGST:</span> <strong id="cgstValue">Rs 0.00</strong></p>
+          <p class="tax-row tax-row-sgst"><span>Total SGST:</span> <strong id="sgstValue">Rs 0.00</strong></p>
+          <p class="tax-row tax-row-igst"><span>Total IGST:</span> <strong id="igstValue">Rs 0.00</strong></p>
+          <p class="shipping-row"><span>Shipping:</span> <strong id="shippingValue">Rs 0.00</strong></p>
+          <p class="tax-total-row"><span>Total GST:</span> <strong id="taxValue">Rs 0.00</strong></p>
+          <p class="grand"><span>Grand Total:</span> <strong id="totalValue">Rs 0.00</strong></p>
+          <p class="gst-rate-row"><span>Effective GST Rate:</span> <strong id="gstRateValue">0.00%</strong></p>
+        </article>
+      </section>
+
+      <section class="upi-block">
+        <h3>UPI Payment QR</h3>
+        <div class="upi-grid">
+          <img id="upiQrImage" alt="UPI Payment QR" loading="lazy" />
+          <div>
+            <p><strong>UPI ID:</strong> <span id="upiIdValue">-</span></p>
+            <p><strong>Payee:</strong> <span id="upiPayeeName">-</span></p>
+            <p><strong>Amount:</strong> <span id="upiAmountValue">Rs 0.00</span></p>
+            <p><a id="upiPayLink" href="#" rel="noopener">Pay via UPI App</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="declaration-grid">
+        <article class="box">
+          <h3>Declaration</h3>
+          <p>
+            We declare that this invoice shows the actual price of the goods/services described
+            and that all particulars are true and correct as per GST requirements.
+          </p>
+        </article>
+        <article class="box sign-box">
+          <p>for <strong id="signSellerName">ElectroMart Retail Pvt. Ltd.</strong></p>
+          <div class="sign-space"></div>
+          <p>Authorised Signatory</p>
+        </article>
+      </section>
+    </section>
+
+    <p id="invoiceMessage" class="invoice-message">Loading invoice...</p>
+  </main>
+  <script src="invoice.js"></script>
+</body>
+</html>

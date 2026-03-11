@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Invoice Print Redirect</title>
+</head>
+<body>
+  <p id="status">Preparing invoice print check...</p>
+  <script src="qa-auth-browser.js"></script>
+  <script>
+    (async () => {
+      const statusNode = document.getElementById("status");
+      const params = new URLSearchParams(window.location.search);
+      const orderId = String(params.get("orderId") || "").trim();
+      if (!orderId) {
+        statusNode.textContent = "Missing orderId.";
+        return;
+      }
+
+      try {
+        const data = await window.QaAuthHelper.otpLogin("http://127.0.0.1:4000/api", "customer@electromart.com", "Customer@123");
+
+        localStorage.setItem("electromart_auth_v1", JSON.stringify({
+          token: data.token,
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          mobile: data.user.mobile,
+          role: data.user.role
+        }));
+
+        statusNode.textContent = "Redirecting to invoice...";
+        window.location.replace(`invoice.html?orderId=${encodeURIComponent(orderId)}`);
+      } catch (error) {
+        statusNode.textContent = error && error.message ? error.message : "QA redirect failed.";
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+backend/.env
+backend/node_modules/
+backend/src/data/*.sqlite
+backend/src/data/*.sqlite-*
+node_modules/
+qa-reports/
+
+# Browser automation profiles
+.edge-headless-profile/
+.edge-invoice-profile/
+
+# Local tunnel and backend logs
+backend-*.log
+backend-*.err
+cloudflared.log
+lt.log
+qa-static.log
+
+# Generated QA artifacts
+qa-*.png
+qa-*.pdf
+qa-*-dom.html

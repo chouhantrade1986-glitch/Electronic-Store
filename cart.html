@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Cart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="cart.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">ElectroMart</a>
+      <form class="search-form" action="products.html" method="get" role="search">
+        <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-links" aria-label="Account and links">
+        <a href="auth.html">Account</a>
+        <a href="orders.html">Orders</a>
+        <a href="products.html">Products</a>
+      </div>
+    </nav>
+    <nav class="sub-nav" aria-label="Quick links">
+      <a href="index.html">Home</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="mega-store.html">Mega Store</a>
+      <a href="terms-and-conditions.html">Customer Service</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+  </header>
+
+  <main class="cart-main">
+    <section class="cart-listing">
+      <div class="section-head">
+        <h1>Your Cart</h1>
+        <p id="cartMeta">0 items</p>
+      </div>
+      <p class="price-col-head">Price</p>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-actions">
+        <button id="clearCart" class="clear-btn" type="button">Clear Cart</button>
+      </div>
+    </section>
+
+    <aside class="cart-summary">
+      <p class="summary-items" id="summaryItems">Subtotal (0 items):</p>
+      <p class="summary-total"><strong id="totalValue">₹0</strong></p>
+      <div class="delivery-box">
+        <h2>Delivery Estimate</h2>
+        <p id="cartDeliveryEstimate" class="delivery-estimate">Choose a slot at checkout for the earliest available delivery window.</p>
+        <p id="cartReservationMessage" class="reservation-message"></p>
+      </div>
+      <div class="coupon-box">
+        <label for="couponInput">Coupon code</label>
+        <div class="coupon-row">
+          <input id="couponInput" type="text" placeholder="SAVE10" />
+          <button id="applyCouponBtn" type="button">Apply</button>
+        </div>
+        <p id="couponMessage" class="coupon-message"></p>
+        <button id="removeCouponBtn" type="button" class="remove-coupon-btn" hidden>Remove coupon</button>
+      </div>
+      <button id="checkoutBtn" type="button">Proceed to Checkout</button>
+      <p class="secure-line">Secure checkout with encrypted payment.</p>
+      <hr />
+      <h2>Order Summary</h2>
+      <p><span>Subtotal</span><strong id="subtotalValue">₹0</strong></p>
+      <p><span>Shipping</span><strong id="shippingValue">₹0</strong></p>
+      <p id="discountRow" hidden><span>Discount</span><strong id="discountValue">-₹0</strong></p>
+      <p><span>Tax</span><strong id="taxValue">₹0</strong></p>
+      <p class="total"><span>Order Total</span><strong id="orderTotalValue">₹0</strong></p>
+    </aside>
+  </main>
+
+  <script src="cart.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Auth State</title>
+</head>
+<body>
+  <pre id="result">Running...</pre>
+  <iframe id="targetFrame" src="index.html" style="width:1280px;height:900px;border:0;"></iframe>
+  <script>
+    const resultNode = document.getElementById("result");
+    const frame = document.getElementById("targetFrame");
+
+    localStorage.setItem("electromart_auth_v1", JSON.stringify({
+      token: "qa-token",
+      id: "qa-customer",
+      name: "Demo Customer",
+      email: "customer@electromart.com",
+      mobile: "8888888888",
+      role: "customer"
+    }));
+
+    frame.addEventListener("load", () => {
+      const doc = frame.contentDocument;
+      const accountLink = doc.querySelector("header .account-link, header a[href='account.html']");
+      const signOutLink = doc.querySelector("header [data-auth-signout]");
+      const payload = {
+        passed: Boolean(accountLink && signOutLink && !signOutLink.hidden),
+        accountHref: accountLink ? accountLink.getAttribute("href") : "",
+        accountText: accountLink ? accountLink.textContent.replace(/\s+/g, " ").trim() : "",
+        signOutText: signOutLink ? signOutLink.textContent.replace(/\s+/g, " ").trim() : "",
+        signOutHidden: signOutLink ? signOutLink.hidden : true
+      };
+      resultNode.textContent = JSON.stringify(payload, null, 2);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Reviews</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="terms.css" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="faq.html">FAQ</a>
+      <a href="thank-you.html">Thank You</a>
+    </nav>
+  </header>
+
+  <main class="terms-main">
+    <section class="hero">
+      <p class="eyebrow">Feedback</p>
+      <h1>Customer Reviews</h1>
+      <p>Share your experience with products you purchased.</p>
+    </section>
+
+    <section class="terms-card">
+      <h2>Write a Review</h2>
+      <form id="reviewForm">
+        <p>
+          <label for="reviewProduct">Product</label><br />
+          <input id="reviewProduct" type="text" placeholder="Product name" required />
+        </p>
+        <p>
+          <label for="reviewRating">Rating</label><br />
+          <select id="reviewRating" required>
+            <option value="">Select rating</option>
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Average</option>
+            <option value="2">2 - Poor</option>
+            <option value="1">1 - Bad</option>
+          </select>
+        </p>
+        <p>
+          <label for="reviewText">Review</label><br />
+          <textarea id="reviewText" rows="4" placeholder="Tell us about your experience" required></textarea>
+        </p>
+        <button type="submit">Submit Review</button>
+      </form>
+    </section>
+
+    <section class="terms-card">
+      <h2>Recent Reviews</h2>
+      <div id="reviewList">
+        <p>No reviews yet. Be the first to add one.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="review.js"></script>
+</body>
+</html>
+

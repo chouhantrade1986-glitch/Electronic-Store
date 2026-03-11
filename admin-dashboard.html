@@ -1,0 +1,1021 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin-dashboard.css" />
+</head>
+<body>
+  <header class="amazon-topbar">
+    <a href="index.html" class="brand">electro<span>mart</span><small>admin</small></a>
+    <form class="top-search" action="products.html">
+      <input type="search" placeholder="Search products, orders, users..." aria-label="Search dashboard" />
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-links">
+      <a href="auth.html">Switch User</a>
+      <a href="account.html">Admin Account</a>
+    </nav>
+  </header>
+
+  <div class="amazon-subbar">
+    <nav class="header-links">
+      <a href="index.html">Storefront</a>
+      <a href="products.html">Catalog</a>
+      <a href="orders.html">Orders</a>
+      <a href="account.html">Account</a>
+    </nav>
+  </div>
+
+  <main class="admin-layout">
+    <aside class="admin-sidebar">
+      <h2>Operations</h2>
+      <p>Monitor store health and manage flows from one place.</p>
+      <ul>
+        <li><a href="#summary">Executive Summary</a></li>
+        <li><a href="#projectAudit">Project Audit</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#users">Users</a></li>
+        <li><a href="#phoneVerificationAutomation">Phone Verification</a></li>
+        <li><a href="#sales">Sales</a></li>
+        <li><a href="#afterSales">Returns & Refunds</a></li>
+        <li><a href="#orderNotifications">Notifications</a></li>
+        <li><a href="#adminAuditTrail">Audit Trail</a></li>
+        <li><a href="#catalog">Catalog</a></li>
+        <li><a href="#menuManager">Menu Manager</a></li>
+        <li><a href="#orders">Orders</a></li>
+      </ul>
+    </aside>
+
+    <div class="admin-main">
+      <section class="admin-head">
+        <div>
+          <h1>Seller Central Dashboard</h1>
+          <p>Amazon-style control center for live backend operations.</p>
+        </div>
+        <div class="admin-head-actions">
+          <span id="backendStatusBadge" class="backend-status offline">Backend: Offline</span>
+          <button id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </section>
+
+      <p id="adminMessage" class="admin-message"></p>
+
+      <section id="summary" class="summary-grid">
+        <article class="summary-card">
+          <p>Users</p>
+          <strong id="statUsers">0</strong>
+        </article>
+        <article class="summary-card">
+          <p>Products</p>
+          <strong id="statProducts">0</strong>
+        </article>
+        <article class="summary-card">
+          <p>Orders</p>
+          <strong id="statOrders">0</strong>
+        </article>
+        <article class="summary-card">
+          <p>Payments</p>
+          <strong id="statPayments">0</strong>
+        </article>
+        <article class="summary-card revenue">
+          <p>Total Revenue</p>
+          <strong id="statRevenue">₹0.00</strong>
+        </article>
+      </section>
+
+      <section id="projectAudit" class="panel project-audit-panel">
+        <div class="panel-head">
+          <h2>Project Delivery Audit</h2>
+          <p>Updated: 10 Mar 2026</p>
+        </div>
+        <div class="project-audit-kpi-grid">
+          <article class="project-audit-kpi done">
+            <p>Completed</p>
+            <strong>81%</strong>
+            <small>Score: 81 / 100</small>
+          </article>
+          <article class="project-audit-kpi remaining">
+            <p>Remaining</p>
+            <strong>19%</strong>
+            <small>Backlog and hardening work</small>
+          </article>
+          <article class="project-audit-kpi quality">
+            <p>Latest QA</p>
+            <strong>43/44</strong>
+            <small>Backend tests pass, UI smoke has 1 blocker</small>
+          </article>
+        </div>
+        <div class="project-audit-progress" role="img" aria-label="Project completion is 81 percent">
+          <span style="width: 81%;"></span>
+        </div>
+        <ul class="project-audit-list">
+          <li><strong>Storefront and admin flows</strong><span>48/55</span></li>
+          <li><strong>Backend reliability and security</strong><span>20/20</span></li>
+          <li><strong>QA automation stability</strong><span>8/15</span></li>
+          <li><strong>Production readiness</strong><span>5/10</span></li>
+        </ul>
+      </section>
+
+      <section id="analytics" class="analytics-grid">
+        <article class="panel analytics-panel">
+          <div class="panel-head">
+            <h2>Business Analytics</h2>
+            <p>Live trend snapshot</p>
+          </div>
+          <div class="analytics-kpi-grid">
+            <article class="analytics-kpi">
+              <p>Avg Order Value</p>
+              <strong id="kpiAov">₹0.00</strong>
+            </article>
+            <article class="analytics-kpi">
+              <p>Paid Orders</p>
+              <strong id="kpiPaidOrders">0</strong>
+            </article>
+            <article class="analytics-kpi">
+              <p>Cancellation Rate</p>
+              <strong id="kpiCancellationRate">0%</strong>
+            </article>
+            <article class="analytics-kpi">
+              <p>Orders Today</p>
+              <strong id="kpiOrdersToday">0</strong>
+            </article>
+          </div>
+        </article>
+
+        <article class="panel analytics-panel">
+          <div class="panel-head">
+            <h2>Revenue (Last 7 Days)</h2>
+            <p id="revenue7dTotal">₹0.00</p>
+          </div>
+          <div id="revenueBars" class="revenue-bars" aria-label="Revenue chart"></div>
+        </article>
+
+        <article class="panel analytics-panel">
+          <div class="panel-head">
+            <h2>Order Status Mix</h2>
+            <p>Current backlog</p>
+          </div>
+          <ul id="statusBreakdownList" class="analytics-list"></ul>
+        </article>
+
+        <article class="panel analytics-panel">
+          <div class="panel-head">
+            <h2>Payment Methods</h2>
+            <p>Usage breakdown</p>
+          </div>
+          <ul id="paymentBreakdownList" class="analytics-list"></ul>
+        </article>
+
+        <article class="panel analytics-panel span-2">
+          <div class="panel-head">
+            <h2>Top Products by Revenue</h2>
+            <p>From paid orders</p>
+          </div>
+          <ul id="topProductsList" class="top-products-list"></ul>
+        </article>
+      </section>
+
+      <section id="invoices" class="panel">
+        <div class="panel-head">
+          <h2>Invoice Tracking</h2>
+          <p id="invoiceMeta">0 invoices</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice No</th>
+                <th>Order ID</th>
+                <th>Issued On</th>
+                <th>Payment On</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="orderNotifications" class="panel">
+        <div class="panel-head">
+          <h2>Order Notifications</h2>
+          <p id="orderNotificationsMeta">0 notifications</p>
+        </div>
+        <div id="orderNotificationChannelStats" class="notification-channel-stats"></div>
+        <div class="panel-tools">
+          <select id="orderNotificationChannelFilter" aria-label="Filter notifications by channel">
+            <option value="all">All channels</option>
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+            <option value="whatsapp">WhatsApp</option>
+          </select>
+          <select id="orderNotificationStatusFilter" aria-label="Filter notifications by status">
+            <option value="all">All statuses</option>
+            <option value="sent">Sent</option>
+            <option value="queued">Queued</option>
+            <option value="failed">Failed</option>
+            <option value="muted">Muted</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sent On</th>
+                <th>Order ID</th>
+                <th>Event</th>
+                <th>Channel</th>
+                <th>Recipient</th>
+                <th>Status</th>
+                <th>Provider</th>
+                <th>Subject</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orderNotificationsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminAuditTrail" class="panel">
+        <div class="panel-head">
+          <h2>Admin Audit Trail</h2>
+          <p id="adminAuditMeta">0 actions</p>
+        </div>
+        <div id="adminAuditStats" class="notification-channel-stats"></div>
+        <div class="panel-tools panel-tools-3">
+          <input id="adminAuditSearchInput" type="search" placeholder="Search by actor, order id, product id, case id" aria-label="Search admin audit trail" />
+          <select id="adminAuditCategoryFilter" aria-label="Filter audit trail by category">
+            <option value="all">All categories</option>
+            <option value="order">Order</option>
+            <option value="refund">Refund</option>
+            <option value="after_sales">After-sales</option>
+            <option value="catalog">Catalog</option>
+            <option value="notification">Notification</option>
+          </select>
+          <button id="refreshAdminAuditBtn" type="button" class="secondary-btn">Refresh Trail</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Actor</th>
+                <th>Category</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Summary</th>
+              </tr>
+            </thead>
+            <tbody id="adminAuditTableBody">
+              <tr><td colspan="6">No admin audit activity yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="users" class="panel">
+        <div class="panel-head">
+          <h2>Users</h2>
+          <p id="usersMeta">0 users</p>
+        </div>
+        <div class="panel-tools">
+          <input id="userSearch" type="search" placeholder="Search users by name, email or mobile" aria-label="Search users" />
+          <select id="userRoleFilter" aria-label="Filter users by role">
+            <option value="all">All roles</option>
+            <option value="admin">Admin</option>
+            <option value="customer">Customer</option>
+          </select>
+          <select id="userPhoneVerificationFilter" aria-label="Filter users by phone verification">
+            <option value="all">All phone states</option>
+            <option value="verified">Verified</option>
+            <option value="pending">Pending OTP</option>
+            <option value="locked">Locked</option>
+            <option value="unverified">Needs verification</option>
+            <option value="missing">No phone</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Phone Status</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="phoneVerificationAutomation" class="panel">
+        <div class="panel-head">
+          <h2>Phone Verification Automation</h2>
+          <p id="phoneVerificationAutomationMeta">0 candidates</p>
+        </div>
+        <p id="phoneVerificationAutomationSummary" class="catalog-health">Automation nudges unverified customers to unlock SMS and WhatsApp updates.</p>
+        <section class="automation-settings-card" aria-label="Phone verification automation settings">
+          <div class="panel-head">
+            <h3>Scheduler Settings</h3>
+            <p id="phoneVerificationAutomationSettingsMeta" class="catalog-health">Server-side schedule settings</p>
+          </div>
+          <div class="automation-settings-grid">
+            <label class="toggle-row">
+              <span>Enable scheduler</span>
+              <input id="phoneVerificationAutomationEnabledInput" type="checkbox" />
+            </label>
+            <label class="toggle-row">
+              <span>Run on backend start</span>
+              <input id="phoneVerificationAutomationRunOnStartInput" type="checkbox" />
+            </label>
+            <label>
+              Interval (minutes)
+              <input id="phoneVerificationAutomationIntervalInput" type="number" min="15" step="15" value="720" />
+            </label>
+            <label>
+              Batch size
+              <input id="phoneVerificationAutomationLimitInput" type="number" min="1" max="200" step="1" value="25" />
+            </label>
+          </div>
+          <div class="automation-channel-row">
+            <label class="checkbox-inline">
+              <input id="phoneVerificationAutomationSmsChannelInput" type="checkbox" checked />
+              SMS OTP nudges
+            </label>
+            <label class="checkbox-inline">
+              <input id="phoneVerificationAutomationEmailChannelInput" type="checkbox" checked />
+              Email reminders
+            </label>
+          </div>
+          <div class="inventory-threshold-actions">
+            <button id="savePhoneVerificationAutomationSettingsBtn" type="button" class="secondary-btn">Save Scheduler</button>
+            <button id="resetPhoneVerificationAutomationSettingsBtn" type="button" class="secondary-btn">Reset Draft</button>
+          </div>
+        </section>
+        <section class="automation-history-card" aria-label="Phone verification automation audit history">
+          <div class="panel-head">
+            <h3>Run History</h3>
+            <p id="phoneVerificationAutomationHistoryMeta" class="catalog-health">0 runs logged</p>
+          </div>
+          <div id="phoneVerificationAutomationHistoryStats" class="notification-channel-stats"></div>
+          <div id="phoneVerificationAutomationHistoryChart" class="automation-history-chart" aria-label="Phone verification automation run history chart"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Started</th>
+                  <th>Finished</th>
+                  <th>Trigger</th>
+                  <th>Status</th>
+                  <th>Channels</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody id="phoneVerificationAutomationHistoryTableBody">
+                <tr><td colspan="6">No automation runs yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div id="phoneVerificationReminderChannelStats" class="notification-channel-stats"></div>
+        <div class="panel-tools">
+          <button id="runPhoneVerificationAutomationBtn" type="button" class="secondary-btn">Send Eligible Nudges</button>
+          <select id="phoneVerificationReminderChannelFilter" aria-label="Filter phone verification reminders by channel">
+            <option value="all">All channels</option>
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+          </select>
+          <select id="phoneVerificationReminderStatusFilter" aria-label="Filter phone verification reminders by status">
+            <option value="all">All statuses</option>
+            <option value="sent">Sent</option>
+            <option value="queued">Queued</option>
+            <option value="failed">Failed</option>
+            <option value="skipped">Skipped</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sent On</th>
+                <th>User</th>
+                <th>Channel</th>
+                <th>Recipient</th>
+                <th>Status</th>
+                <th>Provider</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody id="phoneVerificationReminderTableBody">
+              <tr><td colspan="7">No reminder activity yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="sales" class="panel">
+        <div class="panel-head">
+          <h2>Sales</h2>
+          <p id="salesMeta">0 sales • ₹0.00</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Order</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="salesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="afterSales" class="panel">
+        <div class="panel-head">
+          <h2>Returns / Refunds / Exchanges</h2>
+          <p id="afterSalesMeta">0 cases</p>
+        </div>
+        <div id="afterSalesSummaryCards" class="notification-channel-stats"></div>
+        <section class="after-sales-create-card">
+          <div class="panel-head">
+            <h3>Create After-Sales Case</h3>
+            <p>Use this when customer support or operations need to open a return, refund, or exchange case.</p>
+          </div>
+          <div class="after-sales-create-grid">
+            <label>
+              Order ID
+              <input id="afterSalesOrderIdInput" type="text" placeholder="Paste order id" />
+            </label>
+            <label>
+              Case Type
+              <select id="afterSalesTypeInput">
+                <option value="return">Return</option>
+                <option value="refund">Refund</option>
+                <option value="exchange">Exchange</option>
+              </select>
+            </label>
+            <label>
+              Reason
+              <select id="afterSalesReasonInput">
+                <option value="damaged">Damaged item</option>
+                <option value="defective">Defective item</option>
+                <option value="wrong_item">Wrong item received</option>
+                <option value="missing_parts">Missing parts or accessories</option>
+                <option value="not_as_described">Not as described</option>
+                <option value="no_longer_needed">No longer needed</option>
+                <option value="size_issue">Size or fit issue</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>
+              Requested By
+              <select id="afterSalesRequestedByInput">
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+            <label>
+              Refund Amount
+              <input id="afterSalesRefundAmountInput" type="number" min="0" step="0.01" placeholder="Optional" />
+            </label>
+            <label class="after-sales-note-field">
+              Notes
+              <textarea id="afterSalesNoteInput" rows="3" placeholder="Pickup note, customer issue summary, or resolution context"></textarea>
+            </label>
+          </div>
+          <div class="inventory-threshold-actions">
+            <button id="createAfterSalesCaseBtn" type="button" class="update-btn">Create Case</button>
+          </div>
+        </section>
+        <div class="panel-tools panel-tools-3">
+          <input id="afterSalesSearchInput" type="search" placeholder="Search by order id, customer, case id" aria-label="Search after-sales cases" />
+          <select id="afterSalesTypeFilter" aria-label="Filter by case type">
+            <option value="all">All case types</option>
+            <option value="return">Return</option>
+            <option value="refund">Refund</option>
+            <option value="exchange">Exchange</option>
+          </select>
+          <select id="afterSalesStatusFilter" aria-label="Filter by case status">
+            <option value="all">All statuses</option>
+            <option value="requested">Requested</option>
+            <option value="approved">Approved</option>
+            <option value="pickup_scheduled">Pickup scheduled</option>
+            <option value="in_transit">In transit</option>
+            <option value="received">Received</option>
+            <option value="refund_pending">Refund pending</option>
+            <option value="refunded">Refunded</option>
+            <option value="exchange_processing">Exchange processing</option>
+            <option value="exchange_shipped">Exchange shipped</option>
+            <option value="exchange_completed">Exchange completed</option>
+            <option value="rejected">Rejected</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Case</th>
+                <th>Order / Customer</th>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Refund</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="afterSalesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="catalog" class="panel">
+        <div class="panel-head">
+          <h2>Catalog</h2>
+          <p id="catalogMeta">0 products • Inventory ₹0.00</p>
+        </div>
+        <p id="catalogHealth" class="catalog-health">Low stock: 0 • Out of stock: 0</p>
+        <div class="inventory-full-tools">
+          <label for="inventoryThresholdInput">Low Stock Threshold</label>
+          <input id="inventoryThresholdInput" type="number" min="0" step="1" value="5" aria-label="Low stock threshold" />
+          <label for="inventoryRestockInput">Restock To</label>
+          <input id="inventoryRestockInput" type="number" min="0" step="1" value="10" aria-label="Restock target stock" />
+          <button id="inventoryRefreshBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('refresh')">Refresh Inventory</button>
+          <button id="inventoryShowLowBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('show-low')">Show Low/Out</button>
+          <button id="inventoryShowOutBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('show-out')">Show Out of Stock</button>
+          <button id="inventoryShowAllBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('show-all')">Show All Stock</button>
+          <button id="inventoryRestockSelectedBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('restock-selected')">Restock Selected</button>
+          <button id="inventoryRestockVisibleBtn" type="button" class="secondary-btn" onclick="handleInventoryToolbarAction('restock-visible')">Restock Visible</button>
+        </div>
+        <p id="inventorySummary" class="catalog-health">Inventory summary will appear here.</p>
+        <section class="inventory-threshold-manager" aria-label="Inventory threshold manager">
+          <div class="panel-head">
+            <h3>Threshold Manager</h3>
+            <p id="inventoryThresholdMeta" class="catalog-health">Default threshold 5 • Restock to 10</p>
+          </div>
+          <p id="inventoryThresholdMessage" class="catalog-health">Set category-specific low-stock thresholds for smarter alerts.</p>
+          <div class="inventory-threshold-actions">
+            <button id="saveInventorySettingsBtn" type="button" class="secondary-btn">Save Thresholds</button>
+            <button id="resetInventorySettingsBtn" type="button" class="secondary-btn">Reset Draft</button>
+          </div>
+          <div id="inventoryThresholdList" class="inventory-threshold-list"></div>
+        </section>
+        <div id="inventoryAlertList" class="inventory-alert-list"></div>
+        <section class="back-in-stock-admin" aria-label="Back in stock requests">
+          <div class="panel-head">
+            <h3>Back in Stock Requests</h3>
+            <p id="backInStockMeta" class="catalog-health">No requests yet.</p>
+          </div>
+          <div class="back-in-stock-tools">
+            <input id="backInStockSearchInput" type="search" placeholder="Search by email, product, sku" aria-label="Search back in stock requests" />
+            <select id="backInStockStatusFilter" aria-label="Filter request status">
+              <option value="all">All statuses</option>
+              <option value="open">Open</option>
+              <option value="notified">Notified</option>
+              <option value="queued">Queued</option>
+              <option value="closed">Closed</option>
+              <option value="unsubscribed">Unsubscribed</option>
+            </select>
+            <button id="backInStockRefreshBtn" type="button" class="secondary-btn">Refresh</button>
+          </div>
+          <div id="backInStockDemandList" class="inventory-alert-list"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Requested</th>
+                  <th>Product</th>
+                  <th>Email</th>
+                  <th>Qty</th>
+                  <th>Status</th>
+                  <th>Notified</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="backInStockTableBody">
+                <tr><td colspan="7">No requests yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="category-manager" aria-label="Category management">
+          <div class="category-manager-top">
+            <div>
+              <p class="crumbs">Categories &gt; Editor</p>
+              <h3>Category setup</h3>
+            </div>
+            <div class="category-action-row">
+              <button id="cancelCategoryEditBtn" type="button" class="secondary-btn">Cancel</button>
+              <button id="addCategoryBtn" type="button" class="update-btn">Save Category</button>
+            </div>
+          </div>
+          <div class="category-manager-layout">
+            <article class="category-card">
+              <h4>Category info</h4>
+              <div class="category-manager-tools">
+                <label>
+                  Category name
+                  <input id="newCategoryInput" type="text" placeholder="e.g., Monitor" />
+                </label>
+                <label>
+                  Header description
+                  <textarea id="newCategoryDescriptionInput" rows="4" placeholder="Write a short description for this category"></textarea>
+                </label>
+                <label>
+                  Category image
+                  <input id="newCategoryImageInput" type="url" placeholder="https://example.com/image.jpg" />
+                </label>
+              </div>
+            </article>
+            <aside class="category-side-cards">
+              <article class="category-side-card">
+                <h5>Active on your site</h5>
+                <label class="toggle-row">
+                  <span>Category visibility</span>
+                  <input id="newCategoryActiveInput" type="checkbox" checked />
+                </label>
+              </article>
+              <article class="category-side-card">
+                <h5>Marketing & SEO</h5>
+                <p>Use category URL in menus and campaigns for better navigation and SEO.</p>
+              </article>
+            </aside>
+          </div>
+          <div class="category-manager-toolbar">
+            <input id="categorySearchInput" type="search" placeholder="Search category by name or slug" aria-label="Search category" />
+            <select id="categoryStatusFilter" aria-label="Filter category status">
+              <option value="all">All statuses</option>
+              <option value="active">Active only</option>
+              <option value="inactive">Inactive only</option>
+              <option value="in-use">In-use only</option>
+              <option value="unused">Unused only</option>
+            </select>
+            <select id="categorySortInput" aria-label="Sort categories">
+              <option value="manual">Manual order</option>
+              <option value="name-asc">Name A-Z</option>
+              <option value="name-desc">Name Z-A</option>
+              <option value="updated-desc">Recently updated</option>
+              <option value="products-desc">Most products</option>
+            </select>
+            <button id="categoryRefreshBtn" type="button" class="secondary-btn">Refresh</button>
+            <button id="categoryExportBtn" type="button" class="secondary-btn">Export CSV</button>
+            <button id="categoryImportBtn" type="button" class="secondary-btn">Import CSV/JSON</button>
+            <input id="categoryImportInput" type="file" accept=".csv,.json,application/json,text/csv" hidden />
+          </div>
+          <p id="categorySummary" class="catalog-health">Category summary will appear here.</p>
+          <p id="categoryManagerMessage" class="admin-message"></p>
+          <div id="categoryManagerList" class="category-list"></div>
+        </section>
+
+        <section class="sourcing-panel" aria-label="Find products to sell">
+          <div class="panel-head">
+            <h3>Find Products to Sell</h3>
+            <p id="sourcingMeta" class="catalog-health">0 products available</p>
+          </div>
+          <p class="catalog-health">Expand your store's product range with print on demand and ready-to-sell dropshipping products that ship directly to customers.</p>
+          <div class="sourcing-tools">
+            <select id="sourcingTypeFilter" aria-label="Source type">
+              <option value="all">All source types</option>
+              <option value="print-on-demand">Print on demand products</option>
+              <option value="dropshipping">Ready-to-sell dropshipping</option>
+            </select>
+            <input id="sourcingSearchInput" type="search" placeholder="Search source products" aria-label="Search source products" />
+            <button id="sourcingRefreshBtn" type="button" class="secondary-btn">Refresh List</button>
+          </div>
+          <div class="sourcing-quick-filters">
+            <button id="sourcingQuickAllBtn" type="button" class="secondary-btn active">All</button>
+            <button id="sourcingQuickPodBtn" type="button" class="secondary-btn">Print on demand products</button>
+            <button id="sourcingQuickDropBtn" type="button" class="secondary-btn">Dropshipping products</button>
+          </div>
+          <div id="sourcingList" class="sourcing-list"></div>
+        </section>
+
+        <form id="productForm" class="catalog-form">
+          <input id="productIdInput" type="hidden" />
+          <input id="productSkuInput" type="text" placeholder="SKU (optional)" />
+          <input id="productNameInput" type="text" placeholder="Product name" required />
+          <input id="productBrandInput" type="text" placeholder="Brand" required />
+          <select id="productCategoryInput" required>
+            <option value="">Category</option>
+            <option value="laptop">Laptop</option>
+            <option value="mobile">Mobile</option>
+            <option value="audio">Audio</option>
+            <option value="accessory">Accessories</option>
+          </select>
+          <input id="productCollectionsInput" type="text" placeholder="Collections/pages (comma separated): laptop, best-sellers, gaming" />
+          <select id="productSegmentInput" required>
+            <option value="b2c">B2C</option>
+            <option value="b2b">B2B</option>
+          </select>
+          <input id="productPriceInput" type="number" min="0" step="0.01" placeholder="Price" required />
+          <input id="productListPriceInput" type="number" min="0" step="0.01" placeholder="MRP/List price" />
+          <input id="productStockInput" type="number" min="0" step="1" placeholder="Stock" required />
+          <input id="productRatingInput" type="number" min="0" max="5" step="0.1" placeholder="Rating" />
+          <input id="productMoqInput" type="number" min="0" step="1" placeholder="MOQ (B2B)" />
+          <select id="productStatusInput">
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <select id="productFulfillmentInput">
+            <option value="fbm">FBM</option>
+            <option value="fba">FBA</option>
+          </select>
+          <input id="productKeywordsInput" type="text" placeholder="Keywords (comma separated)" />
+          <textarea id="productDescriptionInput" placeholder="Short description"></textarea>
+          <input id="productImageInput" type="url" placeholder="Image URL (optional)" />
+          <div id="productGalleryFields" class="gallery-fields"></div>
+          <input id="productImageFileInput" type="file" accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.mp4,.webm,.ogg,.mov,.m4v,.avi,.mkv" multiple />
+          <div class="image-preview-wrap">
+            <img id="productImagePreview" alt="Selected product preview" hidden />
+            <video id="productVideoPreview" controls playsinline hidden></video>
+            <p id="productImageHelp" class="field-help">Select up to 15 image/video files at once (MP4, MOV, WEBM, AVI, MKV), or paste media URLs manually below.</p>
+            <div id="productMediaUploadProgressWrap" class="media-upload-progress" hidden>
+              <progress id="productMediaUploadProgress" value="0" max="100"></progress>
+              <span id="productMediaUploadProgressText">0%</span>
+            </div>
+            <button id="retryDriveUploadBtn" type="button" class="secondary-btn" hidden>Retry Failed Drive Upload</button>
+          </div>
+          <section class="media-studio">
+            <div class="media-studio-head">
+              <h4>Photo Studio</h4>
+              <p>Manage product images and videos. Set cover image from here.</p>
+            </div>
+            <div id="mediaStudioGrid" class="media-studio-grid"></div>
+            <div id="photoStudioEditor" class="photo-studio-editor" hidden>
+              <div class="photo-studio-canvas-wrap">
+                <canvas id="photoStudioCanvas" width="720" height="480"></canvas>
+                <p id="photoStudioHint" class="field-help">Select an image from Photo Studio to edit.</p>
+              </div>
+              <div class="photo-studio-controls">
+                <h5>AI Image Editor</h5>
+                <div class="studio-control-group">
+                  <strong>Crop and Extend</strong>
+                  <div class="studio-inline">
+                    <button id="studioCropSquareBtn" type="button" class="secondary-btn">Crop 1:1</button>
+                    <button id="studioCrop43Btn" type="button" class="secondary-btn">Crop 4:3</button>
+                    <button id="studioCrop169Btn" type="button" class="secondary-btn">Crop 16:9</button>
+                    <button id="studioCustomCropToggleBtn" type="button" class="secondary-btn">Custom Crop</button>
+                    <button id="studioApplyCustomCropBtn" type="button" class="secondary-btn">Apply Custom</button>
+                    <button id="studioExtendBtn" type="button" class="secondary-btn">Extend</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Transform</strong>
+                  <div class="studio-inline">
+                    <button id="studioRotateLeftBtn" type="button" class="secondary-btn">Rotate Left</button>
+                    <button id="studioRotateRightBtn" type="button" class="secondary-btn">Rotate Right</button>
+                    <button id="studioFlipHorizontalBtn" type="button" class="secondary-btn">Flip H</button>
+                    <button id="studioFlipVerticalBtn" type="button" class="secondary-btn">Flip V</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Adjust</strong>
+                  <label>Brightness <input id="studioBrightnessInput" type="range" min="60" max="160" value="100" /></label>
+                  <label>Contrast <input id="studioContrastInput" type="range" min="60" max="160" value="100" /></label>
+                  <label>Saturation <input id="studioSaturationInput" type="range" min="0" max="200" value="100" /></label>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Effects</strong>
+                  <div class="studio-inline">
+                    <label>Blur <input id="studioBlurInput" type="range" min="0" max="12" value="0" /></label>
+                    <button id="studioApplySharpenBtn" type="button" class="secondary-btn">Sharpen</button>
+                    <button id="studioApplyVignetteBtn" type="button" class="secondary-btn">Vignette</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Color Filters</strong>
+                  <select id="studioFilterPreset">
+                    <option value="none">None</option>
+                    <option value="grayscale">Grayscale</option>
+                    <option value="sepia">Sepia</option>
+                    <option value="warm">Warm</option>
+                    <option value="cool">Cool</option>
+                  </select>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Object Eraser</strong>
+                  <div class="studio-inline">
+                    <button id="studioEraserToggleBtn" type="button" class="secondary-btn">Enable Eraser</button>
+                    <input id="studioEraserSizeInput" type="range" min="8" max="60" value="24" />
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Text</strong>
+                  <div class="studio-inline">
+                    <input id="studioTextInput" type="text" placeholder="Add text" />
+                    <button id="studioAddTextBtn" type="button" class="secondary-btn">Add</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Decorative</strong>
+                  <div class="studio-inline">
+                    <button id="studioAddDecorativeBtn" type="button" class="secondary-btn">Add Badge</button>
+                    <button id="studioAddStickerBtn" type="button" class="secondary-btn">Add Sticker</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Overlay</strong>
+                  <div class="studio-inline">
+                    <input id="studioOverlayColorInput" type="color" value="#000000" />
+                    <input id="studioOverlayOpacityInput" type="range" min="0" max="80" value="15" />
+                    <button id="studioApplyOverlayBtn" type="button" class="secondary-btn">Apply</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Backgrounds</strong>
+                  <div class="studio-inline">
+                    <input id="studioBackgroundInput" type="color" value="#ffffff" />
+                    <button id="studioApplyBackgroundBtn" type="button" class="secondary-btn">Apply</button>
+                  </div>
+                </div>
+                <div class="studio-control-group">
+                  <strong>Border</strong>
+                  <div class="studio-inline">
+                    <input id="studioBorderColorInput" type="color" value="#111827" />
+                    <input id="studioBorderSizeInput" type="range" min="0" max="40" value="6" />
+                    <button id="studioApplyBorderBtn" type="button" class="secondary-btn">Apply</button>
+                  </div>
+                </div>
+                <div class="studio-inline">
+                  <button id="studioUndoBtn" type="button" class="secondary-btn">Undo</button>
+                  <button id="studioRedoBtn" type="button" class="secondary-btn">Redo</button>
+                  <button id="studioDownloadBtn" type="button" class="secondary-btn">Download</button>
+                  <button id="studioResetBtn" type="button" class="secondary-btn">Reset</button>
+                  <button id="studioSaveBtn" type="button" class="update-btn">Save to Product</button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <label class="checkbox-inline">
+            <input id="productFeaturedInput" type="checkbox" />
+            Featured Listing
+          </label>
+          <button id="saveProductBtn" type="submit" class="update-btn">Add Product</button>
+          <button id="cancelProductEditBtn" type="button" class="secondary-btn">Cancel Edit</button>
+        </form>
+        <p id="productFormMessage" class="admin-message"></p>
+
+        <div class="panel-tools panel-tools-3">
+          <input id="catalogSearch" type="search" placeholder="Search by product name or brand" aria-label="Search catalog" />
+          <select id="catalogCategoryFilter" aria-label="Filter by category">
+            <option value="all">All categories</option>
+            <option value="laptop">Laptop</option>
+            <option value="mobile">Mobile</option>
+            <option value="audio">Audio</option>
+            <option value="accessory">Accessories</option>
+          </select>
+          <select id="catalogSegmentFilter" aria-label="Filter by segment">
+            <option value="all">All segments</option>
+            <option value="b2c">B2C</option>
+            <option value="b2b">B2B</option>
+          </select>
+        </div>
+        <div class="catalog-bulk-tools">
+          <select id="catalogBulkAction" aria-label="Catalog bulk action">
+            <option value="">Bulk action</option>
+            <option value="set_status_active">Set Active</option>
+            <option value="set_status_draft">Set Draft</option>
+            <option value="set_status_inactive">Set Inactive</option>
+            <option value="set_fulfillment_fba">Set FBA</option>
+            <option value="set_fulfillment_fbm">Set FBM</option>
+            <option value="set_featured_true">Mark Featured</option>
+            <option value="set_featured_false">Remove Featured</option>
+            <option value="set_collections">Set Collections</option>
+            <option value="add_collections">Add Collections</option>
+            <option value="clear_collections">Clear Extra Collections</option>
+            <option value="delete">Delete Selected</option>
+          </select>
+          <input id="catalogBulkCollectionsInput" type="text" placeholder="Collections for bulk action (comma separated)" aria-label="Bulk collections input" />
+          <button id="applyCatalogBulkBtn" type="button" class="secondary-btn">Apply</button>
+          <button id="clearCatalogSelectionBtn" type="button" class="secondary-btn">Clear Selection</button>
+          <button id="exportCatalogBtn" type="button" class="secondary-btn">Export Physical CSV</button>
+          <button id="importCatalogBtn" type="button" class="secondary-btn">Import CSV</button>
+          <button id="normalizeMediaBtn" type="button" class="secondary-btn">Fix Media URLs</button>
+          <input id="importCatalogFileInput" type="file" accept=".csv,text/csv" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+        </div>
+        <p id="importCatalogPreviewMeta" class="catalog-health">No CSV file selected.</p>
+        <div id="importCatalogPreviewWrap" class="table-wrap" hidden>
+          <table>
+            <thead>
+              <tr id="importCatalogPreviewHead"></tr>
+            </thead>
+            <tbody id="importCatalogPreviewBody"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input id="selectAllCatalogProducts" type="checkbox" aria-label="Select all products" /></th>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Segment</th>
+                <th>Price</th>
+                <th>MRP</th>
+                <th>Discount</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Fulfillment</th>
+                <th>Featured</th>
+                <th>Rating</th>
+                <th>MOQ</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="catalogTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="menuManager" class="panel">
+        <div class="panel-head">
+          <h2>Website Menu Manager</h2>
+          <p>Add, remove and reorder custom menu links</p>
+        </div>
+        <div class="menu-manager-tools">
+          <input id="menuEditIndexInput" type="hidden" />
+          <input id="menuLabelInput" type="text" placeholder="Menu label (e.g., Terms)" aria-label="Menu label" />
+          <input id="menuHrefInput" type="text" placeholder="Page link (e.g., terms-and-conditions.html)" aria-label="Menu href" />
+          <label class="menu-visible-toggle">
+            <input id="menuVisibleInput" type="checkbox" checked />
+            Visible
+          </label>
+          <button id="menuAddBtn" type="button" class="update-btn">Add Link</button>
+          <button id="menuCancelEditBtn" type="button" class="secondary-btn">Cancel Edit</button>
+          <button id="menuClearBtn" type="button" class="secondary-btn">Clear All</button>
+          <button id="menuResetBtn" type="button" class="secondary-btn">Reset Default</button>
+        </div>
+        <p id="menuManagerMessage" class="admin-message"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Label</th>
+                <th>Link</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="menuTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="orders" class="panel">
+        <div class="panel-head">
+          <h2>Orders</h2>
+          <p id="ordersMeta">0 orders</p>
+        </div>
+        <div class="panel-tools">
+          <input id="orderSearchAdmin" type="search" placeholder="Search orders by id or item name" aria-label="Search orders" />
+          <select id="orderStatusFilterAdmin" aria-label="Filter orders by status">
+            <option value="all">All status</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="admin-dashboard.js?v=20260305i"></script>
+</body>
+</html>
+

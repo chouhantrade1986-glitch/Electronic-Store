@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart PC Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="pc-builder.css" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">electro<span>mart</span><small>pc builder</small></a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="desktops.html">Computers</a>
+      <a href="laptop.html">Laptops</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <main class="builder-main">
+    <section class="hero">
+      <p class="eyebrow">Custom Build</p>
+      <h1>Build Your PC in Minutes</h1>
+      <p>Select parts, validate compatibility and view your total instantly.</p>
+    </section>
+
+    <section class="builder-layout">
+      <section class="panel part-panel">
+        <h2>Select Components</h2>
+
+        <label for="cpuSelect">CPU</label>
+        <select id="cpuSelect"></select>
+
+        <label for="motherboardSelect">Motherboard</label>
+        <select id="motherboardSelect"></select>
+
+        <label for="gpuSelect">GPU</label>
+        <select id="gpuSelect"></select>
+
+        <label for="ramSelect">RAM</label>
+        <select id="ramSelect"></select>
+
+        <label for="storageSelect">Storage</label>
+        <select id="storageSelect"></select>
+
+        <label for="psuSelect">Power Supply</label>
+        <select id="psuSelect"></select>
+
+        <label for="caseSelect">Case</label>
+        <select id="caseSelect"></select>
+      </section>
+
+      <section class="panel summary-panel">
+        <h2>Build Summary</h2>
+        <p id="buildTier" class="build-tier">Tier: Entry</p>
+        <ul id="summaryList" class="summary-list"></ul>
+
+        <div class="totals">
+          <p>Estimated Total</p>
+          <strong id="totalPrice">₹0.00</strong>
+        </div>
+
+        <div id="compatibilityBox" class="compatibility"></div>
+
+        <div class="actions">
+          <button id="copyBuildBtn" type="button">Copy Build</button>
+          <button id="resetBuildBtn" type="button" class="secondary">Reset</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="pc-builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Thank You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="terms.css" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+  </header>
+
+  <main class="terms-main">
+    <section class="hero">
+      <p class="eyebrow">Order Confirmed</p>
+      <h1>Thank You for Your Purchase</h1>
+      <p>Your order has been placed successfully on March 2, 2026.</p>
+    </section>
+
+    <section class="terms-card">
+      <h2>Order Summary</h2>
+      <div class="order-confirmation-grid">
+        <p><span>Order ID</span><strong id="thankYouOrderId">-</strong></p>
+        <p><span>Order Date</span><strong id="thankYouOrderDate">-</strong></p>
+        <p><span>Payment</span><strong id="thankYouPaymentMethod">-</strong></p>
+        <p><span>Grand Total</span><strong id="thankYouOrderTotal">-</strong></p>
+        <p id="thankYouDiscountRow" hidden><span>Discount</span><strong id="thankYouDiscount">-</strong></p>
+        <p id="thankYouCouponRow" hidden><span>Coupon</span><strong id="thankYouCouponCode">-</strong></p>
+        <p id="thankYouDeliverySlotRow" hidden><span>Delivery Slot</span><strong id="thankYouDeliverySlot">-</strong></p>
+        <p id="thankYouReservationRow" hidden><span>Reserved Until</span><strong id="thankYouReservation">-</strong></p>
+      </div>
+      <h2>What happens next?</h2>
+      <p id="thankYouNextStep">You can track shipment updates from your orders page once processing begins.</p>
+      <h2>Need help?</h2>
+      <p>Check our FAQ and policy pages if you have questions about delivery, returns, or refunds.</p>
+      <p id="thankYouLinks">
+        <a href="orders.html">View Orders</a> |
+        <a href="index.html">Continue Shopping</a>
+      </p>
+    </section>
+  </main>
+  <script src="thank-you.js"></script>
+</body>
+</html>
+
+

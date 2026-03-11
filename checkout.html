@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="checkout.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav top-nav--split">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">checkout</span>
+      </a>
+      <div class="header-links">
+        <a href="cart.html">Back to Cart</a>
+        <a href="products.html">Continue shopping</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="checkout-main">
+    <section class="checkout-flow">
+      <h1>Checkout</h1>
+      <p id="apiStatus" class="api-status">Connecting to secure order server...</p>
+
+      <section class="flow-card">
+        <h2>1. Delivery address</h2>
+        <div class="form-grid">
+          <label>Full name<input id="fullName" type="text" placeholder="Enter full name" /></label>
+          <label>Mobile number<input id="mobileNo" type="tel" placeholder="Enter mobile number" /></label>
+          <label>Email<input id="emailId" type="email" placeholder="Enter email" /></label>
+          <label>PIN code<input id="pinCode" type="text" placeholder="110001" /></label>
+          <label class="full-width">Address line<input id="addressLine" type="text" placeholder="House no, street, area" /></label>
+          <label>City<input id="cityName" type="text" placeholder="New Delhi" /></label>
+          <label>State<input id="stateName" type="text" placeholder="Delhi" /></label>
+        </div>
+      </section>
+
+      <section class="flow-card">
+        <h2>2. Payment method</h2>
+        <div class="payment-options">
+          <label class="payment-option active">
+            <input type="radio" name="paymentMethod" value="upi" checked />
+            <span>UPI</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="card" />
+            <span>Credit/Debit Card</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="netbanking" />
+            <span>Net Banking</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="cod" />
+            <span>Cash on Delivery</span>
+          </label>
+        </div>
+
+        <div id="upiDetails" class="payment-detail">
+          <label>UPI ID
+            <input id="upiId" type="text" placeholder="name@bank" />
+          </label>
+          <p class="payment-note">Pay instantly with any UPI app.</p>
+        </div>
+
+        <div id="cardDetails" class="payment-detail" hidden>
+          <label>Name on card
+            <input id="cardName" type="text" placeholder="Cardholder name" />
+          </label>
+          <label>Card number
+            <input id="cardNumber" type="text" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19" />
+          </label>
+          <div class="mini-grid">
+            <label>Expiry
+              <input id="cardExpiry" type="text" placeholder="MM/YY" maxlength="5" />
+            </label>
+            <label>CVV
+              <input id="cardCvv" type="password" inputmode="numeric" placeholder="123" maxlength="4" />
+            </label>
+          </div>
+        </div>
+
+        <div id="netbankingDetails" class="payment-detail" hidden>
+          <label>Choose bank
+            <select id="bankName">
+              <option value="">Select bank</option>
+              <option value="HDFC">HDFC Bank</option>
+              <option value="SBI">State Bank of India</option>
+              <option value="ICICI">ICICI Bank</option>
+              <option value="Axis">Axis Bank</option>
+            </select>
+          </label>
+          <p class="payment-note">You will be redirected to your bank's secure page.</p>
+        </div>
+
+        <div id="codDetails" class="payment-detail" hidden>
+          <p class="payment-note">Pay with cash when your order is delivered.</p>
+        </div>
+        <div id="gatewayBanner" class="gateway-banner" hidden>
+          <div class="gateway-badge">Razorpay</div>
+          <div class="gateway-copy">
+            <strong id="gatewayTitle">Secure payment powered by Razorpay</strong>
+            <p id="gatewayDescription">After you review your order, Razorpay Checkout will open for payment.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow-card">
+        <h2>3. Review items</h2>
+        <div id="checkoutItems" class="checkout-items"></div>
+      </section>
+
+      <section class="flow-card">
+        <h2>4. Delivery slot</h2>
+        <label class="delivery-slot-label">Choose a delivery window
+          <select id="deliverySlotSelect"></select>
+        </label>
+        <p id="deliverySlotHelp" class="payment-note">Select a delivery slot based on your cart stock and location.</p>
+        <p id="reservationMessage" class="coupon-message"></p>
+      </section>
+    </section>
+
+    <aside class="order-summary">
+      <h2>Order Summary</h2>
+      <div class="coupon-box">
+        <label for="couponInput">Coupon code</label>
+        <div class="coupon-row">
+          <input id="couponInput" type="text" placeholder="SAVE10" />
+          <button id="applyCouponBtn" type="button">Apply</button>
+        </div>
+        <p id="couponMessage" class="coupon-message"></p>
+        <button id="removeCouponBtn" type="button" class="remove-coupon-btn" hidden>Remove coupon</button>
+      </div>
+      <p id="discountRow" hidden><span>Discount:</span> <strong id="discountValue">&#8377;0</strong></p>
+      <p><span>Items:</span> <strong id="summaryItems">0</strong></p>
+      <p><span>Subtotal:</span> <strong id="subtotalValue">₹0</strong></p>
+      <p><span>Shipping:</span> <strong id="shippingValue">₹0</strong></p>
+      <p><span>Tax:</span> <strong id="taxValue">₹0</strong></p>
+      <p class="grand-total"><span>Order total:</span> <strong id="totalValue">₹0</strong></p>
+      <button id="placeOrderBtn" type="button">Place your order</button>
+      <p id="gatewaySummaryNote" class="gateway-summary-note" hidden>Razorpay secure checkout will open on the next step.</p>
+      <p class="delivery-note">Expected delivery: 2-4 business days.</p>
+      <p class="secure-line">By placing your order, you agree to ElectroMart terms.</p>
+    </aside>
+  </main>
+
+  <script src="checkout.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin-portal.css" />
+</head>
+<body>
+  <header class="admin-portal-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Storefront</a>
+      <a href="account.html">Account</a>
+      <a href="orders.html">Orders</a>
+      <a href="auth.html?mode=admin&redirect=admin-dashboard.html">Admin Sign In</a>
+    </nav>
+  </header>
+
+  <main class="admin-portal-main">
+    <section class="admin-hero">
+      <div class="eyebrow">Seller Central</div>
+      <h1>Admin Panel Access</h1>
+      <p>Manage catalog, orders, analytics, automation, notifications, and store operations from one dashboard.</p>
+      <div id="adminPortalStatus" class="admin-status-card pending">
+        <strong>Checking account status...</strong>
+        <p>Open the dashboard with an admin account. Demo users will remain available for now.</p>
+      </div>
+      <div class="hero-actions">
+        <a id="adminPrimaryAction" class="primary-btn" href="auth.html?mode=admin&redirect=admin-dashboard.html">Sign In as Admin</a>
+        <a id="adminSecondaryAction" class="secondary-btn" href="account.html">Go to Account</a>
+      </div>
+    </section>
+
+    <section class="admin-feature-grid">
+      <article class="feature-card">
+        <h2>Catalog Control</h2>
+        <p>Manage products, bulk actions, inventory thresholds, category setup, and media studio tools.</p>
+      </article>
+      <article class="feature-card">
+        <h2>Order Operations</h2>
+        <p>Track payments, invoices, shipping timeline, notifications, and status transitions from one place.</p>
+      </article>
+      <article class="feature-card">
+        <h2>Growth Analytics</h2>
+        <p>Monitor revenue, order mix, customer data, notification delivery, and automation health.</p>
+      </article>
+    </section>
+
+    <section class="admin-checklist">
+      <h2>Quick Access Checklist</h2>
+      <ol>
+        <li>Sign in with an admin account.</li>
+        <li>Open the dashboard.</li>
+        <li>Use Catalog, Orders, Users, and Notifications sections.</li>
+        <li>Keep demo users enabled until you are ready to migrate them.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script src="admin-portal.js"></script>
+</body>
+</html>

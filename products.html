@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="products.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>all products</small></a>
+      <form id="searchForm" class="search-form" role="search">
+        <div class="search-input-wrap">
+          <input id="searchInput" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off" />
+          <div id="searchSuggestions" class="search-suggestions" hidden></div>
+        </div>
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-links" aria-label="Account and links">
+        <a href="desktops.html">Computers</a>
+        <a href="laptop.html">Laptops</a>
+        <a href="printer.html">Printers</a>
+        <a href="auth.html">Account</a>
+        <a href="orders.html">Orders</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+    <nav class="sub-nav" aria-label="Quick links">
+      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+      <a href="index.html">Home</a>
+      <a href="products.html" class="active">All Products</a>
+      <a href="catalogs.html">Catalogs</a>
+      <a href="todays-deals.html">Today's Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="mega-store.html">Mega Store</a>
+      <a href="terms-and-conditions.html">Customer Service</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+    <section id="deptMenu" class="dept-menu" aria-label="All departments">
+      <a href="desktops.html">Computers</a>
+      <a href="laptop.html">Laptops</a>
+      <a href="printer.html">Printers</a>
+      <a href="products.html?category=mobile">Mobiles</a>
+      <a href="products.html?category=audio">Audio</a>
+      <a href="products.html?category=accessory">Accessories</a>
+      <a href="pc-builder.html">PC Builder</a>
+      <a href="todays-deals.html">Today's Deals</a>
+    </section>
+  </header>
+
+  <main class="products-main">
+    <p class="breadcrumbs">Electronics &gt; All Products</p>
+    <section class="results-layout">
+      <aside class="filters-panel" aria-label="Filters">
+        <h2>Filters</h2>
+        <div class="filter-actions">
+          <button id="resetFiltersBtn" type="button" class="reset-btn">Reset Filters</button>
+        </div>
+        <div class="filter-group">
+          <label for="segmentFilter">Segment</label>
+          <select id="segmentFilter" aria-label="Filter segment">
+            <option value="all">All Segments</option>
+            <option value="b2c">B2C</option>
+            <option value="b2b">B2B</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter" aria-label="Filter category">
+            <option value="all">All Categories</option>
+            <option value="laptop">Laptops</option>
+            <option value="mobile">Mobiles</option>
+            <option value="audio">Audio</option>
+            <option value="accessory">Accessories</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <h3>Price</h3>
+          <label for="minPriceRange">Min Price</label>
+          <input id="minPriceRange" type="range" min="0" max="250000" value="0" />
+          <p class="range-meta">Min: <span id="minPriceValue">0</span></p>
+          <label for="maxPriceRange">Max Price</label>
+          <input id="maxPriceRange" type="range" min="0" max="250000" value="250000" />
+          <p class="range-meta">Max: <span id="maxPriceValue">250000</span></p>
+        </div>
+        <div class="filter-group">
+          <h3>Brand</h3>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="AstraTech" /> AstraTech</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="Nimbus" /> Nimbus</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="PulseWave" /> PulseWave</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="OrbitX" /> OrbitX</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="ZenPad" /> ZenPad</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="Vector" /> Vector</label>
+          <label class="check-item"><input type="checkbox" class="brand-filter" value="EchoSphere" /> EchoSphere</label>
+        </div>
+        <div class="filter-group">
+          <h3>Customer Rating</h3>
+          <div class="rating-filter" role="group" aria-label="Filter by rating">
+            <button type="button" class="rating-chip active" data-rating="0">All</button>
+            <button type="button" class="rating-chip" data-rating="4">4★ & above</button>
+            <button type="button" class="rating-chip" data-rating="4.5">4.5★ & above</button>
+          </div>
+        </div>
+      </aside>
+      <section class="products-panel">
+        <div class="panel-head">
+          <h1>Results</h1>
+          <div class="panel-controls">
+            <p id="resultMeta">Showing 0 products</p>
+            <label for="sortFilter">Sort by:</label>
+            <select id="sortFilter">
+              <option value="relevance">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating-desc">Avg. Customer Review</option>
+            </select>
+          </div>
+        </div>
+        <p id="activeFilterMeta" class="active-filter-meta">Filters: None</p>
+        <div id="productsGrid" class="products-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="quickViewModal" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quickViewTitle" hidden>
+    <div class="quick-view-backdrop" data-close-quick-view></div>
+    <section class="quick-view-panel">
+      <button id="quickViewClose" class="quick-view-close" type="button" aria-label="Close quick view">&times;</button>
+      <div class="quick-view-layout">
+        <div class="quick-view-media">
+          <img id="quickViewImage" src="" alt="" />
+        </div>
+        <div class="quick-view-copy">
+          <p id="quickViewEyebrow" class="quick-view-eyebrow"></p>
+          <h2 id="quickViewTitle"></h2>
+          <p id="quickViewRating" class="quick-view-rating"></p>
+          <p id="quickViewPrice" class="quick-view-price"></p>
+          <p id="quickViewMeta" class="quick-view-meta"></p>
+          <p id="quickViewDescription" class="quick-view-description"></p>
+          <div class="quick-view-actions">
+            <button id="quickViewAddBtn" class="add-btn" type="button">Add to Cart</button>
+            <button id="quickViewWishlistBtn" class="wishlist-btn" type="button">Save to Wishlist</button>
+            <a id="quickViewDetailsLink" href="products.html" class="view-link">Open full details</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="products.js?v=20260305b"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

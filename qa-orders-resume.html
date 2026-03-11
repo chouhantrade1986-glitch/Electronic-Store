@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders Resume QA</title>
+</head>
+<body>
+  <main>
+    <h1>Orders Resume QA</h1>
+    <p id="status">Preparing authenticated pending order...</p>
+  </main>
+  <script src="qa-auth-browser.js"></script>
+  <script>
+    const API_BASE_URL = (() => {
+      const { protocol, hostname } = window.location;
+      if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
+        return "http://127.0.0.1:4000/api";
+      }
+      return `${window.location.origin}/api`;
+    })();
+    const AUTH_STORAGE_KEY = "electromart_auth_v1";
+
+    async function requestJson(path, options = {}) {
+      const response = await fetch(`${API_BASE_URL}${path}`, options);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || `Request failed: ${response.status}`);
+      }
+      return data;
+    }
+
+    async function run() {
+      const status = document.getElementById("status");
+      try {
+        const auth = await window.QaAuthHelper.otpLogin(API_BASE_URL, "customer@electromart.com", "Customer@123");
+
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({
+          token: auth.token,
+          ...auth.user
+        }));
+
+        const order = await requestJson("/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                productId: "1",
+                quantity: 1
+              }
+            ],
+            shippingAddress: "QA Resume Flow Address",
+            paymentMethod: "upi"
+          })
+        });
+
+        status.textContent = `Pending order ${order.id} created. Redirecting to orders page...`;
+        setTimeout(() => {
+          window.location.href = "orders.html";
+        }, 300);
+      } catch (error) {
+        status.textContent = error && error.message ? error.message : "Failed to prepare QA flow.";
+        document.body.setAttribute("data-qa-error", "true");
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

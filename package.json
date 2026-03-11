@@ -1,0 +1,18 @@
+{
+  "name": "electromart-root",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root tooling for ElectroMart smoke and browser QA flows.",
+  "scripts": {
+    "smoke": "node qa-full-smoke.js --reports-dir=qa-reports",
+    "smoke:ui": "node qa-ui-smoke.js --artifacts-dir=qa-reports/ui",
+    "smoke:baseline:lock": "powershell -ExecutionPolicy Bypass -File .\\lock-visual-baseline.ps1",
+    "smoke:baseline:verify": "powershell -ExecutionPolicy Bypass -File .\\verify-visual-baseline.ps1",
+    "smoke:install-browsers": "npx playwright install chromium",
+    "cleanup:artifacts": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1 -Apply",
+    "cleanup:artifacts:dry": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
+}

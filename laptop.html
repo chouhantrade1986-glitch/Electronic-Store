@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Laptops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="laptop.css" />
+</head>
+<body>
+  <header class="page-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand">electro<span>mart</span><small>laptops</small></a>
+      <form id="searchForm" class="search-shell" role="search">
+        <input id="searchInput" type="search" placeholder="Search laptops by model, brand, purpose" aria-label="Search laptops" />
+      </form>
+      <div class="top-links">
+        <a href="products.html">Products</a>
+        <a href="desktops.html">Computers</a>
+        <a href="printer.html">Printers</a>
+        <a href="laptop.html" class="active-link">Laptops</a>
+        <a href="auth.html">Account</a>
+        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="sub-nav" aria-label="Laptop navigation">
+      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+      <a href="laptop.html" class="active">Laptops</a>
+      <a href="desktops.html">Computers</a>
+      <a href="printer.html">Printers</a>
+      <a href="products.html">All Products</a>
+      <a href="todays-deals.html">Deals</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+    </nav>
+    <section id="deptMenu" class="dept-menu" aria-label="Laptop departments">
+      <a href="laptop.html">Gaming Laptops</a>
+      <a href="laptop.html">Business Laptops</a>
+      <a href="laptop.html">Creator Laptops</a>
+      <a href="laptop.html">2-in-1 Laptops</a>
+      <a href="laptop.html">Thin and Light</a>
+      <a href="laptop.html">Workstation Laptops</a>
+      <a href="laptop.html">Laptop RAM</a>
+      <a href="laptop.html">Laptop SSD</a>
+      <a href="laptop.html">Laptop Accessories</a>
+    </section>
+  </header>
+
+  <main class="laptop-main">
+    <section class="hero">
+      <p class="eyebrow">Laptop Store</p>
+      <h1>Laptops for Study, Business and Gaming</h1>
+      <p>Compare performance laptops with fast delivery and business bulk options.</p>
+      <div class="hero-pills">
+        <span>Intel and AMD</span>
+        <span>Home and Business</span>
+        <span>Bulk B2B Options</span>
+      </div>
+    </section>
+
+    <section class="amazon-layout">
+      <aside class="panel refine-panel">
+        <div class="panel-head">
+          <h2>Refine Results</h2>
+          <p>Amazon style filters</p>
+        </div>
+        <section class="filters" aria-label="Filter laptops">
+          <select id="segmentFilter" aria-label="Filter segment">
+            <option value="all">All Segments</option>
+            <option value="b2c">B2C</option>
+            <option value="b2b">B2B</option>
+          </select>
+          <select id="brandFilter" aria-label="Filter brand">
+            <option value="all">All Brands</option>
+            <option value="astratech">AstraTech</option>
+            <option value="vector">Vector</option>
+          </select>
+          <select id="purposeFilter" aria-label="Filter purpose">
+            <option value="all">All Use Cases</option>
+            <option value="office">Office</option>
+            <option value="gaming">Gaming</option>
+          </select>
+          <select id="sortFilter" aria-label="Sort laptops">
+            <option value="relevance">Sort: Relevance</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating_desc">Top Rated</option>
+            <option value="best_value">Best Value</option>
+          </select>
+        </section>
+
+        <div class="rail-block">
+          <h3>All Departments</h3>
+          <div class="component-links">
+            <a href="laptop.html">Gaming Laptops</a>
+            <a href="laptop.html">Business Laptops</a>
+            <a href="laptop.html">Creator Laptops</a>
+            <a href="laptop.html">2-in-1 Laptops</a>
+            <a href="laptop.html">Thin and Light</a>
+            <a href="laptop.html">Workstation Laptops</a>
+            <a href="laptop.html">Laptop RAM</a>
+            <a href="laptop.html">Laptop SSD</a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel result-panel">
+        <div class="panel-head">
+          <h2>Laptops</h2>
+          <p id="resultMeta">Showing 0 products</p>
+        </div>
+        <p class="result-note">Fast delivery options and business bulk pricing available.</p>
+        <div id="laptopGrid" class="laptop-grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="laptop.js"></script>
+  <script src="menu-manager.js"></script>
+</body>
+</html>
+
+

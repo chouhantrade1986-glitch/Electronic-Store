@@ -1,0 +1,380 @@
+const CART_STORAGE_KEY = "electromart_cart_v1";
+const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
+const API_BASE_URL = (() => {
+  const { protocol, hostname, port } = window.location;
+  if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
+    return "http://localhost:4000/api";
+  }
+  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
+  return `${origin}/api`;
+})();
+
+const laptops = [
+  {
+    id: 1,
+    name: "AstraBook Pro 14",
+    brand: "AstraTech",
+    segment: "b2c",
+    purpose: "office",
+    processor: "intel",
+    ram: "16GB",
+    storage: "512GB SSD",
+    price: 999,
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: 7,
+    name: "Vector Gaming Laptop",
+    brand: "Vector",
+    segment: "b2c",
+    purpose: "gaming",
+    processor: "amd",
+    ram: "32GB",
+    storage: "1TB SSD",
+    price: 1299,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: 9,
+    name: "Office Laptop Bundle (10 Units)",
+    brand: "AstraTech",
+    segment: "b2b",
+    purpose: "office",
+    processor: "intel",
+    ram: "16GB",
+    storage: "512GB SSD",
+    moq: 10,
+    price: 8690,
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+const laptopGrid = document.getElementById("laptopGrid");
+const resultMeta = document.getElementById("resultMeta");
+const searchInput = document.getElementById("searchInput");
+const searchForm = document.getElementById("searchForm");
+const segmentFilter = document.getElementById("segmentFilter");
+const brandFilter = document.getElementById("brandFilter");
+const purposeFilter = document.getElementById("purposeFilter");
+const sortFilter = document.getElementById("sortFilter");
+const cartCount = document.getElementById("cartCount");
+const deptTrigger = document.getElementById("deptTrigger");
+const deptMenu = document.getElementById("deptMenu");
+const inrFormatter = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 2
+});
+let apiLaptopProducts = [];
+
+function loadCatalogMap() {
+  try {
+    const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function normalizeImageUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) {
+    return "";
+  }
+  if (raw.startsWith("data:image/")) {
+    return raw;
+  }
+  let normalized = raw;
+  if (normalized.startsWith("//")) {
+    normalized = `https:${normalized}`;
+  } else if (!/^https?:\/\//i.test(normalized)) {
+    normalized = `https://${normalized}`;
+  }
+  try {
+    const url = new URL(normalized);
+    const host = url.hostname.toLowerCase();
+    if (host.includes("drive.google.com")) {
+      const fileId = url.searchParams.get("id") || url.pathname.split("/d/")[1]?.split("/")[0];
+      if (fileId) {
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+    }
+    if (host.includes("dropbox.com")) {
+      url.searchParams.delete("dl");
+      url.searchParams.set("raw", "1");
+      return url.toString();
+    }
+    if (host.includes("m.media-amazon.com") || host.includes("images-amazon.com")) {
+      url.pathname = url.pathname.replace(/\._[^/.]+_\./, ".");
+      return url.toString();
+    }
+    return url.toString();
+  } catch (error) {
+    return "";
+  }
+}
+
+function normalizeLaptopCategory(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (raw === "laptops") {
+    return "laptop";
+  }
+  return raw;
+}
+
+function mapCatalogLaptop(item) {
+  if (!item || !item.id) {
+    return null;
+  }
+  const category = normalizeLaptopCategory(item.category);
+  const status = String(item.status || "active").toLowerCase();
+  if (category !== "laptop" || status !== "active") {
+    return null;
+  }
+
+  return {
+    id: String(item.id),
+    name: item.name || `Product #${item.id}`,
+    brand: item.brand || "Generic",
+    segment: String(item.segment || "b2c").toLowerCase(),
+    purpose: String(item.purpose || "office").toLowerCase(),
+    processor: String(item.processor || "intel").toLowerCase(),
+    ram: item.ram || "16GB",
+    storage: item.storage || "512GB SSD",
+    featured: Boolean(item.featured),
+    listPrice: Number(item.listPrice || item.price || 0),
+    moq: Number(item.moq || 0),
+    price: Number(item.price || 0),
+    rating: Number(item.rating || 0),
+    image: normalizeImageUrl(item.image) || "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80"
+  };
+}
+
+function getMergedLaptops() {
+  const map = new Map(laptops.map((item) => [String(item.id), item]));
+  Object.values(loadCatalogMap()).forEach((item) => {
+    const mapped = mapCatalogLaptop(item);
+    if (!mapped) {
+      return;
+    }
+    map.set(String(mapped.id), mapped);
+  });
+  apiLaptopProducts.forEach((item) => {
+    const mapped = mapCatalogLaptop(item);
+    if (!mapped) {
+      return;
+    }
+    map.set(String(mapped.id), mapped);
+  });
+  return Array.from(map.values());
+}
+
+async function fetchLaptopsFromApi() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/products?category=laptop&status=active&segment=all`);
+    if (!response.ok) {
+      return;
+    }
+    const payload = await response.json().catch(() => ({}));
+    apiLaptopProducts = Array.isArray(payload.products) ? payload.products : [];
+  } catch (error) {
+    apiLaptopProducts = [];
+  }
+}
+
+function syncBrandFilterOptions(items) {
+  if (!brandFilter) {
+    return;
+  }
+  const selected = String(brandFilter.value || "all").toLowerCase();
+  const brands = Array.from(new Set(items.map((item) => String(item.brand || "").trim()).filter(Boolean))).sort();
+
+  brandFilter.innerHTML = [
+    '<option value="all">All Brands</option>',
+    ...brands.map((brand) => `<option value="${brand.toLowerCase()}">${brand}</option>`)
+  ].join("");
+
+  const allowed = new Set(["all", ...brands.map((brand) => brand.toLowerCase())]);
+  brandFilter.value = allowed.has(selected) ? selected : "all";
+}
+
+function loadCartMap() {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveCartMap(cartMap) {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartMap));
+  } catch (error) {
+    return;
+  }
+}
+
+function syncCartCount() {
+  const total = Object.values(loadCartMap()).reduce((sum, qty) => sum + Number(qty || 0), 0);
+  cartCount.textContent = String(total);
+}
+
+function addToCart(id) {
+  const cartMap = loadCartMap();
+  const key = String(id);
+  cartMap[key] = (Number(cartMap[key]) || 0) + 1;
+  saveCartMap(cartMap);
+  syncCartCount();
+}
+
+function titleCase(value) {
+  const text = String(value || "");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function money(value) {
+  return inrFormatter.format(Number(value || 0));
+}
+
+function getRibbonLabel(item) {
+  if (item.featured) {
+    return "Featured";
+  }
+  const listPrice = Number(item.listPrice || item.price || 0);
+  const price = Number(item.price || 0);
+  if (listPrice > price) {
+    return "Deal";
+  }
+  if (Number(item.rating || 0) >= 4.7) {
+    return "Top Rated";
+  }
+  return "";
+}
+
+function laptopCard(item) {
+  const detailUrl = `product-detail.html?id=${item.id}`;
+  const bulk = item.segment === "b2b" && item.moq ? `<p class="bulk-meta">Minimum order quantity: ${item.moq}</p>` : "";
+  const ribbon = getRibbonLabel(item);
+
+  return `
+    <article class="product-card">
+      ${ribbon ? `<span class="card-ribbon">${ribbon}</span>` : ""}
+      <a href="${detailUrl}" aria-label="Open ${item.name}">
+        <img src="${item.image}" alt="${item.name}" loading="lazy" />
+      </a>
+      <div class="content">
+        <h3><a href="${detailUrl}">${item.name}</a></h3>
+        <div class="spec-row">
+          <span class="spec-chip">${item.brand}</span>
+          <span class="spec-chip">${titleCase(item.processor)} CPU</span>
+          <span class="spec-chip">${titleCase(item.purpose)}</span>
+          <span class="spec-chip">${item.ram}</span>
+        </div>
+        <div class="meta">
+          <span class="price">${money(item.price)}</span>
+          <span class="rating">${Number(item.rating).toFixed(1)} Star</span>
+        </div>
+        ${bulk}
+        <div class="card-actions">
+          <a href="${detailUrl}" class="view-link">View Details</a>
+          <button class="add-btn" data-id="${item.id}" type="button">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function render(list) {
+  resultMeta.textContent = `Showing ${list.length} products`;
+  if (list.length === 0) {
+    laptopGrid.innerHTML = "<div class='empty'>No laptops match your filters.</div>";
+    return;
+  }
+  laptopGrid.innerHTML = list.map(laptopCard).join("");
+}
+
+function sortItems(items, sortValue) {
+  const next = [...items];
+  if (sortValue === "price_asc") {
+    next.sort((a, b) => Number(a.price) - Number(b.price));
+  } else if (sortValue === "price_desc") {
+    next.sort((a, b) => Number(b.price) - Number(a.price));
+  } else if (sortValue === "rating_desc") {
+    next.sort((a, b) => Number(b.rating) - Number(a.rating));
+  } else if (sortValue === "best_value") {
+    next.sort((a, b) => (Number(b.rating) / Number(b.price)) - (Number(a.rating) / Number(a.price)));
+  }
+  return next;
+}
+
+function filterLaptops() {
+  const source = getMergedLaptops();
+  syncBrandFilterOptions(source);
+
+  const query = String(searchInput.value || "").trim().toLowerCase();
+  const segment = String(segmentFilter.value || "all");
+  const brand = String(brandFilter.value || "all");
+  const purpose = String(purposeFilter.value || "all");
+  const sortValue = String(sortFilter.value || "relevance");
+
+  const filtered = source.filter((item) => {
+    const text = `${item.name} ${item.brand} ${item.processor} ${item.purpose} ${item.ram} ${item.storage}`.toLowerCase();
+    const queryMatch = !query || text.includes(query);
+    const segmentMatch = segment === "all" || item.segment === segment;
+    const brandMatch = brand === "all" || String(item.brand).toLowerCase() === brand;
+    const purposeMatch = purpose === "all" || item.purpose === purpose;
+    return queryMatch && segmentMatch && brandMatch && purposeMatch;
+  });
+
+  render(sortItems(filtered, sortValue));
+}
+
+async function refreshLaptops() {
+  await fetchLaptopsFromApi();
+  filterLaptops();
+}
+
+searchInput.addEventListener("input", filterLaptops);
+if (searchForm) {
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    filterLaptops();
+  });
+}
+segmentFilter.addEventListener("change", filterLaptops);
+brandFilter.addEventListener("change", filterLaptops);
+purposeFilter.addEventListener("change", filterLaptops);
+sortFilter.addEventListener("change", filterLaptops);
+
+document.addEventListener("click", (event) => {
+  if (deptTrigger && event.target === deptTrigger) {
+    const next = !deptMenu.classList.contains("open");
+    deptMenu.classList.toggle("open", next);
+    deptTrigger.setAttribute("aria-expanded", String(next));
+    return;
+  }
+
+  if (deptMenu && !deptMenu.contains(event.target) && event.target !== deptTrigger) {
+    deptMenu.classList.remove("open");
+    if (deptTrigger) {
+      deptTrigger.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  if (!event.target.classList.contains("add-btn")) {
+    return;
+  }
+  const id = String(event.target.getAttribute("data-id") || "").trim();
+  if (id) {
+    addToCart(id);
+  }
+});
+
+syncCartCount();
+refreshLaptops();

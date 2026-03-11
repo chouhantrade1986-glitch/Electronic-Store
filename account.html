@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="account.css" />
+</head>
+  <body>
+    <header class="page-header">
+    <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+      <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+      <span class="brand-sub">.in</span>
+    </a>
+    <nav class="header-links">
+      <a href="index.html">Shop</a>
+      <a href="products.html">Products</a>
+      <a href="mega-store.html">Mega Store</a>
+      <a href="orders.html">Orders</a>
+      <a href="terms-and-conditions.html">Terms</a>
+      <a href="shipping-policy.html">Shipping</a>
+      <a href="refund-policy.html">Refund</a>
+      <a href="accessibility-statement.html">Accessibility</a>
+      <a href="faq.html">FAQ</a>
+      <a href="review.html">Review</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <main class="account-layout">
+    <aside class="account-sidebar">
+      <div class="account-sidebar-head">
+        <h1>My Account</h1>
+        <span id="accountPhoneVerificationBadge" class="verification-badge pending">Phone Pending</span>
+      </div>
+      <button class="menu-btn active" data-panel="overview" type="button">Overview</button>
+      <button class="menu-btn" data-panel="notifications" type="button">Notifications</button>
+      <button class="menu-btn" data-panel="profile" type="button">Profile</button>
+      <button class="menu-btn" data-panel="addresses" type="button">Addresses</button>
+      <button class="menu-btn" data-panel="payments" type="button">Payments</button>
+      <button class="menu-btn" data-panel="security" type="button">Security</button>
+      <button class="menu-btn" data-panel="business" type="button">Business Profile</button>
+      <a id="adminDashboardLink" class="menu-btn" href="admin-dashboard.html" hidden>Admin Dashboard</a>
+      <button id="signOutBtn" class="menu-btn signout-btn" type="button">Sign Out</button>
+    </aside>
+
+    <section class="account-content">
+      <article id="panel-overview" class="panel active">
+        <div class="panel-head">
+          <h2>Dashboard</h2>
+          <p>Manage your orders, profile, and account settings.</p>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <p>Total Orders</p>
+            <strong>26</strong>
+          </div>
+          <div class="stat-card">
+            <p>Open Orders</p>
+            <strong>3</strong>
+          </div>
+          <div class="stat-card">
+            <p>Saved Addresses</p>
+            <strong>4</strong>
+          </div>
+          <div class="stat-card">
+            <p>Payment Methods</p>
+            <strong>2</strong>
+          </div>
+        </div>
+        <div class="quick-grid">
+          <a href="orders.html" class="quick-card">
+            <h3>Track Orders</h3>
+            <p>View order status and delivery updates.</p>
+          </a>
+          <a href="cart.html" class="quick-card">
+            <h3>Review Cart</h3>
+            <p>Update quantities and proceed to checkout.</p>
+          </a>
+          <a href="wishlist.html" class="quick-card">
+            <h3>Saved for Later</h3>
+            <p>12 products in your wishlist.</p>
+          </a>
+          <div class="quick-card">
+            <h3>Support Tickets</h3>
+            <p>1 active conversation with customer support.</p>
+          </div>
+          <a id="adminQuickCard" href="admin.html" class="quick-card" hidden>
+            <h3>Admin Panel</h3>
+            <p>Open Seller Central dashboard, catalog controls, and order operations.</p>
+          </a>
+        </div>
+        <section class="notification-center compact">
+          <div class="panel-head">
+            <h3>Recent Order Updates</h3>
+            <p id="overviewNotificationsMeta">0 updates</p>
+          </div>
+          <div id="overviewNotificationsList" class="notification-list"></div>
+        </section>
+      </article>
+
+      <article id="panel-notifications" class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Notification Center</h2>
+            <p id="accountNotificationsMeta">0 updates</p>
+          </div>
+          <button id="markAllNotificationsReadBtn" class="menu-btn" type="button">Mark All Read</button>
+        </div>
+        <section class="notification-preferences-card">
+          <div class="panel-head">
+            <div>
+              <h3>Email Preferences</h3>
+              <p id="notificationPreferencesMeta">Control which order emails you receive.</p>
+            </div>
+            <div class="notification-preferences-actions">
+              <button id="sendTestNotificationBtn" class="menu-btn" type="button">Send Test</button>
+              <button id="saveNotificationPreferencesBtn" class="menu-btn" type="button">Save Preferences</button>
+            </div>
+          </div>
+          <p class="notification-preferences-hint">Send a sample notification to verify delivery across your enabled channels and preview the current provider setup.</p>
+          <div class="toggle-row">
+            <span>Email notifications</span>
+            <button id="prefEmailEnabledToggle" class="toggle-btn on" type="button" aria-pressed="true">Enabled</button>
+          </div>
+          <div class="toggle-row">
+            <span>SMS notifications</span>
+            <button id="prefSmsEnabledToggle" class="toggle-btn" type="button" aria-pressed="false">Disabled</button>
+          </div>
+          <div class="provider-row">
+            <label for="prefSmsProviderSelect">SMS Provider</label>
+            <select id="prefSmsProviderSelect" disabled>
+              <option value="twilio">Twilio</option>
+              <option value="aws-sns">AWS SNS</option>
+              <option value="nexmo">Nexmo (Vonage)</option>
+              <option value="messagebird">MessageBird</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <span>WhatsApp notifications</span>
+            <button id="prefWhatsappEnabledToggle" class="toggle-btn" type="button" aria-pressed="false">Disabled</button>
+          </div>
+          <div class="provider-row">
+            <label for="prefWhatsappProviderSelect">WhatsApp Provider</label>
+            <select id="prefWhatsappProviderSelect" disabled>
+              <option value="twilio">Twilio</option>
+              <option value="360dialog">360Dialog</option>
+              <option value="messagebird">MessageBird</option>
+              <option value="whatsapp-business">WhatsApp Business API</option>
+            </select>
+          </div>
+          <div class="phone-verification-card">
+            <div class="phone-verification-head">
+              <strong>Phone Verification</strong>
+              <p id="phoneVerificationMeta">Verify your account phone number before enabling SMS or WhatsApp notifications.</p>
+            </div>
+            <div class="phone-verification-actions">
+              <button id="requestPhoneVerificationBtn" class="menu-btn" type="button">Send Code</button>
+              <input id="phoneVerificationCodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit code" aria-label="Phone verification code" />
+              <button id="confirmPhoneVerificationBtn" class="menu-btn" type="button">Verify</button>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span>Order shipped updates</span>
+            <button id="prefOrderShippedToggle" class="toggle-btn on" type="button" aria-pressed="true">Enabled</button>
+          </div>
+          <div class="toggle-row">
+            <span>Order delivered updates</span>
+            <button id="prefOrderDeliveredToggle" class="toggle-btn on" type="button" aria-pressed="true">Enabled</button>
+          </div>
+          <div class="toggle-row">
+            <span>Order cancelled updates</span>
+            <button id="prefOrderCancelledToggle" class="toggle-btn on" type="button" aria-pressed="true">Enabled</button>
+          </div>
+        </section>
+        <section class="notification-filter-bar" aria-label="Notification filters">
+          <label class="notification-filter-field">
+            <span>Status</span>
+            <select id="notificationStatusFilter">
+              <option value="all">All updates</option>
+              <option value="unread">Unread only</option>
+              <option value="sent">Sent</option>
+              <option value="queued">Queued</option>
+              <option value="failed">Failed</option>
+              <option value="muted">Muted</option>
+            </select>
+          </label>
+          <label class="notification-filter-field">
+            <span>Type</span>
+            <select id="notificationTypeFilter">
+              <option value="all">Everything</option>
+              <option value="order">Order updates</option>
+              <option value="test">Test notifications</option>
+            </select>
+          </label>
+          <button id="resetNotificationFiltersBtn" class="menu-btn" type="button">Clear Filters</button>
+        </section>
+        <div id="accountNotificationsList" class="notification-list"></div>
+      </article>
+
+      <article id="panel-profile" class="panel">
+        <div class="panel-head">
+          <h2>Profile Details</h2>
+          <p>Update your personal information.</p>
+        </div>
+        <form id="profileForm" class="form-grid">
+          <label>Full Name<input id="fullName" type="text" /></label>
+          <label>Email<input id="email" type="email" /></label>
+          <label>Phone<input id="phone" type="tel" /></label>
+          <label>Company<input id="company" type="text" /></label>
+          <button type="submit">Save Profile</button>
+        </form>
+      </article>
+
+      <article id="panel-addresses" class="panel">
+        <div class="panel-head">
+          <h2>Addresses</h2>
+          <p>Manage shipping and billing addresses.</p>
+        </div>
+        <div class="card-list">
+          <div class="item-card">
+            <h3>Home</h3>
+            <p>221B Baker Street, New York, NY 10001</p>
+          </div>
+          <div class="item-card">
+            <h3>Office</h3>
+            <p>77 Madison Ave, Suite 800, New York, NY 10016</p>
+          </div>
+        </div>
+      </article>
+
+      <article id="panel-payments" class="panel">
+        <div class="panel-head">
+          <h2>Payment Methods</h2>
+          <p>Securely manage cards and billing options.</p>
+        </div>
+        <div class="card-list">
+          <div class="item-card">
+            <h3>Visa ending 2281</h3>
+            <p>Expires 11/28</p>
+          </div>
+          <div class="item-card">
+            <h3>Business Invoice</h3>
+            <p>Net 30 enabled for B2B orders.</p>
+          </div>
+        </div>
+      </article>
+
+      <article id="panel-security" class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Security</h2>
+            <p id="securityPreferencesMeta">Review account security settings and session activity.</p>
+          </div>
+          <button id="saveSecurityPreferencesBtn" class="menu-btn" type="button">Save Security Settings</button>
+        </div>
+        <section class="security-card">
+          <div class="toggle-row">
+            <span>Two-factor authentication</span>
+            <button id="twoFactorToggle" class="toggle-btn" type="button" aria-pressed="false">Disabled</button>
+          </div>
+          <div class="toggle-row">
+            <span>Login alerts</span>
+            <button id="alertsToggle" class="toggle-btn on" type="button" aria-pressed="true">Enabled</button>
+          </div>
+          <p class="security-hint">Two-factor is a readiness toggle for upcoming stronger auth flows. Login alerts are logged in your account activity feed.</p>
+        </section>
+
+        <section class="security-card">
+          <div class="panel-head compact">
+            <div>
+              <h3>Change Password</h3>
+              <p>Update your password and keep this device signed in with a fresh session.</p>
+            </div>
+          </div>
+          <form id="changePasswordForm" class="form-grid security-form">
+            <label>Current Password<input id="currentPassword" type="password" autocomplete="current-password" /></label>
+            <label>New Password<input id="newPassword" type="password" autocomplete="new-password" /></label>
+            <label>Confirm Password<input id="confirmPassword" type="password" autocomplete="new-password" /></label>
+            <button id="changePasswordBtn" type="submit">Change Password</button>
+          </form>
+        </section>
+
+        <section class="security-card">
+          <div class="security-session-row">
+            <div>
+              <h3>Logout All Sessions</h3>
+              <p>Sign out this account from every browser and device. You will need to sign in again.</p>
+            </div>
+            <button id="logoutAllSessionsBtn" class="menu-btn danger-btn" type="button">Logout All</button>
+          </div>
+        </section>
+
+        <section class="security-card">
+          <div class="panel-head compact">
+            <div>
+              <h3>Recent Auth Activity</h3>
+              <p id="authActivityMeta">0 recent events</p>
+            </div>
+            <button id="refreshAuthActivityBtn" class="menu-btn" type="button">Refresh</button>
+          </div>
+          <div id="authActivityList" class="auth-activity-list"></div>
+        </section>
+      </article>
+
+      <article id="panel-business" class="panel">
+        <div class="panel-head">
+          <h2>Business Profile</h2>
+          <p>Configure B2B purchase details.</p>
+        </div>
+        <div class="card-list">
+          <div class="item-card">
+            <h3>GST / Tax ID</h3>
+            <p>US-ECM-88391</p>
+          </div>
+          <div class="item-card">
+            <h3>Procurement Contact</h3>
+            <p>Sarah Lee, procurement@electromart.com</p>
+          </div>
+          <div class="item-card">
+            <h3>Approval Workflow</h3>
+            <p>Orders above ₹5,000 require manager approval.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="account.js"></script>
+</body>
+</html>
+
+
+
+
+

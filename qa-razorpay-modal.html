@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Razorpay Modal QA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
+    .ok {
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .fail {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    iframe {
+      width: 1280px;
+      height: 1600px;
+      border: 1px solid #cbd5e1;
+      margin-top: 20px;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Razorpay Modal QA</h1>
+  <p id="status">Preparing verification...</p>
+  <pre id="result">Waiting...</pre>
+  <iframe id="appFrame" title="ElectroMart checkout QA"></iframe>
+
+  <script src="qa-auth-browser.js"></script>
+  <script>
+    const API_BASE_URL = "http://127.0.0.1:4000/api";
+    const AUTH_STORAGE_KEY = "electromart_auth_v1";
+    const CART_STORAGE_KEY = "electromart_cart_v1";
+    const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
+
+    function setStatus(message, ok) {
+      const status = document.getElementById("status");
+      status.textContent = message;
+      status.className = ok === true ? "ok" : ok === false ? "fail" : "";
+    }
+
+    function setResult(payload) {
+      document.getElementById("result").textContent = JSON.stringify(payload, null, 2);
+    }
+
+    async function requestJson(path, options = {}) {
+      const response = await fetch(`${API_BASE_URL}${path}`, options);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.message || `Request failed with status ${response.status}`);
+      }
+      return data;
+    }
+
+    function asProductList(payload) {
+      if (Array.isArray(payload)) {
+        return payload;
+      }
+      if (!payload || typeof payload !== "object") {
+        return [];
+      }
+      if (Array.isArray(payload.items)) {
+        return payload.items;
+      }
+      if (Array.isArray(payload.products)) {
+        return payload.products;
+      }
+      return [];
+    }
+
+    function pickCheckoutProduct(payload) {
+      const products = asProductList(payload);
+      const normalizeStock = (product) => Number(product && product.stock ? product.stock : 0);
+      const preferred = products.find((product) => String(product && product.id) === "1" && normalizeStock(product) > 0);
+      if (preferred) {
+        return preferred;
+      }
+      const inStock = products.find((product) => normalizeStock(product) > 0);
+      if (inStock) {
+        return inStock;
+      }
+      return products[0] || {
+        id: "1",
+        name: "AstraBook Pro 14",
+        price: 999,
+        image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
+      };
+    }
+
+    async function waitFor(predicate, timeoutMs, message) {
+      const startedAt = Date.now();
+      while (Date.now() - startedAt < timeoutMs) {
+        const result = await predicate();
+        if (result) {
+          return result;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      }
+      throw new Error(message || "Timed out");
+    }
+
+    async function run() {
+      const qa = {
+        sdkLoaded: false,
+        constructorCalled: false,
+        openCalled: false,
+        dismissInjected: false,
+        alertMessages: []
+      };
+
+      try {
+        setStatus("Signing in and preparing checkout data...", null);
+        const auth = await window.QaAuthHelper.otpLogin(API_BASE_URL, "customer@electromart.com", "Customer@123");
+
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({
+          token: auth.token,
+          ...auth.user
+        }));
+        const productsPayload = await requestJson("/products?page=1&pageSize=250");
+        const checkoutProduct = pickCheckoutProduct(productsPayload);
+        const productId = String(checkoutProduct && checkoutProduct.id ? checkoutProduct.id : "1");
+        const productName = String(checkoutProduct && checkoutProduct.name ? checkoutProduct.name : "AstraBook Pro 14");
+        const productPrice = Number(checkoutProduct && checkoutProduct.price ? checkoutProduct.price : 999);
+        const productImage = String(checkoutProduct && checkoutProduct.image
+          ? checkoutProduct.image
+          : "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80");
+
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ [productId]: 1 }));
+        localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify({
+          [productId]: {
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage
+          }
+        }));
+
+        const frame = document.getElementById("appFrame");
+        frame.src = "checkout.html";
+
+        await waitFor(() => {
+          try {
+            return frame.contentWindow && frame.contentDocument && frame.contentDocument.getElementById("placeOrderBtn");
+          } catch (error) {
+            return false;
+          }
+        }, 15000, "Checkout page did not load.");
+
+        const checkoutWindow = frame.contentWindow;
+        const checkoutDocument = frame.contentDocument;
+        const apiStatus = checkoutDocument.getElementById("apiStatus");
+        await waitFor(() => apiStatus && /Connected:/i.test(apiStatus.textContent || ""), 15000, "Checkout API did not connect.");
+
+        const originalLoadRazorpayScript = checkoutWindow.loadRazorpayCheckoutScript;
+        checkoutWindow.loadRazorpayCheckoutScript = async function wrappedLoadRazorpayScript() {
+          const OriginalRazorpay = await originalLoadRazorpayScript.call(checkoutWindow);
+          qa.sdkLoaded = true;
+
+          function WrappedRazorpay(options) {
+            qa.constructorCalled = true;
+            qa.checkoutOptions = {
+              keyPresent: Boolean(options && options.key),
+              orderId: String(options && options.order_id ? options.order_id : ""),
+              name: String(options && options.name ? options.name : ""),
+              description: String(options && options.description ? options.description : "")
+            };
+
+            return {
+              on(eventName, handler) {
+                qa.boundEvents = Array.isArray(qa.boundEvents) ? qa.boundEvents : [];
+                qa.boundEvents.push(eventName);
+                if (eventName === "payment.failed") {
+                  qa.paymentFailedHandlerBound = typeof handler === "function";
+                }
+              },
+              open() {
+                qa.openCalled = true;
+                setTimeout(() => {
+                  if (options && options.modal && typeof options.modal.ondismiss === "function") {
+                    qa.dismissInjected = true;
+                    options.modal.ondismiss();
+                  }
+                }, 300);
+              }
+            };
+          }
+
+          WrappedRazorpay.prototype = OriginalRazorpay && OriginalRazorpay.prototype ? OriginalRazorpay.prototype : {};
+          checkoutWindow.Razorpay = WrappedRazorpay;
+          return WrappedRazorpay;
+        };
+
+        checkoutWindow.alert = (message) => {
+          qa.alertMessages.push(String(message || ""));
+        };
+
+        checkoutDocument.getElementById("fullName").value = "Demo Customer";
+        checkoutDocument.getElementById("mobileNo").value = "8888888888";
+        checkoutDocument.getElementById("emailId").value = "customer@electromart.com";
+        checkoutDocument.getElementById("pinCode").value = "110001";
+        checkoutDocument.getElementById("addressLine").value = "House 1, Demo Street";
+        checkoutDocument.getElementById("cityName").value = "New Delhi";
+        checkoutDocument.getElementById("stateName").value = "Delhi";
+        checkoutDocument.getElementById("upiId").value = "success@razorpay";
+
+        setStatus("Triggering checkout button...", null);
+        checkoutDocument.getElementById("placeOrderBtn").click();
+
+        await waitFor(() => qa.openCalled || qa.alertMessages.length > 0, 25000, "Razorpay checkout open path was not reached.");
+
+        qa.buttonTextAfterClick = checkoutDocument.getElementById("placeOrderBtn").textContent;
+        qa.gatewayBannerVisible = !checkoutDocument.getElementById("gatewayBanner").hidden;
+        qa.gatewaySummaryVisible = !checkoutDocument.getElementById("gatewaySummaryNote").hidden;
+
+        const passed = qa.sdkLoaded && qa.constructorCalled && qa.openCalled;
+        setStatus(passed ? "Razorpay modal opening path verified." : "Razorpay modal opening path failed.", passed);
+        setResult({
+          passed,
+          ...qa
+        });
+      } catch (error) {
+        setStatus(error && error.message ? error.message : "Verification failed.", false);
+        setResult({
+          passed: false,
+          error: error && error.message ? error.message : "Unknown error"
+        });
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

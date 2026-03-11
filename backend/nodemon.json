@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "src"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "src/data/*.json",
+    "src/data/*.sqlite",
+    "src/data/*.sqlite-*",
+    "*.log",
+    "*.err"
+  ]
+}

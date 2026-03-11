@@ -1,0 +1,423 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260305c" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="#" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">.in</span>
+      </a>
+      <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
+        <span data-i18n="header.deliverTo">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
+      </button>
+      <form id="searchForm" class="search-form" role="search">
+        <select id="categoryFilter" aria-label="Filter category">
+          <option id="catAll" value="all">All</option>
+          <option id="catLaptop" value="laptop">Laptops</option>
+          <option id="catMobile" value="mobile">Mobiles</option>
+          <option id="catAudio" value="audio">Audio</option>
+          <option id="catAccessory" value="accessory">Accessories</option>
+        </select>
+        <div class="search-input-wrap">
+          <input id="searchInput" type="search" list="smartKeywordList" placeholder="Search electronics" aria-label="Search products" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
+          <div id="searchSuggestions" class="search-suggestions" hidden></div>
+        </div>
+        <datalist id="smartKeywordList">
+          <option value="gaming"></option>
+          <option value="budget"></option>
+          <option value="premium"></option>
+          <option value="audio"></option>
+          <option value="mobile"></option>
+          <option value="laptop"></option>
+          <option value="under 500"></option>
+          <option value="above 1000"></option>
+        </datalist>
+        <button type="submit" data-i18n="header.searchBtn">Search</button>
+      </form>
+      <div class="nav-actions">
+        <div class="lang-wrap">
+          <label for="languageSelect" class="lang-label" data-i18n="header.language">Language</label>
+          <select id="languageSelect" class="language-select" aria-label="Select language">
+            <option value="en">English - EN</option>
+            <option value="hi">हिन्दी - HI</option>
+            <option value="ta">தமிழ் - TA</option>
+            <option value="te">తెలుగు - TE</option>
+            <option value="kn">ಕನ್ನಡ - KN</option>
+            <option value="ml">മലയാളം - ML</option>
+            <option value="bn">বাংলা - BN</option>
+            <option value="mr">मराठी - MR</option>
+          </select>
+        </div>
+        <a href="auth.html" class="account-link">
+          <span>Hello, sign in</span>
+          <strong data-i18n="nav.account">Account</strong>
+        </a>
+        <a href="orders.html" class="orders-link">
+          <span>Returns</span>
+          <strong data-i18n="nav.orders">Orders</strong>
+        </a>
+        <a href="wishlist.html" class="orders-link">
+          <span>Saved</span>
+          <strong>Wishlist</strong>
+        </a>
+        <a href="cart.html" class="cart-link"><span data-i18n="nav.cart">Cart</span> <span id="cartCount">0</span></a>
+      </div>
+    </nav>
+
+    <nav class="category-nav" aria-label="Main categories">
+      <button id="megaTrigger" class="mega-trigger" type="button" aria-expanded="false" aria-controls="megaMenu" data-i18n="category.allDepartments">All Departments</button>
+      <a href="todays-deals.html" data-i18n="category.deals">Today's Deals</a>
+      <a href="best-sellers.html" data-i18n="category.bestSellers">Best Sellers</a>
+      <a href="#" data-i18n="category.gaming">Gaming</a>
+      <a href="#" data-i18n="category.homeOffice">Home Office</a>
+      <a href="#" data-i18n="category.smartHome">Smart Home</a>
+      <a href="pc-builder.html">PC Builder</a>
+      <a href="mega-store.html" data-i18n="category.stores">Stores</a>
+      <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
+      <a href="#" data-i18n="category.giftCards">Gift Cards</a>
+      <div class="legal-links">
+        <a href="products.html">Products</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="terms-and-conditions.html">Terms</a>
+        <a href="shipping-policy.html">Shipping</a>
+        <a href="refund-policy.html">Refund</a>
+        <a href="accessibility-statement.html">Accessibility</a>
+        <a href="faq.html">FAQ</a>
+        <a href="review.html">Review</a>
+      </div>
+    </nav>
+    <section id="megaMenu" class="mega-menu" aria-label="Departments menu">
+      <div class="mega-column">
+        <h3 data-i18n="mega.computers">Computers</h3>
+        <a href="laptop.html" data-i18n="mega.laptops">Laptops</a>
+        <a href="desktops.html" data-i18n="mega.desktops">Desktops</a>
+        <a href="#" data-i18n="mega.monitors">Monitors</a>
+        <a href="#" data-i18n="mega.storage">Storage</a>
+      </div>
+      <div class="mega-column">
+        <h3 data-i18n="mega.mobile">Mobile</h3>
+        <a href="#" data-i18n="mega.smartphones">Smartphones</a>
+        <a href="#" data-i18n="mega.tablets">Tablets</a>
+        <a href="#" data-i18n="mega.wearables">Wearables</a>
+        <a href="#" data-i18n="mega.chargers">Chargers</a>
+      </div>
+      <div class="mega-column">
+        <h3 data-i18n="mega.audioVideo">Audio & Video</h3>
+        <a href="#" data-i18n="mega.headphones">Headphones</a>
+        <a href="#" data-i18n="mega.speakers">Speakers</a>
+        <a href="#" data-i18n="mega.tvTheater">TV & Home Theater</a>
+        <a href="#" data-i18n="mega.microphones">Microphones</a>
+      </div>
+      <div class="mega-highlight">
+        <p data-i18n="mega.featuredDeal">Featured Deal</p>
+        <h3 data-i18n="mega.productTitle">Wireless Earbuds Pro</h3>
+        <span data-i18n="mega.priceNow">Now ₹79</span>
+        <a href="#" data-i18n="mega.seeOffer">See offer</a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Featured promotions">
+      <div class="hero-layout">
+        <aside class="hero-departments" aria-label="Shop by department">
+          <div class="hero-departments-head">
+            <h2>Shop by Department</h2>
+            <a href="products.html">See all</a>
+          </div>
+          <ul class="hero-department-list">
+            <li><a href="laptop.html"><span>Laptops</span><small>Work and gaming</small></a></li>
+            <li><a href="desktops.html"><span>Desktops</span><small>Performance builds</small></a></li>
+            <li><a href="printer.html"><span>Printers</span><small>Home and office</small></a></li>
+            <li><a href="pc-builder.html"><span>PC Builder</span><small>Custom configuration</small></a></li>
+            <li><a href="best-sellers.html"><span>Best Sellers</span><small>Most purchased now</small></a></li>
+            <li><a href="todays-deals.html"><span>Today's Deals</span><small>Limited-time offers</small></a></li>
+          </ul>
+          <a class="hero-department-offer" href="catalogs.html">Bulk and B2B sourcing available</a>
+        </aside>
+        <div class="hero-slider-shell">
+          <div id="heroTrack" class="hero-track"></div>
+          <button id="heroPrev" class="hero-nav prev" type="button" aria-label="Previous featured slide">&#10094;</button>
+          <button id="heroNext" class="hero-nav next" type="button" aria-label="Next featured slide">&#10095;</button>
+          <div id="heroDots" class="hero-dots" aria-label="Hero slider navigation"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="service-strip" aria-label="Key services">
+      <article class="service-item">
+        <strong>Free Delivery</strong>
+        <p>On eligible orders across India.</p>
+      </article>
+      <article class="service-item">
+        <strong>Secure Payments</strong>
+        <p>UPI, cards, net banking and COD.</p>
+      </article>
+      <article class="service-item">
+        <strong>Easy Returns</strong>
+        <p>Simple return and refund workflow.</p>
+      </article>
+      <article class="service-item">
+        <strong>Business Support</strong>
+        <p>Bulk quotes and GST invoices.</p>
+      </article>
+    </section>
+
+    <section class="quick-grid">
+      <article class="home-card">
+        <h2>Top Picks in Laptops</h2>
+        <div class="home-card-grid">
+          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80" alt="Laptop deals" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=500&q=80" alt="Laptop discounts" loading="lazy" />
+        </div>
+        <a href="laptop.html" class="home-card-link">See more</a>
+      </article>
+      <article class="home-card">
+        <h2>Mobile Accessories</h2>
+        <div class="home-card-grid">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80" alt="Phone offers" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=500&q=80" alt="Mobile accessories" loading="lazy" />
+        </div>
+        <a href="products.html" class="home-card-link">Explore all</a>
+      </article>
+      <article class="home-card">
+        <h2>Gaming Essentials</h2>
+        <div class="home-card-grid">
+          <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=500&q=80" alt="Gaming laptop" loading="lazy" />
+          <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=500&q=80" alt="Gaming keyboard" loading="lazy" />
+        </div>
+        <a href="best-sellers.html" class="home-card-link">Shop gaming</a>
+      </article>
+      <article class="home-card sign-card">
+        <h2>Sign in for best experience</h2>
+        <p>Track orders, save addresses and get personalized recommendations.</p>
+        <a href="auth.html" class="signin-btn">Sign in securely</a>
+      </article>
+    </section>
+
+    <section class="category-rail" aria-label="Featured categories">
+      <h2>Featured Categories</h2>
+      <div class="category-rail-grid">
+        <a href="desktops.html" class="category-pill">Computers</a>
+        <a href="laptop.html" class="category-pill">Laptops</a>
+        <a href="printer.html" class="category-pill">Printers</a>
+        <a href="pc-builder.html" class="category-pill">PC Builder</a>
+        <a href="todays-deals.html" class="category-pill">Today's Deals</a>
+        <a href="best-sellers.html" class="category-pill">Best Sellers</a>
+      </div>
+    </section>
+
+    <section class="deal-strip" aria-label="Today's deals">
+      <div class="deal-strip-head">
+        <h2>Today&apos;s Deals</h2>
+        <a href="todays-deals.html" class="deal-strip-link">See all deals</a>
+      </div>
+      <div class="deal-strip-row">
+        <a href="product-detail.html?id=3" class="deal-tile" aria-label="Open Headphones deal">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" alt="Headphones deal" loading="lazy" />
+          <p><span>Deal</span> Up to 40% off audio gear</p>
+          <small>Limited stock</small>
+        </a>
+        <a href="product-detail.html?id=6" class="deal-tile" aria-label="Open Tablet deal">
+          <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80" alt="Tablet deal" loading="lazy" />
+          <p><span>Deal</span> Tablets under Rs. 30,000</p>
+          <small>Extra bank offer live</small>
+        </a>
+        <a href="product-detail.html?id=4" class="deal-tile" aria-label="Open TV deal">
+          <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="TV deal" loading="lazy" />
+          <p><span>Deal</span> Smart TV offers this week</p>
+          <small>No-cost EMI available</small>
+        </a>
+        <a href="product-detail.html?id=8" class="deal-tile" aria-label="Open Speaker deal">
+          <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=500&q=80" alt="Speaker deal" loading="lazy" />
+          <p><span>Deal</span> Smart speakers starting Rs. 2,999</p>
+          <small>Fast delivery eligible</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="support-cta">
+      <div>
+        <h2>Need help with a business or custom setup?</h2>
+        <p>Talk to our support team for product guidance, GST billing and bulk purchase assistance.</p>
+      </div>
+      <a href="faq.html" class="support-cta-btn">Get Support</a>
+    </section>
+
+    <section class="new-arrivals-window" aria-label="Newly added products">
+      <div class="section-header">
+        <h2>Newly Added Products</h2>
+        <p id="newArrivalsMeta">Showing 0 products</p>
+      </div>
+      <p class="new-arrivals-subtitle">Latest products added from your admin dashboard will appear here automatically.</p>
+      <div id="newArrivalsGrid" class="product-grid"></div>
+    </section>
+
+    <section class="curated-showcase" aria-label="Top rated products">
+      <div class="section-header">
+        <h2>Top Rated Products</h2>
+        <a href="products.html" class="section-link">Browse all</a>
+      </div>
+      <div id="topRatedGrid" class="product-grid"></div>
+    </section>
+
+    <section class="curated-showcase" aria-label="Recommended products">
+      <div class="section-header">
+        <h2>Recommended For You</h2>
+        <a href="wishlist.html" class="section-link">View wishlist</a>
+      </div>
+      <div id="recommendedGrid" class="product-grid"></div>
+    </section>
+
+    <section id="recentlyViewedSection" class="curated-showcase" aria-label="Recently viewed products" hidden>
+      <div class="section-header">
+        <h2>Recently Viewed</h2>
+        <a href="products.html" class="section-link">Keep shopping</a>
+      </div>
+      <div id="recentlyViewedGrid" class="product-grid"></div>
+    </section>
+
+    <section class="products-section">
+      <div class="section-header">
+        <h2 data-i18n="products.sectionTitle">Product Listings</h2>
+      </div>
+      <div class="listing-columns">
+        <section class="listing-panel">
+          <div class="section-header">
+            <h3>Products</h3>
+            <p id="b2cResultMeta">Showing 0 products</p>
+          </div>
+          <div id="b2cProductGrid" class="product-grid"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="stores" class="stores-section">
+      <div class="section-header">
+        <h2 data-i18n="stores.title">Our Stores</h2>
+        <p data-i18n="stores.subtitle">Visit a nearby ElectroMart location</p>
+      </div>
+      <div id="storeGrid" class="store-grid"></div>
+    </section>
+  </main>
+
+  <div id="locationModal" class="location-modal" role="dialog" aria-modal="true" aria-labelledby="locationTitle" hidden>
+    <div class="location-modal__backdrop" data-close-location-modal></div>
+    <section class="location-modal__content">
+      <h2 id="locationTitle" data-i18n="location.title">Choose your location</h2>
+      <p data-i18n="location.subtitle">Select a delivery location to see product availability and delivery options.</p>
+      <div class="location-form">
+        <label for="locationCity" data-i18n="location.cityLabel">City</label>
+        <select id="locationCity">
+          <option value="New Delhi">New Delhi</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Bengaluru">Bengaluru</option>
+          <option value="Jaipur">Jaipur</option>
+          <option value="Hyderabad">Hyderabad</option>
+          <option value="Chennai">Chennai</option>
+        </select>
+
+        <label for="locationPostal" data-i18n="location.postalLabel">PIN code</label>
+        <input id="locationPostal" type="text" inputmode="numeric" maxlength="10" placeholder="110001" data-i18n-placeholder="location.postalPlaceholder" />
+      </div>
+      <div class="location-actions">
+        <button id="locationCancel" type="button" class="location-cancel" data-i18n="location.cancel">Cancel</button>
+        <button id="locationSave" type="button" class="location-save" data-i18n="location.save">Save location</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="quickViewModal" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quickViewTitle" hidden>
+    <div class="quick-view-backdrop" data-close-quick-view></div>
+    <section class="quick-view-panel">
+      <button id="quickViewClose" class="quick-view-close" type="button" aria-label="Close quick view">&times;</button>
+      <div class="quick-view-layout">
+        <div class="quick-view-media">
+          <img id="quickViewImage" src="" alt="" />
+        </div>
+        <div class="quick-view-copy">
+          <p id="quickViewEyebrow" class="quick-view-eyebrow"></p>
+          <h2 id="quickViewTitle"></h2>
+          <p id="quickViewRating" class="quick-view-rating"></p>
+          <p id="quickViewPrice" class="quick-view-price"></p>
+          <p id="quickViewMeta" class="quick-view-meta"></p>
+          <p id="quickViewDescription" class="quick-view-description"></p>
+          <div class="quick-view-actions">
+            <button id="quickViewAddBtn" class="hero-btn" type="button">Add to Cart</button>
+            <button id="quickViewWishlistBtn" class="wishlist-btn" type="button">Save to Wishlist</button>
+            <a id="quickViewDetailsLink" href="products.html" class="quick-view-details-link">Open full details</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <h3 data-i18n="footer.backToTop">Back to top</h3>
+    </div>
+    <div class="footer-columns">
+      <div>
+        <h4 data-i18n="footer.getToKnowUs">Get to Know Us</h4>
+        <a href="#" data-i18n="footer.about">About</a>
+        <a href="#" data-i18n="footer.careers">Careers</a>
+        <a href="#" data-i18n="footer.press">Press</a>
+      </div>
+      <div>
+        <h4 data-i18n="footer.makeMoney">Make Money with Us</h4>
+        <a href="#" data-i18n="footer.sellProducts">Sell Products</a>
+        <a href="#" data-i18n="footer.affiliate">Become an Affiliate</a>
+        <a href="#" data-i18n="footer.advertise">Advertise</a>
+      </div>
+      <div>
+        <h4 data-i18n="footer.help">Help</h4>
+        <a href="auth.html" data-i18n="footer.yourAccount">Your Account</a>
+        <a href="shipping-policy.html" data-i18n="footer.shippingRates">Shipping Rates</a>
+        <a href="refund-policy.html" data-i18n="footer.returns">Returns</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="terms-and-conditions.html">Terms & Conditions</a>
+        <a href="accessibility-statement.html">Accessibility Statement</a>
+        <a href="faq.html">FAQ</a>
+        <a href="review.html">Review</a>
+      </div>
+    </div>
+    <p class="copyright" data-i18n="footer.copyright">© 2026 ElectroMart clone experience</p>
+  </footer>
+
+  <script src="script.js?v=20260305b"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
