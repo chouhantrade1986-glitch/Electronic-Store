@@ -88,8 +88,39 @@ jobs:
         run: npm ci
 
       - name: Run smoke suite
-        shell: cmd
-        run: run-smoke-suite.bat --reports-dir=qa-reports
+        shell: pwsh
+        run: |
+          cmd /c run-smoke-suite.bat --reports-dir=qa-reports
+          $exitCode = $LASTEXITCODE
+          if ($exitCode -ne 0) {
+            if (Test-Path qa-reports/smoke-report.json) {
+              try {
+                $report = Get-Content -Path qa-reports/smoke-report.json -Raw | ConvertFrom-Json
+                $failedCases = @()
+                foreach ($suite in @($report.assertions)) {
+                  foreach ($testcase in @($suite.testcases)) {
+                    if (-not [bool]$testcase.passed) {
+                      $failedCases += ("{0}/{1}: {2}" -f [string]$suite.name, [string]$testcase.name, [string]$testcase.message)
+                    }
+                  }
+                }
+                $fatalError = [string]$report.fatalError
+                $summary = if (-not [string]::IsNullOrWhiteSpace($fatalError)) {
+                  $fatalError
+                } elseif ($failedCases.Count -gt 0) {
+                  [string]::Join(" | ", $failedCases)
+                } else {
+                  "Smoke suite failed. Review qa-reports artifact for details."
+                }
+                Write-Host "::error title=Smoke Suite Failure::$summary"
+              } catch {
+                Write-Host "::error title=Smoke Suite Failure::Smoke suite failed and report parsing also failed."
+              }
+            } else {
+              Write-Host "::error title=Smoke Suite Failure::Smoke suite failed before generating qa-reports/smoke-report.json."
+            }
+            exit $exitCode
+          }
 
       - name: Verify visual baseline
         shell: pwsh
