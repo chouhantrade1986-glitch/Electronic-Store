@@ -152,8 +152,20 @@ try {
     node qa-static-server.js
   }
 
-  Wait-HttpAvailable -Url "http://127.0.0.1:4000/api/health" -TimeoutSeconds 30
-  Wait-HttpAvailable -Url "http://127.0.0.1:5500/index.html" -TimeoutSeconds 30
+  try {
+    Wait-HttpAvailable -Url "http://127.0.0.1:4000/api/health" -TimeoutSeconds 30
+    Wait-HttpAvailable -Url "http://127.0.0.1:5500/index.html" -TimeoutSeconds 30
+  }
+  catch {
+    $backendState = if ($backendJob) { [string]$backendJob.State } else { "not-started" }
+    $frontendState = if ($frontendJob) { [string]$frontendJob.State } else { "not-started" }
+    $backendOutput = if ($backendJob) { ((Receive-Job -Job $backendJob -Keep -ErrorAction SilentlyContinue | Out-String).Trim()) } else { "" }
+    $frontendOutput = if ($frontendJob) { ((Receive-Job -Job $frontendJob -Keep -ErrorAction SilentlyContinue | Out-String).Trim()) } else { "" }
+    $backendOutput = if ($backendOutput.Length -gt 2000) { $backendOutput.Substring(0, 2000) + "...(truncated)" } else { $backendOutput }
+    $frontendOutput = if ($frontendOutput.Length -gt 2000) { $frontendOutput.Substring(0, 2000) + "...(truncated)" } else { $frontendOutput }
+
+    throw ("{0}`nBackendJobState: {1}`nBackendOutput: {2}`nFrontendJobState: {3}`nFrontendOutput: {4}" -f $_.Exception.Message, $backendState, $backendOutput, $frontendState, $frontendOutput)
+  }
 
   $result = [ordered]@{}
   $result.health = Invoke-RestMethod -Uri "http://127.0.0.1:4000/api/health"
