@@ -135,6 +135,24 @@ function Wait-HttpAvailable {
   throw "Timed out waiting for $Url"
 }
 
+function Reset-SmokeOtpChallenges {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$DbPath
+  )
+
+  $dbRaw = Get-Content -Path $DbPath -Raw -Encoding UTF8
+  $db = $dbRaw | ConvertFrom-Json
+  $hasChallenges = ($db.PSObject.Properties.Name -contains "authOtpChallenges") -and ($db.authOtpChallenges -is [System.Array])
+  if ($hasChallenges -and $db.authOtpChallenges.Count -eq 0) {
+    return
+  }
+
+  $db | Add-Member -NotePropertyName authOtpChallenges -NotePropertyValue @() -Force
+  $dbSerialized = $db | ConvertTo-Json -Depth 100
+  Set-Content -Path $DbPath -Value $dbSerialized -Encoding UTF8
+}
+
 Copy-Item $dbPath $dbBackup -Force
 
 $backendProcess = $null
@@ -145,6 +163,7 @@ $backendStdErrLog = Join-Path $tempRoot ("electromart-backend-stderr-" + [guid]:
 $frontendStdOutLog = Join-Path $tempRoot ("electromart-frontend-stdout-" + [guid]::NewGuid().ToString() + ".log")
 $frontendStdErrLog = Join-Path $tempRoot ("electromart-frontend-stderr-" + [guid]::NewGuid().ToString() + ".log")
 $nodeExecutable = (Get-Command node -ErrorAction Stop).Source
+Reset-SmokeOtpChallenges -DbPath $dbPath
 
 try {
   $backendProcess = Start-Process -FilePath $nodeExecutable `

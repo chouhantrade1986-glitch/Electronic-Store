@@ -46,6 +46,18 @@ function artifactPath(fileName) {
   return path.join(ARTIFACTS_DIR, fileName);
 }
 
+function resetAuthOtpChallengesForSmoke() {
+  const dbRaw = fs.readFileSync(DB_PATH, "utf8");
+  const db = JSON.parse(dbRaw);
+  const nextChallenges = [];
+  const currentChallenges = Array.isArray(db.authOtpChallenges) ? db.authOtpChallenges : [];
+  if (currentChallenges.length === 0 && Array.isArray(db.authOtpChallenges)) {
+    return;
+  }
+  db.authOtpChallenges = nextChallenges;
+  fs.writeFileSync(DB_PATH, `${JSON.stringify(db, null, 2)}\n`, "utf8");
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -956,6 +968,7 @@ async function runOrdersSmoke(browser, customerSession, smokeProduct) {
 
 async function main() {
   fs.copyFileSync(DB_PATH, DB_BACKUP_PATH);
+  resetAuthOtpChallengesForSmoke();
   let backendProcess;
   let frontendProcess;
   let browser;

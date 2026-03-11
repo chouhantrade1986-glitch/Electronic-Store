@@ -20,46 +20,44 @@
       ? new Date(error.payload.resendAvailableAt).getTime()
       : NaN;
     if (!Number.isFinite(resendAvailableAt)) {
-      return 0;
+      return 750;
     }
     return Math.max(0, resendAvailableAt - Date.now()) + 250;
   }
 
+  async function requestOtpWithRetry(apiBaseUrl, payload, maxAttempts = 4) {
+    const totalAttempts = Math.max(1, Number(maxAttempts) || 1);
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= totalAttempts; attempt += 1) {
+      try {
+        return await requestJson(apiBaseUrl, "/auth/otp/request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (error) {
+        lastError = error;
+        if (error.status !== 429 || attempt >= totalAttempts) {
+          throw error;
+        }
+        await sleep(getRetryDelayMs(error));
+      }
+    }
+
+    throw lastError || new Error("OTP request failed without a captured error.");
+  }
+
   async function otpLogin(apiBaseUrl, emailOrMobile, password, channel = "email") {
     const normalizedChannel = String(channel || "email").trim().toLowerCase() === "mobile" ? "mobile" : "email";
-    let otpRequest;
-    try {
-      otpRequest = await requestJson(apiBaseUrl, "/auth/otp/request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          purpose: "login",
-          channel: normalizedChannel,
-          emailOrMobile,
-          password
-        })
-      });
-    } catch (error) {
-      const retryDelayMs = error.status === 429 ? getRetryDelayMs(error) : 0;
-      if (!retryDelayMs) {
-        throw error;
-      }
-      await sleep(retryDelayMs);
-      otpRequest = await requestJson(apiBaseUrl, "/auth/otp/request", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          purpose: "login",
-          channel: normalizedChannel,
-          emailOrMobile,
-          password
-        })
-      });
-    }
+    const otpRequest = await requestOtpWithRetry(apiBaseUrl, {
+      purpose: "login",
+      channel: normalizedChannel,
+      emailOrMobile,
+      password
+    });
 
     const challengeId = String(otpRequest.challengeId || "").trim();
     const otpCode = String(otpRequest.otpPreview || "").trim();
