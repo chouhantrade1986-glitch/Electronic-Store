@@ -7,6 +7,33 @@ $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sourcePath = Join-Path $repoRoot $SourceDir
 $manifestFile = Join-Path $repoRoot $ManifestPath
 
+function Get-Sha256Hash {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path
+  )
+
+  $hashCommand = Get-Command -Name Get-FileHash -ErrorAction SilentlyContinue
+  if ($hashCommand) {
+    return ((Get-FileHash -Path $Path -Algorithm SHA256).Hash).ToUpperInvariant()
+  }
+
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $stream = [System.IO.File]::OpenRead($Path)
+    try {
+      $bytes = $sha.ComputeHash($stream)
+    }
+    finally {
+      $stream.Dispose()
+    }
+  }
+  finally {
+    $sha.Dispose()
+  }
+  return (($bytes | ForEach-Object { $_.ToString("x2") }) -join "").ToUpperInvariant()
+}
+
 if (-not (Test-Path -Path $sourcePath)) {
   throw "Source artifacts directory not found: $sourcePath. Run npm run smoke:ui first."
 }
@@ -28,8 +55,8 @@ foreach ($entry in $manifest.files) {
     continue
   }
 
-  $actualHash = (Get-FileHash -Path $sourceFile -Algorithm SHA256).Hash
-  if ($actualHash -ne $expectedHash) {
+  $actualHash = Get-Sha256Hash -Path $sourceFile
+  if ($actualHash -ne [string]$expectedHash.ToUpperInvariant()) {
     $failures += "Hash mismatch for $fileName`n  expected: $expectedHash`n  actual:   $actualHash"
   }
 }

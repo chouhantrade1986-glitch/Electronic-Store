@@ -15,6 +15,33 @@ $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sourcePath = Join-Path $repoRoot $SourceDir
 $destinationPath = Join-Path $repoRoot $DestinationDir
 
+function Get-Sha256Hash {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path
+  )
+
+  $hashCommand = Get-Command -Name Get-FileHash -ErrorAction SilentlyContinue
+  if ($hashCommand) {
+    return ((Get-FileHash -Path $Path -Algorithm SHA256).Hash).ToUpperInvariant()
+  }
+
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $stream = [System.IO.File]::OpenRead($Path)
+    try {
+      $bytes = $sha.ComputeHash($stream)
+    }
+    finally {
+      $stream.Dispose()
+    }
+  }
+  finally {
+    $sha.Dispose()
+  }
+  return (($bytes | ForEach-Object { $_.ToString("x2") }) -join "").ToUpperInvariant()
+}
+
 if (-not (Test-Path -Path $sourcePath)) {
   throw "Source artifacts directory not found: $sourcePath. Run npm run smoke:ui first."
 }
@@ -32,7 +59,7 @@ foreach ($file in $Files) {
   Copy-Item -Path $sourceFile -Destination $destinationFile -Force
 
   $fileItem = Get-Item -Path $destinationFile
-  $hash = (Get-FileHash -Path $destinationFile -Algorithm SHA256).Hash
+  $hash = Get-Sha256Hash -Path $destinationFile
   $copied += [ordered]@{
     name = $file
     bytes = $fileItem.Length
