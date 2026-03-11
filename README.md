@@ -266,6 +266,12 @@ Helper for copying local backend env content to the clipboard:
 powershell -ExecutionPolicy Bypass -File .\copy-backend-env-secret.ps1
 ```
 
+Production hardening issue seeding (requires GitHub token in `GITHUB_PAT` or `GH_TOKEN`):
+
+```powershell
+npm run issues:prod-hardening
+```
+
 ## Current Limitations
 
 - Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer

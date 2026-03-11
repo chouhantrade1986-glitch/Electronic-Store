@@ -12,7 +12,8 @@
     "cleanup:artifacts": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1 -Apply",
     "cleanup:artifacts:dry": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1",
     "branch:protect:main": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1",
-    "branch:protect:check": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1 -CheckOnly"
+    "branch:protect:check": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1 -CheckOnly",
+    "issues:prod-hardening": "powershell -ExecutionPolicy Bypass -File .\\create-production-hardening-issues.ps1"
   },
   "devDependencies": {
     "playwright": "1.58.2"
