@@ -364,7 +364,11 @@ async function main() {
     writeText(API_STDOUT_PATH, apiCommandResult.stdout);
     writeText(API_STDERR_PATH, apiCommandResult.stderr);
     if (apiCommandResult.code !== 0) {
-      throw new Error(`API smoke command failed with exit code ${apiCommandResult.code}.`);
+      const rawDetail = String(apiCommandResult.stderr || apiCommandResult.stdout || "").trim();
+      const detailSummary = rawDetail
+        ? rawDetail.split(/\r?\n/).slice(-12).join(" | ")
+        : "No additional API smoke output captured.";
+      throw new Error(`API smoke command failed with exit code ${apiCommandResult.code}. ${detailSummary}`);
     }
     apiReport = parseJsonOutput(apiCommandResult.stdout, "API smoke");
 
@@ -380,7 +384,11 @@ async function main() {
     writeText(UI_STDOUT_PATH, uiCommandResult.stdout);
     writeText(UI_STDERR_PATH, uiCommandResult.stderr);
     if (uiCommandResult.code !== 0) {
-      throw new Error(`UI smoke command failed with exit code ${uiCommandResult.code}.`);
+      const rawDetail = String(uiCommandResult.stderr || uiCommandResult.stdout || "").trim();
+      const detailSummary = rawDetail
+        ? rawDetail.split(/\r?\n/).slice(-12).join(" | ")
+        : "No additional UI smoke output captured.";
+      throw new Error(`UI smoke command failed with exit code ${uiCommandResult.code}. ${detailSummary}`);
     }
     uiReport = parseJsonOutput(uiCommandResult.stdout, "UI smoke");
   } catch (error) {
