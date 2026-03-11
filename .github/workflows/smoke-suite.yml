@@ -57,6 +57,23 @@ jobs:
             Write-Host "JWT_SECRET was missing/placeholder. Replaced with generated CI secret."
           }
 
+          $forcedSettings = [ordered]@{
+            DB_PROVIDER = "json"
+            PAYMENT_PROVIDER = "simulated"
+            SMOKE_REQUIRE_RAZORPAY = "false"
+          }
+          foreach ($setting in $forcedSettings.GetEnumerator()) {
+            $key = [string]$setting.Key
+            $value = [string]$setting.Value
+            if ([regex]::IsMatch($envContents, "(?m)^$key=.*$")) {
+              $envContents = [regex]::Replace($envContents, "(?m)^$key=.*$", "$key=$value")
+            } else {
+              $envContents = $envContents.TrimEnd() + [Environment]::NewLine + "$key=$value" + [Environment]::NewLine
+            }
+          }
+          $envContents | Set-Content -Path backend/.env -Encoding utf8NoBOM
+          Write-Host "Applied deterministic smoke env overrides (DB_PROVIDER, PAYMENT_PROVIDER, SMOKE_REQUIRE_RAZORPAY)."
+
       - name: Install root smoke dependencies
         shell: pwsh
         run: npm ci
