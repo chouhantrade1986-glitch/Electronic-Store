@@ -97,6 +97,7 @@ Runtime alert policy check:
 cd backend
 npm run job:alerts:check
 npm run job:alerts:check -- --fail-on-alert
+npm run job:alerts:check -- --api-base-url=http://127.0.0.1:4000/api
 ```
 
 Alert runbook reference:

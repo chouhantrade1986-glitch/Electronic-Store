@@ -11,6 +11,7 @@ Last updated: March 11, 2026
 ## Health Degraded
 
 Alert id: `backend-health-degraded`
+Related alert id: `backend-monitoring-endpoint-unreachable`
 
 Immediate checks:
 
