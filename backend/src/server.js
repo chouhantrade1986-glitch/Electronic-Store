@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { ensureSeedData, getDbProvider } = require("./lib/db");
-const { assertJwtSecretConfigured } = require("./lib/auth");
+const { assertRuntimeEnvPolicyConfigured } = require("./lib/envPolicy");
 const { logInfo } = require("./lib/logger");
 const { getMetricsSnapshot } = require("./lib/monitoring");
 const { buildRuntimeHealthSnapshot } = require("./lib/runtimeHealth");
@@ -24,7 +24,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-assertJwtSecretConfigured();
+assertRuntimeEnvPolicyConfigured(process.env);
 ensureSeedData();
 
 app.set("trust proxy", 1);

@@ -12,8 +12,8 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Project Audit Status (March 12, 2026)
 
-- Completed: **92%**
-- Remaining: **8%**
+- Completed: **94%**
+- Remaining: **6%**
 - Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -67,11 +67,28 @@ Optional but important:
 - `ORDER_RESERVATION_TTL_MINUTES`
 - `ORDER_RESERVATION_SWEEP_INTERVAL_MS`
 - `GOOGLE_DRIVE_*`
+- `ORDER_NOTIFICATION_*`
 - `SMTP_*` or `SENDGRID_*`
+- `TWILIO_*`
 - `PHONE_VERIFICATION_*`
 - `ALERT_*` (policy thresholds, escalation targets, runbook base URL)
 - `BACKUP_*` and `RESTORE_DRILL_*` (backup retention and restore drill behavior)
 - `SMOKE_TEST_*`
+
+Runtime env policy check:
+
+```powershell
+cd backend
+npm run job:validate-env
+```
+
+Mode-based env policy matrix:
+
+| Runtime mode | Required / enforced |
+| --- | --- |
+| `local`, `development`, `test` | `JWT_SECRET` must be non-placeholder. Other integrations can remain simulated or unset. |
+| `staging` | `JWT_SECRET`, `PUBLIC_STORE_BASE_URL`, `PUBLIC_API_BASE_URL`; `ALLOW_PASSWORD_AUTH_FALLBACK` must stay `false`; any selected provider must have complete non-placeholder secrets. |
+| `production` | All `staging` rules plus `PAYMENT_PROVIDER` cannot stay `simulated`; placeholder bootstrap/admin/provider secrets are rejected at startup. |
 
 ### 3. Run the backend
 
@@ -335,7 +352,7 @@ npm run issues:prod-hardening
 - Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
-- Production deployment still needs env/secret guardrails and release/rollback enforcement before it is fully hardened
+- Production deployment still needs release/rollback enforcement before it is fully hardened
 
 Production hardening execution plan:
 

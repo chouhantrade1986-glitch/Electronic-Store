@@ -10,6 +10,7 @@
     "test:unit": "node --test",
     "test:smoke": "node ../qa-full-smoke.js --reports-dir=../qa-reports",
     "job:create-admin": "node src/jobs/createRealAdminUser.js",
+    "job:validate-env": "node src/jobs/validateRuntimeEnv.js",
     "job:phone-verification-reminders": "node src/jobs/runPhoneVerificationAutomation.js",
     "job:phone-verification-reminders:dry": "node src/jobs/runPhoneVerificationAutomation.js --dry-run",
     "job:seeded-demo-users": "node src/jobs/migrateSeededDemoUsers.js",

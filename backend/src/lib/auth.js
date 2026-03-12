@@ -7,8 +7,8 @@ const DISALLOWED_JWT_SECRETS = new Set([
   "changeme"
 ]);
 
-function resolveJwtSecret() {
-  const secret = String(process.env.JWT_SECRET || "").trim();
+function resolveJwtSecret(env = process.env) {
+  const secret = String(env.JWT_SECRET || "").trim();
   if (DISALLOWED_JWT_SECRETS.has(secret)) {
     const error = new Error("JWT_SECRET is required and must not use a default placeholder value.");
     error.code = "JWT_SECRET_REQUIRED";
@@ -17,8 +17,8 @@ function resolveJwtSecret() {
   return secret;
 }
 
-function assertJwtSecretConfigured() {
-  return resolveJwtSecret();
+function assertJwtSecretConfigured(env = process.env) {
+  return resolveJwtSecret(env);
 }
 
 function signToken(user) {
