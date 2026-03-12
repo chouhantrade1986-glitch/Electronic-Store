@@ -10,7 +10,7 @@ Last updated: March 12, 2026
 
 ## Evidence Snapshot
 
-- Backend unit tests: **53/53 passed** (`backend`, `npm.cmd test`)
+- Backend unit tests: **56/56 passed** (`backend`, `npm.cmd test`)
 - Smoke API flow: **pass** (health, pages, auth, orders, admin, jobs)
 - Smoke UI flow: **pass** (auth, cart, account, admin, checkout, wishlist, invoice, orders)
 - Latest full smoke command: **pass** (`npm.cmd run smoke`, March 12, 2026)
@@ -33,14 +33,14 @@ Last updated: March 12, 2026
    - OTP cooldown windows during very frequent reruns.
    - Any shell-specific warning handling in local environments.
 3. Complete storage normalization for remaining non-SQLite app-state paths (as noted in README limitations).
-4. Production hardening remaining items pending (`PH-04` to `PH-07`): restore drills, provisioning, and release guardrails.
+4. Production hardening remaining items pending (`PH-05` to `PH-07`): provisioning, env guardrails, and release guardrails.
 
 ## Step-by-Step Next Sequence
 
 1. Apply and verify GitHub branch protection (`main` + required check `smoke`).
 2. Add explicit smoke pre-run reset for OTP/session counters to eliminate cooldown flake risk.
 3. Expand SQLite normalization coverage for remaining JSON-only state.
-4. Execute remaining production guardrails checklist (`PH-04` to `PH-07`) in [PRODUCTION-HARDENING-BACKLOG.md](./PRODUCTION-HARDENING-BACKLOG.md).
+4. Execute remaining production guardrails checklist (`PH-05` to `PH-07`) in [PRODUCTION-HARDENING-BACKLOG.md](./PRODUCTION-HARDENING-BACKLOG.md).
 
 ## Quick Status for Team
 

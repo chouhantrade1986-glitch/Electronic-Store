@@ -69,6 +69,7 @@ Optional but important:
 - `SMTP_*` or `SENDGRID_*`
 - `PHONE_VERIFICATION_*`
 - `ALERT_*` (policy thresholds, escalation targets, runbook base URL)
+- `BACKUP_*` and `RESTORE_DRILL_*` (backup retention and restore drill behavior)
 - `SMOKE_TEST_*`
 
 ### 3. Run the backend
@@ -118,6 +119,21 @@ Backup outputs:
 - default root: `backend/backups` (or `BACKUP_ROOT_DIR`)
 - run artifacts: `backend/backups/runs/<timestamp>-<provider>/`
 - manifest: `backend/backups/backup-manifest.json`
+
+Restore drill automation (checksum verify + timing evidence + post-restore smoke checks):
+
+```powershell
+cd backend
+npm run job:backup
+npm run job:restore:drill
+npm run job:restore:drill -- --backup-id=<backup_id>
+npm run job:restore:drill -- --skip-checksum --skip-smoke
+```
+
+Restore drill outputs:
+
+- evidence file: `backend/backups/restore-drills/<drill-id>/restore-drill-evidence.json`
+- history file: `backend/backups/restore-drill-history.json`
 
 ### SQLite migration
 

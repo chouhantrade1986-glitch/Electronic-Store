@@ -2,6 +2,7 @@ backend/.env
 backend/node_modules/
 backend/src/data/*.sqlite
 backend/src/data/*.sqlite-*
+backend/backups/
 node_modules/
 qa-reports/
 
