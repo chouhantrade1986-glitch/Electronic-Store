@@ -3,6 +3,7 @@ const path = require("path");
 const { DatabaseSync } = require("node:sqlite");
 
 const SQLITE_FILENAME = "electromart.sqlite";
+const VALID_SQLITE_NORMALIZATION_MODES = new Set(["compat", "strict"]);
 
 const MANAGED_TABLES = {
   products: {
@@ -265,6 +266,13 @@ function isSqliteProviderEnabled() {
   return getDbProvider() === "sqlite";
 }
 
+function getSqliteNormalizationMode(env = process.env) {
+  const normalized = String(env && env.SQLITE_NORMALIZATION_MODE ? env.SQLITE_NORMALIZATION_MODE : "compat")
+    .trim()
+    .toLowerCase();
+  return VALID_SQLITE_NORMALIZATION_MODES.has(normalized) ? normalized : "compat";
+}
+
 function getManagedStateSchema() {
   const topLevelSet = new Set();
   const nestedByParent = new Map();
@@ -331,6 +339,38 @@ function summarizeNormalizationCoverage(snapshot) {
     fullyNormalized:
       unmanagedTopLevelKeys.length === 0
       && Object.keys(unmanagedNestedKeysByParent).length === 0
+  };
+}
+
+function buildNormalizationError(summary, normalizationMode) {
+  const error = new Error(`SQLite normalization is incomplete for mode ${normalizationMode}. ${JSON.stringify({
+    unmanagedTopLevelKeys: summary.unmanagedTopLevelKeys,
+    unmanagedNestedKeysByParent: summary.unmanagedNestedKeysByParent
+  })}`);
+  error.code = "SQLITE_NORMALIZATION_INCOMPLETE";
+  error.details = {
+    normalizationMode,
+    unmanagedTopLevelKeys: [...summary.unmanagedTopLevelKeys],
+    unmanagedNestedKeysByParent: {
+      ...summary.unmanagedNestedKeysByParent
+    }
+  };
+  return error;
+}
+
+function assertNormalizationCoverage(snapshot, options = {}) {
+  const summary = summarizeNormalizationCoverage(snapshot);
+  const normalizationMode = String(
+    options.normalizationMode || getSqliteNormalizationMode(options.env)
+  ).trim().toLowerCase() || "compat";
+
+  if (normalizationMode === "strict" && !summary.fullyNormalized) {
+    throw buildNormalizationError(summary, normalizationMode);
+  }
+
+  return {
+    normalizationMode,
+    summary
   };
 }
 
@@ -669,6 +709,35 @@ function readManagedTable(db, config, appState) {
   return readFallbackValueFromAppState(appState, config);
 }
 
+function getSqliteAppStateSummary(options = {}) {
+  const db = typeof options.getDb === "function" ? options.getDb() : getSqliteDb();
+  const rows = db.prepare("SELECT state_key FROM app_state ORDER BY state_key ASC").all();
+  const keys = rows.map((row) => String(row.state_key || ""));
+  return {
+    rowCount: keys.length,
+    hasFallbackState: keys.length > 0,
+    keys
+  };
+}
+
+function getSqliteNormalizationStatus(snapshot, options = {}) {
+  const coverage = summarizeNormalizationCoverage(snapshot);
+  const normalizationMode = String(
+    options.normalizationMode || getSqliteNormalizationMode(options.env)
+  ).trim().toLowerCase() || "compat";
+  const appState = options.includeAppState === false
+    ? { rowCount: 0, hasFallbackState: false, keys: [] }
+    : getSqliteAppStateSummary(options);
+
+  return {
+    mode: normalizationMode,
+    fullyNormalized: coverage.fullyNormalized,
+    unmanagedTopLevelKeys: coverage.unmanagedTopLevelKeys,
+    unmanagedNestedKeysByParent: coverage.unmanagedNestedKeysByParent,
+    appState
+  };
+}
+
 function writeAppState(db, snapshot) {
   clearTable(db, "app_state");
   const statement = db.prepare("INSERT INTO app_state (state_key, json) VALUES (?, ?)");
@@ -715,14 +784,16 @@ function readAppState(db) {
   }, {});
 }
 
-function writeSqliteSnapshot(snapshot) {
+function writeSqliteSnapshot(snapshot, options = {}) {
+  const safeSnapshot = snapshot && typeof snapshot === "object" ? snapshot : {};
+  assertNormalizationCoverage(safeSnapshot, options);
   const db = getSqliteDb();
   db.exec("BEGIN IMMEDIATE TRANSACTION");
   try {
     Object.values(MANAGED_TABLES).forEach((config) => {
-      writeManagedTable(db, config, resolveManagedValue(snapshot, config));
+      writeManagedTable(db, config, resolveManagedValue(safeSnapshot, config));
     });
-    writeAppState(db, snapshot && typeof snapshot === "object" ? snapshot : {});
+    writeAppState(db, safeSnapshot);
     db.exec("COMMIT");
   } catch (error) {
     db.exec("ROLLBACK");
@@ -748,11 +819,11 @@ function readSqliteSnapshot() {
   return appState;
 }
 
-function importJsonSnapshotToSqlite(snapshot) {
+function importJsonSnapshotToSqlite(snapshot, options = {}) {
   if (!snapshot || typeof snapshot !== "object") {
     return false;
   }
-  writeSqliteSnapshot(snapshot);
+  writeSqliteSnapshot(snapshot, options);
   return true;
 }
 
@@ -770,16 +841,21 @@ function bootstrapSqliteFromJsonFile(jsonFilePath) {
 }
 
 module.exports = {
+  assertNormalizationCoverage,
   bootstrapSqliteFromJsonFile,
   closeSqliteDb,
   getDbProvider,
   getManagedStateSchema,
+  getSqliteAppStateSummary,
   getSqliteDb,
   getSqliteDbPath,
+  getSqliteNormalizationMode,
+  getSqliteNormalizationStatus,
   importJsonSnapshotToSqlite,
   isSqliteProviderEnabled,
   readSqliteSnapshot,
   summarizeNormalizationCoverage,
+  VALID_SQLITE_NORMALIZATION_MODES,
   sqliteSnapshotExists,
   writeSqliteSnapshot
 };

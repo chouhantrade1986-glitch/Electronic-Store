@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { getDbProvider, getSqliteDbPath, isSqliteProviderEnabled, readDb } = require("./db");
+const { getSqliteNormalizationStatus } = require("./sqliteStore");
 const { resolveJwtSecret } = require("./auth");
 const { getOrderReservationExpirySchedulerStatus } = require("./orderReservationExpiryScheduler");
 const { getPhoneVerificationAutomationSchedulerStatus } = require("./phoneVerificationAutomationScheduler");
@@ -30,6 +31,9 @@ function buildRuntimeHealthSnapshot(options = {}) {
     ? options.isSqliteProviderEnabled
     : isSqliteProviderEnabled;
   const getSqliteDbPathFn = typeof options.getSqliteDbPath === "function" ? options.getSqliteDbPath : getSqliteDbPath;
+  const getSqliteNormalizationStatusFn = typeof options.getSqliteNormalizationStatus === "function"
+    ? options.getSqliteNormalizationStatus
+    : getSqliteNormalizationStatus;
   const resolveJwtSecretFn = typeof options.resolveJwtSecret === "function" ? options.resolveJwtSecret : resolveJwtSecret;
   const getOrderSchedulerStatusFn = typeof options.getOrderReservationExpirySchedulerStatus === "function"
     ? options.getOrderReservationExpirySchedulerStatus
@@ -72,6 +76,9 @@ function buildRuntimeHealthSnapshot(options = {}) {
       users: usersCount,
       products: productsCount
     };
+    if (isSqliteProviderEnabledFn()) {
+      datastore.normalization = getSqliteNormalizationStatusFn(db);
+    }
   } catch (error) {
     datastore.healthy = false;
     datastore.error = String(error && error.message ? error.message : error);

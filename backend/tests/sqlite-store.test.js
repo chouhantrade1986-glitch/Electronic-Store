@@ -9,11 +9,13 @@ const sqliteStore = require("../src/lib/sqliteStore");
 function withTempEnv(fileName) {
   const previousProvider = process.env.DB_PROVIDER;
   const previousSqlitePath = process.env.SQLITE_DB_PATH;
+  const previousNormalizationMode = process.env.SQLITE_NORMALIZATION_MODE;
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "electromart-sqlite-"));
   const sqlitePath = path.join(tempDir, fileName);
 
   process.env.DB_PROVIDER = "sqlite";
   process.env.SQLITE_DB_PATH = sqlitePath;
+  process.env.SQLITE_NORMALIZATION_MODE = "compat";
   sqliteStore.closeSqliteDb();
 
   return () => {
@@ -27,6 +29,11 @@ function withTempEnv(fileName) {
       process.env.SQLITE_DB_PATH = previousSqlitePath;
     } else {
       delete process.env.SQLITE_DB_PATH;
+    }
+    if (typeof previousNormalizationMode === "string") {
+      process.env.SQLITE_NORMALIZATION_MODE = previousNormalizationMode;
+    } else {
+      delete process.env.SQLITE_NORMALIZATION_MODE;
     }
     fs.rmSync(tempDir, { recursive: true, force: true });
   };
@@ -144,4 +151,56 @@ test("summarizeNormalizationCoverage reports unmanaged top-level and nested keys
   assert.deepEqual(summary.unmanagedNestedKeysByParent, {
     automationJobs: ["anotherJob"]
   });
+});
+
+test("writeSqliteSnapshot rejects unmanaged state when strict normalization is enabled", () => {
+  const restore = withTempEnv("strict-mode.sqlite");
+  process.env.SQLITE_NORMALIZATION_MODE = "strict";
+  try {
+    assert.throws(() => sqliteStore.writeSqliteSnapshot({
+      users: [],
+      products: [],
+      automationJobs: {
+        phoneVerificationReminder: { lastStatus: "idle" },
+        anotherJob: { enabled: true }
+      },
+      extraState: { value: 1 }
+    }), (error) => {
+      assert.equal(error.code, "SQLITE_NORMALIZATION_INCOMPLETE");
+      assert.match(error.message, /extraState/i);
+      assert.match(error.message, /anotherJob/i);
+      return true;
+    });
+  } finally {
+    restore();
+  }
+});
+
+test("getSqliteNormalizationStatus reports fallback app_state usage in compat mode", () => {
+  const restore = withTempEnv("compat-mode.sqlite");
+  try {
+    sqliteStore.writeSqliteSnapshot({
+      users: [],
+      products: [],
+      automationJobs: {
+        phoneVerificationReminder: { lastStatus: "idle" },
+        anotherJob: { enabled: true }
+      },
+      extraState: { value: 1 }
+    });
+
+    const status = sqliteStore.getSqliteNormalizationStatus(sqliteStore.readSqliteSnapshot());
+
+    assert.equal(status.mode, "compat");
+    assert.equal(status.fullyNormalized, false);
+    assert.deepEqual(status.unmanagedTopLevelKeys, ["extraState"]);
+    assert.deepEqual(status.unmanagedNestedKeysByParent, {
+      automationJobs: ["anotherJob"]
+    });
+    assert.equal(status.appState.hasFallbackState, true);
+    assert.equal(status.appState.rowCount, 2);
+    assert.deepEqual(status.appState.keys, ["automationJobs", "extraState"]);
+  } finally {
+    restore();
+  }
 });

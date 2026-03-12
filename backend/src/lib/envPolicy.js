@@ -10,7 +10,9 @@ const VALID_RUNTIME_PROFILES = new Set([
   "production"
 ]);
 
+const VALID_DB_PROVIDERS = new Set(["json", "sqlite"]);
 const VALID_PAYMENT_PROVIDERS = new Set(["simulated", "razorpay"]);
+const VALID_SQLITE_NORMALIZATION_MODES = new Set(["compat", "strict"]);
 const VALID_EMAIL_MODES = new Set(["simulated", "smtp", "sendgrid"]);
 const VALID_MESSAGE_MODES = new Set(["simulated", "twilio", "disabled"]);
 const VALID_PHONE_VERIFICATION_MODES = new Set(["simulated", "twilio", "disabled"]);
@@ -283,6 +285,24 @@ function validateDriveConfig(errors, env) {
   });
 }
 
+function validateDatastoreConfig(errors, env, runtimeProfile) {
+  const provider = normalizeToken(env.DB_PROVIDER || "json") || "json";
+  if (!VALID_DB_PROVIDERS.has(provider)) {
+    errors.push("DB_PROVIDER must be one of: json, sqlite.");
+    return;
+  }
+
+  const normalizationMode = normalizeToken(env.SQLITE_NORMALIZATION_MODE || "compat") || "compat";
+  if (!VALID_SQLITE_NORMALIZATION_MODES.has(normalizationMode)) {
+    errors.push("SQLITE_NORMALIZATION_MODE must be one of: compat, strict.");
+    return;
+  }
+
+  if (provider === "sqlite" && isStrictRuntime(runtimeProfile) && normalizationMode !== "strict") {
+    errors.push("SQLITE_NORMALIZATION_MODE must be strict when DB_PROVIDER=sqlite in staging and production runtimes.");
+  }
+}
+
 function validateRuntimeEnvPolicy(env = process.env) {
   const runtimeProfile = resolveRuntimeProfile(env);
   const errors = [];
@@ -298,6 +318,7 @@ function validateRuntimeEnvPolicy(env = process.env) {
   }
 
   validateEmailValue(errors, "STORE_SUPPORT_EMAIL", env.STORE_SUPPORT_EMAIL, { required: false });
+  validateDatastoreConfig(errors, env, runtimeProfile);
 
   const strictRuntime = isStrictRuntime(runtimeProfile);
   if (strictRuntime) {

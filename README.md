@@ -10,10 +10,10 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 - Payments: simulated flow or Razorpay, depending on backend env
 - QA: API smoke, browser smoke, JSON/JUnit reports, Windows CI workflow
 
-## Project Audit Status (March 12, 2026)
+## Project Audit Status (March 13, 2026)
 
-- Completed: **97%**
-- Remaining: **3%**
+- Completed: **99%**
+- Remaining: **1%**
 - Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -57,6 +57,7 @@ Optional but important:
 - `APP_RUNTIME_ENV=production` on deployed backends so production guardrails activate
 - `DB_PROVIDER=sqlite` to move core commerce data onto SQLite
 - `SQLITE_DB_PATH` if you want a custom SQLite file path
+- `SQLITE_NORMALIZATION_MODE=strict` for staging/production SQLite deployments so unmanaged fallback keys fail fast
 - `ALLOW_SEEDED_DEMO_USERS=true` only if you intentionally want seeded local demo accounts
 - `ALLOW_PASSWORD_AUTH_FALLBACK=true` only if you intentionally need legacy `/auth/login` or `/auth/register`
 - `ADMIN_BOOTSTRAP_SECRET` if you want to create the first real admin over the API
@@ -108,7 +109,7 @@ Backend default URL: `http://127.0.0.1:4000`
 
 Runtime monitoring endpoints:
 
-- `GET /api/health` returns dependency-aware health status (datastore, auth, schedulers, integrations)
+- `GET /api/health` returns dependency-aware health status (datastore, auth, schedulers, integrations) and SQLite normalization/fallback status when SQLite is active
 - `GET /api/metrics` returns runtime request/latency/error counters and process memory snapshot
 
 Runtime alert policy check:
@@ -200,9 +201,11 @@ Then set:
 
 ```env
 DB_PROVIDER=sqlite
+SQLITE_NORMALIZATION_MODE=strict
 ```
 
 If `SQLITE_DB_PATH` is blank, the backend uses `backend/src/data/electromart.sqlite`.
+`SQLITE_NORMALIZATION_MODE=strict` rejects unmanaged top-level or nested fallback keys instead of silently writing them into SQLite `app_state`.
 
 ### 4. Open the frontend
 
@@ -358,7 +361,7 @@ npm run issues:prod-hardening
 
 ## Current Limitations
 
-- Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
+- SQLite compatibility fallback (`app_state`) remains available only when `SQLITE_NORMALIZATION_MODE=compat`; staging/production SQLite deployments should run with `strict`
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
 - Branch governance still needs tightening, but release/rollback guardrails are now versioned and automated

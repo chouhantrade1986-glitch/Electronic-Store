@@ -15,6 +15,17 @@ test("buildRuntimeHealthSnapshot returns healthy status when critical dependenci
       users: [{ id: "u1" }],
       products: [{ id: "p1" }, { id: "p2" }]
     }),
+    getSqliteNormalizationStatus: () => ({
+      mode: "strict",
+      fullyNormalized: true,
+      unmanagedTopLevelKeys: [],
+      unmanagedNestedKeysByParent: {},
+      appState: {
+        rowCount: 0,
+        hasFallbackState: false,
+        keys: []
+      }
+    }),
     resolveJwtSecret: () => "test-secret",
     getOrderReservationExpirySchedulerStatus: () => ({
       healthy: true,
@@ -40,6 +51,8 @@ test("buildRuntimeHealthSnapshot returns healthy status when critical dependenci
   assert.equal(snapshot.storageProvider, "sqlite");
   assert.equal(snapshot.dependencies.datastore.healthy, true);
   assert.equal(snapshot.dependencies.datastore.sqlite.filePresent, true);
+  assert.equal(snapshot.dependencies.datastore.normalization.mode, "strict");
+  assert.equal(snapshot.dependencies.datastore.normalization.appState.rowCount, 0);
   assert.equal(snapshot.dependencies.datastore.summary.users, 1);
   assert.equal(snapshot.dependencies.schedulers.orderReservation.healthy, true);
 });

@@ -10,6 +10,8 @@ function buildStrictEnv(overrides = {}) {
   return {
     APP_RUNTIME_ENV: "production",
     JWT_SECRET: "unit-test-secret-value",
+    DB_PROVIDER: "sqlite",
+    SQLITE_NORMALIZATION_MODE: "strict",
     PUBLIC_STORE_BASE_URL: "https://store.electromart.in",
     PUBLIC_API_BASE_URL: "https://api.electromart.in/api",
     ALLOW_PASSWORD_AUTH_FALLBACK: "false",
@@ -89,6 +91,15 @@ test("validateRuntimeEnvPolicy rejects placeholder drive configuration in stagin
   assert.match(report.errors.join("\n"), /GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL must not use an example placeholder address/i);
   assert.match(report.errors.join("\n"), /GOOGLE_DRIVE_PRIVATE_KEY must not use a placeholder/i);
   assert.match(report.errors.join("\n"), /GOOGLE_DRIVE_CATEGORY_FOLDER_MAP_JSON must not include placeholder folder ids/i);
+});
+
+test("validateRuntimeEnvPolicy requires strict SQLite normalization in strict runtimes", () => {
+  const report = validateRuntimeEnvPolicy(buildStrictEnv({
+    SQLITE_NORMALIZATION_MODE: "compat"
+  }));
+
+  assert.equal(report.ok, false);
+  assert.match(report.errors.join("\n"), /SQLITE_NORMALIZATION_MODE must be strict when DB_PROVIDER=sqlite/i);
 });
 
 test("assertRuntimeEnvPolicyConfigured returns deployment-safe error messages", () => {
