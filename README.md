@@ -68,6 +68,7 @@ Optional but important:
 - `GOOGLE_DRIVE_*`
 - `SMTP_*` or `SENDGRID_*`
 - `PHONE_VERIFICATION_*`
+- `ALERT_*` (policy thresholds, escalation targets, runbook base URL)
 - `SMOKE_TEST_*`
 
 ### 3. Run the backend
@@ -89,6 +90,18 @@ Runtime monitoring endpoints:
 
 - `GET /api/health` returns dependency-aware health status (datastore, auth, schedulers, integrations)
 - `GET /api/metrics` returns runtime request/latency/error counters and process memory snapshot
+
+Runtime alert policy check:
+
+```powershell
+cd backend
+npm run job:alerts:check
+npm run job:alerts:check -- --fail-on-alert
+```
+
+Alert runbook reference:
+
+- [PRODUCTION-INCIDENT-RUNBOOK.md](./PRODUCTION-INCIDENT-RUNBOOK.md)
 
 ### SQLite migration
 
