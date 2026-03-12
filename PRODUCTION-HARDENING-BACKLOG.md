@@ -28,7 +28,7 @@ Move from "demo-safe" operations to production-grade operational safety with exp
 - [x] `PH-04` Add automated restore drill and publish restore time evidence
 - [x] `PH-05` Enforce production admin provisioning path and disable seeded demo access
 - [x] `PH-06` Enforce env/secret validation at startup (fail fast on unsafe config)
-- [ ] `PH-07` Add release guardrails: pre-deploy smoke, post-deploy health gate, rollback runbook
+- [x] `PH-07` Add release guardrails: pre-deploy smoke, post-deploy health gate, rollback runbook
 
 ## Issue Drafts
 
@@ -179,3 +179,4 @@ Move from "demo-safe" operations to production-grade operational safety with exp
 - Backup + restore drill evidence exists for latest release cycle.
 - Production admin provisioning is auditable and seeded demo path is blocked.
 - Monitoring + alerting produces actionable signals with runbook links.
+- Release preflight, post-deploy verify, and rollback dry-run evidence exist in versioned tooling/docs.

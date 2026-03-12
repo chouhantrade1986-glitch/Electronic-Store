@@ -12,8 +12,8 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Project Audit Status (March 12, 2026)
 
-- Completed: **94%**
-- Remaining: **6%**
+- Completed: **97%**
+- Remaining: **3%**
 - Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -72,6 +72,7 @@ Optional but important:
 - `TWILIO_*`
 - `PHONE_VERIFICATION_*`
 - `ALERT_*` (policy thresholds, escalation targets, runbook base URL)
+- `RELEASE_VERIFY_*` (post-deploy health verification retries and target URL)
 - `BACKUP_*` and `RESTORE_DRILL_*` (backup retention and restore drill behavior)
 - `SMOKE_TEST_*`
 
@@ -325,11 +326,19 @@ npm run cleanup:artifacts
 
 Additional smoke/CI notes are documented in [SMOKE-SUITE.md](./SMOKE-SUITE.md).
 
+Release guardrails:
+
+- Preflight gate: `npm run release:preflight`
+- Post-deploy verify: `npm run release:verify:postdeploy -- --api-base-url=https://api.example.com/api`
+- Rollback dry run: `npm run release:rollback:dry`
+- Detailed checklist: [RELEASE-GUARDRAILS.md](./RELEASE-GUARDRAILS.md)
+
 ## CI
 
 GitHub Actions smoke workflow:
 
 - [.github/workflows/smoke-suite.yml](./.github/workflows/smoke-suite.yml)
+- [.github/workflows/release-guardrails.yml](./.github/workflows/release-guardrails.yml)
 
 Required repository secret:
 
@@ -352,7 +361,7 @@ npm run issues:prod-hardening
 - Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
-- Production deployment still needs release/rollback enforcement before it is fully hardened
+- Branch governance and remaining smoke repeatability work still need tightening, but release/rollback guardrails are now versioned and automated
 
 Production hardening execution plan:
 

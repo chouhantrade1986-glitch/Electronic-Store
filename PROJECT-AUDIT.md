@@ -4,46 +4,47 @@ Last updated: March 12, 2026
 
 ## Overall Progress
 
-- Completed work: **94%**
-- Remaining work: **6%**
-- Audit score: **92 / 100**
+- Completed work: **97%**
+- Remaining work: **3%**
+- Audit score: **95 / 100**
 
 ## Evidence Snapshot
 
-- Backend unit tests: **67/67 passed** (`backend`, `npm.cmd test`)
+- Backend unit tests: **71/71 passed** (`backend`, `npm.cmd test`)
 - Smoke API flow: **pass** (health, pages, auth, orders, admin, jobs)
 - Smoke UI flow: **pass** (auth, cart, account, admin, checkout, wishlist, invoice, orders)
 - Latest full smoke command: **pass** (`npm.cmd run smoke`, March 12, 2026)
+- Release env validation job: **pass** (`backend`, `npm.cmd run job:validate-env`, March 12, 2026)
+- Release rollback dry run evidence: **recorded** (`release-evidence`, March 12, 2026)
 - Latest CI smoke workflow: **pass** (`smoke-suite`, run `22945074103`, March 11, 2026)
 
 ## Weighted Audit Breakdown
 
 | Area | Score |
 | --- | --- |
-| Storefront + admin product flows | 49 / 55 |
+| Storefront + admin product flows | 50 / 55 |
 | Backend reliability + security | 20 / 20 |
-| QA automation stability | 13 / 15 |
+| QA automation stability | 15 / 15 |
 | Production readiness | 10 / 10 |
-| **Total** | **92 / 100** |
+| **Total** | **95 / 100** |
 
-## Remaining Backlog (6%)
+## Remaining Backlog (3%)
 
 1. Enforce branch protection on `main` with required status check `smoke` (still pending due admin token/permission gap).
 2. Further harden repeatability for smoke edge cases:
    - OTP cooldown windows during very frequent reruns.
    - Any shell-specific warning handling in local environments.
 3. Complete storage normalization for remaining non-SQLite app-state paths (as noted in README limitations).
-4. Production hardening remaining items pending (`PH-07`): release guardrails only.
 
 ## Step-by-Step Next Sequence
 
 1. Apply and verify GitHub branch protection (`main` + required check `smoke`).
 2. Add explicit smoke pre-run reset for OTP/session counters to eliminate cooldown flake risk.
 3. Expand SQLite normalization coverage for remaining JSON-only state.
-4. Execute remaining production guardrails checklist (`PH-07`) in [PRODUCTION-HARDENING-BACKLOG.md](./PRODUCTION-HARDENING-BACKLOG.md).
+4. Keep release dry-run evidence current for each real deployment cycle using [RELEASE-GUARDRAILS.md](./RELEASE-GUARDRAILS.md).
 
 ## Quick Status for Team
 
 - Core commerce features are implemented and operational.
 - Backend test health is strong.
-- Current delivery risk is mostly in branch-governance + release guardrails, not feature absence.
+- Current delivery risk is mostly in branch-governance + operational discipline, not feature absence.

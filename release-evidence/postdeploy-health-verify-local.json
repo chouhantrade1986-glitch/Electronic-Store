@@ -1,0 +1,148 @@
+{
+  "passed": true,
+  "attempts": 1,
+  "apiBaseUrl": "http://127.0.0.1:4000/api",
+  "healthSnapshot": {
+    "ok": true,
+    "status": "ok",
+    "service": "electromart-backend",
+    "timestamp": "2026-03-12T18:03:33.404Z",
+    "uptimeSeconds": 8,
+    "storageProvider": "json",
+    "dependencies": {
+      "datastore": {
+        "healthy": true,
+        "provider": "json",
+        "summary": {
+          "users": 2,
+          "products": 751
+        }
+      },
+      "auth": {
+        "healthy": true
+      },
+      "schedulers": {
+        "orderReservation": {
+          "healthy": true,
+          "enabled": true,
+          "inFlight": false,
+          "intervalMs": 60000
+        },
+        "phoneVerification": {
+          "healthy": true,
+          "enabled": false,
+          "active": false,
+          "inFlight": false,
+          "intervalMs": 43200000,
+          "channels": [
+            "sms",
+            "email"
+          ]
+        }
+      },
+      "integrations": {
+        "razorpay": {
+          "provider": "simulated",
+          "enabled": false
+        },
+        "drive": {
+          "configured": true
+        },
+        "twilio": {
+          "sms": {
+            "channel": "sms",
+            "configured": false,
+            "mode": "disabled"
+          },
+          "whatsapp": {
+            "channel": "whatsapp",
+            "configured": false,
+            "mode": "disabled"
+          }
+        }
+      }
+    }
+  },
+  "metricsSnapshot": {
+    "generatedAt": "2026-03-12T18:03:33.436Z",
+    "process": {
+      "startedAt": "2026-03-12T18:03:26.559Z",
+      "uptimeSeconds": 8,
+      "pid": 13292,
+      "memory": {
+        "rss": 150962176,
+        "heapTotal": 117575680,
+        "heapUsed": 76123112,
+        "external": 2777623,
+        "arrayBuffers": 19567
+      }
+    },
+    "requests": {
+      "total": 2,
+      "errors": 0,
+      "lastMinute": 2,
+      "lastFiveMinutes": 2,
+      "perMinuteAverageLastFiveMinutes": 0.4,
+      "errorRateLastFiveMinutes": 0,
+      "duration": {
+        "averageMs": 1784,
+        "maxMs": 3538
+      }
+    },
+    "breakdown": {
+      "statusCodes": {
+        "200": 2
+      },
+      "topRoutes": {
+        "GET /api/health": 2
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "health-ok",
+      "passed": true,
+      "details": {
+        "status": "ok"
+      }
+    },
+    {
+      "name": "health-datastore",
+      "passed": true,
+      "details": {
+        "provider": "json"
+      }
+    },
+    {
+      "name": "health-auth",
+      "passed": true,
+      "details": {}
+    },
+    {
+      "name": "health-order-reservation-scheduler",
+      "passed": true,
+      "details": {}
+    },
+    {
+      "name": "metrics-process-started",
+      "passed": true,
+      "details": {
+        "startedAt": "2026-03-12T18:03:26.559Z"
+      }
+    },
+    {
+      "name": "metrics-request-total",
+      "passed": true,
+      "details": {
+        "total": 2
+      }
+    },
+    {
+      "name": "metrics-generated-at",
+      "passed": true,
+      "details": {
+        "generatedAt": "2026-03-12T18:03:33.436Z"
+      }
+    }
+  ]
+}

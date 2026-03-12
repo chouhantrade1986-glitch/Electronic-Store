@@ -1,0 +1,167 @@
+name: Release Guardrails
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_api_base_url:
+        description: "Optional deployed API base URL for post-deploy verification"
+        required: false
+        type: string
+      skip_visual_baseline:
+        description: "Skip visual baseline verification during preflight"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-guardrails-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: windows-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+
+      - name: Prepare backend env file
+        shell: pwsh
+        env:
+          BACKEND_ENV_FILE: ${{ secrets.BACKEND_ENV_FILE }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:BACKEND_ENV_FILE)) {
+            Copy-Item -Path backend/.env.example -Destination backend/.env -Force
+            Write-Host "BACKEND_ENV_FILE secret not set. Using backend/.env.example for release guardrails."
+          } else {
+            $env:BACKEND_ENV_FILE | Set-Content -Path backend/.env -Encoding utf8NoBOM
+          }
+
+          $envContents = Get-Content -Path backend/.env -Raw
+          $jwtMatch = [regex]::Match($envContents, '(?m)^JWT_SECRET=(.*)$')
+          $jwtSecret = if ($jwtMatch.Success) { $jwtMatch.Groups[1].Value.Trim() } else { "" }
+          $disallowedJwtSecrets = @("", "dev-secret-change-me", "replace-with-strong-secret", "changeme")
+          if ($disallowedJwtSecrets -contains $jwtSecret) {
+            $ciJwtSecret = "ci-release-" + [guid]::NewGuid().ToString("N")
+            if ($jwtMatch.Success) {
+              $envContents = $envContents -replace '(?m)^JWT_SECRET=.*$', ("JWT_SECRET=" + $ciJwtSecret)
+            } else {
+              $envContents = $envContents.TrimEnd() + [Environment]::NewLine + "JWT_SECRET=" + $ciJwtSecret + [Environment]::NewLine
+            }
+          }
+
+          $forcedSettings = [ordered]@{
+            DB_PROVIDER = "json"
+            PAYMENT_PROVIDER = "simulated"
+            SMOKE_REQUIRE_RAZORPAY = "false"
+          }
+          foreach ($setting in $forcedSettings.GetEnumerator()) {
+            $key = [string]$setting.Key
+            $value = [string]$setting.Value
+            if ([regex]::IsMatch($envContents, "(?m)^$key=.*$")) {
+              $envContents = [regex]::Replace($envContents, "(?m)^$key=.*$", "$key=$value")
+            } else {
+              $envContents = $envContents.TrimEnd() + [Environment]::NewLine + "$key=$value" + [Environment]::NewLine
+            }
+          }
+          $envContents | Set-Content -Path backend/.env -Encoding utf8NoBOM
+
+      - name: Install root dependencies
+        shell: pwsh
+        run: npm ci
+
+      - name: Install Playwright browsers
+        shell: pwsh
+        run: npm run smoke:install-browsers
+
+      - name: Install backend dependencies
+        shell: pwsh
+        working-directory: backend
+        run: npm ci
+
+      - name: Run release preflight
+        shell: pwsh
+        run: |
+          if ("${{ inputs.skip_visual_baseline }}" -eq "true") {
+            powershell -ExecutionPolicy Bypass -File .\release-preflight.ps1 -SkipVisualBaseline
+          } else {
+            npm run release:preflight
+          }
+
+      - name: Upload preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-preflight-reports
+          path: |
+            qa-reports/
+          if-no-files-found: warn
+
+  postdeploy:
+    needs: preflight
+    if: ${{ inputs.target_api_base_url != '' }}
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        shell: pwsh
+        working-directory: backend
+        run: npm ci
+
+      - name: Verify deployed health
+        shell: pwsh
+        working-directory: backend
+        run: |
+          npm run job:release:verify -- --api-base-url=${{ inputs.target_api_base_url }} --output=..\release-evidence\postdeploy-health-verify.json
+
+      - name: Upload post-deploy verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-postdeploy-evidence
+          path: release-evidence/
+          if-no-files-found: warn
+
+  rollback-dry-run:
+    needs: preflight
+    if: always()
+    runs-on: windows-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run rollback dry run
+        shell: pwsh
+        run: |
+          npm run release:rollback:dry -- --reason="GitHub Actions release guardrail dry run for ${{ github.sha }}"
+
+      - name: Upload rollback dry-run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-rollback-dry-run
+          path: release-evidence/
+          if-no-files-found: warn
