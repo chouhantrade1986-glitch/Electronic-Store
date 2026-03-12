@@ -156,6 +156,7 @@ function runCommand(command, args, options = {}) {
 
 function buildApiCases(apiReport) {
   const health = apiReport.health || {};
+  const metrics = apiReport.metrics || {};
   const pages = Array.isArray(apiReport.pages) ? apiReport.pages : [];
   const api = apiReport.api || {};
   const jobs = apiReport.jobs || {};
@@ -168,6 +169,19 @@ function buildApiCases(apiReport) {
       passed: Boolean(health) && (String(health.status || "").toLowerCase() === "ok" || Object.keys(health).length > 0),
       message: "Backend health endpoint did not report a healthy response.",
       details: health
+    },
+    {
+      suite: "api",
+      name: "metrics",
+      passed: Boolean(metrics && metrics.process && metrics.requests)
+        && Number(metrics.process.uptimeSeconds || 0) >= 0
+        && Number(metrics.requests.total || 0) >= 0,
+      message: "Backend metrics endpoint did not return expected runtime counters.",
+      details: {
+        generatedAt: metrics.generatedAt,
+        uptimeSeconds: metrics && metrics.process ? metrics.process.uptimeSeconds : null,
+        totalRequests: metrics && metrics.requests ? metrics.requests.total : null
+      }
     },
     {
       suite: "api",

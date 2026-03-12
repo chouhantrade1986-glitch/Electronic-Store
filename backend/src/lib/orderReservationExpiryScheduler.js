@@ -1,10 +1,12 @@
 const { acquireWriteLock, readDb, withWriteLock, writeDb } = require("./db");
 const { expireStaleReservationsInMemory, resolveReservationTtlMinutes } = require("./orderReservationMaintenance");
 const { dispatchOrderStatusNotification } = require("./orderNotifications");
+const { logError, logInfo } = require("./logger");
 
 let schedulerTimer = null;
 let schedulerStartupTimer = null;
 let schedulerInFlight = false;
+let currentIntervalMs = 0;
 
 function resolveSweepIntervalMs() {
   const ttlMinutes = resolveReservationTtlMinutes();
@@ -34,12 +36,17 @@ async function runOrderReservationExpirySweep(trigger = "scheduler") {
     if (result.changed) {
       writeDb(db);
       notificationOrderIds = Array.isArray(result.expiredOrderIds) ? result.expiredOrderIds : [];
-      // eslint-disable-next-line no-console
-      console.log(`[order-reservation-expiry] ${trigger}: expired ${result.expiredCount} order reservation(s).`);
+      logInfo("order_reservation_expiry_sweep", {
+        trigger,
+        expiredCount: Number(result.expiredCount || 0),
+        changed: true
+      });
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("[order-reservation-expiry] sweep failed:", error && error.message ? error.message : error);
+    logError("order_reservation_expiry_sweep_failed", {
+      trigger,
+      message: error && error.message ? error.message : String(error)
+    });
     return null;
   } finally {
     if (releaseLock) {
@@ -81,8 +88,10 @@ async function emitReservationExpiryNotifications(expiredOrderIds = []) {
         writeDb(db);
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`[order-reservation-expiry] notification failed for order ${orderId}:`, error && error.message ? error.message : error);
+      logError("order_reservation_expiry_notification_failed", {
+        orderId,
+        message: error && error.message ? error.message : String(error)
+      });
     }
   }
 }
@@ -96,11 +105,13 @@ function stopOrderReservationExpiryScheduler() {
     clearTimeout(schedulerStartupTimer);
     schedulerStartupTimer = null;
   }
+  currentIntervalMs = 0;
 }
 
 function startOrderReservationExpiryScheduler() {
   stopOrderReservationExpiryScheduler();
   const intervalMs = resolveSweepIntervalMs();
+  currentIntervalMs = intervalMs;
 
   schedulerTimer = setInterval(() => {
     runOrderReservationExpirySweep("interval");
@@ -116,8 +127,10 @@ function startOrderReservationExpiryScheduler() {
     schedulerStartupTimer.unref();
   }
 
-  // eslint-disable-next-line no-console
-  console.log(`[order-reservation-expiry] scheduler enabled every ${Math.round(intervalMs / 1000)} second(s).`);
+  logInfo("order_reservation_expiry_scheduler_enabled", {
+    intervalMs,
+    intervalSeconds: Math.round(intervalMs / 1000)
+  });
 
   return {
     stop: stopOrderReservationExpiryScheduler,
@@ -125,7 +138,17 @@ function startOrderReservationExpiryScheduler() {
   };
 }
 
+function getOrderReservationExpirySchedulerStatus() {
+  return {
+    healthy: Boolean(schedulerTimer || schedulerStartupTimer),
+    enabled: Boolean(schedulerTimer || schedulerStartupTimer),
+    inFlight: schedulerInFlight === true,
+    intervalMs: Number(currentIntervalMs || 0)
+  };
+}
+
 module.exports = {
+  getOrderReservationExpirySchedulerStatus,
   runOrderReservationExpirySweep,
   startOrderReservationExpiryScheduler,
   stopOrderReservationExpiryScheduler

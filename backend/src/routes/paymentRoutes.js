@@ -35,6 +35,7 @@ const {
   verifyRazorpayCheckoutSignature,
   verifyRazorpayWebhookSignature
 } = require("../lib/razorpayGateway");
+const { logError, logInfo } = require("../lib/logger");
 
 const router = express.Router();
 const PAYMENT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -559,9 +560,22 @@ router.post("/webhooks/razorpay", paymentWebhookLimiter, async (req, res) => {
         };
       }
     });
-
+    logInfo("payment_webhook_processed", {
+      eventName,
+      eventId,
+      statusCode: Number(outcome && outcome.statusCode ? outcome.statusCode : 200)
+    }, {
+      requestId: requestId || req.requestId
+    });
     return res.status(outcome.statusCode).json(outcome.body);
   } catch (error) {
+    logError("payment_webhook_failed", {
+      eventName,
+      eventId,
+      message: error && error.message ? error.message : String(error)
+    }, {
+      requestId: requestId || req.requestId
+    });
     return res.status(error.status || 500).json({
       message: error.message || "Unable to process Razorpay webhook."
     });
@@ -683,6 +697,13 @@ router.post("/intent", requireAuth, paymentIntentLimiter, async (req, res) => {
   }
 
   if (phaseOne.ready) {
+    logInfo("payment_intent_ready", {
+      orderId: orderId,
+      statusCode: Number(phaseOne.statusCode || 200),
+      provider: String(phaseOne && phaseOne.body && phaseOne.body.provider ? phaseOne.body.provider : "simulated")
+    }, {
+      requestId: req.requestId
+    });
     return res.status(phaseOne.statusCode).json(phaseOne.body);
   }
 
@@ -760,9 +781,22 @@ router.post("/intent", requireAuth, paymentIntentLimiter, async (req, res) => {
         }
       };
     });
-
+    logInfo("payment_intent_gateway_ready", {
+      orderId: phaseOne.orderId,
+      paymentId: phaseOne.paymentId,
+      statusCode: Number(finalized && finalized.statusCode ? finalized.statusCode : 200)
+    }, {
+      requestId: req.requestId
+    });
     return res.status(finalized.statusCode).json(finalized.body);
   } catch (error) {
+    logError("payment_intent_gateway_failed", {
+      orderId: phaseOne.orderId,
+      paymentId: phaseOne.paymentId,
+      message: error && error.message ? error.message : String(error)
+    }, {
+      requestId: req.requestId
+    });
     return res.status(error.status || 502).json({
       message: error.message || "Unable to finalize gateway payment order."
     });

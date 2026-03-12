@@ -37,6 +37,7 @@ const {
   isFinalAfterSalesStatus,
   normalizeAfterSalesCase
 } = require("../lib/afterSalesCases");
+const { logInfo } = require("../lib/logger");
 
 const router = express.Router();
 
@@ -151,6 +152,15 @@ router.post("/", requireAuth, async (req, res) => {
       triggeredFrom: "checkout"
     });
   persistOrderRouteMutation(db, ["orders", "products", "orderNotifications"]);
+  logInfo("order_created", {
+    orderId: order.id,
+    userId: req.user.id,
+    paymentMethod: String(order.paymentMethod || "").trim().toLowerCase(),
+    total: Number(order.total || 0),
+    notificationSkipped: notification && notification.skipped === true
+  }, {
+    requestId: req.requestId
+  });
   return res.status(201).json({
     ...withOrderAfterSales(db, order),
     notification

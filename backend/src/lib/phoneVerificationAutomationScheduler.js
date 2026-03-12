@@ -3,6 +3,7 @@ const {
   executePhoneVerificationAutomationJob,
 } = require("./phoneVerificationAutomationJob");
 const { getPhoneVerificationAutomationEffectiveConfig } = require("./phoneVerificationAutomationSettings");
+const { logError, logInfo } = require("./logger");
 
 let schedulerTimer = null;
 let schedulerStartupTimer = null;
@@ -17,8 +18,10 @@ function resolveSchedulerConfig(overrides = {}) {
 
 async function runScheduledPhoneVerificationAutomation(config, trigger = "scheduler") {
   if (schedulerInFlight) {
-    // eslint-disable-next-line no-console
-    console.log("[phone-verification-automation] previous run still in progress, skipping.");
+    logInfo("phone_verification_automation_skipped", {
+      reason: "in-flight",
+      trigger
+    });
     return null;
   }
 
@@ -31,12 +34,20 @@ async function runScheduledPhoneVerificationAutomation(config, trigger = "schedu
       actor: "scheduler",
       trigger
     });
-    // eslint-disable-next-line no-console
-    console.log(`[phone-verification-automation] ${result.message}`);
+    logInfo("phone_verification_automation_run", {
+      trigger,
+      message: String(result && result.message ? result.message : ""),
+      deliveredCount: Number(result && result.summary ? result.summary.deliveredCount : 0),
+      failedCount: Number(result && result.summary ? result.summary.failedCount : 0),
+      queuedCount: Number(result && result.summary ? result.summary.queuedCount : 0),
+      skippedCount: Number(result && result.summary ? result.summary.skippedCount : 0)
+    });
     return result;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("[phone-verification-automation] run failed:", error && error.message ? error.message : error);
+    logError("phone_verification_automation_run_failed", {
+      trigger,
+      message: error && error.message ? error.message : String(error)
+    });
     return null;
   } finally {
     if (releaseLock) {
@@ -83,10 +94,11 @@ function startPhoneVerificationAutomationScheduler(overrides = {}) {
     }
   }
 
-  // eslint-disable-next-line no-console
-  console.log(
-    `[phone-verification-automation] scheduler enabled every ${config.intervalMinutes} minutes for ${config.channels.join(", ")}`
-  );
+  logInfo("phone_verification_automation_scheduler_enabled", {
+    intervalMinutes: Number(config.intervalMinutes || 0),
+    channels: Array.isArray(config.channels) ? config.channels : [],
+    runOnStart: config.runOnStart === true
+  });
 
   return {
     stop: stopPhoneVerificationAutomationScheduler,
@@ -96,6 +108,20 @@ function startPhoneVerificationAutomationScheduler(overrides = {}) {
 
 module.exports = {
   getCurrentPhoneVerificationAutomationSchedulerConfig: () => currentSchedulerConfig,
+  getPhoneVerificationAutomationSchedulerStatus: () => {
+    const enabled = Boolean(currentSchedulerConfig && currentSchedulerConfig.enabled);
+    const active = Boolean(schedulerTimer || schedulerStartupTimer);
+    return {
+      healthy: enabled ? active : true,
+      enabled,
+      active,
+      inFlight: schedulerInFlight === true,
+      intervalMs: Number(currentSchedulerConfig && currentSchedulerConfig.intervalMs ? currentSchedulerConfig.intervalMs : 0),
+      channels: Array.isArray(currentSchedulerConfig && currentSchedulerConfig.channels)
+        ? [...currentSchedulerConfig.channels]
+        : []
+    };
+  },
   runScheduledPhoneVerificationAutomation,
   startPhoneVerificationAutomationScheduler,
   stopPhoneVerificationAutomationScheduler

@@ -1,4 +1,6 @@
 const { randomUUID } = require("crypto");
+const { logError, logInfo } = require("../lib/logger");
+const { recordHttpRequest } = require("../lib/monitoring");
 
 function normalizeRequestId(value) {
   const raw = String(value || "").trim();
@@ -34,8 +36,8 @@ function requestLogger(req, res, next) {
   const startedAt = Number(req.requestStartedAt || Date.now());
   res.on("finish", () => {
     const payload = buildRequestLogPayload(req, res, Date.now() - startedAt);
-    // eslint-disable-next-line no-console
-    console.log(JSON.stringify(payload));
+    recordHttpRequest(payload);
+    logInfo(payload.event, payload, { requestId: payload.requestId });
   });
   next();
 }
@@ -56,8 +58,7 @@ function errorHandler(error, req, res, next) {
     payload.stack = error.stack;
   }
 
-  // eslint-disable-next-line no-console
-  console.error(JSON.stringify(payload));
+  logError(payload.event, payload, { requestId: payload.requestId });
   return res.status(500).json({
     message: "Internal server error",
     requestId: String(req && req.requestId ? req.requestId : "")

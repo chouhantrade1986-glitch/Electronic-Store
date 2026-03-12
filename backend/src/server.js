@@ -3,6 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const { ensureSeedData, getDbProvider } = require("./lib/db");
 const { assertJwtSecretConfigured } = require("./lib/auth");
+const { logInfo } = require("./lib/logger");
+const { getMetricsSnapshot } = require("./lib/monitoring");
+const { buildRuntimeHealthSnapshot } = require("./lib/runtimeHealth");
 const { startOrderReservationExpiryScheduler } = require("./lib/orderReservationExpiryScheduler");
 const { startPhoneVerificationAutomationScheduler } = require("./lib/phoneVerificationAutomationScheduler");
 const {
@@ -38,7 +41,12 @@ app.use(express.urlencoded({ extended: true, limit: "128mb" }));
 app.use(serializeDbMutations);
 
 app.get("/api/health", (req, res) => {
-  return res.json({ ok: true, service: "electromart-backend", storageProvider: getDbProvider() });
+  const snapshot = buildRuntimeHealthSnapshot();
+  return res.status(snapshot.ok ? 200 : 503).json(snapshot);
+});
+
+app.get("/api/metrics", (req, res) => {
+  return res.json(getMetricsSnapshot());
 });
 
 app.use("/api/auth", authRoutes);
@@ -53,8 +61,12 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`ElectroMart backend running on port ${PORT}`);
+  logInfo("backend_server_started", {
+    port: Number(PORT),
+    storageProvider: getDbProvider()
+  }, {
+    requestId: "startup"
+  });
   startOrderReservationExpiryScheduler();
   startPhoneVerificationAutomationScheduler();
 });

@@ -218,6 +218,7 @@ try {
 
   $result = [ordered]@{}
   $result.health = Invoke-RestMethod -Uri "http://127.0.0.1:4000/api/health"
+  $result.metrics = Invoke-RestMethod -Uri "http://127.0.0.1:4000/api/metrics"
 
   $pages = @(
     "index.html",

@@ -85,6 +85,11 @@ npm run dev
 
 Backend default URL: `http://127.0.0.1:4000`
 
+Runtime monitoring endpoints:
+
+- `GET /api/health` returns dependency-aware health status (datastore, auth, schedulers, integrations)
+- `GET /api/metrics` returns runtime request/latency/error counters and process memory snapshot
+
 ### SQLite migration
 
 The backend can now persist these core entities in SQLite:

@@ -41,6 +41,7 @@ const {
   sendPhoneVerificationCode,
   verifyPhoneCode
 } = require("../lib/phoneVerification");
+const { logInfo } = require("../lib/logger");
 
 const router = express.Router();
 const PASSWORD_AUTH_FALLBACK_ENABLED = String(process.env.ALLOW_PASSWORD_AUTH_FALLBACK || "").trim().toLowerCase() === "true";
@@ -329,7 +330,15 @@ router.post("/otp/request", authOtpRequestLimiter, async (req, res) => {
         resendAvailableAt: result.resendAvailableAt || null
       });
     }
-    return res.json(buildOtpResponse(result, normalizedChannel));
+    const otpResponse = buildOtpResponse(result, normalizedChannel);
+    logInfo("auth_otp_requested", {
+      purpose: "register",
+      channel: normalizedChannel,
+      challengeId: otpResponse.challengeId
+    }, {
+      requestId: req.requestId
+    });
+    return res.json(otpResponse);
   }
 
   const { emailOrMobile, password } = req.body || {};
@@ -363,7 +372,16 @@ router.post("/otp/request", authOtpRequestLimiter, async (req, res) => {
       resendAvailableAt: result.resendAvailableAt || null
     });
   }
-  return res.json(buildOtpResponse(result, normalizedChannel));
+  const otpResponse = buildOtpResponse(result, normalizedChannel);
+  logInfo("auth_otp_requested", {
+    purpose: "login",
+    channel: normalizedChannel,
+    userId: user.id,
+    challengeId: otpResponse.challengeId
+  }, {
+    requestId: req.requestId
+  });
+  return res.json(otpResponse);
 });
 
 router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
@@ -415,6 +433,13 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
     db.users.push(user);
     writeDb(db);
     const token = signToken(user);
+    logInfo("auth_otp_verified", {
+      purpose: "register",
+      userId: user.id,
+      role: user.role
+    }, {
+      requestId: req.requestId
+    });
     return res.status(201).json({
       token,
       user: authUserPayload(user)
@@ -443,6 +468,13 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
   recordAuthEvent(req, user, "login", "OTP sign-in", "", "user");
   writeDb(db);
   const token = signToken(user);
+  logInfo("auth_otp_verified", {
+    purpose: "login",
+    userId: user.id,
+    role: user.role
+  }, {
+    requestId: req.requestId
+  });
   return res.json({
     token,
     user: authUserPayload(user)
