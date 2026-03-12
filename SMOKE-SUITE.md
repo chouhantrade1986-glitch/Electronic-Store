@@ -135,4 +135,4 @@ Then in GitHub:
 
 - `backend/.env` is ignored from git
 - `qa-reports/` is ignored from git
-- The smoke suite restores `backend/src/data/db.json` after each run
+- The smoke suite restores `backend/src/data/db.json` and `backend/src/data/db.json.bak` to their exact pre-run state after each run

@@ -4,8 +4,8 @@ Last updated: March 12, 2026
 
 ## Overall Progress
 
-- Completed work: **97%**
-- Remaining work: **3%**
+- Completed work: **98%**
+- Remaining work: **2%**
 - Audit score: **95 / 100**
 
 ## Evidence Snapshot
@@ -28,20 +28,16 @@ Last updated: March 12, 2026
 | Production readiness | 10 / 10 |
 | **Total** | **95 / 100** |
 
-## Remaining Backlog (3%)
+## Remaining Backlog (2%)
 
 1. Enforce branch protection on `main` with required status check `smoke` (still pending due admin token/permission gap).
-2. Further harden repeatability for smoke edge cases:
-   - OTP cooldown windows during very frequent reruns.
-   - Any shell-specific warning handling in local environments.
-3. Complete storage normalization for remaining non-SQLite app-state paths (as noted in README limitations).
+2. Complete storage normalization for remaining non-SQLite app-state paths (as noted in README limitations).
 
 ## Step-by-Step Next Sequence
 
 1. Apply and verify GitHub branch protection (`main` + required check `smoke`).
-2. Add explicit smoke pre-run reset for OTP/session counters to eliminate cooldown flake risk.
-3. Expand SQLite normalization coverage for remaining JSON-only state.
-4. Keep release dry-run evidence current for each real deployment cycle using [RELEASE-GUARDRAILS.md](./RELEASE-GUARDRAILS.md).
+2. Expand SQLite normalization coverage for remaining JSON-only state.
+3. Keep release dry-run evidence current for each real deployment cycle using [RELEASE-GUARDRAILS.md](./RELEASE-GUARDRAILS.md).
 
 ## Quick Status for Team
 

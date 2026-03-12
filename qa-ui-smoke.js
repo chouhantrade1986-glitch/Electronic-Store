@@ -13,7 +13,8 @@ try {
 const ROOT = __dirname;
 const BACKEND_DIR = path.join(ROOT, "backend");
 const DB_PATH = path.join(BACKEND_DIR, "src", "data", "db.json");
-const DB_BACKUP_PATH = path.join(process.env.TEMP || ROOT, `electromart-ui-smoke-${Date.now()}.json`);
+const DB_RUNTIME_BACKUP_PATH = path.join(BACKEND_DIR, "src", "data", "db.json.bak");
+const TEMP_ROOT = process.env.TEMP || ROOT;
 const FRONTEND_URL = "http://127.0.0.1:5500";
 const API_BASE_URL = "http://127.0.0.1:4000/api";
 
@@ -44,6 +45,44 @@ fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
 
 function artifactPath(fileName) {
   return path.join(ARTIFACTS_DIR, fileName);
+}
+
+function createFileSnapshot(targetPath, label) {
+  const existed = fs.existsSync(targetPath);
+  const snapshot = {
+    targetPath,
+    existed,
+    snapshotPath: ""
+  };
+
+  if (!existed) {
+    return snapshot;
+  }
+
+  snapshot.snapshotPath = path.join(
+    TEMP_ROOT,
+    `electromart-${label}-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}.snapshot`
+  );
+  fs.copyFileSync(targetPath, snapshot.snapshotPath);
+  return snapshot;
+}
+
+function restoreFileSnapshot(snapshot) {
+  if (!snapshot) {
+    return;
+  }
+
+  if (snapshot.existed) {
+    if (snapshot.snapshotPath && fs.existsSync(snapshot.snapshotPath)) {
+      fs.copyFileSync(snapshot.snapshotPath, snapshot.targetPath);
+    }
+  } else if (fs.existsSync(snapshot.targetPath)) {
+    fs.rmSync(snapshot.targetPath, { force: true });
+  }
+
+  if (snapshot.snapshotPath && fs.existsSync(snapshot.snapshotPath)) {
+    fs.rmSync(snapshot.snapshotPath, { force: true });
+  }
 }
 
 function resetAuthOtpChallengesForSmoke() {
@@ -967,7 +1006,8 @@ async function runOrdersSmoke(browser, customerSession, smokeProduct) {
 }
 
 async function main() {
-  fs.copyFileSync(DB_PATH, DB_BACKUP_PATH);
+  const dbSnapshot = createFileSnapshot(DB_PATH, "ui-smoke-db");
+  const dbBackupSnapshot = createFileSnapshot(DB_RUNTIME_BACKUP_PATH, "ui-smoke-db-backup");
   resetAuthOtpChallengesForSmoke();
   let backendProcess;
   let frontendProcess;
@@ -1033,10 +1073,8 @@ async function main() {
     }
     await stopProcess(frontendProcess);
     await stopProcess(backendProcess);
-    if (fs.existsSync(DB_BACKUP_PATH)) {
-      fs.copyFileSync(DB_BACKUP_PATH, DB_PATH);
-      fs.unlinkSync(DB_BACKUP_PATH);
-    }
+    restoreFileSnapshot(dbSnapshot);
+    restoreFileSnapshot(dbBackupSnapshot);
   }
 }
 

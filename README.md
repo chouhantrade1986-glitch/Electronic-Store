@@ -361,7 +361,7 @@ npm run issues:prod-hardening
 - Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
-- Branch governance and remaining smoke repeatability work still need tightening, but release/rollback guardrails are now versioned and automated
+- Branch governance still needs tightening, but release/rollback guardrails are now versioned and automated
 
 Production hardening execution plan:
 

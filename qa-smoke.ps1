@@ -7,7 +7,49 @@ $env:NODE_NO_WARNINGS = "1"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $backendDir = Join-Path $root "backend"
 $dbPath = Join-Path $backendDir "src\\data\\db.json"
-$dbBackup = Join-Path $env:TEMP ("electromart-db-smoke-" + [guid]::NewGuid().ToString() + ".json")
+$dbBackupPath = Join-Path $backendDir "src\\data\\db.json.bak"
+$tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
+
+function New-FileSnapshot {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path,
+    [Parameter(Mandatory = $true)]
+    [string]$Label
+  )
+
+  $snapshot = [ordered]@{
+    path = $Path
+    existed = Test-Path $Path
+    snapshotPath = $null
+  }
+
+  if ($snapshot.existed) {
+    $snapshot.snapshotPath = Join-Path $tempRoot ("electromart-" + $Label + "-" + [guid]::NewGuid().ToString() + ".snapshot")
+    Copy-Item -Path $Path -Destination $snapshot.snapshotPath -Force
+  }
+
+  return [pscustomobject]$snapshot
+}
+
+function Restore-FileSnapshot {
+  param(
+    [Parameter(Mandatory = $true)]
+    $Snapshot
+  )
+
+  if ($Snapshot.existed) {
+    if ($Snapshot.snapshotPath -and (Test-Path $Snapshot.snapshotPath)) {
+      Copy-Item -Path $Snapshot.snapshotPath -Destination $Snapshot.path -Force
+    }
+  } elseif (Test-Path $Snapshot.path) {
+    Remove-Item -Path $Snapshot.path -Force -ErrorAction SilentlyContinue
+  }
+
+  if ($Snapshot.snapshotPath -and (Test-Path $Snapshot.snapshotPath)) {
+    Remove-Item -Path $Snapshot.snapshotPath -Force -ErrorAction SilentlyContinue
+  }
+}
 
 function Get-PageCheck {
   param(
@@ -153,11 +195,11 @@ function Reset-SmokeOtpChallenges {
   Set-Content -Path $DbPath -Value $dbSerialized -Encoding UTF8
 }
 
-Copy-Item $dbPath $dbBackup -Force
+$dbSnapshot = New-FileSnapshot -Path $dbPath -Label "db-smoke"
+$dbBackupSnapshot = New-FileSnapshot -Path $dbBackupPath -Label "db-smoke-backup"
 
 $backendProcess = $null
 $frontendProcess = $null
-$tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
 $backendStdOutLog = Join-Path $tempRoot ("electromart-backend-stdout-" + [guid]::NewGuid().ToString() + ".log")
 $backendStdErrLog = Join-Path $tempRoot ("electromart-backend-stderr-" + [guid]::NewGuid().ToString() + ".log")
 $frontendStdOutLog = Join-Path $tempRoot ("electromart-frontend-stdout-" + [guid]::NewGuid().ToString() + ".log")
@@ -475,8 +517,6 @@ finally {
       Remove-Item -Path $logPath -Force -ErrorAction SilentlyContinue
     }
   }
-  if (Test-Path $dbBackup) {
-    Copy-Item $dbBackup $dbPath -Force
-    Remove-Item $dbBackup -Force
-  }
+  Restore-FileSnapshot -Snapshot $dbSnapshot
+  Restore-FileSnapshot -Snapshot $dbBackupSnapshot
 }
