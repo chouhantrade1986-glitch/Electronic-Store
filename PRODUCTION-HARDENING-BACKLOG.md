@@ -1,6 +1,6 @@
 # Production Hardening Backlog
 
-Last updated: March 11, 2026
+Last updated: March 12, 2026
 
 ## Goal
 
@@ -24,7 +24,7 @@ Move from "demo-safe" operations to production-grade operational safety with exp
 
 - [x] `PH-01` Add runtime health + metrics baseline and centralize structured logs
 - [x] `PH-02` Add error/uptime alert rules with clear thresholds and escalation path
-- [ ] `PH-03` Add scheduled backup job for SQLite/JSON snapshots with retention policy
+- [x] `PH-03` Add scheduled backup job for SQLite/JSON snapshots with retention policy
 - [ ] `PH-04` Add automated restore drill and publish restore time evidence
 - [ ] `PH-05` Enforce production admin provisioning path and disable seeded demo access
 - [ ] `PH-06` Enforce env/secret validation at startup (fail fast on unsafe config)

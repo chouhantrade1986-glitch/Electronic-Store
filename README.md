@@ -10,10 +10,10 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 - Payments: simulated flow or Razorpay, depending on backend env
 - QA: API smoke, browser smoke, JSON/JUnit reports, Windows CI workflow
 
-## Project Audit Status (March 10, 2026)
+## Project Audit Status (March 12, 2026)
 
-- Completed: **81%**
-- Remaining: **19%**
+- Completed: **90%**
+- Remaining: **10%**
 - Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -103,6 +103,21 @@ npm run job:alerts:check -- --api-base-url=http://127.0.0.1:4000/api
 Alert runbook reference:
 
 - [PRODUCTION-INCIDENT-RUNBOOK.md](./PRODUCTION-INCIDENT-RUNBOOK.md)
+
+Runtime datastore backup job (retention + checksum metadata):
+
+```powershell
+cd backend
+npm run job:backup -- --dry-run
+npm run job:backup
+npm run job:backup -- --max-backups=14 --max-age-days=14
+```
+
+Backup outputs:
+
+- default root: `backend/backups` (or `BACKUP_ROOT_DIR`)
+- run artifacts: `backend/backups/runs/<timestamp>-<provider>/`
+- manifest: `backend/backups/backup-manifest.json`
 
 ### SQLite migration
 

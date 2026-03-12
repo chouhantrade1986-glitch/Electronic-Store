@@ -14,6 +14,7 @@
     "job:phone-verification-reminders:dry": "node src/jobs/runPhoneVerificationAutomation.js --dry-run",
     "job:seeded-demo-users": "node src/jobs/migrateSeededDemoUsers.js",
     "job:migrate:sqlite": "node src/jobs/migrateJsonToSqlite.js",
+    "job:backup": "node src/jobs/runDatastoreBackup.js",
     "job:alerts:check": "node src/jobs/runAlertPolicyCheck.js",
     "job:sanitize:wix-media": "node src/jobs/sanitizeWixMediaUrls.js",
     "job:sanitize:wix-media:dry": "node src/jobs/sanitizeWixMediaUrls.js --dry-run",
