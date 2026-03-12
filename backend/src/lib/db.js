@@ -17,6 +17,10 @@ const {
   createSeededDemoUsers,
   normalizeSeededDemoMetadata
 } = require("./demoUsers");
+const {
+  applyAdminProvisioningPolicy,
+  assertAdminProvisioningGuardrails
+} = require("./adminProvisioningGuardrails");
 const { ensureAdminAuditTrailCollection } = require("./adminAuditTrail");
 const { ensureAfterSalesCollections } = require("./afterSalesCases");
 const {
@@ -27,6 +31,7 @@ const {
   readSqliteSnapshot,
   writeSqliteSnapshot
 } = require("./sqliteStore");
+const { isProductionRuntime } = require("./runtimeMode");
 
 const dbPath = path.join(__dirname, "..", "data", "db.json");
 const dbBackupPath = `${dbPath}.bak`;
@@ -209,6 +214,9 @@ async function withWriteLock(task) {
 }
 
 function shouldSeedDemoUsers() {
+  if (isProductionRuntime(process.env)) {
+    return false;
+  }
   const raw = String(process.env.ALLOW_SEEDED_DEMO_USERS || "").trim().toLowerCase();
   return raw === "true";
 }
@@ -320,7 +328,9 @@ function ensureSeedData() {
     };
   }
 
+  applyAdminProvisioningPolicy(db, process.env);
   writeDb(db);
+  assertAdminProvisioningGuardrails(db, process.env);
 }
 
 module.exports = {

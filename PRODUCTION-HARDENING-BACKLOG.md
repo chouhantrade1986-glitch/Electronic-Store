@@ -26,7 +26,7 @@ Move from "demo-safe" operations to production-grade operational safety with exp
 - [x] `PH-02` Add error/uptime alert rules with clear thresholds and escalation path
 - [x] `PH-03` Add scheduled backup job for SQLite/JSON snapshots with retention policy
 - [x] `PH-04` Add automated restore drill and publish restore time evidence
-- [ ] `PH-05` Enforce production admin provisioning path and disable seeded demo access
+- [x] `PH-05` Enforce production admin provisioning path and disable seeded demo access
 - [ ] `PH-06` Enforce env/secret validation at startup (fail fast on unsafe config)
 - [ ] `PH-07` Add release guardrails: pre-deploy smoke, post-deploy health gate, rollback runbook
 

@@ -23,6 +23,10 @@ const {
   hasRealAdminAccount
 } = require("../lib/adminAccounts");
 const {
+  hasValidAdminBootstrapSecret,
+  resolveAdminBootstrapSecret
+} = require("../lib/adminProvisioningGuardrails");
+const {
   AUTH_OTP_REQUEST_COOLDOWN_MS,
   createAuthOtpChallenge,
   normalizeAuthOtpChannel,
@@ -45,7 +49,6 @@ const { logInfo } = require("../lib/logger");
 
 const router = express.Router();
 const PASSWORD_AUTH_FALLBACK_ENABLED = String(process.env.ALLOW_PASSWORD_AUTH_FALLBACK || "").trim().toLowerCase() === "true";
-const ADMIN_BOOTSTRAP_SECRET = String(process.env.ADMIN_BOOTSTRAP_SECRET || "").trim();
 const AUTH_IP_WINDOW_MS = 15 * 60 * 1000;
 
 function authRequestIdentifier(req) {
@@ -239,18 +242,19 @@ function recordAuthEvent(req, user, eventKey, eventLabel, note = "", actor = "us
 }
 
 router.post("/admin/bootstrap", adminBootstrapLimiter, (req, res) => {
-  if (!ADMIN_BOOTSTRAP_SECRET) {
+  if (!hasValidAdminBootstrapSecret(process.env)) {
     return res.status(503).json({
-      message: "ADMIN_BOOTSTRAP_SECRET is not configured on the backend."
+      message: "ADMIN_BOOTSTRAP_SECRET is not configured securely on the backend."
     });
   }
 
+  const bootstrapSecret = resolveAdminBootstrapSecret(process.env);
   const providedSecret = String(
     (req.body && req.body.bootstrapSecret)
     || req.headers["x-admin-bootstrap-secret"]
     || ""
   ).trim();
-  if (!providedSecret || providedSecret !== ADMIN_BOOTSTRAP_SECRET) {
+  if (!providedSecret || providedSecret !== bootstrapSecret) {
     return rejectInvalidBootstrapSecret(res);
   }
 
@@ -262,7 +266,14 @@ router.post("/admin/bootstrap", adminBootstrapLimiter, (req, res) => {
   }
 
   const result = createOrPromoteRealAdmin(db, req.body || {}, {
-    promoteExisting: Boolean(req.body && req.body.promoteExisting)
+    promoteExisting: Boolean(req.body && req.body.promoteExisting),
+    auditContext: {
+      actorEmail: String(req && req.body && req.body.email ? req.body.email : "").trim().toLowerCase(),
+      actorName: String(req && req.body && req.body.name ? req.body.name : "").trim(),
+      ip: resolveClientIp(req),
+      requestId: String(req.requestId || "").trim(),
+      source: "bootstrap_api"
+    }
   });
   if (!result.ok) {
     return res.status(result.status || 400).json({ message: result.message });

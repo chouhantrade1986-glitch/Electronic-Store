@@ -64,15 +64,17 @@ test("listAdminAuditTrail filters by category and search", () => {
 test("summarizeAdminAuditTrail returns category counts and recent count", () => {
   const now = new Date().toISOString();
   const summary = summarizeAdminAuditTrail([
+    { category: "admin", createdAt: now },
     { category: "order", createdAt: now },
     { category: "order", createdAt: now },
     { category: "refund", createdAt: now },
     { category: "catalog", createdAt: "2026-01-01T00:00:00.000Z" }
   ]);
 
-  assert.equal(summary.total, 4);
+  assert.equal(summary.total, 5);
+  assert.equal(summary.categoryCounts.admin, 1);
   assert.equal(summary.categoryCounts.order, 2);
   assert.equal(summary.categoryCounts.refund, 1);
   assert.equal(summary.categoryCounts.catalog, 1);
-  assert.equal(summary.recent24h >= 3, true);
+  assert.equal(summary.recent24h >= 4, true);
 });

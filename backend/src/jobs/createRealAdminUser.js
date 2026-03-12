@@ -64,7 +64,14 @@ function main() {
   const sourceDb = readDb();
   const db = options.apply ? sourceDb : JSON.parse(JSON.stringify(sourceDb));
   const hadRealAdminBefore = hasRealAdminAccount(db);
-  const result = createOrPromoteRealAdmin(db, resolveDraft(options), {
+  const draft = resolveDraft(options);
+  const result = createOrPromoteRealAdmin(db, draft, {
+    auditContext: {
+      actorEmail: draft.email,
+      actorName: draft.name,
+      requestId: "job:create-admin",
+      source: "create_real_admin_job"
+    },
     promoteExisting: options.promoteExisting
   });
 

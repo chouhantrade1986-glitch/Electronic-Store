@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { randomUUID } = require("crypto");
+const { appendAdminAuditEntry } = require("./adminAuditTrail");
 const { findSeededDemoProfile } = require("./demoUsers");
 const {
   normalizeAuthActivityList,
@@ -19,6 +20,16 @@ function normalizeEmail(value) {
 
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value));
+}
+
+const ADMIN_PASSWORD_MIN_LENGTH = 10;
+
+function isStrongAdminPassword(value) {
+  const password = String(value || "");
+  return password.length >= ADMIN_PASSWORD_MIN_LENGTH
+    && /[A-Z]/.test(password)
+    && /[a-z]/.test(password)
+    && /\d/.test(password);
 }
 
 function stripSeededDemoMetadata(user = {}) {
@@ -44,6 +55,31 @@ function buildAdminDraft(input = {}) {
     password: String(input.password || ""),
     address: String(input.address || "").trim()
   };
+}
+
+function recordAdminProvisioningAudit(db, result, auditContext = {}) {
+  if (!result || !result.ok || !result.user || !auditContext || typeof auditContext !== "object") {
+    return null;
+  }
+
+  return appendAdminAuditEntry(db, {
+    category: "admin",
+    actionKey: result.promoted ? "admin_promoted" : "admin_created",
+    actionLabel: result.promoted ? "Real admin promoted" : "Real admin created",
+    actorId: String(auditContext.actorId || result.user.id || ""),
+    actorEmail: normalizeEmail(auditContext.actorEmail || result.user.email),
+    actorName: String(auditContext.actorName || result.user.name || "").trim(),
+    requestId: String(auditContext.requestId || "").trim(),
+    ip: String(auditContext.ip || "").trim(),
+    entityType: "user",
+    entityId: String(result.user.id || ""),
+    status: "success",
+    summary: result.message,
+    details: {
+      source: String(auditContext.source || "unknown").trim() || "unknown",
+      promoteExisting: result.promoted === true
+    }
+  });
 }
 
 function createOrPromoteRealAdmin(db, input = {}, options = {}) {
@@ -82,11 +118,11 @@ function createOrPromoteRealAdmin(db, input = {}, options = {}) {
       message: "Enter a valid admin mobile number."
     };
   }
-  if (draft.password.length < 8) {
+  if (!isStrongAdminPassword(draft.password)) {
     return {
       ok: false,
       status: 400,
-      message: "Admin password must be at least 8 characters long."
+      message: "Admin password must be at least 10 characters and include uppercase, lowercase, and a number."
     };
   }
 
@@ -128,7 +164,7 @@ function createOrPromoteRealAdmin(db, input = {}, options = {}) {
     });
     Object.assign(existingUser, nextUser);
 
-    return {
+    const result = {
       ok: true,
       status: 200,
       message: "Existing account promoted to real admin successfully.",
@@ -136,6 +172,8 @@ function createOrPromoteRealAdmin(db, input = {}, options = {}) {
       created: false,
       promoted: true
     };
+    recordAdminProvisioningAudit(db, result, options.auditContext);
+    return result;
   }
 
   const user = {
@@ -154,7 +192,7 @@ function createOrPromoteRealAdmin(db, input = {}, options = {}) {
   };
   db.users.push(user);
 
-  return {
+  const result = {
     ok: true,
     status: 201,
     message: "Real admin account created successfully.",
@@ -162,6 +200,8 @@ function createOrPromoteRealAdmin(db, input = {}, options = {}) {
     created: true,
     promoted: false
   };
+  recordAdminProvisioningAudit(db, result, options.auditContext);
+  return result;
 }
 
 function adminPublicView(user = {}) {
@@ -176,8 +216,10 @@ function adminPublicView(user = {}) {
 }
 
 module.exports = {
+  ADMIN_PASSWORD_MIN_LENGTH,
   adminPublicView,
   buildAdminDraft,
   createOrPromoteRealAdmin,
-  hasRealAdminAccount
+  hasRealAdminAccount,
+  isStrongAdminPassword
 };

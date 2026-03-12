@@ -3,6 +3,7 @@ const { randomUUID } = require("crypto");
 const { normalizePhone } = require("./phoneVerification");
 const { normalizeNotificationPreferences } = require("./notificationPreferences");
 const { normalizePhoneVerificationState } = require("./phoneVerification");
+const { isProductionRuntime } = require("./runtimeMode");
 
 const SEEDED_DEMO_USER_BLOCK_MESSAGE = "This seeded demo account is disabled. Set ALLOW_SEEDED_DEMO_USERS=true and rerun the demo-user migration to re-enable it.";
 
@@ -50,8 +51,16 @@ function findSeededDemoProfile(user) {
   }) || null;
 }
 
-function isSeededDemoUserBlocked(user) {
-  return Boolean(user && user.seededDemoUser === true && user.demoAccessDisabled === true);
+function isSeededDemoUserBlocked(user, options = {}) {
+  const env = options && options.env ? options.env : process.env;
+  const isSeededDemoUser = Boolean(user && (user.seededDemoUser === true || findSeededDemoProfile(user)));
+  if (!isSeededDemoUser) {
+    return false;
+  }
+  if (user.demoAccessDisabled === true) {
+    return true;
+  }
+  return isProductionRuntime(env);
 }
 
 function normalizeSeededDemoMetadata(user = {}) {

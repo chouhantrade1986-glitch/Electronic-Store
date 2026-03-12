@@ -12,8 +12,8 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Project Audit Status (March 12, 2026)
 
-- Completed: **90%**
-- Remaining: **10%**
+- Completed: **92%**
+- Remaining: **8%**
 - Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -54,6 +54,7 @@ Required:
 
 Optional but important:
 
+- `APP_RUNTIME_ENV=production` on deployed backends so production guardrails activate
 - `DB_PROVIDER=sqlite` to move core commerce data onto SQLite
 - `SQLITE_DB_PATH` if you want a custom SQLite file path
 - `ALLOW_SEEDED_DEMO_USERS=true` only if you intentionally want seeded local demo accounts
@@ -202,6 +203,7 @@ Frontend QA server default URL: `http://127.0.0.1:5500`
 ## Demo Users
 
 Local demo users are seeded only when `ALLOW_SEEDED_DEMO_USERS=true`. Do not treat seeded credentials as production access.
+When `APP_RUNTIME_ENV=production`, seeded demo users are forced disabled and startup fails if `ALLOW_SEEDED_DEMO_USERS=true`.
 
 Before disabling or purging seeded demo users, create at least one real admin account:
 
@@ -209,6 +211,12 @@ Before disabling or purging seeded demo users, create at least one real admin ac
 cd backend
 npm run job:create-admin -- --apply --name="Ops Admin" --email="ops@example.com" --mobile="9876543210" --password="StrongPass1" --address="Jaipur"
 ```
+
+Admin provisioning guardrails:
+
+- Real admin passwords must be at least 10 characters and include uppercase, lowercase, and a number.
+- Production startup requires either an existing real admin account or a secure `ADMIN_BOOTSTRAP_SECRET`.
+- Successful admin creation and promotion flows are recorded in the admin audit trail.
 
 If you prefer an API/bootstrap path for the first real admin, set `ADMIN_BOOTSTRAP_SECRET` and call:
 
@@ -327,7 +335,7 @@ npm run issues:prod-hardening
 - Current snapshots are fully covered by the managed SQLite schema; unknown future keys still fall back to the shared `app_state` compatibility layer
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
-- Production deployment still needs stronger user provisioning, monitoring, backups, and infra hardening
+- Production deployment still needs env/secret guardrails and release/rollback enforcement before it is fully hardened
 
 Production hardening execution plan:
 

@@ -118,7 +118,7 @@ function listAdminAuditTrail(db, options = {}) {
 
 function summarizeAdminAuditTrail(entries = []) {
   const safeEntries = Array.isArray(entries) ? entries : [];
-  const categories = ["order", "refund", "after_sales", "catalog", "notification"];
+  const categories = ["admin", "order", "refund", "after_sales", "catalog", "notification"];
   const categoryCounts = categories.reduce((accumulator, item) => {
     accumulator[item] = 0;
     return accumulator;
