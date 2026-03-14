@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Creator Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="creator-studio.css?v=20260314a" />
+  <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="creator-studio.html" aria-current="page">Creator Studio</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="orders.html">Orders</a>
+      <a href="cart.html">Cart <span id="cartCount">0</span></a>
+    </nav>
+  </header>
+
+  <main class="studio-main">
+    <section class="studio-hero">
+      <div class="studio-hero-copy">
+        <p class="eyebrow">Creator Studio</p>
+        <h1>Build a sharper setup for editing, streaming, and studio work.</h1>
+        <p>We pulled together creator-ready laptops, 4K displays, capture tools, and desk accessories into one focused buying surface.</p>
+        <div class="studio-hero-actions">
+          <a href="#studioResultsHeading" class="studio-primary-link">Browse the collection</a>
+          <a href="products.html?search=creator" class="studio-secondary-link">Open all creator search results</a>
+        </div>
+      </div>
+      <div class="studio-hero-stats" aria-label="Creator Studio highlights">
+        <article>
+          <strong>6 curated picks</strong>
+          <span>Creator-first hardware across workstations, audio, displays, and workflow tools.</span>
+        </article>
+        <article>
+          <strong>Fast setup</strong>
+          <span>Clear filters and removable chips keep the browsing flow lightweight.</span>
+        </article>
+        <article>
+          <strong>Homepage linked</strong>
+          <span>The collection is now featured directly on the home page for faster discovery.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="studio-benefits" aria-label="Why Creator Studio">
+      <article class="benefit-card">
+        <h2>Editing-ready displays</h2>
+        <p>Color-focused screens and pen displays that support detailed timelines, grading, and illustration work.</p>
+      </article>
+      <article class="benefit-card">
+        <h2>Streaming essentials</h2>
+        <p>Microphones, 4K capture tools, and desk-friendly accessories for clean calls, streams, and recordings.</p>
+      </article>
+      <article class="benefit-card">
+        <h2>Minimal friction</h2>
+        <p>Quick filters, removable chips, and direct detail links keep the path from discovery to purchase straightforward.</p>
+      </article>
+    </section>
+
+    <section class="studio-toolbar" aria-label="Creator Studio filters">
+      <input id="studioSearch" type="search" placeholder="Search creator gear" aria-label="Search creator studio products" />
+      <select id="studioTypeFilter" aria-label="Filter by creator setup type">
+        <option value="all">All setup types</option>
+        <option value="workstation">Workstations</option>
+        <option value="display">Displays</option>
+        <option value="audio">Audio</option>
+        <option value="capture">Capture</option>
+        <option value="workflow">Workflow tools</option>
+      </select>
+      <select id="studioBudgetFilter" aria-label="Filter by budget">
+        <option value="all">All budgets</option>
+        <option value="under-10000">Under INR 10,000</option>
+        <option value="10000-50000">INR 10,000 - INR 50,000</option>
+        <option value="over-50000">Above INR 50,000</option>
+      </select>
+    </section>
+
+    <section class="studio-panel">
+      <div class="studio-panel-head">
+        <div>
+          <p class="eyebrow">Creator Studio Picks</p>
+          <h2 id="studioResultsHeading">Curated product lineup</h2>
+        </div>
+        <p id="studioMeta" role="status" aria-live="polite" aria-atomic="true">Loading creator picks...</p>
+      </div>
+      <div id="studioGrid" class="studio-grid" role="region" aria-labelledby="studioResultsHeading" aria-busy="false"></div>
+    </section>
+  </main>
+
+  <script src="listing-filter-chips.js?v=20260314c"></script>
+  <script src="creator-studio.js?v=20260314a"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+</body>
+</html>

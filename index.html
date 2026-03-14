@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260305c" />
+  <link rel="stylesheet" href="styles.css?v=20260314g" />
 </head>
 <body>
   <header class="site-header">
@@ -21,8 +21,10 @@
       </button>
       <form id="searchForm" class="search-form" role="search">
         <select id="categoryFilter" aria-label="Filter category">
-          <option id="catAll" value="all">All</option>
+          <option id="catAll" value="all">All Catalogue</option>
+          <option id="catComputer" value="computer">Computers</option>
           <option id="catLaptop" value="laptop">Laptops</option>
+          <option id="catPrinter" value="printer">Printers</option>
           <option id="catMobile" value="mobile">Mobiles</option>
           <option id="catAudio" value="audio">Audio</option>
           <option id="catAccessory" value="accessory">Accessories</option>
@@ -47,14 +49,14 @@
         <div class="lang-wrap">
           <label for="languageSelect" class="lang-label" data-i18n="header.language">Language</label>
           <select id="languageSelect" class="language-select" aria-label="Select language">
-            <option value="en">English - EN</option>
-            <option value="hi">हिन्दी - HI</option>
-            <option value="ta">தமிழ் - TA</option>
-            <option value="te">తెలుగు - TE</option>
-            <option value="kn">ಕನ್ನಡ - KN</option>
-            <option value="ml">മലയാളം - ML</option>
-            <option value="bn">বাংলা - BN</option>
-            <option value="mr">मराठी - MR</option>
+            <option value="en">EN</option>
+            <option value="hi">HI</option>
+            <option value="ta">TA</option>
+            <option value="te">TE</option>
+            <option value="kn">KN</option>
+            <option value="ml">ML</option>
+            <option value="bn">BN</option>
+            <option value="mr">MR</option>
           </select>
         </div>
         <a href="auth.html" class="account-link">
@@ -77,22 +79,30 @@
       <button id="megaTrigger" class="mega-trigger" type="button" aria-expanded="false" aria-controls="megaMenu" data-i18n="category.allDepartments">All Departments</button>
       <a href="todays-deals.html" data-i18n="category.deals">Today's Deals</a>
       <a href="best-sellers.html" data-i18n="category.bestSellers">Best Sellers</a>
-      <a href="#" data-i18n="category.gaming">Gaming</a>
-      <a href="#" data-i18n="category.homeOffice">Home Office</a>
-      <a href="#" data-i18n="category.smartHome">Smart Home</a>
+      <a href="products.html">Products</a>
       <a href="pc-builder.html">PC Builder</a>
       <a href="mega-store.html" data-i18n="category.stores">Stores</a>
       <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
-      <a href="#" data-i18n="category.giftCards">Gift Cards</a>
-      <div class="legal-links">
-        <a href="products.html">Products</a>
-        <a href="wishlist.html">Wishlist</a>
-        <a href="terms-and-conditions.html">Terms</a>
-        <a href="shipping-policy.html">Shipping</a>
-        <a href="refund-policy.html">Refund</a>
-        <a href="accessibility-statement.html">Accessibility</a>
-        <a href="faq.html">FAQ</a>
-        <a href="review.html">Review</a>
+      <div class="category-more">
+        <button id="quickLinksTrigger" class="quick-links-trigger" type="button" aria-expanded="false" aria-controls="quickLinksMenu" data-i18n="category.more">More</button>
+        <div id="quickLinksMenu" class="quick-links-menu" aria-label="More links">
+          <div class="quick-links-grid">
+            <a href="#" data-i18n="category.gaming">Gaming</a>
+            <a href="#" data-i18n="category.homeOffice">Home Office</a>
+            <a href="creator-studio.html">Creator Studio</a>
+            <a href="#" data-i18n="category.smartHome">Smart Home</a>
+            <a href="#" data-i18n="category.giftCards">Gift Cards</a>
+            <a href="wishlist.html">Wishlist</a>
+          </div>
+          <div class="legal-links" data-menu-managed-container="1">
+            <a href="terms-and-conditions.html">Terms</a>
+            <a href="shipping-policy.html">Shipping</a>
+            <a href="refund-policy.html">Refund</a>
+            <a href="accessibility-statement.html">Accessibility</a>
+            <a href="faq.html">FAQ</a>
+            <a href="review.html">Review</a>
+          </div>
+        </div>
       </div>
     </nav>
     <section id="megaMenu" class="mega-menu" aria-label="Departments menu">
@@ -120,7 +130,7 @@
       <div class="mega-highlight">
         <p data-i18n="mega.featuredDeal">Featured Deal</p>
         <h3 data-i18n="mega.productTitle">Wireless Earbuds Pro</h3>
-        <span data-i18n="mega.priceNow">Now ₹79</span>
+        <span data-i18n="mega.priceNow">Now ?79</span>
         <a href="#" data-i18n="mega.seeOffer">See offer</a>
       </div>
     </section>
@@ -209,11 +219,30 @@
       <div class="category-rail-grid">
         <a href="desktops.html" class="category-pill">Computers</a>
         <a href="laptop.html" class="category-pill">Laptops</a>
+        <a href="creator-studio.html" class="category-pill">Creator Studio</a>
         <a href="printer.html" class="category-pill">Printers</a>
         <a href="pc-builder.html" class="category-pill">PC Builder</a>
         <a href="todays-deals.html" class="category-pill">Today's Deals</a>
         <a href="best-sellers.html" class="category-pill">Best Sellers</a>
       </div>
+    <section id="creatorStudioSection" class="collection-spotlight" aria-label="Creator Studio collection" hidden>
+      <div class="collection-spotlight-copy">
+        <p class="collection-spotlight-eyebrow">New collection</p>
+        <h2>Creator Studio</h2>
+        <p>Build a smarter editing, streaming, and design desk with hand-picked laptops, audio gear, docks, and display tools.</p>
+        <div class="collection-spotlight-actions">
+          <a href="creator-studio.html" class="collection-spotlight-primary">Explore Creator Studio</a>
+          <a href="products.html?search=creator" class="collection-spotlight-secondary">Search creator-ready gear</a>
+        </div>
+      </div>
+      <div class="collection-spotlight-panel">
+        <div class="section-header">
+          <h3>Featured setup picks</h3>
+          <p id="creatorStudioMeta">Loading creator picks</p>
+        </div>
+        <div id="creatorStudioGrid" class="product-grid"></div>
+      </div>
+    </section>
     </section>
 
     <section class="deal-strip" aria-label="Today's deals">
@@ -284,21 +313,6 @@
         <a href="products.html" class="section-link">Keep shopping</a>
       </div>
       <div id="recentlyViewedGrid" class="product-grid"></div>
-    </section>
-
-    <section class="products-section">
-      <div class="section-header">
-        <h2 data-i18n="products.sectionTitle">Product Listings</h2>
-      </div>
-      <div class="listing-columns">
-        <section class="listing-panel">
-          <div class="section-header">
-            <h3>Products</h3>
-            <p id="b2cResultMeta">Showing 0 products</p>
-          </div>
-          <div id="b2cProductGrid" class="product-grid"></div>
-        </section>
-      </div>
     </section>
 
     <section id="stores" class="stores-section">
@@ -390,14 +404,15 @@
         <a href="review.html">Review</a>
       </div>
     </div>
-    <p class="copyright" data-i18n="footer.copyright">© 2026 ElectroMart clone experience</p>
+    <p class="copyright" data-i18n="footer.copyright">� 2026 ElectroMart clone experience</p>
   </footer>
 
-  <script src="script.js?v=20260305b"></script>
+  <script src="script.js?v=20260314g"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
 </body>
 </html>
+
 
 
 

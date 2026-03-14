@@ -26,6 +26,139 @@
     createdAt: "2026-03-05T14:47:19.204Z",
     updatedAt: "2026-03-05T14:47:19.204Z"
   }
+,
+  {
+    id: "product_1773480601001",
+    name: "AstraStudio Creator 16",
+    brand: "AstraTech",
+    segment: "b2c",
+    category: "laptop",
+    collections: ["laptop", "creator-studio", "computer"],
+    price: 129999,
+    listPrice: 139999,
+    rating: 4.8,
+    stock: 12,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=900&q=80",
+    description: "16-inch creator laptop with a color-accurate display, fast SSD storage, and export-ready performance for video, design, and streaming workflows.",
+    keywords: ["creator studio", "laptop", "video editing", "design"],
+    sku: "ASTRA-CREATOR-16",
+    status: "active",
+    fulfillment: "fbm",
+    featured: true,
+    createdAt: "2026-03-14T09:10:01.000Z",
+    updatedAt: "2026-03-14T09:10:01.000Z"
+  },
+  {
+    id: "product_1773480601002",
+    name: "OrbitX ViewPro 32 4K",
+    brand: "OrbitX",
+    segment: "b2c",
+    category: "computer",
+    collections: ["computer", "creator-studio"],
+    price: 32999,
+    listPrice: 37999,
+    rating: 4.7,
+    stock: 18,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80",
+    description: "32-inch 4K monitor tuned for editing timelines, grading work, and long studio sessions.",
+    keywords: ["creator studio", "4k monitor", "color monitor", "editing"],
+    sku: "ORBITX-VIEWPRO-32",
+    status: "active",
+    fulfillment: "fbm",
+    featured: true,
+    createdAt: "2026-03-14T09:12:00.000Z",
+    updatedAt: "2026-03-14T09:12:00.000Z"
+  },
+  {
+    id: "product_1773480601003",
+    name: "PulseCast Pro USB Microphone",
+    brand: "PulseWave",
+    segment: "b2c",
+    category: "audio",
+    collections: ["audio", "creator-studio"],
+    price: 8999,
+    listPrice: 10999,
+    rating: 4.6,
+    stock: 26,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80",
+    description: "USB creator microphone with a clean vocal profile for streaming, podcasts, and client calls.",
+    keywords: ["creator studio", "microphone", "podcast", "streaming"],
+    sku: "PULSECAST-PRO-USB",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:14:00.000Z",
+    updatedAt: "2026-03-14T09:14:00.000Z"
+  },
+  {
+    id: "product_1773480601004",
+    name: "Nimbus StreamCam 4K",
+    brand: "Nimbus",
+    segment: "b2c",
+    category: "accessory",
+    collections: ["accessory", "creator-studio"],
+    price: 6999,
+    listPrice: 8499,
+    rating: 4.5,
+    stock: 31,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+    description: "Compact 4K webcam with autofocus and sharp framing for live sessions and remote shoots.",
+    keywords: ["creator studio", "webcam", "4k camera", "streaming"],
+    sku: "NIMBUS-STREAMCAM-4K",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:16:00.000Z",
+    updatedAt: "2026-03-14T09:16:00.000Z"
+  },
+  {
+    id: "product_1773480601005",
+    name: "VectorDock 12-in-1 Thunderbolt Hub",
+    brand: "Vector",
+    segment: "b2c",
+    category: "accessory",
+    collections: ["accessory", "creator-studio", "computer"],
+    price: 11999,
+    listPrice: 13999,
+    rating: 4.4,
+    stock: 22,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=80",
+    description: "Single-cable dock with creator-friendly ports for drives, monitors, cameras, and fast charging.",
+    keywords: ["creator studio", "dock", "thunderbolt", "hub"],
+    sku: "VECTORDOCK-12IN1",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:18:00.000Z",
+    updatedAt: "2026-03-14T09:18:00.000Z"
+  },
+  {
+    id: "product_1773480601006",
+    name: "AstraPad Pen Display 13",
+    brand: "AstraTech",
+    segment: "b2c",
+    category: "computer",
+    collections: ["computer", "creator-studio"],
+    price: 45999,
+    listPrice: 49999,
+    rating: 4.7,
+    stock: 9,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=900&q=80",
+    description: "13-inch pen display for sketching, retouching, and precise creative control across design workflows.",
+    keywords: ["creator studio", "pen display", "illustration", "design"],
+    sku: "ASTRAPAD-13",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:20:00.000Z",
+    updatedAt: "2026-03-14T09:20:00.000Z"
+  }
 ];
 
 const b2cProductGrid = document.getElementById("b2cProductGrid");
@@ -36,11 +169,16 @@ const cartCount = document.getElementById("cartCount");
 const searchForm = document.getElementById("searchForm");
 const megaTrigger = document.getElementById("megaTrigger");
 const megaMenu = document.getElementById("megaMenu");
+const quickLinksTrigger = document.getElementById("quickLinksTrigger");
+const quickLinksMenu = document.getElementById("quickLinksMenu");
 const storeGrid = document.getElementById("storeGrid");
 const newArrivalsGrid = document.getElementById("newArrivalsGrid");
 const newArrivalsMeta = document.getElementById("newArrivalsMeta");
 const topRatedGrid = document.getElementById("topRatedGrid");
 const recommendedGrid = document.getElementById("recommendedGrid");
+const creatorStudioSection = document.getElementById("creatorStudioSection");
+const creatorStudioGrid = document.getElementById("creatorStudioGrid");
+const creatorStudioMeta = document.getElementById("creatorStudioMeta");
 const recentlyViewedSection = document.getElementById("recentlyViewedSection");
 const recentlyViewedGrid = document.getElementById("recentlyViewedGrid");
 const heroTrack = document.getElementById("heroTrack");
@@ -75,6 +213,14 @@ const LANGUAGE_STORAGE_KEY = "electromart_lang_v1";
 const WISHLIST_STORAGE_KEY = "electromart_wishlist_v1";
 const RECENTLY_VIEWED_STORAGE_KEY = "electromart_recently_viewed_v1";
 const SEARCH_HISTORY_STORAGE_KEY = "electromart_search_history_v1";
+const API_BASE_URL = (() => {
+  const { protocol, hostname, port } = window.location;
+  if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
+    return "http://localhost:4000/api";
+  }
+  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
+  return `${origin}/api`;
+})();
 const HOME_MAIN_LIST_LIMIT = 12;
 const HOME_NEW_ARRIVALS_LIMIT = 6;
 const HOME_CURATED_LIST_LIMIT = 4;
@@ -86,6 +232,9 @@ let heroSlides = [];
 let currentHeroIndex = 0;
 let heroAutoplayTimer = 0;
 let currentQuickViewProductId = "";
+let homeApiProducts = [];
+let homeProductsFetchPromise = null;
+let homeCatalogRequested = false;
 const inrFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
@@ -123,6 +272,7 @@ const translations = {
     "category.stores": "Stores",
     "category.customerService": "Customer Service",
     "category.giftCards": "Gift Cards",
+    "category.more": "More",
     "mega.computers": "Computers",
     "mega.laptops": "Laptops",
     "mega.desktops": "Desktops",
@@ -187,8 +337,10 @@ const translations = {
     "footer.shippingRates": "Shipping Rates",
     "footer.returns": "Returns",
     "footer.copyright": "© 2026 ElectroMart clone experience",
-    "categoryFilter.all": "All",
+    "categoryFilter.all": "All Catalogue",
+    "categoryFilter.computer": "Computers",
     "categoryFilter.laptop": "Laptops",
+    "categoryFilter.printer": "Printers",
     "categoryFilter.mobile": "Mobiles",
     "categoryFilter.audio": "Audio",
     "categoryFilter.accessory": "Accessories"
@@ -217,6 +369,7 @@ const translations = {
     "category.stores": "स्टोर्स",
     "category.customerService": "कस्टमर सर्विस",
     "category.giftCards": "गिफ्ट कार्ड",
+    "category.more": "और",
     "mega.computers": "कंप्यूटर",
     "mega.laptops": "लैपटॉप",
     "mega.desktops": "डेस्कटॉप",
@@ -281,8 +434,10 @@ const translations = {
     "footer.shippingRates": "शिपिंग दरें",
     "footer.returns": "रिटर्न",
     "footer.copyright": "© 2026 इलेक्ट्रोमार्ट क्लोन अनुभव",
-    "categoryFilter.all": "सभी",
+    "categoryFilter.all": "सभी कैटलॉग",
+    "categoryFilter.computer": "कंप्यूटर",
     "categoryFilter.laptop": "लैपटॉप",
+    "categoryFilter.printer": "प्रिंटर",
     "categoryFilter.mobile": "मोबाइल",
     "categoryFilter.audio": "ऑडियो",
     "categoryFilter.accessory": "एक्सेसरी"
@@ -450,12 +605,127 @@ function loadCatalogMap() {
   }
 }
 
+function saveCatalogMap(catalogMap) {
+  try {
+    localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify(catalogMap));
+  } catch (error) {
+    return;
+  }
+}
+
+function cacheCatalogProducts(productsList) {
+  if (!Array.isArray(productsList) || !productsList.length) {
+    return;
+  }
+  const next = loadCatalogMap();
+  let changed = false;
+  productsList.forEach((product) => {
+    if (!product || !product.id) {
+      return;
+    }
+    const key = String(product.id).trim();
+    if (!key) {
+      return;
+    }
+    const existing = next[key] || {};
+    next[key] = {
+      ...existing,
+      ...product,
+      id: key,
+      name: product.name || existing.name || `Product #${key}`,
+      price: Number(product.price ?? existing.price ?? 0),
+      listPrice: Number(product.listPrice ?? existing.listPrice ?? product.price ?? 0),
+      rating: Number(product.rating ?? existing.rating ?? 0),
+      stock: Number(product.stock ?? existing.stock ?? 0),
+      moq: Number(product.moq ?? existing.moq ?? 0),
+      image: product.image || existing.image || FALLBACK_IMAGE_URL,
+      images: Array.isArray(product.images) ? product.images : (Array.isArray(existing.images) ? existing.images : []),
+      videos: Array.isArray(product.videos) ? product.videos : (Array.isArray(existing.videos) ? existing.videos : []),
+      media: Array.isArray(product.media) ? product.media : (Array.isArray(existing.media) ? existing.media : []),
+      keywords: Array.isArray(product.keywords) ? product.keywords : (Array.isArray(existing.keywords) ? existing.keywords : []),
+      description: String(product.description ?? existing.description ?? "").trim(),
+      sku: String(product.sku ?? existing.sku ?? "").trim(),
+      status: String(product.status ?? existing.status ?? "active"),
+      fulfillment: String(product.fulfillment ?? existing.fulfillment ?? "fbm"),
+      featured: Boolean(product.featured ?? existing.featured ?? false),
+      collections: Array.isArray(product.collections) ? product.collections : (Array.isArray(existing.collections) ? existing.collections : []),
+      createdAt: String(product.createdAt ?? existing.createdAt ?? "").trim(),
+      updatedAt: String(product.updatedAt ?? existing.updatedAt ?? "").trim()
+    };
+    changed = true;
+  });
+  if (changed) {
+    saveCatalogMap(next);
+  }
+}
+
 function normalizeHomeCategory(value) {
-  const raw = String(value || "").toLowerCase().trim();
+  const raw = String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, " and ")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
   if (raw === "accessories") {
     return "accessory";
   }
+  if (raw === "computers") {
+    return "computer";
+  }
+  if (raw === "mobiles") {
+    return "mobile";
+  }
   return raw;
+}
+
+function buildHomeCategorySignalText(product) {
+  const parts = [];
+  const append = (value) => {
+    if (Array.isArray(value)) {
+      value.forEach(append);
+      return;
+    }
+    const text = String(value || "").trim().toLowerCase();
+    if (text) {
+      parts.push(text);
+    }
+  };
+  append(product?.category);
+  append(product?.collections);
+  append(product?.keywords);
+  append(product?.name);
+  append(product?.brand);
+  return parts.join(" ").replace(/[^a-z0-9]+/g, " ");
+}
+
+function inferHomeCategory(product) {
+  const fallbackCategory = normalizeHomeCategory(product?.category || "");
+  const signal = buildHomeCategorySignalText(product);
+
+  if (/(printer|plotter|scanner|ink|toner|cartridge|label printer|all printer)/.test(signal)) {
+    return "printer";
+  }
+  if (/(headphone|headset|earbud|earphone|speaker|soundbar|microphone|audio|home theater)/.test(signal)) {
+    return "audio";
+  }
+  if (/(battery|keyboard|adapter|charger|cable|case|cover|power bank|mouse|pendrive|ssd enclosure|cooler|fan|dock|hub|bag|accessory)/.test(signal)) {
+    return "accessory";
+  }
+  if (/(desktop|workstation|cabinet|all in one|aio|monitor|computer|gaming pc|office tower|assembled pc|mini pc)/.test(signal)) {
+    return "computer";
+  }
+  if (/(mobile|smartphone|phone|tablet|wearable|smartwatch|watch)/.test(signal)) {
+    return "mobile";
+  }
+  if (/(laptop|notebook|macbook|chromebook)/.test(signal)) {
+    return "laptop";
+  }
+
+  if (["laptop", "mobile", "audio", "accessory", "computer", "printer"].includes(fallbackCategory)) {
+    return fallbackCategory;
+  }
+  return "accessory";
 }
 
 function mapHomeCatalogProduct(item) {
@@ -470,12 +740,15 @@ function mapHomeCatalogProduct(item) {
   if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
     return null;
   }
+  const category = inferHomeCategory(item);
   return {
     id: String(item.id),
     name: String(item.name || `Product #${item.id}`).trim(),
     brand: String(item.brand || "Generic").trim(),
     segment: String(item.segment || "b2c").toLowerCase(),
-    category: normalizeHomeCategory(item.category || "accessory"),
+    category,
+    rawCategory: normalizeHomeCategory(item.category || category || "accessory"),
+    collections: Array.isArray(item.collections) ? item.collections.slice(0, 8) : [],
     price: normalizedPrice,
     listPrice: Number(item.listPrice || item.price || 0),
     rating: Number(item.rating || 0),
@@ -483,6 +756,8 @@ function mapHomeCatalogProduct(item) {
     moq: Number(item.moq || 0),
     image: normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL,
     featured: Boolean(item.featured),
+    description: String(item.description || "").trim(),
+    keywords: Array.isArray(item.keywords) ? item.keywords : [],
     createdAt: String(item.createdAt || "").trim(),
     updatedAt: String(item.updatedAt || "").trim()
   };
@@ -508,7 +783,42 @@ function mergeHomeProducts(...lists) {
 
 function getHomeProducts() {
   const localCatalogProducts = loadHomeCatalogProductsList();
-  return mergeHomeProducts(products, localCatalogProducts);
+  return mergeHomeProducts(products, localCatalogProducts, homeApiProducts);
+}
+
+async function fetchHomeProductsFromApi() {
+  if (homeCatalogRequested && !homeProductsFetchPromise) {
+    return homeApiProducts;
+  }
+  if (homeProductsFetchPromise) {
+    return homeProductsFetchPromise;
+  }
+
+  homeCatalogRequested = true;
+  homeProductsFetchPromise = (async () => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE_URL}/products?status=active`);
+    } catch (error) {
+      return homeApiProducts;
+    }
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data || !Array.isArray(data.products)) {
+      return homeApiProducts;
+    }
+
+    cacheCatalogProducts(data.products);
+    homeApiProducts = mergeHomeProducts(data.products);
+    renderHomeSurface();
+    return homeApiProducts;
+  })();
+
+  try {
+    return await homeProductsFetchPromise;
+  } finally {
+    homeProductsFetchPromise = null;
+  }
 }
 
 function getReadableCategoryLabel(value) {
@@ -518,7 +828,9 @@ function getReadableCategoryLabel(value) {
   }
   const lower = raw.toLowerCase();
   const knownLabelMap = {
+    computer: t("categoryFilter.computer"),
     laptop: t("categoryFilter.laptop"),
+    printer: t("categoryFilter.printer"),
     mobile: t("categoryFilter.mobile"),
     audio: t("categoryFilter.audio"),
     accessory: t("categoryFilter.accessory")
@@ -1079,6 +1391,50 @@ function renderTopRatedSection(sourceProducts) {
 function renderRecommendedSection(sourceProducts) {
   renderCuratedSection(recommendedGrid, getRecommendedProducts(sourceProducts), "No recommendations available yet.");
 }
+function hasHomeCollection(product, collectionToken) {
+  const target = normalizeHomeCategory(collectionToken);
+  if (!target) {
+    return false;
+  }
+  const tokens = [product?.category, product?.rawCategory, ...(Array.isArray(product?.collections) ? product.collections : [])]
+    .map((item) => normalizeHomeCategory(item))
+    .filter(Boolean);
+  return tokens.includes(target);
+}
+
+function getHomeCollectionProducts(sourceProducts, collectionToken) {
+  return sourceProducts
+    .filter((item) => item.segment !== "b2b")
+    .filter((item) => hasHomeCollection(item, collectionToken))
+    .slice()
+    .sort((a, b) => {
+      const featuredDiff = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+      if (featuredDiff !== 0) {
+        return featuredDiff;
+      }
+      const ratingDiff = Number(b.rating || 0) - Number(a.rating || 0);
+      if (Math.abs(ratingDiff) > 0) {
+        return ratingDiff;
+      }
+      return getProductRecencyScore(b) - getProductRecencyScore(a);
+    });
+}
+
+function renderCreatorStudioSection(sourceProducts) {
+  if (!creatorStudioSection || !creatorStudioGrid || !creatorStudioMeta) {
+    return;
+  }
+  const items = getHomeCollectionProducts(sourceProducts, "creator-studio").slice(0, HOME_CURATED_LIST_LIMIT);
+  if (!items.length) {
+    creatorStudioSection.hidden = true;
+    creatorStudioGrid.innerHTML = "";
+    creatorStudioMeta.textContent = "";
+    return;
+  }
+  creatorStudioSection.hidden = false;
+  creatorStudioGrid.innerHTML = items.map(productCard).join("");
+  creatorStudioMeta.textContent = `${items.length} creator-ready products live now`;
+}
 
 function renderRecentlyViewedSection(sourceProducts) {
   if (!recentlyViewedSection || !recentlyViewedGrid) {
@@ -1177,11 +1533,14 @@ function productCard(product) {
 }
 
 function renderSegmentProducts(list, targetGrid, targetMeta, labelKey) {
-  if (!targetGrid || !targetMeta) {
+  if (!targetGrid) {
     return;
   }
   targetGrid.innerHTML = list.map(productCard).join("");
-  targetMeta.textContent = `${t("products.showing")} ${list.length} ${t(labelKey)}`;
+  if (targetMeta) {
+    targetMeta.textContent = "";
+    targetMeta.hidden = true;
+  }
 }
 
 function storeCard(store) {
@@ -1240,12 +1599,283 @@ function matchesSmartKeyword(product, keyword) {
   return product.name.toLowerCase().includes(keyword);
 }
 
+function escapeSuggestionHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escapeSuggestionRegExp(value) {
+  return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightSuggestionQuery(text, query) {
+  const raw = String(text || "");
+  const cleanQuery = String(query || "").trim();
+  if (!cleanQuery) {
+    return escapeSuggestionHtml(raw);
+  }
+
+  const matcher = new RegExp(`(${escapeSuggestionRegExp(cleanQuery)})`, "ig");
+  const parts = raw.split(matcher);
+  if (parts.length === 1) {
+    return escapeSuggestionHtml(raw);
+  }
+
+  return parts
+    .map((part, index) => (index % 2 === 1 ? `<mark>${escapeSuggestionHtml(part)}</mark>` : escapeSuggestionHtml(part)))
+    .join("");
+}
+
+function renderSuggestionCard(item, query) {
+  const media =
+    item.type === "product" && item.image
+      ? `
+        <span class="suggestion-media suggestion-thumb" aria-hidden="true">
+          <img src="${escapeSuggestionHtml(item.image)}" alt="" loading="lazy" />
+        </span>
+      `
+      : `<span class="suggestion-media suggestion-icon suggestion-icon--${escapeSuggestionHtml(item.type)}" aria-hidden="true"></span>`;
+
+  const kicker = item.kicker
+    ? `<span class="suggestion-kicker">${escapeSuggestionHtml(item.kicker)}</span>`
+    : "";
+  const meta = item.meta
+    ? `<span class="suggestion-meta">${highlightSuggestionQuery(item.meta, query)}</span>`
+    : "";
+  const trailingParts = [];
+  if (item.priceText) {
+    trailingParts.push(`<span class="suggestion-price">${escapeSuggestionHtml(item.priceText)}</span>`);
+  }
+  if (item.action) {
+    trailingParts.push(`<span class="suggestion-action">${escapeSuggestionHtml(item.action)}</span>`);
+  }
+  const trailing = trailingParts.length
+    ? `<span class="suggestion-trailing">${trailingParts.join("")}</span>`
+    : "";
+
+  return `
+    <button class="suggestion-item suggestion-item--${escapeSuggestionHtml(item.type)}" type="button" data-suggestion-type="${escapeSuggestionHtml(item.type)}" data-suggestion-value="${escapeSuggestionHtml(item.value)}">
+      ${media}
+      <span class="suggestion-copy">
+        ${kicker}
+        <span class="suggestion-label">${highlightSuggestionQuery(item.label, query)}</span>
+        ${meta}
+      </span>
+      ${trailing}
+    </button>
+  `;
+}
+
+function renderSuggestionSection(title, items, query) {
+  if (!items.length) {
+    return "";
+  }
+  return `
+    <section class="suggestion-group">
+      <div class="suggestion-group-head">
+        <p class="suggestion-group-label">${escapeSuggestionHtml(title)}</p>
+        ${title === "Recent Searches" ? '<button class="suggestion-clear" type="button" data-clear-search-history="1">Clear</button>' : ""}
+      </div>
+      ${items.map((item) => renderSuggestionCard(item, query)).join("")}
+    </section>
+  `;
+}
+
+function renderSuggestionEmptyState(query) {
+  return `
+    <div class="suggestion-empty">
+      <strong>No direct matches yet</strong>
+      <span>Press Search to explore all results for "${escapeSuggestionHtml(query)}".</span>
+    </div>
+  `;
+}
+
 function closeSearchSuggestions() {
   if (!searchSuggestions) {
     return;
   }
   searchSuggestions.hidden = true;
   searchSuggestions.innerHTML = "";
+  searchSuggestions.setAttribute("aria-hidden", "true");
+  searchInput?.setAttribute("aria-expanded", "false");
+  searchInput?.removeAttribute("aria-activedescendant");
+  resetSearchSuggestionNavigation();
+}
+
+function clearSearchHistory() {
+  saveSearchHistory([]);
+}
+
+let activeSearchSuggestionIndex = -1;
+
+function getSearchSuggestionButtons() {
+  return searchSuggestions
+    ? Array.from(searchSuggestions.querySelectorAll("[data-suggestion-type]"))
+    : [];
+}
+
+function prepareSearchSuggestionAccessibility() {
+  if (!searchSuggestions || !searchInput) {
+    return;
+  }
+  searchSuggestions.setAttribute("role", "listbox");
+  searchSuggestions.setAttribute("aria-hidden", searchSuggestions.hidden ? "true" : "false");
+  searchInput.setAttribute("aria-controls", "searchSuggestions");
+  searchInput.setAttribute("aria-expanded", searchSuggestions.hidden ? "false" : "true");
+  getSearchSuggestionButtons().forEach((item, index) => {
+    if (!item.id) {
+      item.id = `search-suggestion-${index}`;
+    }
+    item.setAttribute("role", "option");
+    item.setAttribute("aria-selected", item.classList.contains("is-active") ? "true" : "false");
+  });
+}
+
+function resetSearchSuggestionNavigation() {
+  activeSearchSuggestionIndex = -1;
+  getSearchSuggestionButtons().forEach((item) => {
+    item.classList.remove("is-active");
+    item.setAttribute("aria-selected", "false");
+  });
+  searchInput?.removeAttribute("aria-activedescendant");
+}
+
+function setActiveSearchSuggestionIndex(nextIndex) {
+  const items = getSearchSuggestionButtons();
+  if (!items.length) {
+    activeSearchSuggestionIndex = -1;
+    return -1;
+  }
+  const safeIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
+  activeSearchSuggestionIndex = safeIndex;
+  items.forEach((item, index) => {
+    const active = index === safeIndex;
+    item.classList.toggle("is-active", active);
+    item.setAttribute("aria-selected", active ? "true" : "false");
+  });
+  searchInput?.setAttribute("aria-activedescendant", items[safeIndex].id);
+  items[safeIndex].scrollIntoView({ block: "nearest" });
+  return safeIndex;
+}
+
+function moveActiveSearchSuggestion(direction) {
+  const items = getSearchSuggestionButtons();
+  if (!items.length) {
+    return false;
+  }
+  if (activeSearchSuggestionIndex < 0) {
+    setActiveSearchSuggestionIndex(direction > 0 ? 0 : items.length - 1);
+    return true;
+  }
+  const nextIndex = (activeSearchSuggestionIndex + direction + items.length) % items.length;
+  setActiveSearchSuggestionIndex(nextIndex);
+  return true;
+}
+
+function activateActiveSearchSuggestion() {
+  const items = getSearchSuggestionButtons();
+  if (activeSearchSuggestionIndex < 0 || !items[activeSearchSuggestionIndex]) {
+    return false;
+  }
+  const activeItem = items[activeSearchSuggestionIndex];
+  const type = activeItem.getAttribute("data-suggestion-type");
+  const value = String(activeItem.getAttribute("data-suggestion-value") || "").trim();
+  handleSearchSuggestionSelection(type, value);
+  return true;
+}
+
+function handleSearchSuggestionKeydown(event) {
+  if (!searchSuggestions || !searchInput) {
+    return;
+  }
+  if (event.key === "Escape") {
+    if (!searchSuggestions.hidden) {
+      event.preventDefault();
+      closeSearchSuggestions();
+    }
+    return;
+  }
+  if (event.key === "Tab") {
+    if (searchSuggestions.hidden) {
+      return;
+    }
+    const items = getSearchSuggestionButtons();
+    if (!items.length) {
+      if (event.shiftKey) {
+        closeSearchSuggestions();
+      }
+      return;
+    }
+    if (event.shiftKey) {
+      closeSearchSuggestions();
+      return;
+    }
+    event.preventDefault();
+    const nextIndex = activeSearchSuggestionIndex >= 0 ? activeSearchSuggestionIndex : 0;
+    setActiveSearchSuggestionIndex(nextIndex);
+    items[nextIndex].focus();
+    return;
+  }
+  if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) {
+    return;
+  }
+  if (searchSuggestions.hidden) {
+    renderSearchSuggestions();
+  }
+  const items = getSearchSuggestionButtons();
+  if (!items.length) {
+    return;
+  }
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    moveActiveSearchSuggestion(1);
+    return;
+  }
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    moveActiveSearchSuggestion(-1);
+    return;
+  }
+  if (event.key === "Enter" && activeSearchSuggestionIndex >= 0) {
+    event.preventDefault();
+    activateActiveSearchSuggestion();
+  }
+}
+
+function buildProductsSearchUrl(query = "", category = "all") {
+  const params = new URLSearchParams();
+  const cleanQuery = String(query || "").trim();
+  const cleanCategory = String(category || "all").trim().toLowerCase();
+  if (cleanQuery) {
+    params.set("search", cleanQuery);
+  }
+  if (cleanCategory && cleanCategory !== "all") {
+    params.set("category", cleanCategory);
+  }
+  const suffix = params.toString();
+  return suffix ? `products.html?${suffix}` : "products.html";
+}
+
+function handleSearchSuggestionSelection(type, value) {
+  closeSearchSuggestions();
+  if (type === "product" && value) {
+    window.location.href = `product-detail.html?id=${encodeURIComponent(value)}`;
+    return;
+  }
+  if (type === "category" && value) {
+    rememberSearchQuery(getReadableCategoryLabel(value));
+    window.location.href = buildProductsSearchUrl("", value);
+    return;
+  }
+  if (type === "history" && value) {
+    searchInput.value = value;
+    rememberSearchQuery(value);
+    window.location.href = buildProductsSearchUrl(value, categoryFilter.value || "all");
+  }
 }
 
 function renderSearchSuggestions() {
@@ -1259,13 +1889,21 @@ function renderSearchSuggestions() {
       closeSearchSuggestions();
       return;
     }
-    searchSuggestions.innerHTML = recent.map((item) => `
-      <button class="suggestion-item" type="button" data-suggestion-type="history" data-suggestion-value="${item}">
-        <span class="suggestion-label">${item}</span>
-        <span class="suggestion-meta">Recent search</span>
-      </button>
-    `).join("");
+    searchSuggestions.innerHTML = renderSuggestionSection(
+      "Recent Searches",
+      recent.map((item) => ({
+        type: "history",
+        value: item,
+        label: item,
+        meta: "Recent search",
+        kicker: "Recent",
+        action: "Use"
+      })),
+      ""
+    );
     searchSuggestions.hidden = false;
+    prepareSearchSuggestionAccessibility();
+    resetSearchSuggestionNavigation();
     return;
   }
   if (query.length < 2) {
@@ -1282,7 +1920,9 @@ function renderSearchSuggestions() {
       type: "category",
       value: category,
       label: getReadableCategoryLabel(category),
-      meta: "Browse category"
+      meta: "Browse category",
+      kicker: "Category",
+      action: "Browse"
     }));
 
   const productMatches = sourceProducts
@@ -1293,26 +1933,97 @@ function renderSearchSuggestions() {
         type: "product",
         value: String(item.id),
         label: item.name,
-        meta: `${item.brand} · ${money(item.price)} · ${stockState.label}`,
-        stockRank: stockState.rank
+        meta: `${item.brand} | ${getReadableCategoryLabel(normalizeHomeCategory(item.category))} | ${stockState.label}`,
+        kicker: Number(item.rating || 0) > 0 ? `${Number(item.rating).toFixed(1)} star rated` : "Top match",
+        stockRank: stockState.rank,
+        priceText: money(item.price),
+        action: "View",
+        image: normalizeImageUrl(item.image || "")
       };
     })
     .sort((a, b) => a.stockRank - b.stockRank || a.label.localeCompare(b.label))
     .slice(0, 4);
 
-  const items = [...categoryMatches, ...productMatches].slice(0, 6);
-  if (!items.length) {
-    closeSearchSuggestions();
+  const markup = [
+    renderSuggestionSection("Categories", categoryMatches, query),
+    renderSuggestionSection("Top Matches", productMatches, query)
+  ]
+    .filter(Boolean)
+    .join("");
+
+  if (!markup) {
+    searchSuggestions.innerHTML = renderSuggestionEmptyState(String(searchInput.value || "").trim());
+    searchSuggestions.hidden = false;
+    prepareSearchSuggestionAccessibility();
+    resetSearchSuggestionNavigation();
     return;
   }
 
-  searchSuggestions.innerHTML = items.map((item) => `
-    <button class="suggestion-item" type="button" data-suggestion-type="${item.type}" data-suggestion-value="${item.value}">
-      <span class="suggestion-label">${item.label}</span>
-      <span class="suggestion-meta">${item.meta}</span>
-    </button>
-  `).join("");
+  searchSuggestions.innerHTML = markup;
   searchSuggestions.hidden = false;
+  prepareSearchSuggestionAccessibility();
+  resetSearchSuggestionNavigation();
+}
+
+function handleSuggestionListKeydown(event) {
+  const suggestion = event.target.closest("[data-suggestion-type]");
+  if (!suggestion) {
+    return;
+  }
+  const items = getSearchSuggestionButtons();
+  const currentIndex = items.indexOf(suggestion);
+  if (currentIndex < 0) {
+    return;
+  }
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    const nextIndex = (currentIndex + 1) % items.length;
+    setActiveSearchSuggestionIndex(nextIndex);
+    items[nextIndex].focus();
+    return;
+  }
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    const nextIndex = (currentIndex - 1 + items.length) % items.length;
+    setActiveSearchSuggestionIndex(nextIndex);
+    items[nextIndex].focus();
+    return;
+  }
+  if (event.key === "Tab") {
+    if (event.shiftKey) {
+      event.preventDefault();
+      if (currentIndex === 0) {
+        searchInput.focus();
+        setActiveSearchSuggestionIndex(0);
+        return;
+      }
+      const prevIndex = currentIndex - 1;
+      setActiveSearchSuggestionIndex(prevIndex);
+      items[prevIndex].focus();
+      return;
+    }
+    if (currentIndex === items.length - 1) {
+      window.setTimeout(() => closeSearchSuggestions(), 0);
+      return;
+    }
+    event.preventDefault();
+    const nextIndex = currentIndex + 1;
+    setActiveSearchSuggestionIndex(nextIndex);
+    items[nextIndex].focus();
+    return;
+  }
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeSearchSuggestions();
+    searchInput.focus();
+    return;
+  }
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    const type = suggestion.getAttribute("data-suggestion-type");
+    const value = String(suggestion.getAttribute("data-suggestion-value") || "").trim();
+    handleSearchSuggestionSelection(type, value);
+  }
 }
 
 function applyTranslations() {
@@ -1332,12 +2043,14 @@ function applyTranslations() {
     const currentValue = String(categoryFilter.value || "all");
     categoryFilter.innerHTML = [
       `<option value="all">${t("categoryFilter.all")}</option>`,
+      `<option value="computer">${t("categoryFilter.computer")}</option>`,
       `<option value="laptop">${t("categoryFilter.laptop")}</option>`,
+      `<option value="printer">${t("categoryFilter.printer")}</option>`,
       `<option value="mobile">${t("categoryFilter.mobile")}</option>`,
       `<option value="audio">${t("categoryFilter.audio")}</option>`,
       `<option value="accessory">${t("categoryFilter.accessory")}</option>`
     ].join("");
-    categoryFilter.value = ["all", "laptop", "mobile", "audio", "accessory"].includes(currentValue) ? currentValue : "all";
+    categoryFilter.value = ["all", "computer", "laptop", "printer", "mobile", "audio", "accessory"].includes(currentValue) ? currentValue : "all";
   }
   renderStores();
 }
@@ -1349,6 +2062,7 @@ function renderHomeSurface() {
   renderDealStrip(sourceProducts);
   renderHeroSection(sourceProducts);
   renderNewArrivalsWindow(sourceProducts);
+  renderCreatorStudioSection(sourceProducts);
   renderTopRatedSection(sourceProducts);
   renderRecommendedSection(sourceProducts);
   renderRecentlyViewedSection(sourceProducts);
@@ -1377,15 +2091,7 @@ searchForm.addEventListener("submit", (event) => {
   const query = String(searchInput.value || "").trim();
   const category = String(categoryFilter.value || "all").trim();
   rememberSearchQuery(query);
-  const params = new URLSearchParams();
-  if (query) {
-    params.set("search", query);
-  }
-  if (category && category !== "all") {
-    params.set("category", category);
-  }
-  const suffix = params.toString();
-  window.location.href = suffix ? `products.html?${suffix}` : "products.html";
+  window.location.href = buildProductsSearchUrl(query, category);
 });
 
 searchInput.addEventListener("input", () => {
@@ -1393,6 +2099,57 @@ searchInput.addEventListener("input", () => {
   renderSearchSuggestions();
 });
 searchInput.addEventListener("focus", renderSearchSuggestions);
+searchInput.addEventListener("keydown", handleSearchSuggestionKeydown);
+if (searchSuggestions) {
+  searchSuggestions.addEventListener("mousedown", (event) => {
+    if (event.target.closest("[data-suggestion-type], [data-clear-search-history]")) {
+      event.preventDefault();
+    }
+  });
+  searchSuggestions.addEventListener("mouseover", (event) => {
+    const suggestion = event.target.closest("[data-suggestion-type]");
+    if (!suggestion) {
+      return;
+    }
+    const items = getSearchSuggestionButtons();
+    const nextIndex = items.indexOf(suggestion);
+    if (nextIndex >= 0) {
+      setActiveSearchSuggestionIndex(nextIndex);
+    }
+  });
+  searchSuggestions.addEventListener("focusin", (event) => {
+    const suggestion = event.target.closest("[data-suggestion-type]");
+    if (!suggestion) {
+      return;
+    }
+    const items = getSearchSuggestionButtons();
+    const nextIndex = items.indexOf(suggestion);
+    if (nextIndex >= 0) {
+      setActiveSearchSuggestionIndex(nextIndex);
+    }
+  });
+  searchSuggestions.addEventListener("keydown", handleSuggestionListKeydown);
+  searchSuggestions.addEventListener("click", (event) => {
+    const clearButton = event.target.closest("[data-clear-search-history]");
+    if (clearButton) {
+      event.preventDefault();
+      clearSearchHistory();
+      if (String(searchInput.value || "").trim()) {
+        renderSearchSuggestions();
+      } else {
+        closeSearchSuggestions();
+      }
+      return;
+    }
+    const suggestion = event.target.closest("[data-suggestion-type]");
+    if (!suggestion) {
+      return;
+    }
+    const type = suggestion.getAttribute("data-suggestion-type");
+    const value = String(suggestion.getAttribute("data-suggestion-value") || "").trim();
+    handleSearchSuggestionSelection(type, value);
+  });
+}
 categoryFilter.addEventListener("change", filterProducts);
 languageSelect.addEventListener("change", (event) => {
   currentLang = event.target.value;
@@ -1432,18 +2189,47 @@ if (heroTrack) {
 }
 
 function closeMegaMenu() {
+  if (!megaMenu || !megaTrigger) {
+    return;
+  }
   megaMenu.classList.remove("open");
   megaTrigger.setAttribute("aria-expanded", "false");
 }
 
-megaTrigger.addEventListener("click", () => {
-  const isOpen = megaMenu.classList.toggle("open");
-  megaTrigger.setAttribute("aria-expanded", String(isOpen));
-});
+function closeQuickLinksMenu() {
+  if (!quickLinksMenu || !quickLinksTrigger) {
+    return;
+  }
+  quickLinksMenu.classList.remove("open");
+  quickLinksTrigger.setAttribute("aria-expanded", "false");
+}
+
+if (megaTrigger && megaMenu) {
+  megaTrigger.addEventListener("click", () => {
+    const isOpen = megaMenu.classList.toggle("open");
+    megaTrigger.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) {
+      closeQuickLinksMenu();
+    }
+  });
+}
+
+if (quickLinksTrigger && quickLinksMenu) {
+  quickLinksTrigger.addEventListener("click", () => {
+    const isOpen = quickLinksMenu.classList.toggle("open");
+    quickLinksTrigger.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) {
+      closeMegaMenu();
+    }
+  });
+}
 
 document.addEventListener("click", (event) => {
-  if (!megaMenu.contains(event.target) && !megaTrigger.contains(event.target)) {
+  if (megaMenu && megaTrigger && !megaMenu.contains(event.target) && !megaTrigger.contains(event.target)) {
     closeMegaMenu();
+  }
+  if (quickLinksMenu && quickLinksTrigger && !quickLinksMenu.contains(event.target) && !quickLinksTrigger.contains(event.target)) {
+    closeQuickLinksMenu();
   }
 });
 
@@ -1466,33 +2252,11 @@ document.addEventListener("keydown", (event) => {
       return;
     }
     closeMegaMenu();
+    closeQuickLinksMenu();
   }
 });
 
 document.addEventListener("click", (event) => {
-  const suggestion = event.target.closest("[data-suggestion-type]");
-  if (suggestion) {
-    const type = suggestion.getAttribute("data-suggestion-type");
-    const value = String(suggestion.getAttribute("data-suggestion-value") || "").trim();
-    closeSearchSuggestions();
-    if (type === "product" && value) {
-      window.location.href = `product-detail.html?id=${encodeURIComponent(value)}`;
-      return;
-    }
-    if (type === "category" && value) {
-      rememberSearchQuery(getReadableCategoryLabel(value));
-      window.location.href = `products.html?category=${encodeURIComponent(value)}`;
-      return;
-    }
-    if (type === "history" && value) {
-      searchInput.value = value;
-      rememberSearchQuery(value);
-      filterProducts();
-      renderSearchSuggestions();
-      return;
-    }
-  }
-
   if (searchSuggestions && !searchForm.contains(event.target)) {
     closeSearchSuggestions();
   }
@@ -1567,3 +2331,4 @@ applyTranslations();
 initLocationPicker();
 syncCartCount();
 renderHomeSurface();
+void fetchHomeProductsFromApi();

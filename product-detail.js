@@ -46,6 +46,138 @@ const products = [
     stock: 1,
     createdAt: "2026-03-05T14:47:19.204Z",
     updatedAt: "2026-03-05T14:47:19.204Z"
+  },
+  {
+    id: "product_1773480601001",
+    name: "AstraStudio Creator 16",
+    brand: "AstraTech",
+    segment: "b2c",
+    category: "laptop",
+    collections: ["laptop", "creator-studio", "computer"],
+    price: 129999,
+    listPrice: 139999,
+    rating: 4.8,
+    stock: 12,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=900&q=80",
+    description: "16-inch creator laptop with a color-accurate display, fast SSD storage, and export-ready performance for video, design, and streaming workflows.",
+    keywords: ["creator studio", "laptop", "video editing", "design"],
+    sku: "ASTRA-CREATOR-16",
+    status: "active",
+    fulfillment: "fbm",
+    featured: true,
+    createdAt: "2026-03-14T09:10:01.000Z",
+    updatedAt: "2026-03-14T09:10:01.000Z"
+  },
+  {
+    id: "product_1773480601002",
+    name: "OrbitX ViewPro 32 4K",
+    brand: "OrbitX",
+    segment: "b2c",
+    category: "computer",
+    collections: ["computer", "creator-studio"],
+    price: 32999,
+    listPrice: 37999,
+    rating: 4.7,
+    stock: 18,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80",
+    description: "32-inch 4K monitor tuned for editing timelines, grading work, and long studio sessions.",
+    keywords: ["creator studio", "4k monitor", "color monitor", "editing"],
+    sku: "ORBITX-VIEWPRO-32",
+    status: "active",
+    fulfillment: "fbm",
+    featured: true,
+    createdAt: "2026-03-14T09:12:00.000Z",
+    updatedAt: "2026-03-14T09:12:00.000Z"
+  },
+  {
+    id: "product_1773480601003",
+    name: "PulseCast Pro USB Microphone",
+    brand: "PulseWave",
+    segment: "b2c",
+    category: "audio",
+    collections: ["audio", "creator-studio"],
+    price: 8999,
+    listPrice: 10999,
+    rating: 4.6,
+    stock: 26,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80",
+    description: "USB creator microphone with a clean vocal profile for streaming, podcasts, and client calls.",
+    keywords: ["creator studio", "microphone", "podcast", "streaming"],
+    sku: "PULSECAST-PRO-USB",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:14:00.000Z",
+    updatedAt: "2026-03-14T09:14:00.000Z"
+  },
+  {
+    id: "product_1773480601004",
+    name: "Nimbus StreamCam 4K",
+    brand: "Nimbus",
+    segment: "b2c",
+    category: "accessory",
+    collections: ["accessory", "creator-studio"],
+    price: 6999,
+    listPrice: 8499,
+    rating: 4.5,
+    stock: 31,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+    description: "Compact 4K webcam with autofocus and sharp framing for live sessions and remote shoots.",
+    keywords: ["creator studio", "webcam", "4k camera", "streaming"],
+    sku: "NIMBUS-STREAMCAM-4K",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:16:00.000Z",
+    updatedAt: "2026-03-14T09:16:00.000Z"
+  },
+  {
+    id: "product_1773480601005",
+    name: "VectorDock 12-in-1 Thunderbolt Hub",
+    brand: "Vector",
+    segment: "b2c",
+    category: "accessory",
+    collections: ["accessory", "creator-studio", "computer"],
+    price: 11999,
+    listPrice: 13999,
+    rating: 4.4,
+    stock: 22,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=80",
+    description: "Single-cable dock with creator-friendly ports for drives, monitors, cameras, and fast charging.",
+    keywords: ["creator studio", "dock", "thunderbolt", "hub"],
+    sku: "VECTORDOCK-12IN1",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:18:00.000Z",
+    updatedAt: "2026-03-14T09:18:00.000Z"
+  },
+  {
+    id: "product_1773480601006",
+    name: "AstraPad Pen Display 13",
+    brand: "AstraTech",
+    segment: "b2c",
+    category: "computer",
+    collections: ["computer", "creator-studio"],
+    price: 45999,
+    listPrice: 49999,
+    rating: 4.7,
+    stock: 9,
+    moq: 0,
+    image: "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=900&q=80",
+    description: "13-inch pen display for sketching, retouching, and precise creative control across design workflows.",
+    keywords: ["creator studio", "pen display", "illustration", "design"],
+    sku: "ASTRAPAD-13",
+    status: "active",
+    fulfillment: "fbm",
+    featured: false,
+    createdAt: "2026-03-14T09:20:00.000Z",
+    updatedAt: "2026-03-14T09:20:00.000Z"
   }
 ];
 
@@ -168,6 +300,8 @@ let fsMediaFilter = "images";
 let fsZoomScale = 1;
 let failedMediaIndexes = new Set();
 let currentProductRecord = null;
+let apiCatalogProducts = [];
+let catalogProductsFetchPromise = null;
 const FALLBACK_IMAGE_URL = "./product-placeholder.svg";
 function escapeHtml(value) {
   return String(value || "")
@@ -214,11 +348,12 @@ function renderServices(product, isInStock) {
   if (!servicesBlock || !serviceDeliveryText || !serviceReturnText || !serviceWarrantyText || !serviceSellerText) {
     return;
   }
+  const categoryFamily = getProductCategoryFamily(product);
   serviceDeliveryText.textContent = isInStock
     ? "FREE delivery by tomorrow in select cities."
     : "Delivery date will be shown after stock update.";
   serviceReturnText.textContent = "7-day replacement, no-questions-asked for defective items.";
-  serviceWarrantyText.textContent = product.category === "laptop" || product.category === "computer"
+  serviceWarrantyText.textContent = categoryFamily === "laptop" || categoryFamily === "computer"
     ? "1 Year manufacturer warranty + service center support."
     : "6 Months to 1 Year standard brand warranty.";
   serviceSellerText.textContent = `${product.brand} Authorized Seller | GST invoice available.`;
@@ -559,6 +694,49 @@ function cacheCatalogProduct(product) {
   saveCatalogMap(next);
 }
 
+function cacheCatalogProducts(productsList) {
+  if (!Array.isArray(productsList) || !productsList.length) {
+    return;
+  }
+  const next = loadCatalogMap();
+  let changed = false;
+  productsList.forEach((product) => {
+    if (!product || !product.id) {
+      return;
+    }
+    const key = String(product.id).trim();
+    if (!key) {
+      return;
+    }
+    const existing = next[key] || {};
+    next[key] = {
+      ...existing,
+      ...product,
+      id: key,
+      name: product.name || existing.name || `Product #${key}`,
+      price: Number(product.price ?? existing.price ?? 0),
+      listPrice: Number(product.listPrice ?? existing.listPrice ?? product.price ?? 0),
+      rating: Number(product.rating ?? existing.rating ?? 0),
+      stock: Number(product.stock ?? existing.stock ?? 0),
+      moq: Number(product.moq ?? existing.moq ?? 0),
+      image: product.image || existing.image || FALLBACK_IMAGE_URL,
+      images: Array.isArray(product.images) ? product.images : (Array.isArray(existing.images) ? existing.images : []),
+      videos: Array.isArray(product.videos) ? product.videos : (Array.isArray(existing.videos) ? existing.videos : []),
+      media: Array.isArray(product.media) ? product.media : (Array.isArray(existing.media) ? existing.media : []),
+      keywords: Array.isArray(product.keywords) ? product.keywords : (Array.isArray(existing.keywords) ? existing.keywords : []),
+      description: String(product.description ?? existing.description ?? "").trim(),
+      sku: String(product.sku ?? existing.sku ?? "").trim(),
+      status: String(product.status ?? existing.status ?? "active"),
+      fulfillment: String(product.fulfillment ?? existing.fulfillment ?? "fbm"),
+      featured: Boolean(product.featured ?? existing.featured ?? false)
+    };
+    changed = true;
+  });
+  if (changed) {
+    saveCatalogMap(next);
+  }
+}
+
 function syncCartCount() {
   const cartMap = loadCartMap();
   const total = Object.values(cartMap).reduce((sum, qty) => sum + Number(qty || 0), 0);
@@ -702,6 +880,63 @@ function parseKeywordList(value) {
     .filter(Boolean);
 }
 
+function formatCategoryLabel(value) {
+  return asCleanText(value, "Accessory")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function buildProductCategorySignal(product) {
+  const parts = [];
+  const append = (value) => {
+    if (Array.isArray(value)) {
+      value.forEach(append);
+      return;
+    }
+    const text = String(value || "").trim().toLowerCase();
+    if (text) {
+      parts.push(text);
+    }
+  };
+  append(product?.category);
+  append(product?.collections);
+  append(product?.keywords);
+  append(product?.name);
+  append(product?.brand);
+  return parts.join(" ").replace(/[^a-z0-9]+/g, " ");
+}
+
+function getProductCategoryFamily(product) {
+  const fallbackCategory = asCleanText(product?.category, "accessory").toLowerCase();
+  const signal = buildProductCategorySignal(product);
+
+  if (/(printer|plotter|scanner|ink|toner|cartridge|label printer|all printer)/.test(signal)) {
+    return "printer";
+  }
+  if (/(headphone|headset|earbud|earphone|speaker|soundbar|microphone|audio|home theater)/.test(signal)) {
+    return "audio";
+  }
+  if (/(battery|keyboard|adapter|charger|cable|case|cover|power bank|mouse|pendrive|ssd enclosure|cooler|fan|dock|hub|bag|accessory)/.test(signal)) {
+    return "accessory";
+  }
+  if (/(desktop|workstation|cabinet|all in one|aio|monitor|computer|gaming pc|office tower|assembled pc|mini pc)/.test(signal)) {
+    return "computer";
+  }
+  if (/(mobile|smartphone|phone|tablet|wearable|smartwatch|watch)/.test(signal)) {
+    return "mobile";
+  }
+  if (/(laptop|notebook|macbook|chromebook)/.test(signal)) {
+    return "laptop";
+  }
+
+  if (["laptop", "mobile", "audio", "accessory", "computer", "printer"].includes(fallbackCategory)) {
+    return fallbackCategory;
+  }
+  return fallbackCategory || "accessory";
+}
+
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return String(params.get("id") || "").trim();
@@ -748,6 +983,20 @@ function mapApiProduct(product) {
   };
 }
 
+function mergeProductListsById(...lists) {
+  const merged = new Map();
+  lists.flat().forEach((item) => {
+    if (!item || !item.id) {
+      return;
+    }
+    const normalized = mapApiProduct(item);
+    const key = String(normalized.id);
+    const existing = merged.get(key);
+    merged.set(key, existing ? mergeProductSources(normalized, existing) : normalized);
+  });
+  return Array.from(merged.values());
+}
+
 async function fetchProductFromApi(productId) {
   if (!productId) {
     return null;
@@ -766,6 +1015,39 @@ async function fetchProductFromApi(productId) {
     return null;
   }
   return mapApiProduct(data);
+}
+
+async function fetchCatalogProductsFromApi() {
+  if (apiCatalogProducts.length) {
+    return apiCatalogProducts;
+  }
+  if (catalogProductsFetchPromise) {
+    return catalogProductsFetchPromise;
+  }
+
+  catalogProductsFetchPromise = (async () => {
+    let response;
+    try {
+      response = await fetch(`${API_BASE_URL}/products?status=active`);
+    } catch (error) {
+      return apiCatalogProducts;
+    }
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data || !Array.isArray(data.products)) {
+      return apiCatalogProducts;
+    }
+    apiCatalogProducts = data.products
+      .map(mapApiProduct)
+      .filter((item) => item && item.id);
+    cacheCatalogProducts(apiCatalogProducts);
+    return apiCatalogProducts;
+  })();
+
+  try {
+    return await catalogProductsFetchPromise;
+  } finally {
+    catalogProductsFetchPromise = null;
+  }
 }
 
 function extractRawMedia(product) {
@@ -1244,6 +1526,68 @@ function closeFullscreenViewer() {
   document.body.style.overflow = "";
 }
 
+function renderRelatedProducts(items) {
+  if (!relatedBlock || !relatedGrid) {
+    return;
+  }
+  if (!Array.isArray(items) || !items.length) {
+    relatedGrid.innerHTML = "";
+    relatedBlock.hidden = true;
+    return;
+  }
+  relatedGrid.innerHTML = items.map((item) => `
+    <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-item">
+      <img src="${normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL}" alt="${item.name}" loading="lazy" />
+      <p>${item.name}</p>
+    </a>
+  `).join("");
+  relatedBlock.hidden = false;
+}
+
+function buildRelatedProducts(product, candidates) {
+  const selectedFamily = getProductCategoryFamily(product);
+  const selectedPrice = Number(product.price || 0);
+  return mergeProductListsById(candidates)
+    .filter((item) => item.id !== product.id && String(item.status || "active").toLowerCase() === "active")
+    .map((item) => {
+      let score = Number(item.rating || 0);
+      if (item.brand === product.brand) {
+        score += 8;
+      }
+      if (getProductCategoryFamily(item) === selectedFamily) {
+        score += 6;
+      }
+      if (item.segment === product.segment) {
+        score += 2;
+      }
+      if (item.featured) {
+        score += 1.5;
+      }
+      if (Number(item.stock || 0) > 0) {
+        score += 1;
+      }
+      if (selectedPrice > 0) {
+        const priceDeltaRatio = Math.abs(Number(item.price || 0) - selectedPrice) / selectedPrice;
+        score += Math.max(0, 2 - priceDeltaRatio);
+      }
+      return { item, score };
+    })
+    .sort((a, b) => b.score - a.score || Number(a.item.price || 0) - Number(b.item.price || 0))
+    .map((entry) => entry.item)
+    .slice(0, 4);
+}
+
+async function hydrateRelatedProducts(product) {
+  const localCandidates = mergeProductListsById(Object.values(loadCatalogMap()), allProducts);
+  renderRelatedProducts(buildRelatedProducts(product, localCandidates));
+
+  const remoteCandidates = await fetchCatalogProductsFromApi();
+  if (!remoteCandidates.length) {
+    return;
+  }
+  renderRelatedProducts(buildRelatedProducts(product, mergeProductListsById(remoteCandidates, localCandidates)));
+}
+
 function renderProduct(product) {
   currentProductRecord = product;
   cacheCatalogProduct(product);
@@ -1302,19 +1646,20 @@ function renderProduct(product) {
   addToCartBtn.textContent = isInStock ? "Add to Cart" : "Out of Stock";
   setBackInStockPanelState(product, isInStock);
   crumbName.textContent = product.name;
-  renderOffers(price, listPrice, product.category);
+  const productCategoryFamily = getProductCategoryFamily(product);
+  renderOffers(price, listPrice, productCategoryFamily);
   renderServices(product, isInStock);
   renderReviewSummary(product);
   renderQa(product);
 
-  const defaultSpecs = specMap[product.category] || ["Quality assured", "Trusted by customers", "Fast delivery options"];
+  const defaultSpecs = specMap[productCategoryFamily] || ["Quality assured", "Trusted by customers", "Fast delivery options"];
   const keywordSpecs = Array.isArray(product.keywords) ? product.keywords.slice(0, 6) : [];
   const specs = keywordSpecs.length ? keywordSpecs : defaultSpecs;
   productSpecs.innerHTML = specs.map((spec) => `<li>${spec}</li>`).join("");
 
   infoSku.textContent = product.sku || "--";
   infoBrand.textContent = product.brand;
-  infoCategory.textContent = product.category;
+  infoCategory.textContent = formatCategoryLabel(productCategoryFamily);
   infoSegment.textContent = product.segment.toUpperCase();
   infoPrice.textContent = money(price);
   infoListPrice.textContent = money(listPrice);
@@ -1329,20 +1674,7 @@ function renderProduct(product) {
 
   addToCartBtn.setAttribute("data-id", String(product.id));
   syncWishlistButton(product.id);
-
-  const related = allProducts
-    .filter((item) => item.id !== product.id && (item.category === product.category || item.brand === product.brand))
-    .slice(0, 4);
-
-  if (related.length > 0) {
-    relatedGrid.innerHTML = related.map((item) => `
-      <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-item">
-        <img src="${normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL}" alt="${item.name}" loading="lazy" />
-        <p>${item.name}</p>
-      </a>
-    `).join("");
-    relatedBlock.hidden = false;
-  }
+  void hydrateRelatedProducts(product);
 }
 
 async function initProductPage() {
