@@ -248,16 +248,43 @@ async function runAuthSmoke(browser) {
 
     await page.fill("#signinIdentifier", "customer@electromart.com");
     await page.fill("#signinPassword", "Customer@123");
-    await page.click("#generateOtpBtn");
-    await page.waitForFunction(() => {
-      const message = document.getElementById("authMessage");
-      return message && /Demo OTP:\s*\d{6}/.test(message.textContent || "");
-    }, { timeout: 15000 });
+    let otpMessage = "";
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (attempt > 0) {
+        await page.waitForFunction(() => {
+          const button = document.getElementById("generateOtpBtn");
+          return button && button.disabled === false;
+        }, { timeout: 70000 });
+      }
 
-    const otpMessage = await page.locator("#authMessage").textContent();
+      await page.click("#generateOtpBtn");
+      await page.waitForFunction(() => {
+        const message = document.getElementById("authMessage");
+        const button = document.getElementById("generateOtpBtn");
+        const assist = document.getElementById("signinOtpAssist");
+        const text = String(message?.textContent || "");
+        return /Demo OTP:\s*\d{6}/.test(text)
+          || Boolean(assist && assist.hidden === false)
+          || /Resend OTP/i.test(String(button?.textContent || ""))
+          || /too many|try again|request/i.test(text);
+      }, { timeout: 20000 });
+
+      otpMessage = String(await page.locator("#authMessage").textContent() || "");
+      if (/Demo OTP:\s*\d{6}/.test(otpMessage)) {
+        break;
+      }
+    }
+
     const otpMatch = String(otpMessage || "").match(/(\d{6})/);
     if (!otpMatch) {
-      throw new Error("Auth smoke could not extract demo OTP.");
+      const authSnapshot = await page.evaluate(() => ({
+        message: document.getElementById("authMessage")?.textContent?.trim() || "",
+        otpDestination: document.getElementById("signinOtpDestination")?.textContent?.trim() || "",
+        otpTimer: document.getElementById("signinOtpTimer")?.textContent?.trim() || "",
+        buttonText: document.getElementById("generateOtpBtn")?.textContent?.trim() || "",
+        buttonDisabled: Boolean(document.getElementById("generateOtpBtn")?.disabled)
+      }));
+      throw new Error(`Auth smoke could not extract demo OTP. ${JSON.stringify(authSnapshot)}`);
     }
     await page.fill("#signinOtp", otpMatch[1]);
     await page.click("#signinForm button[type='submit']");
