@@ -297,6 +297,7 @@ let lastAdminToastAt = 0;
 let adminOrderFilterChipController = null;
 let adminCatalogFilterChipController = null;
 let adminAfterSalesFilterChipController = null;
+let adminUserFilterChipController = null;
 const MAX_PRODUCT_IMAGES = 15;
 const MAX_UPLOAD_IMAGE_MB = 15;
 const MAX_UPLOAD_VIDEO_MB = 50;
@@ -2517,7 +2518,9 @@ function renderUsers(users) {
     const state = normalizeUserPhoneVerification(user.phoneVerification, user.mobile);
     return !state.isVerified && state.hasPendingCode;
   }).length;
-  usersMeta.textContent = `${users.length} users • ${verifiedCount} verified${pendingCount ? ` • ${pendingCount} pending` : ""}`;
+  const totalUsers = Array.isArray(allUsers) ? allUsers.length : users.length;
+  const countPrefix = users.length === totalUsers ? `${users.length} users` : `Showing ${users.length} of ${totalUsers} users`;
+  usersMeta.textContent = `${countPrefix} • ${verifiedCount} verified${pendingCount ? ` • ${pendingCount} pending` : ""}`;
   if (!users.length) {
     usersTableBody.innerHTML = "<tr><td colspan='5'>No users found.</td></tr>";
     return;
@@ -2538,6 +2541,69 @@ function renderUsers(users) {
       </tr>
     `;
   }).join("");
+}
+
+function getUserRoleFilterLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Role: All";
+  }
+  const selectedLabel = String(userRoleFilter?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Role: ${selectedLabel}`;
+}
+
+function getUserPhoneFilterLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Phone: All";
+  }
+  const selectedLabel = String(userPhoneVerificationFilter?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Phone: ${selectedLabel}`;
+}
+
+function getActiveUserFilters() {
+  const filters = [];
+  const query = String(userSearch?.value || "").trim();
+  const role = String(userRoleFilter?.value || "all").trim().toLowerCase();
+  const phoneState = String(userPhoneVerificationFilter?.value || "all").trim().toLowerCase();
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        userSearch.value = "";
+      },
+      focus: userSearch,
+      feedback: "Removed user search filter. Focus moved to the user search input."
+    });
+  }
+
+  if (role !== "all") {
+    filters.push({
+      id: "role",
+      label: getUserRoleFilterLabel(role),
+      clear: () => {
+        userRoleFilter.value = "all";
+      },
+      focus: userRoleFilter,
+      feedback: "Removed user role filter. Focus moved to the role filter."
+    });
+  }
+
+  if (phoneState !== "all") {
+    filters.push({
+      id: "phoneState",
+      label: getUserPhoneFilterLabel(phoneState),
+      clear: () => {
+        userPhoneVerificationFilter.value = "all";
+      },
+      focus: userPhoneVerificationFilter,
+      feedback: "Removed phone verification filter. Focus moved to the phone filter."
+    });
+  }
+
+  return filters;
 }
 
 function getFilteredUsers() {
@@ -2563,6 +2629,7 @@ function getFilteredUsers() {
 
 function applyUserFilters() {
   renderUsers(getFilteredUsers());
+  adminUserFilterChipController?.update();
 }
 
 function orderItemsPreview(order) {
@@ -5928,6 +5995,25 @@ adminAfterSalesFilterChipController = window.ElectroMartListingFilterChips?.init
   clearAllFeedback: "Removed all after-sales filters. Focus moved to the search input.",
   onChange: () => renderAfterSales({ cases: allAfterSalesCases, summary: currentAfterSalesSummary }),
   getResultSummary: () => String(afterSalesMeta?.textContent || "").trim()
+}) || null;
+adminUserFilterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#users .panel-tools",
+  getFilters: getActiveUserFilters,
+  clearAll: () => {
+    if (userSearch) {
+      userSearch.value = "";
+    }
+    if (userRoleFilter) {
+      userRoleFilter.value = "all";
+    }
+    if (userPhoneVerificationFilter) {
+      userPhoneVerificationFilter.value = "all";
+    }
+  },
+  focusAfterClearAll: userSearch,
+  clearAllFeedback: "Removed all user filters. Focus moved to the user search input.",
+  onChange: applyUserFilters,
+  getResultSummary: () => String(usersMeta?.textContent || "").trim()
 }) || null;
 userSearch.addEventListener("input", applyUserFilters);
 userRoleFilter.addEventListener("change", applyUserFilters);
