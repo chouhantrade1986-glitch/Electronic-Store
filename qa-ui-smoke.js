@@ -488,6 +488,41 @@ async function runAccountSmoke(browser, customerSession) {
 async function runAdminDashboardSmoke(browser, adminSession) {
   return withSessionPage(browser, adminSession, async (page) => {
     const screenshotPath = artifactPath("qa-admin-dashboard-browser.png");
+    const normalizeText = (value) => String(value || "").replace(/\s+/g, " ").trim();
+    const chipLabels = async (panelSelector) => {
+      const labels = await page.locator(`${panelSelector} .listing-filter-chip .listing-filter-chip-label`).allTextContents();
+      return labels.map((value) => normalizeText(value)).filter(Boolean);
+    };
+    const getFirstNonAllOption = async (selector) => page.$eval(selector, (select) => {
+      const options = Array.from(select.options || []);
+      const match = options.find((option) => String(option.value || "").trim().toLowerCase() !== "all");
+      return match
+        ? {
+          value: String(match.value || "").trim(),
+          label: String(match.textContent || "").trim()
+        }
+        : null;
+    }).catch(() => null);
+    const waitForChipCount = async (panelSelector, expectedCount) => {
+      await page.waitForFunction(({ panelSelector, expectedCount }) => {
+        return document.querySelectorAll(`${panelSelector} .listing-filter-chip`).length >= expectedCount;
+      }, { panelSelector, expectedCount }, { timeout: 15000 });
+    };
+    const removeChipAndVerify = async (panelSelector, labelFragment, focusId, metaSelector) => {
+      const chip = page.locator(`${panelSelector} .listing-filter-chip`).filter({ hasText: labelFragment }).first();
+      await chip.click();
+      await page.waitForFunction(({ panelSelector, labelFragment }) => {
+        return !Array.from(document.querySelectorAll(`${panelSelector} .listing-filter-chip-label`))
+          .some((node) => String(node.textContent || "").includes(labelFragment));
+      }, { panelSelector, labelFragment }, { timeout: 15000 });
+      return {
+        labels: await chipLabels(panelSelector),
+        feedback: normalizeText(await page.locator(`${panelSelector} .listing-filter-feedback`).textContent().catch(() => "")),
+        focusId: await page.evaluate(() => document.activeElement && document.activeElement.id ? document.activeElement.id : ""),
+        meta: normalizeText(await page.locator(metaSelector).textContent().catch(() => ""))
+      };
+    };
+
     await page.goto(`${FRONTEND_URL}/admin-dashboard.html`, { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => {
       const badge = document.getElementById("backendStatusBadge");
@@ -506,6 +541,104 @@ async function runAdminDashboardSmoke(browser, adminSession) {
       const message = document.getElementById("adminMessage");
       return message && /up to date/i.test(message.textContent || "");
     }, { timeout: 30000 });
+
+    const orderStatusOption = await getFirstNonAllOption("#orderStatusFilterAdmin");
+    await page.fill("#orderSearchAdmin", "qa-order");
+    if (orderStatusOption && orderStatusOption.value) {
+      await page.selectOption("#orderStatusFilterAdmin", orderStatusOption.value);
+    }
+    await waitForChipCount("#orders", orderStatusOption ? 3 : 2);
+    const orderChipsBefore = await chipLabels("#orders");
+    const orderStatusRemoval = orderStatusOption
+      ? await removeChipAndVerify("#orders", "Status:", "orderStatusFilterAdmin", "#ordersMeta")
+      : null;
+
+    const catalogCategoryOption = await getFirstNonAllOption("#catalogCategoryFilter");
+    const catalogSegmentOption = await getFirstNonAllOption("#catalogSegmentFilter");
+    await page.locator("#catalogSearch").scrollIntoViewIfNeeded();
+    await page.fill("#catalogSearch", "qa-catalog");
+    if (catalogCategoryOption && catalogCategoryOption.value) {
+      await page.selectOption("#catalogCategoryFilter", catalogCategoryOption.value);
+    }
+    if (catalogSegmentOption && catalogSegmentOption.value) {
+      await page.selectOption("#catalogSegmentFilter", catalogSegmentOption.value);
+    }
+    await page.click("#inventoryShowLowBtn");
+    await waitForChipCount("#catalog", 5);
+    const catalogChipsBefore = await chipLabels("#catalog");
+    const catalogInventoryRemoval = await removeChipAndVerify("#catalog", "Inventory:", "inventoryShowAllBtn", "#catalogMeta");
+
+    const afterSalesTypeOption = await getFirstNonAllOption("#afterSalesTypeFilter");
+    const afterSalesStatusOption = await getFirstNonAllOption("#afterSalesStatusFilter");
+    await page.locator("#afterSalesSearchInput").scrollIntoViewIfNeeded();
+    await page.fill("#afterSalesSearchInput", "qa-case");
+    if (afterSalesTypeOption && afterSalesTypeOption.value) {
+      await page.selectOption("#afterSalesTypeFilter", afterSalesTypeOption.value);
+    }
+    if (afterSalesStatusOption && afterSalesStatusOption.value) {
+      await page.selectOption("#afterSalesStatusFilter", afterSalesStatusOption.value);
+    }
+    await waitForChipCount("#afterSales", 4);
+    const afterSalesChipsBefore = await chipLabels("#afterSales");
+    const afterSalesStatusRemoval = await removeChipAndVerify("#afterSales", "Status:", "afterSalesStatusFilter", "#afterSalesMeta");
+
+    const userRoleOption = await getFirstNonAllOption("#userRoleFilter");
+    const userPhoneOption = await getFirstNonAllOption("#userPhoneVerificationFilter");
+    await page.locator("#userSearch").scrollIntoViewIfNeeded();
+    await page.fill("#userSearch", "qa-user");
+    if (userRoleOption && userRoleOption.value) {
+      await page.selectOption("#userRoleFilter", userRoleOption.value);
+    }
+    if (userPhoneOption && userPhoneOption.value) {
+      await page.selectOption("#userPhoneVerificationFilter", userPhoneOption.value);
+    }
+    await waitForChipCount("#users", 4);
+    const userChipsBefore = await chipLabels("#users");
+    const userPhoneRemoval = await removeChipAndVerify("#users", "Phone:", "userPhoneVerificationFilter", "#usersMeta");
+
+    const auditCategoryOption = await getFirstNonAllOption("#adminAuditCategoryFilter");
+    await page.locator("#adminAuditSearchInput").scrollIntoViewIfNeeded();
+    await page.fill("#adminAuditSearchInput", "qa-audit");
+    if (auditCategoryOption && auditCategoryOption.value) {
+      await page.selectOption("#adminAuditCategoryFilter", auditCategoryOption.value);
+    }
+    await waitForChipCount("#adminAuditTrail", auditCategoryOption ? 3 : 2);
+    const auditChipsBefore = await chipLabels("#adminAuditTrail");
+    const auditCategoryRemoval = auditCategoryOption
+      ? await removeChipAndVerify("#adminAuditTrail", "Category:", "adminAuditCategoryFilter", "#adminAuditMeta")
+      : null;
+
+    if (!orderChipsBefore.some((item) => item.includes("Search:"))) {
+      throw new Error("Admin orders smoke did not render search chip.");
+    }
+    if (!orderStatusRemoval || orderStatusRemoval.focusId !== "orderStatusFilterAdmin") {
+      throw new Error("Admin orders smoke did not return focus to the order status filter.");
+    }
+    if (!catalogChipsBefore.some((item) => item.includes("Inventory:"))) {
+      throw new Error("Admin catalog smoke did not render inventory chip.");
+    }
+    if (!catalogInventoryRemoval || catalogInventoryRemoval.focusId !== "inventoryShowAllBtn") {
+      throw new Error("Admin catalog smoke did not return focus to the inventory controls.");
+    }
+    if (!afterSalesChipsBefore.some((item) => item.includes("Status:"))) {
+      throw new Error("Admin after-sales smoke did not render status chip.");
+    }
+    if (!afterSalesStatusRemoval || afterSalesStatusRemoval.focusId !== "afterSalesStatusFilter") {
+      throw new Error("Admin after-sales smoke did not return focus to the status filter.");
+    }
+    if (!userChipsBefore.some((item) => item.includes("Phone:"))) {
+      throw new Error("Admin users smoke did not render phone chip.");
+    }
+    if (!userPhoneRemoval || userPhoneRemoval.focusId !== "userPhoneVerificationFilter") {
+      throw new Error("Admin users smoke did not return focus to the phone verification filter.");
+    }
+    if (!auditChipsBefore.some((item) => item.includes("Category:"))) {
+      throw new Error("Admin audit trail smoke did not render category chip.");
+    }
+    if (!auditCategoryRemoval || auditCategoryRemoval.focusId !== "adminAuditCategoryFilter") {
+      throw new Error("Admin audit trail smoke did not return focus to the category filter.");
+    }
+
     const result = await page.evaluate(() => ({
       backendBadge: document.getElementById("backendStatusBadge")?.textContent?.trim() || "",
       statUsers: document.getElementById("statUsers")?.textContent?.trim() || "",
@@ -520,6 +653,28 @@ async function runAdminDashboardSmoke(browser, adminSession) {
     return {
       passed: true,
       screenshotPath,
+      chipRegression: {
+        orders: {
+          before: orderChipsBefore,
+          removed: orderStatusRemoval
+        },
+        catalog: {
+          before: catalogChipsBefore,
+          removed: catalogInventoryRemoval
+        },
+        afterSales: {
+          before: afterSalesChipsBefore,
+          removed: afterSalesStatusRemoval
+        },
+        users: {
+          before: userChipsBefore,
+          removed: userPhoneRemoval
+        },
+        auditTrail: {
+          before: auditChipsBefore,
+          removed: auditCategoryRemoval
+        }
+      },
       ...result
     };
   });
