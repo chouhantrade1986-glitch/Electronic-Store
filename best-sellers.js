@@ -1,18 +1,20 @@
-const CART_STORAGE_KEY = "electromart_cart_v1";
+﻿const CART_STORAGE_KEY = "electromart_cart_v1";
+const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
 
 const bestSellers = [
-  { id: 7, name: "Vector Gaming Laptop", category: "laptop", price: 1299, rating: 4.8, sold: "2.4k sold this month", soldCount: 2400, image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=900&q=80" },
-  { id: 2, name: "Nimbus Phone X", category: "mobile", price: 749, rating: 4.7, sold: "3.1k sold this month", soldCount: 3100, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
-  { id: 3, name: "Pulse ANC Headphones", category: "audio", price: 179, rating: 4.6, sold: "1.8k sold this month", soldCount: 1800, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" },
-  { id: 1, name: "AstraBook Pro 14", category: "laptop", price: 999, rating: 4.6, sold: "2.0k sold this month", soldCount: 2000, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
-  { id: 5, name: "Orbit Mechanical Keyboard", category: "accessory", price: 109, rating: 4.5, sold: "1.5k sold this month", soldCount: 1500, image: "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=900&q=80" },
-  { id: 8, name: "Echo Smart Speaker", category: "audio", price: 89, rating: 4.4, sold: "2.7k sold this month", soldCount: 2700, image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80" }
+  { id: 7, name: "Vector Gaming Laptop", brand: "Vector", category: "laptop", collections: ["laptop"], price: 1299, rating: 4.8, sold: "2.4k sold this month", soldCount: 2400, image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=900&q=80" },
+  { id: 2, name: "Nimbus Phone X", brand: "Nimbus", category: "mobile", collections: ["mobile"], price: 749, rating: 4.7, sold: "3.1k sold this month", soldCount: 3100, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
+  { id: 3, name: "Pulse ANC Headphones", brand: "PulseWave", category: "audio", collections: ["audio"], price: 179, rating: 4.6, sold: "1.8k sold this month", soldCount: 1800, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" },
+  { id: 1, name: "AstraBook Pro 14", brand: "AstraTech", category: "laptop", collections: ["laptop", "computer"], price: 999, rating: 4.6, sold: "2.0k sold this month", soldCount: 2000, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
+  { id: 5, name: "Orbit Mechanical Keyboard", brand: "OrbitX", category: "accessory", collections: ["accessory", "computer"], price: 109, rating: 4.5, sold: "1.5k sold this month", soldCount: 1500, image: "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=900&q=80" },
+  { id: 8, name: "Echo Smart Speaker", brand: "EchoSphere", category: "audio", collections: ["audio"], price: 89, rating: 4.4, sold: "2.7k sold this month", soldCount: 2700, image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80" }
 ];
 
 const bestGrid = document.getElementById("bestGrid");
 const resultMeta = document.getElementById("resultMeta");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
+const brandFilterList = document.getElementById("brandFilterList");
 const sortFilter = document.getElementById("sortFilter");
 const cartCount = document.getElementById("cartCount");
 const deptTrigger = document.getElementById("deptTrigger");
@@ -61,21 +63,157 @@ function money(value) {
   return inrFormatter.format(Number(value || 0));
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeCategory(value) {
+  const raw = String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, " and ")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  if (raw === "accessories") {
+    return "accessory";
+  }
+  if (raw === "computers") {
+    return "computer";
+  }
+  if (raw === "mobiles") {
+    return "mobile";
+  }
+  return raw;
+}
+
+function normalizeCollectionValues(collections, category) {
+  const normalized = (Array.isArray(collections) ? collections : [])
+    .map((item) => normalizeCategory(item))
+    .filter(Boolean);
+  const categoryValue = normalizeCategory(category);
+  if (categoryValue) {
+    normalized.push(categoryValue);
+  }
+  return Array.from(new Set(normalized));
+}
+
+function categoryLabel(value) {
+  const labels = {
+    accessory: "Accessories",
+    audio: "Audio",
+    computer: "Computers",
+    "creator-studio": "Creator Studio",
+    laptop: "Laptops",
+    mobile: "Mobiles",
+    printer: "Printers"
+  };
+  const normalized = normalizeCategory(value);
+  if (labels[normalized]) {
+    return labels[normalized];
+  }
+  return normalized.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function sortCategorySlugs(slugs) {
+  const unique = Array.from(new Set((Array.isArray(slugs) ? slugs : []).filter(Boolean)));
+  return unique.sort((left, right) => {
+    const leftPriority = CATEGORY_PRIORITY_SLUGS.indexOf(left);
+    const rightPriority = CATEGORY_PRIORITY_SLUGS.indexOf(right);
+    if (leftPriority !== -1 || rightPriority !== -1) {
+      if (leftPriority === -1) return 1;
+      if (rightPriority === -1) return -1;
+      return leftPriority - rightPriority;
+    }
+    return categoryLabel(left).localeCompare(categoryLabel(right));
+  });
+}
+
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getBrandFilters() {
+  return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function getSelectedBrands() {
+  return getBrandFilters().filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+}
+
+function getCategoryOptions() {
+  return sortCategorySlugs(bestSellers.flatMap((item) => normalizeCollectionValues(item.collections, item.category)));
+}
+
+function syncDynamicCategoryUI() {
+  if (!categoryFilter) {
+    return;
+  }
+  const selected = normalizeCategory(categoryFilter.value || "all");
+  const options = getCategoryOptions();
+  categoryFilter.innerHTML = [
+    "<option value='all'>All Categories</option>",
+    ...options.map((slug) => `<option value="${escapeHtml(slug)}">${escapeHtml(categoryLabel(slug))}</option>`)
+  ].join("");
+  categoryFilter.value = options.includes(selected) ? selected : "all";
+}
+
+function syncDynamicBrandUI() {
+  if (!brandFilterList) {
+    return;
+  }
+  const selectedBrands = getSelectedBrands();
+  const selectedKeys = new Set(selectedBrands.map((brand) => normalizeBrandKey(brand)));
+  const activeCategory = normalizeCategory(categoryFilter?.value || "all");
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const source = bestSellers.filter((item) => {
+    const collections = normalizeCollectionValues(item.collections, item.category);
+    const categoryMatch = activeCategory === "all" || collections.includes(activeCategory);
+    const queryMatch = !query || `${item.name} ${item.brand} ${collections.join(" ")}`.toLowerCase().includes(query);
+    return categoryMatch && queryMatch;
+  });
+  const optionMap = new Map();
+  [...source, ...bestSellers.filter((item) => selectedKeys.has(normalizeBrandKey(item.brand)))]
+    .forEach((item) => {
+      const brand = String(item.brand || "").trim();
+      if (!brand) {
+        return;
+      }
+      optionMap.set(normalizeBrandKey(brand), brand);
+    });
+
+  const options = Array.from(optionMap.values()).sort((left, right) => left.localeCompare(right));
+  if (!options.length) {
+    brandFilterList.innerHTML = "<p class='brand-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+  brandFilterList.innerHTML = options.map((brand) => {
+    const checked = selectedKeys.has(normalizeBrandKey(brand)) ? " checked" : "";
+    return `<label class="check-item"><input type="checkbox" class="brand-filter" value="${escapeHtml(brand)}"${checked} /> ${escapeHtml(brand)}</label>`;
+  }).join("");
+}
+
 function card(item) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
   return `
     <article class="product-card">
-      <a href="${detailUrl}" aria-label="Open ${item.name}">
-        <img src="${item.image}" alt="${item.name}" loading="lazy" />
+      <a href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
       </a>
       <div class="content">
-        <h3><a href="${detailUrl}">${item.name}</a></h3>
+        <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
         <div class="meta">
-          <span class="price">${money(item.price)}</span>
-          <span class="rating">${item.rating} &#9733;</span>
+          <span class="price">${escapeHtml(money(item.price))}</span>
+          <span class="rating">${escapeHtml(String(item.rating))} &#9733;</span>
         </div>
-        <span class="sold-tag">${item.sold}</span>
-        <button class="add-btn" data-id="${item.id}" type="button">Add to Cart</button>
+        <p class="brand-line">${escapeHtml(item.brand)}</p>
+        <span class="sold-tag">${escapeHtml(item.sold)}</span>
+        <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
       </div>
     </article>
   `;
@@ -86,8 +224,8 @@ function render(list) {
     return;
   }
   resultMeta.textContent = `Showing ${list.length} products`;
-  if (list.length === 0) {
-    bestGrid.innerHTML = "<div class='empty'>No best sellers match your filters.</div>";
+  if (!list.length) {
+    bestGrid.innerHTML = "<div class='empty'>No exact matches found. Try clearing one filter or broadening the search.</div>";
     return;
   }
   bestGrid.innerHTML = list.map(card).join("");
@@ -112,37 +250,44 @@ function getActiveListingFilters() {
   if (query) {
     filters.push({
       id: "search",
-      label: `Search: "${query}"`,
+      label: `Search: \"${query}\"`,
       ariaLabel: `Remove search ${query}`,
-      clear: () => {
-        searchInput.value = "";
-      },
+      clear: () => { searchInput.value = ""; },
       focus: () => searchInput.focus(),
       feedback: `Removed search ${query}. Focus moved to the search input.`
     });
   }
   if (category !== "all") {
-    const readable = category.charAt(0).toUpperCase() + category.slice(1);
+    const readable = categoryLabel(category);
     filters.push({
       id: "category",
       label: `Category: ${readable}`,
       ariaLabel: `Remove category filter ${readable}`,
-      clear: () => {
-        categoryFilter.value = "all";
-      },
+      clear: () => { categoryFilter.value = "all"; },
       focus: () => categoryFilter.focus(),
       feedback: `Removed category filter ${readable}. Focus moved to the category filter.`
     });
   }
+  getSelectedBrands().forEach((brand) => {
+    filters.push({
+      id: `brand-${normalizeBrandKey(brand)}`,
+      label: `Brand: ${brand}`,
+      ariaLabel: `Remove brand filter ${brand}`,
+      clear: () => {
+        const target = getBrandFilters().find((checkbox) => checkbox.value === brand);
+        if (target) target.checked = false;
+      },
+      focus: () => getBrandFilters().find((checkbox) => checkbox.value === brand)?.focus(),
+      feedback: `Removed brand filter ${brand}. Focus moved to the brand option.`
+    });
+  });
   if (sortValue !== "relevance") {
     const sortLabel = getSortLabel(sortValue);
     filters.push({
       id: "sort",
       label: `Sort: ${sortLabel}`,
       ariaLabel: `Remove sort filter ${sortLabel}`,
-      clear: () => {
-        sortFilter.value = "relevance";
-      },
+      clear: () => { sortFilter.value = "relevance"; },
       focus: () => sortFilter.focus(),
       feedback: `Removed sort order ${sortLabel}. Focus moved to the sort control.`
     });
@@ -166,22 +311,28 @@ function sortBestSellers(items, sortValue) {
 
 function applyInitialCategoryFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const requested = String(params.get("category") || "").trim().toLowerCase();
-  const allowed = new Set(["all", "laptop", "mobile", "audio", "accessory"]);
+  const requested = normalizeCategory(params.get("category") || "");
+  const allowed = new Set(["all", ...getCategoryOptions()]);
   if (requested && allowed.has(requested) && categoryFilter) {
     categoryFilter.value = requested;
   }
 }
 
 function filterBestSellers() {
-  const query = String(searchInput && searchInput.value ? searchInput.value : "").trim().toLowerCase();
-  const category = String(categoryFilter && categoryFilter.value ? categoryFilter.value : "all");
-  const sortValue = String(sortFilter && sortFilter.value ? sortFilter.value : "relevance");
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const category = normalizeCategory(categoryFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+  const selectedBrands = getSelectedBrands();
+
+  syncDynamicCategoryUI();
+  syncDynamicBrandUI();
 
   const filtered = bestSellers.filter((item) => {
-    const queryMatch = !query || item.name.toLowerCase().includes(query);
-    const categoryMatch = category === "all" || item.category === category;
-    return queryMatch && categoryMatch;
+    const collections = normalizeCollectionValues(item.collections, item.category);
+    const queryMatch = !query || `${item.name} ${item.brand} ${collections.join(" ")}`.toLowerCase().includes(query);
+    const categoryMatch = category === "all" || collections.includes(category);
+    const brandMatch = !selectedBrands.length || selectedBrands.includes(item.brand);
+    return queryMatch && categoryMatch && brandMatch;
   });
 
   render(sortBestSellers(filtered, sortValue));
@@ -193,6 +344,13 @@ if (searchInput) {
 }
 if (categoryFilter) {
   categoryFilter.addEventListener("change", filterBestSellers);
+}
+if (brandFilterList) {
+  brandFilterList.addEventListener("change", (event) => {
+    if (event.target.closest(".brand-filter")) {
+      filterBestSellers();
+    }
+  });
 }
 if (sortFilter) {
   sortFilter.addEventListener("change", filterBestSellers);
@@ -224,20 +382,19 @@ document.addEventListener("click", (event) => {
 });
 
 syncCartCount();
+syncDynamicCategoryUI();
 applyInitialCategoryFromUrl();
+syncDynamicBrandUI();
 filterChipController = window.ElectroMartListingFilterChips?.init({
   mountAfter: ".result-note",
   getFilters: getActiveListingFilters,
   clearAll: () => {
-    if (searchInput) {
-      searchInput.value = "";
-    }
-    if (categoryFilter) {
-      categoryFilter.value = "all";
-    }
-    if (sortFilter) {
-      sortFilter.value = "relevance";
-    }
+    if (searchInput) searchInput.value = "";
+    if (categoryFilter) categoryFilter.value = "all";
+    getBrandFilters().forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    if (sortFilter) sortFilter.value = "relevance";
   },
   focusAfterClearAll: () => searchInput?.focus(),
   clearAllFeedback: "Removed all listing filters. Focus moved to the search input.",
