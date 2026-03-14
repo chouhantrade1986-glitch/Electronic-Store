@@ -450,7 +450,7 @@
       <section id="afterSales" class="panel">
         <div class="panel-head">
           <h2>Returns / Refunds / Exchanges</h2>
-          <p id="afterSalesMeta">0 cases</p>
+          <p id="afterSalesMeta" role="status" aria-live="polite" aria-atomic="true">0 cases</p>
         </div>
         <div id="afterSalesSummaryCards" class="notification-channel-stats"></div>
         <section class="after-sales-create-card">
@@ -549,9 +549,9 @@
       <section id="catalog" class="panel">
         <div class="panel-head">
           <h2>Catalog</h2>
-          <p id="catalogMeta" role="status" aria-live="polite" aria-atomic="true">0 products • Inventory ?0.00</p>
+          <p id="catalogMeta" role="status" aria-live="polite" aria-atomic="true">0 products - Inventory 0.00</p>
         </div>
-        <p id="catalogHealth" class="catalog-health">Low stock: 0 � Out of stock: 0</p>
+        <p id="catalogHealth" class="catalog-health">Low stock: 0 - Out of stock: 0</p>
         <div class="inventory-full-tools">
           <label for="inventoryThresholdInput">Low Stock Threshold</label>
           <input id="inventoryThresholdInput" type="number" min="0" step="1" value="5" aria-label="Low stock threshold" />
@@ -1017,7 +1017,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="admin-dashboard.js?v=20260314a"></script>
+  <script src="admin-dashboard.js?v=20260314b"></script>
 </body>
 </html>
 

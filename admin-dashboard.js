@@ -296,6 +296,7 @@ let lastAdminToastKey = "";
 let lastAdminToastAt = 0;
 let adminOrderFilterChipController = null;
 let adminCatalogFilterChipController = null;
+let adminAfterSalesFilterChipController = null;
 const MAX_PRODUCT_IMAGES = 15;
 const MAX_UPLOAD_IMAGE_MB = 15;
 const MAX_UPLOAD_VIDEO_MB = 50;
@@ -2800,23 +2801,90 @@ function getFilteredAfterSalesCases() {
   });
 }
 
+function getAfterSalesFilterTypeLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Case Type: All";
+  }
+  const selectedLabel = String(afterSalesTypeFilter?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Case Type: ${selectedLabel}`;
+}
+
+function getAfterSalesFilterStatusLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Status: All";
+  }
+  const selectedLabel = String(afterSalesStatusFilter?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Status: ${selectedLabel}`;
+}
+
+function getActiveAfterSalesFilters() {
+  const filters = [];
+  const query = String(afterSalesSearchInput?.value || "").trim();
+  const type = String(afterSalesTypeFilter?.value || "all").trim().toLowerCase();
+  const status = String(afterSalesStatusFilter?.value || "all").trim().toLowerCase();
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        afterSalesSearchInput.value = "";
+      },
+      focus: afterSalesSearchInput,
+      feedback: "Removed after-sales search filter. Focus moved to the search input."
+    });
+  }
+
+  if (type !== "all") {
+    filters.push({
+      id: "type",
+      label: getAfterSalesFilterTypeLabel(type),
+      clear: () => {
+        afterSalesTypeFilter.value = "all";
+      },
+      focus: afterSalesTypeFilter,
+      feedback: "Removed after-sales case type filter. Focus moved to the case type filter."
+    });
+  }
+
+  if (status !== "all") {
+    filters.push({
+      id: "status",
+      label: getAfterSalesFilterStatusLabel(status),
+      clear: () => {
+        afterSalesStatusFilter.value = "all";
+      },
+      focus: afterSalesStatusFilter,
+      feedback: "Removed after-sales status filter. Focus moved to the status filter."
+    });
+  }
+
+  return filters;
+}
+
 function renderAfterSales(payload = {}) {
   const cases = Array.isArray(payload.cases) ? payload.cases : [];
   currentAfterSalesSummary = payload.summary && typeof payload.summary === "object" ? payload.summary : {};
   allAfterSalesCases = cases;
+  const filtered = getFilteredAfterSalesCases();
   if (afterSalesMeta) {
-    afterSalesMeta.textContent = `${cases.length} cases`;
+    afterSalesMeta.textContent = filtered.length === cases.length
+      ? `${filtered.length} cases`
+      : `Showing ${filtered.length} of ${cases.length} cases`;
   }
   renderAfterSalesSummary(currentAfterSalesSummary);
   if (!afterSalesTableBody) {
     return;
   }
-  const filtered = getFilteredAfterSalesCases();
   if (!filtered.length) {
     afterSalesTableBody.innerHTML = "<tr><td colspan='7'>No after-sales cases found.</td></tr>";
+    adminAfterSalesFilterChipController?.update();
     return;
   }
   afterSalesTableBody.innerHTML = filtered.map(afterSalesRow).join("");
+  adminAfterSalesFilterChipController?.update();
 }
 
 async function createAfterSalesCaseFromAdmin() {
@@ -5841,6 +5909,25 @@ adminCatalogFilterChipController = window.ElectroMartListingFilterChips?.init({
   clearAllFeedback: "Removed all catalog filters. Focus moved to the catalog search input.",
   onChange: applyCatalogFilters,
   getResultSummary: () => String(catalogMeta?.textContent || "").trim()
+}) || null;
+adminAfterSalesFilterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#afterSales .panel-tools-3",
+  getFilters: getActiveAfterSalesFilters,
+  clearAll: () => {
+    if (afterSalesSearchInput) {
+      afterSalesSearchInput.value = "";
+    }
+    if (afterSalesTypeFilter) {
+      afterSalesTypeFilter.value = "all";
+    }
+    if (afterSalesStatusFilter) {
+      afterSalesStatusFilter.value = "all";
+    }
+  },
+  focusAfterClearAll: afterSalesSearchInput,
+  clearAllFeedback: "Removed all after-sales filters. Focus moved to the search input.",
+  onChange: () => renderAfterSales({ cases: allAfterSalesCases, summary: currentAfterSalesSummary }),
+  getResultSummary: () => String(afterSalesMeta?.textContent || "").trim()
 }) || null;
 userSearch.addEventListener("input", applyUserFilters);
 userRoleFilter.addEventListener("change", applyUserFilters);
