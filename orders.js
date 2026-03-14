@@ -70,6 +70,7 @@ let orders = [];
 let currentOrderNotifications = [];
 let razorpayScriptPromise = null;
 let orderToastTimeoutCounter = 0;
+let filterChipController = null;
 
 function normalizePhoneVerificationState(value) {
   const source = value && typeof value === "object" ? value : {};
@@ -1519,6 +1520,46 @@ function orderCard(order) {
   `;
 }
 
+function getOrderStatusFilterLabel(value) {
+  if (value === "awaiting_payment") {
+    return "Status: Awaiting Payment";
+  }
+  const selectedLabel = String(statusFilter?.selectedOptions?.[0]?.textContent || value || "").trim();
+  return `Status: ${selectedLabel}`;
+}
+
+function getActiveOrderFilters() {
+  const filters = [];
+  const query = String(orderSearch?.value || "").trim();
+  const status = String(statusFilter?.value || "all").trim();
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        orderSearch.value = "";
+      },
+      focus: orderSearch,
+      feedback: "Removed order search filter. Focus moved to the search input."
+    });
+  }
+
+  if (status !== "all") {
+    filters.push({
+      id: "status",
+      label: getOrderStatusFilterLabel(status),
+      clear: () => {
+        statusFilter.value = "all";
+      },
+      focus: statusFilter,
+      feedback: "Removed order status filter. Focus moved to the status filter."
+    });
+  }
+
+  return filters;
+}
+
 function renderOrders(list) {
   if (list.length === 0) {
     ordersGrid.innerHTML = "<div class='empty-message'>No orders matched your search or filter.</div>";
@@ -1546,6 +1587,7 @@ function filterOrders() {
   });
 
   renderOrders(filtered);
+  filterChipController?.update();
 }
 
 async function fetchOrders() {
@@ -1710,5 +1752,22 @@ if (markAllOrderNotificationsReadBtn) {
     renderOrderNotifications(currentOrderNotifications);
   });
 }
+
+filterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#ordersMeta",
+  getFilters: getActiveOrderFilters,
+  clearAll: () => {
+    if (orderSearch) {
+      orderSearch.value = "";
+    }
+    if (statusFilter) {
+      statusFilter.value = "all";
+    }
+  },
+  focusAfterClearAll: orderSearch,
+  clearAllFeedback: "Removed all order filters. Focus moved to the search input.",
+  onChange: filterOrders,
+  getResultSummary: () => String(ordersMeta?.textContent || "").trim()
+}) || null;
 
 fetchOrders();
