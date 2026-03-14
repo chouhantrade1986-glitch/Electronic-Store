@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="printer.css" />
+  <link rel="stylesheet" href="printer.css?v=20260314c" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
@@ -80,6 +80,9 @@
             <option value="b2c">B2C</option>
             <option value="b2b">B2B</option>
           </select>
+          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
+            <p class="brand-filter-empty">Loading brands...</p>
+          </div>
           <select id="typeFilter" aria-label="Filter type">
             <option value="all">All Types</option>
             <option value="inkjet">Inkjet</option>
@@ -134,7 +137,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="printer.js?v=20260314b"></script>
+  <script src="printer.js?v=20260314c"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>

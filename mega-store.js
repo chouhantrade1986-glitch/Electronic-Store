@@ -1,4 +1,4 @@
-const CART_STORAGE_KEY = "electromart_cart_v1";
+﻿const CART_STORAGE_KEY = "electromart_cart_v1";
 
 const stores = [
   {
@@ -60,7 +60,7 @@ const serviceLabels = {
 
 const cartCount = document.getElementById("cartCount");
 const storeSearch = document.getElementById("storeSearch");
-const serviceFilter = document.getElementById("serviceFilter");
+const serviceFilterList = document.getElementById("serviceFilterList");
 const storeMeta = document.getElementById("storeMeta");
 const storeGrid = document.getElementById("storeGrid");
 let filterChipController = null;
@@ -81,15 +81,56 @@ function syncCartCount() {
   cartCount.textContent = String(total);
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getServiceFilters() {
+  return serviceFilterList ? Array.from(serviceFilterList.querySelectorAll(".service-filter")) : [];
+}
+
+function getSelectedServices() {
+  return getServiceFilters()
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+}
+
+function getServiceOptions() {
+  return Array.from(new Set(stores.flatMap((store) => Array.isArray(store.services) ? store.services : []).filter(Boolean)))
+    .sort((left, right) => String(serviceLabels[left] || left).localeCompare(String(serviceLabels[right] || right)));
+}
+
+function syncDynamicServiceUI() {
+  if (!serviceFilterList) {
+    return;
+  }
+  const selected = new Set(getSelectedServices());
+  const options = getServiceOptions();
+  if (!options.length) {
+    serviceFilterList.innerHTML = "<p class='service-filter-empty'>No services available right now.</p>";
+    return;
+  }
+  serviceFilterList.innerHTML = options.map((service) => {
+    const checked = selected.has(service) ? " checked" : "";
+    const label = serviceLabels[service] || service;
+    return `<label class="check-item"><input type="checkbox" class="service-filter" value="${escapeHtml(service)}"${checked} /> ${escapeHtml(label)}</label>`;
+  }).join("");
+}
+
 function storeCard(store) {
-  const tags = store.services.map((service) => `<span class="tag">${serviceLabels[service]}</span>`).join("");
+  const tags = store.services.map((service) => `<span class="tag">${escapeHtml(serviceLabels[service])}</span>`).join("");
 
   return `
     <article class="store-card">
-      <h3>${store.name}</h3>
-      <p>${store.address}</p>
-      <p class="hours">${store.hours}</p>
-      <p>${store.phone}</p>
+      <h3>${escapeHtml(store.name)}</h3>
+      <p>${escapeHtml(store.address)}</p>
+      <p class="hours">${escapeHtml(store.hours)}</p>
+      <p>${escapeHtml(store.phone)}</p>
       <div class="tags">${tags}</div>
       <button type="button">Book Visit</button>
     </article>
@@ -100,7 +141,7 @@ function renderStores(list) {
   storeMeta.textContent = `Showing ${list.length} stores`;
 
   if (list.length === 0) {
-    storeGrid.innerHTML = "<div class='empty-state'>No stores match your filters.</div>";
+    storeGrid.innerHTML = "<div class='empty-state'>No exact store matches found. Try clearing one filter or broadening the search.</div>";
     return;
   }
 
@@ -110,7 +151,7 @@ function renderStores(list) {
 function getActiveStoreFilters() {
   const filters = [];
   const query = String(storeSearch?.value || "").trim();
-  const service = String(serviceFilter?.value || "all");
+  const selectedServices = getSelectedServices();
 
   if (query) {
     filters.push({
@@ -124,28 +165,34 @@ function getActiveStoreFilters() {
     });
   }
 
-  if (service !== "all") {
+  selectedServices.forEach((service) => {
+    const label = serviceLabels[service] || service;
     filters.push({
-      id: "service",
-      label: `Service: ${String(serviceFilter.selectedOptions?.[0]?.textContent || service).trim()}`,
+      id: `service-${service}`,
+      label: `Service: ${label}`,
       clear: () => {
-        serviceFilter.value = "all";
+        const target = getServiceFilters().find((checkbox) => checkbox.value === service);
+        if (target) {
+          target.checked = false;
+        }
       },
-      focus: serviceFilter,
-      feedback: "Removed service filter. Focus moved to the service filter."
+      focus: () => getServiceFilters().find((checkbox) => checkbox.value === service)?.focus(),
+      feedback: "Removed service filter. Focus moved to the service option."
     });
-  }
+  });
 
   return filters;
 }
 
 function filterStores() {
-  const query = storeSearch.value.trim().toLowerCase();
-  const service = serviceFilter.value;
+  syncDynamicServiceUI();
+  const query = String(storeSearch?.value || "").trim().toLowerCase();
+  const selectedServices = getSelectedServices();
 
   const filtered = stores.filter((store) => {
-    const serviceMatch = service === "all" || store.services.includes(service);
+    const serviceMatch = !selectedServices.length || store.services.some((service) => selectedServices.includes(service));
     const queryMatch =
+      !query ||
       store.name.toLowerCase().includes(query) ||
       store.address.toLowerCase().includes(query) ||
       store.services.some((item) => serviceLabels[item].toLowerCase().includes(query));
@@ -158,15 +205,22 @@ function filterStores() {
 }
 
 storeSearch.addEventListener("input", filterStores);
-serviceFilter.addEventListener("change", filterStores);
+serviceFilterList?.addEventListener("change", (event) => {
+  if (event.target.closest(".service-filter")) {
+    filterStores();
+  }
+});
 
 syncCartCount();
+syncDynamicServiceUI();
 filterChipController = window.ElectroMartListingFilterChips?.init({
   mountAfter: ".filters",
   getFilters: getActiveStoreFilters,
   clearAll: () => {
     storeSearch.value = "";
-    serviceFilter.value = "all";
+    getServiceFilters().forEach((checkbox) => {
+      checkbox.checked = false;
+    });
   },
   focusAfterClearAll: storeSearch,
   clearAllFeedback: "Removed all store filters. Focus moved to the search input.",

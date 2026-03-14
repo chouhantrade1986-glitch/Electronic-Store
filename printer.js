@@ -21,6 +21,7 @@ const printerGrid = document.getElementById("printerGrid");
 const resultMeta = document.getElementById("resultMeta");
 const searchInput = document.getElementById("searchInput");
 const segmentFilter = document.getElementById("segmentFilter");
+const brandFilterList = document.getElementById("brandFilterList");
 const typeFilter = document.getElementById("typeFilter");
 const useFilter = document.getElementById("useFilter");
 const sortFilter = document.getElementById("sortFilter");
@@ -201,6 +202,69 @@ function syncCartCount() {
   cartCount.textContent = String(total);
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getBrandFilters() {
+  return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function getSelectedBrands() {
+  return getBrandFilters()
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+}
+
+function syncDynamicBrandUI(items) {
+  if (!brandFilterList) {
+    return;
+  }
+  const selectedKeys = new Set(getSelectedBrands().map((brand) => normalizeBrandKey(brand)));
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const activeSegment = String(segmentFilter?.value || "all");
+  const activeType = String(typeFilter?.value || "all");
+  const activeUse = String(useFilter?.value || "all");
+
+  const source = items.filter((item) => {
+    const text = `${item.name} ${item.brand || ""} ${item.type} ${item.useCase} ${item.speed} ${item.connectivity}`.toLowerCase();
+    const queryMatch = !query || text.includes(query);
+    const segmentMatch = activeSegment === "all" || item.segment === activeSegment;
+    const typeMatch = activeType === "all" || item.type === activeType;
+    const useMatch = activeUse === "all" || item.useCase === activeUse;
+    return queryMatch && segmentMatch && typeMatch && useMatch;
+  });
+
+  const optionMap = new Map();
+  [...source, ...items.filter((item) => selectedKeys.has(normalizeBrandKey(item.brand)))]
+    .forEach((item) => {
+      const brand = String(item.brand || "").trim();
+      if (!brand) {
+        return;
+      }
+      optionMap.set(normalizeBrandKey(brand), brand);
+    });
+
+  const brands = Array.from(optionMap.values()).sort((left, right) => left.localeCompare(right));
+  if (!brands.length) {
+    brandFilterList.innerHTML = "<p class='brand-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+  brandFilterList.innerHTML = brands.map((brand) => {
+    const checked = selectedKeys.has(normalizeBrandKey(brand)) ? " checked" : "";
+    return `<label class="check-item"><input type="checkbox" class="brand-filter" value="${escapeHtml(brand)}"${checked} /> ${escapeHtml(brand)}</label>`;
+  }).join("");
+}
+
 function addToCart(id) {
   const cartMap = loadCartMap();
   const key = String(id);
@@ -230,6 +294,7 @@ function printerCard(item) {
       <div class="content">
         <h3><a href="${detailUrl}">${item.name}</a></h3>
         <div class="spec-row">
+          <span class="spec-chip">${item.brand}</span>
           <span class="spec-chip">${titleCase(item.type)}</span>
           <span class="spec-chip">${titleCase(item.useCase)}</span>
           <span class="spec-chip">${item.speed}</span>
@@ -252,7 +317,7 @@ function printerCard(item) {
 function render(list) {
   resultMeta.textContent = `Showing ${list.length} products`;
   if (!list.length) {
-    printerGrid.innerHTML = "<div class='empty'>No printers match your filters.</div>";
+    printerGrid.innerHTML = "<div class='empty'>No exact printer matches found. Try clearing one filter or broadening the search.</div>";
     return;
   }
   printerGrid.innerHTML = list.map(printerCard).join("");
@@ -292,6 +357,7 @@ function getActivePrinterFilters() {
   const filters = [];
   const query = String(searchInput.value || "").trim();
   const segment = String(segmentFilter.value || "all");
+  const selectedBrands = getSelectedBrands();
   const type = String(typeFilter.value || "all");
   const useCase = String(useFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
@@ -319,6 +385,21 @@ function getActivePrinterFilters() {
       feedback: "Removed segment filter. Focus moved to the segment filter."
     });
   }
+
+  selectedBrands.forEach((brand) => {
+    filters.push({
+      id: `brand-${normalizeBrandKey(brand)}`,
+      label: `Brand: ${brand}`,
+      clear: () => {
+        const target = getBrandFilters().find((checkbox) => checkbox.value === brand);
+        if (target) {
+          target.checked = false;
+        }
+      },
+      focus: () => getBrandFilters().find((checkbox) => checkbox.value === brand)?.focus(),
+      feedback: "Removed brand filter. Focus moved to the brand option."
+    });
+  });
 
   if (type !== "all") {
     filters.push({
@@ -361,8 +442,10 @@ function getActivePrinterFilters() {
 
 function filterPrinters() {
   const source = getMergedPrinters();
+  syncDynamicBrandUI(source);
   const query = String(searchInput.value || "").trim().toLowerCase();
   const segment = String(segmentFilter.value || "all");
+  const selectedBrands = getSelectedBrands();
   const type = String(typeFilter.value || "all");
   const useCase = String(useFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
@@ -371,9 +454,10 @@ function filterPrinters() {
     const text = `${item.name} ${item.brand || ""} ${item.type} ${item.useCase} ${item.speed} ${item.connectivity}`.toLowerCase();
     const queryMatch = !query || text.includes(query);
     const segmentMatch = segment === "all" || item.segment === segment;
+    const brandMatch = !selectedBrands.length || selectedBrands.includes(item.brand);
     const typeMatch = type === "all" || item.type === type;
     const useMatch = useCase === "all" || item.useCase === useCase;
-    return queryMatch && segmentMatch && typeMatch && useMatch;
+    return queryMatch && segmentMatch && brandMatch && typeMatch && useMatch;
   });
 
   render(sortItems(filtered, sortValue));
@@ -382,6 +466,11 @@ function filterPrinters() {
 
 searchInput.addEventListener("input", filterPrinters);
 segmentFilter.addEventListener("change", filterPrinters);
+brandFilterList?.addEventListener("change", (event) => {
+  if (event.target.closest(".brand-filter")) {
+    filterPrinters();
+  }
+});
 typeFilter.addEventListener("change", filterPrinters);
 useFilter.addEventListener("change", filterPrinters);
 sortFilter.addEventListener("change", filterPrinters);
@@ -419,6 +508,9 @@ async function initPrinterPage() {
     clearAll: () => {
       searchInput.value = "";
       segmentFilter.value = "all";
+      getBrandFilters().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
       typeFilter.value = "all";
       useFilter.value = "all";
       sortFilter.value = "relevance";

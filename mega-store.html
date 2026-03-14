@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="mega-store.css" />
+  <link rel="stylesheet" href="mega-store.css?v=20260314b" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
@@ -38,13 +38,9 @@
 
     <section class="filters">
       <input id="storeSearch" type="search" placeholder="Search city or service" aria-label="Search stores" />
-      <select id="serviceFilter" aria-label="Filter by service">
-        <option value="all">All Services</option>
-        <option value="pickup">Same-day Pickup</option>
-        <option value="repair">Device Repair</option>
-        <option value="b2b">B2B Desk</option>
-        <option value="experience">Experience Zone</option>
-      </select>
+      <div id="serviceFilterList" class="service-filter-list" role="group" aria-label="Filter by service">
+        <p class="service-filter-empty">Loading services...</p>
+      </div>
     </section>
 
     <section class="store-panel">
@@ -57,7 +53,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="mega-store.js?v=20260314a"></script>
+  <script src="mega-store.js?v=20260314b"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
