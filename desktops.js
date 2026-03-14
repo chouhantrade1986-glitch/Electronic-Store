@@ -21,6 +21,7 @@ const desktopGrid = document.getElementById("desktopGrid");
 const resultMeta = document.getElementById("resultMeta");
 const searchInput = document.getElementById("searchInput");
 const segmentFilter = document.getElementById("segmentFilter");
+const brandFilterList = document.getElementById("brandFilterList");
 const processorFilter = document.getElementById("processorFilter");
 const purposeFilter = document.getElementById("purposeFilter");
 const sortFilter = document.getElementById("sortFilter");
@@ -195,6 +196,69 @@ function syncCartCount() {
   cartCount.textContent = String(total);
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getBrandFilters() {
+  return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function getSelectedBrands() {
+  return getBrandFilters()
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+}
+
+function syncDynamicBrandUI(items) {
+  if (!brandFilterList) {
+    return;
+  }
+  const selectedKeys = new Set(getSelectedBrands().map((brand) => normalizeBrandKey(brand)));
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const activeSegment = String(segmentFilter?.value || "all");
+  const activeProcessor = String(processorFilter?.value || "all");
+  const activePurpose = String(purposeFilter?.value || "all");
+
+  const source = items.filter((item) => {
+    const text = `${item.name} ${item.brand || ""} ${item.processor} ${item.purpose} ${item.ram} ${item.storage}`.toLowerCase();
+    const queryMatch = !query || text.includes(query);
+    const segmentMatch = activeSegment === "all" || item.segment === activeSegment;
+    const processorMatch = activeProcessor === "all" || item.processor === activeProcessor;
+    const purposeMatch = activePurpose === "all" || item.purpose === activePurpose;
+    return queryMatch && segmentMatch && processorMatch && purposeMatch;
+  });
+
+  const optionMap = new Map();
+  [...source, ...items.filter((item) => selectedKeys.has(normalizeBrandKey(item.brand)))]
+    .forEach((item) => {
+      const brand = String(item.brand || "").trim();
+      if (!brand) {
+        return;
+      }
+      optionMap.set(normalizeBrandKey(brand), brand);
+    });
+
+  const brands = Array.from(optionMap.values()).sort((left, right) => left.localeCompare(right));
+  if (!brands.length) {
+    brandFilterList.innerHTML = "<p class='brand-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+  brandFilterList.innerHTML = brands.map((brand) => {
+    const checked = selectedKeys.has(normalizeBrandKey(brand)) ? " checked" : "";
+    return `<label class="check-item"><input type="checkbox" class="brand-filter" value="${escapeHtml(brand)}"${checked} /> ${escapeHtml(brand)}</label>`;
+  }).join("");
+}
+
 function addToCart(id) {
   const cartMap = loadCartMap();
   const key = String(id);
@@ -224,6 +288,7 @@ function desktopCard(item) {
       <div class="content">
         <h3><a href="${detailUrl}" class="title-link">${item.name}</a></h3>
         <div class="spec-row">
+          <span class="spec-chip">${item.brand}</span>
           <span class="spec-chip">${titleCase(item.processor)} CPU</span>
           <span class="spec-chip">${titleCase(item.purpose)}</span>
           <span class="spec-chip">${item.ram}</span>
@@ -246,7 +311,7 @@ function desktopCard(item) {
 function render(list) {
   resultMeta.textContent = `Showing ${list.length} products`;
   if (!list.length) {
-    desktopGrid.innerHTML = "<div class='empty'>No computers match your filters.</div>";
+    desktopGrid.innerHTML = "<div class='empty'>No exact computer matches found. Try clearing one filter or broadening the search.</div>";
     return;
   }
   desktopGrid.innerHTML = list.map(desktopCard).join("");
@@ -266,6 +331,7 @@ function getActiveListingFilters() {
   const filters = [];
   const query = String(searchInput?.value || "").trim();
   const segment = String(segmentFilter?.value || "all");
+  const selectedBrands = getSelectedBrands();
   const processor = String(processorFilter?.value || "all");
   const purpose = String(purposeFilter?.value || "all");
   const sortValue = String(sortFilter?.value || "relevance");
@@ -294,6 +360,21 @@ function getActiveListingFilters() {
       feedback: `Removed segment filter ${segment.toUpperCase()}. Focus moved to the segment filter.`
     });
   }
+  selectedBrands.forEach((brand) => {
+    filters.push({
+      id: `brand-${normalizeBrandKey(brand)}`,
+      label: `Brand: ${brand}`,
+      ariaLabel: `Remove brand filter ${brand}`,
+      clear: () => {
+        const target = getBrandFilters().find((checkbox) => checkbox.value === brand);
+        if (target) {
+          target.checked = false;
+        }
+      },
+      focus: () => getBrandFilters().find((checkbox) => checkbox.value === brand)?.focus(),
+      feedback: `Removed brand filter ${brand}. Focus moved to the brand option.`
+    });
+  });
   if (processor !== "all") {
     const readableProcessor = processor.toUpperCase();
     filters.push({
@@ -352,8 +433,10 @@ function sortItems(items, sortValue) {
 
 function filterDesktops() {
   const source = getMergedDesktops();
+  syncDynamicBrandUI(source);
   const query = String(searchInput.value || "").trim().toLowerCase();
   const segment = String(segmentFilter.value || "all");
+  const selectedBrands = getSelectedBrands();
   const processor = String(processorFilter.value || "all");
   const purpose = String(purposeFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
@@ -362,9 +445,10 @@ function filterDesktops() {
     const text = `${item.name} ${item.brand || ""} ${item.processor} ${item.purpose} ${item.ram} ${item.storage}`.toLowerCase();
     const queryMatch = !query || text.includes(query);
     const segmentMatch = segment === "all" || item.segment === segment;
+    const brandMatch = !selectedBrands.length || selectedBrands.includes(item.brand);
     const processorMatch = processor === "all" || item.processor === processor;
     const purposeMatch = purpose === "all" || item.purpose === purpose;
-    return queryMatch && segmentMatch && processorMatch && purposeMatch;
+    return queryMatch && segmentMatch && brandMatch && processorMatch && purposeMatch;
   });
 
   render(sortItems(filtered, sortValue));
@@ -373,6 +457,11 @@ function filterDesktops() {
 
 searchInput.addEventListener("input", filterDesktops);
 segmentFilter.addEventListener("change", filterDesktops);
+brandFilterList?.addEventListener("change", (event) => {
+  if (event.target.closest(".brand-filter")) {
+    filterDesktops();
+  }
+});
 processorFilter.addEventListener("change", filterDesktops);
 purposeFilter.addEventListener("change", filterDesktops);
 sortFilter.addEventListener("change", filterDesktops);
@@ -413,6 +502,9 @@ async function initDesktopPage() {
       if (segmentFilter) {
         segmentFilter.value = "all";
       }
+      getBrandFilters().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
       if (processorFilter) {
         processorFilter.value = "all";
       }
