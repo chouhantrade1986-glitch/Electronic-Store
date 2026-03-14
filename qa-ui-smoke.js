@@ -874,6 +874,23 @@ async function runCheckoutSmoke(browser) {
   const page = await context.newPage();
   const screenshotPath = artifactPath("qa-checkout-browser.png");
   try {
+    if (!razorpayEnabled) {
+      await page.goto(`${FRONTEND_URL}/checkout.html`, { waitUntil: "domcontentloaded" });
+      await normalizeScreenshotForBaseline(page, "checkout");
+      await page.screenshot({ path: screenshotPath, timeout: 120000 });
+      return {
+        passed: true,
+        screenshotPath,
+        status: "Razorpay gateway is disabled in smoke environment. Checkout modal assertion skipped.",
+        result: {
+          passed: true,
+          skipped: true,
+          reason: "Razorpay gateway is disabled in smoke environment.",
+          provider: String(paymentConfig.provider || "simulated")
+        }
+      };
+    }
+
     await page.goto(`${FRONTEND_URL}/qa-razorpay-modal.html`, { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => {
       const result = document.getElementById("result");
@@ -895,22 +912,11 @@ async function runCheckoutSmoke(browser) {
     });
     await normalizeScreenshotForBaseline(page, "checkout");
     await page.screenshot({ path: screenshotPath, timeout: 120000 });
-    const skippedForGateway = !razorpayEnabled;
     return {
-      passed: skippedForGateway ? true : Boolean(payload.result && payload.result.passed === true),
+      passed: Boolean(payload.result && payload.result.passed === true),
       screenshotPath,
-      status: skippedForGateway
-        ? "Razorpay gateway is disabled in smoke environment. Checkout modal assertion skipped."
-        : payload.status,
-      result: skippedForGateway
-        ? {
-            ...payload.result,
-            passed: true,
-            skipped: true,
-            reason: "Razorpay gateway is disabled in smoke environment.",
-            provider: String(paymentConfig.provider || "simulated")
-          }
-        : payload.result
+      status: payload.status,
+      result: payload.result
     };
   } finally {
     await context.close();
