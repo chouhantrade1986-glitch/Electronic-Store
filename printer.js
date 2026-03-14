@@ -34,6 +34,7 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
 });
 
 let apiPrinterProducts = [];
+let filterChipController = null;
 
 function fallbackImage() {
   return "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80";
@@ -271,6 +272,93 @@ function sortItems(items, sortValue) {
   return next;
 }
 
+function getSortLabel(value) {
+  if (value === "price_asc") {
+    return "Sort: Price Low to High";
+  }
+  if (value === "price_desc") {
+    return "Sort: Price High to Low";
+  }
+  if (value === "rating_desc") {
+    return "Sort: Top Rated";
+  }
+  if (value === "best_value") {
+    return "Sort: Best Value";
+  }
+  return "Sort: Relevance";
+}
+
+function getActivePrinterFilters() {
+  const filters = [];
+  const query = String(searchInput.value || "").trim();
+  const segment = String(segmentFilter.value || "all");
+  const type = String(typeFilter.value || "all");
+  const useCase = String(useFilter.value || "all");
+  const sortValue = String(sortFilter.value || "relevance");
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        searchInput.value = "";
+      },
+      focus: searchInput,
+      feedback: "Removed search filter. Focus moved to the search input."
+    });
+  }
+
+  if (segment !== "all") {
+    filters.push({
+      id: "segment",
+      label: `Segment: ${String(segmentFilter.selectedOptions?.[0]?.textContent || segment).trim()}`,
+      clear: () => {
+        segmentFilter.value = "all";
+      },
+      focus: segmentFilter,
+      feedback: "Removed segment filter. Focus moved to the segment filter."
+    });
+  }
+
+  if (type !== "all") {
+    filters.push({
+      id: "type",
+      label: `Type: ${String(typeFilter.selectedOptions?.[0]?.textContent || type).trim()}`,
+      clear: () => {
+        typeFilter.value = "all";
+      },
+      focus: typeFilter,
+      feedback: "Removed printer type filter. Focus moved to the type filter."
+    });
+  }
+
+  if (useCase !== "all") {
+    filters.push({
+      id: "useCase",
+      label: `Use Case: ${String(useFilter.selectedOptions?.[0]?.textContent || useCase).trim()}`,
+      clear: () => {
+        useFilter.value = "all";
+      },
+      focus: useFilter,
+      feedback: "Removed printer use-case filter. Focus moved to the use-case filter."
+    });
+  }
+
+  if (sortValue !== "relevance") {
+    filters.push({
+      id: "sort",
+      label: getSortLabel(sortValue),
+      clear: () => {
+        sortFilter.value = "relevance";
+      },
+      focus: sortFilter,
+      feedback: "Removed sort preference. Focus moved to the sort filter."
+    });
+  }
+
+  return filters;
+}
+
 function filterPrinters() {
   const source = getMergedPrinters();
   const query = String(searchInput.value || "").trim().toLowerCase();
@@ -289,6 +377,7 @@ function filterPrinters() {
   });
 
   render(sortItems(filtered, sortValue));
+  filterChipController?.update();
 }
 
 searchInput.addEventListener("input", filterPrinters);
@@ -324,6 +413,21 @@ document.addEventListener("click", (event) => {
 async function initPrinterPage() {
   syncCartCount();
   await fetchPrintersFromApi();
+  filterChipController = window.ElectroMartListingFilterChips?.init({
+    mountAfter: ".result-note",
+    getFilters: getActivePrinterFilters,
+    clearAll: () => {
+      searchInput.value = "";
+      segmentFilter.value = "all";
+      typeFilter.value = "all";
+      useFilter.value = "all";
+      sortFilter.value = "relevance";
+    },
+    focusAfterClearAll: searchInput,
+    clearAllFeedback: "Removed all printer filters. Focus moved to the search input.",
+    onChange: filterPrinters,
+    getResultSummary: () => String(resultMeta?.textContent || "").trim()
+  }) || null;
   filterPrinters();
 }
 

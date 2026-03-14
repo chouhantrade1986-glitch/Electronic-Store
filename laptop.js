@@ -69,6 +69,7 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 2
 });
 let apiLaptopProducts = [];
+let filterChipController = null;
 
 function loadCatalogMap() {
   try {
@@ -299,6 +300,90 @@ function render(list) {
   laptopGrid.innerHTML = list.map(laptopCard).join("");
 }
 
+function getSortLabel(value) {
+  const labels = {
+    price_asc: "Price: Low to High",
+    price_desc: "Price: High to Low",
+    rating_desc: "Top Rated",
+    best_value: "Best Value"
+  };
+  return labels[value] || "Relevance";
+}
+
+function getActiveListingFilters() {
+  const filters = [];
+  const query = String(searchInput?.value || "").trim();
+  const segment = String(segmentFilter?.value || "all");
+  const brand = String(brandFilter?.value || "all");
+  const purpose = String(purposeFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
+  if (query) {
+    filters.push({
+      id: "search",
+      label: `Search: "${query}"`,
+      ariaLabel: `Remove search ${query}`,
+      clear: () => {
+        searchInput.value = "";
+      },
+      focus: () => searchInput.focus(),
+      feedback: `Removed search ${query}. Focus moved to the search input.`
+    });
+  }
+  if (segment !== "all") {
+    filters.push({
+      id: "segment",
+      label: `Segment: ${segment.toUpperCase()}`,
+      ariaLabel: `Remove segment filter ${segment.toUpperCase()}`,
+      clear: () => {
+        segmentFilter.value = "all";
+      },
+      focus: () => segmentFilter.focus(),
+      feedback: `Removed segment filter ${segment.toUpperCase()}. Focus moved to the segment filter.`
+    });
+  }
+  if (brand !== "all") {
+    const readableBrand = brandFilter?.selectedOptions?.[0]?.textContent?.trim() || brand;
+    filters.push({
+      id: "brand",
+      label: `Brand: ${readableBrand}`,
+      ariaLabel: `Remove brand filter ${readableBrand}`,
+      clear: () => {
+        brandFilter.value = "all";
+      },
+      focus: () => brandFilter.focus(),
+      feedback: `Removed brand filter ${readableBrand}. Focus moved to the brand filter.`
+    });
+  }
+  if (purpose !== "all") {
+    const readablePurpose = purpose.charAt(0).toUpperCase() + purpose.slice(1);
+    filters.push({
+      id: "purpose",
+      label: `Use Case: ${readablePurpose}`,
+      ariaLabel: `Remove use case filter ${readablePurpose}`,
+      clear: () => {
+        purposeFilter.value = "all";
+      },
+      focus: () => purposeFilter.focus(),
+      feedback: `Removed use case filter ${readablePurpose}. Focus moved to the use case filter.`
+    });
+  }
+  if (sortValue !== "relevance") {
+    const sortLabel = getSortLabel(sortValue);
+    filters.push({
+      id: "sort",
+      label: `Sort: ${sortLabel}`,
+      ariaLabel: `Remove sort filter ${sortLabel}`,
+      clear: () => {
+        sortFilter.value = "relevance";
+      },
+      focus: () => sortFilter.focus(),
+      feedback: `Removed sort order ${sortLabel}. Focus moved to the sort control.`
+    });
+  }
+  return filters;
+}
+
 function sortItems(items, sortValue) {
   const next = [...items];
   if (sortValue === "price_asc") {
@@ -333,6 +418,7 @@ function filterLaptops() {
   });
 
   render(sortItems(filtered, sortValue));
+  filterChipController?.update();
 }
 
 async function refreshLaptops() {
@@ -377,4 +463,29 @@ document.addEventListener("click", (event) => {
 });
 
 syncCartCount();
+filterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: ".result-note",
+  getFilters: getActiveListingFilters,
+  clearAll: () => {
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    if (segmentFilter) {
+      segmentFilter.value = "all";
+    }
+    if (brandFilter) {
+      brandFilter.value = "all";
+    }
+    if (purposeFilter) {
+      purposeFilter.value = "all";
+    }
+    if (sortFilter) {
+      sortFilter.value = "relevance";
+    }
+  },
+  focusAfterClearAll: () => searchInput?.focus(),
+  clearAllFeedback: "Removed all laptop filters. Focus moved to the search input.",
+  onChange: filterLaptops,
+  getResultSummary: () => String(resultMeta?.textContent || "").trim()
+});
 refreshLaptops();

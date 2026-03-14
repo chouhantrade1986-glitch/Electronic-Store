@@ -34,6 +34,7 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
 });
 
 let apiDesktopProducts = [];
+let filterChipController = null;
 
 function fallbackImage() {
   return "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80";
@@ -251,6 +252,90 @@ function render(list) {
   desktopGrid.innerHTML = list.map(desktopCard).join("");
 }
 
+function getSortLabel(value) {
+  const labels = {
+    price_asc: "Price: Low to High",
+    price_desc: "Price: High to Low",
+    rating_desc: "Top Rated",
+    best_value: "Best Value"
+  };
+  return labels[value] || "Relevance";
+}
+
+function getActiveListingFilters() {
+  const filters = [];
+  const query = String(searchInput?.value || "").trim();
+  const segment = String(segmentFilter?.value || "all");
+  const processor = String(processorFilter?.value || "all");
+  const purpose = String(purposeFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
+  if (query) {
+    filters.push({
+      id: "search",
+      label: `Search: "${query}"`,
+      ariaLabel: `Remove search ${query}`,
+      clear: () => {
+        searchInput.value = "";
+      },
+      focus: () => searchInput.focus(),
+      feedback: `Removed search ${query}. Focus moved to the search input.`
+    });
+  }
+  if (segment !== "all") {
+    filters.push({
+      id: "segment",
+      label: `Segment: ${segment.toUpperCase()}`,
+      ariaLabel: `Remove segment filter ${segment.toUpperCase()}`,
+      clear: () => {
+        segmentFilter.value = "all";
+      },
+      focus: () => segmentFilter.focus(),
+      feedback: `Removed segment filter ${segment.toUpperCase()}. Focus moved to the segment filter.`
+    });
+  }
+  if (processor !== "all") {
+    const readableProcessor = processor.toUpperCase();
+    filters.push({
+      id: "processor",
+      label: `Processor: ${readableProcessor}`,
+      ariaLabel: `Remove processor filter ${readableProcessor}`,
+      clear: () => {
+        processorFilter.value = "all";
+      },
+      focus: () => processorFilter.focus(),
+      feedback: `Removed processor filter ${readableProcessor}. Focus moved to the processor filter.`
+    });
+  }
+  if (purpose !== "all") {
+    const readablePurpose = purpose.charAt(0).toUpperCase() + purpose.slice(1);
+    filters.push({
+      id: "purpose",
+      label: `Use Case: ${readablePurpose}`,
+      ariaLabel: `Remove use case filter ${readablePurpose}`,
+      clear: () => {
+        purposeFilter.value = "all";
+      },
+      focus: () => purposeFilter.focus(),
+      feedback: `Removed use case filter ${readablePurpose}. Focus moved to the use case filter.`
+    });
+  }
+  if (sortValue !== "relevance") {
+    const sortLabel = getSortLabel(sortValue);
+    filters.push({
+      id: "sort",
+      label: `Sort: ${sortLabel}`,
+      ariaLabel: `Remove sort filter ${sortLabel}`,
+      clear: () => {
+        sortFilter.value = "relevance";
+      },
+      focus: () => sortFilter.focus(),
+      feedback: `Removed sort order ${sortLabel}. Focus moved to the sort control.`
+    });
+  }
+  return filters;
+}
+
 function sortItems(items, sortValue) {
   const next = [...items];
   if (sortValue === "price_asc") {
@@ -283,6 +368,7 @@ function filterDesktops() {
   });
 
   render(sortItems(filtered, sortValue));
+  filterChipController?.update();
 }
 
 searchInput.addEventListener("input", filterDesktops);
@@ -317,6 +403,31 @@ document.addEventListener("click", (event) => {
 
 async function initDesktopPage() {
   syncCartCount();
+  filterChipController = window.ElectroMartListingFilterChips?.init({
+    mountAfter: ".result-note",
+    getFilters: getActiveListingFilters,
+    clearAll: () => {
+      if (searchInput) {
+        searchInput.value = "";
+      }
+      if (segmentFilter) {
+        segmentFilter.value = "all";
+      }
+      if (processorFilter) {
+        processorFilter.value = "all";
+      }
+      if (purposeFilter) {
+        purposeFilter.value = "all";
+      }
+      if (sortFilter) {
+        sortFilter.value = "relevance";
+      }
+    },
+    focusAfterClearAll: () => searchInput?.focus(),
+    clearAllFeedback: "Removed all computer filters. Focus moved to the search input.",
+    onChange: filterDesktops,
+    getResultSummary: () => String(resultMeta?.textContent || "").trim()
+  });
   await fetchDesktopsFromApi();
   filterDesktops();
 }

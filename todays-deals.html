@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="todays-deals.css" />
+  <link rel="stylesheet" href="listing-filter-chips.css?v=20260314a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
 <body>
   <header class="page-header">
@@ -93,7 +95,7 @@
       <section class="panel result-panel">
         <div class="panel-head">
           <h2>Best Deals Today</h2>
-          <p id="resultMeta">Showing 0 deals</p>
+          <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 deals</p>
         </div>
         <p class="result-note">Limited-time pricing updates daily.</p>
         <div id="dealsGrid" class="deals-grid"></div>
@@ -101,9 +103,13 @@
     </section>
   </main>
 
-  <script src="todays-deals.js"></script>
+  <script src="listing-filter-chips.js?v=20260314a"></script>
+  <script src="todays-deals.js?v=20260314a"></script>
   <script src="menu-manager.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
+
+
 
 

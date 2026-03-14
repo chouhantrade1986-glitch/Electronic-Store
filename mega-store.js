@@ -63,6 +63,7 @@ const storeSearch = document.getElementById("storeSearch");
 const serviceFilter = document.getElementById("serviceFilter");
 const storeMeta = document.getElementById("storeMeta");
 const storeGrid = document.getElementById("storeGrid");
+let filterChipController = null;
 
 function loadCartMap() {
   try {
@@ -106,6 +107,38 @@ function renderStores(list) {
   storeGrid.innerHTML = list.map(storeCard).join("");
 }
 
+function getActiveStoreFilters() {
+  const filters = [];
+  const query = String(storeSearch?.value || "").trim();
+  const service = String(serviceFilter?.value || "all");
+
+  if (query) {
+    filters.push({
+      id: "search",
+      label: `Search: ${query}`,
+      clear: () => {
+        storeSearch.value = "";
+      },
+      focus: storeSearch,
+      feedback: "Removed store search filter. Focus moved to the search input."
+    });
+  }
+
+  if (service !== "all") {
+    filters.push({
+      id: "service",
+      label: `Service: ${String(serviceFilter.selectedOptions?.[0]?.textContent || service).trim()}`,
+      clear: () => {
+        serviceFilter.value = "all";
+      },
+      focus: serviceFilter,
+      feedback: "Removed service filter. Focus moved to the service filter."
+    });
+  }
+
+  return filters;
+}
+
 function filterStores() {
   const query = storeSearch.value.trim().toLowerCase();
   const service = serviceFilter.value;
@@ -121,10 +154,23 @@ function filterStores() {
   });
 
   renderStores(filtered);
+  filterChipController?.update();
 }
 
 storeSearch.addEventListener("input", filterStores);
 serviceFilter.addEventListener("change", filterStores);
 
 syncCartCount();
+filterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: ".filters",
+  getFilters: getActiveStoreFilters,
+  clearAll: () => {
+    storeSearch.value = "";
+    serviceFilter.value = "all";
+  },
+  focusAfterClearAll: storeSearch,
+  clearAllFeedback: "Removed all store filters. Focus moved to the search input.",
+  onChange: filterStores,
+  getResultSummary: () => String(storeMeta?.textContent || "").trim()
+}) || null;
 filterStores();

@@ -22,6 +22,7 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
   currency: "INR",
   maximumFractionDigits: 2
 });
+let filterChipController = null;
 
 function loadCartMap() {
   try {
@@ -92,6 +93,63 @@ function render(list) {
   bestGrid.innerHTML = list.map(card).join("");
 }
 
+function getSortLabel(value) {
+  const labels = {
+    sold_desc: "Most Sold",
+    rating_desc: "Top Rated",
+    price_asc: "Price: Low to High",
+    price_desc: "Price: High to Low"
+  };
+  return labels[value] || "Featured";
+}
+
+function getActiveListingFilters() {
+  const filters = [];
+  const query = String(searchInput?.value || "").trim();
+  const category = String(categoryFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
+  if (query) {
+    filters.push({
+      id: "search",
+      label: `Search: "${query}"`,
+      ariaLabel: `Remove search ${query}`,
+      clear: () => {
+        searchInput.value = "";
+      },
+      focus: () => searchInput.focus(),
+      feedback: `Removed search ${query}. Focus moved to the search input.`
+    });
+  }
+  if (category !== "all") {
+    const readable = category.charAt(0).toUpperCase() + category.slice(1);
+    filters.push({
+      id: "category",
+      label: `Category: ${readable}`,
+      ariaLabel: `Remove category filter ${readable}`,
+      clear: () => {
+        categoryFilter.value = "all";
+      },
+      focus: () => categoryFilter.focus(),
+      feedback: `Removed category filter ${readable}. Focus moved to the category filter.`
+    });
+  }
+  if (sortValue !== "relevance") {
+    const sortLabel = getSortLabel(sortValue);
+    filters.push({
+      id: "sort",
+      label: `Sort: ${sortLabel}`,
+      ariaLabel: `Remove sort filter ${sortLabel}`,
+      clear: () => {
+        sortFilter.value = "relevance";
+      },
+      focus: () => sortFilter.focus(),
+      feedback: `Removed sort order ${sortLabel}. Focus moved to the sort control.`
+    });
+  }
+  return filters;
+}
+
 function sortBestSellers(items, sortValue) {
   const next = [...items];
   if (sortValue === "sold_desc") {
@@ -127,6 +185,7 @@ function filterBestSellers() {
   });
 
   render(sortBestSellers(filtered, sortValue));
+  filterChipController?.update();
 }
 
 if (searchInput) {
@@ -166,4 +225,23 @@ document.addEventListener("click", (event) => {
 
 syncCartCount();
 applyInitialCategoryFromUrl();
+filterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: ".result-note",
+  getFilters: getActiveListingFilters,
+  clearAll: () => {
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    if (categoryFilter) {
+      categoryFilter.value = "all";
+    }
+    if (sortFilter) {
+      sortFilter.value = "relevance";
+    }
+  },
+  focusAfterClearAll: () => searchInput?.focus(),
+  clearAllFeedback: "Removed all listing filters. Focus moved to the search input.",
+  onChange: filterBestSellers,
+  getResultSummary: () => String(resultMeta?.textContent || "").trim()
+});
 filterBestSellers();

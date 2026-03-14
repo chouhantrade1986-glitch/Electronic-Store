@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,13 +7,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="products.css" />
+  <link rel="stylesheet" href="products.css?v=20260314m" />
 </head>
 <body>
   <header class="site-header">
     <nav class="top-nav">
       <a href="index.html" class="brand">electro<span>mart</span><small>all products</small></a>
       <form id="searchForm" class="search-form" role="search">
+        <select id="searchCatalogSelect" class="search-context-select" aria-label="Browse catalogue">
+          <option value="all">All Catalogue</option>
+          <option value="computer">Computers</option>
+          <option value="laptop">Laptops</option>
+          <option value="printer">Printers</option>
+          <option value="mobile">Mobiles</option>
+          <option value="audio">Audio</option>
+          <option value="accessory">Accessories</option>
+        </select>
         <div class="search-input-wrap">
           <input id="searchInput" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off" />
           <div id="searchSuggestions" class="search-suggestions" hidden></div>
@@ -21,9 +30,6 @@
         <button type="submit">Search</button>
       </form>
       <div class="header-links" aria-label="Account and links">
-        <a href="desktops.html">Computers</a>
-        <a href="laptop.html">Laptops</a>
-        <a href="printer.html">Printers</a>
         <a href="auth.html">Account</a>
         <a href="orders.html">Orders</a>
         <a href="wishlist.html">Wishlist</a>
@@ -107,16 +113,16 @@
           <h3>Customer Rating</h3>
           <div class="rating-filter" role="group" aria-label="Filter by rating">
             <button type="button" class="rating-chip active" data-rating="0">All</button>
-            <button type="button" class="rating-chip" data-rating="4">4★ & above</button>
-            <button type="button" class="rating-chip" data-rating="4.5">4.5★ & above</button>
+            <button type="button" class="rating-chip" data-rating="4">4? & above</button>
+            <button type="button" class="rating-chip" data-rating="4.5">4.5? & above</button>
           </div>
         </div>
       </aside>
       <section class="products-panel">
         <div class="panel-head">
-          <h1>Results</h1>
+          <h1 id="resultsHeading">Results</h1>
           <div class="panel-controls">
-            <p id="resultMeta">Showing 0 products</p>
+            <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 products</p>
             <label for="sortFilter">Sort by:</label>
             <select id="sortFilter">
               <option value="relevance">Featured</option>
@@ -127,7 +133,14 @@
           </div>
         </div>
         <p id="activeFilterMeta" class="active-filter-meta">Filters: None</p>
-        <div id="productsGrid" class="products-grid"></div>
+        <div id="activeFilterChips" class="active-filter-chips" aria-label="Active filters" hidden></div>
+        <p id="filterChipFeedback" class="filter-chip-feedback" hidden></p>
+        <p id="filterLiveStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div id="productsGrid" class="products-grid" role="region" aria-labelledby="resultsHeading" aria-busy="false"></div>
+        <div id="resultsFooter" class="results-footer" hidden>
+          <p id="resultsWindowMeta" class="results-window-meta" role="status" aria-live="polite" aria-atomic="true"></p>
+          <button id="loadMoreBtn" type="button" class="load-more-btn">Load More Products</button>
+        </div>
       </section>
     </section>
   </main>
@@ -157,11 +170,12 @@
     </section>
   </div>
 
-  <script src="products.js?v=20260305b"></script>
-  <script src="menu-manager.js"></script>
-  <script src="auth-state.js"></script>
+  <script src="products.js?v=20260314m"></script>
+  <script src="menu-manager.js?v=20260313c"></script>
+  <script src="auth-state.js?v=20260313c"></script>
 </body>
 </html>
+
 
 
 

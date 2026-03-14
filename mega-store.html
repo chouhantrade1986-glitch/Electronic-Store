@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="mega-store.css" />
+  <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
 <body>
   <header class="page-header">
@@ -48,15 +50,19 @@
     <section class="store-panel">
       <div class="panel-head">
         <h2>Mega Store Locations</h2>
-        <p id="storeMeta">Showing 0 stores</p>
+        <p id="storeMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 stores</p>
       </div>
       <div id="storeGrid" class="store-grid"></div>
     </section>
   </main>
 
-  <script src="mega-store.js"></script>
+  <script src="listing-filter-chips.js?v=20260314c"></script>
+  <script src="mega-store.js?v=20260314a"></script>
+  <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
+
+
 
 
 
