@@ -298,6 +298,7 @@ let adminOrderFilterChipController = null;
 let adminCatalogFilterChipController = null;
 let adminAfterSalesFilterChipController = null;
 let adminUserFilterChipController = null;
+let adminAuditFilterChipController = null;
 const MAX_PRODUCT_IMAGES = 15;
 const MAX_UPLOAD_IMAGE_MB = 15;
 const MAX_UPLOAD_VIDEO_MB = 50;
@@ -6015,6 +6016,27 @@ adminUserFilterChipController = window.ElectroMartListingFilterChips?.init({
   onChange: applyUserFilters,
   getResultSummary: () => String(usersMeta?.textContent || "").trim()
 }) || null;
+adminAuditFilterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#adminAuditTrail .panel-tools-3",
+  getFilters: getActiveAdminAuditFilters,
+  clearAll: () => {
+    currentAdminAuditFilters.search = "";
+    currentAdminAuditFilters.category = "all";
+    if (adminAuditSearchInput) {
+      adminAuditSearchInput.value = "";
+    }
+    if (adminAuditCategoryFilter) {
+      adminAuditCategoryFilter.value = "all";
+    }
+  },
+  focusAfterClearAll: adminAuditSearchInput,
+  clearAllFeedback: "Removed all audit trail filters. Focus moved to the search input.",
+  onChange: () => renderAdminAuditTrail({
+    entries: allAdminAuditEntries,
+    summary: buildAdminAuditSummary(allAdminAuditEntries)
+  }),
+  getResultSummary: () => String(adminAuditMeta?.textContent || "").trim()
+}) || null;
 userSearch.addEventListener("input", applyUserFilters);
 userRoleFilter.addEventListener("change", applyUserFilters);
 if (userPhoneVerificationFilter) {
@@ -7485,6 +7507,53 @@ function buildAdminAuditSummary(entries) {
   };
 }
 
+function getAdminAuditCategoryLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Category: All";
+  }
+  const selectedLabel = String(adminAuditCategoryFilter?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Category: ${selectedLabel}`;
+}
+
+function getActiveAdminAuditFilters() {
+  const filters = [];
+  const search = String(currentAdminAuditFilters.search || "").trim();
+  const category = String(currentAdminAuditFilters.category || "all").trim().toLowerCase();
+
+  if (search) {
+    filters.push({
+      id: "search",
+      label: `Search: ${search}`,
+      clear: () => {
+        currentAdminAuditFilters.search = "";
+        if (adminAuditSearchInput) {
+          adminAuditSearchInput.value = "";
+        }
+      },
+      focus: adminAuditSearchInput,
+      feedback: "Removed audit trail search filter. Focus moved to the search input."
+    });
+  }
+
+  if (category !== "all") {
+    filters.push({
+      id: "category",
+      label: getAdminAuditCategoryLabel(category),
+      clear: () => {
+        currentAdminAuditFilters.category = "all";
+        if (adminAuditCategoryFilter) {
+          adminAuditCategoryFilter.value = "all";
+        }
+      },
+      focus: adminAuditCategoryFilter,
+      feedback: "Removed audit trail category filter. Focus moved to the category filter."
+    });
+  }
+
+  return filters;
+}
+
 function renderAdminAuditTrail(payload) {
   const entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
   const summary = payload && payload.summary ? payload.summary : buildAdminAuditSummary(entries);
@@ -7520,6 +7589,7 @@ function renderAdminAuditTrail(payload) {
 
   if (!filteredEntries.length) {
     adminAuditTableBody.innerHTML = "<tr><td colspan='6'>No admin audit entries match the current filters.</td></tr>";
+    adminAuditFilterChipController?.update();
     return;
   }
 
@@ -7540,6 +7610,7 @@ function renderAdminAuditTrail(payload) {
       </tr>
     `;
   }).join("");
+  adminAuditFilterChipController?.update();
 }
 
 function applyPhoneVerificationReminderFilters(reminders) {
