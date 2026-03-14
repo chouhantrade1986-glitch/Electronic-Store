@@ -1,6 +1,6 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-03-11T08:22:38Z",
+    "generatedAt":  "2026-03-14T04:13:28Z",
     "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
@@ -16,8 +16,8 @@
                   },
                   {
                       "name":  "qa-invoice-browser.png",
-                      "bytes":  147651,
-                      "sha256":  "839A041889F04E628C56308A59458D3F37441DBD01D8370B4E8D86700185F9B3"
+                      "bytes":  156761,
+                      "sha256":  "44BBC58B656C5671FD63F29BE6640946ABE2220DBBC8C570130244AC8EAC2FEF"
                   },
                   {
                       "name":  "qa-checkout-browser.png",
@@ -31,8 +31,8 @@
                   },
                   {
                       "name":  "qa-wishlist-browser.png",
-                      "bytes":  93716,
-                      "sha256":  "9D897C3A50B75614E5B1816AE85D87B76F5B99D2244AB131700330ABC214F6D1"
+                      "bytes":  97939,
+                      "sha256":  "0ED5F1C2B922EFC442CD627624EEA21D372AF4051A9CF7DE1F6E894344602CD1"
                   }
               ]
 }
