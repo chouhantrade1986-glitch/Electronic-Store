@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="products.css?v=20260314m" />
+  <link rel="stylesheet" href="products.css?v=20260314n" />
 </head>
 <body>
   <header class="site-header">
@@ -101,13 +101,9 @@
         </div>
         <div class="filter-group">
           <h3>Brand</h3>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="AstraTech" /> AstraTech</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="Nimbus" /> Nimbus</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="PulseWave" /> PulseWave</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="OrbitX" /> OrbitX</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="ZenPad" /> ZenPad</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="Vector" /> Vector</label>
-          <label class="check-item"><input type="checkbox" class="brand-filter" value="EchoSphere" /> EchoSphere</label>
+          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
+            <p class="brand-filter-empty">Loading brands...</p>
+          </div>
         </div>
         <div class="filter-group">
           <h3>Customer Rating</h3>
@@ -170,7 +166,7 @@
     </section>
   </div>
 
-  <script src="products.js?v=20260314n"></script>
+  <script src="products.js?v=20260314o"></script>
   <script src="menu-manager.js?v=20260313c"></script>
   <script src="auth-state.js?v=20260313c"></script>
 </body>

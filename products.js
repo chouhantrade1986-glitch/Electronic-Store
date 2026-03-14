@@ -24,7 +24,7 @@ const minPriceRange = document.getElementById("minPriceRange");
 const maxPriceRange = document.getElementById("maxPriceRange");
 const minPriceValue = document.getElementById("minPriceValue");
 const maxPriceValue = document.getElementById("maxPriceValue");
-const brandFilters = Array.from(document.querySelectorAll(".brand-filter"));
+const brandFilterList = document.getElementById("brandFilterList");
 const sortFilter = document.getElementById("sortFilter");
 const ratingChips = Array.from(document.querySelectorAll(".rating-chip"));
 const deptTrigger = document.getElementById("deptTrigger");
@@ -59,6 +59,7 @@ let visibleResultCount = 0;
 const PRODUCTS_INITIAL_RENDER_LIMIT = 48;
 const PRODUCTS_LOAD_MORE_STEP = 24;
 const CORE_CATEGORY_SLUGS = ["computer", "laptop", "printer", "mobile", "audio", "accessory"];
+const CATEGORY_PRIORITY_SLUGS = [...CORE_CATEGORY_SLUGS, "creator-studio"];
 const fallbackProducts = [
   { id: "1", name: "AstraBook Pro 14", brand: "AstraTech", category: "laptop", segment: "b2c", price: 999, rating: 4.6, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
   { id: "2", name: "Nimbus Phone X", brand: "Nimbus", category: "mobile", segment: "b2c", price: 749, rating: 4.5, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
@@ -277,15 +278,37 @@ function getActiveCategorySlugs() {
     .flatMap((item) => normalizeCollectionValues(item.collections, item.category))
     .filter((slug) => slug && slug !== "all-products");
 
-  const merged = Array.from(new Set([...fromRecords, ...fromCatalog]));
+  const fromFallback = fallbackProducts
+    .flatMap((item) => normalizeCollectionValues(item.collections, item.category))
+    .filter((slug) => slug && slug !== "all-products");
+
+  const merged = Array.from(new Set([...fromRecords, ...fromCatalog, ...fromFallback]));
   if (merged.length) {
     return merged;
   }
   return CORE_CATEGORY_SLUGS.slice();
 }
 
+function sortCategorySlugs(slugs) {
+  const unique = Array.from(new Set((Array.isArray(slugs) ? slugs : []).filter(Boolean)));
+  return unique.sort((left, right) => {
+    const leftPriority = CATEGORY_PRIORITY_SLUGS.indexOf(left);
+    const rightPriority = CATEGORY_PRIORITY_SLUGS.indexOf(right);
+    if (leftPriority !== -1 || rightPriority !== -1) {
+      if (leftPriority === -1) {
+        return 1;
+      }
+      if (rightPriority === -1) {
+        return -1;
+      }
+      return leftPriority - rightPriority;
+    }
+    return categoryLabel(left).localeCompare(categoryLabel(right));
+  });
+}
+
 function getSearchCategorySlugs() {
-  return CORE_CATEGORY_SLUGS.slice();
+  return sortCategorySlugs(getActiveCategorySlugs());
 }
 
 function syncDynamicCategoryUI() {
@@ -319,6 +342,89 @@ function syncSearchCategoryControls(nextValue) {
     searchCatalogSelect.value = safeValue;
   }
   return safeValue;
+}
+
+function getBrandFilters() {
+  return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function choosePreferredBrandLabel(currentValue, nextValue) {
+  const current = String(currentValue || "").trim();
+  const next = String(nextValue || "").trim();
+  if (!current) {
+    return next;
+  }
+  if (!next) {
+    return current;
+  }
+  const currentHasUpper = /[A-Z]/.test(current);
+  const nextHasUpper = /[A-Z]/.test(next);
+  if (!currentHasUpper && nextHasUpper) {
+    return next;
+  }
+  return current;
+}
+
+function getProductsForBrandOptions(sourceProducts) {
+  const selectedCategory = categoryFilter.value;
+  const selectedSegment = segmentFilter.value;
+  const query = searchInput.value.trim().toLowerCase();
+  const minPrice = Number(minPriceRange.value);
+  const maxPrice = Number(maxPriceRange.value);
+  const priceFloor = Math.min(minPrice, maxPrice);
+  const priceCeil = Math.max(minPrice, maxPrice);
+
+  return sourceProducts.filter((item) => {
+    const collections = normalizeCollectionValues(item.collections, item.category);
+    const queryMatch = !query || `${item.name} ${item.brand} ${item.category} ${collections.join(" ")}`.toLowerCase().includes(query);
+    const categoryMatch = categoryMatchesSelection(selectedCategory, collections);
+    const segmentMatch = selectedSegment === "all" || item.segment === selectedSegment;
+    const priceMatch = Number(item.price || 0) >= priceFloor && Number(item.price || 0) <= priceCeil;
+    const ratingMatch = Number(item.rating || 0) >= selectedMinRating;
+    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch;
+  });
+}
+
+function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts, loadCatalogProductsList())) {
+  if (!brandFilterList) {
+    return;
+  }
+
+  const selectedBrands = getSelectedBrands();
+  const selectedBrandKeys = new Set(selectedBrands.map((brand) => normalizeBrandKey(brand)));
+  const optionMap = new Map();
+  const relevantProducts = getProductsForBrandOptions(sourceProducts);
+  const productsForOptions = [...relevantProducts, ...sourceProducts.filter((item) => selectedBrandKeys.has(normalizeBrandKey(item.brand)))];
+
+  productsForOptions.forEach((item) => {
+    const brand = String(item?.brand || "").trim();
+    if (!brand) {
+      return;
+    }
+    const key = normalizeBrandKey(brand);
+    const existing = optionMap.get(key);
+    optionMap.set(key, {
+      key,
+      label: choosePreferredBrandLabel(existing?.label, brand)
+    });
+  });
+
+  const options = Array.from(optionMap.values()).sort((left, right) => left.label.localeCompare(right.label));
+  if (!options.length) {
+    brandFilterList.innerHTML = "<p class='brand-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+
+  brandFilterList.innerHTML = options
+    .map((option) => {
+      const checked = selectedBrandKeys.has(option.key) ? " checked" : "";
+      return `<label class="check-item"><input type="checkbox" class="brand-filter" value="${escapeSuggestionHtml(option.label)}"${checked} /> ${escapeSuggestionHtml(option.label)}</label>`;
+    })
+    .join("");
 }
 
 function loadCartMap() {
@@ -485,7 +591,7 @@ function addProductToCart(productId) {
 }
 
 function getSelectedBrands() {
-  return brandFilters.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+  return getBrandFilters().filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
 }
 
 function money(value) {
@@ -1660,7 +1766,7 @@ function resetAllFilters() {
   maxPriceRange.value = String(maxPriceRange.max || 16000);
   selectedMinRating = 0;
   syncRatingChipUI();
-  brandFilters.forEach((checkbox) => {
+  getBrandFilters().forEach((checkbox) => {
     checkbox.checked = false;
   });
   updatePriceLabels();
@@ -1730,11 +1836,6 @@ function applyClientFilters(sourceProducts) {
     return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch;
   });
 
-  if (query && !items.length) {
-    // Rescue mode: when query exists and active filters hide everything, show query matches.
-    items = sourceProducts.filter((item) => queryMatchOnly(item));
-  }
-
   if (selectedSort === "price_asc") {
     items = items.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
   } else if (selectedSort === "price_desc") {
@@ -1753,34 +1854,41 @@ function filterFallbackProducts() {
 async function fetchProductsFromApi() {
   const { params, checkedBrands } = buildQueryParams();
   const activeQuery = searchInput.value.trim();
+  const fallbackSource = mergeProductsById(fallbackProducts, loadCatalogProductsList());
   visibleResultCount = PRODUCTS_INITIAL_RENDER_LIMIT;
   renderActiveFilterMeta();
   setLoadingState();
+  syncDynamicCategoryUI();
+  syncDynamicBrandUI(fallbackSource);
 
   let response;
   try {
     response = await fetch(`${API_BASE_URL}/products?${params.toString()}`);
   } catch (error) {
-    renderProducts(filterFallbackProducts());
+    renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
   }
 
   const data = await response.json().catch(() => null);
   if (!response.ok || !data || !Array.isArray(data.products)) {
-    renderProducts(filterFallbackProducts());
+    renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
   }
 
-  let items = mergeProductsById(data.products, loadCatalogProductsList());
+  cacheCatalogProducts(data.products);
+  const sourceItems = mergeProductsById(data.products, loadCatalogProductsList());
+  syncDynamicCategoryUI();
+  syncDynamicBrandUI(sourceItems);
+  let items = sourceItems;
   if (!activeQuery && checkedBrands.length > 1) {
     items = items.filter((item) => checkedBrands.includes(item.brand));
   }
   items = applyClientFilters(items);
   renderProducts(items);
   window.setTimeout(() => {
-    cacheCatalogProducts(items);
+    cacheCatalogProducts(data.products);
   }, 0);
 }
 
@@ -1880,9 +1988,13 @@ maxPriceRange.addEventListener("input", () => {
   fetchProductsFromApi();
 });
 
-brandFilters.forEach((checkbox) => {
-  checkbox.addEventListener("change", fetchProductsFromApi);
-});
+if (brandFilterList) {
+  brandFilterList.addEventListener("change", (event) => {
+    if (event.target.closest(".brand-filter")) {
+      fetchProductsFromApi();
+    }
+  });
+}
 if (resetFiltersBtn) {
   resetFiltersBtn.addEventListener("click", resetAllFilters);
 }
@@ -1926,7 +2038,7 @@ if (resetFiltersBtn) {
         focusTarget = segmentFilter;
         feedbackMessage = "Removed segment filter. Focus moved to the segment filter.";
       } else if (action === "brand") {
-        const targetCheckbox = brandFilters.find((checkbox) => checkbox.value === value);
+        const targetCheckbox = getBrandFilters().find((checkbox) => checkbox.value === value);
         if (targetCheckbox) {
           targetCheckbox.checked = false;
           focusTarget = targetCheckbox;
@@ -2102,6 +2214,7 @@ if (quickViewWishlistBtn) {
 syncCartCount();
 syncDynamicCategoryUI();
 applyInitialQueryFilters();
+syncDynamicBrandUI();
 updatePriceLabels();
 fetchProductsFromApi();
 
