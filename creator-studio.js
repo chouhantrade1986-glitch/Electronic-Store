@@ -146,6 +146,7 @@ const creatorStudioFallbackProducts = [
 
 const cartCount = document.getElementById("cartCount");
 const studioSearch = document.getElementById("studioSearch");
+const studioBrandFilterList = document.getElementById("studioBrandFilterList");
 const studioTypeFilter = document.getElementById("studioTypeFilter");
 const studioBudgetFilter = document.getElementById("studioBudgetFilter");
 const studioMeta = document.getElementById("studioMeta");
@@ -349,6 +350,58 @@ function studioTypeLabel(value) {
   return labels[value] || "Creator Tool";
 }
 
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getBrandFilters() {
+  return studioBrandFilterList ? Array.from(studioBrandFilterList.querySelectorAll(".studio-brand-filter")) : [];
+}
+
+function getSelectedBrands() {
+  return getBrandFilters()
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+}
+
+function syncDynamicBrandUI() {
+  if (!studioBrandFilterList) {
+    return;
+  }
+  const selectedKeys = new Set(getSelectedBrands().map((brand) => normalizeBrandKey(brand)));
+  const query = String(studioSearch?.value || "").trim().toLowerCase();
+  const type = String(studioTypeFilter?.value || "all");
+  const budget = String(studioBudgetFilter?.value || "all");
+
+  const source = creatorStudioProducts.filter((product) => {
+    const haystack = [product.name, product.brand, product.description, ...(Array.isArray(product.keywords) ? product.keywords : []), ...(Array.isArray(product.collections) ? product.collections : [])].join(" ").toLowerCase();
+    const queryMatch = !query || haystack.includes(query);
+    const typeMatch = type === "all" || inferStudioType(product) === type;
+    const budgetMatch = matchesBudget(product, budget);
+    return queryMatch && typeMatch && budgetMatch;
+  });
+
+  const optionMap = new Map();
+  [...source, ...creatorStudioProducts.filter((product) => selectedKeys.has(normalizeBrandKey(product.brand)))]
+    .forEach((product) => {
+      const brand = String(product.brand || "").trim();
+      if (!brand) {
+        return;
+      }
+      optionMap.set(normalizeBrandKey(brand), brand);
+    });
+
+  const brands = Array.from(optionMap.values()).sort((left, right) => left.localeCompare(right));
+  if (!brands.length) {
+    studioBrandFilterList.innerHTML = "<p class='studio-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+  studioBrandFilterList.innerHTML = brands.map((brand) => {
+    const checked = selectedKeys.has(normalizeBrandKey(brand)) ? " checked" : "";
+    return `<label class="check-item"><input type="checkbox" class="studio-brand-filter" value="${escapeHtml(brand)}"${checked} /> ${escapeHtml(brand)}</label>`;
+  }).join("");
+}
+
 function categoryLabel(value) {
   const labels = {
     accessory: "Accessories",
@@ -372,6 +425,7 @@ function matchesBudget(product, budget) {
 function getActiveStudioFilters() {
   const filters = [];
   const query = String(studioSearch?.value || "").trim();
+  const selectedBrands = getSelectedBrands();
   const type = String(studioTypeFilter?.value || "all");
   const budget = String(studioBudgetFilter?.value || "all");
 
@@ -384,6 +438,20 @@ function getActiveStudioFilters() {
       feedback: "Removed creator search filter. Focus moved to the search input."
     });
   }
+  selectedBrands.forEach((brand) => {
+    filters.push({
+      id: `brand-${normalizeBrandKey(brand)}`,
+      label: `Brand: ${brand}`,
+      clear: () => {
+        const target = getBrandFilters().find((checkbox) => checkbox.value === brand);
+        if (target) {
+          target.checked = false;
+        }
+      },
+      focus: () => getBrandFilters().find((checkbox) => checkbox.value === brand)?.focus(),
+      feedback: "Removed creator brand filter. Focus moved to the brand option."
+    });
+  });
   if (type !== "all") {
     filters.push({
       id: "type",
@@ -460,11 +528,16 @@ function setGridBusy(isBusy) {
 
 function applyFilters() {
   const query = String(studioSearch?.value || "").trim().toLowerCase();
+  syncDynamicBrandUI();
+  const selectedBrands = getSelectedBrands();
   const type = String(studioTypeFilter?.value || "all");
   const budget = String(studioBudgetFilter?.value || "all");
   const filtered = creatorStudioProducts.filter((product) => {
     const haystack = [product.name, product.brand, product.description, ...(Array.isArray(product.keywords) ? product.keywords : []), ...(Array.isArray(product.collections) ? product.collections : [])].join(" ").toLowerCase();
-    return (!query || haystack.includes(query)) && (type === "all" || inferStudioType(product) === type) && matchesBudget(product, budget);
+    return (!query || haystack.includes(query))
+      && (!selectedBrands.length || selectedBrands.includes(product.brand))
+      && (type === "all" || inferStudioType(product) === type)
+      && matchesBudget(product, budget);
   });
 
   if (!filtered.length) {
@@ -504,6 +577,11 @@ studioGrid?.addEventListener("click", (event) => {
 });
 
 studioSearch?.addEventListener("input", applyFilters);
+studioBrandFilterList?.addEventListener("change", (event) => {
+  if (event.target.closest(".studio-brand-filter")) {
+    applyFilters();
+  }
+});
 studioTypeFilter?.addEventListener("change", applyFilters);
 studioBudgetFilter?.addEventListener("change", applyFilters);
 
@@ -513,6 +591,9 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
   getFilters: getActiveStudioFilters,
   clearAll: () => {
     studioSearch.value = "";
+    getBrandFilters().forEach((checkbox) => {
+      checkbox.checked = false;
+    });
     studioTypeFilter.value = "all";
     studioBudgetFilter.value = "all";
   },

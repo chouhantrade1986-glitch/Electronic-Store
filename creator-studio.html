@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="creator-studio.css?v=20260314a" />
+  <link rel="stylesheet" href="creator-studio.css?v=20260314b" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
@@ -68,6 +68,9 @@
 
     <section class="studio-toolbar" aria-label="Creator Studio filters">
       <input id="studioSearch" type="search" placeholder="Search creator gear" aria-label="Search creator studio products" />
+      <div id="studioBrandFilterList" class="studio-brand-filter-list" role="group" aria-label="Filter by brand">
+        <p class="studio-filter-empty">Loading brands...</p>
+      </div>
       <select id="studioTypeFilter" aria-label="Filter by creator setup type">
         <option value="all">All setup types</option>
         <option value="workstation">Workstations</option>
@@ -97,7 +100,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="creator-studio.js?v=20260314a"></script>
+  <script src="creator-studio.js?v=20260314b"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
