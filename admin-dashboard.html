@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="admin-dashboard.css" />
+  <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
 </head>
 <body>
   <header class="amazon-topbar">
@@ -84,7 +85,7 @@
         </article>
         <article class="summary-card revenue">
           <p>Total Revenue</p>
-          <strong id="statRevenue">₹0.00</strong>
+          <strong id="statRevenue">?0.00</strong>
         </article>
       </section>
 
@@ -130,7 +131,7 @@
           <div class="analytics-kpi-grid">
             <article class="analytics-kpi">
               <p>Avg Order Value</p>
-              <strong id="kpiAov">₹0.00</strong>
+              <strong id="kpiAov">?0.00</strong>
             </article>
             <article class="analytics-kpi">
               <p>Paid Orders</p>
@@ -150,7 +151,7 @@
         <article class="panel analytics-panel">
           <div class="panel-head">
             <h2>Revenue (Last 7 Days)</h2>
-            <p id="revenue7dTotal">₹0.00</p>
+            <p id="revenue7dTotal">?0.00</p>
           </div>
           <div id="revenueBars" class="revenue-bars" aria-label="Revenue chart"></div>
         </article>
@@ -426,7 +427,7 @@
       <section id="sales" class="panel">
         <div class="panel-head">
           <h2>Sales</h2>
-          <p id="salesMeta">0 sales • ₹0.00</p>
+          <p id="salesMeta">0 sales � ?0.00</p>
         </div>
         <div class="table-wrap">
           <table>
@@ -548,9 +549,9 @@
       <section id="catalog" class="panel">
         <div class="panel-head">
           <h2>Catalog</h2>
-          <p id="catalogMeta">0 products • Inventory ₹0.00</p>
+          <p id="catalogMeta" role="status" aria-live="polite" aria-atomic="true">0 products • Inventory ?0.00</p>
         </div>
-        <p id="catalogHealth" class="catalog-health">Low stock: 0 • Out of stock: 0</p>
+        <p id="catalogHealth" class="catalog-health">Low stock: 0 � Out of stock: 0</p>
         <div class="inventory-full-tools">
           <label for="inventoryThresholdInput">Low Stock Threshold</label>
           <input id="inventoryThresholdInput" type="number" min="0" step="1" value="5" aria-label="Low stock threshold" />
@@ -567,7 +568,7 @@
         <section class="inventory-threshold-manager" aria-label="Inventory threshold manager">
           <div class="panel-head">
             <h3>Threshold Manager</h3>
-            <p id="inventoryThresholdMeta" class="catalog-health">Default threshold 5 • Restock to 10</p>
+            <p id="inventoryThresholdMeta" class="catalog-health">Default threshold 5 � Restock to 10</p>
           </div>
           <p id="inventoryThresholdMessage" class="catalog-health">Set category-specific low-stock thresholds for smarter alerts.</p>
           <div class="inventory-threshold-actions">
@@ -984,7 +985,7 @@
       <section id="orders" class="panel">
         <div class="panel-head">
           <h2>Orders</h2>
-          <p id="ordersMeta">0 orders</p>
+          <p id="ordersMeta" role="status" aria-live="polite" aria-atomic="true">0 orders</p>
         </div>
         <div class="panel-tools">
           <input id="orderSearchAdmin" type="search" placeholder="Search orders by id or item name" aria-label="Search orders" />
@@ -1015,7 +1016,9 @@
     </div>
   </main>
 
-  <script src="admin-dashboard.js?v=20260305i"></script>
+  <script src="listing-filter-chips.js?v=20260314c"></script>
+  <script src="admin-dashboard.js?v=20260314a"></script>
 </body>
 </html>
+
 

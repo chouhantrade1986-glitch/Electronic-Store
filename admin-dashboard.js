@@ -294,6 +294,8 @@ let editingCategorySlug = "";
 let sourcingAddInProgress = new Set();
 let lastAdminToastKey = "";
 let lastAdminToastAt = 0;
+let adminOrderFilterChipController = null;
+let adminCatalogFilterChipController = null;
 const MAX_PRODUCT_IMAGES = 15;
 const MAX_UPLOAD_IMAGE_MB = 15;
 const MAX_UPLOAD_VIDEO_MB = 50;
@@ -2610,6 +2612,47 @@ function renderOrders(orders) {
   ordersTableBody.innerHTML = orders.map(orderRow).join("");
 }
 
+function getAdminOrderFilterStatusLabel(value) {
+  const normalized = String(value || "all").trim().toLowerCase();
+  if (normalized === "all") {
+    return "Status: All";
+  }
+  const selectedLabel = String(orderStatusFilterAdmin?.selectedOptions?.[0]?.textContent || normalized).trim();
+  return `Status: ${selectedLabel}`;
+}
+
+function getActiveAdminOrderFilters() {
+  const filters = [];
+  const query = String(orderSearchAdmin?.value || "").trim();
+  const status = String(orderStatusFilterAdmin?.value || "all").trim().toLowerCase();
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        orderSearchAdmin.value = "";
+      },
+      focus: orderSearchAdmin,
+      feedback: "Removed admin order search filter. Focus moved to the order search input."
+    });
+  }
+
+  if (status !== "all") {
+    filters.push({
+      id: "status",
+      label: getAdminOrderFilterStatusLabel(status),
+      clear: () => {
+        orderStatusFilterAdmin.value = "all";
+      },
+      focus: orderStatusFilterAdmin,
+      feedback: "Removed admin order status filter. Focus moved to the status filter."
+    });
+  }
+
+  return filters;
+}
+
 function salesRow(sale) {
   const paymentStatus = String(sale.paymentStatus || "pending");
   const orderStatus = String(sale.orderStatus || "processing");
@@ -3123,6 +3166,77 @@ function applyCatalogFilters() {
     return sum + Number(product.price || 0) * Number(product.stock || 0);
   }, 0);
   renderCatalog(filtered, filteredInventoryValue);
+  adminCatalogFilterChipController?.update();
+}
+
+function getCatalogInventoryModeLabel(mode) {
+  const normalized = String(mode || "all").trim().toLowerCase();
+  if (normalized === "low") {
+    return "Inventory: Low Stock";
+  }
+  if (normalized === "out") {
+    return "Inventory: Out of Stock";
+  }
+  return "Inventory: All Stock";
+}
+
+function getActiveCatalogFilters() {
+  const filters = [];
+  const query = String(catalogSearch?.value || "").trim();
+  const category = normalizeCategoryValue(catalogCategoryFilter?.value || "all");
+  const segment = String(catalogSegmentFilter?.value || "all").trim().toLowerCase();
+  const stockMode = String(catalogStockFilterMode || "all").trim().toLowerCase();
+
+  if (query) {
+    filters.push({
+      id: "query",
+      label: `Search: ${query}`,
+      clear: () => {
+        catalogSearch.value = "";
+      },
+      focus: catalogSearch,
+      feedback: "Removed catalog search filter. Focus moved to the catalog search input."
+    });
+  }
+
+  if (category !== "all") {
+    filters.push({
+      id: "category",
+      label: `Category: ${String(catalogCategoryFilter?.selectedOptions?.[0]?.textContent || category).trim()}`,
+      clear: () => {
+        catalogCategoryFilter.value = "all";
+      },
+      focus: catalogCategoryFilter,
+      feedback: "Removed catalog category filter. Focus moved to the category filter."
+    });
+  }
+
+  if (segment !== "all") {
+    filters.push({
+      id: "segment",
+      label: `Segment: ${String(catalogSegmentFilter?.selectedOptions?.[0]?.textContent || segment).trim()}`,
+      clear: () => {
+        catalogSegmentFilter.value = "all";
+      },
+      focus: catalogSegmentFilter,
+      feedback: "Removed catalog segment filter. Focus moved to the segment filter."
+    });
+  }
+
+  if (stockMode !== "all") {
+    filters.push({
+      id: "stockMode",
+      label: getCatalogInventoryModeLabel(stockMode),
+      clear: () => {
+        catalogStockFilterMode = "all";
+        syncInventoryFilterButtons();
+      },
+      focus: inventoryShowAllBtn || inventoryShowLowBtn || inventoryShowOutBtn,
+      feedback: "Removed inventory mode filter. Focus moved to the inventory filter controls."
+    });
+  }
+
+  return filters;
 }
 
 function syncCatalogSelectionState() {
@@ -5481,6 +5595,7 @@ function getFilteredOrders() {
 
 function applyOrderFilters() {
   renderOrders(getFilteredOrders());
+  adminOrderFilterChipController?.update();
 }
 
 async function fetchJson(path) {
@@ -5690,6 +5805,43 @@ async function updateOrderStatus(orderId, nextStatus, button) {
 }
 
 refreshBtn.addEventListener("click", loadDashboard);
+adminOrderFilterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#orders .panel-tools",
+  getFilters: getActiveAdminOrderFilters,
+  clearAll: () => {
+    if (orderSearchAdmin) {
+      orderSearchAdmin.value = "";
+    }
+    if (orderStatusFilterAdmin) {
+      orderStatusFilterAdmin.value = "all";
+    }
+  },
+  focusAfterClearAll: orderSearchAdmin,
+  clearAllFeedback: "Removed all admin order filters. Focus moved to the order search input.",
+  onChange: applyOrderFilters,
+  getResultSummary: () => String(ordersMeta?.textContent || "").trim()
+}) || null;
+adminCatalogFilterChipController = window.ElectroMartListingFilterChips?.init({
+  mountAfter: "#catalog .panel-tools-3",
+  getFilters: getActiveCatalogFilters,
+  clearAll: () => {
+    if (catalogSearch) {
+      catalogSearch.value = "";
+    }
+    if (catalogCategoryFilter) {
+      catalogCategoryFilter.value = "all";
+    }
+    if (catalogSegmentFilter) {
+      catalogSegmentFilter.value = "all";
+    }
+    catalogStockFilterMode = "all";
+    syncInventoryFilterButtons();
+  },
+  focusAfterClearAll: catalogSearch,
+  clearAllFeedback: "Removed all catalog filters. Focus moved to the catalog search input.",
+  onChange: applyCatalogFilters,
+  getResultSummary: () => String(catalogMeta?.textContent || "").trim()
+}) || null;
 userSearch.addEventListener("input", applyUserFilters);
 userRoleFilter.addEventListener("change", applyUserFilters);
 if (userPhoneVerificationFilter) {
