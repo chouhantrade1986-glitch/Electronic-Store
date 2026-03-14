@@ -16,6 +16,7 @@ const catalogHideSmall = document.getElementById("catalogHideSmall");
 let catalogRows = [];
 let catalogProductCount = 0;
 let catalogModeLabel = "";
+let filterChipController = null;
 
 function normalizeCategoryToken(value) {
   let raw = String(value || "").trim().toLowerCase();
@@ -162,7 +163,8 @@ function applyCatalogView() {
   catalogMeta.textContent = `${rows.length} catalogs • ${catalogProductCount} products${catalogModeLabel ? ` • ${catalogModeLabel}` : ""}`;
 
   if (!rows.length) {
-    catalogGrid.innerHTML = "<p>No catalogs found yet.</p>";
+    catalogGrid.innerHTML = "<p>No exact catalogs found. Try clearing one filter or broadening the search.</p>";
+    filterChipController?.update();
     return;
   }
 
@@ -173,6 +175,62 @@ function applyCatalogView() {
       <a href="products.html?category=${encodeURIComponent(item.slug)}">Open Catalog</a>
     </article>
   `).join("");
+  filterChipController?.update();
+}
+
+function getSortLabel(value) {
+  const labels = {
+    count_desc: "Most Products",
+    count_asc: "Fewest Products",
+    name_asc: "Name A-Z",
+    name_desc: "Name Z-A"
+  };
+  return labels[value] || "Most Products";
+}
+
+function getActiveCatalogFilters() {
+  const filters = [];
+  const query = String(catalogSearchInput?.value || "").trim();
+  const sortValue = String(catalogSortSelect?.value || "count_desc");
+  const hideSmall = Boolean(catalogHideSmall?.checked);
+
+  if (query) {
+    filters.push({
+      id: "search",
+      label: `Search: ${query}`,
+      clear: () => {
+        catalogSearchInput.value = "";
+      },
+      focus: catalogSearchInput,
+      feedback: "Removed catalog search filter. Focus moved to the search input."
+    });
+  }
+
+  if (sortValue !== "count_desc") {
+    filters.push({
+      id: "sort",
+      label: `Sort: ${getSortLabel(sortValue)}`,
+      clear: () => {
+        catalogSortSelect.value = "count_desc";
+      },
+      focus: catalogSortSelect,
+      feedback: "Removed catalog sort preference. Focus moved to the sort control."
+    });
+  }
+
+  if (hideSmall) {
+    filters.push({
+      id: "hide-small",
+      label: "Hide 1-product catalogs",
+      clear: () => {
+        catalogHideSmall.checked = false;
+      },
+      focus: catalogHideSmall,
+      feedback: "Removed small-catalog filter. Focus moved to the catalog toggle."
+    });
+  }
+
+  return filters;
 }
 
 async function initCatalogsPage() {
@@ -182,6 +240,25 @@ async function initCatalogsPage() {
   catalogRows = computeCatalogRows(merged);
   catalogProductCount = merged.length;
   catalogModeLabel = api.length ? "server + local" : "local mode";
+  filterChipController = window.ElectroMartListingFilterChips?.init({
+    mountAfter: ".catalog-controls",
+    getFilters: getActiveCatalogFilters,
+    clearAll: () => {
+      if (catalogSearchInput) {
+        catalogSearchInput.value = "";
+      }
+      if (catalogSortSelect) {
+        catalogSortSelect.value = "count_desc";
+      }
+      if (catalogHideSmall) {
+        catalogHideSmall.checked = false;
+      }
+    },
+    focusAfterClearAll: catalogSearchInput,
+    clearAllFeedback: "Removed all catalog filters. Focus moved to the search input.",
+    onChange: applyCatalogView,
+    getResultSummary: () => String(catalogMeta?.textContent || "").trim()
+  }) || null;
   applyCatalogView();
 
   if (catalogSearchInput) {

@@ -118,6 +118,7 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
 });
 
 let filterChipController = null;
+let brandFilterList = null;
 
 function loadCartMap() {
   try {
@@ -140,6 +141,82 @@ function saveCartMap(cartMap) {
 function syncCartCount() {
   const total = Object.values(loadCartMap()).reduce((sum, qty) => sum + Number(qty || 0), 0);
   cartCount.textContent = String(total);
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function normalizeBrandKey(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function ensureBrandFilterHost() {
+  if (brandFilterList || !brandFilter || !brandFilter.parentElement) {
+    return brandFilterList;
+  }
+  const host = document.createElement("div");
+  host.id = "brandFilterList";
+  host.className = "brand-filter-list";
+  host.setAttribute("role", "group");
+  host.setAttribute("aria-label", "Filter by brand");
+  host.innerHTML = "<p class='brand-filter-empty'>Loading brands...</p>";
+  brandFilter.replaceWith(host);
+  brandFilterList = host;
+  return brandFilterList;
+}
+
+function getBrandFilters() {
+  const host = ensureBrandFilterHost();
+  return host ? Array.from(host.querySelectorAll(".brand-filter")) : [];
+}
+
+function getSelectedBrands() {
+  return getBrandFilters()
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+}
+
+function syncDynamicBrandUI() {
+  const host = ensureBrandFilterHost();
+  if (!host) {
+    return;
+  }
+  const selectedKeys = new Set(getSelectedBrands().map((brand) => normalizeBrandKey(brand)));
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const segment = String(segmentFilter?.value || "all");
+
+  const source = pageItems.filter((item) => {
+    const text = `${item.name} ${item.brand} ${item.spec}`.toLowerCase();
+    const queryMatch = !query || text.includes(query);
+    const segmentMatch = segment === "all" || String(item.segment).toLowerCase() === segment;
+    return queryMatch && segmentMatch;
+  });
+
+  const optionMap = new Map();
+  [...source, ...pageItems.filter((item) => selectedKeys.has(normalizeBrandKey(item.brand)))]
+    .forEach((item) => {
+      const brand = String(item.brand || "").trim();
+      if (!brand) {
+        return;
+      }
+      optionMap.set(normalizeBrandKey(brand), brand);
+    });
+
+  const brands = Array.from(optionMap.values()).sort((left, right) => left.localeCompare(right));
+  if (!brands.length) {
+    host.innerHTML = "<p class='brand-filter-empty'>No brands match the current filters.</p>";
+    return;
+  }
+  host.innerHTML = brands.map((brand) => {
+    const checked = selectedKeys.has(normalizeBrandKey(brand)) ? " checked" : "";
+    return `<label class="check-item"><input type="checkbox" class="brand-filter" value="${escapeHtml(brand)}"${checked} /> ${escapeHtml(brand)}</label>`;
+  }).join("");
 }
 
 function addToCart(id) {
@@ -326,7 +403,7 @@ function cardHtml(item) {
 function render(list) {
   resultMeta.textContent = `Showing ${list.length} products`;
   if (!list.length) {
-    itemGrid.innerHTML = "<div class='empty'>No products match current filters.</div>";
+    itemGrid.innerHTML = "<div class='empty'>No exact component matches found. Try clearing one filter or broadening the search.</div>";
     return;
   }
   itemGrid.innerHTML = list.map(cardHtml).join("");
@@ -360,7 +437,6 @@ function getSortLabel(value) {
 function getActiveListingFilters() {
   const filters = [];
   const query = String(searchInput.value || "").trim();
-  const brand = String(brandFilter.value || "all");
   const segment = String(segmentFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
 
@@ -376,17 +452,20 @@ function getActiveListingFilters() {
     });
   }
 
-  if (brand !== "all") {
+  getSelectedBrands().forEach((brand) => {
     filters.push({
-      id: "brand",
-      label: `Brand: ${String(brandFilter.selectedOptions?.[0]?.textContent || brand).trim()}`,
+      id: `brand-${normalizeBrandKey(brand)}`,
+      label: `Brand: ${brand}`,
       clear: () => {
-        brandFilter.value = "all";
+        const target = getBrandFilters().find((checkbox) => checkbox.value === brand);
+        if (target) {
+          target.checked = false;
+        }
       },
-      focus: brandFilter,
-      feedback: "Removed brand filter. Focus moved to the brand filter."
+      focus: () => getBrandFilters().find((checkbox) => checkbox.value === brand)?.focus(),
+      feedback: "Removed brand filter. Focus moved to the brand option."
     });
-  }
+  });
 
   if (segment !== "all") {
     filters.push({
@@ -417,14 +496,15 @@ function getActiveListingFilters() {
 
 function applyFilters() {
   const query = String(searchInput.value || "").trim().toLowerCase();
-  const brand = String(brandFilter.value || "all");
+  syncDynamicBrandUI();
+  const selectedBrands = getSelectedBrands();
   const segment = String(segmentFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
 
   const filtered = pageItems.filter((item) => {
     const text = `${item.name} ${item.brand} ${item.spec}`.toLowerCase();
     const queryMatch = !query || text.includes(query);
-    const brandMatch = brand === "all" || String(item.brand).toLowerCase() === brand;
+    const brandMatch = !selectedBrands.length || selectedBrands.includes(item.brand);
     const segmentMatch = segment === "all" || String(item.segment).toLowerCase() === segment;
     return queryMatch && brandMatch && segmentMatch;
   });
@@ -433,22 +513,19 @@ function applyFilters() {
   filterChipController?.update();
 }
 
-function populateBrands() {
-  const brands = Array.from(new Set(pageItems.map((item) => String(item.brand || "").trim()).filter(Boolean))).sort();
-  brandFilter.innerHTML = [
-    `<option value="all">All Brands</option>`,
-    ...brands.map((brand) => `<option value="${brand.toLowerCase()}">${brand}</option>`)
-  ].join("");
-}
-
 pageTitle.textContent = pageConfig.title;
 pageHeadline.textContent = pageConfig.headline;
 pageSubtitle.textContent = pageConfig.subtitle;
 
 searchInput.addEventListener("input", applyFilters);
-brandFilter.addEventListener("change", applyFilters);
 segmentFilter.addEventListener("change", applyFilters);
 sortFilter.addEventListener("change", applyFilters);
+ensureBrandFilterHost();
+brandFilterList?.addEventListener("change", (event) => {
+  if (event.target.closest(".brand-filter")) {
+    applyFilters();
+  }
+});
 
 document.addEventListener("click", (event) => {
   if (!event.target.classList.contains("add-btn")) {
@@ -464,13 +541,14 @@ syncCartCount();
 
 async function initPage() {
   await hydrateWithApiData();
-  populateBrands();
   filterChipController = window.ElectroMartListingFilterChips?.init({
     mountAfter: ".panel-head",
     getFilters: getActiveListingFilters,
     clearAll: () => {
       searchInput.value = "";
-      brandFilter.value = "all";
+      getBrandFilters().forEach((checkbox) => {
+        checkbox.checked = false;
+      });
       segmentFilter.value = "all";
       sortFilter.value = "relevance";
     },
