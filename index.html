@@ -19,32 +19,39 @@
       <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
         <span data-i18n="header.deliverTo">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
       </button>
-      <form id="searchForm" class="search-form" role="search">
-        <select id="categoryFilter" aria-label="Filter category">
-          <option id="catAll" value="all">All Catalogue</option>
-          <option id="catComputer" value="computer">Computers</option>
-          <option id="catLaptop" value="laptop">Laptops</option>
-          <option id="catPrinter" value="printer">Printers</option>
-          <option id="catMobile" value="mobile">Mobiles</option>
-          <option id="catAudio" value="audio">Audio</option>
-          <option id="catAccessory" value="accessory">Accessories</option>
-        </select>
-        <div class="search-input-wrap">
-          <input id="searchInput" type="search" list="smartKeywordList" placeholder="Search electronics" aria-label="Search products" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
-          <div id="searchSuggestions" class="search-suggestions" hidden></div>
+      <div class="search-stack">
+        <form id="searchForm" class="search-form" role="search">
+          <select id="categoryFilter" aria-label="Filter category">
+            <option id="catAll" value="all">All Catalogue</option>
+            <option id="catComputer" value="computer">Computers</option>
+            <option id="catLaptop" value="laptop">Laptops</option>
+            <option id="catPrinter" value="printer">Printers</option>
+            <option id="catMobile" value="mobile">Mobiles</option>
+            <option id="catAudio" value="audio">Audio</option>
+            <option id="catAccessory" value="accessory">Accessories</option>
+          </select>
+          <div class="search-input-wrap">
+            <input id="searchInput" type="search" list="smartKeywordList" placeholder="Search electronics" aria-label="Search products" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
+            <div id="searchSuggestions" class="search-suggestions" hidden></div>
+          </div>
+          <datalist id="smartKeywordList">
+            <option value="gaming"></option>
+            <option value="budget"></option>
+            <option value="premium"></option>
+            <option value="audio"></option>
+            <option value="mobile"></option>
+            <option value="laptop"></option>
+            <option value="under 500"></option>
+            <option value="above 1000"></option>
+          </datalist>
+          <button type="submit" data-i18n="header.searchBtn">Search</button>
+        </form>
+        <div class="search-trust-strip" aria-label="Search benefits">
+          <span>Top Deals live</span>
+          <span>Fast delivery</span>
+          <span>GST invoicing available</span>
         </div>
-        <datalist id="smartKeywordList">
-          <option value="gaming"></option>
-          <option value="budget"></option>
-          <option value="premium"></option>
-          <option value="audio"></option>
-          <option value="mobile"></option>
-          <option value="laptop"></option>
-          <option value="under 500"></option>
-          <option value="above 1000"></option>
-        </datalist>
-        <button type="submit" data-i18n="header.searchBtn">Search</button>
-      </form>
+      </div>
       <div class="nav-actions">
         <div class="lang-wrap">
           <label for="languageSelect" class="lang-label" data-i18n="header.language">Language</label>
@@ -59,15 +66,15 @@
             <option value="mr">MR</option>
           </select>
         </div>
-        <a href="auth.html" class="account-link">
+        <a href="auth.html" class="account-link nav-action-card">
           <span>Hello, sign in</span>
           <strong data-i18n="nav.account">Account</strong>
         </a>
-        <a href="orders.html" class="orders-link">
+        <a href="orders.html" class="orders-link nav-action-card">
           <span>Returns</span>
           <strong data-i18n="nav.orders">Orders</strong>
         </a>
-        <a href="wishlist.html" class="orders-link">
+        <a href="wishlist.html" class="orders-link nav-action-card">
           <span>Saved</span>
           <strong>Wishlist</strong>
         </a>
