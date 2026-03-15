@@ -16,6 +16,8 @@ backend-*.err
 cloudflared.log
 lt.log
 qa-static.log
+frontend-start.log
+frontend-start.err.log
 
 # Generated QA artifacts
 qa-*.png
