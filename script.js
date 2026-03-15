@@ -1220,9 +1220,16 @@ function renderCategoryRail(sourceProducts) {
     return `
       <a href="${href}" class="category-rail-card" aria-label="Shop ${escapeSuggestionHtml(entry.label)}">
         <span class="category-rail-card__media" style="background-image:url('${image}')"></span>
-        <span class="category-rail-card__kicker">${entry.count} live now</span>
+        <span class="category-rail-card__top">
+          <span class="category-rail-card__kicker">Featured lane</span>
+          <span class="category-rail-card__lane">${entry.count} live now</span>
+        </span>
         <strong>${escapeSuggestionHtml(entry.label)}</strong>
         <small>From ${money(entry.startingPrice)} - ${escapeSuggestionHtml(entry.highestRating)} confidence</small>
+        <span class="category-rail-card__meta">
+          <span>From ${money(entry.startingPrice)}</span>
+          <span>${escapeSuggestionHtml(entry.highestRating)}</span>
+        </span>
         <span class="category-rail-card__cta">Shop ${escapeSuggestionHtml(entry.label)}</span>
       </a>
     `;
@@ -1405,11 +1412,17 @@ function renderDealStrip(sourceProducts) {
       <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="${cardClass}" aria-label="Open ${item.name} deal">
         <img src="${image}" alt="${item.name}" loading="lazy" />
         <span class="deal-copy">
-          <small class="deal-kicker">${kicker}</small>
+          <span class="deal-topline">
+            <small class="deal-kicker">${kicker}</small>
+            <small class="deal-lane">${item.featured ? "Fast checkout" : `${item.brand || "ElectroMart"} pick`}</small>
+          </span>
           <h3>${item.name}</h3>
           <p class="deal-price-line"><span>${badge}</span> Now ${money(livePrice)}</p>
-          <small class="deal-price-meta">${priceMeta}</small>
-          <small class="deal-delivery-note">${deliveryMeta}</small>
+          <span class="deal-meta-row">
+            <small class="deal-price-meta">${priceMeta}</small>
+            <small class="deal-delivery-note">${deliveryMeta}</small>
+          </span>
+          <span class="deal-tile__cta">${index === 0 ? "Shop featured deal" : "Open deal"}</span>
         </span>
       </a>
     `;

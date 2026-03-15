@@ -1562,12 +1562,32 @@ a {
   gap: 8px;
 }
 
+.deal-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .deal-kicker {
   color: #64748b;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.deal-lane {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfd7ff;
+  color: #0046be;
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .deal-tile h3 {
@@ -1603,12 +1623,33 @@ a {
   font-weight: 600;
 }
 
+.deal-meta-row {
+  display: grid;
+  gap: 4px;
+}
+
 .deal-price-meta {
   color: #475569;
 }
 
 .deal-delivery-note {
   color: #0f766e;
+}
+
+.deal-tile__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  width: fit-content;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff3a3 0%, #ffe000 100%);
+  border: 1px solid #ffd200;
+  color: #111827;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(230, 190, 0, 0.16);
 }
 
 .deal-tile--featured {
@@ -1635,6 +1676,12 @@ a {
   color: #fff3a3;
 }
 
+.deal-tile--featured .deal-lane {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #f8fafc;
+}
+
 .deal-tile--featured h3 {
   font-size: 1.15rem;
   color: #ffffff;
@@ -1649,6 +1696,13 @@ a {
 .deal-tile--featured .deal-price-line span {
   background: #ffe000;
   color: #111827;
+}
+
+.deal-tile--featured .deal-tile__cta {
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #003087;
+  box-shadow: none;
 }
 
 .category-rail {
@@ -1699,6 +1753,13 @@ a {
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
 }
 
+.category-rail-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .category-rail-card__media {
   display: block;
   width: 100%;
@@ -1717,6 +1778,19 @@ a {
   text-transform: uppercase;
 }
 
+.category-rail-card__lane {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #fffbe0;
+  border: 1px solid #ffe484;
+  color: #7a6300;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
 .category-rail-card strong {
   color: #0f172a;
   font-size: 1.02rem;
@@ -1727,6 +1801,25 @@ a {
   color: #475569;
   font-size: 0.88rem;
   line-height: 1.45;
+}
+
+.category-rail-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-rail-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfd7ff;
+  color: #0046be;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
 .category-rail-card__cta {
