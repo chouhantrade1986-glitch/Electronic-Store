@@ -377,6 +377,11 @@ a {
   font-weight: 600;
 }
 
+.brand-line:hover {
+  color: #0046be;
+  text-decoration: underline;
+}
+
 .price-row {
   display: flex;
   justify-content: space-between;

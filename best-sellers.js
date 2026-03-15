@@ -200,6 +200,7 @@ function syncDynamicBrandUI() {
 
 function card(item) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
+  const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
   return `
     <article class="product-card">
       <a href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
@@ -211,7 +212,7 @@ function card(item) {
           <span class="price">${escapeHtml(money(item.price))}</span>
           <span class="rating">${escapeHtml(String(item.rating))} &#9733;</span>
         </div>
-        <p class="brand-line">${escapeHtml(item.brand)}</p>
+        <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
         <span class="sold-tag">${escapeHtml(item.sold)}</span>
         <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
       </div>

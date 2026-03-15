@@ -502,7 +502,7 @@ function productCard(product) {
           <div>
             <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${escapeHtml(product.name)}</a></h3>
             <div class="studio-card-meta">
-              <span>${escapeHtml(product.brand || "ElectroMart")}</span>
+              <a class="studio-card-brand-link" href="brands.html?brand=${encodeURIComponent(String(product.brand || "ElectroMart").trim())}">${escapeHtml(product.brand || "ElectroMart")}</a>
               <span>${escapeHtml(categoryLabel(product.category))}</span>
             </div>
           </div>

@@ -254,6 +254,10 @@ function categoryLabel(value) {
     .join(" ");
 }
 
+function brandStoreUrl(value) {
+  return `brands.html?brand=${encodeURIComponent(String(value || "").trim())}`;
+}
+
 function loadCategoryRecords() {
   try {
     const raw = localStorage.getItem(CATEGORY_STORAGE_KEY);
@@ -1610,8 +1614,10 @@ function productCard(product) {
       </a>
       <div class="content">
         <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
-        <p class="bulk-meta">Brand: ${product.brand || "N/A"}</p>
-        <span class="segment-pill">${segment}</span>
+        <div class="card-meta-row">
+          <p><a class="product-brand" href="${brandStoreUrl(product.brand || "ElectroMart")}">by ${product.brand || "ElectroMart"}</a></p>
+          <span class="segment-pill">${segment}</span>
+        </div>
         <div class="meta">
           <span class="price">${money(price)}</span>
           <span class="rating">${Number(product.rating || 0)} &#9733;</span>

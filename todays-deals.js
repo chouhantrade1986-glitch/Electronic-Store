@@ -204,6 +204,7 @@ function syncDynamicBrandUI() {
 
 function dealCard(item) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
+  const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
   const discount = discountPercent(item.oldPrice, item.dealPrice);
 
   return `
@@ -213,7 +214,7 @@ function dealCard(item) {
       </a>
       <div class="content">
         <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
-        <p class="brand-line">${escapeHtml(item.brand)}</p>
+        <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
         <div class="price-row">
           <span class="price-now">${escapeHtml(money(item.dealPrice))}</span>
           <span class="price-old">${escapeHtml(money(item.oldPrice))}</span>
