@@ -1593,44 +1593,53 @@ function debounceFetch() {
 
 function productCard(product) {
   const segment = product.segment || "b2c";
-  const bulkMeta = segment === "b2b" && product.moq ? `<p class="bulk-meta">Minimum order quantity: ${product.moq}</p>` : "";
+  const bulkMeta = segment === "b2b" && product.moq ? `<p class="bulk-note">Minimum order quantity: ${product.moq}</p>` : "";
   const deliveryMeta = segment === "b2c" ? "FREE delivery by tomorrow" : "Business delivery options available";
   const image = normalizeImageUrl(product.image) || fallbackImage();
   const ribbon = getRibbonLabel(product);
   const wishlisted = isWishlisted(product.id);
-  const highlights = getProductHighlights(product).map((item) => `<li>${item}</li>`).join("");
+  const highlights = getProductHighlights(product).slice(0, 2).map((item) => `<li>${item}</li>`).join("");
   const listPrice = Number(product.listPrice || product.price || 0);
   const price = Number(product.price || 0);
+  const rating = Number(product.rating || 0);
   const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;
   const priceMeta = discountPercent > 0
-    ? `<p class="bulk-meta">M.R.P. <s>${money(listPrice)}</s> | Save ${discountPercent}%</p>`
-    : "";
+    ? `<p class="price-inline-meta">M.R.P. <s>${money(listPrice)}</s> (${discountPercent}% off)</p>`
+    : `<p class="price-inline-meta">Inclusive of all taxes</p>`;
+  const ratingMeta = rating > 0 ? `${rating.toFixed(1)} star rating` : "New arrival";
+  const socialProof = segment === "b2b"
+    ? (product.moq ? `MOQ ${product.moq} for business orders` : "Business buying options available")
+    : (discountPercent > 0 ? "Limited-time price drop" : (product.featured ? "Popular customer pick" : "Fast-moving catalog item"));
 
   return `
     <article class="product-card">
       ${ribbon ? `<span class="card-ribbon">${ribbon}</span>` : ""}
-      <a href="product-detail.html?id=${encodeURIComponent(product.id)}">
+      <a class="product-card-media" href="product-detail.html?id=${encodeURIComponent(product.id)}">
         <img src="${image}" alt="${product.name}" loading="lazy" />
       </a>
       <div class="content">
+        <p class="product-card-kicker">${product.featured ? "Best value pick" : categoryLabel(product.category)}</p>
         <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
         <div class="card-meta-row">
           <p><a class="product-brand" href="${brandStoreUrl(product.brand || "ElectroMart")}">by ${product.brand || "ElectroMart"}</a></p>
           <span class="segment-pill">${segment}</span>
         </div>
-        <div class="meta">
+        <div class="rating-row">
           <span class="price">${money(price)}</span>
-          <span class="rating">${Number(product.rating || 0)} &#9733;</span>
+          <span class="rating">${ratingMeta}</span>
         </div>
+        <p class="product-social-proof">${socialProof}</p>
         ${priceMeta}
         <ul class="feature-list">${highlights}</ul>
-        <p class="bulk-meta">${deliveryMeta}</p>
+        <p class="delivery-meta">${deliveryMeta}</p>
         ${bulkMeta}
         <div class="card-actions">
-          <button class="quick-view-btn" data-quick-view-id="${product.id}" type="button">Quick view</button>
-          <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">View details</a>
-          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${wishlisted ? "Wishlisted" : "Wishlist"}</button>
           <button class="add-btn" data-id="${product.id}" data-name="${product.name}" data-price="${Number(product.price || 0)}" data-image="${image}" type="button">Add to Cart</button>
+          <div class="card-secondary-actions">
+            <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">View details</a>
+            <button class="quick-view-btn" data-quick-view-id="${product.id}" type="button">Quick view</button>
+            <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${wishlisted ? "Wishlisted" : "Wishlist"}</button>
+          </div>
         </div>
       </div>
     </article>

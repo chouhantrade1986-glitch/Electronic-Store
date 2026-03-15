@@ -151,6 +151,8 @@ const studioTypeFilter = document.getElementById("studioTypeFilter");
 const studioBudgetFilter = document.getElementById("studioBudgetFilter");
 const studioMeta = document.getElementById("studioMeta");
 const studioGrid = document.getElementById("studioGrid");
+const studioBundleGrid = document.getElementById("studioBundleGrid");
+const studioBundleMeta = document.getElementById("studioBundleMeta");
 let creatorStudioProducts = [];
 let filterChipController = null;
 
@@ -414,6 +416,84 @@ function categoryLabel(value) {
   return labels[normalizeCategory(value)] || "Products";
 }
 
+function featuredCreatorByType(type) {
+  return creatorStudioProducts
+    .filter((product) => inferStudioType(product) === type)
+    .slice()
+    .sort((left, right) => Number(Boolean(right.featured)) - Number(Boolean(left.featured)) || Number(right.rating || 0) - Number(left.rating || 0))[0] || null;
+}
+
+function buildStudioBundles() {
+  const workstation = featuredCreatorByType("workstation");
+  const display = featuredCreatorByType("display");
+  const audio = featuredCreatorByType("audio");
+  const capture = featuredCreatorByType("capture");
+  const workflow = featuredCreatorByType("workflow");
+
+  return [
+    {
+      id: "editing-suite",
+      kicker: "Editing suite",
+      title: "Color-first editing desk",
+      description: "Start with a creator laptop, then add a calibrated display and workflow dock for exports, drives, and second-screen timelines.",
+      items: [workstation, display, workflow].filter(Boolean),
+      cta: workstation ? `product-detail.html?id=${encodeURIComponent(workstation.id)}` : "creator-studio.html"
+    },
+    {
+      id: "streaming-suite",
+      kicker: "Streaming suite",
+      title: "Mic and camera first setup",
+      description: "Focus on voice clarity and framing first, then add a dock or display later once your stream or call workflow is stable.",
+      items: [audio, capture, workflow].filter(Boolean),
+      cta: audio ? `product-detail.html?id=${encodeURIComponent(audio.id)}` : "creator-studio.html"
+    },
+    {
+      id: "desk-upgrade",
+      kicker: "Desk upgrade",
+      title: "Upgrade the setup you already own",
+      description: "Best for creators who already have a laptop and just need stronger ports, a sharper display, or cleaner accessory flow.",
+      items: [workflow, display, audio].filter(Boolean),
+      cta: workflow ? `product-detail.html?id=${encodeURIComponent(workflow.id)}` : "creator-studio.html"
+    }
+  ].filter((bundle) => bundle.items.length > 0);
+}
+
+function renderStudioBundles() {
+  if (!studioBundleGrid || !studioBundleMeta) {
+    return;
+  }
+  const bundles = buildStudioBundles();
+  if (!bundles.length) {
+    studioBundleMeta.textContent = "No starter bundles available right now.";
+    studioBundleGrid.innerHTML = "";
+    return;
+  }
+
+  studioBundleMeta.textContent = `${bundles.length} ready-made setup paths based on the current Creator Studio catalog.`;
+  studioBundleGrid.innerHTML = bundles.map((bundle) => {
+    const total = bundle.items.reduce((sum, item) => sum + Number(item?.price || 0), 0);
+    const media = normalizeImageUrl(bundle.items[0]?.image);
+    return `
+      <article class="studio-bundle-card">
+        <div class="studio-bundle-media" style="background-image:url('${escapeHtml(media)}')"></div>
+        <div class="studio-bundle-copy">
+          <p class="studio-bundle-kicker">${escapeHtml(bundle.kicker)}</p>
+          <h3>${escapeHtml(bundle.title)}</h3>
+          <div class="studio-bundle-meta">
+            <span class="studio-bundle-pill">${bundle.items.length} picks</span>
+            <span class="studio-bundle-pill">From ${money(total)}</span>
+          </div>
+          <p>${escapeHtml(bundle.description)}</p>
+          <ul class="studio-bundle-list">
+            ${bundle.items.map((item) => `<li>${escapeHtml(item.name)} - ${money(item.price)}</li>`).join("")}
+          </ul>
+          <a href="${bundle.cta}" class="studio-bundle-link">Open starting pick</a>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
 function matchesBudget(product, budget) {
   const price = Number(product.price || 0);
   if (budget === "under-10000") return price < 10000;
@@ -553,6 +633,7 @@ async function loadCreatorStudioProducts() {
   setGridBusy(true);
   cacheCatalogProducts(creatorStudioFallbackProducts);
   creatorStudioProducts = creatorCollectionProducts(loadCatalogProductsList());
+  renderStudioBundles();
   applyFilters();
   try {
     const response = await fetch(`${API_BASE_URL}/products?status=active`);
@@ -560,6 +641,7 @@ async function loadCreatorStudioProducts() {
     if (response.ok && data && Array.isArray(data.products)) {
       cacheCatalogProducts(data.products);
       creatorStudioProducts = creatorCollectionProducts(loadCatalogProductsList());
+      renderStudioBundles();
       applyFilters();
     }
   } catch (error) {
@@ -584,6 +666,29 @@ studioBrandFilterList?.addEventListener("change", (event) => {
 });
 studioTypeFilter?.addEventListener("change", applyFilters);
 studioBudgetFilter?.addEventListener("change", applyFilters);
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-studio-shortcut]");
+  if (!trigger) {
+    return;
+  }
+  const shortcut = String(trigger.getAttribute("data-studio-shortcut") || "");
+  studioSearch.value = "";
+  getBrandFilters().forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+  if (shortcut === "editing") {
+    studioTypeFilter.value = "workstation";
+    studioBudgetFilter.value = "over-50000";
+  } else if (shortcut === "streaming") {
+    studioTypeFilter.value = "audio";
+    studioBudgetFilter.value = "under-10000";
+  } else if (shortcut === "workflow") {
+    studioTypeFilter.value = "workflow";
+    studioBudgetFilter.value = "10000-50000";
+  }
+  applyFilters();
+  studioSearch?.focus();
+});
 
 syncCartCount();
 filterChipController = window.ElectroMartListingFilterChips?.init({

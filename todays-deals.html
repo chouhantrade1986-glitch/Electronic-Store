@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="todays-deals.css?v=20260314b" />
+  <link rel="stylesheet" href="todays-deals.css?v=20260315a" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314a" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
@@ -71,6 +71,12 @@
         </div>
 
         <section class="filters" aria-label="Filter deals">
+          <div class="filter-block">
+            <h3>Brand</h3>
+            <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
+              <p class="brand-filter-empty">Loading brands...</p>
+            </div>
+          </div>
           <select id="categoryFilter" aria-label="Filter category">
             <option value="all">All Categories</option>
             <option value="laptop">Laptops</option>
@@ -78,9 +84,6 @@
             <option value="audio">Audio</option>
             <option value="accessory">Accessories</option>
           </select>
-          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
-            <p class="brand-filter-empty">Loading brands...</p>
-          </div>
           <select id="sortFilter" aria-label="Sort deals">
             <option value="relevance">Sort: Relevance</option>
             <option value="discount_desc">Highest Discount</option>
@@ -107,11 +110,12 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314a"></script>
-  <script src="todays-deals.js?v=20260314b"></script>
+  <script src="todays-deals.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
+
 
 
 

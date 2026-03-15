@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="creator-studio.css?v=20260314b" />
+  <link rel="stylesheet" href="creator-studio.css?v=20260315a" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
@@ -17,6 +17,7 @@
     <nav class="header-links">
       <a href="index.html">Home</a>
       <a href="products.html">Products</a>
+      <a href="brands.html">Brands</a>
       <a href="creator-studio.html" aria-current="page">Creator Studio</a>
       <a href="wishlist.html">Wishlist</a>
       <a href="orders.html">Orders</a>
@@ -66,6 +67,36 @@
       </article>
     </section>
 
+    <section class="studio-workflows" aria-label="Creator workflow shortcuts">
+      <div class="studio-section-head">
+        <div>
+          <p class="eyebrow">Where to start</p>
+          <h2>Pick the workflow that matches your setup</h2>
+        </div>
+        <p class="studio-section-copy">Use one click to narrow the page into editing, streaming, or desk-upgrade gear without rebuilding filters from scratch.</p>
+      </div>
+      <div class="studio-workflow-grid">
+        <article class="workflow-card">
+          <p class="workflow-kicker">Editing desk</p>
+          <h3>Workstation + color display</h3>
+          <p>Best if you want timeline performance, accurate screens, and ports for drives and cameras.</p>
+          <button type="button" class="workflow-action" data-studio-shortcut="editing">Show editing setup</button>
+        </article>
+        <article class="workflow-card">
+          <p class="workflow-kicker">Streaming desk</p>
+          <h3>Mic + camera + fast accessories</h3>
+          <p>Best if you need cleaner voice, sharper framing, and an easier daily call or stream setup.</p>
+          <button type="button" class="workflow-action" data-studio-shortcut="streaming">Show streaming setup</button>
+        </article>
+        <article class="workflow-card">
+          <p class="workflow-kicker">Desk upgrade</p>
+          <h3>Dock + workflow tools first</h3>
+          <p>Best if you already have a laptop and want more ports, desk efficiency, and cleaner cable flow.</p>
+          <button type="button" class="workflow-action" data-studio-shortcut="workflow">Show workflow tools</button>
+        </article>
+      </div>
+    </section>
+
     <section class="studio-toolbar" aria-label="Creator Studio filters">
       <input id="studioSearch" type="search" placeholder="Search creator gear" aria-label="Search creator studio products" />
       <div id="studioBrandFilterList" class="studio-brand-filter-list" role="group" aria-label="Filter by brand">
@@ -97,10 +128,21 @@
       </div>
       <div id="studioGrid" class="studio-grid" role="region" aria-labelledby="studioResultsHeading" aria-busy="false"></div>
     </section>
+
+    <section class="studio-bundles" aria-label="Recommended creator bundles">
+      <div class="studio-section-head">
+        <div>
+          <p class="eyebrow">Ready-made bundles</p>
+          <h2>Start from a setup, not just a single product</h2>
+        </div>
+        <p id="studioBundleMeta" class="studio-section-copy">Loading creator bundles...</p>
+      </div>
+      <div id="studioBundleGrid" class="studio-bundle-grid"></div>
+    </section>
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="creator-studio.js?v=20260314b"></script>
+  <script src="creator-studio.js?v=20260315b"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>

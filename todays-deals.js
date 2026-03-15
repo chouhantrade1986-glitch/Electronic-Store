@@ -209,18 +209,23 @@ function dealCard(item) {
 
   return `
     <article class="deal-card">
-      <a href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
+      <a class="deal-card-media" href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
       </a>
       <div class="content">
+        <p class="card-kicker">Limited time deal</p>
         <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
         <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
         <div class="price-row">
           <span class="price-now">${escapeHtml(money(item.dealPrice))}</span>
-          <span class="price-old">${escapeHtml(money(item.oldPrice))}</span>
+          <span class="discount">${escapeHtml(String(discount))}% off</span>
         </div>
-        <span class="discount">Save ${escapeHtml(String(discount))}%</span>
-        <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
+        <p class="price-meta">M.R.P. <s>${escapeHtml(money(item.oldPrice))}</s> - grab it before the next refresh.</p>
+        <p class="delivery-note">FREE delivery by tomorrow on eligible pincodes</p>
+        <div class="card-actions">
+          <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
+          <a class="view-link" href="${detailUrl}">View details</a>
+        </div>
       </div>
     </article>
   `;

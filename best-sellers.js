@@ -203,18 +203,23 @@ function card(item) {
   const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
   return `
     <article class="product-card">
-      <a href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
+      <a class="product-card-media" href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
       </a>
       <div class="content">
+        <p class="card-kicker">Best seller</p>
         <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
-        <div class="meta">
-          <span class="price">${escapeHtml(money(item.price))}</span>
-          <span class="rating">${escapeHtml(String(item.rating))} &#9733;</span>
-        </div>
         <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
-        <span class="sold-tag">${escapeHtml(item.sold)}</span>
-        <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
+        <div class="rating-line">
+          <span class="rating">${escapeHtml(String(item.rating.toFixed(1)))} star rating</span>
+          <span class="sold-tag">${escapeHtml(item.sold)}</span>
+        </div>
+        <p class="price">${escapeHtml(money(item.price))}</p>
+        <p class="price-meta">Popular pick in ${escapeHtml(categoryLabel(item.category))} with fast checkout ready.</p>
+        <div class="card-actions">
+          <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
+          <a class="view-link" href="${detailUrl}">View details</a>
+        </div>
       </div>
     </article>
   `;

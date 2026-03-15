@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="products.css?v=20260314n" />
+  <link rel="stylesheet" href="products.css?v=20260315a" />
 </head>
 <body>
   <header class="site-header">
@@ -40,7 +40,7 @@
       <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
       <a href="index.html">Home</a>
       <a href="products.html" class="active">All Products</a>
-      <a href="catalogs.html">Catalogs</a>
+      <a href="brands.html">Brands</a>
       <a href="todays-deals.html">Today's Deals</a>
       <a href="best-sellers.html">Best Sellers</a>
       <a href="wishlist.html">Wishlist</a>
@@ -73,6 +73,12 @@
           <button id="resetFiltersBtn" type="button" class="reset-btn">Reset Filters</button>
         </div>
         <div class="filter-group">
+          <h3>Brand</h3>
+          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
+            <p class="brand-filter-empty">Loading brands...</p>
+          </div>
+        </div>
+        <div class="filter-group">
           <label for="segmentFilter">Segment</label>
           <select id="segmentFilter" aria-label="Filter segment">
             <option value="all">All Segments</option>
@@ -98,12 +104,6 @@
           <label for="maxPriceRange">Max Price</label>
           <input id="maxPriceRange" type="range" min="0" max="250000" value="250000" />
           <p class="range-meta">Max: <span id="maxPriceValue">250000</span></p>
-        </div>
-        <div class="filter-group">
-          <h3>Brand</h3>
-          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
-            <p class="brand-filter-empty">Loading brands...</p>
-          </div>
         </div>
         <div class="filter-group">
           <h3>Customer Rating</h3>
@@ -166,11 +166,12 @@
     </section>
   </div>
 
-  <script src="products.js?v=20260314o"></script>
+  <script src="products.js?v=20260315q"></script>
   <script src="menu-manager.js?v=20260313c"></script>
   <script src="auth-state.js?v=20260313c"></script>
 </body>
 </html>
+
 
 
 

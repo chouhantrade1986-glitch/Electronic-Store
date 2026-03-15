@@ -35,30 +35,23 @@
     if (!menuItems.length) {
       return;
     }
+    const managedContainer = nav.querySelector("[data-menu-managed-container='1']") || nav.querySelector(".legal-links") || nav;
     const managedHrefSet = new Set(menuItems.map((item) => String(item.href || "").split("#")[0].split("?")[0]));
 
-    Array.from(nav.querySelectorAll("a[data-managed-menu-item='1']")).forEach((node) => node.remove());
-    Array.from(nav.querySelectorAll("a[href]")).forEach((node) => {
+    Array.from(managedContainer.querySelectorAll("a[data-managed-menu-item='1']")).forEach((node) => node.remove());
+    Array.from(managedContainer.querySelectorAll("a[href]")).forEach((node) => {
       const href = String(node.getAttribute("href") || "").split("#")[0].split("?")[0];
       if (managedHrefSet.has(href)) {
         node.remove();
       }
     });
 
-    const insertionAnchor = nav.querySelector("#deptTrigger, #megaTrigger");
-    let referenceNode = insertionAnchor ? insertionAnchor.nextSibling : null;
-
     menuItems.forEach((item) => {
       const link = document.createElement("a");
       link.href = item.href;
       link.textContent = item.label;
       link.setAttribute("data-managed-menu-item", "1");
-      if (insertionAnchor) {
-        nav.insertBefore(link, referenceNode);
-        referenceNode = link.nextSibling;
-      } else {
-        nav.appendChild(link);
-      }
+      managedContainer.appendChild(link);
     });
   }
 
