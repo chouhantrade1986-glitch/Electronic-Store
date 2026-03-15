@@ -1246,14 +1246,15 @@ a {
 
 .home-card {
   background: var(--white);
-  padding: 20px;
+  padding: 18px;
   border-radius: 16px;
   box-shadow: 0 10px 26px rgba(15, 23, 42, 0.1);
   border: 1px solid #dfe3e6;
+  border-top: 4px solid #bfd7ff;
   min-height: 338px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1269,13 +1270,34 @@ a {
   line-height: 1.25;
 }
 
+.home-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
 .home-card-kicker {
-  margin: 0 0 8px;
+  margin: 0;
   color: #0046be;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.home-card-lane {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfd7ff;
+  color: #0046be;
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .home-card-meta {
@@ -1297,9 +1319,9 @@ a {
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #e6be00;
+  background: #fffbe0;
+  border: 1px solid #ffe484;
+  color: #7a6300;
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -1360,7 +1382,8 @@ a {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  padding-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #e6eef7;
 }
 
 .home-card-proof {
@@ -1368,6 +1391,30 @@ a {
   font-size: 0.84rem;
   font-weight: 700;
   line-height: 1.4;
+}
+
+.home-card-action,
+.signin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff3a3 0%, #ffe000 100%);
+  border: 1px solid #ffd200;
+  color: #111827;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(230, 190, 0, 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.home-card-action:hover,
+.signin-btn:hover {
+  background: linear-gradient(180deg, #fff7c9 0%, #ffd200 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(230, 190, 0, 0.24);
 }
 
 .home-card-link:hover {
@@ -1408,24 +1455,6 @@ a {
 
 .home-card-list li {
   line-height: 1.45;
-}
-
-.signin-btn {
-  display: inline-block;
-  margin-top: auto;
-  text-align: center;
-  background: #ffe000;
-  border: 1px solid #ffe000;
-  color: #111827;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-weight: 700;
-  transition: background-color 0.18s ease, transform 0.18s ease;
-}
-
-.signin-btn:hover {
-  background: #ffe000;
-  transform: translateY(-1px);
 }
 
 .deal-strip {

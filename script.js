@@ -1284,7 +1284,10 @@ function renderQuickGrid(sourceProducts) {
   const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
   const creatorCard = creatorItems.length ? `
       <article class="home-card creator-card">
-        <p class="home-card-kicker">Fresh collection</p>
+        <div class="home-card__top">
+          <p class="home-card-kicker">Fresh collection</p>
+          <span class="home-card-lane">${creatorItems.length} live now</span>
+        </div>
         <h2>Creator Studio</h2>
         <p class="home-card-meta">${creatorItems.length} creator-ready picks - From ${money(getStartingPrice(creatorItems))}</p>
         <div class="home-card-badges">
@@ -1294,7 +1297,7 @@ function renderQuickGrid(sourceProducts) {
         <div class="home-card-grid">${renderHomeCardMiniTiles(creatorItems.slice(0, 4))}</div>
         <div class="home-card-footer">
           <span class="home-card-proof">Editing, streaming, and design-ready</span>
-          <a href="creator-studio.html" class="home-card-link">Build your setup</a>
+          <a href="creator-studio.html" class="home-card-action">Build your setup</a>
         </div>
       </article>
     ` : "";
@@ -1304,7 +1307,10 @@ function renderQuickGrid(sourceProducts) {
   const cards = visibleEntries.map((entry) => {
     return `
       <article class="home-card">
-        <p class="home-card-kicker">${entry.liveCount} live now</p>
+        <div class="home-card__top">
+          <p class="home-card-kicker">Shop lane</p>
+          <span class="home-card-lane">${entry.liveCount} live now</span>
+        </div>
         <h2>${entry.label} Picks</h2>
         <p class="home-card-meta">From ${money(entry.startingPrice)} - ${getHomeRatingBadge(entry.items)} confidence</p>
         <div class="home-card-badges">
@@ -1314,7 +1320,7 @@ function renderQuickGrid(sourceProducts) {
         <div class="home-card-grid">${renderHomeCardMiniTiles(entry.items)}</div>
         <div class="home-card-footer">
           <span class="home-card-proof">${getHomeRatingBadge(entry.items)} top rated</span>
-          <a href="${getCategoryLandingLink(entry.category)}" class="home-card-link">See more</a>
+          <a href="${getCategoryLandingLink(entry.category)}" class="home-card-action">See more</a>
         </div>
       </article>
     `;
@@ -1322,7 +1328,10 @@ function renderQuickGrid(sourceProducts) {
 
   const signInCard = `
     <article class="home-card sign-card">
-      <p class="home-card-kicker">Account benefits</p>
+      <div class="home-card__top">
+        <p class="home-card-kicker">Account benefits</p>
+        <span class="home-card-lane">Fast checkout</span>
+      </div>
       <h2>Sign in for best experience</h2>
       <p>Track orders, save creator picks, and keep your recent shopping synced across every page.</p>
       <div class="home-card-badges">
@@ -1334,7 +1343,10 @@ function renderQuickGrid(sourceProducts) {
         <li>Save creator and deal picks for later</li>
         <li>Get faster repeat checkout</li>
       </ul>
-      <a href="auth.html" class="signin-btn">Sign in securely</a>
+      <div class="home-card-footer">
+        <span class="home-card-proof">Secure sign-in and saved shopping state</span>
+        <a href="auth.html" class="signin-btn">Sign in securely</a>
+      </div>
     </article>
   `;
 
