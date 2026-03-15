@@ -1108,6 +1108,27 @@ function getUniqueCollectionCount(items) {
   return tokens.size;
 }
 
+function truncateHomeCardLabel(value, maxLength = 34) {
+  const text = String(value || "").trim();
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return `${text.slice(0, Math.max(0, maxLength - 1)).trim()}…`;
+}
+
+function renderHomeCardMiniTiles(items) {
+  return items.map((item) => {
+    const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
+    return `
+      <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="home-mini-tile" aria-label="Open ${escapeSuggestionHtml(item.name)}">
+        <img src="${image}" alt="${escapeSuggestionHtml(item.name)}" loading="lazy" />
+        <span class="home-mini-label">${escapeSuggestionHtml(truncateHomeCardLabel(item.name, 30))}</span>
+        <small class="home-mini-price">From ${money(item.price)}</small>
+      </a>
+    `;
+  }).join("");
+}
+
 function renderQuickGrid(sourceProducts) {
   const quickGrid = document.querySelector(".quick-grid");
   if (!quickGrid) {
@@ -1134,8 +1155,14 @@ function renderQuickGrid(sourceProducts) {
       highestRating: getHighestRating(items),
       items: items
         .slice()
-        .sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0))
-        .slice(0, 2)
+        .sort((a, b) => {
+          const featuredDiff = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+          if (featuredDiff !== 0) {
+            return featuredDiff;
+          }
+          return Number(b.rating || 0) - Number(a.rating || 0) || Number(a.price || 0) - Number(b.price || 0);
+        })
+        .slice(0, 4)
     }))
     .filter((entry) => entry.items.length > 0)
     .sort((a, b) => {
@@ -1164,12 +1191,7 @@ function renderQuickGrid(sourceProducts) {
           <span class="home-card-badge">${getUniqueCollectionCount(creatorItems)} merch lanes</span>
           <span class="home-card-badge">${getHomeRatingBadge(creatorItems)} top rated</span>
         </div>
-        <div class="home-card-grid">
-          ${creatorItems.slice(0, 2).map((item) => {
-            const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
-            return `<img src="${image}" alt="${item.name}" loading="lazy" />`;
-          }).join("")}
-        </div>
+        <div class="home-card-grid">${renderHomeCardMiniTiles(creatorItems.slice(0, 4))}</div>
         <div class="home-card-footer">
           <span class="home-card-proof">Editing, streaming, and design-ready</span>
           <a href="creator-studio.html" class="home-card-link">Build your setup</a>
@@ -1180,11 +1202,6 @@ function renderQuickGrid(sourceProducts) {
   const visibleEntries = entries.slice(0, creatorCard ? 2 : 3);
 
   const cards = visibleEntries.map((entry) => {
-    const images = entry.items.map((item) => {
-      const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
-      return `<img src="${image}" alt="${item.name}" loading="lazy" />`;
-    }).join("");
-
     return `
       <article class="home-card">
         <p class="home-card-kicker">${entry.liveCount} live now</p>
@@ -1194,7 +1211,7 @@ function renderQuickGrid(sourceProducts) {
           <span class="home-card-badge">${entry.liveCount} active picks</span>
           <span class="home-card-badge">From ${money(entry.startingPrice)}</span>
         </div>
-        <div class="home-card-grid">${images}</div>
+        <div class="home-card-grid">${renderHomeCardMiniTiles(entry.items)}</div>
         <div class="home-card-footer">
           <span class="home-card-proof">${getHomeRatingBadge(entry.items)} top rated</span>
           <a href="${getCategoryLandingLink(entry.category)}" class="home-card-link">See more</a>
@@ -1212,6 +1229,11 @@ function renderQuickGrid(sourceProducts) {
         <span class="home-card-badge">Wishlist sync</span>
         <span class="home-card-badge">Faster reorder</span>
       </div>
+      <ul class="home-card-list">
+        <li>Track every order in one place</li>
+        <li>Save creator and deal picks for later</li>
+        <li>Get faster repeat checkout</li>
+      </ul>
       <a href="auth.html" class="signin-btn">Sign in securely</a>
     </article>
   `;
