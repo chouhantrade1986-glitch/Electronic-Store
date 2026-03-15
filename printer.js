@@ -282,6 +282,10 @@ function money(value) {
   return inrFormatter.format(Number(value || 0));
 }
 
+function brandStoreUrl(value) {
+  return `brands.html?brand=${encodeURIComponent(String(value || "").trim())}`;
+}
+
 function printerCard(item) {
   const detailUrl = `product-detail.html?id=${item.id}`;
   const bulk = item.segment === "b2b" && item.moq ? `<p class="bulk-meta">Minimum order quantity: ${item.moq}</p>` : "";
@@ -294,7 +298,7 @@ function printerCard(item) {
       <div class="content">
         <h3><a href="${detailUrl}">${item.name}</a></h3>
         <div class="spec-row">
-          <span class="spec-chip">${item.brand}</span>
+          <a class="spec-chip spec-chip-link" href="${brandStoreUrl(item.brand)}">${item.brand}</a>
           <span class="spec-chip">${titleCase(item.type)}</span>
           <span class="spec-chip">${titleCase(item.useCase)}</span>
           <span class="spec-chip">${item.speed}</span>

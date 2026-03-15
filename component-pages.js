@@ -231,6 +231,10 @@ function money(value) {
   return inrFormatter.format(Number(value || 0));
 }
 
+function brandStoreUrl(value) {
+  return `brands.html?brand=${encodeURIComponent(String(value || "").trim())}`;
+}
+
 function fallbackImage() {
   return "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80";
 }
@@ -388,6 +392,7 @@ function cardHtml(item) {
       </a>
       <div class="item-content">
         <h3><a href="${detailUrl}">${item.name}</a></h3>
+        <p class="brand-line"><a class="component-brand-link" href="${brandStoreUrl(item.brand || "ElectroMart")}">by ${item.brand || "ElectroMart"}</a></p>
         <p class="spec">${item.spec}</p>
         <div class="meta">
           <span class="price">${money(item.price)}</span>

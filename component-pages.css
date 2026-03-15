@@ -217,6 +217,22 @@ a { color: inherit; text-decoration: none; }
 .item-content { padding: 12px; }
 .item-content h3 { margin: 0; font-size: 1rem; }
 
+.brand-line {
+  margin: 6px 0 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.component-brand-link {
+  color: #475569;
+  text-decoration: none;
+}
+
+.component-brand-link:hover {
+  color: #0046be;
+  text-decoration: underline;
+}
+
 .meta {
   margin: 8px 0;
   display: flex;

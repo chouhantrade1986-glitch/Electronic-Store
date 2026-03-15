@@ -382,6 +382,15 @@ a {
   color: #334155;
 }
 
+.spec-chip-link {
+  text-decoration: none;
+}
+
+.spec-chip-link:hover {
+  color: #0046be;
+  border-color: #8db4ff;
+}
+
 .meta {
   display: flex;
   justify-content: space-between;
