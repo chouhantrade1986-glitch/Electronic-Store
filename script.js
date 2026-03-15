@@ -179,6 +179,8 @@ const recommendedGrid = document.getElementById("recommendedGrid");
 const creatorStudioSection = document.getElementById("creatorStudioSection");
 const creatorStudioGrid = document.getElementById("creatorStudioGrid");
 const creatorStudioMeta = document.getElementById("creatorStudioMeta");
+const creatorStudioStats = document.getElementById("creatorStudioStats");
+const homeMomentumBand = document.getElementById("homeMomentumBand");
 const recentlyViewedSection = document.getElementById("recentlyViewedSection");
 const recentlyViewedGrid = document.getElementById("recentlyViewedGrid");
 const heroTrack = document.getElementById("heroTrack");
@@ -1063,6 +1065,49 @@ function getCategoryLandingLink(category) {
   return knownPageMap[normalized] || `catalogs.html?category=${encodeURIComponent(normalized || "all")}`;
 }
 
+function countProductsWithDiscount(items) {
+  return items.filter((item) => Number(item.listPrice || item.price || 0) > Number(item.price || 0)).length;
+}
+
+function getStartingPrice(items) {
+  const prices = items
+    .map((item) => Number(item.price || 0))
+    .filter((price) => Number.isFinite(price) && price > 0);
+  if (!prices.length) {
+    return 0;
+  }
+  return Math.min(...prices);
+}
+
+function getHighestRating(items) {
+  const ratings = items
+    .map((item) => Number(item.rating || 0))
+    .filter((rating) => Number.isFinite(rating) && rating > 0);
+  if (!ratings.length) {
+    return 0;
+  }
+  return Math.max(...ratings);
+}
+
+function getHomeRatingBadge(items) {
+  const rating = getHighestRating(items);
+  if (rating <= 0) {
+    return "New in";
+  }
+  return `${rating.toFixed(1)} star`;
+}
+
+function getUniqueCollectionCount(items) {
+  const tokens = new Set();
+  items.forEach((item) => {
+    [item?.category, ...(Array.isArray(item?.collections) ? item.collections : [])]
+      .map((value) => normalizeHomeCategory(value))
+      .filter(Boolean)
+      .forEach((token) => tokens.add(token));
+  });
+  return tokens.size;
+}
+
 function renderQuickGrid(sourceProducts) {
   const quickGrid = document.querySelector(".quick-grid");
   if (!quickGrid) {
@@ -1084,16 +1129,57 @@ function renderQuickGrid(sourceProducts) {
     .map(([category, items]) => ({
       category,
       label: getReadableCategoryLabel(category),
+      liveCount: items.length,
+      startingPrice: getStartingPrice(items),
+      highestRating: getHighestRating(items),
       items: items
         .slice()
         .sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0))
         .slice(0, 2)
     }))
     .filter((entry) => entry.items.length > 0)
-    .sort((a, b) => b.items.length - a.items.length)
-    .slice(0, 3);
+    .sort((a, b) => {
+      const categoryPriority = {
+        laptop: 6,
+        computer: 5,
+        mobile: 4,
+        audio: 3,
+        accessory: 2,
+        printer: 1
+      };
+      const priorityDiff = (categoryPriority[b.category] || 0) - (categoryPriority[a.category] || 0);
+      if (priorityDiff !== 0) {
+        return priorityDiff;
+      }
+      return b.liveCount - a.liveCount;
+    });
 
-  const cards = entries.map((entry) => {
+  const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
+  const creatorCard = creatorItems.length ? `
+      <article class="home-card creator-card">
+        <p class="home-card-kicker">Fresh collection</p>
+        <h2>Creator Studio</h2>
+        <p class="home-card-meta">${creatorItems.length} creator-ready picks - From ${money(getStartingPrice(creatorItems))}</p>
+        <div class="home-card-badges">
+          <span class="home-card-badge">${getUniqueCollectionCount(creatorItems)} merch lanes</span>
+          <span class="home-card-badge">${getHomeRatingBadge(creatorItems)} top rated</span>
+        </div>
+        <div class="home-card-grid">
+          ${creatorItems.slice(0, 2).map((item) => {
+            const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
+            return `<img src="${image}" alt="${item.name}" loading="lazy" />`;
+          }).join("")}
+        </div>
+        <div class="home-card-footer">
+          <span class="home-card-proof">Editing, streaming, and design-ready</span>
+          <a href="creator-studio.html" class="home-card-link">Build your setup</a>
+        </div>
+      </article>
+    ` : "";
+
+  const visibleEntries = entries.slice(0, creatorCard ? 2 : 3);
+
+  const cards = visibleEntries.map((entry) => {
     const images = entry.items.map((item) => {
       const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
       return `<img src="${image}" alt="${item.name}" loading="lazy" />`;
@@ -1101,23 +1187,37 @@ function renderQuickGrid(sourceProducts) {
 
     return `
       <article class="home-card">
+        <p class="home-card-kicker">${entry.liveCount} live now</p>
         <h2>${entry.label} Picks</h2>
+        <p class="home-card-meta">From ${money(entry.startingPrice)} - ${getHomeRatingBadge(entry.items)} confidence</p>
+        <div class="home-card-badges">
+          <span class="home-card-badge">${entry.liveCount} active picks</span>
+          <span class="home-card-badge">From ${money(entry.startingPrice)}</span>
+        </div>
         <div class="home-card-grid">${images}</div>
-        <a href="${getCategoryLandingLink(entry.category)}" class="home-card-link">See more</a>
+        <div class="home-card-footer">
+          <span class="home-card-proof">${getHomeRatingBadge(entry.items)} top rated</span>
+          <a href="${getCategoryLandingLink(entry.category)}" class="home-card-link">See more</a>
+        </div>
       </article>
     `;
   }).join("");
 
   const signInCard = `
     <article class="home-card sign-card">
+      <p class="home-card-kicker">Account benefits</p>
       <h2>Sign in for best experience</h2>
-      <p>Track orders, save addresses and get personalized recommendations.</p>
+      <p>Track orders, save creator picks, and keep your recent shopping synced across every page.</p>
+      <div class="home-card-badges">
+        <span class="home-card-badge">Wishlist sync</span>
+        <span class="home-card-badge">Faster reorder</span>
+      </div>
       <a href="auth.html" class="signin-btn">Sign in securely</a>
     </article>
   `;
 
-  if (cards) {
-    quickGrid.innerHTML = `${cards}${signInCard}`;
+  if (cards || creatorCard) {
+    quickGrid.innerHTML = `${cards}${creatorCard}${signInCard}`;
   }
 }
 
@@ -1127,8 +1227,19 @@ function renderDealStrip(sourceProducts) {
     return;
   }
   const dealProducts = sourceProducts
+    .filter((item) => item.segment !== "b2b")
     .slice()
     .sort((a, b) => {
+      const aDiscount = Math.max(0, Number(a.listPrice || a.price || 0) - Number(a.price || 0));
+      const bDiscount = Math.max(0, Number(b.listPrice || b.price || 0) - Number(b.price || 0));
+      const savingsDiff = bDiscount - aDiscount;
+      if (Math.abs(savingsDiff) > 0) {
+        return savingsDiff;
+      }
+      const featuredDiff = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+      if (featuredDiff !== 0) {
+        return featuredDiff;
+      }
       const ratingDiff = Number(b.rating || 0) - Number(a.rating || 0);
       if (Math.abs(ratingDiff) > 0.05) {
         return ratingDiff;
@@ -1143,11 +1254,26 @@ function renderDealStrip(sourceProducts) {
 
   row.innerHTML = dealProducts.map((item) => {
     const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
-    const dealText = Number(item.price || 0) > 0 ? `Now ${money(item.price)}` : "Limited-time offer";
+    const listPrice = Number(item.listPrice || item.price || 0);
+    const livePrice = Number(item.price || 0);
+    const savings = Math.max(0, listPrice - livePrice);
+    const discountPercent = listPrice > livePrice ? Math.round(((listPrice - livePrice) / listPrice) * 100) : 0;
+    const badge = discountPercent > 0 ? `${discountPercent}% off` : "Top pick";
+    const kicker = item.featured ? "Featured deal" : getReadableCategoryLabel(item.category);
+    const priceMeta = savings > 0
+      ? `Was ${money(listPrice)} - Save ${money(savings)}`
+      : `${Number(item.rating || 0).toFixed(1)} star rated - ${item.brand || "ElectroMart"}`;
+    const deliveryMeta = item.featured
+      ? "Fast delivery eligible on featured stock"
+      : `${item.brand || "ElectroMart"} deal now live`;
     return `
       <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="deal-tile" aria-label="Open ${item.name} deal">
         <img src="${image}" alt="${item.name}" loading="lazy" />
-        <p><span>Deal</span> ${dealText}</p>
+        <small class="deal-kicker">${kicker}</small>
+        <h3>${item.name}</h3>
+        <p class="deal-price-line"><span>${badge}</span> Now ${money(livePrice)}</p>
+        <small class="deal-price-meta">${priceMeta}</small>
+        <small class="deal-delivery-note">${deliveryMeta}</small>
       </a>
     `;
   }).join("");
@@ -1156,6 +1282,7 @@ function renderDealStrip(sourceProducts) {
 function getHeroBackdrop(category, product) {
   const normalized = normalizeHomeCategory(category);
   const visualMap = {
+    "creator-studio": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1800&q=80",
     laptop: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1800&q=80",
     mobile: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1800&q=80",
     audio: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1800&q=80",
@@ -1168,6 +1295,29 @@ function getHeroBackdrop(category, product) {
 }
 
 function buildHeroSlides(sourceProducts) {
+  const slides = [];
+  const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
+  if (creatorItems.length) {
+    const featuredCreator = creatorItems[0];
+    slides.push({
+      id: "creator-studio-launch",
+      eyebrow: "Just launched",
+      title: "Creator Studio setups built for editing, streaming, and sharper desks",
+      description: `${creatorItems.length} creator-ready products are live now across ${getUniqueCollectionCount(creatorItems)} shopping paths. ${featuredCreator?.name || "Creator Studio"} leads the collection with premium-ready confidence.`,
+      pills: ["Creator Studio", `From ${money(getStartingPrice(creatorItems))}`, `${getHomeRatingBadge(creatorItems)} top rated`],
+      stats: [
+        { label: "Live picks", value: `${creatorItems.length}` },
+        { label: "Starting at", value: money(getStartingPrice(creatorItems)) },
+        { label: "Top rating", value: getHomeRatingBadge(creatorItems) }
+      ],
+      actions: [
+        { href: "creator-studio.html", label: "Explore Creator Studio", secondary: false },
+        { href: featuredCreator ? `product-detail.html?id=${encodeURIComponent(featuredCreator.id)}` : "products.html?search=creator", label: "View featured creator pick", secondary: true }
+      ],
+      backgroundImage: getHeroBackdrop("creator-studio", featuredCreator)
+    });
+  }
+
   const categories = new Map();
   sourceProducts.forEach((item) => {
     if (item.segment === "b2b") {
@@ -1184,30 +1334,36 @@ function buildHeroSlides(sourceProducts) {
 
   const ranked = Array.from(categories.entries())
     .sort((a, b) => b[1].length - a[1].length)
-    .slice(0, 3);
+    .slice(0, creatorItems.length ? 2 : 3);
 
-  if (!ranked.length) {
+  if (!ranked.length && !slides.length) {
     return [];
   }
 
-  return ranked.map(([category, items], index) => {
+  ranked.forEach(([category, items], index) => {
     const featured = items
       .slice()
       .sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0) || Number(a.price || 0) - Number(b.price || 0))[0];
     const label = getReadableCategoryLabel(category);
-    return {
+    slides.push({
       id: `${category}-${index}`,
-      eyebrow: index === 0 ? "Today’s headline offer" : "Trending right now",
+      eyebrow: index === 0 && !creatorItems.length ? "Today’s headline offer" : "Trending right now",
       title: `${label} deals built for fast checkout`,
       description: `${items.length} options live now. ${featured?.name || label} is leading this category with strong ratings and ready-to-ship pricing.`,
-      pills: [label, featured?.brand || "ElectroMart", featured ? money(featured.price) : "Shop now"],
+      pills: [label, featured?.brand || "ElectroMart", `From ${money(getStartingPrice(items))}`],
+      stats: [
+        { label: "Live now", value: `${items.length}` },
+        { label: "Starting at", value: money(getStartingPrice(items)) },
+        { label: "Top rating", value: getHomeRatingBadge(items) }
+      ],
       actions: [
         { href: getCategoryLandingLink(category), label: `Shop ${label}`, secondary: false },
         { href: featured ? `product-detail.html?id=${encodeURIComponent(featured.id)}` : "products.html", label: "View featured pick", secondary: true }
       ],
       backgroundImage: getHeroBackdrop(category, featured)
-    };
+    });
   });
+  return slides.slice(0, 3);
 }
 
 function stopHeroAutoplay() {
@@ -1260,6 +1416,14 @@ function renderHeroSection(sourceProducts) {
           ${slide.pills.map((pill) => `<span>${pill}</span>`).join("")}
         </div>
         <p>${slide.description}</p>
+        <div class="hero-stats">
+          ${Array.isArray(slide.stats) ? slide.stats.map((stat) => `
+            <div class="hero-stat">
+              <strong>${stat.value}</strong>
+              <span>${stat.label}</span>
+            </div>
+          `).join("") : ""}
+        </div>
         <div class="hero-actions">
           ${slide.actions.map((action) => `<a href="${action.href}" class="hero-btn${action.secondary ? " secondary" : ""}">${action.label}</a>`).join("")}
         </div>
@@ -1424,16 +1588,55 @@ function renderCreatorStudioSection(sourceProducts) {
   if (!creatorStudioSection || !creatorStudioGrid || !creatorStudioMeta) {
     return;
   }
-  const items = getHomeCollectionProducts(sourceProducts, "creator-studio").slice(0, HOME_CURATED_LIST_LIMIT);
+  const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
+  const items = creatorItems.slice(0, HOME_CURATED_LIST_LIMIT);
   if (!items.length) {
     creatorStudioSection.hidden = true;
     creatorStudioGrid.innerHTML = "";
     creatorStudioMeta.textContent = "";
+    if (creatorStudioStats) {
+      creatorStudioStats.innerHTML = "";
+    }
     return;
   }
   creatorStudioSection.hidden = false;
   creatorStudioGrid.innerHTML = items.map(productCard).join("");
-  creatorStudioMeta.textContent = `${items.length} creator-ready products live now`;
+  creatorStudioMeta.textContent = `${creatorItems.length} creator-ready products live now - From ${money(getStartingPrice(creatorItems))} across audio, display, and workflow picks.`;
+  if (creatorStudioStats) {
+    creatorStudioStats.innerHTML = [
+      `${creatorItems.length} live now`,
+      `From ${money(getStartingPrice(creatorItems))}`,
+      `${getHomeRatingBadge(creatorItems)} top rating`
+    ].map((value) => `<span class="collection-spotlight-stat">${value}</span>`).join("");
+  }
+}
+
+function renderHomeMomentumBand(sourceProducts) {
+  if (!homeMomentumBand) {
+    return;
+  }
+  const retailProducts = sourceProducts.filter((item) => item.segment !== "b2b");
+  const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
+  const discountedProducts = countProductsWithDiscount(retailProducts);
+  const topRatedProducts = retailProducts.filter((item) => Number(item.rating || 0) >= 4.5).length;
+
+  homeMomentumBand.innerHTML = `
+    <article class="momentum-card momentum-card--primary">
+      <p>Live catalog</p>
+      <strong>${retailProducts.length}</strong>
+      <span>Products ready to browse across our homepage, category pages, and featured rails.</span>
+    </article>
+    <article class="momentum-card">
+      <p>Creator Studio</p>
+      <strong>${creatorItems.length}</strong>
+      <span>${creatorItems.length ? `Setup-ready picks from ${money(getStartingPrice(creatorItems))}` : "Fresh gear spotlighted as soon as it goes live."}</span>
+    </article>
+    <article class="momentum-card">
+      <p>High-confidence shopping</p>
+      <strong>${topRatedProducts}</strong>
+      <span>Products rated 4.5 star and above, with ${discountedProducts} live markdowns in the mix.</span>
+    </article>
+  `;
 }
 
 function renderRecentlyViewedSection(sourceProducts) {
@@ -2061,6 +2264,7 @@ function renderHomeSurface() {
   renderQuickGrid(sourceProducts);
   renderDealStrip(sourceProducts);
   renderHeroSection(sourceProducts);
+  renderHomeMomentumBand(sourceProducts);
   renderNewArrivalsWindow(sourceProducts);
   renderCreatorStudioSection(sourceProducts);
   renderTopRatedSection(sourceProducts);

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260314g" />
+  <link rel="stylesheet" href="styles.css?v=20260315b" />
 </head>
 <body>
   <header class="site-header">
@@ -182,7 +182,16 @@
       </article>
     </section>
 
-    <section class="quick-grid">
+    <section class="quick-grid-shell" aria-label="Shopping entry points">
+      <div class="quick-grid-head">
+        <div>
+          <p class="section-eyebrow">Shop faster</p>
+          <h2>Start with the strongest buying paths</h2>
+          <p class="section-subtitle">Jump straight into our highest-conversion categories, creator-focused setups, and quick-repeat shopping journeys.</p>
+        </div>
+        <span class="quick-grid-note">Live catalog, fast delivery, and creator-ready merchandising</span>
+      </div>
+      <div class="quick-grid">
       <article class="home-card">
         <h2>Top Picks in Laptops</h2>
         <div class="home-card-grid">
@@ -212,10 +221,17 @@
         <p>Track orders, save addresses and get personalized recommendations.</p>
         <a href="auth.html" class="signin-btn">Sign in securely</a>
       </article>
+      </div>
     </section>
 
     <section class="category-rail" aria-label="Featured categories">
-      <h2>Featured Categories</h2>
+      <div class="section-header section-header--stacked">
+        <div>
+          <h2>Featured Categories</h2>
+          <p class="section-subtitle">Jump into the strongest live collections across laptops, creator gear, and fast-moving deals.</p>
+        </div>
+        <a href="products.html" class="section-link">Browse all products</a>
+      </div>
       <div class="category-rail-grid">
         <a href="desktops.html" class="category-pill">Computers</a>
         <a href="laptop.html" class="category-pill">Laptops</a>
@@ -225,11 +241,21 @@
         <a href="todays-deals.html" class="category-pill">Today's Deals</a>
         <a href="best-sellers.html" class="category-pill">Best Sellers</a>
       </div>
+    </section>
+
+    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping highlights"></section>
+
     <section id="creatorStudioSection" class="collection-spotlight" aria-label="Creator Studio collection" hidden>
       <div class="collection-spotlight-copy">
         <p class="collection-spotlight-eyebrow">New collection</p>
         <h2>Creator Studio</h2>
         <p>Build a smarter editing, streaming, and design desk with hand-picked laptops, audio gear, docks, and display tools.</p>
+        <ul class="collection-spotlight-list">
+          <li>Color-accurate displays and workstation-ready laptops</li>
+          <li>USB microphones, capture gear, and sharper desk accessories</li>
+          <li>Fast setup paths for streaming, editing, and design workflows</li>
+        </ul>
+        <div id="creatorStudioStats" class="collection-spotlight-stats"></div>
         <div class="collection-spotlight-actions">
           <a href="creator-studio.html" class="collection-spotlight-primary">Explore Creator Studio</a>
           <a href="products.html?search=creator" class="collection-spotlight-secondary">Search creator-ready gear</a>
@@ -243,12 +269,18 @@
         <div id="creatorStudioGrid" class="product-grid"></div>
       </div>
     </section>
-    </section>
 
     <section class="deal-strip" aria-label="Today's deals">
       <div class="deal-strip-head">
-        <h2>Today&apos;s Deals</h2>
-        <a href="todays-deals.html" class="deal-strip-link">See all deals</a>
+        <div>
+          <p class="section-eyebrow">Fast-moving discounts</p>
+          <h2>Today&apos;s Deals</h2>
+          <p class="deal-strip-subtitle">Live picks ranked by savings, ratings, and fast-delivery confidence.</p>
+        </div>
+        <div class="deal-strip-actions">
+          <span class="deal-strip-note">Bank offers and EMI on select picks</span>
+          <a href="todays-deals.html" class="deal-strip-link">See all deals</a>
+        </div>
       </div>
       <div class="deal-strip-row">
         <a href="product-detail.html?id=3" class="deal-tile" aria-label="Open Headphones deal">
@@ -404,10 +436,10 @@
         <a href="review.html">Review</a>
       </div>
     </div>
-    <p class="copyright" data-i18n="footer.copyright">© 2026 ElectroMart clone experience</p>
+    <p class="copyright" data-i18n="footer.copyright">Copyright 2026 ElectroMart clone experience</p>
   </footer>
 
-  <script src="script.js?v=20260314g"></script>
+  <script src="script.js?v=20260315b"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
 </body>
