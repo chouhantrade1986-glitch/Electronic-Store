@@ -1,4 +1,4 @@
-.orders-main {
+﻿.orders-main {
   width: min(1200px, 95vw);
   margin: 22px auto 30px;
 }
@@ -39,7 +39,7 @@
 }
 
 .verification-badge.pending {
-  background: #fef3c7;
+  background: #dbeafe;
   color: #92400e;
 }
 
@@ -97,9 +97,9 @@
 }
 
 .order-update-item.unread {
-  border-color: #93c5fd;
+  border-color: #fff3a3;
   background: linear-gradient(180deg, #eff6ff 0%, #f8fbff 100%);
-  box-shadow: inset 3px 0 0 #2563eb;
+  box-shadow: inset 3px 0 0 #0046be;
 }
 
 .order-update-item-head {
@@ -136,7 +136,7 @@
 }
 
 .order-update-meta a {
-  color: #007185;
+  color: #0046be;
   font-weight: 700;
 }
 
@@ -155,7 +155,7 @@
   font-size: 0.76rem;
   font-weight: 800;
   text-transform: uppercase;
-  color: #1d4ed8;
+  color: #e6be00;
 }
 
 .order-update-channel {
@@ -252,7 +252,7 @@
 .order-product {
   margin: 0;
   font-size: 1.1rem;
-  color: #007185;
+  color: #0046be;
 }
 
 .order-date-line {
@@ -293,17 +293,17 @@
 
 .badge.shipped {
   background: #dbeafe;
-  color: #1d4ed8;
+  color: #e6be00;
 }
 
 .badge.processing {
-  background: #fef3c7;
+  background: #dbeafe;
   color: #92400e;
 }
 
 .badge.pending,
 .badge.requires_confirmation {
-  background: #fef3c7;
+  background: #dbeafe;
   color: #92400e;
 }
 
@@ -315,7 +315,7 @@
 
 .badge.refund_pending {
   background: #ffedd5;
-  color: #c2410c;
+  color: #1e40af;
 }
 
 .badge.refunded {
@@ -356,7 +356,7 @@
 }
 
 .badge.queued {
-  background: #fef3c7;
+  background: #dbeafe;
   color: #92400e;
 }
 
@@ -390,8 +390,8 @@
 }
 
 .order-actions .primary {
-  border-color: #fcd200;
-  background: #ffd814;
+  border-color: #ffe000;
+  background: #fff3a3;
 }
 
 .order-actions a:hover,
@@ -463,11 +463,11 @@
 
 .orders-toast.warning {
   border-color: #fcd34d;
-  background: #fffbeb;
+  background: #eff6ff;
 }
 
 .orders-toast.info {
-  border-color: #93c5fd;
+  border-color: #fff3a3;
   background: #eff6ff;
 }
 
@@ -586,7 +586,7 @@
   padding: 8px 10px;
   border-radius: 8px;
   background: #eff6ff;
-  color: #1d4ed8;
+  color: #e6be00;
   font-size: 0.9rem;
 }
 
@@ -620,8 +620,8 @@
 }
 
 .after-sales-progress-list li.current .after-sales-progress-dot {
-  background: #f59e0b;
-  box-shadow: 0 0 0 3px #fef3c7;
+  background: #ffd200;
+  box-shadow: 0 0 0 3px #dbeafe;
 }
 
 .after-sales-progress-copy {
@@ -792,8 +792,8 @@
 }
 
 .slot-timeline-list li.current .slot-dot {
-  background: #f59e0b;
-  box-shadow: 0 0 0 3px #fef3c7;
+  background: #ffd200;
+  box-shadow: 0 0 0 3px #dbeafe;
 }
 
 .slot-copy {
@@ -937,3 +937,5 @@
     height: 200px;
   }
 }
+
+

@@ -1,10 +1,10 @@
-:root {
+﻿:root {
   --ink: #0f1111;
-  --navy: #131921;
-  --navy-light: #232f3e;
-  --orange: #febd69;
-  --line: #d5d9d9;
-  --off-bg: #eaeded;
+  --navy: #0046be;
+  --navy-light: #003087;
+  --orange: #ffe000;
+  --line: #d5e2ef;
+  --off-bg: #eef4fb;
   --white: #ffffff;
 }
 
@@ -83,7 +83,7 @@ a {
 }
 
 .search-form button:hover {
-  background: #fbbf24;
+  background: #fff3a3;
 }
 
 .header-links {
@@ -99,7 +99,7 @@ a {
 }
 
 .header-links a:hover {
-  border-color: #60a5fa;
+  border-color: #ffe000;
   background: rgba(15, 23, 42, 0.48);
 }
 
@@ -276,11 +276,11 @@ a {
 .item-title {
   margin: 0;
   font-size: 1.18rem;
-  color: #007185;
+  color: #0046be;
 }
 
 .item-title:hover {
-  color: #c2410c;
+  color: #1e40af;
 }
 
 .item-stock {
@@ -373,13 +373,13 @@ a {
 
 .cart-summary button {
   width: 100%;
-  background: #ffd814;
-  border: 1px solid #fcd200;
+  background: #fff3a3;
+  border: 1px solid #ffe000;
   padding: 10px 12px;
 }
 
 .cart-summary button:hover:not(:disabled) {
-  background: #f9cf29;
+  background: #ffe000;
   transform: translateY(-1px);
 }
 
@@ -458,3 +458,5 @@ a {
     text-align: left;
   }
 }
+
+

@@ -1,13 +1,13 @@
-:root {
+﻿:root {
   --ink: #0f172a;
-  --navy: #131921;
-  --navy-light: #232f3e;
-  --line: #d5d9d9;
-  --bg: #eaeded;
+  --navy: #0046be;
+  --navy-light: #003087;
+  --line: #d5e2ef;
+  --bg: #eef4fb;
   --card: #ffffff;
-  --orange: #ffd814;
-  --orange-border: #f4c340;
-  --orange-hover: #f1b708;
+  --orange: #ffe000;
+  --orange-border: #ffd200;
+  --orange-hover: #e6be00;
 }
 
 * {
@@ -18,7 +18,7 @@ body {
   margin: 0;
   font-family: "Barlow", sans-serif;
   color: var(--ink);
-  background: linear-gradient(180deg, #f1f5f9 0%, #eaeded 52%, #e3e8eb 100%);
+  background: linear-gradient(180deg, #eff6ff 0%, #eef4fb 52%, #e2ecf8 100%);
 }
 
 a {
@@ -104,7 +104,7 @@ button {
 }
 
 .brand-accent {
-  color: #ff9900;
+  color: #38bdf8;
 }
 
 .brand-sub {
@@ -134,7 +134,7 @@ button {
 
 .header-links a:hover,
 .header-actions a:hover {
-  border-color: #60a5fa;
+  border-color: #ffe000;
   background: rgba(15, 23, 42, 0.48);
 }
 
@@ -150,14 +150,14 @@ button {
 
 .header-links select:hover,
 .header-links select:focus {
-  border-color: #60a5fa;
+  border-color: #ffe000;
 }
 
 .header-links a[href="cart.html"],
 .header-actions a[href="cart.html"],
 .cart-link {
   border: 1px solid var(--orange-border);
-  background: linear-gradient(180deg, #ffd86d 0%, #f4bc2b 100%);
+  background: linear-gradient(180deg, #fff3a3 0%, #ffd200 100%);
   color: #111827;
   border-radius: 10px;
   padding: 7px 10px;
@@ -168,7 +168,7 @@ button {
 .header-actions a[href="cart.html"]:hover,
 .cart-link:hover {
   border-color: var(--orange-hover);
-  background: linear-gradient(180deg, #ffd04b 0%, #ecab05 100%);
+  background: linear-gradient(180deg, #ffe000 0%, #e6be00 100%);
   transform: translateY(-1px);
 }
 
@@ -196,7 +196,7 @@ button {
 
 .header-search:focus-within,
 .search-form:focus-within {
-  box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.58);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.42);
   border-radius: 8px;
 }
 
@@ -213,6 +213,10 @@ button {
 .search-form input {
   border-radius: 8px 0 0 8px;
   background: #ffffff;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
 }
 
 .header-search button,
@@ -221,12 +225,14 @@ button {
   background: var(--orange);
   color: #111827;
   font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.1;
   cursor: pointer;
 }
 
 .header-search button:hover,
 .search-form button:hover {
-  background: #f9cf29;
+  background: #ffd200;
 }
 
 .sub-nav {
@@ -252,7 +258,7 @@ button {
 }
 
 .sub-nav a.active {
-  border-color: #f59e0b;
+  border-color: #ffd200;
   color: #ffffff;
   background: rgba(249, 115, 22, 0.28);
   font-weight: 700;
@@ -260,7 +266,7 @@ button {
 
 :is(input, select, textarea):focus {
   outline: none;
-  border-color: #60a5fa;
+  border-color: #ffe000;
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.28);
 }
 
@@ -287,6 +293,9 @@ button {
   .page-header .header-links {
     width: 100%;
     justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
   }
 
   .top-nav--split {
@@ -296,5 +305,11 @@ button {
 
   .top-nav--split .header-links {
     width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
   }
 }
+
+
+

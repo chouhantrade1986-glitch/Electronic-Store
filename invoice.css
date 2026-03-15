@@ -1,11 +1,11 @@
-:root {
+﻿:root {
   --ink: #111111;
   --line: #111111;
   --paper: #ffffff;
   --bg: #eef0f2;
   --accent: #146eb4;
   --muted: #5f6b7a;
-  --soft-line: #d5d9d9;
+  --soft-line: #d5e2ef;
 }
 
 * {
@@ -31,7 +31,7 @@ body {
   align-items: center;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #131921;
+  background: #0046be;
   color: #f8fafc;
   position: sticky;
   top: 10px;
@@ -81,14 +81,14 @@ body {
 }
 
 #printBtn {
-  border-color: #f4c340;
-  background: linear-gradient(180deg, #ffd86d 0%, #f4bc2b 100%);
+  border-color: #ffe000;
+  background: linear-gradient(180deg, #bfdbfe 0%, #ffd200 100%);
   color: #111827;
 }
 
 #printBtn:hover {
-  border-color: #f1b708;
-  background: linear-gradient(180deg, #ffd04b 0%, #ecab05 100%);
+  border-color: #e6be00;
+  background: linear-gradient(180deg, #fff3a3 0%, #0046be 100%);
 }
 
 @media (max-width: 980px) {
@@ -266,8 +266,8 @@ body {
 }
 
 .delivery-timeline-item.current .dot {
-  background: #f59e0b;
-  box-shadow: 0 0 0 3px #fef3c7;
+  background: #ffd200;
+  box-shadow: 0 0 0 3px #dbeafe;
 }
 
 .delivery-timeline-copy strong,
@@ -592,3 +592,5 @@ th:first-child {
     grid-template-columns: 1fr;
   }
 }
+
+

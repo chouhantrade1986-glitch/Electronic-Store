@@ -1,12 +1,12 @@
-:root {
+﻿:root {
   --ink: #111827;
-  --navy: #131921;
-  --navy-2: #232f3e;
-  --line: #d5d9d9;
+  --navy: #0046be;
+  --navy-2: #003087;
+  --line: #d5e2ef;
   --surface: #ffffff;
-  --bg: #eaeded;
-  --accent: #ffd814;
-  --accent-2: #f0c14b;
+  --bg: #eef4fb;
+  --accent: #fff3a3;
+  --accent-2: #ffd200;
 }
 
 * {
@@ -17,7 +17,7 @@ body {
   margin: 0;
   font-family: "Barlow", sans-serif;
   color: var(--ink);
-  background: linear-gradient(180deg, #f6f9f9 0%, var(--bg) 38%, #dde3e3 100%);
+  background: linear-gradient(180deg, #eff6ff 0%, var(--bg) 38%, #e2ecf8 100%);
 }
 
 a {
@@ -50,7 +50,7 @@ a {
 }
 
 .brand span {
-  color: #ff9900;
+  color: #ffe000;
 }
 
 .brand small {
@@ -76,7 +76,7 @@ a {
 
 .search-shell input:focus {
   outline: none;
-  border-color: #ff9900;
+  border-color: #ffe000;
 }
 
 .top-links {
@@ -87,7 +87,7 @@ a {
 }
 
 .active-link {
-  color: #fbbf24;
+  color: #fff3a3;
 }
 
 .cart-link span {
@@ -96,7 +96,7 @@ a {
   width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: #ff9900;
+  background: #ffe000;
   color: #111827;
   margin-left: 4px;
   font-size: 0.8rem;
@@ -132,7 +132,7 @@ a {
 }
 
 .sub-nav a.active {
-  border-color: #ff9900;
+  border-color: #ffe000;
 }
 
 .dept-menu {
@@ -183,7 +183,7 @@ a {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.9px;
-  color: #fef08a;
+  color: #bfdbfe;
 }
 
 .hero h1 {
@@ -395,7 +395,7 @@ a {
 }
 
 .rating {
-  color: #b45309;
+  color: #e6be00;
 }
 
 .bulk-meta {
@@ -487,4 +487,6 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+
 

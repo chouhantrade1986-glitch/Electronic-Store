@@ -1,10 +1,10 @@
-:root {
+﻿:root {
   color-scheme: light;
-  --studio-bg: #f4f7fb;
+  --studio-bg: #eef4fb;
   --studio-ink: #142132;
   --studio-muted: #5e6c81;
-  --studio-accent: #ffb84d;
-  --studio-accent-strong: #ff9900;
+  --studio-accent: #ffe000;
+  --studio-accent-strong: #0046be;
   --studio-card: #ffffff;
   --studio-line: #d7e2f0;
   --studio-shadow: 0 18px 44px rgba(16, 23, 35, 0.1);
@@ -18,7 +18,7 @@ body {
   margin: 0;
   font-family: "Barlow", sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(255, 184, 77, 0.18), transparent 34%),
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 34%),
     linear-gradient(180deg, #eff4fb 0%, var(--studio-bg) 100%);
   color: var(--studio-ink);
 }
@@ -176,6 +176,38 @@ body {
   margin-bottom: 1.2rem;
 }
 
+.studio-workflows,
+.studio-bundles {
+  margin-bottom: 1.2rem;
+}
+
+.studio-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.studio-section-head h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.studio-section-copy {
+  margin: 0;
+  max-width: 520px;
+  color: var(--studio-muted);
+  line-height: 1.55;
+}
+
+.studio-workflow-grid,
+.studio-bundle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .benefit-card {
   padding: 1.3rem 1.25rem;
 }
@@ -189,6 +221,60 @@ body {
   margin: 0;
   color: var(--studio-muted);
   line-height: 1.55;
+}
+
+.workflow-card,
+.studio-bundle-card {
+  background: var(--studio-card);
+  border: 1px solid rgba(215, 226, 240, 0.9);
+  border-radius: 24px;
+  box-shadow: var(--studio-shadow);
+}
+
+.workflow-card {
+  padding: 1.35rem 1.25rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.workflow-kicker,
+.studio-bundle-kicker {
+  margin: 0;
+  color: var(--studio-accent-strong);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.workflow-card h3,
+.studio-bundle-card h3 {
+  margin: 0;
+  font-size: 1.22rem;
+}
+
+.workflow-card p:last-of-type,
+.studio-bundle-copy p {
+  margin: 0;
+  color: var(--studio-muted);
+  line-height: 1.55;
+}
+
+.workflow-action {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--studio-line);
+  background: #fff;
+  color: var(--studio-ink);
+  font: inherit;
+  font-weight: 700;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.workflow-action:hover {
+  border-color: var(--studio-accent-strong);
+  color: var(--studio-accent-strong);
 }
 
 .studio-toolbar {
@@ -279,6 +365,64 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.studio-bundle-card {
+  overflow: hidden;
+}
+
+.studio-bundle-media {
+  min-height: 150px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.studio-bundle-copy {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+}
+
+.studio-bundle-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.studio-bundle-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 184, 77, 0.14);
+  color: #8f4d05;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.studio-bundle-list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.45rem;
+  color: var(--studio-muted);
+  font-size: 0.92rem;
+}
+
+.studio-bundle-list li {
+  line-height: 1.45;
+}
+
+.studio-bundle-link {
+  color: var(--studio-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.studio-bundle-link:hover {
+  color: var(--studio-accent-strong);
 }
 
 .studio-card {
@@ -433,13 +577,20 @@ body {
 @media (max-width: 1040px) {
   .studio-hero,
   .studio-benefits,
-  .studio-grid {
+  .studio-grid,
+  .studio-workflow-grid,
+  .studio-bundle-grid {
     grid-template-columns: 1fr;
   }
 
   .studio-toolbar {
     grid-template-columns: 1fr;
     top: 76px;
+  }
+
+  .studio-section-head {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -477,3 +628,5 @@ body {
     grid-template-rows: 200px auto;
   }
 }
+
+

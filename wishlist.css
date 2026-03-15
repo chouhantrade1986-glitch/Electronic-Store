@@ -1,4 +1,4 @@
-.wishlist-main {
+﻿.wishlist-main {
   width: min(1240px, 94vw);
   margin: 22px auto 30px;
 }
@@ -116,15 +116,15 @@
 }
 
 .move-btn {
-  border: 1px solid #fcd200;
-  background: #ffd814;
+  border: 1px solid #ffe000;
+  background: #fff3a3;
   color: #111827;
 }
 
 .view-btn {
   border: 1px solid #dbe4ef;
   background: #f8fafc;
-  color: #1d4ed8;
+  color: #e6be00;
 }
 
 .remove-btn {
@@ -162,3 +162,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+

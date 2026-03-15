@@ -1,12 +1,12 @@
-:root {
+﻿:root {
   --ink: #111827;
-  --navy: #131921;
-  --navy-2: #232f3e;
-  --line: #d5d9d9;
+  --navy: #0046be;
+  --navy-2: #003087;
+  --line: #d5e2ef;
   --surface: #ffffff;
-  --bg: #eaeded;
-  --accent: #ffd814;
-  --accent-2: #f0c14b;
+  --bg: #eef4fb;
+  --accent: #fff3a3;
+  --accent-2: #ffd200;
 }
 
 * {
@@ -17,7 +17,7 @@ body {
   margin: 0;
   font-family: "Barlow", sans-serif;
   color: var(--ink);
-  background: linear-gradient(180deg, #fff9e5 0%, #fffdf2 35%, #fff 100%);
+  background: linear-gradient(180deg, #eff6ff 0%, #f5faff 35%, #fff 100%);
 }
 
 a {
@@ -50,7 +50,7 @@ a {
 }
 
 .brand span {
-  color: #ff9900;
+  color: #ffe000;
 }
 
 .brand small {
@@ -76,7 +76,7 @@ a {
 
 .search-shell input:focus {
   outline: none;
-  border-color: #ff9900;
+  border-color: #ffe000;
 }
 
 .top-links {
@@ -92,7 +92,7 @@ a {
   width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: #ff9900;
+  background: #ffe000;
   color: #111827;
   margin-left: 4px;
   font-size: 0.8rem;
@@ -128,7 +128,7 @@ a {
 }
 
 .sub-nav a.active {
-  border-color: #ff9900;
+  border-color: #ffe000;
 }
 
 .dept-menu {
@@ -217,6 +217,18 @@ a {
   gap: 8px;
 }
 
+.filter-block {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-block h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
 .filters select {
   min-height: 38px;
   border: 1px solid #b8bfc8;
@@ -298,60 +310,98 @@ a {
   margin-top: 12px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .product-card {
-  border: 1px solid #dbe2ea;
-  border-radius: 12px;
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  border-color: #d5e2ef;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.product-card-media {
+  display: block;
+  border-radius: 12px;
   overflow: hidden;
-  display: grid;
-  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
 }
 
 .product-card img {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  height: 220px;
+  object-fit: contain;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
 }
 
 .product-card .content {
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.card-kicker {
+  margin: 0;
+  color: #565959;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .product-card h3 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
+  line-height: 1.42;
+  min-height: 4.3em;
 }
 
 .brand-line {
-  margin: 8px 0 0;
+  margin: 0;
   color: #475569;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
-.meta {
+.rating-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0;
-  font-weight: 700;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .price {
-  color: #1e3a8a;
+  margin: 0;
+  color: #0f1111;
+  font-size: 1.9rem;
+  font-weight: 800;
 }
 
 .rating {
-  color: #b45309;
+  color: #e6be00;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
 .sold-tag {
   display: inline-block;
-  margin: 0 0 10px;
-  background: #fef3c7;
+  margin: 0;
+  background: #dbeafe;
   color: #92400e;
   border-radius: 999px;
   padding: 4px 8px;
@@ -359,16 +409,41 @@ a {
   font-weight: 700;
 }
 
+.price-meta {
+  margin: 0;
+  color: #565959;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.card-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
 .add-btn {
   width: 100%;
   border: 1px solid #a88734;
-  border-radius: 10px;
+  border-radius: 999px;
   min-height: 38px;
   background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
   color: #111827;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+.view-link {
+  color: #0046be;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.view-link:hover {
+  color: #075985;
+  text-decoration: underline;
 }
 
 .empty {
@@ -407,6 +482,11 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .rating-line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .hero-pills {
     flex-direction: column;
     align-items: flex-start;
@@ -416,4 +496,7 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+
+
 
