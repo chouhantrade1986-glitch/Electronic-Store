@@ -26,7 +26,7 @@
   <div class="amazon-subbar">
     <nav class="header-links">
       <a href="index.html">Storefront</a>
-      <a href="products.html">Catalog</a>
+      <a href="products.html">Products</a>
       <a href="orders.html">Orders</a>
       <a href="account.html">Account</a>
     </nav>
@@ -35,28 +35,49 @@
   <main class="admin-layout">
     <aside class="admin-sidebar">
       <h2>Operations</h2>
-      <p>Monitor store health and manage flows from one place.</p>
-      <ul>
-        <li><a href="#summary">Executive Summary</a></li>
-        <li><a href="#projectAudit">Project Audit</a></li>
-        <li><a href="#analytics">Analytics</a></li>
-        <li><a href="#users">Users</a></li>
-        <li><a href="#phoneVerificationAutomation">Phone Verification</a></li>
-        <li><a href="#sales">Sales</a></li>
-        <li><a href="#afterSales">Returns & Refunds</a></li>
-        <li><a href="#orderNotifications">Notifications</a></li>
-        <li><a href="#adminAuditTrail">Audit Trail</a></li>
-        <li><a href="#catalog">Catalog</a></li>
-        <li><a href="#menuManager">Menu Manager</a></li>
-        <li><a href="#orders">Orders</a></li>
-      </ul>
+      <p>Focused on the daily admin jobs first, with advanced tools grouped separately.</p>
+
+      <div class="sidebar-group">
+        <h3>Overview</h3>
+        <ul>
+          <li><a href="#summary">Executive Summary</a></li>
+          <li><a href="#analytics">Analytics</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-group">
+        <h3>Operations</h3>
+        <ul>
+          <li><a href="#orders">Orders</a></li>
+          <li><a href="#sales">Sales</a></li>
+          <li><a href="#orderNotifications">Notifications</a></li>
+          <li><a href="#afterSales">Returns & Refunds</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-group">
+        <h3>Customers</h3>
+        <ul>
+          <li><a href="#users">Users</a></li>
+          <li><a href="#adminAuditTrail">Audit Trail</a></li>
+        </ul>
+      </div>
+
+      <details class="sidebar-advanced">
+        <summary>Advanced Tools</summary>
+        <ul>
+          <li><a href="#catalog">Products</a></li>
+          <li><a href="#phoneVerificationAutomation">Phone Verification</a></li>
+          <li><a href="#menuManager">Menu Manager</a></li>
+        </ul>
+      </details>
     </aside>
 
     <div class="admin-main">
       <section class="admin-head">
         <div>
           <h1>Seller Central Dashboard</h1>
-          <p>Amazon-style control center for live backend operations.</p>
+          <p>Orders, customers, support, and product operations in one cleaner workspace.</p>
         </div>
         <div class="admin-head-actions">
           <span id="backendStatusBadge" class="backend-status offline">Backend: Offline</span>
@@ -65,6 +86,25 @@
       </section>
 
       <p id="adminMessage" class="admin-message"></p>
+
+      <section class="admin-quick-actions" aria-label="Admin quick actions">
+        <a href="#orders" class="admin-quick-card">
+          <strong>Manage Orders</strong>
+          <span>Track status, payments, and delivery updates.</span>
+        </a>
+        <a href="#users" class="admin-quick-card">
+          <strong>Review Users</strong>
+          <span>Check customer accounts and verification state.</span>
+        </a>
+        <a href="#afterSales" class="admin-quick-card">
+          <strong>Handle Returns</strong>
+          <span>Resolve refunds, exchanges, and after-sales cases.</span>
+        </a>
+        <a href="#catalog" class="admin-quick-card">
+          <strong>Update Products</strong>
+          <span>Edit inventory, add products, and fix media.</span>
+        </a>
+      </section>
 
       <section id="summary" class="summary-grid">
         <article class="summary-card">
@@ -89,37 +129,30 @@
         </article>
       </section>
 
-      <section id="projectAudit" class="panel project-audit-panel">
-        <div class="panel-head">
-          <h2>Project Delivery Audit</h2>
-          <p>Updated: 10 Mar 2026</p>
-        </div>
-        <div class="project-audit-kpi-grid">
-          <article class="project-audit-kpi done">
-            <p>Completed</p>
-            <strong>81%</strong>
-            <small>Score: 81 / 100</small>
-          </article>
-          <article class="project-audit-kpi remaining">
-            <p>Remaining</p>
-            <strong>19%</strong>
-            <small>Backlog and hardening work</small>
-          </article>
-          <article class="project-audit-kpi quality">
-            <p>Latest QA</p>
-            <strong>43/44</strong>
-            <small>Backend tests pass, UI smoke has 1 blocker</small>
-          </article>
-        </div>
-        <div class="project-audit-progress" role="img" aria-label="Project completion is 81 percent">
-          <span style="width: 81%;"></span>
-        </div>
-        <ul class="project-audit-list">
-          <li><strong>Storefront and admin flows</strong><span>48/55</span></li>
-          <li><strong>Backend reliability and security</strong><span>20/20</span></li>
-          <li><strong>QA automation stability</strong><span>8/15</span></li>
-          <li><strong>Production readiness</strong><span>5/10</span></li>
-        </ul>
+      <section class="seller-service-grid" aria-label="Seller central services">
+        <article class="panel seller-workbench-panel">
+          <div class="panel-head">
+            <h2>Seller Workbench</h2>
+            <p>Amazon-inspired command view for daily store execution</p>
+          </div>
+          <div id="sellerWorkbenchCards" class="seller-workbench-cards"></div>
+        </article>
+
+        <article class="panel seller-service-panel">
+          <div class="panel-head">
+            <h2>Service Hub</h2>
+            <p>Key services grouped around listing, fulfillment, support, and compliance</p>
+          </div>
+          <div id="sellerServiceHub" class="seller-service-list"></div>
+        </article>
+
+        <article class="panel seller-queue-panel span-2">
+          <div class="panel-head">
+            <h2>Priority Action Queue</h2>
+            <p id="sellerQueueMeta">0 active tasks</p>
+          </div>
+          <div id="sellerActionQueue" class="seller-action-queue"></div>
+        </article>
       </section>
 
       <section id="analytics" class="analytics-grid">
@@ -258,7 +291,7 @@
             <option value="order">Order</option>
             <option value="refund">Refund</option>
             <option value="after_sales">After-sales</option>
-            <option value="catalog">Catalog</option>
+            <option value="catalog">Products</option>
             <option value="notification">Notification</option>
           </select>
           <button id="refreshAdminAuditBtn" type="button" class="secondary-btn">Refresh Trail</button>
@@ -548,7 +581,7 @@
 
       <section id="catalog" class="panel">
         <div class="panel-head">
-          <h2>Catalog</h2>
+          <h2>Products</h2>
           <p id="catalogMeta" role="status" aria-live="polite" aria-atomic="true">0 products - Inventory 0.00</p>
         </div>
         <p id="catalogHealth" class="catalog-health">Low stock: 0 - Out of stock: 0</p>
@@ -874,7 +907,7 @@
         <p id="productFormMessage" class="admin-message"></p>
 
         <div class="panel-tools panel-tools-3">
-          <input id="catalogSearch" type="search" placeholder="Search by product name or brand" aria-label="Search catalog" />
+          <input id="catalogSearch" type="search" placeholder="Search by product name or brand" aria-label="Search products" />
           <select id="catalogCategoryFilter" aria-label="Filter by category">
             <option value="all">All categories</option>
             <option value="laptop">Laptop</option>
@@ -889,7 +922,7 @@
           </select>
         </div>
         <div class="catalog-bulk-tools">
-          <select id="catalogBulkAction" aria-label="Catalog bulk action">
+          <select id="catalogBulkAction" aria-label="Products bulk action">
             <option value="">Bulk action</option>
             <option value="set_status_active">Set Active</option>
             <option value="set_status_draft">Set Draft</option>

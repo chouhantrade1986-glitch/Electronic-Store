@@ -195,6 +195,10 @@ const statProducts = document.getElementById("statProducts");
 const statOrders = document.getElementById("statOrders");
 const statPayments = document.getElementById("statPayments");
 const statRevenue = document.getElementById("statRevenue");
+const sellerWorkbenchCards = document.getElementById("sellerWorkbenchCards");
+const sellerServiceHub = document.getElementById("sellerServiceHub");
+const sellerQueueMeta = document.getElementById("sellerQueueMeta");
+const sellerActionQueue = document.getElementById("sellerActionQueue");
 const kpiAov = document.getElementById("kpiAov");
 const kpiPaidOrders = document.getElementById("kpiPaidOrders");
 const kpiCancellationRate = document.getElementById("kpiCancellationRate");
@@ -1639,7 +1643,7 @@ function sourcingTemplateCard(template, existsInCatalog, adding = false) {
   const safeCategory = escapeHtml(formatStatus(template.category || "accessory"));
   const leadTimeText = escapeHtml(safeLeadTime);
   const discountValue = Math.max(0, numberOrZero(template.listPrice) - numberOrZero(template.price));
-  const actionLabel = existsInCatalog ? "Already in Catalog" : (adding ? "Adding..." : "Add to Catalog");
+  const actionLabel = existsInCatalog ? "Already Added" : (adding ? "Adding..." : "Add to Products");
   const disableAction = existsInCatalog || adding;
   return `
     <article class="sourcing-card">
@@ -1690,7 +1694,7 @@ function renderSourcingPanel() {
   const existingCount = filteredTemplates.filter((template) => isSourcingTemplateInCatalog(template, keySet)).length;
 
   if (sourcingMeta) {
-    sourcingMeta.textContent = `${filteredTemplates.length} shown of ${SOURCING_TEMPLATE_PRODUCTS.length} • ${existingCount} already in catalog`;
+    sourcingMeta.textContent = `${filteredTemplates.length} shown of ${SOURCING_TEMPLATE_PRODUCTS.length} • ${existingCount} already added`;
   }
 
   if (!filteredTemplates.length) {
@@ -1748,9 +1752,9 @@ async function addSourcingTemplateToCatalog(sourceId) {
   }
   const existsInCatalog = isSourcingTemplateInCatalog(template);
   if (existsInCatalog) {
-    setMessage(`${template.name} is already available in your catalog.`, false, {
+    setMessage(`${template.name} is already available in your products.`, false, {
       toast: true,
-      title: "Already in catalog",
+      title: "Already added",
       tone: "warning",
       timeoutMs: 4600
     });
@@ -2095,7 +2099,7 @@ function viewCategoryProducts(value) {
   if (catalogSection && typeof catalogSection.scrollIntoView === "function") {
     catalogSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  setMessage(`Catalog filtered by category: ${categoryLabel(normalized)}.`);
+  setMessage(`Products filtered by category: ${categoryLabel(normalized)}.`);
 }
 
 function formatStatus(value) {
@@ -2511,6 +2515,264 @@ function updateSummary(summary) {
   statOrders.textContent = String(summary.orders || 0);
   statPayments.textContent = String(summary.payments || 0);
   statRevenue.textContent = money(summary.totalRevenue || 0);
+}
+
+function normalizeDashboardStatus(value) {
+  return String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+}
+
+function countOrdersByStatuses(statuses = []) {
+  const wanted = new Set((Array.isArray(statuses) ? statuses : []).map((item) => normalizeDashboardStatus(item)));
+  return allOrders.filter((order) => wanted.has(normalizeDashboardStatus(order && order.status))).length;
+}
+
+function buildSellerCentralMetrics() {
+  const products = Array.isArray(allCatalogProducts) ? allCatalogProducts : [];
+  const users = Array.isArray(allUsers) ? allUsers : [];
+  const notifications = Array.isArray(allOrderNotifications) ? allOrderNotifications : [];
+  const afterSalesCases = Array.isArray(allAfterSalesCases) ? allAfterSalesCases : [];
+  const lowStockCount = products.filter((item) => getProductInventoryStatus(item) === "low").length;
+  const outOfStockCount = products.filter((item) => getProductInventoryStatus(item) === "out").length;
+  const draftProducts = products.filter((item) => normalizeDashboardStatus(item && item.status) === "draft").length;
+  const featuredProducts = products.filter((item) => Boolean(item && item.featured)).length;
+  const b2bProducts = products.filter((item) => String(item && item.segment || "").trim().toLowerCase() === "b2b").length;
+  const activeProducts = products.filter((item) => {
+    const status = normalizeDashboardStatus(item && item.status);
+    return !status || status === "active";
+  }).length;
+  const ordersToProcess = countOrdersByStatuses(["placed", "order_placed", "processing", "confirmed", "packed"]);
+  const inTransitOrders = countOrdersByStatuses(["shipped", "out_for_delivery"]);
+  const cancelledOrders = countOrdersByStatuses(["cancelled", "canceled"]);
+  const openReturns = Number(currentAfterSalesSummary.open || 0) || afterSalesCases.filter((item) => {
+    const status = normalizeDashboardStatus(item && item.status);
+    return !["closed", "rejected", "refunded", "exchange_completed"].includes(status);
+  }).length;
+  const refundPending = afterSalesCases.filter((item) => normalizeDashboardStatus(item && item.status) === "refund_pending").length;
+  const notificationFailures = notifications.filter((item) => {
+    const status = normalizeDashboardStatus(item && item.status);
+    return status === "failed" || status === "skipped" || Boolean(item && item.failed);
+  }).length;
+  const queuedNotifications = notifications.filter((item) => normalizeDashboardStatus(item && item.status) === "queued").length;
+  const usersNeedVerification = users.filter((user) => {
+    const state = normalizeUserPhoneVerification(user && user.phoneVerification, user && user.mobile);
+    return !state.isVerified;
+  }).length;
+  const verifiedUsers = users.filter((user) => normalizeUserPhoneVerification(user && user.phoneVerification, user && user.mobile).isVerified).length;
+  const automationCandidates = Number(currentPhoneVerificationAutomationSummary.candidateCount || 0);
+  const auditActions = Array.isArray(allAdminAuditEntries) ? allAdminAuditEntries.length : 0;
+  const activeCategories = new Set(products.map((item) => normalizeCategoryValue(item && item.category)).filter(Boolean)).size;
+
+  return {
+    lowStockCount,
+    outOfStockCount,
+    draftProducts,
+    featuredProducts,
+    b2bProducts,
+    activeProducts,
+    ordersToProcess,
+    inTransitOrders,
+    cancelledOrders,
+    openReturns,
+    refundPending,
+    notificationFailures,
+    queuedNotifications,
+    usersNeedVerification,
+    verifiedUsers,
+    automationCandidates,
+    auditActions,
+    activeCategories
+  };
+}
+
+function renderSellerCentralServices() {
+  if (!sellerWorkbenchCards || !sellerServiceHub || !sellerActionQueue || !sellerQueueMeta) {
+    return;
+  }
+
+  const metrics = buildSellerCentralMetrics();
+
+  sellerWorkbenchCards.innerHTML = [
+    {
+      title: "Operations Health",
+      copy: "Keep daily order movement clean and catch issues before they spill into support.",
+      href: "#orders",
+      cta: "Open orders desk",
+      stats: [
+        { label: "To process", value: metrics.ordersToProcess },
+        { label: "In transit", value: metrics.inTransitOrders }
+      ]
+    },
+    {
+      title: "Inventory Pulse",
+      copy: "Watch low-stock and out-of-stock pressure the same way seller central highlights inventory risk.",
+      href: "#catalog",
+      cta: "Review product inventory",
+      stats: [
+        { label: "Low stock", value: metrics.lowStockCount },
+        { label: "Out of stock", value: metrics.outOfStockCount }
+      ]
+    },
+    {
+      title: "Customer Trust",
+      copy: "Track returns, refund pressure, and verification gaps from one operational view.",
+      href: "#afterSales",
+      cta: "Open customer support flows",
+      stats: [
+        { label: "Open cases", value: metrics.openReturns },
+        { label: "Need verification", value: metrics.usersNeedVerification }
+      ]
+    },
+    {
+      title: "Listing Readiness",
+      copy: "Keep products publish-ready with active assortments, featured merchandising, and B2B coverage.",
+      href: "#catalog",
+      cta: "Open products workspace",
+      stats: [
+        { label: "Draft products", value: metrics.draftProducts },
+        { label: "Featured", value: metrics.featuredProducts }
+      ]
+    }
+  ].map((card) => `
+    <article class="seller-workbench-card">
+      <div>
+        <h3>${card.title}</h3>
+        <p>${card.copy}</p>
+      </div>
+      <div class="seller-workbench-stats">
+        ${card.stats.map((stat) => `<span><strong>${stat.value}</strong>${stat.label}</span>`).join("")}
+      </div>
+      <a class="seller-workbench-link" href="${card.href}">${card.cta}</a>
+    </article>
+  `).join("");
+
+  sellerServiceHub.innerHTML = [
+    {
+      title: "Listings & Pricing",
+      pillar: "Listings",
+      copy: "Add products, tighten inventory, and keep assortment breadth ready for search and merchandising.",
+      meta: [
+        `${metrics.activeProducts} active`,
+        `${metrics.draftProducts} draft`,
+        `${metrics.activeCategories} categories`
+      ],
+      href: "#catalog",
+      cta: "Go to products"
+    },
+    {
+      title: "Fulfillment & Returns",
+      pillar: "Fulfillment",
+      copy: "Watch processing load, in-transit orders, and returns together so delivery and support stay aligned.",
+      meta: [
+        `${metrics.ordersToProcess} to process`,
+        `${metrics.inTransitOrders} in transit`,
+        `${metrics.openReturns} open cases`
+      ],
+      href: "#afterSales",
+      cta: "Review operations"
+    },
+    {
+      title: "Customer Messaging",
+      pillar: "Support",
+      copy: "Keep notifications, reminders, and follow-up actions reliable across order and phone-verification channels.",
+      meta: [
+        `${metrics.notificationFailures} failures`,
+        `${metrics.queuedNotifications} queued`,
+        `${metrics.automationCandidates} automation candidates`
+      ],
+      href: "#orderNotifications",
+      cta: "Open notification center"
+    },
+    {
+      title: "Compliance & Oversight",
+      pillar: "Governance",
+      copy: "Use audit visibility and customer state tracking to maintain clean admin execution.",
+      meta: [
+        `${metrics.auditActions} audit actions`,
+        `${metrics.verifiedUsers} verified users`,
+        `${metrics.cancelledOrders} cancelled orders`
+      ],
+      href: "#adminAuditTrail",
+      cta: "Open audit trail"
+    }
+  ].map((card) => `
+    <article class="seller-service-card">
+      <div class="seller-service-topline">
+        <strong>${card.title}</strong>
+        <span class="seller-service-pill">${card.pillar}</span>
+      </div>
+      <p>${card.copy}</p>
+      <div class="seller-service-meta">
+        ${card.meta.map((item) => `<span>${item}</span>`).join("")}
+      </div>
+      <a href="${card.href}">${card.cta}</a>
+    </article>
+  `).join("");
+
+  const queueItems = [
+    {
+      count: metrics.outOfStockCount,
+      title: "Restock out-of-stock products",
+      detail: "These products are fully unavailable and need immediate inventory action.",
+      href: "#catalog",
+      cta: "Open products",
+      tone: "attention"
+    },
+    {
+      count: metrics.openReturns,
+      title: "Resolve open return and refund cases",
+      detail: "Customer support load is waiting in after-sales and refund workflows.",
+      href: "#afterSales",
+      cta: "Open returns desk",
+      tone: "warning"
+    },
+    {
+      count: metrics.notificationFailures,
+      title: "Review failed customer notifications",
+      detail: "Notification delivery needs attention before support volume grows.",
+      href: "#orderNotifications",
+      cta: "Open notifications",
+      tone: "warning"
+    },
+    {
+      count: metrics.usersNeedVerification,
+      title: "Nudge customers pending verification",
+      detail: "Phone verification gaps reduce messaging reach and trust signals.",
+      href: "#phoneVerificationAutomation",
+      cta: "Open automation",
+      tone: "warning"
+    },
+    {
+      count: metrics.draftProducts,
+      title: "Publish draft product listings",
+      detail: "Draft listings are sitting in the product workspace and can be activated.",
+      href: "#catalog",
+      cta: "Review products",
+      tone: "good"
+    }
+  ].filter((item) => item.count > 0);
+
+  sellerQueueMeta.textContent = `${queueItems.length} active tasks`;
+  sellerActionQueue.innerHTML = queueItems.length
+    ? queueItems.map((item) => `
+      <article class="seller-action-item">
+        <span class="seller-action-badge ${item.tone}">${item.count}</span>
+        <div>
+          <strong>${item.title}</strong>
+          <p>${item.detail}</p>
+        </div>
+        <a href="${item.href}">${item.cta}</a>
+      </article>
+    `).join("")
+    : `
+      <article class="seller-action-item">
+        <span class="seller-action-badge good">OK</span>
+        <div>
+          <strong>Operations look healthy</strong>
+          <p>No urgent actions are currently blocking orders, customer messaging, or listings.</p>
+        </div>
+        <a href="#summary">Back to summary</a>
+      </article>
+    `;
 }
 
 function renderUsers(users) {
@@ -3268,7 +3530,7 @@ function renderCatalog(products, inventoryValue) {
 
   if (!visibleCatalogProducts.length) {
     catalogRenderToken += 1;
-    catalogTableBody.innerHTML = "<tr><td colspan='16'>No catalog products found.</td></tr>";
+    catalogTableBody.innerHTML = "<tr><td colspan='16'>No products found.</td></tr>";
     if (selectAllCatalogProducts) {
       selectAllCatalogProducts.checked = false;
     }
@@ -3331,7 +3593,7 @@ function getActiveCatalogFilters() {
         catalogSearch.value = "";
       },
       focus: catalogSearch,
-      feedback: "Removed catalog search filter. Focus moved to the catalog search input."
+      feedback: "Removed products search filter. Focus moved to the products search input."
     });
   }
 
@@ -3343,7 +3605,7 @@ function getActiveCatalogFilters() {
         catalogCategoryFilter.value = "all";
       },
       focus: catalogCategoryFilter,
-      feedback: "Removed catalog category filter. Focus moved to the category filter."
+      feedback: "Removed product category filter. Focus moved to the category filter."
     });
   }
 
@@ -3355,7 +3617,7 @@ function getActiveCatalogFilters() {
         catalogSegmentFilter.value = "all";
       },
       focus: catalogSegmentFilter,
-      feedback: "Removed catalog segment filter. Focus moved to the segment filter."
+      feedback: "Removed product segment filter. Focus moved to the segment filter."
     });
   }
 
@@ -5041,7 +5303,7 @@ function exportCatalogCsv() {
     }));
 
   if (!rows.length) {
-    setMessage("No physical products available to export in current catalog view.", true);
+    setMessage("No physical products available to export in the current products view.", true);
     return;
   }
 
@@ -5645,7 +5907,7 @@ async function importCatalogCsvFile(file, preParsedRows = null, options = {}) {
 async function normalizeCatalogMediaUrls() {
   const products = Array.isArray(allCatalogProducts) ? allCatalogProducts : [];
   if (!products.length) {
-    setMessage("No catalog products available to normalize.", true);
+    setMessage("No products available to normalize.", true);
     return;
   }
   if (!window.confirm(`Normalize media URLs for ${products.length} product(s)?`)) {
@@ -5864,6 +6126,7 @@ async function loadDashboard() {
     renderAdminAuditTrail(adminAuditPayload);
     renderPhoneVerificationAutomation(phoneVerificationAutomationPayload);
     renderAfterSales(afterSalesPayload);
+    renderSellerCentralServices();
     setBackendStatus(true);
     setMessage("Dashboard and analytics are up to date.");
   } catch (error) {
@@ -5894,6 +6157,7 @@ async function loadDashboard() {
     renderAdminAuditTrail({ entries: [], summary: { categoryCounts: {} } });
     renderPhoneVerificationAutomation(fallback.phoneVerificationAutomationPayload);
     renderAfterSales({ cases: [], summary: {} });
+    renderSellerCentralServices();
     setBackendStatus(false);
     setMessage("Backend offline: showing local admin data mode.", true);
   } finally {
@@ -5974,7 +6238,7 @@ adminCatalogFilterChipController = window.ElectroMartListingFilterChips?.init({
     syncInventoryFilterButtons();
   },
   focusAfterClearAll: catalogSearch,
-  clearAllFeedback: "Removed all catalog filters. Focus moved to the catalog search input.",
+  clearAllFeedback: "Removed all product filters. Focus moved to the products search input.",
   onChange: applyCatalogFilters,
   getResultSummary: () => String(catalogMeta?.textContent || "").trim()
 }) || null;
@@ -6297,7 +6561,7 @@ applyCatalogBulkBtn.addEventListener("click", () => {
 });
 clearCatalogSelectionBtn.addEventListener("click", () => {
   clearCatalogSelection();
-  setMessage("Catalog selection cleared.", false, {
+  setMessage("Product selection cleared.", false, {
     toast: true,
     title: "Selection cleared",
     tone: "info",
@@ -7446,7 +7710,7 @@ function formatAuditCategory(category) {
     return "After-sales";
   }
   if (key === "catalog") {
-    return "Catalog";
+    return "Product";
   }
   if (key === "notification") {
     return "Notification";
@@ -7573,7 +7837,7 @@ function renderAdminAuditTrail(payload) {
       { label: "Order", value: Number(categoryCounts.order || 0) },
       { label: "Refund", value: Number(categoryCounts.refund || 0) },
       { label: "After-sales", value: Number(categoryCounts.after_sales || 0) },
-      { label: "Catalog", value: Number(categoryCounts.catalog || 0) },
+      { label: "Product", value: Number(categoryCounts.catalog || 0) },
       { label: "Notification", value: Number(categoryCounts.notification || 0) }
     ].map((item) => `
       <article class="notification-channel-card">
