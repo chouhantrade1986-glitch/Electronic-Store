@@ -7,8 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="shared-ui.css" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="wishlist.css" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 </head>
 <body>
   <header class="site-header">
@@ -17,8 +18,11 @@
         <span class="brand-main">electro<span class="brand-accent">mart</span></span>
         <span class="brand-sub">wishlist</span>
       </a>
-      <form class="search-form" action="products.html" method="get" role="search">
-        <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+      <form class="search-form" action="products.html" method="get" role="search" data-shared-search="1">
+        <span class="search-context">All Products</span>
+        <div class="search-input-wrap">
+          <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
+        </div>
         <button type="submit">Search</button>
       </form>
       <div class="header-links">
@@ -54,5 +58,8 @@
 
   <script src="wishlist.js"></script>
   <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
 </body>
 </html>
+
+
