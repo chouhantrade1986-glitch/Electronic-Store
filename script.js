@@ -180,6 +180,8 @@ const creatorStudioSection = document.getElementById("creatorStudioSection");
 const creatorStudioGrid = document.getElementById("creatorStudioGrid");
 const creatorStudioMeta = document.getElementById("creatorStudioMeta");
 const creatorStudioStats = document.getElementById("creatorStudioStats");
+const categoryRailGrid = document.getElementById("categoryRailGrid");
+const categoryRailMeta = document.getElementById("categoryRailMeta");
 const homeMomentumBand = document.getElementById("homeMomentumBand");
 const recentlyViewedSection = document.getElementById("recentlyViewedSection");
 const recentlyViewedGrid = document.getElementById("recentlyViewedGrid");
@@ -1058,11 +1060,13 @@ function getCategoryLandingLink(category) {
     mobile: "products.html?category=mobile",
     audio: "products.html?category=audio",
     accessory: "products.html?category=accessory",
+    computer: "desktops.html",
     desktops: "desktops.html",
+    "creator-studio": "creator-studio.html",
     printers: "printer.html",
     printer: "printer.html"
   };
-  return knownPageMap[normalized] || `catalogs.html?category=${encodeURIComponent(normalized || "all")}`;
+  return knownPageMap[normalized] || `products.html?category=${encodeURIComponent(normalized || "all")}`;
 }
 
 function countProductsWithDiscount(items) {
@@ -1124,6 +1128,102 @@ function renderHomeCardMiniTiles(items) {
         <img src="${image}" alt="${escapeSuggestionHtml(item.name)}" loading="lazy" />
         <span class="home-mini-label">${escapeSuggestionHtml(truncateHomeCardLabel(item.name, 30))}</span>
         <small class="home-mini-price">From ${money(item.price)}</small>
+      </a>
+    `;
+  }).join("");
+}
+
+function getHomeCategoryVisual(item, category) {
+  return getHeroBackdrop(category, item);
+}
+
+function renderCategoryRail(sourceProducts) {
+  if (!categoryRailGrid || !categoryRailMeta) {
+    return;
+  }
+
+  const retailProducts = sourceProducts.filter((item) => item.segment !== "b2b");
+  const categories = new Map();
+  retailProducts.forEach((item) => {
+    const category = normalizeHomeCategory(item?.category);
+    if (!category) {
+      return;
+    }
+    const bucket = categories.get(category) || [];
+    bucket.push(item);
+    categories.set(category, bucket);
+  });
+
+  const categoryPriority = {
+    laptop: 7,
+    computer: 6,
+    "creator-studio": 5,
+    printer: 4,
+    mobile: 3,
+    audio: 2,
+    accessory: 1
+  };
+
+  const entries = Array.from(categories.entries())
+    .map(([category, items]) => {
+      const rankedItems = items
+        .slice()
+        .sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)) || Number(b.rating || 0) - Number(a.rating || 0));
+      return {
+        category,
+        label: getReadableCategoryLabel(category),
+        count: items.length,
+        startingPrice: getStartingPrice(items),
+        featured: rankedItems[0],
+        highestRating: getHomeRatingBadge(items)
+      };
+    })
+    .sort((a, b) => {
+      const priorityDiff = (categoryPriority[b.category] || 0) - (categoryPriority[a.category] || 0);
+      if (priorityDiff !== 0) {
+        return priorityDiff;
+      }
+      return b.count - a.count;
+    });
+
+  const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
+  if (creatorItems.length) {
+    entries.push({
+      category: "creator-studio",
+      label: "Creator Studio",
+      count: creatorItems.length,
+      startingPrice: getStartingPrice(creatorItems),
+      featured: creatorItems[0],
+      highestRating: getHomeRatingBadge(creatorItems)
+    });
+  }
+
+  entries.sort((a, b) => {
+    const priorityDiff = (categoryPriority[b.category] || 0) - (categoryPriority[a.category] || 0);
+    if (priorityDiff !== 0) {
+      return priorityDiff;
+    }
+    return b.count - a.count;
+  });
+
+  const visibleEntries = entries.slice(0, 6);
+  if (!visibleEntries.length) {
+    categoryRailGrid.innerHTML = "";
+    categoryRailMeta.textContent = "No category highlights available right now.";
+    return;
+  }
+
+  categoryRailMeta.textContent = `${visibleEntries.length} featured shopping paths live now - strongest picks from ${money(getStartingPrice(retailProducts))}.`;
+  categoryRailGrid.innerHTML = visibleEntries.map((entry) => {
+    const image = getHomeCategoryVisual(entry.featured, entry.category);
+    const href = getCategoryLandingLink(entry.category);
+    return `
+      <a href="${href}" class="category-rail-card" aria-label="Shop ${escapeSuggestionHtml(entry.label)}">
+        <span class="category-rail-card__media" style="background-image:url('${image}')"></span>
+        <span class="category-rail-card__kicker">${entry.count} live now</span>
+        <strong>${escapeSuggestionHtml(entry.label)}</strong>
+        <small>From ${money(entry.startingPrice)} - ${escapeSuggestionHtml(entry.highestRating)} confidence</small>
+        <span class="category-rail-card__cta">Shop ${escapeSuggestionHtml(entry.label)}</span>
       </a>
     `;
   }).join("");
@@ -1274,7 +1374,7 @@ function renderDealStrip(sourceProducts) {
     return;
   }
 
-  row.innerHTML = dealProducts.map((item) => {
+  row.innerHTML = dealProducts.map((item, index) => {
     const image = normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL;
     const listPrice = Number(item.listPrice || item.price || 0);
     const livePrice = Number(item.price || 0);
@@ -1288,14 +1388,17 @@ function renderDealStrip(sourceProducts) {
     const deliveryMeta = item.featured
       ? "Fast delivery eligible on featured stock"
       : `${item.brand || "ElectroMart"} deal now live`;
+    const cardClass = index === 0 ? "deal-tile deal-tile--featured" : "deal-tile";
     return `
-      <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="deal-tile" aria-label="Open ${item.name} deal">
+      <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="${cardClass}" aria-label="Open ${item.name} deal">
         <img src="${image}" alt="${item.name}" loading="lazy" />
-        <small class="deal-kicker">${kicker}</small>
-        <h3>${item.name}</h3>
-        <p class="deal-price-line"><span>${badge}</span> Now ${money(livePrice)}</p>
-        <small class="deal-price-meta">${priceMeta}</small>
-        <small class="deal-delivery-note">${deliveryMeta}</small>
+        <span class="deal-copy">
+          <small class="deal-kicker">${kicker}</small>
+          <h3>${item.name}</h3>
+          <p class="deal-price-line"><span>${badge}</span> Now ${money(livePrice)}</p>
+          <small class="deal-price-meta">${priceMeta}</small>
+          <small class="deal-delivery-note">${deliveryMeta}</small>
+        </span>
       </a>
     `;
   }).join("");
@@ -1641,22 +1744,38 @@ function renderHomeMomentumBand(sourceProducts) {
   const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
   const discountedProducts = countProductsWithDiscount(retailProducts);
   const topRatedProducts = retailProducts.filter((item) => Number(item.rating || 0) >= 4.5).length;
+  const categoryCount = getUniqueCollectionCount(retailProducts);
 
   homeMomentumBand.innerHTML = `
     <article class="momentum-card momentum-card--primary">
-      <p>Live catalog</p>
-      <strong>${retailProducts.length}</strong>
-      <span>Products ready to browse across our homepage, category pages, and featured rails.</span>
+      <p class="momentum-card__eyebrow">Blue Tag shopping event</p>
+      <strong>Shop the strongest live buying paths before the best inventory moves.</strong>
+      <span>${retailProducts.length} live products across ${categoryCount} active shopping lanes, tuned for faster discovery from hero to checkout.</span>
+      <div class="momentum-card__chips">
+        <span>${retailProducts.length} live now</span>
+        <span>${discountedProducts} markdowns</span>
+        <span>${topRatedProducts} high-rated picks</span>
+      </div>
+      <div class="momentum-card__actions">
+        <a href="todays-deals.html" class="momentum-card__cta">Shop Top Deals</a>
+        <a href="products.html" class="momentum-card__link">Browse all products</a>
+      </div>
     </article>
     <article class="momentum-card">
-      <p>Creator Studio</p>
-      <strong>${creatorItems.length}</strong>
-      <span>${creatorItems.length ? `Setup-ready picks from ${money(getStartingPrice(creatorItems))}` : "Fresh gear spotlighted as soon as it goes live."}</span>
+      <p class="momentum-card__eyebrow">Creator Studio</p>
+      <strong>${creatorItems.length ? `${creatorItems.length} setup-ready creator picks` : "Creator-ready gear spotlight"}</strong>
+      <span>${creatorItems.length ? `Start from ${money(getStartingPrice(creatorItems))} across streaming, editing, and desk-upgrade essentials.` : "Fresh creator gear gets highlighted here as soon as it goes live."}</span>
+      <div class="momentum-card__actions">
+        <a href="creator-studio.html" class="momentum-card__link">Explore Creator Studio</a>
+      </div>
     </article>
     <article class="momentum-card">
-      <p>High-confidence shopping</p>
-      <strong>${topRatedProducts}</strong>
-      <span>Products rated 4.5 star and above, with ${discountedProducts} live markdowns in the mix.</span>
+      <p class="momentum-card__eyebrow">High-confidence shopping</p>
+      <strong>${topRatedProducts} products rated 4.5 stars and above</strong>
+      <span>${discountedProducts} discounted offers are live now, with top-rated picks surfaced first across our featured rails.</span>
+      <div class="momentum-card__actions">
+        <a href="best-sellers.html" class="momentum-card__link">See trusted best sellers</a>
+      </div>
     </article>
   `;
 }
@@ -2284,6 +2403,7 @@ function renderHomeSurface() {
   const sourceProducts = getHomeProducts();
   syncCategoryFilterOptions(sourceProducts);
   renderQuickGrid(sourceProducts);
+  renderCategoryRail(sourceProducts);
   renderDealStrip(sourceProducts);
   renderHeroSection(sourceProducts);
   renderHomeMomentumBand(sourceProducts);

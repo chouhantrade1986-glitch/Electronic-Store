@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="styles.css?v=20260315d" />
 </head>
 <body>
   <header class="site-header">
@@ -152,7 +152,7 @@
             <li><a href="best-sellers.html"><span>Best Sellers</span><small>Most purchased now</small></a></li>
             <li><a href="todays-deals.html"><span>Today's Deals</span><small>Limited-time offers</small></a></li>
           </ul>
-          <a class="hero-department-offer" href="catalogs.html">Bulk and B2B sourcing available</a>
+          <a class="hero-department-offer" href="products.html">Bulk and B2B sourcing available</a>
         </aside>
         <div class="hero-slider-shell">
           <div id="heroTrack" class="hero-track"></div>
@@ -162,6 +162,8 @@
         </div>
       </div>
     </section>
+
+    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping highlights"></section>
 
     <section class="service-strip" aria-label="Key services">
       <article class="service-item">
@@ -232,18 +234,16 @@
         </div>
         <a href="products.html" class="section-link">Browse all products</a>
       </div>
-      <div class="category-rail-grid">
-        <a href="desktops.html" class="category-pill">Computers</a>
-        <a href="laptop.html" class="category-pill">Laptops</a>
-        <a href="creator-studio.html" class="category-pill">Creator Studio</a>
-        <a href="printer.html" class="category-pill">Printers</a>
-        <a href="pc-builder.html" class="category-pill">PC Builder</a>
-        <a href="todays-deals.html" class="category-pill">Today's Deals</a>
-        <a href="best-sellers.html" class="category-pill">Best Sellers</a>
+      <p id="categoryRailMeta" class="category-rail-meta">Loading featured category highlights...</p>
+      <div id="categoryRailGrid" class="category-rail-grid">
+        <a href="desktops.html" class="category-rail-card">
+          <span class="category-rail-card__kicker">Featured category</span>
+          <strong>Computers</strong>
+          <small>Performance builds and desktop-ready picks</small>
+          <span class="category-rail-card__cta">Shop now</span>
+        </a>
       </div>
     </section>
-
-    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping highlights"></section>
 
     <section id="creatorStudioSection" class="collection-spotlight" aria-label="Creator Studio collection" hidden>
       <div class="collection-spotlight-copy">
@@ -283,25 +283,45 @@
         </div>
       </div>
       <div class="deal-strip-row">
-        <a href="product-detail.html?id=3" class="deal-tile" aria-label="Open Headphones deal">
+        <a href="product-detail.html?id=3" class="deal-tile deal-tile--featured" aria-label="Open Headphones deal">
           <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" alt="Headphones deal" loading="lazy" />
-          <p><span>Deal</span> Up to 40% off audio gear</p>
-          <small>Limited stock</small>
+          <span class="deal-copy">
+            <small class="deal-kicker">Featured deal</small>
+            <h3>Audio offers built for quick checkout</h3>
+            <p class="deal-price-line"><span>Deal</span> Up to 40% off audio gear</p>
+            <small class="deal-price-meta">Live savings across headphones and creator audio picks</small>
+            <small class="deal-delivery-note">Fast delivery on selected featured stock</small>
+          </span>
         </a>
         <a href="product-detail.html?id=6" class="deal-tile" aria-label="Open Tablet deal">
           <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80" alt="Tablet deal" loading="lazy" />
-          <p><span>Deal</span> Tablets under Rs. 30,000</p>
-          <small>Extra bank offer live</small>
+          <span class="deal-copy">
+            <small class="deal-kicker">Tablet</small>
+            <h3>Tablet value picks under Rs. 30,000</h3>
+            <p class="deal-price-line"><span>Deal</span> Tablets under Rs. 30,000</p>
+            <small class="deal-price-meta">Strong value options for work, study, and travel</small>
+            <small class="deal-delivery-note">Extra bank offer live</small>
+          </span>
         </a>
         <a href="product-detail.html?id=4" class="deal-tile" aria-label="Open TV deal">
           <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="TV deal" loading="lazy" />
-          <p><span>Deal</span> Smart TV offers this week</p>
-          <small>No-cost EMI available</small>
+          <span class="deal-copy">
+            <small class="deal-kicker">TV</small>
+            <h3>Smart TV offers this week</h3>
+            <p class="deal-price-line"><span>Deal</span> Smart TV offers this week</p>
+            <small class="deal-price-meta">Weekend viewing picks with screen-size variety</small>
+            <small class="deal-delivery-note">No-cost EMI available</small>
+          </span>
         </a>
         <a href="product-detail.html?id=8" class="deal-tile" aria-label="Open Speaker deal">
           <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=500&q=80" alt="Speaker deal" loading="lazy" />
-          <p><span>Deal</span> Smart speakers starting Rs. 2,999</p>
-          <small>Fast delivery eligible</small>
+          <span class="deal-copy">
+            <small class="deal-kicker">Audio</small>
+            <h3>Smart speakers starting Rs. 2,999</h3>
+            <p class="deal-price-line"><span>Deal</span> Smart speakers starting Rs. 2,999</p>
+            <small class="deal-price-meta">Compact picks for desks, rooms, and everyday music</small>
+            <small class="deal-delivery-note">Fast delivery eligible</small>
+          </span>
         </a>
       </div>
     </section>
@@ -439,7 +459,7 @@
     <p class="copyright" data-i18n="footer.copyright">Copyright 2026 ElectroMart clone experience</p>
   </footer>
 
-  <script src="script.js?v=20260315c"></script>
+  <script src="script.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
 </body>
