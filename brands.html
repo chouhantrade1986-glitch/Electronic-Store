@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Brands</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="brands.css?v=20260315a" />
+  <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="brand">ElectroMart</a>
+    <nav class="header-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="brands.html" aria-current="page">Brands</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="orders.html">Orders</a>
+      <a href="cart.html">Cart <span id="cartCount">0</span></a>
+    </nav>
+  </header>
+
+  <main class="brands-main">
+    <section class="brand-intro">
+      <div class="brand-intro-copy">
+        <p id="brandIntroEyebrow" class="eyebrow">Brand Directory</p>
+        <h1 id="brandIntroTitle">Browse brands before you browse products.</h1>
+        <p id="brandIntroLead">Choose a brand to open its storefront, compare categories, and narrow down the product range without leaving the page.</p>
+        <div class="brand-intro-actions">
+          <a id="brandPrimaryAction" href="#brandDirectoryHeading" class="brand-primary-link">Browse all brands</a>
+          <a id="brandSecondaryAction" href="products.html" class="brand-secondary-link">Open all products</a>
+        </div>
+      </div>
+      <div id="brandIntroStats" class="brand-intro-stats" aria-label="Brand page highlights"></div>
+    </section>
+
+    <section class="brand-directory-panel">
+      <div class="brand-panel-head">
+        <div>
+          <p class="eyebrow">Explore brands</p>
+          <h2 id="brandDirectoryHeading">Brand stores</h2>
+        </div>
+        <p id="brandDirectoryMeta" class="brand-panel-meta">Loading brands...</p>
+      </div>
+      <div class="brand-directory-toolbar">
+        <input id="brandDirectorySearch" type="search" placeholder="Search brands, categories, or product lines" aria-label="Search brands" />
+      </div>
+      <div id="brandDirectoryGrid" class="brand-directory-grid"></div>
+    </section>
+
+    <section id="brandStoreShell" class="brand-store-shell" hidden>
+      <section class="brand-hero-panel">
+        <div class="brand-panel-head">
+          <div>
+            <p class="eyebrow">Brand Store</p>
+            <h2 id="brandStoreHeading">Brand storefront</h2>
+          </div>
+          <p id="brandStoreMeta" class="brand-panel-meta" role="status" aria-live="polite" aria-atomic="true">Loading brand products...</p>
+        </div>
+        <p id="brandStoreLead" class="brand-store-lead">Loading brand summary...</p>
+        <div id="brandCategoryLanes" class="brand-category-lanes" aria-label="Quick brand categories"></div>
+      </section>
+
+      <section class="brand-toolbar" aria-label="Brand product filters">
+        <input id="brandSearch" type="search" placeholder="Search this brand" aria-label="Search this brand" />
+        <select id="brandCategoryFilter" aria-label="Filter brand products by category">
+          <option value="all">All categories</option>
+        </select>
+        <select id="brandSegmentFilter" aria-label="Filter brand products by segment">
+          <option value="all">All segments</option>
+          <option value="b2c">B2C</option>
+          <option value="b2b">B2B</option>
+        </select>
+        <select id="brandBudgetFilter" aria-label="Filter brand products by budget">
+          <option value="all">All budgets</option>
+          <option value="under-10000">Under INR 10,000</option>
+          <option value="10000-50000">INR 10,000 - INR 50,000</option>
+          <option value="over-50000">Above INR 50,000</option>
+        </select>
+      </section>
+
+      <section class="brand-products-panel">
+        <div id="brandStoreGrid" class="brand-store-grid" role="region" aria-labelledby="brandStoreHeading" aria-busy="false"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="listing-filter-chips.js?v=20260314c"></script>
+  <script src="brands.js?v=20260315a"></script>
+</body>
+</html>

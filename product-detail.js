@@ -1606,6 +1606,8 @@ function renderProduct(product) {
   productName.textContent = product.name;
   productBrand.textContent = `Brand: ${product.brand}`;
   brandStoreLink.textContent = `${product.brand}`;
+  brandStoreLink.href = `brands.html?brand=${encodeURIComponent(String(product.brand || "").trim())}`;
+  brandStoreLink.setAttribute("aria-label", `Open ${String(product.brand || "this").trim()} brand store`);
   productRating.innerHTML = `${product.rating} &#9733;`;
   const price = Number(product.price || 0);
   const listPrice = Number(product.listPrice || product.price || 0);
