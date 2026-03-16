@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="admin-dashboard.css" />
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260315b" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
 </head>
 <body>
@@ -26,6 +26,9 @@
   <div class="amazon-subbar">
     <nav class="header-links">
       <a href="index.html">Storefront</a>
+      <a href="admin-dashboard.html">Dashboard</a>
+      <a href="admin-listing.html">Listing</a>
+      <a href="admin-orders.html">Admin Orders</a>
       <a href="products.html">Products</a>
       <a href="orders.html">Orders</a>
       <a href="account.html">Account</a>
@@ -40,35 +43,35 @@
       <div class="sidebar-group">
         <h3>Overview</h3>
         <ul>
-          <li><a href="#summary">Executive Summary</a></li>
-          <li><a href="#analytics">Analytics</a></li>
+          <li><a href="admin-overview.html">Executive Summary</a></li>
+          <li><a href="admin-analytics.html">Analytics</a></li>
         </ul>
       </div>
 
       <div class="sidebar-group">
         <h3>Operations</h3>
         <ul>
-          <li><a href="#orders">Orders</a></li>
-          <li><a href="#sales">Sales</a></li>
-          <li><a href="#orderNotifications">Notifications</a></li>
-          <li><a href="#afterSales">Returns & Refunds</a></li>
+          <li><a href="admin-orders.html">Orders</a></li>
+          <li><a href="admin-sales.html">Sales</a></li>
+          <li><a href="admin-notifications.html">Notifications</a></li>
+          <li><a href="admin-after-sales.html">Returns & Refunds</a></li>
         </ul>
       </div>
 
       <div class="sidebar-group">
         <h3>Customers</h3>
         <ul>
-          <li><a href="#users">Users</a></li>
-          <li><a href="#adminAuditTrail">Audit Trail</a></li>
+          <li><a href="admin-users.html">Users</a></li>
+          <li><a href="admin-audit.html">Audit Trail</a></li>
         </ul>
       </div>
 
       <details class="sidebar-advanced">
         <summary>Advanced Tools</summary>
         <ul>
-          <li><a href="#catalog">Products</a></li>
-          <li><a href="#phoneVerificationAutomation">Phone Verification</a></li>
-          <li><a href="#menuManager">Menu Manager</a></li>
+          <li><a href="admin-listing.html">Products Listing</a></li>
+          <li><a href="admin-phone-verification.html">Phone Verification</a></li>
+          <li><a href="admin-menu-manager.html">Menu Manager</a></li>
         </ul>
       </details>
     </aside>
@@ -88,21 +91,21 @@
       <p id="adminMessage" class="admin-message"></p>
 
       <section class="admin-quick-actions" aria-label="Admin quick actions">
-        <a href="#orders" class="admin-quick-card">
+        <a href="admin-orders.html" class="admin-quick-card">
           <strong>Manage Orders</strong>
           <span>Track status, payments, and delivery updates.</span>
         </a>
-        <a href="#users" class="admin-quick-card">
+        <a href="admin-users.html" class="admin-quick-card">
           <strong>Review Users</strong>
           <span>Check customer accounts and verification state.</span>
         </a>
-        <a href="#afterSales" class="admin-quick-card">
+        <a href="admin-after-sales.html" class="admin-quick-card">
           <strong>Handle Returns</strong>
           <span>Resolve refunds, exchanges, and after-sales cases.</span>
         </a>
-        <a href="#catalog" class="admin-quick-card">
-          <strong>Update Products</strong>
-          <span>Edit inventory, add products, and fix media.</span>
+        <a href="admin-listing.html" class="admin-quick-card">
+          <strong>Open Listing Page</strong>
+          <span>Add/edit listing, multi-catalog selection, and listing table management.</span>
         </a>
       </section>
 
@@ -753,6 +756,15 @@
             <option value="accessory">Accessories</option>
           </select>
           <input id="productCollectionsInput" type="text" placeholder="Collections/pages (comma separated): laptop, best-sellers, gaming" />
+          <section class="collection-picker" aria-label="Select multiple collections">
+            <p class="field-help">Click to select one product in multiple catalogues/pages.</p>
+            <div id="productCollectionOptionList" class="collection-option-list"></div>
+            <div class="collection-picker-actions">
+              <input id="productCollectionCustomInput" type="text" placeholder="Add custom collection (example: creator-studio)" />
+              <button id="addProductCollectionCustomBtn" type="button" class="secondary-btn">Add Collection</button>
+            </div>
+            <p id="productCollectionsSelectionMeta" class="field-help">Selected collections will sync to the Collections field.</p>
+          </section>
           <select id="productSegmentInput" required>
             <option value="b2c">B2C</option>
             <option value="b2b">B2B</option>
@@ -772,7 +784,11 @@
             <option value="fba">FBA</option>
           </select>
           <input id="productKeywordsInput" type="text" placeholder="Keywords (comma separated)" />
-          <textarea id="productDescriptionInput" placeholder="Short description"></textarea>
+          <textarea id="productDescriptionInput" rows="3" placeholder="Short description (3 lines recommended)"></textarea>
+          <div class="definition-builder">
+            <input id="productDefinitionInput" type="text" placeholder="Add custom definition line" />
+            <button id="addProductDefinitionBtn" type="button" class="secondary-btn">Add Definition</button>
+          </div>
           <input id="productImageInput" type="url" placeholder="Image URL (optional)" />
           <div id="productGalleryFields" class="gallery-fields"></div>
           <input id="productImageFileInput" type="file" accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.mp4,.webm,.ogg,.mov,.m4v,.avi,.mkv" multiple />
@@ -940,6 +956,7 @@
           <button id="applyCatalogBulkBtn" type="button" class="secondary-btn">Apply</button>
           <button id="clearCatalogSelectionBtn" type="button" class="secondary-btn">Clear Selection</button>
           <button id="exportCatalogBtn" type="button" class="secondary-btn">Export Physical CSV</button>
+          <button id="downloadCleanCatalogCsvBtn" type="button" class="secondary-btn">Download Clean CSV</button>
           <button id="importCatalogBtn" type="button" class="secondary-btn">Import CSV</button>
           <button id="normalizeMediaBtn" type="button" class="secondary-btn">Fix Media URLs</button>
           <input id="importCatalogFileInput" type="file" accept=".csv,text/csv" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
@@ -953,7 +970,7 @@
             <tbody id="importCatalogPreviewBody"></tbody>
           </table>
         </div>
-        <div class="table-wrap">
+        <div id="catalogTableWrap" class="table-wrap catalog-table-wrap">
           <table>
             <thead>
               <tr>
@@ -1050,7 +1067,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="admin-dashboard.js?v=20260314d"></script>
+  <script src="admin-dashboard.js?v=20260316a"></script>
 </body>
 </html>
 

@@ -76,6 +76,7 @@ const catalogBulkCollectionsInput = document.getElementById("catalogBulkCollecti
 const applyCatalogBulkBtn = document.getElementById("applyCatalogBulkBtn");
 const clearCatalogSelectionBtn = document.getElementById("clearCatalogSelectionBtn");
 const exportCatalogBtn = document.getElementById("exportCatalogBtn");
+const downloadCleanCatalogCsvBtn = document.getElementById("downloadCleanCatalogCsvBtn");
 const importCatalogBtn = document.getElementById("importCatalogBtn");
 const importCatalogFileInput = document.getElementById("importCatalogFileInput");
 const normalizeMediaBtn = document.getElementById("normalizeMediaBtn");
@@ -91,6 +92,10 @@ const productNameInput = document.getElementById("productNameInput");
 const productBrandInput = document.getElementById("productBrandInput");
 const productCategoryInput = document.getElementById("productCategoryInput");
 const productCollectionsInput = document.getElementById("productCollectionsInput");
+const productCollectionOptionList = document.getElementById("productCollectionOptionList");
+const productCollectionCustomInput = document.getElementById("productCollectionCustomInput");
+const addProductCollectionCustomBtn = document.getElementById("addProductCollectionCustomBtn");
+const productCollectionsSelectionMeta = document.getElementById("productCollectionsSelectionMeta");
 const productSegmentInput = document.getElementById("productSegmentInput");
 const productPriceInput = document.getElementById("productPriceInput");
 const productListPriceInput = document.getElementById("productListPriceInput");
@@ -101,6 +106,8 @@ const productStatusInput = document.getElementById("productStatusInput");
 const productFulfillmentInput = document.getElementById("productFulfillmentInput");
 const productKeywordsInput = document.getElementById("productKeywordsInput");
 const productDescriptionInput = document.getElementById("productDescriptionInput");
+const productDefinitionInput = document.getElementById("productDefinitionInput");
+const addProductDefinitionBtn = document.getElementById("addProductDefinitionBtn");
 const productImageInput = document.getElementById("productImageInput");
 const productGalleryFields = document.getElementById("productGalleryFields");
 const productImageFileInput = document.getElementById("productImageFileInput");
@@ -241,6 +248,8 @@ const resetPhoneVerificationAutomationSettingsBtn = document.getElementById("res
 const phoneVerificationReminderChannelFilter = document.getElementById("phoneVerificationReminderChannelFilter");
 const phoneVerificationReminderStatusFilter = document.getElementById("phoneVerificationReminderStatusFilter");
 const phoneVerificationReminderTableBody = document.getElementById("phoneVerificationReminderTableBody");
+const adminHeadSection = document.querySelector(".admin-head");
+const adminQuickActionsSection = document.querySelector(".admin-quick-actions");
 
 let allUsers = [];
 let allOrders = [];
@@ -303,13 +312,32 @@ let adminCatalogFilterChipController = null;
 let adminAfterSalesFilterChipController = null;
 let adminUserFilterChipController = null;
 let adminAuditFilterChipController = null;
+let selectedProductCollections = new Set();
 const MAX_PRODUCT_IMAGES = 15;
 const MAX_UPLOAD_IMAGE_MB = 15;
 const MAX_UPLOAD_VIDEO_MB = 50;
 const MAX_UPLOAD_BATCH_MB = 90;
+const MAX_IMPORT_CSV_MB = 30;
+const MAX_IMPORT_CSV_BYTES = MAX_IMPORT_CSV_MB * 1024 * 1024;
+const CSV_PREVIEW_MAX_CHARS = 96;
 const VIDEO_FILE_EXTENSIONS = new Set(["mp4", "webm", "ogg", "mov", "m4v", "avi", "mkv"]);
 const IMAGE_FILE_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp", "gif", "bmp"]);
 const DEFAULT_CATEGORIES = ["laptop", "mobile", "audio", "accessory", "computer", "printer"];
+const DEFAULT_COLLECTION_OPTIONS = [
+  "all-products",
+  "best-sellers",
+  "todays-deals",
+  "mega-store",
+  "creator-studio",
+  "laptop",
+  "mobile",
+  "audio",
+  "accessory",
+  "computer",
+  "printer",
+  "gaming",
+  "home-office"
+];
 const DEFAULT_WEBSITE_MENU = [
     { label: "Terms", href: "terms-and-conditions.html" },
   { label: "Shipping", href: "shipping-policy.html" },
@@ -318,6 +346,88 @@ const DEFAULT_WEBSITE_MENU = [
   { label: "FAQ", href: "faq.html" },
   { label: "Review", href: "review.html" }
 ];
+const ADMIN_VIEW_CONFIG = {
+  dashboard: {
+    label: "Dashboard",
+    selectors: ["#summary", ".seller-service-grid", "#analytics", "#invoices", "#orderNotifications", "#adminAuditTrail", "#users", "#phoneVerificationAutomation", "#sales", "#afterSales", "#catalog", "#menuManager", "#orders"]
+  },
+  overview: {
+    label: "Overview",
+    selectors: ["#summary", ".seller-service-grid"]
+  },
+  analytics: {
+    label: "Analytics",
+    selectors: ["#analytics"]
+  },
+  orders: {
+    label: "Orders",
+    selectors: ["#orders"]
+  },
+  sales: {
+    label: "Sales",
+    selectors: ["#sales"]
+  },
+  notifications: {
+    label: "Notifications",
+    selectors: ["#orderNotifications"]
+  },
+  "after-sales": {
+    label: "Returns and Refunds",
+    selectors: ["#afterSales"]
+  },
+  users: {
+    label: "Users",
+    selectors: ["#users"]
+  },
+  audit: {
+    label: "Audit Trail",
+    selectors: ["#adminAuditTrail"]
+  },
+  listing: {
+    label: "Listing",
+    selectors: ["#catalog"]
+  },
+  "phone-verification": {
+    label: "Phone Verification",
+    selectors: ["#phoneVerificationAutomation"]
+  },
+  menu: {
+    label: "Menu Manager",
+    selectors: ["#menuManager"]
+  }
+};
+const ADMIN_VIEW_ALIASES = {
+  catalog: "listing",
+  products: "listing",
+  "after-sales": "after-sales",
+  aftersales: "after-sales",
+  notifications: "notifications",
+  users: "users",
+  orders: "orders",
+  sales: "sales",
+  listing: "listing",
+  overview: "overview",
+  analytics: "analytics",
+  audit: "audit",
+  menu: "menu",
+  dashboard: "dashboard",
+  "phone-verification": "phone-verification",
+  phoneverification: "phone-verification"
+};
+const ADMIN_PAGE_BY_VIEW = {
+  dashboard: "admin-dashboard.html",
+  overview: "admin-overview.html",
+  analytics: "admin-analytics.html",
+  orders: "admin-orders.html",
+  sales: "admin-sales.html",
+  notifications: "admin-notifications.html",
+  "after-sales": "admin-after-sales.html",
+  users: "admin-users.html",
+  audit: "admin-audit.html",
+  listing: "admin-listing.html",
+  "phone-verification": "admin-phone-verification.html",
+  menu: "admin-menu-manager.html"
+};
 const SOURCING_TEMPLATE_PRODUCTS = [
   {
     id: "pod-phone-case-matte",
@@ -1266,10 +1376,76 @@ function normalizeCategoryValue(value) {
   if (!raw) {
     return "";
   }
-  if (raw === "accessories") {
+  const normalized = raw
+    .replace(/&/g, " and ")
+    .replace(/[’'`]+/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  if (normalized === "accessories") {
     return "accessory";
   }
-  return raw.replace(/[\s_]+/g, "-");
+  return normalized;
+}
+
+function normalizeAdminView(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  if (!raw) {
+    return "dashboard";
+  }
+  return ADMIN_VIEW_ALIASES[raw] || "dashboard";
+}
+
+function getRequestedAdminView() {
+  const params = new URLSearchParams(window.location.search);
+  const value = params.get("view");
+  return normalizeAdminView(value);
+}
+
+function adminPageHref(view) {
+  const normalized = normalizeAdminView(view);
+  return ADMIN_PAGE_BY_VIEW[normalized] || ADMIN_PAGE_BY_VIEW.dashboard;
+}
+
+function applyAdminFocusedView() {
+  const requestedView = getRequestedAdminView();
+  const config = ADMIN_VIEW_CONFIG[requestedView] || ADMIN_VIEW_CONFIG.dashboard;
+  const focusSelectors = config.selectors || [];
+  const allSelectors = Array.from(
+    new Set(
+      Object.values(ADMIN_VIEW_CONFIG)
+        .flatMap((item) => item.selectors || [])
+    )
+  );
+  const focusSet = new Set(focusSelectors);
+
+  allSelectors.forEach((selector) => {
+    const element = document.querySelector(selector);
+    if (!element) {
+      return;
+    }
+    element.hidden = !focusSet.has(selector);
+  });
+
+  if (adminHeadSection) {
+    adminHeadSection.hidden = false;
+  }
+  if (adminQuickActionsSection) {
+    adminQuickActionsSection.hidden = false;
+  }
+  if (adminMessage) {
+    adminMessage.hidden = false;
+  }
+
+  const heading = adminHeadSection ? adminHeadSection.querySelector("h1") : null;
+  if (heading) {
+    heading.textContent = requestedView === "dashboard"
+      ? "Seller Central Dashboard"
+      : `Seller Central - ${config.label}`;
+  }
+  document.title = requestedView === "dashboard"
+    ? "ElectroMart Admin Dashboard"
+    : `ElectroMart Admin ${config.label}`;
 }
 
 function normalizeCollectionValues(value, fallbackCategory = "") {
@@ -2595,7 +2771,7 @@ function renderSellerCentralServices() {
     {
       title: "Operations Health",
       copy: "Keep daily order movement clean and catch issues before they spill into support.",
-      href: "#orders",
+      href: adminPageHref("orders"),
       cta: "Open orders desk",
       stats: [
         { label: "To process", value: metrics.ordersToProcess },
@@ -2605,7 +2781,7 @@ function renderSellerCentralServices() {
     {
       title: "Inventory Pulse",
       copy: "Watch low-stock and out-of-stock pressure the same way seller central highlights inventory risk.",
-      href: "#catalog",
+      href: adminPageHref("listing"),
       cta: "Review product inventory",
       stats: [
         { label: "Low stock", value: metrics.lowStockCount },
@@ -2615,7 +2791,7 @@ function renderSellerCentralServices() {
     {
       title: "Customer Trust",
       copy: "Track returns, refund pressure, and verification gaps from one operational view.",
-      href: "#afterSales",
+      href: adminPageHref("after-sales"),
       cta: "Open customer support flows",
       stats: [
         { label: "Open cases", value: metrics.openReturns },
@@ -2625,7 +2801,7 @@ function renderSellerCentralServices() {
     {
       title: "Listing Readiness",
       copy: "Keep products publish-ready with active assortments, featured merchandising, and B2B coverage.",
-      href: "#catalog",
+      href: adminPageHref("listing"),
       cta: "Open products workspace",
       stats: [
         { label: "Draft products", value: metrics.draftProducts },
@@ -2655,7 +2831,7 @@ function renderSellerCentralServices() {
         `${metrics.draftProducts} draft`,
         `${metrics.activeCategories} categories`
       ],
-      href: "#catalog",
+      href: adminPageHref("listing"),
       cta: "Go to products"
     },
     {
@@ -2667,7 +2843,7 @@ function renderSellerCentralServices() {
         `${metrics.inTransitOrders} in transit`,
         `${metrics.openReturns} open cases`
       ],
-      href: "#afterSales",
+      href: adminPageHref("after-sales"),
       cta: "Review operations"
     },
     {
@@ -2679,7 +2855,7 @@ function renderSellerCentralServices() {
         `${metrics.queuedNotifications} queued`,
         `${metrics.automationCandidates} automation candidates`
       ],
-      href: "#orderNotifications",
+      href: adminPageHref("notifications"),
       cta: "Open notification center"
     },
     {
@@ -2691,7 +2867,7 @@ function renderSellerCentralServices() {
         `${metrics.verifiedUsers} verified users`,
         `${metrics.cancelledOrders} cancelled orders`
       ],
-      href: "#adminAuditTrail",
+      href: adminPageHref("audit"),
       cta: "Open audit trail"
     }
   ].map((card) => `
@@ -2713,7 +2889,7 @@ function renderSellerCentralServices() {
       count: metrics.outOfStockCount,
       title: "Restock out-of-stock products",
       detail: "These products are fully unavailable and need immediate inventory action.",
-      href: "#catalog",
+      href: adminPageHref("listing"),
       cta: "Open products",
       tone: "attention"
     },
@@ -2721,7 +2897,7 @@ function renderSellerCentralServices() {
       count: metrics.openReturns,
       title: "Resolve open return and refund cases",
       detail: "Customer support load is waiting in after-sales and refund workflows.",
-      href: "#afterSales",
+      href: adminPageHref("after-sales"),
       cta: "Open returns desk",
       tone: "warning"
     },
@@ -2729,7 +2905,7 @@ function renderSellerCentralServices() {
       count: metrics.notificationFailures,
       title: "Review failed customer notifications",
       detail: "Notification delivery needs attention before support volume grows.",
-      href: "#orderNotifications",
+      href: adminPageHref("notifications"),
       cta: "Open notifications",
       tone: "warning"
     },
@@ -2737,7 +2913,7 @@ function renderSellerCentralServices() {
       count: metrics.usersNeedVerification,
       title: "Nudge customers pending verification",
       detail: "Phone verification gaps reduce messaging reach and trust signals.",
-      href: "#phoneVerificationAutomation",
+      href: adminPageHref("phone-verification"),
       cta: "Open automation",
       tone: "warning"
     },
@@ -2745,7 +2921,7 @@ function renderSellerCentralServices() {
       count: metrics.draftProducts,
       title: "Publish draft product listings",
       detail: "Draft listings are sitting in the product workspace and can be activated.",
-      href: "#catalog",
+      href: adminPageHref("listing"),
       cta: "Review products",
       tone: "good"
     }
@@ -2770,7 +2946,7 @@ function renderSellerCentralServices() {
           <strong>Operations look healthy</strong>
           <p>No urgent actions are currently blocking orders, customer messaging, or listings.</p>
         </div>
-        <a href="#summary">Back to summary</a>
+        <a href="${adminPageHref("overview")}">Back to summary</a>
       </article>
     `;
 }
@@ -3446,6 +3622,9 @@ function catalogRow(product) {
   const safeProductNameAttr = escapeHtmlAttr(product.name || "Product");
   const safeThumbnail = escapeHtmlAttr(getCatalogProductThumbnail(product));
   const safeFallbackThumbnail = escapeHtmlAttr(CATALOG_FALLBACK_IMAGE);
+  const safeDefinition = String(product.description || "").trim()
+    ? `<span class="catalog-product-definition">${escapeHtml(String(product.description || "").trim())}</span>`
+    : "";
   return `
     <tr>
       <td><input type="checkbox" data-action="select-product" data-product-id="${product.id}" ${selectedAttr} /></td>
@@ -3463,6 +3642,7 @@ function catalogRow(product) {
           <div class="catalog-product-text">
             <a class="catalog-product-name" href="${escapeHtmlAttr(detailUrl)}" target="_blank" rel="noopener noreferrer">${safeProductName}</a>
             <span class="catalog-product-id">ID: ${escapeHtml(product.id || "N/A")}</span>
+            ${safeDefinition}
           </div>
         </div>
       </td>
@@ -4020,6 +4200,100 @@ function syncBulkCollectionsInputState() {
   catalogBulkCollectionsInput.placeholder = needsCollections
     ? "Collections for bulk action (comma separated)"
     : "Collections input enabled for set/add actions";
+}
+
+function getCollectionOptionPool() {
+  const categoryOptions = getAllCategories();
+  const catalogOptions = allCatalogProducts.flatMap((product) => productCategoryTokens(product));
+  const typedOptions = normalizeCollectionValues(productCollectionsInput ? productCollectionsInput.value : "", productCategoryInput ? productCategoryInput.value : "");
+  return [...new Set([...DEFAULT_COLLECTION_OPTIONS, ...categoryOptions, ...catalogOptions, ...typedOptions])]
+    .map((item) => normalizeCategoryValue(item))
+    .filter(Boolean)
+    .slice(0, 60);
+}
+
+function syncCollectionsInputFromSelection() {
+  if (!productCollectionsInput) {
+    return;
+  }
+  const optionPool = getCollectionOptionPool();
+  const selectedOrdered = optionPool.filter((item) => selectedProductCollections.has(item));
+  const selectedExtras = Array.from(selectedProductCollections).filter((item) => !selectedOrdered.includes(item));
+  const finalSelections = [...selectedOrdered, ...selectedExtras]
+    .map((item) => normalizeCategoryValue(item))
+    .filter(Boolean)
+    .slice(0, 8);
+  selectedProductCollections = new Set(finalSelections);
+  productCollectionsInput.value = finalSelections.join(", ");
+
+  if (productCollectionsSelectionMeta) {
+    if (!finalSelections.length) {
+      productCollectionsSelectionMeta.textContent = "No collections selected. Choose one or more catalogues/pages.";
+    } else {
+      const labels = finalSelections.map((item) => categoryLabel(item)).join(", ");
+      productCollectionsSelectionMeta.textContent = `Selected (${finalSelections.length}): ${labels}`;
+    }
+  }
+}
+
+function syncProductCollectionSelectionFromInput() {
+  const fallbackCategory = normalizeCategoryValue(productCategoryInput ? productCategoryInput.value : "");
+  selectedProductCollections = new Set(
+    normalizeCollectionValues(productCollectionsInput ? productCollectionsInput.value : "", fallbackCategory)
+  );
+  syncCollectionsInputFromSelection();
+}
+
+function renderProductCollectionPicker() {
+  if (!productCollectionOptionList) {
+    return;
+  }
+  const options = getCollectionOptionPool();
+  if (!options.length) {
+    productCollectionOptionList.innerHTML = "<span class='subtle'>No collection options available.</span>";
+    return;
+  }
+  productCollectionOptionList.innerHTML = options.map((item) => {
+    const checked = selectedProductCollections.has(item);
+    return `
+      <label class="collection-option-chip${checked ? " is-selected" : ""}">
+        <input type="checkbox" value="${escapeHtmlAttr(item)}" ${checked ? "checked" : ""} />
+        <span>${escapeHtml(categoryLabel(item))}</span>
+      </label>
+    `;
+  }).join("");
+}
+
+function addCustomCollectionFromInput() {
+  if (!productCollectionCustomInput) {
+    return;
+  }
+  const customValue = normalizeCategoryValue(productCollectionCustomInput.value || "");
+  if (!customValue) {
+    setProductFormMessage("Type a custom collection name first.", true);
+    return;
+  }
+  selectedProductCollections.add(customValue);
+  productCollectionCustomInput.value = "";
+  syncCollectionsInputFromSelection();
+  renderProductCollectionPicker();
+  setProductFormMessage(`Collection ${categoryLabel(customValue)} added.`);
+}
+
+function appendCustomDefinitionToDescription() {
+  if (!productDefinitionInput || !productDescriptionInput) {
+    return;
+  }
+  const definitionLine = String(productDefinitionInput.value || "").trim();
+  if (!definitionLine) {
+    setProductFormMessage("Type a short definition first.", true);
+    return;
+  }
+  const existing = String(productDescriptionInput.value || "").trim();
+  productDescriptionInput.value = existing ? `${existing}\n${definitionLine}` : definitionLine;
+  productDefinitionInput.value = "";
+  productDescriptionInput.focus();
+  setProductFormMessage("Custom definition added to description.");
 }
 
 function productCategoryTokens(product) {
@@ -4812,6 +5086,15 @@ function resetProductForm() {
   setGalleryImagesOnForm([]);
   setProductImagePreview("");
   renderMediaStudio();
+  selectedProductCollections = new Set();
+  if (productCollectionCustomInput) {
+    productCollectionCustomInput.value = "";
+  }
+  if (productDefinitionInput) {
+    productDefinitionInput.value = "";
+  }
+  syncProductCollectionSelectionFromInput();
+  renderProductCollectionPicker();
   saveProductBtn.textContent = "Add Product";
   resetMediaUploadProgress();
   setPendingDriveRetryUploads([], "");
@@ -4830,6 +5113,8 @@ function fillProductForm(product) {
   if (productCollectionsInput) {
     productCollectionsInput.value = normalizeCollectionValues(product.collections, product.category).join(", ");
   }
+  syncProductCollectionSelectionFromInput();
+  renderProductCollectionPicker();
   productSegmentInput.value = product.segment || "b2c";
   productPriceInput.value = numberOrZero(product.price);
   productListPriceInput.value = numberOrZero(product.listPrice || product.price);
@@ -4840,6 +5125,9 @@ function fillProductForm(product) {
   productFulfillmentInput.value = String(product.fulfillment || "fbm");
   productKeywordsInput.value = Array.isArray(product.keywords) ? product.keywords.join(", ") : "";
   productDescriptionInput.value = product.description || "";
+  if (productDefinitionInput) {
+    productDefinitionInput.value = "";
+  }
   productImageInput.value = product.image || "";
   const combinedMedia = Array.isArray(product.media)
     ? product.media
@@ -5316,6 +5604,33 @@ function exportCatalogCsv() {
   });
 }
 
+async function downloadCleanCatalogCsv() {
+  const cleanCsvPath = "imports/catalog_products_clean_import.csv";
+  try {
+    const response = await fetch(`${cleanCsvPath}?v=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "catalog_products_clean_import.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setMessage("Clean import CSV downloaded.", false, {
+      toast: true,
+      title: "CSV downloaded",
+      tone: "success",
+      timeoutMs: 4200
+    });
+  } catch (error) {
+    setMessage("Clean CSV is not available in project yet. Run conversion and publish the file, then try again.", true);
+  }
+}
+
 function detectCsvDelimiter(text) {
   const sampleLine = String(text || "")
     .split(/\r?\n/)
@@ -5408,6 +5723,17 @@ function parseCsvText(csvText) {
   return rows;
 }
 
+function truncateCsvPreviewCell(value, maxChars = CSV_PREVIEW_MAX_CHARS) {
+  const raw = String(value || "").trim();
+  if (!raw) {
+    return "";
+  }
+  if (raw.length <= maxChars) {
+    return raw;
+  }
+  return `${raw.slice(0, Math.max(1, maxChars - 1)).trim()}...`;
+}
+
 function renderCsvImportPreview(fileName, parsedRows) {
   if (!importCatalogPreviewMeta || !importCatalogPreviewWrap || !importCatalogPreviewHead || !importCatalogPreviewBody) {
     return;
@@ -5431,7 +5757,11 @@ function renderCsvImportPreview(fileName, parsedRows) {
     .join("");
   importCatalogPreviewBody.innerHTML = previewRows.length
     ? previewRows.map((row) => {
-      const cells = headerRow.slice(0, 12).map((_, index) => `<td>${escapeHtmlAttr(row[index] || "")}</td>`).join("");
+      const cells = headerRow.slice(0, 12).map((_, index) => {
+        const fullValue = String(row[index] || "");
+        const compactValue = truncateCsvPreviewCell(fullValue);
+        return `<td title="${escapeHtmlAttr(truncateCsvPreviewCell(fullValue, 220))}">${escapeHtmlAttr(compactValue)}</td>`;
+      }).join("");
       return `<tr>${cells}</tr>`;
     }).join("")
     : "<tr><td colspan='12'>No data rows found in this CSV.</td></tr>";
@@ -5480,25 +5810,119 @@ function parseCsvBoolean(value) {
   return ["1", "true", "yes", "y"].includes(normalized);
 }
 
+let csvDecodeTextarea = null;
+
+function decodeCsvHtmlEntities(value) {
+  const raw = String(value || "");
+  if (!raw) {
+    return "";
+  }
+  if (!csvDecodeTextarea && typeof document !== "undefined" && typeof document.createElement === "function") {
+    csvDecodeTextarea = document.createElement("textarea");
+  }
+  if (!csvDecodeTextarea) {
+    return raw
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, "\"")
+      .replace(/&#39;|&apos;/gi, "'");
+  }
+  csvDecodeTextarea.innerHTML = raw;
+  return csvDecodeTextarea.value;
+}
+
+function sanitizeCsvText(value, maxLength = 0) {
+  const decoded = decodeCsvHtmlEntities(value);
+  const stripped = stripHtmlToText(decoded);
+  if (!maxLength || stripped.length <= maxLength) {
+    return stripped;
+  }
+  return stripped.slice(0, maxLength).trim();
+}
+
+function normalizeCsvSegment(value) {
+  const normalized = sanitizeCsvText(value).toLowerCase();
+  return normalized === "b2b" ? "b2b" : "b2c";
+}
+
 function parseCsvKeywords(value) {
-  const raw = String(value || "").trim();
+  const raw = sanitizeCsvText(value);
   if (!raw) {
     return [];
   }
   const separator = raw.includes("|") ? "|" : ",";
-  return raw.split(separator).map((item) => item.trim()).filter(Boolean);
+  return raw
+    .split(separator)
+    .map((item) => sanitizeCsvText(item, 80))
+    .filter(Boolean);
 }
 
-function parseCsvMedia(value) {
-  const raw = String(value || "").trim();
+function extractCsvMediaUrlTokens(rawValue) {
+  const matches = String(rawValue || "").match(/(?:https?:\/\/|\/\/)[^\s|;,]+/gi);
+  return Array.isArray(matches) ? matches.map((item) => String(item || "").trim()).filter(Boolean) : [];
+}
+
+function splitCsvMediaCandidates(rawValue) {
+  const raw = String(rawValue || "").trim();
   if (!raw) {
     return [];
   }
-  const separator = raw.includes("|") ? "|" : (raw.includes(";") ? ";" : "|");
-  return String(value || "")
-    .split(separator)
-    .map((item) => normalizeImageUrl(item))
+
+  const directUrlTokens = extractCsvMediaUrlTokens(raw);
+  if (directUrlTokens.length > 1) {
+    return directUrlTokens;
+  }
+  if (directUrlTokens.length === 1 && raw.replace(directUrlTokens[0], "").trim() === "") {
+    return directUrlTokens;
+  }
+
+  const firstPass = raw
+    .split(/[|;\n\r]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (!firstPass.length) {
+    return [raw];
+  }
+
+  const secondPass = firstPass
+    .flatMap((item) => item.split(/,\s*(?=(?:https?:\/\/|\/\/|data:))/i))
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (secondPass.length !== 1) {
+    return secondPass;
+  }
+
+  const maybeWhitespaceParts = secondPass[0]
+    .split(/\s+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const allLookLikeUrls = maybeWhitespaceParts.length > 1
+    && maybeWhitespaceParts.every((item) => /^(?:https?:\/\/|\/\/|data:|[a-z0-9.-]+\.[a-z]{2,}(?:\/|$))/i.test(item));
+  return allLookLikeUrls ? maybeWhitespaceParts : secondPass;
+}
+
+function parseCsvMedia(value) {
+  const raw = decodeCsvHtmlEntities(value);
+  if (!raw) {
+    return [];
+  }
+
+  const candidates = splitCsvMediaCandidates(raw);
+  return candidates
+    .map((item) => {
+      const entry = String(item || "").trim();
+      if (!entry) {
+        return "";
+      }
+      const safeEntry = /^data:(?:image|video)\//i.test(entry)
+        ? entry
+        : sanitizeCsvText(entry, 1800);
+      return normalizeImageUrl(safeEntry);
+    })
     .filter(Boolean)
+    .filter((entry, index, list) => list.indexOf(entry) === index)
     .slice(0, MAX_PRODUCT_IMAGES);
 }
 
@@ -5525,47 +5949,59 @@ function parseCsvStock(value) {
 }
 
 function payloadFromCsvRow(row, headerMap) {
-  const id = csvValueFromRow(row, headerMap, "id", "handleid", "productid");
-  const sku = csvValueFromRow(row, headerMap, "sku");
-  const name = csvValueFromRow(row, headerMap, "name", "product", "productname", "title");
-  const collectionValue = csvValueFromRow(row, headerMap, "collection");
+  const id = sanitizeCsvText(csvValueFromRow(row, headerMap, "id"), 120);
+  const sku = sanitizeCsvText(csvValueFromRow(row, headerMap, "sku"), 120);
+  const name = sanitizeCsvText(csvValueFromRow(row, headerMap, "name"), 220);
+  const collectionValue = sanitizeCsvText(csvValueFromRow(row, headerMap, "collection"), 280);
   const collectionParts = String(collectionValue || "")
     .split(/[;|,]+/)
-    .map((item) => String(item || "").trim())
+    .map((item) => sanitizeCsvText(item, 80))
     .filter(Boolean);
   const collectionPrimary = collectionParts[0] || "";
-  const rawCategory = csvValueFromRow(
+  const rawCategory = sanitizeCsvText(csvValueFromRow(
     row,
     headerMap,
-    "category",
-    "productcategory",
-    "product_type",
-    "producttype",
-    "type",
-    "department",
-    "google_product_category",
-    "googleproductcategory"
-  ) || collectionPrimary;
+    "category"
+  ), 120) || collectionPrimary;
   const category = normalizeCategoryValue(rawCategory);
-  const brandRaw = csvValueFromRow(row, headerMap, "brand");
+  const brandRaw = sanitizeCsvText(csvValueFromRow(row, headerMap, "brand"), 120);
   const brand = brandRaw || "Generic";
-  const segment = csvValueFromRow(row, headerMap, "segment") || "b2c";
-  const price = parseCsvNumber(csvValueFromRow(row, headerMap, "price", "sellingprice"), 0);
-  const listPrice = parseCsvNumber(csvValueFromRow(row, headerMap, "listprice", "list_price", "mrp", "originalprice"), price);
-  const stock = parseCsvStock(csvValueFromRow(row, headerMap, "stock", "quantity", "inventory"));
+  const segment = normalizeCsvSegment(csvValueFromRow(row, headerMap, "segment") || "b2c");
+  const price = parseCsvNumber(csvValueFromRow(row, headerMap, "price"), 0);
+  const listPrice = parseCsvNumber(csvValueFromRow(row, headerMap, "listPrice", "list_price"), price);
+  const stock = parseCsvStock(csvValueFromRow(row, headerMap, "stock"));
   const rating = parseCsvNumber(csvValueFromRow(row, headerMap, "rating"), 0);
-  const moq = parseCsvNumber(csvValueFromRow(row, headerMap, "moq", "minorderqty", "minimumorderquantity"), 0);
-  const status = String(csvValueFromRow(row, headerMap, "status") || "active").toLowerCase();
-  const fulfillment = String(csvValueFromRow(row, headerMap, "fulfillment") || "fbm").toLowerCase();
+  const moq = parseCsvNumber(csvValueFromRow(row, headerMap, "moq"), 0);
+  const statusRaw = sanitizeCsvText(csvValueFromRow(row, headerMap, "status"), 40).toLowerCase();
+  const status = statusRaw === "draft" || statusRaw === "inactive" ? statusRaw : "active";
+  const fulfillmentRaw = sanitizeCsvText(csvValueFromRow(row, headerMap, "fulfillment"), 40).toLowerCase();
+  const fulfillment = fulfillmentRaw === "fba" ? "fba" : "fbm";
   const featured = parseCsvBoolean(csvValueFromRow(row, headerMap, "featured"));
-  const description = csvValueFromRow(row, headerMap, "description");
+  const description = sanitizeCsvText(csvValueFromRow(row, headerMap, "description"), 2200);
+  const additionalInfoTitle1 = sanitizeCsvText(csvValueFromRow(row, headerMap, "additionalInfoTitle1"), 90);
+  const additionalInfoDescription1 = sanitizeCsvText(csvValueFromRow(row, headerMap, "additionalInfoDescription1"), 650);
+  const additionalInfoTitle2 = sanitizeCsvText(csvValueFromRow(row, headerMap, "additionalInfoTitle2"), 90);
+  const additionalInfoDescription2 = sanitizeCsvText(csvValueFromRow(row, headerMap, "additionalInfoDescription2"), 650);
+  const compatibilityBlocks = [];
+  if (additionalInfoTitle1 && additionalInfoDescription1) {
+    compatibilityBlocks.push(`${additionalInfoTitle1}: ${additionalInfoDescription1}`);
+  }
+  if (additionalInfoTitle2 && additionalInfoDescription2) {
+    compatibilityBlocks.push(`${additionalInfoTitle2}: ${additionalInfoDescription2}`);
+  }
+  const mergedDescription = [description, ...compatibilityBlocks].filter(Boolean).join("\n\n").slice(0, 2800);
   const keywords = parseCsvKeywords(csvValueFromRow(row, headerMap, "keywords"));
-  const importedImageField = csvValueFromRow(row, headerMap, "image", "productimageurl", "product_image_url");
+  const importedImageField = sanitizeCsvText(csvValueFromRow(row, headerMap, "image"), 1000);
   const images = parseCsvMedia(csvValueFromRow(row, headerMap, "images")) || [];
-  const importedMedia = parseCsvMedia(csvValueFromRow(row, headerMap, "media", "productimageurl", "product_image_url"));
+  const importedMedia = parseCsvMedia(csvValueFromRow(row, headerMap, "media"));
   const image = normalizeImageUrl(importedImageField) || importedMedia[0] || images[0] || "";
   const videos = parseCsvMedia(csvValueFromRow(row, headerMap, "videos"));
-  const media = importedMedia;
+  const mergedMedia = [image, ...images, ...videos, ...importedMedia]
+    .map((entry) => normalizeImageUrl(entry))
+    .filter(Boolean);
+  const media = [...new Set(mergedMedia)].slice(0, MAX_PRODUCT_IMAGES);
+  const mediaImages = media.filter((item) => inferMediaType(item) === "image").slice(0, MAX_PRODUCT_IMAGES);
+  const mediaVideos = media.filter((item) => inferMediaType(item) === "video").slice(0, MAX_PRODUCT_IMAGES);
 
   return {
     id,
@@ -5584,11 +6020,11 @@ function payloadFromCsvRow(row, headerMap) {
       status: status || "active",
       fulfillment: fulfillment || "fbm",
       featured,
-      description,
+      description: mergedDescription,
       keywords,
-      image,
-      images,
-      videos,
+      image: mediaImages[0] || image,
+      images: mediaImages,
+      videos: mediaVideos,
       media,
       collections: normalizeCollectionValues(collectionParts, category)
     }
@@ -5596,8 +6032,8 @@ function payloadFromCsvRow(row, headerMap) {
 }
 
 function validateCsvPayload(rowIndex, payload) {
-  if (!payload.name || !payload.category || !Number.isFinite(payload.price) || payload.price <= 0) {
-    throw new Error(`Row ${rowIndex}: name, category and price are required.`);
+  if (!payload.sku || !payload.name || !payload.category || !Number.isFinite(payload.price) || payload.price <= 0) {
+    throw new Error(`Row ${rowIndex}: sku, name, category and price are required.`);
   }
 }
 
@@ -5707,17 +6143,53 @@ async function importCatalogCsvFile(file, preParsedRows = null, options = {}) {
 
   const headerMap = csvHeaderIndexMap(parsedRows[0]);
   const requiredColumns = [
-    ["name", "product", "productname", "title"],
+    ["sku"],
+    ["name"],
     ["brand"],
-    ["category", "productcategory", "product_type", "producttype", "type", "collection", "department", "google_product_category", "googleproductcategory"],
-    ["price", "sellingprice"]
+    ["category"],
+    ["price"]
   ];
   const missingColumns = requiredColumns
     .filter((aliases) => !aliases.some((column) => headerMap.has(canonicalCsvHeader(column))))
     .map((aliases) => aliases[0]);
   if (missingColumns.length) {
     const detectedHeaders = parsedRows[0].map((value) => String(value || "").trim()).filter(Boolean).slice(0, 20);
-    throw new Error(`Missing required CSV column(s): ${missingColumns.join(", ")}. Detected headers: ${detectedHeaders.join(", ")}`);
+    const requiredHeaderSet = "sku,name,brand,category,price";
+    throw new Error(`Missing required ElectroMart CSV column(s): ${missingColumns.join(", ")}. Required headers: ${requiredHeaderSet}. Tip: convert external CSV first using 'npm.cmd run csv:convert:project -- --input \"C:\\path\\catalog_products.csv\"'. Detected headers: ${detectedHeaders.join(", ")}`);
+  }
+
+  let importableProductRows = 0;
+  const seenCsvSkus = new Map();
+  const duplicateSkuPairs = [];
+  for (let rowIndex = 1; rowIndex < parsedRows.length; rowIndex += 1) {
+    const row = parsedRows[rowIndex];
+    if (!row || !row.some((cell) => String(cell || "").trim())) {
+      continue;
+    }
+    const fieldType = String(csvValueFromRow(row, headerMap, "fieldtype", "rowtype") || "").trim().toLowerCase();
+    if (fieldType && fieldType !== "product") {
+      continue;
+    }
+    importableProductRows += 1;
+    const normalizedSku = sanitizeCsvText(csvValueFromRow(row, headerMap, "sku"), 120).toUpperCase();
+    if (!normalizedSku) {
+      continue;
+    }
+    const existingRowNo = seenCsvSkus.get(normalizedSku);
+    if (existingRowNo) {
+      if (duplicateSkuPairs.length < 8) {
+        duplicateSkuPairs.push(`${normalizedSku} (rows ${existingRowNo} & ${rowIndex + 1})`);
+      }
+      continue;
+    }
+    seenCsvSkus.set(normalizedSku, rowIndex + 1);
+  }
+
+  if (!importableProductRows) {
+    throw new Error("No product rows found in CSV. Ensure row type is product or blank.");
+  }
+  if (duplicateSkuPairs.length) {
+    throw new Error(`Duplicate SKU rows found in CSV. Please keep one row per SKU. Samples: ${duplicateSkuPairs.join("; ")}`);
   }
 
   const existingById = new Map(allCatalogProducts.map((product) => [String(product.id), product]));
@@ -5740,7 +6212,7 @@ async function importCatalogCsvFile(file, preParsedRows = null, options = {}) {
     if (!row || !row.some((cell) => String(cell || "").trim())) {
       continue;
     }
-    const fieldType = String(csvValueFromRow(row, headerMap, "fieldtype", "rowtype", "type") || "").trim().toLowerCase();
+    const fieldType = String(csvValueFromRow(row, headerMap, "fieldtype", "rowtype") || "").trim().toLowerCase();
     if (fieldType && fieldType !== "product") {
       skipped += 1;
       continue;
@@ -5809,6 +6281,7 @@ async function importCatalogCsvFile(file, preParsedRows = null, options = {}) {
       if (onProgress && (processed % batchSize === 0 || processed === totalRows)) {
         onProgress({
           processed,
+          total: totalRows,
           totalRows,
           created,
           updated,
@@ -5896,7 +6369,7 @@ async function importCatalogCsvFile(file, preParsedRows = null, options = {}) {
 
     processed += 1;
     if (onProgress && (processed % batchSize === 0 || rowIndex === parsedRows.length - 1)) {
-      onProgress({ processed, total: totalRows, created, updated, skipped, failed });
+      onProgress({ processed, total: totalRows, totalRows, created, updated, skipped, failed });
       await new Promise((resolve) => setTimeout(resolve, 0));
     }
   }
@@ -6116,6 +6589,8 @@ async function loadDashboard() {
     currentAfterSalesSummary = afterSalesPayload.summary && typeof afterSalesPayload.summary === "object" ? afterSalesPayload.summary : {};
     applyUserFilters();
     syncCategorySelectOptions();
+    syncProductCollectionSelectionFromInput();
+    renderProductCollectionPicker();
     renderSourcingPanel();
     applyCatalogFilters();
     applyOrderFilters();
@@ -6141,6 +6616,8 @@ async function loadDashboard() {
     allOrders = Array.isArray(fallback.ordersPayload.orders) ? fallback.ordersPayload.orders : [];
     applyUserFilters();
     syncCategorySelectOptions();
+    syncProductCollectionSelectionFromInput();
+    renderProductCollectionPicker();
     renderSourcingPanel();
     applyCatalogFilters();
     applyOrderFilters();
@@ -6569,6 +7046,11 @@ clearCatalogSelectionBtn.addEventListener("click", () => {
   });
 });
 exportCatalogBtn.addEventListener("click", exportCatalogCsv);
+if (downloadCleanCatalogCsvBtn) {
+  downloadCleanCatalogCsvBtn.addEventListener("click", () => {
+    downloadCleanCatalogCsv();
+  });
+}
 if (importCatalogBtn && importCatalogFileInput) {
   importCatalogBtn.addEventListener("click", () => {
     try {
@@ -6588,6 +7070,11 @@ if (importCatalogBtn && importCatalogFileInput) {
     }
     if (!String(file.name || "").toLowerCase().endsWith(".csv")) {
       setMessage("Please choose a valid CSV file.", true);
+      importCatalogFileInput.value = "";
+      return;
+    }
+    if (Number(file.size || 0) > MAX_IMPORT_CSV_BYTES) {
+      setMessage(`CSV file is too large (${MAX_IMPORT_CSV_MB}+ MB). Split the file and import in smaller batches.`, true);
       importCatalogFileInput.value = "";
       return;
     }
@@ -6649,6 +7136,59 @@ if (importCatalogBtn && importCatalogFileInput) {
 if (normalizeMediaBtn) {
   normalizeMediaBtn.addEventListener("click", () => {
     normalizeCatalogMediaUrls();
+  });
+}
+if (productCollectionsInput) {
+  productCollectionsInput.addEventListener("input", () => {
+    syncProductCollectionSelectionFromInput();
+    renderProductCollectionPicker();
+  });
+}
+if (productCategoryInput) {
+  productCategoryInput.addEventListener("change", () => {
+    syncProductCollectionSelectionFromInput();
+    renderProductCollectionPicker();
+  });
+}
+if (productCollectionOptionList) {
+  productCollectionOptionList.addEventListener("change", (event) => {
+    const checkbox = event.target.closest("input[type='checkbox']");
+    if (!checkbox) {
+      return;
+    }
+    const collectionValue = normalizeCategoryValue(checkbox.value || "");
+    if (!collectionValue) {
+      return;
+    }
+    if (checkbox.checked) {
+      selectedProductCollections.add(collectionValue);
+    } else {
+      selectedProductCollections.delete(collectionValue);
+    }
+    syncCollectionsInputFromSelection();
+    renderProductCollectionPicker();
+  });
+}
+if (addProductCollectionCustomBtn) {
+  addProductCollectionCustomBtn.addEventListener("click", addCustomCollectionFromInput);
+}
+if (productCollectionCustomInput) {
+  productCollectionCustomInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addCustomCollectionFromInput();
+    }
+  });
+}
+if (addProductDefinitionBtn) {
+  addProductDefinitionBtn.addEventListener("click", appendCustomDefinitionToDescription);
+}
+if (productDefinitionInput) {
+  productDefinitionInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      appendCustomDefinitionToDescription();
+    }
   });
 }
 productForm.addEventListener("submit", (event) => {
@@ -8505,6 +9045,7 @@ applyBackInStockFilters();
 setPendingDriveRetryUploads([], "");
 resetMenuEditor();
 renderWebsiteMenuManager();
+applyAdminFocusedView();
 scheduleUiTask(() => {
   loadDashboard();
 });
