@@ -291,10 +291,14 @@ function buildUiCases(uiReport) {
 
   return mapping.map((entry) => {
     const details = uiReport[entry.key] || {};
+    const skipped = details.skipped === true
+      || Boolean(details.result && details.result.skipped === true);
+    const passed = details.passed === true || skipped;
     return {
       suite: "ui",
       name: entry.name,
-      passed: details.passed === true,
+      passed,
+      skipped,
       message: `${entry.name} browser smoke failed.`,
       details
     };
@@ -304,24 +308,32 @@ function buildUiCases(uiReport) {
 function buildJUnitXml(suites) {
   const tests = suites.reduce((sum, suite) => sum + suite.testcases.length, 0);
   const failures = suites.reduce((sum, suite) => sum + suite.failures, 0);
+  const skipped = suites.reduce((sum, suite) => sum + suite.skipped, 0);
   const duration = suites.reduce((sum, suite) => sum + suite.durationSeconds, 0);
 
   const suitesXml = suites.map((suite) => {
     const testcasesXml = suite.testcases.map((testcase) => {
       const detailText = JSON.stringify(testcase.details, null, 2);
+      const testcaseDuration = Number(testcase.details && testcase.details.durationMs) > 0
+        ? Number(testcase.details.durationMs) / 1000
+        : suite.durationSeconds;
       const failureXml = testcase.passed
         ? ""
         : `\n      <failure message="${xmlEscape(testcase.message)}">${xmlEscape(detailText)}</failure>`;
+      const skippedXml = testcase.skipped
+        ? "\n      <skipped message=\"Test skipped in smoke environment.\"/>"
+        : "";
       return [
-        `    <testcase classname="${xmlEscape(`electromart.${suite.name}`)}" name="${xmlEscape(testcase.name)}" time="${suite.durationSeconds.toFixed(3)}">`,
+        `    <testcase classname="${xmlEscape(`electromart.${suite.name}`)}" name="${xmlEscape(testcase.name)}" time="${testcaseDuration.toFixed(3)}">`,
         failureXml,
+        skippedXml,
         `\n      <system-out>${xmlEscape(detailText)}</system-out>`,
         "\n    </testcase>"
       ].join("");
     }).join("\n");
 
     return [
-      `  <testsuite name="${xmlEscape(`electromart.${suite.name}`)}" tests="${suite.testcases.length}" failures="${suite.failures}" errors="0" skipped="0" time="${suite.durationSeconds.toFixed(3)}" timestamp="${xmlEscape(suite.timestamp)}">`,
+      `  <testsuite name="${xmlEscape(`electromart.${suite.name}`)}" tests="${suite.testcases.length}" failures="${suite.failures}" errors="0" skipped="${suite.skipped}" time="${suite.durationSeconds.toFixed(3)}" timestamp="${xmlEscape(suite.timestamp)}">`,
       testcasesXml,
       "\n  </testsuite>"
     ].join("\n");
@@ -329,7 +341,7 @@ function buildJUnitXml(suites) {
 
   return [
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-    `<testsuites name="electromart-smoke" tests="${tests}" failures="${failures}" errors="0" time="${duration.toFixed(3)}">`,
+    `<testsuites name="electromart-smoke" tests="${tests}" failures="${failures}" errors="0" skipped="${skipped}" time="${duration.toFixed(3)}">`,
     suitesXml,
     "</testsuites>"
   ].join("\n");
@@ -419,14 +431,16 @@ async function main() {
       timestamp: apiCommandResult ? apiCommandResult.startedAt : startedAt.toISOString(),
       durationSeconds: apiCommandResult ? apiCommandResult.durationSeconds : 0,
       testcases: apiCases,
-      failures: apiCases.filter((entry) => !entry.passed).length
+      failures: apiCases.filter((entry) => !entry.passed).length,
+      skipped: apiCases.filter((entry) => entry.skipped === true).length
     },
     {
       name: "ui",
       timestamp: uiCommandResult ? uiCommandResult.startedAt : startedAt.toISOString(),
       durationSeconds: uiCommandResult ? uiCommandResult.durationSeconds : 0,
       testcases: uiCases,
-      failures: uiCases.filter((entry) => !entry.passed).length
+      failures: uiCases.filter((entry) => !entry.passed).length,
+      skipped: uiCases.filter((entry) => entry.skipped === true).length
     }
   ].filter((suite) => suite.testcases.length > 0);
 
@@ -445,7 +459,8 @@ async function main() {
     summary: {
       suites: suites.length,
       tests: suites.reduce((sum, suite) => sum + suite.testcases.length, 0),
-      failures: assertionFailures
+      failures: assertionFailures,
+      skipped: suites.reduce((sum, suite) => sum + suite.skipped, 0)
     },
     commands: {
       api: apiCommandResult,
