@@ -3,6 +3,7 @@ const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const AUTH_STORAGE_KEY = "electromart_auth_v1";
 const BACK_IN_STOCK_REQUESTS_STORAGE_KEY = "electromart_back_in_stock_requests_v1";
 const WISHLIST_STORAGE_KEY = "electromart_wishlist_v1";
+const COMPARE_STORAGE_KEY = "electromart_compare_v1";
 const RECENTLY_VIEWED_STORAGE_KEY = "electromart_recently_viewed_v1";
 const API_BASE_URL = (() => {
   const { protocol, hostname, port } = window.location;
@@ -210,6 +211,8 @@ const specMap = {
 
 const productDetail = document.getElementById("productDetail");
 const missingState = document.getElementById("missingState");
+const recentlyViewedDetailSection = document.getElementById("recentlyViewedDetailSection");
+const recentlyViewedDetailGrid = document.getElementById("recentlyViewedDetailGrid");
 const productImage = document.getElementById("productImage");
 const productVideo = document.getElementById("productVideo");
 const mediaThumbRail = document.getElementById("mediaThumbRail");
@@ -239,6 +242,7 @@ const productDescription = document.getElementById("productDescription");
 const productSpecs = document.getElementById("productSpecs");
 const addToCartBtn = document.getElementById("addToCartBtn");
 const wishlistBtn = document.getElementById("wishlistBtn");
+const compareBtn = document.getElementById("compareBtn");
 const cartCount = document.getElementById("cartCount");
 const crumbName = document.getElementById("crumbName");
 const brandStoreLink = document.getElementById("brandStoreLink");
@@ -467,6 +471,52 @@ function saveWishlistIds(ids) {
   }
 }
 
+function loadCompareIds() {
+  try {
+    const raw = localStorage.getItem(COMPARE_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.map((item) => String(item).trim()).filter(Boolean) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveCompareIds(ids) {
+  try {
+    localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(Array.from(new Set(ids.map((item) => String(item).trim()).filter(Boolean)))));
+  } catch (error) {
+    return;
+  }
+}
+
+function loadRecentlyViewedIds() {
+  try {
+    const raw = localStorage.getItem(RECENTLY_VIEWED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.map((item) => String(item).trim()).filter(Boolean) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function isCompared(productId) {
+  return loadCompareIds().includes(String(productId));
+}
+
+function toggleCompare(productId) {
+  const key = String(productId).trim();
+  if (!key) {
+    return false;
+  }
+  const ids = loadCompareIds();
+  if (ids.includes(key)) {
+    saveCompareIds(ids.filter((item) => item !== key));
+    return false;
+  }
+  saveCompareIds([key, ...ids]);
+  return true;
+}
+
 function isWishlisted(productId) {
   return loadWishlistIds().includes(String(productId));
 }
@@ -499,6 +549,47 @@ function saveRecentlyViewed(productId) {
   } catch (error) {
     return;
   }
+}
+
+function getRecentlyViewedProducts() {
+  const ids = loadRecentlyViewedIds();
+  if (!ids.length) {
+    return [];
+  }
+
+  const sourceMap = new Map(allProducts.map((item) => [String(item.id), item]));
+  return ids
+    .map((id) => sourceMap.get(String(id)))
+    .filter((item) => item && String(item.id) !== String(currentProductRecord?.id) )
+    .slice(0, 6);
+}
+
+function renderRecentlyViewedDetailSection() {
+  if (!recentlyViewedDetailSection || !recentlyViewedDetailGrid) {
+    return;
+  }
+
+  const items = getRecentlyViewedProducts();
+  if (!items.length) {
+    recentlyViewedDetailSection.hidden = true;
+    recentlyViewedDetailGrid.innerHTML = "";
+    return;
+  }
+
+  recentlyViewedDetailSection.hidden = false;
+  recentlyViewedDetailGrid.innerHTML = items
+    .map((item) => `
+      <article class="related-card">
+        <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-media">
+          <img src="${item.image || ''}" alt="${item.name}" loading="lazy" />
+        </a>
+        <div class="related-copy">
+          <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-title">${item.name}</a>
+          <p class="related-price">${money(item.price)}</p>
+        </div>
+      </article>
+    `)
+    .join("");
 }
 
 function readAuthSession() {
@@ -753,6 +844,16 @@ function syncWishlistButton(productId) {
   wishlistBtn.setAttribute("data-id", String(productId || ""));
 }
 
+function syncCompareButton(productId) {
+  if (!compareBtn) {
+    return;
+  }
+  const active = isCompared(productId);
+  compareBtn.classList.toggle("active", active);
+  compareBtn.textContent = active ? "Compared" : "Add to Compare";
+  compareBtn.setAttribute("data-id", String(productId || ""));
+}
+
 function addProductToCart(productId, quantity = 1) {
   const cartMap = loadCartMap();
   const key = String(productId);
@@ -1003,7 +1104,15 @@ async function fetchProductFromApi(productId) {
   }
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}/products/${encodeURIComponent(productId)}`);
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+    try {
+      response = await fetch(`${API_BASE_URL}/products/${encodeURIComponent(productId)}`, {
+        signal: controller.signal
+      });
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
   } catch (error) {
     return null;
   }
@@ -1028,7 +1137,15 @@ async function fetchCatalogProductsFromApi() {
   catalogProductsFetchPromise = (async () => {
     let response;
     try {
-      response = await fetch(`${API_BASE_URL}/products?status=active`);
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+      try {
+        response = await fetch(`${API_BASE_URL}/products?status=active`, {
+          signal: controller.signal
+        });
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
     } catch (error) {
       return apiCatalogProducts;
     }
@@ -1654,6 +1771,8 @@ function renderProduct(product) {
   renderReviewSummary(product);
   renderQa(product);
 
+  renderRecentlyViewedDetailSection();
+
   const defaultSpecs = specMap[productCategoryFamily] || ["Quality assured", "Trusted by customers", "Fast delivery options"];
   const keywordSpecs = Array.isArray(product.keywords) ? product.keywords.slice(0, 6) : [];
   const specs = keywordSpecs.length ? keywordSpecs : defaultSpecs;
@@ -1676,6 +1795,7 @@ function renderProduct(product) {
 
   addToCartBtn.setAttribute("data-id", String(product.id));
   syncWishlistButton(product.id);
+  syncCompareButton(product.id);
   void hydrateRelatedProducts(product);
 }
 
@@ -1714,6 +1834,22 @@ if (wishlistBtn) {
     }
     toggleWishlist(productId);
     syncWishlistButton(productId);
+  });
+}
+
+if (compareBtn) {
+  compareBtn.addEventListener("click", () => {
+    const productId = String(compareBtn.getAttribute("data-id") || "").trim();
+    if (!productId) {
+      return;
+    }
+    toggleCompare(productId);
+    syncCompareButton(productId);
+    const count = loadCompareIds().length;
+    const message = count > 1
+      ? `${count} products ready for comparison. View in compare cart for side-by-side details.`
+      : `${count} product selected for comparison. Select at least 2 to compare.`;
+    console.info(message);
   });
 }
 
