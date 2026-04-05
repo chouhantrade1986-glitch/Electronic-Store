@@ -344,6 +344,7 @@ GitHub Actions smoke workflow:
 - [.github/workflows/release-guardrails.yml](./.github/workflows/release-guardrails.yml)
 - [.github/workflows/copilot-auto-intake.yml](./.github/workflows/copilot-auto-intake.yml)
 - [.github/workflows/workflow-action-governance.yml](./.github/workflows/workflow-action-governance.yml)
+- [.github/workflows/a2z-weekly-audit-intake.yml](./.github/workflows/a2z-weekly-audit-intake.yml)
 
 Workflow action major guardrail:
 
@@ -357,6 +358,12 @@ Copilot automatic task intake:
 - Use label `copilot-auto` to trigger intake automation
 - Intake workflow auto-manages `copilot-ready` and `copilot-needs-info` labels based on issue structure
 - After issue is marked ready, delegate from GitHub issue UI to Copilot coding agent
+
+Amazon-style weekly A-to-Z audit cadence:
+
+- Audit playbook: [docs/AMAZON-A2Z-AUDIT-CADENCE.md](./docs/AMAZON-A2Z-AUDIT-CADENCE.md)
+- Weekly intake workflow creates one structured `copilot: weekly a2z audit <week>` issue
+- Weekly issue is auto-labeled for Copilot intake and uses the weighted percentage model
 
 Required repository secret:
 
