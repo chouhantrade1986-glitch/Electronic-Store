@@ -2628,7 +2628,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (searchSuggestions && !searchForm.contains(event.target)) {
+  if (searchSuggestions && searchForm && !searchForm.contains(event.target)) {
     closeSearchSuggestions();
   }
 
@@ -2650,7 +2650,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (event.target.classList.contains("add-btn")) {
+  if (event.target && event.target.classList && event.target.classList.contains("add-btn")) {
     const productId = String(event.target.getAttribute("data-id") || "").trim();
     if (productId) {
       addProductToCart(productId);
