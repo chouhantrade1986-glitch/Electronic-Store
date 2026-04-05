@@ -37,11 +37,6 @@ function Set-ContentWithRetry {
 
 $specs = @(
   [pscustomobject]@{
-    Path = (Join-Path $ReportsDir "smoke-triage-status.json")
-    SchemaVersion = "smoke-triage-status.v2"
-    AllowedGeneratedBy = @("smoke-triage.ps1")
-  },
-  [pscustomobject]@{
     Path = (Join-Path $ReportsDir "smoke-trend-latest.json")
     SchemaVersion = "smoke-trend-entry.v2"
     AllowedGeneratedBy = @("smoke-trend.ps1", "smoke-suite.yml")
@@ -54,6 +49,11 @@ $specs = @(
 )
 
 $optionalSpecs = @(
+  [pscustomobject]@{
+    Path = (Join-Path $ReportsDir "smoke-triage-status.json")
+    SchemaVersion = "smoke-triage-status.v2"
+    AllowedGeneratedBy = @("smoke-triage.ps1")
+  },
   [pscustomobject]@{
     Path = (Join-Path $ReportsDir "smoke-triage-loop-summary.json")
     SchemaVersion = "smoke-triage-loop.v1"
@@ -96,43 +96,6 @@ foreach ($spec in $specs) {
 
   $fileName = [System.IO.Path]::GetFileName($targetPath)
   switch ($fileName) {
-    "smoke-triage-status.json" {
-      if ([string]::IsNullOrWhiteSpace([string]$json.generatedAt)) {
-        $errors += "Missing required field generatedAt in $targetPath."
-      }
-      if ($null -eq $json.schemaValidationExitCode) {
-        $errors += "Missing required field schemaValidationExitCode in $targetPath."
-      }
-      if ([string]::IsNullOrWhiteSpace([string]$json.failureCodeSequence)) {
-        $errors += "Missing required field failureCodeSequence in $targetPath."
-      }
-      if ($null -eq $json.failureCodeSequenceArray) {
-        $errors += "Missing required field failureCodeSequenceArray in $targetPath."
-      } else {
-        $sequenceArray = @($json.failureCodeSequenceArray | ForEach-Object { [string]$_ })
-        if ($sequenceArray.Count -eq 0) {
-          $errors += "failureCodeSequenceArray is empty in $targetPath."
-        } else {
-          $sequenceText = [string]::Join(', ', $sequenceArray)
-          if ($sequenceText -ne [string]$json.failureCodeSequence) {
-            $errors += "Mismatch between failureCodeSequenceArray and failureCodeSequence in $targetPath."
-          }
-          $sparkline = [string]$json.failureCodeSparkline
-          if ([string]::IsNullOrWhiteSpace($sparkline)) {
-            $errors += "Missing required field failureCodeSparkline in $targetPath."
-          } elseif ($sparkline -ne "-" -and $sparkline.Length -ne $sequenceArray.Count) {
-            $errors += "failureCodeSparkline length does not match failureCodeSequenceArray count in $targetPath."
-          } elseif ($sparkline -ne "-") {
-            foreach ($ch in $sparkline.ToCharArray()) {
-              if (-not ($allowedSparklineSymbols -contains [string]$ch)) {
-                $errors += "Unknown sparkline symbol '$ch' in $targetPath."
-                break
-              }
-            }
-          }
-        }
-      }
-    }
     "smoke-trend-latest.json" {
       if ([string]::IsNullOrWhiteSpace([string]$json.timestamp)) {
         $errors += "Missing required field timestamp in $targetPath."
@@ -230,6 +193,43 @@ foreach ($spec in $optionalSpecs) {
 
   $optionalFileName = [System.IO.Path]::GetFileName($targetPath)
   switch ($optionalFileName) {
+    "smoke-triage-status.json" {
+      if ([string]::IsNullOrWhiteSpace([string]$json.generatedAt)) {
+        $errors += "Missing required field generatedAt in $targetPath."
+      }
+      if ($null -eq $json.schemaValidationExitCode) {
+        $errors += "Missing required field schemaValidationExitCode in $targetPath."
+      }
+      if ([string]::IsNullOrWhiteSpace([string]$json.failureCodeSequence)) {
+        $errors += "Missing required field failureCodeSequence in $targetPath."
+      }
+      if ($null -eq $json.failureCodeSequenceArray) {
+        $errors += "Missing required field failureCodeSequenceArray in $targetPath."
+      } else {
+        $sequenceArray = @($json.failureCodeSequenceArray | ForEach-Object { [string]$_ })
+        if ($sequenceArray.Count -eq 0) {
+          $errors += "failureCodeSequenceArray is empty in $targetPath."
+        } else {
+          $sequenceText = [string]::Join(', ', $sequenceArray)
+          if ($sequenceText -ne [string]$json.failureCodeSequence) {
+            $errors += "Mismatch between failureCodeSequenceArray and failureCodeSequence in $targetPath."
+          }
+          $sparkline = [string]$json.failureCodeSparkline
+          if ([string]::IsNullOrWhiteSpace($sparkline)) {
+            $errors += "Missing required field failureCodeSparkline in $targetPath."
+          } elseif ($sparkline -ne "-" -and $sparkline.Length -ne $sequenceArray.Count) {
+            $errors += "failureCodeSparkline length does not match failureCodeSequenceArray count in $targetPath."
+          } elseif ($sparkline -ne "-") {
+            foreach ($ch in $sparkline.ToCharArray()) {
+              if (-not ($allowedSparklineSymbols -contains [string]$ch)) {
+                $errors += "Unknown sparkline symbol '$ch' in $targetPath."
+                break
+              }
+            }
+          }
+        }
+      }
+    }
     "smoke-triage-loop-summary.json" {
       if ($null -eq $json.runs) {
         $errors += "Missing required field runs in $targetPath."
