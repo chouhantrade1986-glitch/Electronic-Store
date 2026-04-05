@@ -18,7 +18,6 @@ concurrency:
 
 jobs:
   intake:
-    if: contains(github.event.issue.labels.*.name, 'copilot-auto')
     runs-on: ubuntu-latest
     steps:
       - name: Validate issue structure and update labels
@@ -29,7 +28,16 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const issueNumber = context.payload.issue.number;
+            const issueTitle = context.payload.issue.title || '';
             const issueBody = (context.payload.issue.body || '').toLowerCase();
+            const currentLabels = (context.payload.issue.labels || []).map((label) => label.name);
+            const hasCopilotLabel = currentLabels.includes('copilot-auto');
+            const hasCopilotTitlePrefix = /^copilot\s*:/i.test(issueTitle);
+
+            if (!hasCopilotLabel && !hasCopilotTitlePrefix) {
+              console.log('Skipping intake: issue is not marked for Copilot automation.');
+              return;
+            }
 
             async function ensureLabel(name, color, description) {
               try {
@@ -58,7 +66,6 @@ jobs:
               .filter((section) => !section.patterns.some((pattern) => issueBody.includes(pattern)))
               .map((section) => section.key);
 
-            const currentLabels = (context.payload.issue.labels || []).map((label) => label.name);
             const desiredLabels = ['copilot-auto'];
             if (missing.length === 0) {
               desiredLabels.push('copilot-ready');
