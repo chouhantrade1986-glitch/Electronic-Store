@@ -343,6 +343,12 @@ GitHub Actions smoke workflow:
 - [.github/workflows/smoke-suite.yml](./.github/workflows/smoke-suite.yml)
 - [.github/workflows/release-guardrails.yml](./.github/workflows/release-guardrails.yml)
 - [.github/workflows/copilot-auto-intake.yml](./.github/workflows/copilot-auto-intake.yml)
+- [.github/workflows/workflow-action-governance.yml](./.github/workflows/workflow-action-governance.yml)
+
+Workflow action major guardrail:
+
+- Validation script: [scripts/ci/validate-workflow-actions.ps1](./scripts/ci/validate-workflow-actions.ps1)
+- Fails CI when workflow actions drift below required majors
 
 Copilot automatic task intake:
 
