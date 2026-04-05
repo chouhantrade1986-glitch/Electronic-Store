@@ -1,0 +1,155 @@
+name: A2Z Weekly Audit Intake
+
+on:
+  schedule:
+    - cron: "30 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      week_start:
+        description: "Optional ISO date (YYYY-MM-DD) for audit week start"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-weekly-audit-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or reuse weekly A2Z audit issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const weekStartInput = (core.getInput('week_start') || '').trim();
+
+            const toIsoDate = (date) => date.toISOString().slice(0, 10);
+            const mondayOfWeekUtc = (date) => {
+              const utc = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+              const diff = (utc.getUTCDay() + 6) % 7;
+              utc.setUTCDate(utc.getUTCDate() - diff);
+              return utc;
+            };
+
+            if (weekStartInput && !/^\d{4}-\d{2}-\d{2}$/.test(weekStartInput)) {
+              throw new Error("Input 'week_start' must match YYYY-MM-DD.");
+            }
+
+            const weekStart = weekStartInput || toIsoDate(mondayOfWeekUtc(new Date()));
+            const title = `copilot: weekly a2z audit ${weekStart}`;
+            const projectAuditUrl = `https://github.com/${owner}/${repo}/blob/main/PROJECT-AUDIT.md`;
+
+            const issueBody = [
+              '## Weekly Amazon-Style A2Z Audit Intake',
+              '',
+              `Audit week start: ${weekStart}`,
+              '',
+              '### Required Actions',
+              `- Review [PROJECT-AUDIT.md](${projectAuditUrl}) and update completion percentages.`,
+              '- Validate smoke and release guardrails remain green.',
+              '- Triage top risks and create or refresh hardening tasks.',
+              '- Update runbook and backlog docs when scope changes.',
+              '',
+              '### Completion Criteria',
+              '- [ ] Evidence links added for CI results',
+              '- [ ] Percentage update committed',
+              '- [ ] Remaining work clearly listed with owners',
+              '',
+              '_This issue is created automatically by the weekly A2Z intake workflow._'
+            ].join('\n');
+
+            const requiredLabels = [
+              {
+                name: 'copilot-auto',
+                color: '0052cc',
+                description: 'Task intended for Copilot auto intake'
+              },
+              {
+                name: 'audit-weekly',
+                color: '5319e7',
+                description: 'Weekly Amazon-style A-to-Z audit tracker'
+              }
+            ];
+
+            for (const label of requiredLabels) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (error) {
+                if (error.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description
+                  });
+                  core.notice(`Created missing label '${label.name}'.`);
+                } else {
+                  throw error;
+                }
+              }
+            }
+
+            const { data: openWeeklyIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'audit-weekly',
+              per_page: 100
+            });
+
+            const openWeeklyOnly = openWeeklyIssues.filter((issue) => !issue.pull_request);
+            const existingCurrent = openWeeklyOnly.find(
+              (issue) => issue.title.toLowerCase() === title.toLowerCase()
+            );
+
+            if (existingCurrent) {
+              core.notice(`Reusing existing weekly A2Z audit issue #${existingCurrent.number}.`);
+              core.setOutput('issue_number', String(existingCurrent.number));
+              core.setOutput('created', 'false');
+              return;
+            }
+
+            const created = await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body: issueBody,
+              labels: requiredLabels.map((label) => label.name)
+            });
+
+            core.notice(`Created weekly A2Z audit issue #${created.data.number}.`);
+            core.setOutput('issue_number', String(created.data.number));
+            core.setOutput('created', 'true');
+
+            const priorWeeklyIssues = openWeeklyOnly.filter(
+              (issue) =>
+                issue.number !== created.data.number &&
+                issue.title.toLowerCase().startsWith('copilot: weekly a2z audit ')
+            );
+
+            if (priorWeeklyIssues.length === 0) {
+              core.notice('No prior weekly intake issue to close.');
+              return;
+            }
+
+            for (const priorIssue of priorWeeklyIssues) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: priorIssue.number,
+                body: `Superseded by #${created.data.number}. Closing this prior weekly intake issue automatically.`
+              });
+
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: priorIssue.number,
+                state: 'closed'
+              });
+
+              core.notice(`Closed prior weekly intake issue #${priorIssue.number}.`);
+            }
