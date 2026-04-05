@@ -17,7 +17,7 @@
                   {
                       "name":  "qa-invoice-browser.png",
                       "bytes":  157078,
-                      "sha256":  "0F746DDE655A3DC2AFE2DBDB6D817EB151DE9492B08ED3DC0D093BEB5BAA2C97"
+                      "sha256":  "736BC4F17C54181577D74E9DAB5C42F269166D1D22D53010708092538C3CED7D"
                   },
                   {
                       "name":  "qa-checkout-browser.png",
@@ -32,7 +32,7 @@
                   {
                       "name":  "qa-wishlist-browser.png",
                       "bytes":  98612,
-                      "sha256":  "B564368FE3A549E186BC0F79BBA1F97ABEB258366AC07CA88A39AE1E834E5561"
+                      "sha256":  "899E127A3E05F65256BA30B189133D2252D4335CB6BA5E02E23BD812FF8EDE93"
                   }
               ]
 }
