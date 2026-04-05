@@ -1,0 +1,76 @@
+name: Copilot Auto Task
+description: Structured task format for automatic Copilot intake and execution handoff.
+title: "copilot: "
+labels:
+  - copilot-auto
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill all required sections so intake automation can mark this issue as Copilot ready.
+
+  - type: input
+    id: goal
+    attributes:
+      label: Goal
+      description: One line outcome for this task.
+      placeholder: Example: Fix smoke workflow failure in schema validation step.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Files, modules, or workflows that should be touched.
+      placeholder: |
+        - .github/workflows/smoke-suite.yml
+        - smoke-validate-artifacts.ps1
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Measurable done conditions.
+      placeholder: |
+        - Workflow run succeeds on main
+        - Schema validation step passes
+        - No regression in visual baseline verification
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation Commands
+      description: Commands that prove the change works.
+      value: |
+        npm run smoke
+        npm run smoke:baseline:verify
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk Level
+      options:
+        - Low
+        - Medium
+        - High
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety Checks
+      options:
+        - label: I confirmed this task does not require committing secrets.
+          required: true
+        - label: I confirmed this task does not require destructive git history changes.
+          required: true
