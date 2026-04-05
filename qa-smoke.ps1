@@ -187,12 +187,66 @@ function Reset-SmokeOtpChallenges {
   $db = $dbRaw | ConvertFrom-Json
   $hasChallenges = ($db.PSObject.Properties.Name -contains "authOtpChallenges") -and ($db.authOtpChallenges -is [System.Array])
   if ($hasChallenges -and $db.authOtpChallenges.Count -eq 0) {
-    return
+    # Keep going: we also normalize phone verification pending state for deterministic smoke runs.
   }
 
   $db | Add-Member -NotePropertyName authOtpChallenges -NotePropertyValue @() -Force
+
+  if (($db.PSObject.Properties.Name -contains "users") -and ($db.users -is [System.Array])) {
+    foreach ($user in $db.users) {
+      if (-not $user) {
+        continue
+      }
+
+      $phone = $null
+      if ($user.PSObject.Properties.Name -contains "phoneVerification") {
+        $phone = $user.phoneVerification
+      }
+
+      if (-not $phone) {
+        $phone = [ordered]@{}
+        $user | Add-Member -NotePropertyName phoneVerification -NotePropertyValue $phone -Force
+      }
+
+      $phone | Add-Member -NotePropertyName pendingCode -NotePropertyValue "" -Force
+      $phone | Add-Member -NotePropertyName pendingMobile -NotePropertyValue "" -Force
+      $phone | Add-Member -NotePropertyName pendingExpiresAt -NotePropertyValue $null -Force
+      $phone | Add-Member -NotePropertyName lastRequestedAt -NotePropertyValue $null -Force
+      $phone | Add-Member -NotePropertyName failedAttempts -NotePropertyValue 0 -Force
+      $phone | Add-Member -NotePropertyName lockedUntil -NotePropertyValue $null -Force
+    }
+  }
+
   $dbSerialized = $db | ConvertTo-Json -Depth 100
-  Set-Content -Path $DbPath -Value $dbSerialized -Encoding UTF8
+  Set-ContentWithRetry -Path $DbPath -Value $dbSerialized -Encoding UTF8
+}
+
+function Set-ContentWithRetry {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path,
+    [Parameter(Mandatory = $true)]
+    [AllowEmptyString()]
+    [string]$Value,
+    [string]$Encoding = "UTF8",
+    [int]$MaxRetries = 8,
+    [int]$RetryDelayMs = 250
+  )
+
+  $attempt = 0
+  while ($true) {
+    try {
+      Set-Content -Path $Path -Value $Value -Encoding $Encoding
+      return
+    }
+    catch {
+      $attempt += 1
+      if ($attempt -ge $MaxRetries) {
+        throw
+      }
+      Start-Sleep -Milliseconds $RetryDelayMs
+    }
+  }
 }
 
 $dbSnapshot = New-FileSnapshot -Path $dbPath -Label "db-smoke"
