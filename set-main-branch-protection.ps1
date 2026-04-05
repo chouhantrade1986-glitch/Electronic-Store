@@ -37,6 +37,13 @@ function Get-BranchState {
   $rules = Invoke-RestMethod -Method Get -Uri $rulesUrl -Headers $Headers
 
   $contexts = @()
+
+  foreach ($entry in @($branch.protection.required_status_checks.contexts)) {
+    if (-not [string]::IsNullOrWhiteSpace([string]$entry)) {
+      $contexts += [string]$entry
+    }
+  }
+
   foreach ($rule in @($rules)) {
     if ($rule.type -eq "required_status_checks") {
       foreach ($entry in @($rule.parameters.required_status_checks)) {
@@ -66,7 +73,7 @@ function Ensure-RequiredChecksPresent {
       $missing += $item
     }
   }
-  return $missing
+  return @($missing)
 }
 
 $headers = Get-GitHubHeaders
@@ -87,16 +94,22 @@ if (-not $CheckOnly) {
 }
 
 $state = Get-BranchState -RepoName $Repo -BranchName $Branch -Headers $headers
-$missingChecks = Ensure-RequiredChecksPresent -Current $state.Contexts -Expected $RequiredChecks
+$missingChecks = @(Ensure-RequiredChecksPresent -Current $state.Contexts -Expected $RequiredChecks)
+
+$foundChecks = if (@($state.Contexts).Count -gt 0) {
+  @($state.Contexts) -join ", "
+} else {
+  "(none)"
+}
 
 Write-Host ("Repo: {0}" -f $Repo)
 Write-Host ("Branch: {0}" -f $Branch)
 Write-Host ("Protected: {0}" -f $state.Protected)
 Write-Host ("Rule count: {0}" -f $state.RuleCount)
-Write-Host ("Required checks found: {0}" -f (($state.Contexts -join ", ")))
+Write-Host ("Required checks found: {0}" -f $foundChecks)
 
-if (-not $state.Protected -or $missingChecks.Count -gt 0) {
-  if ($missingChecks.Count -gt 0) {
+if (-not $state.Protected -or @($missingChecks).Count -gt 0) {
+  if (@($missingChecks).Count -gt 0) {
     Write-Host ("Missing checks: {0}" -f ($missingChecks -join ", "))
   }
   throw "Branch protection verification failed."
