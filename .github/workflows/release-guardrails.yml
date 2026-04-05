@@ -156,7 +156,7 @@ jobs:
       - name: Run rollback dry run
         shell: pwsh
         run: |
-          npm run release:rollback:dry -- --reason="GitHub Actions release guardrail dry run for ${{ github.sha }}"
+          powershell -ExecutionPolicy Bypass -File .\release-rollback-dry-run.ps1 -Reason "GitHub Actions release guardrail dry run for ${{ github.sha }}"
 
       - name: Upload rollback dry-run evidence
         if: always()
