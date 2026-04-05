@@ -342,6 +342,15 @@ GitHub Actions smoke workflow:
 
 - [.github/workflows/smoke-suite.yml](./.github/workflows/smoke-suite.yml)
 - [.github/workflows/release-guardrails.yml](./.github/workflows/release-guardrails.yml)
+- [.github/workflows/copilot-auto-intake.yml](./.github/workflows/copilot-auto-intake.yml)
+
+Copilot automatic task intake:
+
+- Project coding instructions: [.github/copilot-instructions.md](./.github/copilot-instructions.md)
+- Structured issue template: [.github/ISSUE_TEMPLATE/copilot-auto-task.yml](./.github/ISSUE_TEMPLATE/copilot-auto-task.yml)
+- Use label `copilot-auto` to trigger intake automation
+- Intake workflow auto-manages `copilot-ready` and `copilot-needs-info` labels based on issue structure
+- After issue is marked ready, delegate from GitHub issue UI to Copilot coding agent
 
 Required repository secret:
 
