@@ -2,6 +2,11 @@ name: A2Z Weekly Audit Intake
 
 on:
   workflow_dispatch:
+    inputs:
+      week_start:
+        description: "Optional ISO date (YYYY-MM-DD) for audit week start"
+        required: false
+        type: string
   schedule:
     - cron: '0 4 * * 1'
 
@@ -39,13 +44,19 @@ jobs:
             await ensureLabel('copilot-auto', '0052cc', 'Task intended for Copilot auto intake');
             await ensureLabel('audit-weekly', '5319e7', 'Weekly Amazon-style A-to-Z audit tracker');
 
+            const weekStartInput = String(core.getInput('week_start') || '').trim();
+            const isIsoDate = /^\d{4}-\d{2}-\d{2}$/;
+            if (weekStartInput && !isIsoDate.test(weekStartInput)) {
+              throw new Error("Input 'week_start' must match YYYY-MM-DD.");
+            }
+
             const now = new Date();
             const utc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
             const day = utc.getUTCDay();
             const mondayDelta = day === 0 ? -6 : 1 - day;
             const monday = new Date(utc);
             monday.setUTCDate(utc.getUTCDate() + mondayDelta);
-            const weekKey = monday.toISOString().slice(0, 10);
+            const weekKey = weekStartInput || monday.toISOString().slice(0, 10);
 
             const title = `copilot: weekly a2z audit ${weekKey}`;
 
@@ -57,13 +68,17 @@ jobs:
               per_page: 100
             });
 
-            const existing = openWeeklyIssues.find((issue) => {
+            const openWeeklyOnly = openWeeklyIssues.filter((issue) => !issue.pull_request);
+
+            const existing = openWeeklyOnly.find((issue) => {
               const issueTitle = (issue.title || '').toLowerCase();
-              return issueTitle.includes(`weekly a2z audit ${weekKey}`);
+              return issueTitle === title.toLowerCase();
             });
 
             if (existing) {
               core.notice(`Weekly audit issue already exists: #${existing.number}`);
+              core.setOutput('issue_number', String(existing.number));
+              core.setOutput('created', 'false');
               return;
             }
 
@@ -143,3 +158,33 @@ jobs:
             });
 
             core.notice(`Created weekly A2Z audit issue #${created.data.number}`);
+            core.setOutput('issue_number', String(created.data.number));
+            core.setOutput('created', 'true');
+
+            const priorWeeklyIssues = openWeeklyOnly.filter((issue) => {
+              const issueTitle = String(issue.title || '').toLowerCase();
+              return issue.number !== created.data.number && issueTitle.startsWith('copilot: weekly a2z audit ');
+            });
+
+            if (priorWeeklyIssues.length === 0) {
+              core.notice('No prior weekly intake issue to close.');
+              return;
+            }
+
+            for (const priorIssue of priorWeeklyIssues) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: priorIssue.number,
+                body: `Superseded by #${created.data.number}. Closing this prior weekly intake issue automatically.`
+              });
+
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: priorIssue.number,
+                state: 'closed'
+              });
+
+              core.notice(`Closed prior weekly intake issue #${priorIssue.number}.`);
+            }

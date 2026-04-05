@@ -346,6 +346,10 @@ GitHub Actions smoke workflow:
 - [.github/workflows/workflow-action-governance.yml](./.github/workflows/workflow-action-governance.yml)
 - [.github/workflows/a2z-weekly-audit-intake.yml](./.github/workflows/a2z-weekly-audit-intake.yml)
 
+Weekly A2Z intake status:
+
+[![A2Z Weekly Audit Intake](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/workflows/a2z-weekly-audit-intake.yml/badge.svg)](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/workflows/a2z-weekly-audit-intake.yml)
+
 Workflow action major guardrail:
 
 - Validation script: [scripts/ci/validate-workflow-actions.ps1](./scripts/ci/validate-workflow-actions.ps1)
