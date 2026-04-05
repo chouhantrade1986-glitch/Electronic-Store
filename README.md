@@ -379,7 +379,7 @@ npm run issues:prod-hardening
 - SQLite compatibility fallback (`app_state`) remains available only when `SQLITE_NORMALIZATION_MODE=compat`; staging/production SQLite deployments should run with `strict`
 - Concurrency safety is improved, but this remains a single-process demo architecture
 - Razorpay checkout/resume flows require valid backend credentials
-- Branch governance still needs tightening, but release/rollback guardrails are now versioned and automated
+- Branch governance and workflow-action governance are now enforced; keep status checks healthy before merge
 
 Production hardening execution plan:
 
