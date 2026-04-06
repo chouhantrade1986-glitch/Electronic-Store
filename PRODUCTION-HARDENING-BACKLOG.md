@@ -33,11 +33,11 @@ Move from "demo-safe" operations to production-grade operational safety with exp
 ## Weekly Risk Triage (Week of April 13, 2026)
 
 1. `R-01` CI evidence drift risk: manual audit updates can lag latest workflow results.
-	Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #34](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/34).
+   Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #34](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/34).
 2. `R-02` Release evidence cadence risk: `release-guardrails` runs remain manually triggered and can be skipped.
-	Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #35](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/35).
+   Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #35](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/35).
 3. `R-03` Alert threshold drift risk: current thresholds need periodic recalibration against recent traffic.
-	Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36).
+   Owner: `@chouhantrade1986-glitch`. Mitigation task: [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36).
 
 ## Issue Drafts
 
