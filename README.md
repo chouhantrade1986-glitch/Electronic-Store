@@ -10,11 +10,11 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 - Payments: simulated flow or Razorpay, depending on backend env
 - QA: API smoke, browser smoke, JSON/JUnit reports, Windows CI workflow
 
-## Project Audit Status (March 13, 2026)
+## Project Audit Status (April 6, 2026)
 
 - Completed: **99%**
 - Remaining: **1%**
-- Detailed report: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
+- Detailed report and owner-assigned follow-ups: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
 
