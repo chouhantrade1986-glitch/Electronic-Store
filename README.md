@@ -12,8 +12,8 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Project Audit Status (April 6, 2026)
 
-- Completed: **99%**
-- Remaining: **1%**
+- Completed: **100%**
+- Remaining: **0%**
 - Detailed report and owner-assigned follow-ups: [PROJECT-AUDIT.md](./PROJECT-AUDIT.md)
 
 ## Main Areas
@@ -119,6 +119,12 @@ cd backend
 npm run job:alerts:check
 npm run job:alerts:check -- --fail-on-alert
 npm run job:alerts:check -- --api-base-url=http://127.0.0.1:4000/api
+```
+
+Weekly audit evidence snippet generation:
+
+```powershell
+npm run audit:evidence:weekly
 ```
 
 Alert runbook reference:
