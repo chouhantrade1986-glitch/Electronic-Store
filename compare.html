@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Products - ElectroMart</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="shared-ui.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="logo">
+        <a href="index.html">
+          <img src="logo.svg" alt="ElectroMart" width="120" height="40">
+        </a>
+      </div>
+      <nav class="main-nav">
+        <a href="products.html">Products</a>
+        <a href="brands.html">Brands</a>
+        <a href="creator-studio.html">Creator Studio</a>
+        <a href="mega-store.html">Mega Store</a>
+      </nav>
+      <div class="header-actions">
+        <a href="cart.html" class="cart-link">
+          <span class="cart-icon">🛒</span>
+          <span id="cartCount" class="cart-count">0</span>
+        </a>
+        <a href="wishlist.html" class="wishlist-link">
+          <span class="wishlist-icon">❤️</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="compare-header">
+        <h1>Compare Products</h1>
+        <button id="clearCompareBtn" class="btn-secondary">Clear All</button>
+      </div>
+      <div id="compareGrid" class="compare-grid">
+        <!-- Products will be rendered here -->
+      </div>
+      <div id="compareEmpty" class="empty-state" hidden>
+        <h2>No products to compare</h2>
+        <p>Select products from the catalog to add them to comparison.</p>
+        <a href="products.html" class="btn-primary">Browse Products</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 ElectroMart. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="products.js"></script>
+</body>
+</html>

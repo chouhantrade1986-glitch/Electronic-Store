@@ -169,8 +169,6 @@ const cartCount = document.getElementById("cartCount");
 const searchForm = document.getElementById("searchForm");
 const megaTrigger = document.getElementById("megaTrigger");
 const megaMenu = document.getElementById("megaMenu");
-const quickLinksTrigger = document.getElementById("quickLinksTrigger");
-const quickLinksMenu = document.getElementById("quickLinksMenu");
 const storeGrid = document.getElementById("storeGrid");
 const newArrivalsGrid = document.getElementById("newArrivalsGrid");
 const newArrivalsMeta = document.getElementById("newArrivalsMeta");
@@ -257,6 +255,9 @@ const translations = {
     "header.searchPlaceholder": "Search electronics",
     "header.searchBtn": "Search",
     "header.language": "Language",
+    "header.searchBenefitDeals": "Top Deals live",
+    "header.searchBenefitDelivery": "Fast delivery",
+    "header.searchBenefitGst": "GST invoicing available",
     "location.title": "Choose your location",
     "location.subtitle": "Select a delivery location to see product availability and delivery options.",
     "location.cityLabel": "City",
@@ -267,6 +268,10 @@ const translations = {
     "nav.account": "Account",
     "nav.orders": "Orders",
     "nav.cart": "Cart",
+    "nav.signInPrompt": "Hello, sign in",
+    "nav.returnsShort": "Returns",
+    "nav.saved": "Saved",
+    "nav.wishlist": "Wishlist",
     "category.allDepartments": "All Departments",
     "category.deals": "Today's Deals",
     "category.bestSellers": "Best Sellers",
@@ -287,11 +292,20 @@ const translations = {
     "mega.tablets": "Tablets",
     "mega.wearables": "Wearables",
     "mega.chargers": "Chargers",
+    "mega.components": "Components",
+    "mega.pcBuilder": "PC Builder",
+    "mega.memoryCooling": "Memory & Cooling",
+    "mega.powerCases": "Power & Cases",
     "mega.audioVideo": "Audio & Video",
     "mega.headphones": "Headphones",
     "mega.speakers": "Speakers",
     "mega.tvTheater": "TV & Home Theater",
     "mega.microphones": "Microphones",
+    "mega.businessServices": "Business & Services",
+    "mega.businessCatalogs": "Business Catalogs",
+    "mega.megaStores": "Mega Stores",
+    "mega.compareProducts": "Compare Products",
+    "mega.ordersReturns": "Orders & Returns",
     "mega.featuredDeal": "Featured Deal",
     "mega.productTitle": "Wireless Earbuds Pro",
     "mega.priceNow": "Now ₹79",
@@ -299,6 +313,18 @@ const translations = {
     "hero.event": "Mega Electronics Sale",
     "hero.headline": "Up to 60% off on laptops, mobiles and accessories",
     "hero.shopNow": "Shop now",
+    "home.discoveryEyebrow": "Home discovery",
+    "home.discoveryTitle": "Amazon-style shopping lanes built from your live catalogue",
+    "home.discoverySubtitle": "Featured shortcuts, sign-in benefits, and creator-ready merchandising update automatically from the same product feed used across the storefront.",
+    "home.exploreCatalog": "Explore full catalogue",
+    "deal.eyebrow": "Live markdowns",
+    "deal.title": "Deals picked from products already in stock",
+    "deal.subtitle": "The lead tile highlights the strongest live discount, then the rail fans out into high-conversion deal picks.",
+    "deal.shopTopDeals": "Shop top deals",
+    "rail.eyebrow": "Browse by mission",
+    "rail.title": "Fast category rails for laptops, creator gear, audio, and more",
+    "rail.browseAll": "Browse all categories",
+    "rail.metaLoading": "Loading live category highlights.",
     "quick.homeEntertainment": "Home Entertainment",
     "quick.homeEntertainmentDesc": "4K TVs, soundbars, and streaming gear.",
     "quick.gamingZone": "Gaming Zone",
@@ -347,13 +373,35 @@ const translations = {
     "categoryFilter.printer": "Printers",
     "categoryFilter.mobile": "Mobiles",
     "categoryFilter.audio": "Audio",
-    "categoryFilter.accessory": "Accessories"
+    "categoryFilter.accessory": "Accessories",
+    "links.allProducts": "All Products",
+    "links.brandStores": "Brand Stores",
+    "links.creatorStudio": "Creator Studio",
+    "service.dispatch": "Prime-style dispatch",
+    "service.dispatchDesc": "Same-day processing on flagship and featured inventory.",
+    "service.checkout": "Secure checkout",
+    "service.checkoutDesc": "Encrypted payments, invoice-ready billing, and saved carts.",
+    "service.returns": "Easy returns",
+    "service.returnsDesc": "30-day return window with order tracking built in.",
+    "service.business": "Business support",
+    "service.businessDesc": "GST invoices, bulk requests, and store pickup coordination.",
+    "products.eyebrow": "Best of retail",
+    "products.title": "Featured products surfaced from your homepage search and filters",
+    "products.viewAll": "See all products",
+    "testimonials.eyebrow": "Verified buyer voices",
+    "testimonials.title": "What Our Customers Say",
+    "testimonials.subtitle": "Real reviews from verified buyers across gaming, home office, creator, and business orders.",
+    "mega.pick": "Mega Department Pick",
+    "mega.price": "Now INR 4,799"
   },
   hi: {
     "header.deliverTo": "पहुंचाएं",
     "header.searchPlaceholder": "इलेक्ट्रॉनिक्स खोजें",
     "header.searchBtn": "खोजें",
     "header.language": "भाषा",
+    "header.searchBenefitDeals": "टॉप डील्स लाइव",
+    "header.searchBenefitDelivery": "तेज़ डिलीवरी",
+    "header.searchBenefitGst": "जीएसटी इनवॉइस उपलब्ध",
     "location.title": "अपना स्थान चुनें",
     "location.subtitle": "उत्पाद उपलब्धता और डिलीवरी विकल्प देखने के लिए डिलीवरी स्थान चुनें।",
     "location.cityLabel": "शहर",
@@ -364,6 +412,10 @@ const translations = {
     "nav.account": "अकाउंट",
     "nav.orders": "ऑर्डर",
     "nav.cart": "कार्ट",
+    "nav.signInPrompt": "हेलो, साइन इन करें",
+    "nav.returnsShort": "रिटर्न",
+    "nav.saved": "सेव्ड",
+    "nav.wishlist": "विशलिस्ट",
     "category.allDepartments": "सभी विभाग",
     "category.deals": "आज के ऑफर",
     "category.bestSellers": "बेस्ट सेलर",
@@ -384,11 +436,20 @@ const translations = {
     "mega.tablets": "टैबलेट",
     "mega.wearables": "वेयरेबल",
     "mega.chargers": "चार्जर",
+    "mega.components": "कंपोनेंट्स",
+    "mega.pcBuilder": "पीसी बिल्डर",
+    "mega.memoryCooling": "मेमोरी और कूलिंग",
+    "mega.powerCases": "पावर और केसेस",
     "mega.audioVideo": "ऑडियो और वीडियो",
     "mega.headphones": "हेडफोन",
     "mega.speakers": "स्पीकर",
     "mega.tvTheater": "टीवी और होम थिएटर",
     "mega.microphones": "माइक्रोफोन",
+    "mega.businessServices": "बिजनेस और सर्विसेज",
+    "mega.businessCatalogs": "बिजनेस कैटलॉग",
+    "mega.megaStores": "मेगा स्टोर्स",
+    "mega.compareProducts": "प्रोडक्ट तुलना",
+    "mega.ordersReturns": "ऑर्डर और रिटर्न",
     "mega.featuredDeal": "विशेष ऑफर",
     "mega.productTitle": "वायरलेस ईयरबड्स प्रो",
     "mega.priceNow": "अब ₹79",
@@ -396,6 +457,18 @@ const translations = {
     "hero.event": "मेगा इलेक्ट्रॉनिक्स सेल",
     "hero.headline": "लैपटॉप, मोबाइल और एक्सेसरी पर 60% तक की छूट",
     "hero.shopNow": "अभी खरीदें",
+    "home.discoveryEyebrow": "होम डिस्कवरी",
+    "home.discoveryTitle": "आपकी लाइव कैटलॉग से बने अमेज़न-स्टाइल शॉपिंग लेन",
+    "home.discoverySubtitle": "फीचर्ड शॉर्टकट्स, साइन-इन बेनिफिट्स, और क्रिएटर-रेडी मर्चेंडाइजिंग वही प्रोडक्ट फीड इस्तेमाल करते हुए ऑटो अपडेट होते हैं।",
+    "home.exploreCatalog": "पूरा कैटलॉग देखें",
+    "deal.eyebrow": "लाइव मार्कडाउन",
+    "deal.title": "स्टॉक में उपलब्ध प्रोडक्ट्स से चुनी गई डील्स",
+    "deal.subtitle": "लीड टाइल सबसे मजबूत लाइव डिस्काउंट दिखाती है, फिर रेल हाई-कन्वर्जन डील पिक्स दिखाती है।",
+    "deal.shopTopDeals": "टॉप डील्स खरीदें",
+    "rail.eyebrow": "मिशन के अनुसार ब्राउज़ करें",
+    "rail.title": "लैपटॉप, क्रिएटर गियर, ऑडियो और अधिक के लिए फास्ट कैटेगरी रेल",
+    "rail.browseAll": "सभी कैटेगरी देखें",
+    "rail.metaLoading": "लाइव कैटेगरी हाइलाइट्स लोड हो रहे हैं।",
     "quick.homeEntertainment": "होम एंटरटेनमेंट",
     "quick.homeEntertainmentDesc": "4K टीवी, साउंडबार और स्ट्रीमिंग गियर।",
     "quick.gamingZone": "गेमिंग ज़ोन",
@@ -444,17 +517,380 @@ const translations = {
     "categoryFilter.printer": "प्रिंटर",
     "categoryFilter.mobile": "मोबाइल",
     "categoryFilter.audio": "ऑडियो",
-    "categoryFilter.accessory": "एक्सेसरी"
+    "categoryFilter.accessory": "एक्सेसरी",
+    "links.allProducts": "सभी प्रोडक्ट",
+    "links.brandStores": "ब्रांड स्टोर्स",
+    "links.creatorStudio": "क्रिएटर स्टूडियो",
+    "service.dispatch": "प्राइम-स्टाइल डिस्पैच",
+    "service.dispatchDesc": "फ्लैगशिप और विशेष इन्वेंटरी पर समान-दिन प्रोसेसिंग।",
+    "service.checkout": "सुरक्षित चेकआउट",
+    "service.checkoutDesc": "एन्क्रिप्टेड भुगतान, इनवॉयस-तैयार बिलिंग, और सेव किए गए कार्ट।",
+    "service.returns": "आसान रिटर्न",
+    "service.returnsDesc": "30 दिन की रिटर्न विंडो निर्मित ऑर्डर ट्रैकिंग के साथ।",
+    "service.business": "बिजनेस सपोर्ट",
+    "service.businessDesc": "जीएसटी इनवॉयस, बल्क अनुरोध, और स्टोर पिकअप समन्वय।",
+    "products.eyebrow": "रीटेल का सर्वश्रेष्ठ",
+    "products.title": "आपकी होमपेज सर्च और फिल्टर से सर्च किए गए विशेष प्रोडक्ट",
+    "products.viewAll": "सभी प्रोडक्ट देखें",
+    "testimonials.eyebrow": "सत्यापित खरीदार की आवाजें",
+    "testimonials.title": "हमारे ग्राहक क्या कहते हैं",
+    "testimonials.subtitle": "गेमिंग, होम ऑफिस, क्रिएटर और बिजनेस ऑर्डर के सत्यापित खरीदारों की असली समीक्षाएं।",
+    "mega.pick": "मेगा विभाग पिक",
+    "mega.price": "अब INR 4,799"
   }
 };
 
+const nativeLanguageOverrides = {
+  ta: {
+    "header.deliverTo": "அனுப்ப வேண்டிய இடம்",
+    "header.searchPlaceholder": "மின்னணு பொருட்களை தேடுங்கள்",
+    "header.searchBtn": "தேடு",
+    "header.language": "மொழி",
+    "header.searchBenefitDeals": "சிறந்த சலுகைகள் நேரலையில்",
+    "header.searchBenefitDelivery": "விரைவு டெலிவரி",
+    "header.searchBenefitGst": "GST இன்வாய்ஸ் கிடைக்கும்",
+    "nav.account": "கணக்கு",
+    "nav.orders": "ஆர்டர்கள்",
+    "nav.cart": "கார்ட்",
+    "nav.signInPrompt": "வணக்கம், உள்நுழைக",
+    "nav.returnsShort": "திரும்பப்பெறுதல்",
+    "nav.saved": "சேமிக்கப்பட்டவை",
+    "nav.wishlist": "விருப்பப்பட்டியல்",
+    "category.allDepartments": "அனைத்து பிரிவுகள்",
+    "category.stores": "ஸ்டோர்கள்",
+    "links.allProducts": "அனைத்து பொருட்கள்",
+    "links.brandStores": "பிராண்ட் ஸ்டோர்கள்",
+    "links.creatorStudio": "கிரியேட்டர் ஸ்டூடியோ",
+    "mega.computers": "கம்ப்யூட்டர்கள்",
+    "mega.components": "கூறுகள்",
+    "mega.audioVideo": "ஆடியோ & வீடியோ",
+    "mega.businessServices": "வணிகம் & சேவைகள்",
+    "mega.pcBuilder": "பிசி பில்டர்",
+    "mega.memoryCooling": "மெமரி & கூலிங்",
+    "mega.powerCases": "பவர் & கேஸ்கள்",
+    "mega.businessCatalogs": "வணிக பட்டியல்கள்",
+    "mega.megaStores": "மேகா ஸ்டோர்கள்",
+    "mega.compareProducts": "பொருட்களை ஒப்பிடு",
+    "mega.ordersReturns": "ஆர்டர்கள் & திரும்பப்பெறுதல்",
+    "home.discoveryEyebrow": "ஹோம் கண்டுபிடிப்பு",
+    "home.discoveryTitle": "உங்கள் நேரடி கேடலாகில் இருந்து உருவான Amazon-ஸ்டைல் ஷாப்பிங் லேன்கள்",
+    "home.discoverySubtitle": "சிறப்பு குறுக்குவழிகள், உள்நுழைவு நன்மைகள் மற்றும் கிரியேட்டர் தயாரான மெர்சண்டைசிங் தானாகப் புதுப்பிக்கப்படும்.",
+    "home.exploreCatalog": "முழு கேடலாகை பார்க்கவும்",
+    "deal.eyebrow": "நேரடி தள்ளுபடிகள்",
+    "deal.title": "இருப்பில் உள்ள பொருட்களில் இருந்து தேர்ந்தெடுக்கப்பட்ட சலுகைகள்",
+    "deal.subtitle": "முக்கிய டைல் அதிக தள்ளுபடியை காட்டும், அதன் பின் ரெயில் உயர் மாற்றச் சலுகைகளை காட்டும்.",
+    "deal.shopTopDeals": "சிறந்த சலுகைகள் வாங்கவும்",
+    "rail.eyebrow": "உங்கள் தேவைக்கேற்ப உலாவுங்கள்",
+    "rail.title": "லேப்டாப், கிரியேட்டர் கியர், ஆடியோ மற்றும் பலவற்றிற்கான வேகமான பிரிவு வரிசைகள்",
+    "rail.browseAll": "அனைத்து பிரிவுகளையும் பார்க்கவும்",
+    "rail.metaLoading": "நேரடி பிரிவு ஹைலைட்கள் ஏற்றப்படுகின்றன.",
+    "service.dispatch": "பிரைம்-ஸ்டைல் அனுப்பல்",
+    "service.dispatchDesc": "முக்கிய மற்றும் சிறப்பு இன்வென்டரிக்கு அதே நாள் செயலாக்கம்.",
+    "service.checkout": "பாதுகாப்பான செக்அவுட்",
+    "service.checkoutDesc": "குறியாக்கப்பட்ட கட்டணம், இன்வாய்ஸ் தயாரான பில்லிங், மற்றும் சேமித்த கார்ட்கள்.",
+    "service.returns": "எளிய திரும்பப்பெறுதல்",
+    "service.returnsDesc": "30 நாள் திரும்பப்பெறும் சாளரம், உட்பொதிக்கப்பட்ட ஆர்டர் கண்காணிப்புடன்.",
+    "service.business": "வணிக ஆதரவு",
+    "service.businessDesc": "GST இன்வாய்ஸ், பல்க் கோரிக்கைகள் மற்றும் ஸ்டோர் பிக்-அப் ஒருங்கிணைப்பு.",
+    "products.eyebrow": "சிறந்த ரீடெயில்",
+    "products.title": "உங்கள் ஹோம்பேஜ் தேடல் மற்றும் ஃபில்டர்களில் இருந்து காட்சிப்படுத்தப்பட்ட தயாரிப்புகள்",
+    "products.viewAll": "அனைத்து பொருட்களையும் பார்க்கவும்",
+    "testimonials.eyebrow": "சரிபார்க்கப்பட்ட வாங்குபவர் குரல்கள்",
+    "testimonials.title": "எங்கள் வாடிக்கையாளர்கள் என்ன சொல்கிறார்கள்",
+    "testimonials.subtitle": "கேமிங், ஹோம் ஆபீஸ், கிரியேட்டர் மற்றும் வணிக ஆர்டர்களிலிருந்து உண்மையான மதிப்புரைகள்.",
+    "mega.pick": "மேகா பிரிவு தேர்வு",
+    "mega.price": "இப்போது INR 4,799",
+    "categoryFilter.all": "அனைத்து பட்டியல்",
+    "categoryFilter.computer": "கம்ப்யூட்டர்கள்",
+    "categoryFilter.laptop": "லேப்டாப்கள்",
+    "categoryFilter.printer": "பிரிண்டர்கள்",
+    "categoryFilter.mobile": "மொபைல்கள்",
+    "categoryFilter.audio": "ஆடியோ",
+    "categoryFilter.accessory": "அக்சசரிகள்"
+  },
+  te: {
+    "header.deliverTo": "డెలివరీ స్థలం",
+    "header.searchPlaceholder": "ఎలక్ట్రానిక్స్ కోసం శోధించండి",
+    "header.searchBtn": "శోధించు",
+    "header.language": "భాష",
+    "header.searchBenefitDeals": "టాప్ డీల్స్ లైవ్",
+    "header.searchBenefitDelivery": "వేగవంతమైన డెలివరీ",
+    "header.searchBenefitGst": "GST ఇన్వాయిస్ అందుబాటులో ఉంది",
+    "nav.account": "ఖాతా",
+    "nav.orders": "ఆర్డర్లు",
+    "nav.cart": "కార్ట్",
+    "nav.signInPrompt": "హలో, సైన్ ఇన్ చేయండి",
+    "nav.returnsShort": "రిటర్న్స్",
+    "nav.saved": "సేవ్ చేసినవి",
+    "nav.wishlist": "విష్‌లిస్ట్",
+    "category.allDepartments": "అన్ని విభాగాలు",
+    "category.stores": "స్టోర్లు",
+    "links.allProducts": "అన్ని ఉత్పత్తులు",
+    "links.brandStores": "బ్రాండ్ స్టోర్లు",
+    "links.creatorStudio": "క్రియేటర్ స్టూడియో",
+    "mega.computers": "కంప్యూటర్లు",
+    "mega.components": "భాగాలు",
+    "mega.audioVideo": "ఆడియో & వీడియో",
+    "mega.businessServices": "వ్యాపారం & సేవలు",
+    "home.discoveryEyebrow": "హోమ్ డిస్కవరీ",
+    "home.discoveryTitle": "మీ లైవ్ కాటలాగ్‌తో నిర్మించిన Amazon-శైలి షాపింగ్ లేన్లు",
+    "home.discoverySubtitle": "ఫీచర్డ్ షార్ట్‌కట్లు మరియు సైన్-ఇన్ ప్రయోజనాలు ఆటోమేటిక్‌గా నవీకరించబడతాయి.",
+    "home.exploreCatalog": "పూర్తి కాటలాగ్ చూడండి",
+    "deal.eyebrow": "లైవ్ మార్క్‌డౌన్స్",
+    "deal.title": "స్టాక్‌లో ఉన్న ఉత్పత్తుల నుంచి ఎంపిక చేసిన డీల్స్",
+    "deal.subtitle": "లీడ్ టైల్ ఉత్తమ తగ్గింపును చూపుతుంది, తరువాత రైలు హై-కన్వర్షన్ డీల్స్ చూపుతుంది.",
+    "deal.shopTopDeals": "టాప్ డీల్స్ కొనండి",
+    "rail.eyebrow": "లక్ష్యానికి అనుగుణంగా బ్రౌజ్ చేయండి",
+    "rail.title": "ల్యాప్‌టాప్‌లు, క్రియేటర్ గేర్, ఆడియో మరియు మరిన్ని కోసం వేగవంతమైన కేటగిరీ రైలు",
+    "rail.browseAll": "అన్ని కేటగిరీలు చూడండి",
+    "rail.metaLoading": "లైవ్ కేటగిరీ హైలైట్స్ లోడ్ అవుతున్నాయి.",
+    "service.dispatch": "ప్రైమ్-స్టైల్ డిస్పాచ్",
+    "service.checkout": "సురక్షిత చెకౌట్",
+    "service.returns": "సులభమైన రిటర్న్స్",
+    "service.business": "వ్యాపార సహాయం",
+    "products.eyebrow": "రిటైల్‌లో బెస్ట్",
+    "products.title": "మీ హోంపేజ్ శోధన మరియు ఫిల్టర్ల నుండి ఎంపికైన ఉత్పత్తులు",
+    "products.viewAll": "అన్ని ఉత్పత్తులు చూడండి",
+    "testimonials.eyebrow": "ధృవీకరించిన కస్టమర్ అభిప్రాయాలు",
+    "testimonials.title": "మా కస్టమర్లు ఏమంటున్నారు",
+    "mega.pick": "మెగా డిపార్ట్‌మెంట్ ఎంపిక",
+    "mega.price": "ఇప్పుడు INR 4,799",
+    "categoryFilter.all": "అన్ని కాటలాగ్",
+    "categoryFilter.computer": "కంప్యూటర్లు",
+    "categoryFilter.laptop": "ల్యాప్‌టాప్‌లు",
+    "categoryFilter.printer": "ప్రింటర్లు",
+    "categoryFilter.mobile": "మొబైల్స్",
+    "categoryFilter.audio": "ఆడియో",
+    "categoryFilter.accessory": "యాక్సెసరీలు"
+  },
+  kn: {
+    "header.deliverTo": "ವಿತರಣಾ ಸ್ಥಳ",
+    "header.searchPlaceholder": "ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಹುಡುಕಿ",
+    "header.searchBtn": "ಹುಡುಕಿ",
+    "header.language": "ಭಾಷೆ",
+    "header.searchBenefitDeals": "ಟಾಪ್ ಡೀಲ್ಸ್ ಲೈವ್",
+    "header.searchBenefitDelivery": "ವೇಗದ ವಿತರಣೆ",
+    "header.searchBenefitGst": "GST ಇನ್ವಾಯ್ಸ್ ಲಭ್ಯ",
+    "nav.account": "ಖಾತೆ",
+    "nav.orders": "ಆರ್ಡರ್‌ಗಳು",
+    "nav.cart": "ಕಾರ್ಟ್",
+    "nav.signInPrompt": "ಹಲೋ, ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "nav.returnsShort": "ರಿಟರ್ನ್ಸ್",
+    "nav.saved": "ಉಳಿಸಿದವು",
+    "nav.wishlist": "ವಿಷ್‌ಲಿಸ್ಟ್",
+    "category.allDepartments": "ಎಲ್ಲ ವಿಭಾಗಗಳು",
+    "category.stores": "ಸ್ಟೋರ್‌ಗಳು",
+    "links.allProducts": "ಎಲ್ಲ ಉತ್ಪನ್ನಗಳು",
+    "links.brandStores": "ಬ್ರ್ಯಾಂಡ್ ಸ್ಟೋರ್‌ಗಳು",
+    "links.creatorStudio": "ಕ್ರಿಯೇಟರ್ ಸ್ಟುಡಿಯೋ",
+    "mega.computers": "ಕಂಪ್ಯೂಟರ್‌ಗಳು",
+    "mega.components": "ಘಟಕಗಳು",
+    "mega.audioVideo": "ಆಡಿಯೋ ಮತ್ತು ವೀಡಿಯೋ",
+    "mega.businessServices": "ವ್ಯಾಪಾರ ಮತ್ತು ಸೇವೆಗಳು",
+    "home.discoveryEyebrow": "ಹೋಮ್ ಡಿಸ್ಕವರಿ",
+    "home.discoveryTitle": "ನಿಮ್ಮ ಲೈವ್ ಕ್ಯಾಟಲಾಗ್‌ನಿಂದ ನಿರ್ಮಿಸಲಾದ Amazon-ಶೈಲಿಯ ಶಾಪಿಂಗ್ ಲೇನ್‌ಗಳು",
+    "home.exploreCatalog": "ಪೂರ್ಣ ಕ್ಯಾಟಲಾಗ್ ನೋಡಿ",
+    "deal.eyebrow": "ಲೈವ್ ಮಾರ್ಕ್‌ಡೌನ್‌ಗಳು",
+    "deal.title": "ಸ್ಟಾಕ್‌ನಲ್ಲಿರುವ ಉತ್ಪನ್ನಗಳಿಂದ ಆಯ್ಕೆ ಮಾಡಿದ ಡೀಲ್ಸ್",
+    "deal.shopTopDeals": "ಟಾಪ್ ಡೀಲ್ಸ್ ಖರೀದಿಸಿ",
+    "rail.eyebrow": "ಉದ್ದೇಶದ ಆಧಾರದಲ್ಲಿ ಬ್ರೌಸ್ ಮಾಡಿ",
+    "rail.title": "ಲ್ಯಾಪ್‌ಟಾಪ್‌ಗಳು, ಕ್ರಿಯೇಟರ್ ಗೇರ್, ಆಡಿಯೋ ಮತ್ತು ಇನ್ನಷ್ಟುಗಾಗಿ ವೇಗದ ವರ್ಗ ಸಾಲುಗಳು",
+    "rail.browseAll": "ಎಲ್ಲ ವರ್ಗಗಳನ್ನು ನೋಡಿ",
+    "rail.metaLoading": "ಲೈವ್ ವರ್ಗ ಹೈಲೈಟ್ಸ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ.",
+    "service.dispatch": "ಪ್ರೈಮ್-ಸ್ಟೈಲ್ ಡಿಸ್ಪ್ಯಾಚ್",
+    "service.checkout": "ಸುರಕ್ಷಿತ ಚೆಕ್ಔಟ್",
+    "service.returns": "ಸುಲಭ ರಿಟರ್ನ್ಸ್",
+    "service.business": "ವ್ಯಾಪಾರ ಬೆಂಬಲ",
+    "products.eyebrow": "ರಿಟೇಲ್‌ನ ಅತ್ಯುತ್ತಮ",
+    "products.title": "ನಿಮ್ಮ ಹೋಂಪೇಜ್ ಹುಡುಕಾಟ ಮತ್ತು ಫಿಲ್ಟರ್‌ನಿಂದ ಆಯ್ಕೆಯಾದ ಉತ್ಪನ್ನಗಳು",
+    "products.viewAll": "ಎಲ್ಲ ಉತ್ಪನ್ನಗಳನ್ನು ನೋಡಿ",
+    "testimonials.eyebrow": "ಪರಿಶೀಲಿತ ಗ್ರಾಹಕರ ಅಭಿಪ್ರಾಯಗಳು",
+    "testimonials.title": "ನಮ್ಮ ಗ್ರಾಹಕರು ಏನು ಹೇಳುತ್ತಾರೆ",
+    "mega.pick": "ಮೆಗಾ ವಿಭಾಗದ ಆಯ್ಕೆ",
+    "mega.price": "ಈಗ INR 4,799",
+    "categoryFilter.all": "ಎಲ್ಲ ಕ್ಯಾಟಲಾಗ್",
+    "categoryFilter.computer": "ಕಂಪ್ಯೂಟರ್‌ಗಳು",
+    "categoryFilter.laptop": "ಲ್ಯಾಪ್‌ಟಾಪ್‌ಗಳು",
+    "categoryFilter.printer": "ಪ್ರಿಂಟರ್‌ಗಳು",
+    "categoryFilter.mobile": "ಮೊಬೈಲ್‌ಗಳು",
+    "categoryFilter.audio": "ಆಡಿಯೋ",
+    "categoryFilter.accessory": "ಆಕ್ಸೆಸರಿಗಳು"
+  },
+  ml: {
+    "header.deliverTo": "ഡെലിവറി സ്ഥലം",
+    "header.searchPlaceholder": "ഇലക്ട്രോണിക്സ് തിരയുക",
+    "header.searchBtn": "തിരയുക",
+    "header.language": "ഭാഷ",
+    "header.searchBenefitDeals": "ടോപ്പ് ഡീലുകൾ ലൈവ്",
+    "header.searchBenefitDelivery": "വേഗത്തിലുള്ള ഡെലിവറി",
+    "header.searchBenefitGst": "GST ഇൻവോയ്സ് ലഭ്യമാണ്",
+    "nav.account": "അക്കൗണ്ട്",
+    "nav.orders": "ഓർഡറുകൾ",
+    "nav.cart": "കാർട്ട്",
+    "nav.signInPrompt": "ഹലോ, സൈൻ ഇൻ ചെയ്യൂ",
+    "nav.returnsShort": "റിട്ടേൺസ്",
+    "nav.saved": "സേവ് ചെയ്തത്",
+    "nav.wishlist": "വിഷ്‌ലിസ്റ്റ്",
+    "category.allDepartments": "എല്ലാ വിഭാഗങ്ങളും",
+    "category.stores": "സ്റ്റോറുകൾ",
+    "links.allProducts": "എല്ലാ ഉൽപ്പന്നങ്ങൾ",
+    "links.brandStores": "ബ്രാൻഡ് സ്റ്റോറുകൾ",
+    "links.creatorStudio": "ക്രിയേറ്റർ സ്റ്റുഡിയോ",
+    "mega.computers": "കമ്പ്യൂട്ടറുകൾ",
+    "mega.components": "ഘടകങ്ങൾ",
+    "mega.audioVideo": "ഓഡിയോ & വീഡിയോ",
+    "mega.businessServices": "ബിസിനസ് & സേവനങ്ങൾ",
+    "home.discoveryEyebrow": "ഹോം ഡിസ്കവറി",
+    "home.discoveryTitle": "നിങ്ങളുടെ ലൈവ് കാറ്റലോഗിൽ നിന്ന് നിർമ്മിച്ച Amazon-സ്റ്റൈൽ ഷോപ്പിംഗ് ലെയ്‌നുകൾ",
+    "home.exploreCatalog": "പൂർണ്ണ കാറ്റലോഗ് കാണുക",
+    "deal.eyebrow": "ലൈവ് മാർക്ക്ഡൗൺസ്",
+    "deal.title": "സ്റ്റോക്കിലുള്ള ഉൽപ്പന്നങ്ങളിൽ നിന്ന് തെരഞ്ഞെടുത്ത ഡീലുകൾ",
+    "deal.shopTopDeals": "ടോപ്പ് ഡീലുകൾ വാങ്ങുക",
+    "rail.eyebrow": "ലക്ഷ്യം അനുസരിച്ച് ബ്രൗസ് ചെയ്യുക",
+    "rail.title": "ലാപ്‌ടോപ്പുകൾ, ക്രിയേറ്റർ ഗിയർ, ഓഡിയോ എന്നിവയ്ക്കുള്ള വേഗതയുള്ള വിഭാഗ റെയിൽ",
+    "rail.browseAll": "എല്ലാ വിഭാഗങ്ങളും കാണുക",
+    "rail.metaLoading": "ലൈവ് വിഭാഗ ഹൈലൈറ്റുകൾ ലോഡ് ചെയ്യുന്നു.",
+    "service.dispatch": "പ്രൈം-സ്റ്റൈൽ ഡിസ്പാച്ച്",
+    "service.checkout": "സുരക്ഷിത ചെക്ക്ഔട്ട്",
+    "service.returns": "എളുപ്പമുള്ള റിട്ടേൺസ്",
+    "service.business": "ബിസിനസ് പിന്തുണ",
+    "products.eyebrow": "റീട്ടെയിൽ ബെസ്റ്റ്",
+    "products.title": "നിങ്ങളുടെ ഹോംപേജ് തിരച്ചിലും ഫിൽറ്ററുകളും അടിസ്ഥാനമാക്കിയുള്ള ഉൽപ്പന്നങ്ങൾ",
+    "products.viewAll": "എല്ലാ ഉൽപ്പന്നങ്ങളും കാണുക",
+    "testimonials.eyebrow": "സ്ഥിരീകരിച്ച ഉപഭോക്തൃ അഭിപ്രായങ്ങൾ",
+    "testimonials.title": "ഞങ്ങളുടെ ഉപഭോക്താക്കൾ എന്ത് പറയുന്നു",
+    "mega.pick": "മെഗാ വിഭാഗം തിരഞ്ഞെടുപ്പ്",
+    "mega.price": "ഇപ്പോൾ INR 4,799",
+    "categoryFilter.all": "എല്ലാ കാറ്റലോഗും",
+    "categoryFilter.computer": "കമ്പ്യൂട്ടറുകൾ",
+    "categoryFilter.laptop": "ലാപ്‌ടോപ്പുകൾ",
+    "categoryFilter.printer": "പ്രിന്ററുകൾ",
+    "categoryFilter.mobile": "മൊബൈലുകൾ",
+    "categoryFilter.audio": "ഓഡിയോ",
+    "categoryFilter.accessory": "ആക്സസറികൾ"
+  },
+  bn: {
+    "header.deliverTo": "ডেলিভারি স্থান",
+    "header.searchPlaceholder": "ইলেকট্রনিক্স খুঁজুন",
+    "header.searchBtn": "খুঁজুন",
+    "header.language": "ভাষা",
+    "header.searchBenefitDeals": "টপ ডিলস লাইভ",
+    "header.searchBenefitDelivery": "দ্রুত ডেলিভারি",
+    "header.searchBenefitGst": "GST ইনভয়েস উপলব্ধ",
+    "nav.account": "অ্যাকাউন্ট",
+    "nav.orders": "অর্ডার",
+    "nav.cart": "কার্ট",
+    "nav.signInPrompt": "হ্যালো, সাইন ইন করুন",
+    "nav.returnsShort": "রিটার্নস",
+    "nav.saved": "সেভড",
+    "nav.wishlist": "উইশলিস্ট",
+    "category.allDepartments": "সব বিভাগ",
+    "category.stores": "স্টোরস",
+    "links.allProducts": "সব পণ্য",
+    "links.brandStores": "ব্র্যান্ড স্টোরস",
+    "links.creatorStudio": "ক্রিয়েটর স্টুডিও",
+    "mega.computers": "কম্পিউটার",
+    "mega.components": "কম্পোনেন্টস",
+    "mega.audioVideo": "অডিও ও ভিডিও",
+    "mega.businessServices": "ব্যবসা ও সেবা",
+    "home.discoveryEyebrow": "হোম ডিসকভারি",
+    "home.discoveryTitle": "আপনার লাইভ ক্যাটালগ থেকে তৈরি Amazon-স্টাইল শপিং লেন",
+    "home.exploreCatalog": "পুরো ক্যাটালগ দেখুন",
+    "deal.eyebrow": "লাইভ মার্কডাউন",
+    "deal.title": "স্টকে থাকা পণ্য থেকে বাছাই করা ডিলস",
+    "deal.shopTopDeals": "টপ ডিলস কিনুন",
+    "rail.eyebrow": "প্রয়োজন অনুযায়ী ব্রাউজ করুন",
+    "rail.title": "ল্যাপটপ, ক্রিয়েটর গিয়ার, অডিও ও আরও কিছুর জন্য দ্রুত ক্যাটাগরি রেল",
+    "rail.browseAll": "সব ক্যাটাগরি দেখুন",
+    "rail.metaLoading": "লাইভ ক্যাটাগরি হাইলাইট লোড হচ্ছে।",
+    "service.dispatch": "প্রাইম-স্টাইল ডিসপ্যাচ",
+    "service.checkout": "সুরক্ষিত চেকআউট",
+    "service.returns": "সহজ রিটার্ন",
+    "service.business": "ব্যবসায়িক সহায়তা",
+    "products.eyebrow": "রিটেইলের সেরা",
+    "products.title": "আপনার হোমপেজ সার্চ এবং ফিল্টার থেকে বাছাই করা পণ্য",
+    "products.viewAll": "সব পণ্য দেখুন",
+    "testimonials.eyebrow": "যাচাইকৃত ক্রেতার মতামত",
+    "testimonials.title": "আমাদের গ্রাহকরা কী বলছেন",
+    "mega.pick": "মেগা বিভাগের পছন্দ",
+    "mega.price": "এখন INR 4,799",
+    "categoryFilter.all": "সব ক্যাটালগ",
+    "categoryFilter.computer": "কম্পিউটার",
+    "categoryFilter.laptop": "ল্যাপটপ",
+    "categoryFilter.printer": "প্রিন্টার",
+    "categoryFilter.mobile": "মোবাইল",
+    "categoryFilter.audio": "অডিও",
+    "categoryFilter.accessory": "অ্যাকসেসরিজ"
+  },
+  mr: {
+    "header.deliverTo": "डिलिव्हरी स्थान",
+    "header.searchPlaceholder": "इलेक्ट्रॉनिक्स शोधा",
+    "header.searchBtn": "शोधा",
+    "header.language": "भाषा",
+    "header.searchBenefitDeals": "टॉप डील्स लाइव्ह",
+    "header.searchBenefitDelivery": "जलद डिलिव्हरी",
+    "header.searchBenefitGst": "GST इनव्हॉइस उपलब्ध",
+    "nav.account": "खाते",
+    "nav.orders": "ऑर्डर्स",
+    "nav.cart": "कार्ट",
+    "nav.signInPrompt": "हॅलो, साइन इन करा",
+    "nav.returnsShort": "रिटर्न्स",
+    "nav.saved": "सेव्ह केलेले",
+    "nav.wishlist": "विशलिस्ट",
+    "category.allDepartments": "सर्व विभाग",
+    "category.stores": "स्टोअर्स",
+    "links.allProducts": "सर्व प्रॉडक्ट्स",
+    "links.brandStores": "ब्रँड स्टोअर्स",
+    "links.creatorStudio": "क्रिएटर स्टुडिओ",
+    "mega.computers": "कॉम्प्युटर्स",
+    "mega.components": "घटक",
+    "mega.audioVideo": "ऑडिओ आणि व्हिडिओ",
+    "mega.businessServices": "बिझनेस आणि सेवा",
+    "home.discoveryEyebrow": "होम डिस्कव्हरी",
+    "home.discoveryTitle": "तुमच्या लाइव्ह कॅटलॉगवर आधारित Amazon-शैलीतील शॉपिंग लेन्स",
+    "home.exploreCatalog": "पूर्ण कॅटलॉग पहा",
+    "deal.eyebrow": "लाइव्ह मार्कडाउन",
+    "deal.title": "स्टॉकमधील प्रॉडक्ट्समधून निवडलेल्या डील्स",
+    "deal.shopTopDeals": "टॉप डील्स खरेदी करा",
+    "rail.eyebrow": "गरजेनुसार ब्राउझ करा",
+    "rail.title": "लॅपटॉप, क्रिएटर गिअर, ऑडिओ आणि अधिकसाठी वेगवान कॅटेगरी रेल",
+    "rail.browseAll": "सर्व कॅटेगरी पहा",
+    "rail.metaLoading": "लाइव्ह कॅटेगरी हायलाइट्स लोड होत आहेत.",
+    "service.dispatch": "प्राइम-स्टाइल डिस्पॅच",
+    "service.checkout": "सुरक्षित चेकआउट",
+    "service.returns": "सोपे रिटर्न्स",
+    "service.business": "बिझनेस सपोर्ट",
+    "products.eyebrow": "रिटेलमधील सर्वोत्तम",
+    "products.title": "तुमच्या होमपेज शोध आणि फिल्टरवर आधारित निवडलेली उत्पादने",
+    "products.viewAll": "सर्व प्रॉडक्ट्स पहा",
+    "testimonials.eyebrow": "सत्यापित ग्राहकांचे मत",
+    "testimonials.title": "आमचे ग्राहक काय म्हणतात",
+    "mega.pick": "मेगा विभाग निवड",
+    "mega.price": "आता INR 4,799",
+    "categoryFilter.all": "संपूर्ण कॅटलॉग",
+    "categoryFilter.computer": "कॉम्प्युटर्स",
+    "categoryFilter.laptop": "लॅपटॉप्स",
+    "categoryFilter.printer": "प्रिंटर्स",
+    "categoryFilter.mobile": "मोबाइल्स",
+    "categoryFilter.audio": "ऑडिओ",
+    "categoryFilter.accessory": "अॅक्सेसरीज"
+  }
+};
+
+Object.keys(nativeLanguageOverrides).forEach((lang) => {
+  translations[lang] = {
+    ...translations.en,
+    ...nativeLanguageOverrides[lang]
+  };
+});
+
 const languageFallbackMap = {
-  ta: "hi",
-  te: "hi",
-  kn: "hi",
-  ml: "hi",
-  bn: "hi",
-  mr: "hi"
+  ta: "en",
+  te: "en",
+  kn: "en",
+  ml: "en",
+  bn: "en",
+  mr: "en"
 };
 
 function getLanguagePack(lang) {
@@ -1860,10 +2296,48 @@ function openQuickViewModal(productId) {
   document.body.classList.add("quick-view-open");
 }
 
+function badgeEngine(product) {
+  const badges = [];
+  
+  // Sponsored badge (rotate every 30s)
+  if (Math.random() < 0.3) {
+    badges.push({ type: 'sponsored', label: 'SPONSORED', color: '#ff9900' });
+  }
+  
+  // Prime badge (featured/high rating)
+  if (product.featured || product.rating >= 4.7) {
+    badges.push({ type: 'prime', label: 'PRIME', color: '#00A8E1' });
+  }
+  
+  // Lightning Deal (discount > 25%)
+  const discount = ((product.listPrice - product.price) / product.listPrice * 100);
+  if (discount > 25) {
+    badges.push({ type: 'deal', label: `${Math.round(discount)}% OFF`, color: '#FF5A1F' });
+  }
+  
+  // Low Stock urgency
+  const stockState = getProductStockState(product);
+  if (stockState.rank === 1) {
+    badges.push({ type: 'stock', label: stockState.label, color: '#CC0000' });
+  }
+  
+  // Best Seller (top rating + sales simulation)
+  if (product.rating >= 4.8 && Math.random() < 0.4) {
+    badges.push({ type: 'bestseller', label: 'Bestseller', color: '#146EB4' });
+  }
+  
+  return badges.map(badge => 
+    `<span class="amazon-badge amazon-${badge.type}" style="--badge-color: ${badge.color}">
+      ${badge.label}
+    </span>`
+  ).join('');
+}
+
 function productCard(product) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(product.id)}`;
   const image = normalizeImageUrl(product.image) || FALLBACK_IMAGE_URL;
   const ribbon = getRibbonLabel(product);
+  const badgesHtml = badgeEngine(product);
   const listPrice = Number(product.listPrice || product.price || 0);
   const price = Number(product.price || 0);
   const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;
@@ -1874,12 +2348,18 @@ function productCard(product) {
   const discountMeta = discountPercent > 0
     ? `<p class="price-meta"><span class="list-price-inline">${money(listPrice)}</span><span class="discount-badge">${discountPercent}% off</span></p>`
     : "";
+  const ratingReviews = product.rating ? 
+    `<span class="rating">${product.rating.toFixed(1)} ★</span>
+     <span class="review-count">(2.5K)</span>` : '';
 
   return `
-    <article class="product-card">
+    <article class="product-card" data-product-id="${product.id}">
       ${ribbon ? `<span class="card-ribbon">${ribbon}</span>` : ""}
+      <div class="amazon-badges">${badgesHtml}</div>
       <a href="${detailUrl}" aria-label="Open ${product.name}">
-        <img src="${image}" alt="${product.name}" loading="lazy" />
+        <div class="image-zoom-container">
+          <img src="${image}" alt="${product.name}" loading="lazy" />
+        </div>
       </a>
       <div class="content">
         <h3><a href="${detailUrl}">${product.name}</a></h3>
@@ -1888,12 +2368,14 @@ function productCard(product) {
             <span class="price">${money(price)}</span>
             ${discountMeta}
           </span>
-          <span class="rating">${product.rating} ★</span>
+          <div class="rating-reviews">
+            ${ratingReviews}
+          </div>
         </div>
         ${bulkMeta}
         <div class="card-actions-inline">
           <button class="add-btn" data-id="${product.id}" type="button">${t("products.addToCart")}</button>
-          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${wishlisted ? "Wishlisted" : "Wishlist"}</button>
+          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${wishlisted ? "♥" : "♡"}</button>
           <button class="quick-view-link quick-view-btn" data-quick-view-id="${product.id}" type="button">Quick view</button>
         </div>
       </div>
@@ -2567,40 +3049,18 @@ function closeMegaMenu() {
   megaTrigger.setAttribute("aria-expanded", "false");
 }
 
-function closeQuickLinksMenu() {
-  if (!quickLinksMenu || !quickLinksTrigger) {
-    return;
-  }
-  quickLinksMenu.classList.remove("open");
-  quickLinksTrigger.setAttribute("aria-expanded", "false");
-}
+
 
 if (megaTrigger && megaMenu) {
   megaTrigger.addEventListener("click", () => {
     const isOpen = megaMenu.classList.toggle("open");
     megaTrigger.setAttribute("aria-expanded", String(isOpen));
-    if (isOpen) {
-      closeQuickLinksMenu();
-    }
-  });
-}
-
-if (quickLinksTrigger && quickLinksMenu) {
-  quickLinksTrigger.addEventListener("click", () => {
-    const isOpen = quickLinksMenu.classList.toggle("open");
-    quickLinksTrigger.setAttribute("aria-expanded", String(isOpen));
-    if (isOpen) {
-      closeMegaMenu();
-    }
   });
 }
 
 document.addEventListener("click", (event) => {
   if (megaMenu && megaTrigger && !megaMenu.contains(event.target) && !megaTrigger.contains(event.target)) {
     closeMegaMenu();
-  }
-  if (quickLinksMenu && quickLinksTrigger && !quickLinksMenu.contains(event.target) && !quickLinksTrigger.contains(event.target)) {
-    closeQuickLinksMenu();
   }
 });
 
@@ -2623,12 +3083,11 @@ document.addEventListener("keydown", (event) => {
       return;
     }
     closeMegaMenu();
-    closeQuickLinksMenu();
   }
 });
 
 document.addEventListener("click", (event) => {
-  if (searchSuggestions && !searchForm.contains(event.target)) {
+  if (searchSuggestions && searchForm && !searchForm.contains(event.target)) {
     closeSearchSuggestions();
   }
 
@@ -2650,7 +3109,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (event.target.classList.contains("add-btn")) {
+  if (event.target && event.target.classList && event.target.classList.contains("add-btn")) {
     const productId = String(event.target.getAttribute("data-id") || "").trim();
     if (productId) {
       addProductToCart(productId);
@@ -2703,3 +3162,1179 @@ initLocationPicker();
 syncCartCount();
 renderHomeSurface();
 void fetchHomeProductsFromApi();
+
+// =============== INTERACTIVE HERO CAROUSEL ===============
+
+class HeroCarousel {
+  constructor() {
+    this.container = document.querySelector('.hero-carousel');
+    if (!this.container) return;
+
+    this.slides = document.querySelectorAll('.carousel-slide');
+    this.prevBtn = document.querySelector('.carousel-prev');
+    this.nextBtn = document.querySelector('.carousel-next');
+    this.dots = document.querySelectorAll('.dot');
+    this.progressBar = document.querySelector('.progress-bar');
+
+    this.currentSlide = 0;
+    this.totalSlides = this.slides.length;
+    this.autoPlayInterval = null;
+    this.autoPlayDelay = 5000; // 5 seconds
+    this.isPaused = false;
+    this.touchStartX = 0;
+    this.touchEndX = 0;
+
+    if (this.totalSlides === 0 || this.dots.length === 0) {
+      return;
+    }
+
+    this.init();
+  }
+
+  init() {
+    this.setupEventListeners();
+    this.startAutoPlay();
+    this.updateProgressBar();
+  }
+
+  setupEventListeners() {
+    // Navigation buttons
+    if (this.prevBtn) {
+      this.prevBtn.addEventListener('click', () => this.prevSlide());
+    }
+    if (this.nextBtn) {
+      this.nextBtn.addEventListener('click', () => this.nextSlide());
+    }
+
+    // Dot navigation
+    this.dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => this.goToSlide(index));
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        this.prevSlide();
+      } else if (e.key === 'ArrowRight') {
+        this.nextSlide();
+      }
+    });
+
+    // Touch/swipe support
+    this.container.addEventListener('touchstart', (e) => {
+      this.touchStartX = e.changedTouches[0].screenX;
+    });
+
+    this.container.addEventListener('touchend', (e) => {
+      this.touchEndX = e.changedTouches[0].screenX;
+      this.handleSwipe();
+    });
+
+    // Pause on hover
+    this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
+    this.container.addEventListener('mouseleave', () => this.resumeAutoPlay());
+
+    // Pause on focus (accessibility)
+    this.container.addEventListener('focusin', () => this.pauseAutoPlay());
+    this.container.addEventListener('focusout', () => this.resumeAutoPlay());
+  }
+
+  goToSlide(index) {
+    if (index === this.currentSlide) return;
+
+    const currentSlideEl = this.slides[this.currentSlide];
+    const currentDotEl = this.dots[this.currentSlide];
+    const nextSlideEl = this.slides[index];
+    const nextDotEl = this.dots[index];
+    if (!nextSlideEl || !nextDotEl) return;
+
+    // Remove active class from current slide
+    if (currentSlideEl) {
+      currentSlideEl.classList.remove('active');
+    }
+    if (currentDotEl) {
+      currentDotEl.classList.remove('active');
+    }
+
+    // Update current slide
+    this.currentSlide = index;
+
+    // Add active class to new slide
+    nextSlideEl.classList.add('active');
+    nextDotEl.classList.add('active');
+
+    // Reset progress bar
+    this.updateProgressBar();
+  }
+
+  nextSlide() {
+    if (this.totalSlides <= 0) return;
+    const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+    this.goToSlide(nextIndex);
+  }
+
+  prevSlide() {
+    if (this.totalSlides <= 0) return;
+    const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+    this.goToSlide(prevIndex);
+  }
+
+  startAutoPlay() {
+    this.autoPlayInterval = setInterval(() => {
+      if (!this.isPaused) {
+        this.nextSlide();
+      }
+    }, this.autoPlayDelay);
+  }
+
+  pauseAutoPlay() {
+    this.isPaused = true;
+  }
+
+  resumeAutoPlay() {
+    this.isPaused = false;
+  }
+
+  updateProgressBar() {
+    if (!this.progressBar) return;
+
+    // Reset progress bar
+    this.progressBar.style.width = '0%';
+
+    // Animate progress bar
+    let startTime = null;
+    const duration = this.autoPlayDelay;
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      this.progressBar.style.width = `${progress * 100}%`;
+
+      if (progress < 1 && !this.isPaused) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  handleSwipe() {
+    const swipeThreshold = 50;
+    const swipeDistance = this.touchStartX - this.touchEndX;
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0) {
+        // Swipe left - next slide
+        this.nextSlide();
+      } else {
+        // Swipe right - previous slide
+        this.prevSlide();
+      }
+    }
+  }
+}
+
+// Initialize carousel when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new HeroCarousel();
+});
+
+// Add smooth scrolling for carousel buttons
+document.querySelectorAll('.hero-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    // Add click ripple effect
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.left = `${e.offsetX}px`;
+    ripple.style.top = `${e.offsetY}px`;
+    btn.appendChild(ripple);
+
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
+
+// =============== CUSTOMER TESTIMONIALS INTERACTIVITY ===============
+
+class TestimonialsManager {
+  constructor() {
+    this.testimonials = document.querySelectorAll('.testimonial-card');
+    this.currentIndex = 0;
+    this.autoRotateInterval = null;
+    this.autoRotateDelay = 8000; // 8 seconds
+    this.isPaused = false;
+
+    this.init();
+  }
+
+  init() {
+    this.setupIntersectionObserver();
+    this.setupHoverEffects();
+    this.startAutoRotate();
+  }
+
+  setupIntersectionObserver() {
+    // Animate testimonials when they come into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, index * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    this.testimonials.forEach(testimonial => {
+      testimonial.style.opacity = '0';
+      testimonial.style.transform = 'translateY(30px)';
+      testimonial.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(testimonial);
+    });
+  }
+
+  setupHoverEffects() {
+    this.testimonials.forEach(testimonial => {
+      testimonial.addEventListener('mouseenter', () => {
+        this.pauseAutoRotate();
+      });
+
+      testimonial.addEventListener('mouseleave', () => {
+        this.resumeAutoRotate();
+      });
+    });
+  }
+
+  startAutoRotate() {
+    this.autoRotateInterval = setInterval(() => {
+      if (!this.isPaused && this.testimonials.length > 0) {
+        this.rotateTestimonials();
+      }
+    }, this.autoRotateDelay);
+  }
+
+  pauseAutoRotate() {
+    this.isPaused = true;
+  }
+
+  resumeAutoRotate() {
+    this.isPaused = false;
+  }
+
+  rotateTestimonials() {
+    // Simple rotation effect - could be enhanced with more complex animations
+    this.testimonials.forEach((testimonial, index) => {
+      if (index === this.currentIndex) {
+        testimonial.style.transform = 'scale(1.02)';
+        testimonial.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+      } else {
+        testimonial.style.transform = 'scale(1)';
+        testimonial.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
+      }
+    });
+
+    this.currentIndex = (this.currentIndex + 1) % this.testimonials.length;
+  }
+}
+
+// Initialize testimonials when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new TestimonialsManager();
+});
+
+// Trust badges counter animation
+function animateCounters() {
+  const counters = document.querySelectorAll('.badge-content strong');
+
+  counters.forEach(counter => {
+    const target = parseFloat(counter.textContent.replace(/[^\d.]/g, ''));
+    if (isNaN(target)) return;
+
+    let current = 0;
+    const increment = target / 50; // 50 animation steps
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+
+      // Format based on content type
+      if (counter.textContent.includes('+')) {
+        counter.textContent = Math.floor(current).toLocaleString() + '+';
+      } else if (counter.textContent.includes('%')) {
+        counter.textContent = current.toFixed(1) + '%';
+      } else if (counter.textContent.includes('/')) {
+        counter.textContent = current.toFixed(1) + '/5';
+      } else {
+        counter.textContent = current.toFixed(1);
+      }
+    }, 30);
+  });
+}
+
+// Animate counters when testimonials section comes into view
+const testimonialsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      testimonialsObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const testimonialsSection = document.querySelector('.customer-testimonials');
+  if (testimonialsSection) {
+    testimonialsObserver.observe(testimonialsSection);
+  }
+});
+
+// Trending Products Manager
+class TrendingProductsManager {
+  constructor() {
+    this.carousel = document.querySelector('.trending-carousel');
+    this.grid = document.querySelector('.trending-grid');
+    this.prevBtn = document.querySelector('.carousel-nav.prev');
+    this.nextBtn = document.querySelector('.carousel-nav.next');
+    this.currentPosition = 0;
+    this.cardWidth = 300; // Approximate card width + gap
+    this.visibleCards = 4;
+    this.maxPosition = 0;
+
+    this.init();
+  }
+
+  init() {
+    if (!this.carousel) return;
+
+    this.updateMaxPosition();
+    this.bindEvents();
+    this.animateStats();
+    this.setupRecommendationTags();
+    this.setupWishlistButtons();
+    this.setupQuickAddButtons();
+
+    // Auto-scroll every 5 seconds
+    setInterval(() => this.autoScroll(), 5000);
+  }
+
+  updateMaxPosition() {
+    const cards = this.grid.children.length;
+    this.maxPosition = Math.max(0, cards - this.visibleCards);
+  }
+
+  bindEvents() {
+    this.prevBtn?.addEventListener('click', () => this.scroll(-1));
+    this.nextBtn?.addEventListener('click', () => this.scroll(1));
+
+    // Touch/swipe support
+    let startX = 0;
+    let isDragging = false;
+
+    this.grid.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    });
+
+    this.grid.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const diff = startX - currentX;
+
+      if (Math.abs(diff) > 50) {
+        e.preventDefault();
+        this.scroll(diff > 0 ? 1 : -1);
+        isDragging = false;
+      }
+    });
+
+    this.grid.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Update on window resize
+    window.addEventListener('resize', () => {
+      this.updateMaxPosition();
+      this.updateButtonStates();
+    });
+  }
+
+  scroll(direction) {
+    this.currentPosition = Math.max(0, Math.min(this.maxPosition, this.currentPosition + direction));
+    this.updateCarousel();
+    this.updateButtonStates();
+  }
+
+  autoScroll() {
+    if (this.currentPosition >= this.maxPosition) {
+      this.currentPosition = 0;
+    } else {
+      this.currentPosition++;
+    }
+    this.updateCarousel();
+    this.updateButtonStates();
+  }
+
+  updateCarousel() {
+    const translateX = -this.currentPosition * this.cardWidth;
+    this.grid.style.transform = `translateX(${translateX}px)`;
+  }
+
+  updateButtonStates() {
+    if (this.prevBtn) {
+      this.prevBtn.disabled = this.currentPosition === 0;
+      this.prevBtn.style.opacity = this.currentPosition === 0 ? '0.5' : '1';
+    }
+
+    if (this.nextBtn) {
+      this.nextBtn.disabled = this.currentPosition >= this.maxPosition;
+      this.nextBtn.style.opacity = this.currentPosition >= this.maxPosition ? '0.5' : '1';
+    }
+  }
+
+  animateStats() {
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    statNumbers.forEach(number => {
+      const target = parseInt(number.getAttribute('data-target'));
+      let current = 0;
+      const increment = target / 60;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        number.textContent = Math.floor(current).toLocaleString();
+      }, 50);
+    });
+  }
+
+  setupRecommendationTags() {
+    const tags = document.querySelectorAll('.recommendation-tags .tag');
+
+    tags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        // Remove active class from all tags
+        tags.forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tag
+        tag.classList.add('active');
+
+        // Here you would typically filter products based on the tag
+        // For now, we'll just show a visual feedback
+        this.filterProducts(tag.textContent.toLowerCase());
+      });
+    });
+  }
+
+  filterProducts(category) {
+    // Simulate filtering - in a real app, this would fetch/filter products
+    const cards = document.querySelectorAll('.trending-card');
+
+    cards.forEach((card, index) => {
+      if (Math.random() > 0.5) { // Random filter simulation
+        card.style.opacity = '0.3';
+        card.style.transform = 'scale(0.95)';
+      } else {
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+      }
+    });
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      cards.forEach(card => {
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+      });
+    }, 2000);
+  }
+
+  setupWishlistButtons() {
+    const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+
+    wishlistBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const productId = btn.getAttribute('data-product-id');
+        this.toggleWishlist(btn, productId);
+      });
+    });
+  }
+
+  toggleWishlist(button, productId) {
+    const isActive = button.classList.contains('active');
+
+    if (isActive) {
+      button.classList.remove('active');
+      button.textContent = '♡';
+      this.showNotification('Removed from wishlist', 'info');
+    } else {
+      button.classList.add('active');
+      button.textContent = '♥';
+      this.showNotification('Added to wishlist!', 'success');
+    }
+
+    // Here you would typically save to localStorage or send to server
+    this.updateWishlistStorage(productId, !isActive);
+  }
+
+  updateWishlistStorage(productId, isAdding) {
+    let wishlist = JSON.parse(localStorage.getItem('electroMart_wishlist') || '[]');
+
+    if (isAdding) {
+      if (!wishlist.includes(productId)) {
+        wishlist.push(productId);
+      }
+    } else {
+      wishlist = wishlist.filter(id => id !== productId);
+    }
+
+    localStorage.setItem('electroMart_wishlist', JSON.stringify(wishlist));
+  }
+
+  setupQuickAddButtons() {
+    const addBtns = document.querySelectorAll('.quick-add-btn');
+
+    addBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const productId = btn.getAttribute('data-product-id');
+        this.addToCart(btn, productId);
+      });
+    });
+  }
+
+  addToCart(button, productId) {
+    // Disable button temporarily
+    button.disabled = true;
+    button.textContent = 'Adding...';
+
+    // Simulate API call
+    setTimeout(() => {
+      button.disabled = false;
+      button.textContent = '✓ Added!';
+      this.showNotification('Added to cart successfully!', 'success');
+
+      // Update cart count
+      this.updateCartCount();
+
+      setTimeout(() => {
+        button.textContent = 'Add to Cart';
+      }, 2000);
+    }, 1000);
+
+    // Here you would typically send to cart API
+    this.updateCartStorage(productId);
+  }
+
+  updateCartStorage(productId) {
+    let cart = JSON.parse(localStorage.getItem('electroMart_cart') || '[]');
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ id: productId, quantity: 1 });
+    }
+
+    localStorage.setItem('electroMart_cart', JSON.stringify(cart));
+  }
+
+  updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('electroMart_cart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // Update cart badge if it exists
+    const cartBadge = document.querySelector('.cart-count');
+    if (cartBadge) {
+      cartBadge.textContent = totalItems;
+      cartBadge.style.display = totalItems > 0 ? 'block' : 'none';
+    }
+  }
+
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => notification.classList.add('show'), 10);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+}
+
+// Initialize trending products when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new TrendingProductsManager();
+});
+
+// Notification styles (add to CSS if needed)
+const notificationStyles = `
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #1a73e8;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    font-weight: 500;
+  }
+
+  .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification-success {
+    background: #00d4aa;
+  }
+
+  .notification-error {
+    background: #ff4757;
+  }
+
+  .notification-info {
+    background: #1a73e8;
+  }
+`;
+
+// Add notification styles to head
+const style = document.createElement('style');
+style.textContent = notificationStyles;
+document.head.appendChild(style);
+
+/* Newsletter Signup Manager */
+class NewsletterManager {
+  constructor() {
+    this.form = document.getElementById('newsletterForm');
+    this.emailInput = document.getElementById('newsletterEmail');
+    this.submitButton = this.form?.querySelector('.signup-button');
+    this.buttonText = this.submitButton?.querySelector('.button-text');
+    this.buttonLoading = this.submitButton?.querySelector('.button-loading');
+
+    this.init();
+  }
+
+  init() {
+    if (!this.form) return;
+
+    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    this.setupFormValidation();
+    this.animateSubscriberCount();
+  }
+
+  setupFormValidation() {
+    this.emailInput?.addEventListener('input', () => {
+      this.validateEmail();
+    });
+
+    this.emailInput?.addEventListener('blur', () => {
+      this.validateEmail();
+    });
+  }
+
+  validateEmail() {
+    const email = this.emailInput.value;
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    this.emailInput.classList.toggle('invalid', email && !isValid);
+    this.emailInput.classList.toggle('valid', email && isValid);
+
+    return isValid;
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault();
+
+    if (!this.validateEmail()) {
+      this.showNotification('Please enter a valid email address', 'error');
+      return;
+    }
+
+    // Show loading state
+    this.setLoadingState(true);
+
+    try {
+      // Simulate API call
+      await this.submitNewsletter();
+
+      // Success
+      this.showNotification('Welcome! Check your email for a 10% discount code.', 'success');
+      this.form.reset();
+      this.updateSubscriberCount();
+
+    } catch (error) {
+      this.showNotification('Something went wrong. Please try again.', 'error');
+    } finally {
+      this.setLoadingState(false);
+    }
+  }
+
+  setLoadingState(isLoading) {
+    this.submitButton.disabled = isLoading;
+
+    if (isLoading) {
+      this.buttonText.style.display = 'none';
+      this.buttonLoading.style.display = 'inline';
+    } else {
+      this.buttonText.style.display = 'inline';
+      this.buttonLoading.style.display = 'none';
+    }
+  }
+
+  async submitNewsletter() {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const formData = new FormData(this.form);
+    const data = {
+      email: formData.get('email'),
+      offers: formData.get('offers') === 'on',
+      updates: formData.get('updates') === 'on',
+      timestamp: new Date().toISOString()
+    };
+
+    // Store in localStorage (in real app, this would be an API call)
+    const subscribers = JSON.parse(localStorage.getItem('electroMart_newsletter') || '[]');
+    subscribers.push(data);
+    localStorage.setItem('electroMart_newsletter', JSON.stringify(subscribers));
+
+    // Here you would typically send to your newsletter service
+    console.log('Newsletter subscription:', data);
+  }
+
+  updateSubscriberCount() {
+    const countElement = document.querySelector('.count-number');
+    if (countElement) {
+      const currentCount = parseInt(countElement.textContent.replace(/[^\d]/g, ''));
+      const newCount = currentCount + 1;
+      countElement.textContent = newCount.toLocaleString() + '+';
+    }
+  }
+
+  animateSubscriberCount() {
+    const countElement = document.querySelector('.count-number');
+    if (!countElement) return;
+
+    const target = parseInt(countElement.textContent.replace(/[^\d]/g, ''));
+    let current = 0;
+    const increment = target / 50;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      countElement.textContent = Math.floor(current).toLocaleString() + '+';
+    }, 50);
+  }
+
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+      <span class="notification-text">${message}</span>
+    `;
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => notification.classList.add('show'), 10);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 5000);
+  }
+
+  getNotificationIcon(type) {
+    const icons = {
+      success: '✓',
+      error: '✕',
+      info: 'ℹ'
+    };
+    return icons[type] || icons.info;
+  }
+}
+
+// Initialize newsletter when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new NewsletterManager();
+});
+
+// Enhanced notification styles
+const enhancedNotificationStyles = `
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #1a73e8;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 400px;
+  }
+
+  .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification-success {
+    background: #00d4aa;
+  }
+
+  .notification-error {
+    background: #ff4757;
+  }
+
+  .notification-info {
+    background: #1a73e8;
+  }
+
+  .notification-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .notification-text {
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .form-group input.invalid {
+    border-color: #ff4757;
+    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+  }
+
+  .form-group input.valid {
+    border-color: #00d4aa;
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+  }
+`;
+
+// Add enhanced notification styles
+const enhancedStyle = document.createElement('style');
+enhancedStyle.textContent = enhancedNotificationStyles;
+document.head.appendChild(enhancedStyle);
+
+/* Interactive Elements Manager */
+class InteractiveElementsManager {
+  constructor() {
+    this.fabMain = document.getElementById('fabMain');
+    this.fabMenu = document.getElementById('fabMenu');
+    this.progressBar = document.getElementById('progressBar');
+    this.liveChatWidget = document.getElementById('liveChatWidget');
+    this.chatMessages = document.getElementById('chatMessages');
+    this.chatInput = document.getElementById('chatInput');
+    this.chatSend = document.querySelector('.chat-send');
+    this.chatClose = document.querySelector('.chat-close');
+
+    this.init();
+  }
+
+  init() {
+    this.setupFloatingActionButton();
+    this.setupScrollProgress();
+    this.setupLiveChat();
+    this.updateBadges();
+  }
+
+  setupFloatingActionButton() {
+    this.fabMain?.addEventListener('click', () => {
+      this.toggleFabMenu();
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!this.fabMain?.contains(e.target) && !this.fabMenu?.contains(e.target)) {
+        this.closeFabMenu();
+      }
+    });
+
+    // Handle FAB menu item clicks
+    this.fabMenu?.addEventListener('click', (e) => {
+      const fabItem = e.target.closest('.fab-item');
+      if (fabItem) {
+        const action = fabItem.dataset.action;
+        this.handleFabAction(action);
+      }
+    });
+  }
+
+  toggleFabMenu() {
+    const isActive = this.fabMenu?.classList.contains('active');
+    if (isActive) {
+      this.closeFabMenu();
+    } else {
+      this.openFabMenu();
+    }
+  }
+
+  openFabMenu() {
+    this.fabMain?.classList.add('active');
+    this.fabMenu?.classList.add('active');
+  }
+
+  closeFabMenu() {
+    this.fabMain?.classList.remove('active');
+    this.fabMenu?.classList.remove('active');
+  }
+
+  handleFabAction(action) {
+    switch (action) {
+      case 'cart':
+        this.scrollToSection('cart.html');
+        break;
+      case 'wishlist':
+        this.showWishlistModal();
+        break;
+      case 'compare':
+        this.showCompareModal();
+        break;
+      case 'chat':
+        this.toggleLiveChat();
+        break;
+      case 'top':
+        this.scrollToTop();
+        break;
+    }
+    this.closeFabMenu();
+  }
+
+  scrollToSection(url) {
+    window.location.href = url;
+  }
+
+  showWishlistModal() {
+    const wishlist = JSON.parse(localStorage.getItem('electroMart_wishlist') || '[]');
+    if (wishlist.length === 0) {
+      this.showNotification('Your wishlist is empty', 'info');
+      return;
+    }
+    // In a real app, this would open a wishlist modal
+    this.showNotification(`You have ${wishlist.length} items in your wishlist`, 'info');
+  }
+
+  showCompareModal() {
+    const compare = JSON.parse(localStorage.getItem('electroMart_compare') || '[]');
+    if (compare.length === 0) {
+      this.showNotification('Add products to compare', 'info');
+      return;
+    }
+    // In a real app, this would open a comparison modal
+    this.showNotification(`Comparing ${compare.length} products`, 'info');
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  setupScrollProgress() {
+    window.addEventListener('scroll', () => {
+      this.updateScrollProgress();
+    });
+    this.updateScrollProgress(); // Initial call
+  }
+
+  updateScrollProgress() {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+    this.progressBar.style.width = Math.min(scrollPercent, 100) + '%';
+  }
+
+  setupLiveChat() {
+    this.chatSend?.addEventListener('click', () => this.sendMessage());
+    this.chatInput?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.sendMessage();
+      }
+    });
+    this.chatClose?.addEventListener('click', () => this.closeLiveChat());
+  }
+
+  toggleLiveChat() {
+    if (this.liveChatWidget.classList.contains('show')) {
+      this.closeLiveChat();
+    } else {
+      this.openLiveChat();
+    }
+  }
+
+  openLiveChat() {
+    this.liveChatWidget.classList.add('show');
+    this.chatInput?.focus();
+  }
+
+  closeLiveChat() {
+    this.liveChatWidget.classList.remove('show');
+  }
+
+  sendMessage() {
+    const message = this.chatInput.value.trim();
+    if (!message) return;
+
+    this.addMessage(message, 'sent');
+    this.chatInput.value = '';
+
+    // Simulate bot response
+    setTimeout(() => {
+      const responses = [
+        "Thanks for your message! How can I help you with your order?",
+        "I'd be happy to assist you with that. Could you provide more details?",
+        "That's a great question! Let me check that for you.",
+        "I understand. Let me connect you with our specialist.",
+        "Perfect! Is there anything else I can help you with today?"
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      this.addMessage(randomResponse, 'received');
+    }, 1000 + Math.random() * 2000);
+  }
+
+  addMessage(text, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `
+      <p>${text}</p>
+      <span class="message-time">Just now</span>
+    `;
+    this.chatMessages.appendChild(messageDiv);
+    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+  }
+
+  updateBadges() {
+    // Update cart count
+    const cart = JSON.parse(localStorage.getItem('electroMart_cart') || '[]');
+    const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartBadge = document.querySelector('.cart-count');
+    if (cartBadge) {
+      cartBadge.textContent = cartCount;
+      cartBadge.style.display = cartCount > 0 ? 'flex' : 'none';
+    }
+
+    // Update wishlist count
+    const wishlist = JSON.parse(localStorage.getItem('electroMart_wishlist') || '[]');
+    const wishlistBadge = document.querySelector('.wishlist-count');
+    if (wishlistBadge) {
+      wishlistBadge.textContent = wishlist.length;
+      wishlistBadge.style.display = wishlist.length > 0 ? 'flex' : 'none';
+    }
+
+    // Update compare count
+    const compare = JSON.parse(localStorage.getItem('electroMart_compare') || '[]');
+    const compareBadge = document.querySelector('.compare-count');
+    if (compareBadge) {
+      compareBadge.textContent = compare.length;
+      compareBadge.style.display = compare.length > 0 ? 'flex' : 'none';
+    }
+  }
+
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+      <span class="notification-text">${message}</span>
+    `;
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => notification.classList.add('show'), 10);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 300);
+    }, 5000);
+  }
+
+  getNotificationIcon(type) {
+    const icons = {
+      success: '✓',
+      error: '✕',
+      info: 'ℹ'
+    };
+    return icons[type] || icons.info;
+  }
+}
+
+// Initialize interactive elements when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new InteractiveElementsManager();
+  new SeasonalPromotionsManager();
+});
+
+// Seasonal promotions countdown timer
+class SeasonalPromotionsManager {
+  constructor() {
+    this.countdownElements = document.querySelectorAll('.seasonal-promotions .countdown');
+    this.init();
+  }
+
+  init() {
+    if (!this.countdownElements.length) return;
+    this.updateCountdowns();
+    setInterval(() => this.updateCountdowns(), 1000);
+  }
+
+  updateCountdowns() {
+    const now = new Date();
+
+    this.countdownElements.forEach((countdown) => {
+      const deadline = new Date(countdown.getAttribute('data-deadline'));
+      const diff = deadline - now;
+
+      if (diff <= 0) {
+        countdown.innerHTML = '<span class="countdown-item">Offer ended</span>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      const timeStrings = {
+        days: String(days).padStart(2, '0'),
+        hours: String(hours).padStart(2, '0'),
+        minutes: String(minutes).padStart(2, '0'),
+        seconds: String(seconds).padStart(2, '0'),
+      };
+
+      countdown.querySelector('.days').textContent = timeStrings.days;
+      countdown.querySelector('.hours').textContent = timeStrings.hours;
+      countdown.querySelector('.minutes').textContent = timeStrings.minutes;
+      countdown.querySelector('.seconds').textContent = timeStrings.seconds;
+    });
+  }
+}

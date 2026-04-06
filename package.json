@@ -9,6 +9,10 @@
     "csv:convert:project": "node tools/convert-wix-catalog-csv.js",
     "smoke": "node qa-full-smoke.js --reports-dir=qa-reports",
     "smoke:ui": "node qa-ui-smoke.js --artifacts-dir=qa-reports/ui",
+    "smoke:trend": "powershell -ExecutionPolicy Bypass -File .\\smoke-trend.ps1",
+    "smoke:triage": "powershell -ExecutionPolicy Bypass -File .\\smoke-triage.ps1",
+    "smoke:triage:loop": "powershell -ExecutionPolicy Bypass -File .\\smoke-triage-loop.ps1",
+    "smoke:validate:artifacts": "powershell -ExecutionPolicy Bypass -File .\\smoke-validate-artifacts.ps1",
     "smoke:baseline:lock": "powershell -ExecutionPolicy Bypass -File .\\lock-visual-baseline.ps1",
     "smoke:baseline:verify": "powershell -ExecutionPolicy Bypass -File .\\verify-visual-baseline.ps1",
     "smoke:install-browsers": "npx playwright install chromium",
@@ -22,6 +26,8 @@
     "issues:prod-hardening": "powershell -ExecutionPolicy Bypass -File .\\create-production-hardening-issues.ps1"
   },
   "devDependencies": {
-    "playwright": "1.58.2"
+    "otplib": "^13.4.0",
+    "playwright": "1.58.2",
+    "speakeasy": "^2.0.0"
   }
 }

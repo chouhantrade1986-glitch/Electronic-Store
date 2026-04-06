@@ -1,0 +1,22 @@
+{
+  "users": [],
+  "products": [],
+  "orders": [],
+  "payments": [],
+  "afterSalesCases": [],
+  "adminAuditTrail": [],
+  "orderNotifications": [],
+  "paymentWebhookEvents": [],
+  "authOtpChallenges": [],
+  "backInStockRequests": [],
+  "backInStockNotifications": [],
+  "phoneVerificationReminders": [],
+  "inventorySettings": {
+    "defaultLowStockThreshold": 5,
+    "restockTarget": 10,
+    "categoryThresholds": {}
+  },
+  "automationJobs": {},
+  "automationSettings": {},
+  "automationRunHistory": {}
+}

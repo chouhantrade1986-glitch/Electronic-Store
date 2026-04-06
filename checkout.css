@@ -1,9 +1,29 @@
+.site-header {
+  box-shadow: 0 10px 24px rgba(2, 8, 23, 0.3);
+}
+
+.top-nav {
+  background: linear-gradient(180deg, #19212b 0%, #131921 100%);
+}
+
+.brand-accent {
+  color: #ffd814;
+}
+
+.brand-sub {
+  color: #d1d5db;
+}
+
+.header-links a:hover {
+  border-color: #ffd814;
+}
+
 .checkout-main {
   width: min(1400px, 96vw);
   margin: 22px auto 28px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 18px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -31,10 +51,10 @@
 .flow-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 14px;
   margin-bottom: 12px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
 }
 
 .flow-card h2 {
@@ -57,10 +77,20 @@
 
 .form-grid input {
   min-height: 38px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c7d0db;
   border-radius: 8px;
   padding: 0 10px;
   font: inherit;
+}
+
+.form-grid input:focus,
+.payment-detail input:focus,
+.payment-detail select:focus,
+.coupon-row input:focus,
+.delivery-slot-label select:focus {
+  outline: none;
+  border-color: #0f5ea8;
+  box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.2);
 }
 
 .full-width {
@@ -77,26 +107,26 @@
   align-items: center;
   gap: 8px;
   padding: 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dfe5ec;
   border-radius: 8px;
-  background: #fafafa;
+  background: #f8fafb;
   font-weight: 600;
   transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .payment-option.active {
-  border-color: #f59e0b;
-  background: #fffbeb;
+  border-color: #f2c200;
+  background: #fff8df;
 }
 
 .payment-option:hover {
-  border-color: #94a3b8;
+  border-color: #b7c3d1;
 }
 
 .payment-detail {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #dfe5ec;
   border-radius: 8px;
   background: #ffffff;
   display: grid;
@@ -113,7 +143,7 @@
 .payment-detail input,
 .payment-detail select {
   min-height: 38px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c7d0db;
   border-radius: 8px;
   padding: 0 10px;
   font: inherit;
@@ -138,9 +168,9 @@
   gap: 12px;
   align-items: center;
   padding: 12px 14px;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #d6deea;
   border-radius: 12px;
-  background: linear-gradient(135deg, #eff6ff, #eef2ff);
+  background: linear-gradient(135deg, #f7fafc, #eef3f8);
 }
 
 .gateway-badge {
@@ -151,7 +181,7 @@
   min-height: 38px;
   padding: 0 12px;
   border-radius: 999px;
-  background: #0f172a;
+  background: #131921;
   color: #ffffff;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -181,7 +211,7 @@
 
 .delivery-slot-label select {
   min-height: 40px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c7d0db;
   border-radius: 8px;
   padding: 0 10px;
   font: inherit;
@@ -198,7 +228,7 @@
   grid-template-columns: 78px 1fr auto;
   gap: 10px;
   padding: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e3e8ee;
   border-radius: 8px;
 }
 
@@ -226,11 +256,11 @@
 .order-summary {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 14px;
   position: sticky;
   top: 12px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
 }
 
 .order-summary h2 {
@@ -242,9 +272,9 @@
   display: grid;
   gap: 8px;
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e3e8ee;
   border-radius: 10px;
-  background: #f8fafc;
+  background: #f8fafb;
 }
 
 .coupon-box label {
@@ -259,7 +289,7 @@
 
 .coupon-row input {
   min-height: 38px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c7d0db;
   border-radius: 8px;
   padding: 0 10px;
   font: inherit;
@@ -267,7 +297,7 @@
 
 .coupon-row button,
 .remove-coupon-btn {
-  border: 1px solid #d1d5db;
+  border: 1px solid #c7d0db;
   border-radius: 8px;
   background: #ffffff;
   padding: 0 12px;
@@ -279,8 +309,8 @@
 
 .coupon-row button:hover,
 .remove-coupon-btn:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
+  background: #f1f5f9;
+  border-color: #b7c3d1;
 }
 
 .coupon-message {
@@ -302,16 +332,16 @@
 }
 
 .grand-total {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #e3e8ee;
   padding-top: 10px;
   font-size: 1.1rem;
 }
 
 #placeOrderBtn {
   width: 100%;
-  border: 1px solid #fcd200;
+  border: 1px solid #f2c200;
   border-radius: 999px;
-  background: var(--orange);
+  background: linear-gradient(180deg, #ffe9a8 0%, #ffd814 100%);
   color: #111827;
   font: inherit;
   font-weight: 700;
@@ -321,13 +351,13 @@
 }
 
 #placeOrderBtn:hover:not(:disabled) {
-  background: #f9cf29;
+  background: linear-gradient(180deg, #fddf86 0%, #f7ca00 100%);
   transform: translateY(-1px);
 }
 
 #placeOrderBtn.gateway-active {
-  border-color: #0f172a;
-  background: #0f172a;
+  border-color: #131921;
+  background: #131921;
   color: #ffffff;
 }
 
@@ -346,7 +376,7 @@
 .secure-line {
   margin-top: 10px;
   font-size: 0.9rem;
-  color: #565959;
+  color: #4b5563;
 }
 
 .delivery-note {
@@ -358,12 +388,12 @@
 .gateway-summary-note {
   margin-top: 10px;
   font-size: 0.9rem;
-  color: #1d4ed8;
+  color: #0f5ea8;
   font-weight: 700;
 }
 
 .empty-message {
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed #c7d0db;
   border-radius: 8px;
   padding: 16px;
   color: #565959;

@@ -122,15 +122,36 @@ async function requestJson(pathname, options = {}) {
   return data;
 }
 
-async function runTimedStep(stepName, runner) {
+async function runTimedStep(stepName, runner, options = {}) {
+  const retries = Number.isInteger(options.retries) ? options.retries : 0;
+  const retryDelayMs = Number.isFinite(options.retryDelayMs) ? Number(options.retryDelayMs) : 1000;
+  const maxAttempts = Math.max(1, retries + 1);
   const startedAt = Date.now();
-  const result = await runner();
-  const durationMs = Date.now() - startedAt;
-  return {
-    ...result,
-    step: stepName,
-    durationMs
-  };
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const result = await runner();
+      const durationMs = Date.now() - startedAt;
+      return {
+        ...result,
+        step: stepName,
+        durationMs,
+        attempts: attempt
+      };
+    } catch (error) {
+      lastError = error;
+      const message = error && error.message ? error.message : String(error);
+      if (attempt < maxAttempts) {
+        process.stderr.write(`[qa-ui-smoke] Step ${stepName} failed on attempt ${attempt}/${maxAttempts}: ${message}. Retrying...\n`);
+        if (retryDelayMs > 0) {
+          await sleep(retryDelayMs);
+        }
+      }
+    }
+  }
+
+  throw lastError;
 }
 
 function asProductList(payload) {
@@ -1313,15 +1334,20 @@ async function main() {
     });
 
     const smokeProduct = await resolveSmokeProduct();
-    const auth = await runTimedStep("auth", () => runAuthSmoke(browser));
-    const productDetail = await runTimedStep("productDetail", () => runProductDetailSmoke(browser, customerSession, smokeProduct));
-    const cart = await runTimedStep("cart", () => runCartSmoke(browser, customerSession));
-    const account = await runTimedStep("account", () => runAccountSmoke(browser, customerSession));
-    const admin = await runTimedStep("admin", () => runAdminDashboardSmoke(browser, adminSession));
-    const checkout = await runTimedStep("checkout", () => runCheckoutSmoke(browser));
-    const wishlist = await runTimedStep("wishlist", () => runWishlistSmoke(browser, customerSession));
-    const invoice = await runTimedStep("invoice", () => runInvoiceSmoke(browser, customerSession));
-    const orders = await runTimedStep("orders", () => runOrdersSmoke(browser, customerSession, smokeProduct));
+    const stepRetryOptions = {
+      retries: 1,
+      retryDelayMs: 1250
+    };
+
+    const auth = await runTimedStep("auth", () => runAuthSmoke(browser), stepRetryOptions);
+    const productDetail = await runTimedStep("productDetail", () => runProductDetailSmoke(browser, customerSession, smokeProduct), stepRetryOptions);
+    const cart = await runTimedStep("cart", () => runCartSmoke(browser, customerSession), stepRetryOptions);
+    const account = await runTimedStep("account", () => runAccountSmoke(browser, customerSession), stepRetryOptions);
+    const admin = await runTimedStep("admin", () => runAdminDashboardSmoke(browser, adminSession), stepRetryOptions);
+    const checkout = await runTimedStep("checkout", () => runCheckoutSmoke(browser), stepRetryOptions);
+    const wishlist = await runTimedStep("wishlist", () => runWishlistSmoke(browser, customerSession), stepRetryOptions);
+    const invoice = await runTimedStep("invoice", () => runInvoiceSmoke(browser, customerSession), stepRetryOptions);
+    const orders = await runTimedStep("orders", () => runOrdersSmoke(browser, customerSession, smokeProduct), stepRetryOptions);
 
     const result = {
       auth,

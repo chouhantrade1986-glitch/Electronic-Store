@@ -2,10 +2,53 @@ name: Smoke Suite
 
 on:
   workflow_dispatch:
+    inputs:
+      trend_window_size:
+        description: "Trend window size (last N runs)"
+        required: false
+        default: "10"
+      trend_warn_threshold:
+        description: "Warning threshold for retry-affected runs in window"
+        required: false
+        default: "3"
+      trend_error_threshold:
+        description: "Error threshold for retry-affected runs in window"
+        required: false
+        default: "6"
+      trend_failure_warn_threshold:
+        description: "Warning threshold for runs with non-none failureCode in window"
+        required: false
+        default: "2"
+      trend_failure_error_threshold:
+        description: "Error threshold for runs with non-none failureCode in window"
+        required: false
+        default: "4"
+      trend_max_entries:
+        description: "Max history entries to keep"
+        required: false
+        default: "30"
+      trend_fail_on_error_threshold:
+        description: "Fail job when flake error threshold is hit (true/false)"
+        required: false
+        default: "false"
+      trend_fail_on_failure_error_threshold:
+        description: "Fail job when failure-class error threshold is hit (true/false)"
+        required: false
+        default: "false"
+      triage_loop_runs:
+        description: "Optional extra triage loop runs for distribution sampling (0 to disable)"
+        required: false
+        default: "0"
+  pull_request:
+    branches:
+      - main
+      - master
   push:
     branches:
       - main
       - master
+  schedule:
+    - cron: '30 2 * * *'
 
 concurrency:
   group: smoke-suite-${{ github.ref }}
@@ -28,6 +71,14 @@ jobs:
           cache-dependency-path: |
             package-lock.json
             backend/package-lock.json
+
+      - name: Restore smoke trend history
+        uses: actions/cache/restore@v4
+        with:
+          path: qa-reports/smoke-trend-history.json
+          key: smoke-trend-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            smoke-trend-${{ github.ref_name }}-
 
       - name: Prepare backend env file
         shell: pwsh
@@ -90,8 +141,53 @@ jobs:
       - name: Run smoke suite
         shell: pwsh
         run: |
-          cmd /c run-smoke-suite.bat --reports-dir=qa-reports
-          $exitCode = $LASTEXITCODE
+          New-Item -ItemType Directory -Path qa-reports -Force | Out-Null
+          $maxAttempts = 2
+          $exitCode = 0
+          $successfulAttempt = 0
+          for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+            Write-Host "Running smoke suite (attempt $attempt/$maxAttempts)..."
+            cmd /c run-smoke-suite.bat --reports-dir=qa-reports
+            $exitCode = $LASTEXITCODE
+
+            if (Test-Path qa-reports/smoke-report.json) {
+              Copy-Item -Path qa-reports/smoke-report.json -Destination ("qa-reports/smoke-report-attempt-{0}.json" -f $attempt) -Force
+            }
+
+            if ($exitCode -eq 0) {
+              $successfulAttempt = $attempt
+              break
+            }
+
+            if ($attempt -lt $maxAttempts) {
+              Write-Host "Smoke suite attempt $attempt failed (exit code $exitCode). Retrying once..."
+            }
+          }
+
+          if ($successfulAttempt -gt 1) {
+            Write-Host "::warning title=Smoke Suite Retry Succeeded::Smoke suite succeeded on retry attempt $successfulAttempt."
+          }
+
+          if ($exitCode -eq 0 -and (Test-Path qa-reports/smoke-report.json)) {
+            try {
+              $report = Get-Content -Path qa-reports/smoke-report.json -Raw | ConvertFrom-Json
+              $uiRetries = 0
+              $uiRetrySteps = @()
+              if ($report.summary -and $null -ne $report.summary.uiRetries) {
+                $uiRetries = [int]$report.summary.uiRetries
+              }
+              if ($report.summary -and $null -ne $report.summary.uiRetrySteps) {
+                $uiRetrySteps = @($report.summary.uiRetrySteps | ForEach-Object { [string]$_ })
+              }
+              if ($uiRetries -gt 0) {
+                $stepsLabel = if ($uiRetrySteps.Count -gt 0) { [string]::Join(', ', $uiRetrySteps) } else { 'unknown-step' }
+                Write-Host "::warning title=UI Smoke Recovered With Retries::UI smoke recovered using retries on $uiRetries step(s): $stepsLabel"
+              }
+            } catch {
+              Write-Host "::warning title=UI Retry Signal Parse Failed::Smoke completed but uiRetries could not be parsed from smoke-report.json."
+            }
+          }
+
           if ($exitCode -ne 0) {
             if (Test-Path qa-reports/smoke-report.json) {
               try {
@@ -122,7 +218,659 @@ jobs:
             exit $exitCode
           }
 
+      - name: Build smoke flake trend artifact
+        if: always()
+        shell: pwsh
+        env:
+          SMOKE_TREND_WINDOW_SIZE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_window_size || '' }}
+          SMOKE_TREND_WARN_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_warn_threshold || '' }}
+          SMOKE_TREND_ERROR_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_error_threshold || '' }}
+          SMOKE_TREND_FAILURE_WARN_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_failure_warn_threshold || '' }}
+          SMOKE_TREND_FAILURE_ERROR_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_failure_error_threshold || '' }}
+          SMOKE_TREND_MAX_ENTRIES: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_max_entries || '' }}
+          SMOKE_TREND_FAIL_ON_ERROR_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_fail_on_error_threshold || '' }}
+          SMOKE_TREND_FAIL_ON_FAILURE_ERROR_THRESHOLD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trend_fail_on_failure_error_threshold || '' }}
+        run: |
+          New-Item -ItemType Directory -Path qa-reports -Force | Out-Null
+          $historyPath = "qa-reports/smoke-trend-history.json"
+          $latestPath = "qa-reports/smoke-trend-latest.json"
+          $windowPath = "qa-reports/smoke-trend-window.json"
+          $summaryPath = "qa-reports/smoke-trend-summary.md"
+          $diagnosticsPath = "qa-reports/smoke-failure-diagnostics.json"
+
+          function Set-ContentWithRetry {
+            param(
+              [Parameter(Mandatory = $true)]
+              [string]$Path,
+              [Parameter(Mandatory = $true)]
+              [AllowEmptyString()]
+              [string]$Value,
+              [string]$Encoding = "utf8",
+              [int]$MaxRetries = 8,
+              [int]$RetryDelayMs = 250
+            )
+
+            $attempt = 0
+            while ($true) {
+              try {
+                Set-Content -Path $Path -Value $Value -Encoding $Encoding
+                return
+              }
+              catch {
+                $attempt += 1
+                if ($attempt -ge $MaxRetries) {
+                  throw
+                }
+                Start-Sleep -Milliseconds $RetryDelayMs
+              }
+            }
+          }
+
+          $maxEntries = 30
+          $windowSize = 10
+          $warnThreshold = 3
+          $errorThreshold = 6
+          $failureWarnThreshold = 2
+          $failureErrorThreshold = 4
+
+          $parsed = 0
+          $failOnErrorThreshold = $false
+          $failOnFailureErrorThreshold = $false
+          if ([int]::TryParse([string]$env:SMOKE_TREND_MAX_ENTRIES, [ref]$parsed) -and $parsed -ge 5) {
+            $maxEntries = $parsed
+          }
+          if ([int]::TryParse([string]$env:SMOKE_TREND_WINDOW_SIZE, [ref]$parsed) -and $parsed -ge 3) {
+            $windowSize = $parsed
+          }
+          if ([int]::TryParse([string]$env:SMOKE_TREND_WARN_THRESHOLD, [ref]$parsed) -and $parsed -ge 1) {
+            $warnThreshold = $parsed
+          }
+          if ([int]::TryParse([string]$env:SMOKE_TREND_ERROR_THRESHOLD, [ref]$parsed) -and $parsed -ge 1) {
+            $errorThreshold = $parsed
+          }
+          if ([int]::TryParse([string]$env:SMOKE_TREND_FAILURE_WARN_THRESHOLD, [ref]$parsed) -and $parsed -ge 1) {
+            $failureWarnThreshold = $parsed
+          }
+          if ([int]::TryParse([string]$env:SMOKE_TREND_FAILURE_ERROR_THRESHOLD, [ref]$parsed) -and $parsed -ge 1) {
+            $failureErrorThreshold = $parsed
+          }
+
+          if ($errorThreshold -lt $warnThreshold) {
+            $errorThreshold = $warnThreshold
+          }
+          if ($failureErrorThreshold -lt $failureWarnThreshold) {
+            $failureErrorThreshold = $failureWarnThreshold
+          }
+          if ($windowSize -gt $maxEntries) {
+            $windowSize = $maxEntries
+          }
+
+          $failToggle = [string]$env:SMOKE_TREND_FAIL_ON_ERROR_THRESHOLD
+          if (-not [string]::IsNullOrWhiteSpace($failToggle)) {
+            $failOnErrorThreshold = $failToggle.Trim().ToLowerInvariant() -eq "true"
+          }
+          $failureFailToggle = [string]$env:SMOKE_TREND_FAIL_ON_FAILURE_ERROR_THRESHOLD
+          if (-not [string]::IsNullOrWhiteSpace($failureFailToggle)) {
+            $failOnFailureErrorThreshold = $failureFailToggle.Trim().ToLowerInvariant() -eq "true"
+          }
+
+          $history = @()
+          if (Test-Path $historyPath) {
+            try {
+              $loaded = Get-Content -Path $historyPath -Raw | ConvertFrom-Json
+              if ($loaded -is [System.Collections.IEnumerable]) {
+                $history = @($loaded)
+              } elseif ($null -ne $loaded) {
+                # Backward compatibility: accept legacy single-object history files.
+                $history = @($loaded)
+              }
+            } catch {
+              $history = @()
+            }
+          }
+
+          $entry = [ordered]@{
+            schemaVersion = "smoke-trend-entry.v2"
+            generatedBy = "smoke-suite.yml"
+            timestamp = (Get-Date).ToString("o")
+            runId = [string]"${{ github.run_id }}"
+            runAttempt = [string]"${{ github.run_attempt }}"
+            event = [string]"${{ github.event_name }}"
+            refName = [string]"${{ github.ref_name }}"
+            sha = [string]"${{ github.sha }}"
+            smokeExitCode = $null
+            failures = $null
+            skipped = $null
+            uiRetries = 0
+            uiRetrySteps = @()
+            failureCode = "none"
+            failureCodeSequence = "none"
+            failureCodeSequenceArray = @("none")
+            hasSmokeReport = $false
+            hasDiagnostics = $false
+          }
+
+          $entry.hasDiagnostics = Test-Path $diagnosticsPath
+
+          if (Test-Path "qa-reports/smoke-report.json") {
+            try {
+              $entry.hasSmokeReport = $true
+              $report = Get-Content -Path "qa-reports/smoke-report.json" -Raw | ConvertFrom-Json
+              if ($report -and $null -ne $report.exitCode) { $entry.smokeExitCode = [int]$report.exitCode }
+              if ($report.summary -and $null -ne $report.summary.failures) { $entry.failures = [int]$report.summary.failures }
+              if ($report.summary -and $null -ne $report.summary.skipped) { $entry.skipped = [int]$report.summary.skipped }
+              if ($report.summary -and $null -ne $report.summary.uiRetries) { $entry.uiRetries = [int]$report.summary.uiRetries }
+              if ($report.summary -and $null -ne $report.summary.uiRetrySteps) {
+                $entry.uiRetrySteps = @($report.summary.uiRetrySteps | ForEach-Object { [string]$_ })
+              }
+
+              $failedSuites = @()
+              $failedCases = @()
+              foreach ($suite in @($report.assertions)) {
+                foreach ($testcase in @($suite.testcases)) {
+                  if (-not [bool]$testcase.passed) {
+                    if ([string]$suite.name -and -not ($failedSuites -contains [string]$suite.name)) {
+                      $failedSuites += [string]$suite.name
+                    }
+                    $failedCases += ("{0}/{1}" -f [string]$suite.name, [string]$testcase.name)
+                  }
+                }
+              }
+
+              $fatalError = [string]$report.fatalError
+              if (-not [string]::IsNullOrWhiteSpace($fatalError)) {
+                $apiCode = $null
+                $uiCode = $null
+                if ($report.commands -and $report.commands.api) { $apiCode = $report.commands.api.code }
+                if ($report.commands -and $report.commands.ui) { $uiCode = $report.commands.ui.code }
+
+                if ($null -ne $apiCode -and [int]$apiCode -ne 0) {
+                  $entry.failureCode = "smoke-fatal-api"
+                } elseif ($null -ne $uiCode -and [int]$uiCode -ne 0) {
+                  $entry.failureCode = "smoke-fatal-ui"
+                } else {
+                  $entry.failureCode = "smoke-fatal"
+                }
+              } elseif ($failedCases.Count -gt 0) {
+                if ($failedSuites.Count -eq 1 -and $failedSuites[0] -eq "api") {
+                  $entry.failureCode = "smoke-assertion-api"
+                } elseif ($failedSuites.Count -eq 1 -and $failedSuites[0] -eq "ui") {
+                  $entry.failureCode = "smoke-assertion-ui"
+                } elseif ($failedSuites.Count -gt 1) {
+                  $entry.failureCode = "smoke-assertion-mixed"
+                } else {
+                  $entry.failureCode = "smoke-assertion"
+                }
+              } elseif ($null -ne $report.exitCode -and [int]$report.exitCode -ne 0) {
+                $entry.failureCode = "smoke-unknown"
+              }
+            } catch {
+              $entry.failureCode = "report-parse-error"
+              # Keep defaults if parsing fails.
+            }
+          } elseif ($null -ne $entry.smokeExitCode -and [int]$entry.smokeExitCode -ne 0) {
+            $entry.failureCode = "report-missing"
+          }
+
+          $entryFailureCode = if (-not [string]::IsNullOrWhiteSpace([string]$entry.failureCode)) {
+            [string]$entry.failureCode
+          } else {
+            "none"
+          }
+          $entry.failureCodeSequence = $entryFailureCode
+          $entry.failureCodeSequenceArray = @($entryFailureCode)
+
+          $history = @($history + @([pscustomobject]$entry))
+          if ($history.Count -gt $maxEntries) {
+            $history = @($history | Select-Object -Last $maxEntries)
+          }
+
+          $windowRows = @($history | Select-Object -Last $windowSize)
+          $windowRetryRuns = @($windowRows | Where-Object { [int]($_.uiRetries) -gt 0 })
+          $windowRetryCount = ($windowRetryRuns | Measure-Object).Count
+          $windowDiagnosticsRuns = @($windowRows | Where-Object { [bool]$_.hasDiagnostics })
+          $windowDiagnosticsCount = ($windowDiagnosticsRuns | Measure-Object).Count
+          $windowDiagnosticsRate = [math]::Round((100.0 * [double]$windowDiagnosticsCount) / [double]$windowSize, 1)
+          $failureCodeSequence = @(
+            $windowRows | ForEach-Object {
+              $code = [string]$_.failureCode
+              if ([string]::IsNullOrWhiteSpace($code)) { "none" } else { $code }
+            }
+          )
+          $failureCodeSequenceText = if ($failureCodeSequence.Count -gt 0) {
+            [string]::Join(', ', $failureCodeSequence)
+          } else {
+            '-'
+          }
+          $failureSymbolMap = @{
+            "none" = "N"
+            "smoke-assertion-api" = "A"
+            "smoke-assertion-ui" = "U"
+            "smoke-assertion-mixed" = "M"
+            "smoke-assertion" = "S"
+            "smoke-fatal" = "F"
+            "smoke-fatal-api" = "R"
+            "smoke-fatal-ui" = "V"
+            "smoke-unknown" = "K"
+            "report-parse-error" = "P"
+            "report-missing" = "G"
+            "trend-fail" = "T"
+          }
+          $failureCodeSparklineSymbols = @(
+            $failureCodeSequence | ForEach-Object {
+              $code = [string]$_
+              if ($failureSymbolMap.ContainsKey($code)) {
+                [string]$failureSymbolMap[$code]
+              } else {
+                "?"
+              }
+            }
+          )
+          $failureCodeSparkline = if ($failureCodeSparklineSymbols.Count -gt 0) {
+            [string]::Join('', $failureCodeSparklineSymbols)
+          } else {
+            '-'
+          }
+          $failureCodeSparklineLegend = "N=none, A=assertion-api, U=assertion-ui, M=assertion-mixed, S=assertion, F=fatal, R=fatal-api, V=fatal-ui, K=unknown, P=parse-error, G=report-missing, T=trend-fail, ?=other"
+          $windowNonNoneFailureRuns = @(
+            $windowRows | Where-Object {
+              $code = [string]$_.failureCode
+              -not [string]::IsNullOrWhiteSpace($code) -and $code -ne "none"
+            }
+          )
+          $windowNonNoneFailureCount = ($windowNonNoneFailureRuns | Measure-Object).Count
+          $failureCodeCounts = @{}
+          foreach ($row in $windowRows) {
+            $code = if (-not [string]::IsNullOrWhiteSpace([string]$row.failureCode)) { [string]$row.failureCode } else { "none" }
+            if ($failureCodeCounts.ContainsKey($code)) {
+              $failureCodeCounts[$code] = [int]$failureCodeCounts[$code] + 1
+            } else {
+              $failureCodeCounts[$code] = 1
+            }
+          }
+          $failureCodeRanking = @(
+            $failureCodeCounts.GetEnumerator() |
+              Sort-Object -Property @{ Expression = { $_.Value }; Descending = $true }, @{ Expression = { $_.Key }; Descending = $false }
+          )
+          $nonNoneFailureCodeRanking = @($failureCodeRanking | Where-Object { [string]$_.Key -ne "none" })
+          $dominantNonNoneFailureClass = if ($nonNoneFailureCodeRanking.Count -gt 0) {
+            "{0}={1}" -f $nonNoneFailureCodeRanking[0].Key, $nonNoneFailureCodeRanking[0].Value
+          } else {
+            'none'
+          }
+          $failureCodeText = if ($failureCodeRanking.Count -gt 0) {
+            [string]::Join(', ', @($failureCodeRanking | ForEach-Object { "{0}={1}" -f $_.Key, $_.Value }))
+          } else {
+            '-'
+          }
+          $topFailureCodes = @(
+            ($failureCodeRanking | Select-Object -First 5) | ForEach-Object {
+              [pscustomobject]@{
+                failureCode = [string]$_.Key
+                count = [int]$_.Value
+                percentOfWindow = [math]::Round((100.0 * [double]$_.Value) / [double]$windowSize, 1)
+              }
+            }
+          )
+          $windowRetryStepsSet = [System.Collections.Generic.HashSet[string]]::new()
+          $stepRetryCounts = @{}
+          foreach ($row in $windowRetryRuns) {
+            foreach ($stepName in @($row.uiRetrySteps)) {
+              if (-not [string]::IsNullOrWhiteSpace([string]$stepName)) {
+                $normalizedStep = [string]$stepName
+                [void]$windowRetryStepsSet.Add($normalizedStep)
+                if ($stepRetryCounts.ContainsKey($normalizedStep)) {
+                  $stepRetryCounts[$normalizedStep] = [int]$stepRetryCounts[$normalizedStep] + 1
+                } else {
+                  $stepRetryCounts[$normalizedStep] = 1
+                }
+              }
+            }
+          }
+          $windowRetrySteps = @($windowRetryStepsSet)
+          [array]::Sort($windowRetrySteps)
+
+          $stepRetryRanking = @(
+            $stepRetryCounts.GetEnumerator() |
+              Sort-Object -Property @{ Expression = { $_.Value }; Descending = $true }, @{ Expression = { $_.Key }; Descending = $false }
+          )
+          $stepRetryFrequencyText = if ($stepRetryRanking.Count -gt 0) {
+            [string]::Join(', ', @($stepRetryRanking | ForEach-Object { "{0}={1}" -f $_.Key, $_.Value }))
+          } else {
+            '-'
+          }
+          $topFlakyRows = @($stepRetryRanking | Select-Object -First 3)
+          $hottestStepLabel = if ($stepRetryRanking.Count -gt 0) {
+            "{0}={1}" -f $stepRetryRanking[0].Key, $stepRetryRanking[0].Value
+          } else {
+            'none'
+          }
+
+          $topFlakySteps = @(
+            $topFlakyRows | ForEach-Object {
+              [pscustomobject]@{
+                step = [string]$_.Key
+                count = [int]$_.Value
+                percentOfWindow = [math]::Round((100.0 * [double]$_.Value) / [double]$windowSize, 1)
+              }
+            }
+          )
+
+          $windowSnapshot = [pscustomobject]@{
+            schemaVersion = "smoke-trend-window.v2"
+            generatedBy = "smoke-suite.yml"
+            generatedAt = (Get-Date).ToString("o")
+            windowSize = $windowSize
+            maxEntries = $maxEntries
+            thresholds = [pscustomobject]@{
+              warning = $warnThreshold
+              error = $errorThreshold
+              failureWarning = $failureWarnThreshold
+              failureError = $failureErrorThreshold
+            }
+            retryAffectedRuns = $windowRetryCount
+            diagnosticsPresentRuns = $windowDiagnosticsCount
+            diagnosticsPresentRate = $windowDiagnosticsRate
+            failureAffectedRuns = $windowNonNoneFailureCount
+            failureCodeSequence = @($failureCodeSequence)
+            failureCodeSequenceText = $failureCodeSequenceText
+            failureCodeSparkline = $failureCodeSparkline
+            failureCodeSparklineLegend = $failureCodeSparklineLegend
+            retryProneSteps = @($windowRetrySteps)
+            perStepRetryCounts = [pscustomobject]$stepRetryCounts
+            failureCodeCounts = [pscustomobject]$failureCodeCounts
+            topFailureCodes = $topFailureCodes
+            dominantNonNoneFailureClass = $dominantNonNoneFailureClass
+            hottestFlakyStep = $hottestStepLabel
+            topFlakySteps = $topFlakySteps
+          }
+
+          Set-ContentWithRetry -Path $historyPath -Value (ConvertTo-Json -InputObject ([object[]]$history) -Depth 8) -Encoding utf8
+          Set-ContentWithRetry -Path $latestPath -Value ([pscustomobject]$entry | ConvertTo-Json -Depth 8) -Encoding utf8
+          Set-ContentWithRetry -Path $windowPath -Value ($windowSnapshot | ConvertTo-Json -Depth 8) -Encoding utf8
+
+          $lines = @(
+            "# Smoke Flake Trend",
+            "",
+            "Keeping last $maxEntries runs.",
+            "",
+            "Window (last $windowSize runs): $windowRetryCount run(s) required UI retries.",
+            "Window (last $windowSize runs): $windowDiagnosticsCount run(s) produced smoke diagnostics artifacts ($windowDiagnosticsRate%).",
+            "Thresholds: warning >= $warnThreshold, error >= $errorThreshold.",
+            "Failure-class thresholds: warning >= $failureWarnThreshold, error >= $failureErrorThreshold.",
+            "Window (last $windowSize runs): $windowNonNoneFailureCount run(s) had non-none failureCode.",
+            "Dominant non-none failure class (window): $dominantNonNoneFailureClass",
+            "Failure-class sequence (window, oldest -> newest): $failureCodeSequenceText",
+            "Failure-class sparkline (window, oldest -> newest): $failureCodeSparkline",
+            "Failure-class sparkline legend: $failureCodeSparklineLegend",
+            "Fail on error threshold: $failOnErrorThreshold",
+            "Fail on failure-class error threshold: $failOnFailureErrorThreshold",
+            "Retry-prone steps in window: " + $(if ($windowRetrySteps.Count -gt 0) { [string]::Join(', ', $windowRetrySteps) } else { '-' }),
+            "Per-step retry frequency (window): $stepRetryFrequencyText",
+            "Failure class breakdown (window): $failureCodeText",
+            "Hottest flaky step (window): $hottestStepLabel",
+            "",
+            "Top failure classes (window):",
+            "",
+            "| FailureCode | Count | % of window |",
+            "|---|---:|---:|"
+          )
+
+          if ($topFailureCodes.Count -gt 0) {
+            foreach ($row in $topFailureCodes) {
+              $lines += "| $($row.failureCode) | $($row.count) | $($row.percentOfWindow)% |"
+            }
+          } else {
+            $lines += "| none | 0 | 0% |"
+          }
+
+          $lines += ""
+
+          $lines += "Top 3 flaky steps (window):"
+          $lines += ""
+          $lines += "| Step | Count | % of window |"
+          $lines += "|---|---:|---:|"
+
+          if ($topFlakyRows.Count -gt 0) {
+            foreach ($row in $topFlakyRows) {
+              $pct = [math]::Round((100.0 * [double]$row.Value) / [double]$windowSize, 1)
+              $lines += "| $($row.Key) | $($row.Value) | $pct% |"
+            }
+          } else {
+            $lines += "| - | 0 | 0% |"
+          }
+
+          $lines += ""
+          $lines += "| Timestamp | Run | Event | Exit | Failures | uiRetries | FailureCode | Diagnostics | Retry Steps |"
+          $lines += "|---|---:|---|---:|---:|---:|---|---|---|"
+
+          foreach ($row in $history) {
+            $retrySteps = if ($row.uiRetrySteps -and @($row.uiRetrySteps).Count -gt 0) { [string]::Join(', ', @($row.uiRetrySteps)) } else { '-' }
+            $code = if (-not [string]::IsNullOrWhiteSpace([string]$row.failureCode)) { [string]$row.failureCode } else { 'none' }
+            $diagnostics = if ([bool]$row.hasDiagnostics) { 'yes' } else { 'no' }
+            $lines += "| $($row.timestamp) | $($row.runId).$($row.runAttempt) | $($row.event) | $($row.smokeExitCode) | $($row.failures) | $($row.uiRetries) | $code | $diagnostics | $retrySteps |"
+          }
+
+          Set-ContentWithRetry -Path $summaryPath -Value ($lines -join [Environment]::NewLine) -Encoding utf8
+
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY) -and (Test-Path $summaryPath)) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Flake Trend"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+            Get-Content -Path $summaryPath | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+          }
+
+          if ($windowRetryCount -ge $errorThreshold) {
+            $stepsLabel = if ($windowRetrySteps.Count -gt 0) { [string]::Join(', ', $windowRetrySteps) } else { 'unknown-step' }
+            Write-Host "::error title=Smoke Flake Trend Critical::Last $windowSize runs had $windowRetryCount run(s) with UI retries. Steps: $stepsLabel. Hottest: $hottestStepLabel"
+            if ($failOnErrorThreshold) {
+              Write-Host "Failing build because trend_fail_on_error_threshold=true and error threshold was reached."
+              exit 1
+            }
+          } elseif ($windowRetryCount -ge $warnThreshold) {
+            $stepsLabel = if ($windowRetrySteps.Count -gt 0) { [string]::Join(', ', $windowRetrySteps) } else { 'unknown-step' }
+            Write-Host "::warning title=Smoke Flake Trend Warning::Last $windowSize runs had $windowRetryCount run(s) with UI retries. Steps: $stepsLabel. Hottest: $hottestStepLabel"
+          }
+
+          if ($windowNonNoneFailureCount -ge $failureErrorThreshold) {
+            Write-Host "::error title=Smoke Failure Trend Critical::Last $windowSize runs had $windowNonNoneFailureCount run(s) with non-none failureCode. Dominant: $dominantNonNoneFailureClass. Breakdown: $failureCodeText"
+            if ($failOnFailureErrorThreshold) {
+              Write-Host "Failing build because trend_fail_on_failure_error_threshold=true and failure-class error threshold was reached."
+              exit 1
+            }
+          } elseif ($windowNonNoneFailureCount -ge $failureWarnThreshold) {
+            Write-Host "::warning title=Smoke Failure Trend Warning::Last $windowSize runs had $windowNonNoneFailureCount run(s) with non-none failureCode. Dominant: $dominantNonNoneFailureClass. Breakdown: $failureCodeText"
+          }
+
+      - name: Emit smoke failure classification
+        if: always()
+        shell: pwsh
+        run: |
+          $reportPath = "qa-reports/smoke-report.json"
+          $failureCode = "none"
+          $failureSummary = "none"
+
+          if (-not (Test-Path $reportPath)) {
+            $failureCode = "report-missing"
+            $failureSummary = "Smoke report missing after run."
+          } else {
+            try {
+              $report = Get-Content -Path $reportPath -Raw | ConvertFrom-Json
+              $failedSuites = @()
+              $failedCases = @()
+
+              foreach ($suite in @($report.assertions)) {
+                foreach ($testcase in @($suite.testcases)) {
+                  if (-not [bool]$testcase.passed) {
+                    if ([string]$suite.name -and -not ($failedSuites -contains [string]$suite.name)) {
+                      $failedSuites += [string]$suite.name
+                    }
+                    $failedCases += ("{0}/{1}" -f [string]$suite.name, [string]$testcase.name)
+                  }
+                }
+              }
+
+              $fatalError = [string]$report.fatalError
+              if (-not [string]::IsNullOrWhiteSpace($fatalError)) {
+                $fatalCompact = [regex]::Replace($fatalError, "\r?\n+", " | ")
+                if ($fatalCompact.Length -gt 220) {
+                  $fatalCompact = $fatalCompact.Substring(0, 220) + "..."
+                }
+                $failureSummary = "fatal=" + $fatalCompact
+
+                $apiCode = $null
+                $uiCode = $null
+                if ($report.commands -and $report.commands.api) { $apiCode = $report.commands.api.code }
+                if ($report.commands -and $report.commands.ui) { $uiCode = $report.commands.ui.code }
+
+                if ($null -ne $apiCode -and [int]$apiCode -ne 0) {
+                  $failureCode = "smoke-fatal-api"
+                } elseif ($null -ne $uiCode -and [int]$uiCode -ne 0) {
+                  $failureCode = "smoke-fatal-ui"
+                } else {
+                  $failureCode = "smoke-fatal"
+                }
+              } elseif ($failedCases.Count -gt 0) {
+                $failureSummary = "failed=" + [string]::Join(',', $failedCases)
+                if ($failedSuites.Count -eq 1 -and $failedSuites[0] -eq "api") {
+                  $failureCode = "smoke-assertion-api"
+                } elseif ($failedSuites.Count -eq 1 -and $failedSuites[0] -eq "ui") {
+                  $failureCode = "smoke-assertion-ui"
+                } elseif ($failedSuites.Count -gt 1) {
+                  $failureCode = "smoke-assertion-mixed"
+                } else {
+                  $failureCode = "smoke-assertion"
+                }
+              } elseif ($null -ne $report.exitCode -and [int]$report.exitCode -ne 0) {
+                $failureCode = "smoke-unknown"
+              }
+            } catch {
+              $failureCode = "report-parse-error"
+              $failureSummary = "Unable to parse smoke-report.json"
+            }
+          }
+
+          if ($failureCode -eq "none") {
+            Write-Host "::notice title=Smoke Failure Classification::failureCode=none"
+          } else {
+            Write-Host "::error title=Smoke Failure Classification::failureCode=$failureCode | $failureSummary"
+          }
+
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Failure Classification"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- failureCode: $failureCode"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- failureSummary: $failureSummary"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+
+            $diagnosticsPath = "qa-reports/smoke-failure-diagnostics.json"
+            if (Test-Path $diagnosticsPath) {
+              try {
+                $diagnostics = Get-Content -Path $diagnosticsPath -Raw | ConvertFrom-Json
+                $diagExitCode = if ($null -ne $diagnostics.exitCode) { [int]$diagnostics.exitCode } else { -1 }
+                $diagFailures = if ($diagnostics.summary -and $null -ne $diagnostics.summary.failures) { [int]$diagnostics.summary.failures } else { 0 }
+                $diagUiRetries = if ($diagnostics.summary -and $null -ne $diagnostics.summary.uiRetries) { [int]$diagnostics.summary.uiRetries } else { 0 }
+                $diagGeneratedAt = [string]$diagnostics.generatedAt
+
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Failure Diagnostics"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- artifact: present"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- generatedAt: $diagGeneratedAt"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- exitCode: $diagExitCode"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- assertionFailures: $diagFailures"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- uiRetries: $diagUiRetries"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+              } catch {
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Failure Diagnostics"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- artifact: present"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- parseStatus: failed"
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+              }
+            }
+          }
+
+      - name: Validate smoke artifact schemas
+        if: always()
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\smoke-validate-artifacts.ps1 -ReportsDir qa-reports
+          $schemaExit = $LASTEXITCODE
+
+          $reportPath = "qa-reports/smoke-artifact-validation.json"
+          $checkedArtifacts = -1
+          $errorCount = -1
+          $passed = $false
+          if (Test-Path $reportPath) {
+            try {
+              $report = Get-Content -Path $reportPath -Raw | ConvertFrom-Json
+              if ($null -ne $report.checkedArtifacts) { $checkedArtifacts = [int]$report.checkedArtifacts }
+              if ($null -ne $report.errorCount) { $errorCount = [int]$report.errorCount }
+              if ($null -ne $report.passed) { $passed = [bool]$report.passed }
+            } catch {
+              Write-Host "::warning title=Smoke Artifact Validation Report Parse::Unable to parse qa-reports/smoke-artifact-validation.json"
+            }
+          } else {
+            Write-Host "::warning title=Smoke Artifact Validation Report Missing::qa-reports/smoke-artifact-validation.json was not found."
+          }
+
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Artifact Validation"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- exitCode: $schemaExit"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- checkedArtifacts: $checkedArtifacts"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- errorCount: $errorCount"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- passed: $passed"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+          }
+
+          if ($schemaExit -ne 0) {
+            exit $schemaExit
+          }
+
+      - name: Run triage loop sampling
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        shell: pwsh
+        env:
+          SMOKE_TRIAGE_LOOP_RUNS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.triage_loop_runs || '' }}
+        run: |
+          $runs = 0
+          if ([string]"${{ github.event_name }}" -eq "schedule") {
+            $runs = 2
+          }
+
+          $parsed = 0
+          if ([int]::TryParse([string]$env:SMOKE_TRIAGE_LOOP_RUNS, [ref]$parsed) -and $parsed -ge 0) {
+            $runs = $parsed
+          }
+
+          if ($runs -le 0) {
+            Write-Host "Skipping triage loop sampling (runs=$runs)."
+            exit 0
+          }
+
+          Write-Host "Running triage loop sampling with runs=$runs"
+          powershell -ExecutionPolicy Bypass -File .\smoke-triage-loop.ps1 -Runs $runs -ReportsDir qa-reports
+          $loopExit = $LASTEXITCODE
+
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY) -and (Test-Path "qa-reports/smoke-triage-loop-summary.md")) {
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## Smoke Triage Loop Sampling"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+            Get-Content -Path "qa-reports/smoke-triage-loop-summary.md" | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+          }
+
+          if ($loopExit -ne 0) {
+            Write-Host "::warning title=Smoke Triage Loop Sampling::Loop completed with one or more failing iterations (exit $loopExit). Review qa-reports/smoke-triage-loop-summary.*"
+          }
+
+      - name: Save smoke trend history
+        if: always() && hashFiles('qa-reports/smoke-trend-history.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: qa-reports/smoke-trend-history.json
+          key: smoke-trend-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Verify visual baseline
+        if: github.event_name != 'pull_request'
         shell: pwsh
         run: |
           $verifyOutput = (& npm run smoke:baseline:verify 2>&1 | Out-String).Trim()
@@ -143,6 +891,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-suite-reports
+          name: smoke-${{ github.event_name }}-reports
           path: qa-reports/
           if-no-files-found: warn

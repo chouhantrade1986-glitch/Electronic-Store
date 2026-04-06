@@ -6,10 +6,10 @@ const API_BASE_OVERRIDE_KEY = "electromart_api_base_url";
 const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const OFFLINE_ADMIN_EMAIL = "admin@electromart.com";
 const OFFLINE_ADMIN_MOBILE = "9999999999";
-const OFFLINE_ADMIN_PASSWORD = "Admin@123";
 const OFFLINE_CUSTOMER_EMAIL = "customer@electromart.com";
 const OFFLINE_CUSTOMER_MOBILE = "8888888888";
-const OFFLINE_CUSTOMER_PASSWORD = "Customer@123";
+const OFFLINE_ADMIN_PASSWORD_STORAGE_KEY = "electromart_offline_admin_password";
+const OFFLINE_CUSTOMER_PASSWORD_STORAGE_KEY = "electromart_offline_customer_password";
 const LOCAL_PASSWORD_HASH_PREFIX = "sha256:";
 const AUTH_TOAST_STACK_ID = "authToastStack";
 
@@ -85,6 +85,7 @@ let resetActiveOtp = "";
 let resetActiveOtpTarget = "";
 let resetActiveOtpMethod = "";
 let resetActiveOtpChallengeId = "";
+let twoFATempToken = "";
 let resolvedApiBaseUrl = "";
 let apiResolvePromise = null;
 let apiAvailable = false;
@@ -258,6 +259,73 @@ function getPostAuthDestination(user = {}) {
   return "account.html";
 }
 
+function showTwoFAModal(tempToken) {
+  const twoFAModal = document.getElementById("twoFAModal");
+  const twoFACode = document.getElementById("twoFACode");
+  const submitTwoFABtn = document.getElementById("submitTwoFABtn");
+  const cancelTwoFABtn = document.getElementById("cancelTwoFABtn");
+
+  twoFATempToken = tempToken;
+  twoFACode.value = "";
+  twoFACode.focus();
+  twoFAModal.style.display = "flex";
+
+  submitTwoFABtn.onclick = submitTwoFAForm;
+  cancelTwoFABtn.onclick = cancelTwoFA;
+  twoFACode.onkeypress = (e) => {
+    if (e.key === "Enter") {
+      submitTwoFAForm();
+    }
+  };
+}
+
+function cancelTwoFA() {
+  const twoFAModal = document.getElementById("twoFAModal");
+  twoFATempToken = "";
+  twoFAModal.style.display = "none";
+  setMessage("2FA login cancelled. Please try again.", false);
+}
+
+async function submitTwoFAForm() {
+  const twoFACode = document.getElementById("twoFACode");
+  const code = twoFACode.value.trim();
+
+  if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
+    setMessage("Enter a valid 6-digit code.", true);
+    return;
+  }
+
+  try {
+    const data = await postJson("/auth/2fa/login-verify", {
+      tempToken: twoFATempToken,
+      token: code
+    });
+
+    const twoFAModal = document.getElementById("twoFAModal");
+    twoFAModal.style.display = "none";
+    twoFATempToken = "";
+
+    saveSession({
+      token: data.token,
+      id: data.user.id,
+      name: data.user.name,
+      email: data.user.email,
+      mobile: data.user.mobile,
+      role: data.user.role
+    });
+    saveProfile(mapUserToProfile(data.user));
+
+    activeOtp = "";
+    activeOtpTarget = "";
+    activeOtpMethod = "";
+    activeOtpChallengeId = "";
+    clearOtpUiState("signin");
+    navigateAfterAuth(data.user);
+  } catch (error) {
+    setMessage(error.message || "Invalid 2FA code. Please try again.", true);
+  }
+}
+
 function navigateAfterAuth(user) {
   window.location.href = getPostAuthDestination(user);
 }
@@ -334,8 +402,24 @@ function isOfflineDemoEnabled() {
   }
 }
 
+function resolveOfflineDemoPassword({ windowKey = "", storageKey = "" } = {}) {
+  const fromWindow = String(window && windowKey ? window[windowKey] || "" : "").trim();
+  if (fromWindow.length >= 8) {
+    return fromWindow;
+  }
+  try {
+    const fromStorage = String(localStorage.getItem(storageKey) || "").trim();
+    if (fromStorage.length >= 8) {
+      return fromStorage;
+    }
+  } catch (error) {
+    return "";
+  }
+  return "";
+}
+
 function getOfflineDemoHelpText() {
-  return `Start backend on port 4000, or explicitly enable offline demo mode with localStorage key "${OFFLINE_DEMO_STORAGE_KEY}".`;
+  return `Start backend on port 4000, or enable offline demo mode with "${OFFLINE_DEMO_STORAGE_KEY}" and set strong demo passwords in "${OFFLINE_ADMIN_PASSWORD_STORAGE_KEY}" and "${OFFLINE_CUSTOMER_PASSWORD_STORAGE_KEY}".`;
 }
 
 function buildOtpFeedback(data, method) {
@@ -667,25 +751,66 @@ async function verifyLocalUserPassword(user, password) {
 
 async function ensureOfflineSeedUsers() {
   const users = await loadLocalUsers();
+  let changed = false;
+
+  const adminPassword = resolveOfflineDemoPassword({
+    windowKey: "ELECTROMART_OFFLINE_ADMIN_PASSWORD",
+    storageKey: OFFLINE_ADMIN_PASSWORD_STORAGE_KEY
+  });
+  const customerPassword = resolveOfflineDemoPassword({
+    windowKey: "ELECTROMART_OFFLINE_CUSTOMER_PASSWORD",
+    storageKey: OFFLINE_CUSTOMER_PASSWORD_STORAGE_KEY
+  });
+
+  if (!adminPassword) {
+    const before = users.length;
+    const next = users.filter((entry) => {
+      const email = String(entry && entry.email ? entry.email : "").toLowerCase();
+      const mobile = String(entry && entry.mobile ? entry.mobile : "");
+      const id = String(entry && entry.id ? entry.id : "");
+      return !(id === "local_admin_1" || email === OFFLINE_ADMIN_EMAIL || mobile === OFFLINE_ADMIN_MOBILE);
+    });
+    if (next.length !== before) {
+      users.length = 0;
+      users.push(...next);
+      changed = true;
+    }
+  }
+
+  if (!customerPassword) {
+    const before = users.length;
+    const next = users.filter((entry) => {
+      const email = String(entry && entry.email ? entry.email : "").toLowerCase();
+      const mobile = String(entry && entry.mobile ? entry.mobile : "");
+      const id = String(entry && entry.id ? entry.id : "");
+      return !(id === "local_customer_1" || email === OFFLINE_CUSTOMER_EMAIL || mobile === OFFLINE_CUSTOMER_MOBILE);
+    });
+    if (next.length !== before) {
+      users.length = 0;
+      users.push(...next);
+      changed = true;
+    }
+  }
+
   const defaults = [
-    {
+    ...(adminPassword ? [{
       id: "local_admin_1",
       name: "ElectroMart Admin",
       email: OFFLINE_ADMIN_EMAIL,
       mobile: OFFLINE_ADMIN_MOBILE,
-      passwordHash: await hashLocalPassword(OFFLINE_ADMIN_PASSWORD),
+      passwordHash: await hashLocalPassword(adminPassword),
       address: "HQ",
       role: "admin"
-    },
-    {
+    }] : []),
+    ...(customerPassword ? [{
       id: "local_customer_1",
       name: "ElectroMart Customer",
       email: OFFLINE_CUSTOMER_EMAIL,
       mobile: OFFLINE_CUSTOMER_MOBILE,
-      passwordHash: await hashLocalPassword(OFFLINE_CUSTOMER_PASSWORD),
+      passwordHash: await hashLocalPassword(customerPassword),
       address: "Jaipur, Rajasthan",
       role: "customer"
-    }
+    }] : [])
   ];
 
   defaults.forEach((entry) => {
@@ -696,9 +821,12 @@ async function ensureOfflineSeedUsers() {
     });
     if (!exists) {
       users.push(entry);
+      changed = true;
     }
   });
-  saveLocalUsers(users);
+  if (changed) {
+    saveLocalUsers(users);
+  }
 }
 
 function getApiCandidates() {
@@ -1138,6 +1266,12 @@ signinForm.addEventListener("submit", async (event) => {
         emailOrMobile: identifier,
         password
       });
+
+      // Check if 2FA is required
+      if (data.twoFactorRequired && data.tempToken) {
+        showTwoFAModal(data.tempToken);
+        return;
+      }
 
       saveSession({
         token: data.token,

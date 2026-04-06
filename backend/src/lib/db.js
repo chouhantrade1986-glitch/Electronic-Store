@@ -221,6 +221,14 @@ function shouldSeedDemoUsers() {
   return raw === "true";
 }
 
+function shouldSeedSampleProducts() {
+  if (isProductionRuntime(process.env)) {
+    return false;
+  }
+  const raw = String(process.env.ALLOW_SEEDED_SAMPLE_PRODUCTS || "true").trim().toLowerCase();
+  return raw === "true";
+}
+
 function ensureSeedData() {
   const db = readDb();
 
@@ -238,7 +246,7 @@ function ensureSeedData() {
   }));
 
   if (!db.products || db.products.length === 0) {
-    db.products = sampleProducts;
+    db.products = shouldSeedSampleProducts() ? sampleProducts : [];
   }
 
   if (!db.orders) {

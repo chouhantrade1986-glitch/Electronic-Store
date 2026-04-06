@@ -11,6 +11,7 @@ const UI_STDOUT_LOG = path.join(REPORTS_DIR, "ui-smoke.stdout.log");
 const UI_STDERR_LOG = path.join(REPORTS_DIR, "ui-smoke.stderr.log");
 const JSON_REPORT_PATH = path.join(REPORTS_DIR, "smoke-report.json");
 const JUNIT_REPORT_PATH = path.join(REPORTS_DIR, "smoke-report.junit.xml");
+const FAILURE_DIAGNOSTICS_PATH = path.join(REPORTS_DIR, "smoke-failure-diagnostics.json");
 
 function parseArgs(argv = []) {
   const options = {
@@ -43,6 +44,7 @@ const UI_STDOUT_PATH = path.join(REPORT_ROOT, path.basename(UI_STDOUT_LOG));
 const UI_STDERR_PATH = path.join(REPORT_ROOT, path.basename(UI_STDERR_LOG));
 const JSON_REPORT = path.join(REPORT_ROOT, path.basename(JSON_REPORT_PATH));
 const JUNIT_REPORT = path.join(REPORT_ROOT, path.basename(JUNIT_REPORT_PATH));
+const FAILURE_DIAGNOSTICS = path.join(REPORT_ROOT, path.basename(FAILURE_DIAGNOSTICS_PATH));
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -95,6 +97,37 @@ function parseJsonOutput(rawText, label) {
     }
     throw new Error(`${label} did not produce valid JSON.`);
   }
+}
+
+function tailLines(rawText, maxLines = 30) {
+  const normalized = String(rawText || "").replace(/\u0000/g, "");
+  if (!normalized.trim()) {
+    return [];
+  }
+  return normalized
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter((line) => line.length > 0)
+    .slice(-Math.max(1, maxLines));
+}
+
+function summarizeCommandForDiagnostics(commandResult) {
+  if (!commandResult) {
+    return null;
+  }
+  return {
+    label: commandResult.label,
+    command: commandResult.command,
+    args: commandResult.args,
+    cwd: commandResult.cwd,
+    code: commandResult.code,
+    signal: commandResult.signal,
+    startedAt: commandResult.startedAt,
+    finishedAt: commandResult.finishedAt,
+    durationSeconds: commandResult.durationSeconds,
+    stdoutTail: tailLines(commandResult.stdout, 40),
+    stderrTail: tailLines(commandResult.stderr, 40)
+  };
 }
 
 function runCommand(command, args, options = {}) {
@@ -294,15 +327,56 @@ function buildUiCases(uiReport) {
     const skipped = details.skipped === true
       || Boolean(details.result && details.result.skipped === true);
     const passed = details.passed === true || skipped;
+    const attempts = Number(details.attempts || 1);
     return {
       suite: "ui",
       name: entry.name,
       passed,
       skipped,
       message: `${entry.name} browser smoke failed.`,
-      details
+      details: {
+        ...details,
+        attempts
+      }
     };
   });
+}
+
+function getUiRetryCount(uiReport) {
+  const stepKeys = [
+    "auth",
+    "productDetail",
+    "cart",
+    "account",
+    "admin",
+    "checkout",
+    "wishlist",
+    "invoice",
+    "orders"
+  ];
+
+  return stepKeys.reduce((count, key) => {
+    const attempts = Number(uiReport && uiReport[key] && uiReport[key].attempts ? uiReport[key].attempts : 1);
+    return attempts > 1 ? count + 1 : count;
+  }, 0);
+}
+
+function getUiRetrySteps(uiReport) {
+  const mapping = [
+    { key: "auth", name: "auth" },
+    { key: "productDetail", name: "product-detail" },
+    { key: "cart", name: "cart" },
+    { key: "account", name: "account" },
+    { key: "admin", name: "admin-dashboard" },
+    { key: "checkout", name: "checkout" },
+    { key: "wishlist", name: "wishlist" },
+    { key: "invoice", name: "invoice" },
+    { key: "orders", name: "orders" }
+  ];
+
+  return mapping
+    .filter((entry) => Number(uiReport && uiReport[entry.key] && uiReport[entry.key].attempts ? uiReport[entry.key].attempts : 1) > 1)
+    .map((entry) => entry.name);
 }
 
 function buildJUnitXml(suites) {
@@ -460,7 +534,9 @@ async function main() {
       suites: suites.length,
       tests: suites.reduce((sum, suite) => sum + suite.testcases.length, 0),
       failures: assertionFailures,
-      skipped: suites.reduce((sum, suite) => sum + suite.skipped, 0)
+      skipped: suites.reduce((sum, suite) => sum + suite.skipped, 0),
+      uiRetries: uiReport ? getUiRetryCount(uiReport) : 0,
+      uiRetrySteps: uiReport ? getUiRetrySteps(uiReport) : []
     },
     commands: {
       api: apiCommandResult,
@@ -473,8 +549,33 @@ async function main() {
     assertions: suites
   };
 
+  if (exitCode !== 0) {
+    const diagnostics = {
+      schemaVersion: "smoke-failure-diagnostics.v1",
+      generatedBy: "qa-full-smoke.js",
+      generatedAt: finishedAt.toISOString(),
+      exitCode,
+      summary: report.summary,
+      fatalError,
+      commands: {
+        api: summarizeCommandForDiagnostics(apiCommandResult),
+        ui: summarizeCommandForDiagnostics(uiCommandResult)
+      }
+    };
+    writeText(FAILURE_DIAGNOSTICS, `${JSON.stringify(diagnostics, null, 2)}\n`);
+    logStep(`Failure diagnostics: ${FAILURE_DIAGNOSTICS}`);
+  } else if (fs.existsSync(FAILURE_DIAGNOSTICS)) {
+    // Prevent stale diagnostics from being misread by triage after a green run.
+    fs.rmSync(FAILURE_DIAGNOSTICS, { force: true });
+    logStep(`Cleared stale failure diagnostics: ${FAILURE_DIAGNOSTICS}`);
+  }
+
   writeText(JSON_REPORT, `${JSON.stringify(report, null, 2)}\n`);
   writeText(JUNIT_REPORT, buildJUnitXml(suites));
+
+  if (report.summary.uiRetries > 0) {
+    logStep(`Warning: UI smoke recovered using retries on ${report.summary.uiRetries} step(s).`);
+  }
 
   if (fatalError) {
     process.stderr.write(`${fatalError}\n`);

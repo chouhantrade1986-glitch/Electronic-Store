@@ -37,11 +37,34 @@ body {
 }
 
 .brand {
-  color: #fff;
+  display: grid;
+  gap: 0.1rem;
+  color: #e8f0ff;
   text-decoration: none;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
+  line-height: 0.88;
   letter-spacing: 0.01em;
+  text-transform: lowercase;
+  flex-shrink: 0;
+}
+
+.brand span {
+  color: var(--brand-accent);
+}
+
+.brand small {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: rgba(232, 240, 255, 0.85);
+  line-height: 1;
+}
+
+.page-header .search-form[data-shared-search="1"] {
+  flex: 1 1 440px;
+  min-width: min(100%, 320px);
+  max-width: 700px;
 }
 
 .header-links {
@@ -356,7 +379,7 @@ body {
 
 .brand-toolbar {
   display: grid;
-  grid-template-columns: minmax(220px, 1.2fr) repeat(3, minmax(170px, 0.8fr));
+  grid-template-columns: minmax(220px, 1.2fr) repeat(4, minmax(150px, 0.78fr));
   gap: 0.85rem;
   padding: 1rem;
   border-radius: 24px;
@@ -480,7 +503,7 @@ body {
   }
 
   .brand-toolbar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     top: 78px;
   }
 }
@@ -520,5 +543,9 @@ body {
 
   .brand-toolbar {
     top: 120px;
+  }
+
+  .brand {
+    font-size: 1.8rem;
   }
 }

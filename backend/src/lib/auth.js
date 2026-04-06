@@ -34,6 +34,26 @@ function signToken(user) {
   );
 }
 
+/**
+ * Signs a temporary token that grants access only to complete 2FA.
+ * This token is intended to be used for the /2fa/login-verify endpoint only.
+ * @param {Object} user - User object
+ * @returns {string} JWT token
+ */
+function signTemporaryTwoFactorToken(user) {
+  return jwt.sign(
+    {
+      sub: user.id,
+      role: user.role,
+      email: user.email,
+      sessionVersion: Number.isFinite(Number(user && user.sessionVersion)) ? Math.max(1, Math.floor(Number(user.sessionVersion))) : 1,
+      twoFactorPending: true
+    },
+    resolveJwtSecret(),
+    { expiresIn: "15m" }
+  );
+}
+
 function verifyToken(token) {
   return jwt.verify(token, resolveJwtSecret());
 }
@@ -42,5 +62,6 @@ module.exports = {
   assertJwtSecretConfigured,
   resolveJwtSecret,
   signToken,
+  signTemporaryTwoFactorToken,
   verifyToken
 };

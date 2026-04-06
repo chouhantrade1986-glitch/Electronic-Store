@@ -22,16 +22,25 @@
     "job:sanitize:wix-media": "node src/jobs/sanitizeWixMediaUrls.js",
     "job:sanitize:wix-media:dry": "node src/jobs/sanitizeWixMediaUrls.js --dry-run",
     "smoke:razorpay": "node src/jobs/runRazorpaySmokeTest.js",
-    "verify:razorpay-resume": "node src/jobs/verifyRazorpayResumeFlow.js"
+    "verify:razorpay-resume": "node src/jobs/verifyRazorpayResumeFlow.js",
+    "job:migrate:pii-encrypt": "node src/jobs/migrateExistingPII.js",
+    "job:migrate:pii-encrypt:dry": "node src/jobs/migrateExistingPII.js --dry-run",
+    "job:migrate:pii-encrypt:rollback": "node src/jobs/migrateExistingPII.js --rollback"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-validator": "^7.3.1",
     "googleapis": "^140.0.1",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.10.0"
+    "nodemailer": "^8.0.2",
+    "rate-limiter-flexible": "^10.0.1",
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

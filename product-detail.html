@@ -13,7 +13,12 @@
 <body>
   <header class="site-header">
     <nav class="top-nav">
-      <a href="index.html" class="brand">ElectroMart</a>
+      <a href="index.html" class="brand">
+        <span class="logo-block">
+          <span class="brand-main">electromart</span>
+          <span class="brand-accent">.in</span>
+        </span>
+      </a>
       <form class="search-form" action="products.html" method="get" data-shared-search="1">
         <span class="search-context">All Products</span>
         <div class="search-input-wrap">
@@ -46,6 +51,25 @@
   <main class="detail-main">
     <p class="breadcrumbs"><a href="products.html">Products</a> &gt; <span id="crumbName">Product</span></p>
 
+    <section class="detail-trust-strip" aria-label="Shopping assurances">
+      <article class="detail-trust-chip">
+        <strong>Fast doorstep delivery</strong>
+        <span>Same-day dispatch on eligible orders</span>
+      </article>
+      <article class="detail-trust-chip">
+        <strong>Easy replacements</strong>
+        <span>Clear return and replacement support</span>
+      </article>
+      <article class="detail-trust-chip">
+        <strong>Verified marketplace sellers</strong>
+        <span>Brand-backed inventory and secure checkout</span>
+      </article>
+      <article class="detail-trust-chip detail-trust-chip--accent">
+        <strong>Deal-first pricing</strong>
+        <span>Coupons, bank offers, and bundle savings</span>
+      </article>
+    </section>
+
     <section id="productDetail" class="product-detail" hidden>
       <div class="product-media">
         <div id="mediaThumbRail" class="thumb-rail"></div>
@@ -61,6 +85,7 @@
         <p class="seller-line">Visit the <a id="brandStoreLink" href="brands.html">brand store</a></p>
         <hr />
         <p id="productPrice" class="price"></p>
+        <span class="deal-badge">Deal of the Day</span>
         <p id="productListPrice" class="list-price"></p>
         <p id="productDealMeta" class="deal-meta"></p>
         <p id="productSegment" class="segment-pill"></p>
@@ -98,10 +123,21 @@
         </select>
         <button id="addToCartBtn" type="button">Add to Cart</button>
         <button id="wishlistBtn" type="button" class="secondary-btn">Save to Wishlist</button>
+        <button id="compareBtn" type="button" class="secondary-btn">Add to Compare</button>
         <a href="cart.html" class="buy-now-btn">Buy Now</a>
         <a href="products.html" class="secondary-btn">Back to products</a>
         <p class="secure-line">Secure transaction</p>
+        <div class="buy-box-promise">
+          <span>Amazon-style fast checkout flow</span>
+          <span>GST invoice and business ordering support</span>
+          <span>Protected payments and order tracking</span>
+        </div>
       </aside>
+    </section>
+
+    <section id="recentlyViewedDetailSection" class="related-block" hidden>
+      <h2>Recently Viewed</h2>
+      <div id="recentlyViewedDetailGrid" class="related-grid"></div>
     </section>
 
     <section id="relatedBlock" class="related-block" hidden>

@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { randomUUID } = require("crypto");
 const { readDb, writeDb } = require("../lib/db");
-const { signToken } = require("../lib/auth");
+const { signToken, signTemporaryTwoFactorToken } = require("../lib/auth");
 const { requireAuth } = require("../middleware/authMiddleware");
 const { createMemoryRateLimiter, resolveClientIp } = require("../middleware/rateLimitMiddleware");
 const {
@@ -12,6 +12,7 @@ const {
   normalizeSecurityPreferences,
   normalizeSessionVersion
 } = require("../lib/authSecurity");
+const { generateTotpSecret, verifyTotpToken } = require("../lib/twoFactorAuth");
 const { normalizeNotificationPreferences } = require("../lib/notificationPreferences");
 const { sendTestNotification } = require("../lib/orderNotifications");
 const {
@@ -46,6 +47,11 @@ const {
   verifyPhoneCode
 } = require("../lib/phoneVerification");
 const { logInfo } = require("../lib/logger");
+const {
+  recordLoginFailure,
+  recordLoginSuccess,
+  checkAccountLockout
+} = require("../middleware/accountLockoutMiddleware");
 
 const router = express.Router();
 const PASSWORD_AUTH_FALLBACK_ENABLED = String(process.env.ALLOW_PASSWORD_AUTH_FALLBACK || "").trim().toLowerCase() === "true";
@@ -151,6 +157,26 @@ const logoutAllLimiter = createMemoryRateLimiter({
   message: "Too many session reset attempts. Please wait before trying again."
 });
 
+const twoFactorVerifyLimiter = createMemoryRateLimiter({
+  namespace: "auth-2fa-verify",
+  windowMs: AUTH_IP_WINDOW_MS,
+  max: 10,
+  keyGenerator: (req) => `${resolveClientIp(req)}|${String(req && req.user && req.user.id ? req.user.id : "guest")}`,
+  message: "Too many 2FA verification attempts. Please wait before trying again."
+});
+
+const twoFactorLoginVerifyLimiter = createMemoryRateLimiter({
+  namespace: "auth-2fa-login-verify",
+  windowMs: AUTH_IP_WINDOW_MS,
+  max: 10,
+  keyGenerator: (req) => {
+    const body = req && req.body && typeof req.body === "object" ? req.body : {};
+    const tempToken = String(body.tempToken || "").trim();
+    return `${resolveClientIp(req)}|${tempToken || "no-token"}`;
+  },
+  message: "Too many 2FA login attempts. Please wait before trying again."
+});
+
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -222,7 +248,8 @@ function authUserPayload(user) {
     address: user.address,
     notificationPreferences: normalizeNotificationPreferences(user.notificationPreferences),
     securityPreferences: normalizeSecurityPreferences(user.securityPreferences || defaultSecurityPreferences()),
-    phoneVerification: phoneVerificationPublicView(user)
+    phoneVerification: phoneVerificationPublicView(user),
+    twoFactorEnabled: Boolean(user.twoFactor && user.twoFactor.enabled)
   };
 }
 
@@ -395,8 +422,8 @@ router.post("/otp/request", authOtpRequestLimiter, async (req, res) => {
   return res.json(otpResponse);
 });
 
-router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
-  const { purpose, challengeId, code, emailOrMobile, password } = req.body || {};
+router.post("/otp/verify", checkAccountLockout, authOtpVerifyLimiter, (req, res) => {
+  const { purpose, challengeId, code, emailOrMobile, password, twoFactorToken } = req.body || {};
   const normalizedPurpose = String(purpose || "").trim().toLowerCase() === "register" ? "register" : "login";
   const db = readDb();
   const result = verifyAuthOtpChallenge(db, {
@@ -407,6 +434,20 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
 
   if (!result.ok) {
     writeDb(db);
+    // Record failed attempt for login purposes
+    if (normalizedPurpose === "login" && emailOrMobile) {
+      const failureResult = recordLoginFailure(emailOrMobile, {
+        ip: resolveClientIp(req),
+        userAgent: req.headers["user-agent"]
+      });
+      if (!failureResult.allowed) {
+        return res.status(429).json({
+          message: failureResult.message,
+          code: "ACCOUNT_LOCKED",
+          minutesRemaining: failureResult.minutesRemaining
+        });
+      }
+    }
     return res.status(result.status || 400).json({ message: result.message });
   }
 
@@ -465,6 +506,18 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
   const user = findUserByIdentifier(db, emailOrMobile);
   if (!user) {
     writeDb(db);
+    // Record failed attempt
+    const failureResult = recordLoginFailure(emailOrMobile, {
+      ip: resolveClientIp(req),
+      userAgent: req.headers["user-agent"]
+    });
+    if (!failureResult.allowed) {
+      return res.status(429).json({
+        message: failureResult.message,
+        code: "ACCOUNT_LOCKED",
+        minutesRemaining: failureResult.minutesRemaining
+      });
+    }
     return res.status(404).json({ message: "User not found" });
   }
   if (isSeededDemoUserBlocked(user)) {
@@ -473,7 +526,33 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
   }
   if (user.id !== result.challenge.userId || !bcrypt.compareSync(String(password), user.passwordHash)) {
     writeDb(db);
+    // Record failed login attempt
+    const failureResult = recordLoginFailure(user.email, {
+      ip: resolveClientIp(req),
+      userAgent: req.headers["user-agent"]
+    });
+    if (!failureResult.allowed) {
+      return res.status(429).json({
+        message: failureResult.message,
+        code: "ACCOUNT_LOCKED",
+        minutesRemaining: failureResult.minutesRemaining
+      });
+    }
     return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  // Record successful login - clear failed attempts
+  recordLoginSuccess(user.email);
+
+  // If user has 2FA enabled, return a temporary token that allows them to verify 2FA.
+  if (user.twoFactor && user.twoFactor.enabled) {
+    const tempToken = signTemporaryTwoFactorToken(user);
+    writeDb(db);
+    return res.json({
+      message: "Enter your two-factor authentication code to complete login.",
+      tempToken,
+      twoFactorRequired: true
+    });
   }
 
   recordAuthEvent(req, user, "login", "OTP sign-in", "", "user");
@@ -488,6 +567,142 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
   });
   return res.json({
     token,
+    user: authUserPayload(user)
+  });
+});
+
+router.post("/2fa/setup", requireAuth, (req, res) => {
+  const db = readDb();
+  const user = db.users.find((u) => u.id === req.user.id);
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+  if (user.twoFactor && user.twoFactor.enabled) {
+    return res.status(409).json({ message: "Two-factor authentication is already enabled." });
+  }
+
+  const issuer = String(process.env.TWO_FACTOR_ISSUER || "Electronic Store").trim();
+  const accountName = user.email || user.mobile || user.id;
+  const { otpauthUrl, base32 } = generateTotpSecret({ issuer, accountName });
+
+  user.twoFactor = user.twoFactor || {};
+  user.twoFactor.enabled = false;
+  user.twoFactor.secret = base32;
+  user.twoFactor.createdAt = new Date().toISOString();
+  recordAuthEvent(req, user, "2fa_setup_initiated", "Two-factor authentication setup initiated", "", "user");
+  writeDb(db);
+
+  return res.json({
+    message: "Two-factor authentication setup is ready. Verify with a code from your authenticator app.",
+    otpauthUrl,
+    secret: base32
+  });
+});
+
+router.post("/2fa/verify", requireAuth, twoFactorVerifyLimiter, (req, res) => {
+  const { token } = req.body || {};
+  if (!token) {
+    return res.status(400).json({ message: "Missing token" });
+  }
+
+  const db = readDb();
+  const user = db.users.find((u) => u.id === req.user.id);
+  if (!user || !user.twoFactor || !user.twoFactor.secret) {
+    return res.status(400).json({ message: "Two-factor authentication is not set up for this account." });
+  }
+
+  const isValid = verifyTotpToken(user.twoFactor.secret, String(token));
+  if (!isValid) {
+    return res.status(400).json({ message: "Invalid two-factor authentication token." });
+  }
+
+  user.twoFactor.enabled = true;
+  user.twoFactor.verifiedAt = new Date().toISOString();
+  recordAuthEvent(req, user, "2fa_enabled", "Two-factor authentication enabled", "", "user");
+  writeDb(db);
+
+  return res.json({ message: "Two-factor authentication is enabled." });
+});
+
+router.post("/2fa/disable", requireAuth, (req, res) => {
+  const { token, password } = req.body || {};
+  if (!token || !password) {
+    return res.status(400).json({ message: "Missing token or password." });
+  }
+
+  const db = readDb();
+  const user = db.users.find((u) => u.id === req.user.id);
+  if (!user || !user.twoFactor || !user.twoFactor.enabled) {
+    return res.status(400).json({ message: "Two-factor authentication is not enabled." });
+  }
+
+  if (!bcrypt.compareSync(String(password), user.passwordHash)) {
+    return res.status(401).json({ message: "Invalid password." });
+  }
+
+  const isValid = verifyTotpToken(user.twoFactor.secret, String(token));
+  if (!isValid) {
+    return res.status(400).json({ message: "Invalid two-factor authentication token." });
+  }
+
+  user.twoFactor.enabled = false;
+  user.twoFactor.secret = null;
+  user.twoFactor.disabledAt = new Date().toISOString();
+  recordAuthEvent(req, user, "2fa_disabled", "Two-factor authentication disabled", "", "user");
+  writeDb(db);
+
+  return res.json({ message: "Two-factor authentication is disabled." });
+});
+
+router.post("/2fa/login-verify", twoFactorLoginVerifyLimiter, (req, res) => {
+  const { tempToken, token } = req.body || {};
+  if (!tempToken || !token) {
+    return res.status(400).json({ message: "Missing temporary token or 2FA code." });
+  }
+
+  const db = readDb();
+
+  let decoded;
+  try {
+    const { verifyToken } = require("../lib/auth");
+    decoded = verifyToken(tempToken);
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired temporary token." });
+  }
+
+  // Verify that this is a 2FA pending token
+  if (!decoded.twoFactorPending) {
+    return res.status(401).json({ message: "This token is not valid for 2FA login." });
+  }
+
+  const user = db.users.find((u) => u.id === decoded.sub);
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!user.twoFactor || !user.twoFactor.enabled || !user.twoFactor.secret) {
+    return res.status(400).json({ message: "Two-factor authentication is not set up." });
+  }
+
+  const is2faValid = verifyTotpToken(user.twoFactor.secret, String(token).trim());
+  if (!is2faValid) {
+    return res.status(401).json({ message: "Invalid two-factor authentication code." });
+  }
+
+  recordAuthEvent(req, user, "login", "OTP + 2FA sign-in", "", "user");
+  writeDb(db);
+
+  const jwtToken = signToken(user);
+  logInfo("auth_2fa_login_verified", {
+    userId: user.id,
+    role: user.role
+  }, {
+    requestId: req.requestId
+  });
+
+  return res.json({
+    message: "Login successful.",
+    token: jwtToken,
     user: authUserPayload(user)
   });
 });

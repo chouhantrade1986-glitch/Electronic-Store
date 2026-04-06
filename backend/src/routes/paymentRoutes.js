@@ -36,6 +36,12 @@ const {
   verifyRazorpayWebhookSignature
 } = require("../lib/razorpayGateway");
 const { logError, logInfo } = require("../lib/logger");
+const {
+  isReplayProtectionEnabled,
+  isWebhookEventProcessed,
+  markWebhookEventProcessed,
+  DEFAULT_REPLAY_TTL_SECONDS
+} = require("../lib/webhookReplayProtection");
 
 const router = express.Router();
 const PAYMENT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -334,6 +340,17 @@ router.post("/webhooks/razorpay", paymentWebhookLimiter, async (req, res) => {
   const requestId = String(req.headers["x-request-id"] || req.headers["x-razorpay-request-id"] || "").trim();
   const sourceIp = resolveClientIp(req);
 
+  // Replay protection: prevent processing the same event twice
+  if (isReplayProtectionEnabled() && eventId && (await isWebhookEventProcessed("razorpay", eventId))) {
+    return res.status(200).json({
+      ok: true,
+      duplicate: true,
+      event: eventName,
+      eventId,
+      reason: "replay"
+    });
+  }
+
   try {
     const outcome = await withWriteLock(async () => {
       const db = readDb();
@@ -350,6 +367,11 @@ router.post("/webhooks/razorpay", paymentWebhookLimiter, async (req, res) => {
         gatewayRefundId: String(refundEntity && refundEntity.id ? refundEntity.id : "").trim(),
         gatewayCreatedAt: req.body && req.body.created_at ? req.body.created_at : ""
       });
+
+      // Mark idempotence token in Redis to prevent replay attacks
+      if (isReplayProtectionEnabled() && eventId) {
+        await markWebhookEventProcessed("razorpay", eventId, DEFAULT_REPLAY_TTL_SECONDS);
+      }
 
       const webhookEvent = trackedEvent.entry;
       if (!trackedEvent.accepted) {

@@ -2,6 +2,7 @@ const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const CATEGORY_STORAGE_KEY = "electromart_categories_v1";
 const WISHLIST_STORAGE_KEY = "electromart_wishlist_v1";
+const COMPARE_STORAGE_KEY = "electromart_compare_v1";
 const SEARCH_HISTORY_STORAGE_KEY = "electromart_search_history_v1";
 const API_BASE_URL = (() => {
   const { protocol, hostname, port } = window.location;
@@ -34,7 +35,14 @@ const activeFilterMeta = document.getElementById("activeFilterMeta");
 const activeFilterChips = document.getElementById("activeFilterChips");
 const filterChipFeedback = document.getElementById("filterChipFeedback");
 const filterLiveStatus = document.getElementById("filterLiveStatus");
+const compareBar = document.getElementById("compareBar");
+const compareStatus = document.getElementById("compareStatus");
+const compareViewBtn = document.getElementById("compareViewBtn");
+const compareClearBtn = document.getElementById("compareClearBtn");
 const resultsFooter = document.getElementById("resultsFooter");
+const recentlyViewedSection = document.getElementById("recentlyViewedSection");
+const recentlyViewedGrid = document.getElementById("recentlyViewedGrid");
+const RECENTLY_VIEWED_STORAGE_KEY = "electromart_recently_viewed_v1";
 const resultsWindowMeta = document.getElementById("resultsWindowMeta");
 const loadMoreBtn = document.getElementById("loadMoreBtn");
 const quickViewModal = document.getElementById("quickViewModal");
@@ -48,6 +56,7 @@ const quickViewMeta = document.getElementById("quickViewMeta");
 const quickViewDescription = document.getElementById("quickViewDescription");
 const quickViewAddBtn = document.getElementById("quickViewAddBtn");
 const quickViewWishlistBtn = document.getElementById("quickViewWishlistBtn");
+const quickViewCompareBtn = document.getElementById("quickViewCompareBtn");
 const quickViewDetailsLink = document.getElementById("quickViewDetailsLink");
 const searchSuggestions = document.getElementById("searchSuggestions");
 
@@ -467,6 +476,42 @@ function saveWishlistIds(ids) {
   }
 }
 
+function loadCompareIds() {
+  try {
+    const raw = localStorage.getItem(COMPARE_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.map((item) => String(item).trim()).filter(Boolean) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveCompareIds(ids) {
+  try {
+    localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(Array.from(new Set(ids.map((item) => String(item).trim()).filter(Boolean)))));
+  } catch (error) {
+    return;
+  }
+}
+
+function isCompared(productId) {
+  return loadCompareIds().includes(String(productId));
+}
+
+function toggleCompare(productId) {
+  const key = String(productId).trim();
+  if (!key) {
+    return false;
+  }
+  const ids = loadCompareIds();
+  if (ids.includes(key)) {
+    saveCompareIds(ids.filter((item) => item !== key));
+    return false;
+  }
+  saveCompareIds([key, ...ids]);
+  return true;
+}
+
 function isWishlisted(productId) {
   return loadWishlistIds().includes(String(productId));
 }
@@ -483,6 +528,81 @@ function toggleWishlist(productId) {
   }
   saveWishlistIds([key, ...ids]);
   return true;
+}
+
+function loadRecentlyViewedIds() {
+  try {
+    const raw = localStorage.getItem(RECENTLY_VIEWED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.map((item) => String(item).trim()).filter(Boolean) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveRecentlyViewedIds(ids) {
+  try {
+    localStorage.setItem(
+      RECENTLY_VIEWED_STORAGE_KEY,
+      JSON.stringify(Array.from(new Set((ids || []).map((item) => String(item).trim()).filter(Boolean))).slice(0, 12))
+    );
+  } catch (error) {
+    return;
+  }
+}
+
+function updateRecentlyViewed(productId) {
+  const key = String(productId).trim();
+  if (!key) {
+    return;
+  }
+  const existing = loadRecentlyViewedIds();
+  const next = [key, ...existing.filter((item) => item !== key)].slice(0, 12);
+  saveRecentlyViewedIds(next);
+}
+
+function getRecentlyViewedProducts(sourceProducts) {
+  if (!Array.isArray(sourceProducts) || !sourceProducts.length) {
+    return [];
+  }
+  const productMap = new Map(sourceProducts.map((item) => [String(item.id), item]));
+  return loadRecentlyViewedIds()
+    .map((id) => productMap.get(String(id)))
+    .filter((item) => item && item.segment !== "b2b")
+    .slice(0, 8);
+}
+
+function renderRecentlyViewedSection(sourceProducts) {
+  if (!recentlyViewedSection || !recentlyViewedGrid) {
+    return;
+  }
+
+  const items = getRecentlyViewedProducts(sourceProducts);
+  if (!items.length) {
+    recentlyViewedSection.hidden = true;
+    recentlyViewedGrid.innerHTML = "";
+    return;
+  }
+
+  recentlyViewedSection.hidden = false;
+  recentlyViewedGrid.innerHTML = items
+    .map((product) => {
+      const image = normalizeImageUrl(product.image) || fallbackImage();
+      const price = money(product.price);
+      return `
+        <article class="recently-viewed-card">
+          <a href="product-detail.html?id=${encodeURIComponent(product.id)}" class="card-image" aria-label="View ${escapeSuggestionHtml(product.name)}">
+            <img src="${image}" alt="${escapeSuggestionHtml(product.name)}" loading="lazy" />
+          </a>
+          <div class="card-body">
+            <a href="product-detail.html?id=${encodeURIComponent(product.id)}" class="card-name">${escapeSuggestionHtml(product.name)}</a>
+            <p class="card-price">${price}</p>
+            <button class="compare-btn${isCompared(product.id) ? " active" : ""}" type="button" data-compare-id="${product.id}">${isCompared(product.id) ? "Compared" : "Compare"}</button>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function loadCatalogMap() {
@@ -584,6 +704,19 @@ function syncCartCount() {
   const cartMap = loadCartMap();
   const total = Object.values(cartMap).reduce((sum, qty) => sum + Number(qty || 0), 0);
   cartCount.textContent = String(total);
+}
+
+function syncCompareBar() {
+  if (!compareBar || !compareStatus) {
+    return;
+  }
+  const ids = loadCompareIds();
+  const count = ids.length;
+  compareBar.hidden = count === 0;
+  compareStatus.textContent = count === 0
+    ? "Select products to add to comparison list."
+    : `${count} item${count === 1 ? "" : "s"} selected for comparison.`;
+  compareViewBtn.disabled = count < 2;
 }
 
 function addProductToCart(productId) {
@@ -1598,6 +1731,7 @@ function productCard(product) {
   const image = normalizeImageUrl(product.image) || fallbackImage();
   const ribbon = getRibbonLabel(product);
   const wishlisted = isWishlisted(product.id);
+  const compared = isCompared(product.id);
   const highlights = getProductHighlights(product).slice(0, 2).map((item) => `<li>${item}</li>`).join("");
   const listPrice = Number(product.listPrice || product.price || 0);
   const price = Number(product.price || 0);
@@ -1610,6 +1744,12 @@ function productCard(product) {
   const socialProof = segment === "b2b"
     ? (product.moq ? `MOQ ${product.moq} for business orders` : "Business buying options available")
     : (discountPercent > 0 ? "Limited-time price drop" : (product.featured ? "Popular customer pick" : "Fast-moving catalog item"));
+  const summary = getProductShortDescription(product);
+  const stockState = getProductStockState(product);
+  const stockClass = stockState.rank === 2 ? "out" : (stockState.rank === 1 ? "low" : "in");
+  const offerBadge = segment === "b2b"
+    ? (product.moq ? `Bulk buy: MOQ ${product.moq}` : "Business pricing")
+    : (discountPercent > 0 ? `Save ${discountPercent}%` : "Top catalog pick");
 
   return `
     <article class="product-card">
@@ -1618,6 +1758,10 @@ function productCard(product) {
         <img src="${image}" alt="${product.name}" loading="lazy" />
       </a>
       <div class="content">
+        <div class="offer-badge-row">
+          <span class="offer-badge">${offerBadge}</span>
+          <span class="stock-badge ${stockClass}">${stockState.label}</span>
+        </div>
         <p class="product-card-kicker">${product.featured ? "Best value pick" : categoryLabel(product.category)}</p>
         <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
         <div class="card-meta-row">
@@ -1630,6 +1774,7 @@ function productCard(product) {
         </div>
         <p class="product-social-proof">${socialProof}</p>
         ${priceMeta}
+        <p class="product-summary">${summary}</p>
         <ul class="feature-list">${highlights}</ul>
         <p class="delivery-meta">${deliveryMeta}</p>
         ${bulkMeta}
@@ -1639,6 +1784,7 @@ function productCard(product) {
             <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">View details</a>
             <button class="quick-view-btn" data-quick-view-id="${product.id}" type="button">Quick view</button>
             <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${wishlisted ? "Wishlisted" : "Wishlist"}</button>
+            <button class="compare-btn ${compared ? "active" : ""}" data-compare-id="${product.id}" type="button">${compared ? "Compared" : "Compare"}</button>
           </div>
         </div>
       </div>
@@ -1653,6 +1799,103 @@ function syncQuickViewWishlistState(productId) {
   const active = isWishlisted(productId);
   quickViewWishlistBtn.classList.toggle("active", active);
   quickViewWishlistBtn.textContent = active ? "Wishlisted" : "Save to Wishlist";
+}
+
+function renderComparePage() {
+  const compareGrid = document.getElementById("compareGrid");
+  const compareEmpty = document.getElementById("compareEmpty");
+  const clearCompareBtn = document.getElementById("clearCompareBtn");
+
+  if (!compareGrid) {
+    return;
+  }
+
+  const ids = loadCompareIds();
+  if (ids.length === 0) {
+    compareGrid.innerHTML = "";
+    if (compareEmpty) {
+      compareEmpty.hidden = false;
+    }
+    return;
+  }
+
+  if (compareEmpty) {
+    compareEmpty.hidden = true;
+  }
+
+  const sourceProducts = mergeProductsById(fallbackProducts, loadCatalogProductsList());
+  const products = ids.map(id => sourceProducts.find(p => String(p.id) === String(id))).filter(Boolean);
+
+  compareGrid.innerHTML = products.map(product => `
+    <div class="compare-card">
+      <div class="compare-card-header">
+        <button class="compare-remove-btn" data-remove-compare="${product.id}" type="button" aria-label="Remove from comparison">×</button>
+      </div>
+      <div class="compare-card-media">
+        <img src="${normalizeImageUrl(product.image) || fallbackImage()}" alt="${product.name}" />
+      </div>
+      <div class="compare-card-content">
+        <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
+        <p class="compare-brand">by ${product.brand || "ElectroMart"}</p>
+        <p class="compare-price">${money(product.price)}</p>
+        <p class="compare-rating">${Number(product.rating || 0).toFixed(1)} ★</p>
+        <p class="compare-category">${categoryLabel(product.category)}</p>
+        <div class="compare-actions">
+          <button class="add-btn" data-id="${product.id}" data-name="${product.name}" data-price="${Number(product.price || 0)}" data-image="${normalizeImageUrl(product.image)}" type="button">Add to Cart</button>
+          <button class="wishlist-btn ${isWishlisted(product.id) ? "active" : ""}" data-wishlist-id="${product.id}" type="button">${isWishlisted(product.id) ? "Wishlisted" : "Wishlist"}</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  if (clearCompareBtn) {
+    clearCompareBtn.addEventListener("click", () => {
+      saveCompareIds([]);
+      renderComparePage();
+    });
+  }
+
+  // Add event listeners for remove buttons
+  compareGrid.addEventListener("click", (event) => {
+    const removeBtn = event.target.closest("[data-remove-compare]");
+    if (removeBtn) {
+      const productId = removeBtn.getAttribute("data-remove-compare");
+      const ids = loadCompareIds().filter(id => id !== productId);
+      saveCompareIds(ids);
+      renderComparePage();
+    }
+
+    const wishlistBtn = event.target.closest(".wishlist-btn");
+    if (wishlistBtn) {
+      const productId = wishlistBtn.getAttribute("data-wishlist-id");
+      if (productId) {
+        const active = toggleWishlist(productId);
+        wishlistBtn.classList.toggle("active", active);
+        wishlistBtn.textContent = active ? "Wishlisted" : "Wishlist";
+      }
+    }
+
+    const addBtn = event.target.closest(".add-btn");
+    if (addBtn) {
+      const productId = addBtn.getAttribute("data-id");
+      if (productId) {
+        cacheCatalogProduct({
+          id: productId,
+          name: addBtn.getAttribute("data-name"),
+          price: Number(addBtn.getAttribute("data-price") || 0),
+          image: addBtn.getAttribute("data-image")
+        });
+        addProductToCart(productId);
+        const oldText = addBtn.textContent;
+        addBtn.textContent = "Added";
+        addBtn.classList.remove("added");
+        window.setTimeout(() => {
+          addBtn.textContent = oldText || "Add to Cart";
+          addBtn.classList.add("added");
+        }, 1200);
+      }
+    }
+  });
 }
 
 function closeQuickViewModal() {
@@ -1684,6 +1927,7 @@ function openQuickViewModal(productId) {
   quickViewAddBtn.setAttribute("data-id", currentQuickViewProductId);
   quickViewDetailsLink.href = `product-detail.html?id=${encodeURIComponent(currentQuickViewProductId)}`;
   syncQuickViewWishlistState(currentQuickViewProductId);
+  syncQuickViewCompareState(currentQuickViewProductId);
   quickViewModal.hidden = false;
   document.body.classList.add("quick-view-open");
 }
@@ -1721,6 +1965,8 @@ function renderProducts(list) {
     loadMoreBtn.hidden = !hasMore;
     loadMoreBtn.disabled = !hasMore;
   }
+
+  renderRecentlyViewedSection(list);
   flushFilterAnnouncement(resultMeta.textContent);
 }
 
@@ -2154,6 +2400,18 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const compareBtn = event.target.closest(".compare-btn");
+  if (compareBtn) {
+    const productId = compareBtn.getAttribute("data-compare-id");
+    if (productId) {
+      const active = toggleCompare(productId);
+      compareBtn.classList.toggle("active", active);
+      compareBtn.textContent = active ? "Compared" : "Compare";
+      syncCompareBar();
+    }
+    return;
+  }
+
   const addBtn = event.target.closest(".add-btn");
   if (!addBtn) {
     return;
@@ -2226,10 +2484,32 @@ if (quickViewWishlistBtn) {
   });
 }
 
+if (quickViewCompareBtn) {
+  quickViewCompareBtn.addEventListener("click", () => {
+    if (!currentQuickViewProductId) {
+      return;
+    }
+    toggleCompare(currentQuickViewProductId);
+    syncQuickViewCompareState(currentQuickViewProductId);
+    syncCompareBar();
+  });
+}
+
 syncCartCount();
+syncCompareBar();
 syncDynamicCategoryUI();
 applyInitialQueryFilters();
 syncDynamicBrandUI();
 updatePriceLabels();
 fetchProductsFromApi();
+
+// Handle compare page
+if (window.location.pathname.includes('compare.html')) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ids = urlParams.getAll('ids');
+  if (ids.length > 0) {
+    saveCompareIds(ids);
+  }
+  renderComparePage();
+}
 

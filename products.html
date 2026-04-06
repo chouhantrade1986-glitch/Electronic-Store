@@ -10,6 +10,14 @@
   <link rel="stylesheet" href="products.css?v=20260315a" />
 </head>
 <body>
+  <div class="utility-bar">
+    <p>India-wide electronics marketplace with verified catalog, fast delivery promises, and GST-ready business buying.</p>
+    <div class="utility-links">
+      <a href="orders.html">Track Orders</a>
+      <a href="brands.html">Brand Stores</a>
+      <a href="faq.html">Customer Service</a>
+    </div>
+  </div>
   <header class="site-header">
     <nav class="top-nav">
       <a href="index.html" class="brand">electro<span>mart</span><small>all products</small></a>
@@ -30,10 +38,10 @@
         <button type="submit">Search</button>
       </form>
       <div class="header-links" aria-label="Account and links">
-        <a href="auth.html">Account</a>
-        <a href="orders.html">Orders</a>
-        <a href="wishlist.html">Wishlist</a>
-        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
+        <a href="auth.html"><strong>Hello, sign in</strong><span>Account</span></a>
+        <a href="orders.html"><strong>Returns</strong><span>&amp; Orders</span></a>
+        <a href="wishlist.html"><strong>Saved for later</strong><span>Wishlist</span></a>
+        <a href="cart.html" class="cart-link"><strong>Cart</strong><span><span id="cartCount">0</span> items</span></a>
       </div>
     </nav>
     <nav class="sub-nav" aria-label="Quick links">
@@ -66,9 +74,54 @@
 
   <main class="products-main">
     <p class="breadcrumbs">Electronics &gt; All Products</p>
+    <section class="catalog-hero" aria-label="Catalog overview">
+      <div class="catalog-hero-copy">
+        <p class="catalog-hero-kicker">All Products</p>
+        <h1>Shop ElectroMart's full electronics catalog</h1>
+        <p>Browse laptops, accessories, creator gear, business bundles, and fast-moving deals with search, comparison, and verified pricing in one place.</p>
+        <div class="catalog-hero-actions">
+          <a href="todays-deals.html">Explore Today's Deals</a>
+          <a href="brands.html" class="ghost-link">Browse Brand Stores</a>
+        </div>
+      </div>
+      <div class="catalog-hero-stats">
+        <div class="catalog-stat-card">
+          <strong>Fast filters</strong>
+          <span>sort by price, rating, category, and segment</span>
+        </div>
+        <div class="catalog-stat-card">
+          <strong>Business ready</strong>
+          <span>bulk order visibility for B2B buying flows</span>
+        </div>
+        <div class="catalog-stat-card">
+          <strong>Quick compare</strong>
+          <span>save, compare, and shortlist before checkout</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Shopping promises">
+      <article>
+        <strong>Secure checkout</strong>
+        <p>Protected payment flow with invoice-ready order records.</p>
+      </article>
+      <article>
+        <strong>Verified catalog</strong>
+        <p>Brand, category, and price metadata surfaced for quick evaluation.</p>
+      </article>
+      <article>
+        <strong>Delivery clarity</strong>
+        <p>Retail and business fulfillment messaging shown directly in listings.</p>
+      </article>
+    </section>
+
     <section class="results-layout">
       <aside class="filters-panel" aria-label="Filters">
-        <h2>Filters</h2>
+        <div class="filters-panel-head">
+          <p class="filters-kicker">Refine Results</p>
+          <h2>Filters</h2>
+          <p>Use brand, category, rating, and price to narrow a large catalog quickly.</p>
+        </div>
         <div class="filter-actions">
           <button id="resetFiltersBtn" type="button" class="reset-btn">Reset Filters</button>
         </div>
@@ -115,6 +168,20 @@
         </div>
       </aside>
       <section class="products-panel">
+        <section class="results-summary-strip" aria-label="Shopping summary">
+          <article>
+            <strong>Compare before you buy</strong>
+            <p>Shortlist products and open a side-by-side comparison when ready.</p>
+          </article>
+          <article>
+            <strong>Save to wishlist</strong>
+            <p>Keep products in a shortlist while continuing to browse the catalog.</p>
+          </article>
+          <article>
+            <strong>Quick view decisions</strong>
+            <p>Preview key specs and pricing without leaving the listing page.</p>
+          </article>
+        </section>
         <div class="panel-head">
           <h1 id="resultsHeading">Results</h1>
           <div class="panel-controls">
@@ -137,9 +204,24 @@
           <p id="resultsWindowMeta" class="results-window-meta" role="status" aria-live="polite" aria-atomic="true"></p>
           <button id="loadMoreBtn" type="button" class="load-more-btn">Load More Products</button>
         </div>
+
+        <section id="recentlyViewedSection" class="recently-viewed-section" hidden>
+          <h2>Recently Viewed</h2>
+          <div id="recentlyViewedGrid" class="recently-viewed-grid"></div>
+        </section>
       </section>
     </section>
   </main>
+
+  <div id="compareBar" class="compare-bar" hidden>
+    <div class="compare-bar-content">
+      <p id="compareStatus" class="compare-status">Select products to add to comparison list.</p>
+      <div class="compare-bar-actions">
+        <button id="compareViewBtn" type="button" class="compare-view-btn" disabled>View Comparison</button>
+        <button id="compareClearBtn" type="button" class="compare-clear-btn">Clear All</button>
+      </div>
+    </div>
+  </div>
 
   <div id="quickViewModal" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quickViewTitle" hidden>
     <div class="quick-view-backdrop" data-close-quick-view></div>
@@ -159,6 +241,7 @@
           <div class="quick-view-actions">
             <button id="quickViewAddBtn" class="add-btn" type="button">Add to Cart</button>
             <button id="quickViewWishlistBtn" class="wishlist-btn" type="button">Save to Wishlist</button>
+            <button id="quickViewCompareBtn" class="compare-btn" type="button">Compare</button>
             <a id="quickViewDetailsLink" href="products.html" class="view-link">Open full details</a>
           </div>
         </div>

@@ -13,7 +13,7 @@ const SEEDED_DEMO_PROFILES = [
     name: "Admin User",
     email: "admin@electromart.com",
     mobile: "9999999999",
-    password: "Admin@123",
+    passwordEnvKey: "SEEDED_DEMO_ADMIN_PASSWORD",
     role: "admin",
     address: "HQ, Delhi"
   },
@@ -22,7 +22,7 @@ const SEEDED_DEMO_PROFILES = [
     name: "Demo Customer",
     email: "customer@electromart.com",
     mobile: "8888888888",
-    password: "Customer@123",
+    passwordEnvKey: "SEEDED_DEMO_CUSTOMER_PASSWORD",
     role: "customer",
     address: "Jaipur, Rajasthan"
   }
@@ -30,6 +30,16 @@ const SEEDED_DEMO_PROFILES = [
 
 function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function resolveSeededDemoPassword(profile, env = process.env) {
+  const key = String(profile && profile.passwordEnvKey ? profile.passwordEnvKey : "").trim();
+  const configured = key ? String(env && env[key] ? env[key] : "").trim() : "";
+  if (configured.length >= 10) {
+    return configured;
+  }
+  // Fallback to a random one-time password so source code does not ship known credentials.
+  return randomUUID();
 }
 
 function findSeededDemoProfile(user) {
@@ -79,13 +89,13 @@ function normalizeSeededDemoMetadata(user = {}) {
   };
 }
 
-function createSeededDemoUsers() {
+function createSeededDemoUsers(env = process.env) {
   return SEEDED_DEMO_PROFILES.map((profile) => ({
+    passwordHash: bcrypt.hashSync(resolveSeededDemoPassword(profile, env), 10),
     id: randomUUID(),
     name: profile.name,
     email: profile.email,
     mobile: profile.mobile,
-    passwordHash: bcrypt.hashSync(profile.password, 10),
     role: profile.role,
     address: profile.address,
     notificationPreferences: normalizeNotificationPreferences({}),

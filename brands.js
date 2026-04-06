@@ -46,6 +46,7 @@ const brandSearch = document.getElementById("brandSearch");
 const brandCategoryFilter = document.getElementById("brandCategoryFilter");
 const brandSegmentFilter = document.getElementById("brandSegmentFilter");
 const brandBudgetFilter = document.getElementById("brandBudgetFilter");
+const brandSortFilter = document.getElementById("brandSortFilter");
 const brandStoreMeta = document.getElementById("brandStoreMeta");
 const brandStoreGrid = document.getElementById("brandStoreGrid");
 
@@ -96,6 +97,51 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+let htmlDecodeArea = null;
+
+function decodeHtmlEntities(value) {
+  const raw = String(value || "");
+  if (!raw) {
+    return "";
+  }
+  if (!htmlDecodeArea && typeof document !== "undefined" && typeof document.createElement === "function") {
+    htmlDecodeArea = document.createElement("textarea");
+  }
+  if (!htmlDecodeArea) {
+    return raw;
+  }
+  htmlDecodeArea.innerHTML = raw;
+  return htmlDecodeArea.value;
+}
+
+function normalizePlainText(value) {
+  let text = String(value || "");
+  if (!text) {
+    return "";
+  }
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    text = decodeHtmlEntities(text);
+    text = text.replace(/<[^>]+>/g, " ");
+  }
+  return text
+    .replace(/[\u0000-\u001f\u007f]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeSegment(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  return raw === "b2b" ? "b2b" : "b2c";
+}
+
+function summarizeDescription(value, fallback = "") {
+  const clean = normalizePlainText(value) || normalizePlainText(fallback);
+  if (clean.length <= 180) {
+    return clean;
+  }
+  return `${clean.slice(0, 177).trimEnd()}...`;
 }
 
 function money(value) {
@@ -151,40 +197,75 @@ function brandStoreUrl(brand) {
   return `brands.html?brand=${encodeURIComponent(String(brand || "").trim())}`;
 }
 
-function cacheCatalogProducts(products) {
-  if (!Array.isArray(products) || !products.length) {
+function normalizeBrandProduct(product, existing = {}) {
+  const source = {
+    ...existing,
+    ...(product && typeof product === "object" ? product : {})
+  };
+  const id = String(source.id || "").trim();
+  if (!id) {
+    return null;
+  }
+  const collections = Array.isArray(source.collections)
+    ? source.collections
+    : String(source.collections || "").split(/[;|,]+/);
+  const keywords = Array.isArray(source.keywords)
+    ? source.keywords
+    : String(source.keywords || "").split(/[;|,]+/);
+  const category = normalizeCategory(source.category || collections[0] || "accessory") || "accessory";
+  const name = normalizePlainText(source.name || source.title || "");
+  const brand = normalizePlainText(source.brand || "");
+  return {
+    ...source,
+    id,
+    name: name || "Untitled product",
+    brand: brand || "Unbranded",
+    category,
+    segment: normalizeSegment(source.segment),
+    description: normalizePlainText(source.description || source.definition || ""),
+    image: normalizeImageUrl(source.image || source.productImageUrl || source.product_image_url || ""),
+    price: Number(source.price ?? 0) || 0,
+    listPrice: Number(source.listPrice ?? source.list_price ?? source.mrp ?? source.price ?? 0) || 0,
+    rating: Number(source.rating ?? 0) || 0,
+    collections: collections
+      .map((item) => normalizeCategory(normalizePlainText(item)))
+      .filter(Boolean),
+    keywords: keywords
+      .map((item) => normalizePlainText(item))
+      .filter(Boolean)
+  };
+}
+
+function cacheCatalogProducts(products, options = {}) {
+  if (!Array.isArray(products)) {
     return;
   }
+  const replace = options && options.replace === true;
   let next = {};
   try {
-    const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : {};
-    next = typeof parsed === "object" && parsed ? parsed : {};
+    if (!replace) {
+      const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      next = typeof parsed === "object" && parsed ? parsed : {};
+    }
   } catch (error) {
     next = {};
   }
-  let changed = false;
+  let changed = replace;
   products.forEach((product) => {
-    if (!product || !product.id) {
-      return;
-    }
-    const key = String(product.id).trim();
+    const key = String(product && product.id ? product.id : "").trim();
     if (!key) {
       return;
     }
     const existing = next[key] || {};
-    next[key] = {
-      ...existing,
-      ...product,
-      id: key,
-      image: normalizeImageUrl(product.image || existing.image || ""),
-      price: Number(product.price ?? existing.price ?? 0),
-      listPrice: Number(product.listPrice ?? existing.listPrice ?? product.price ?? 0),
-      rating: Number(product.rating ?? existing.rating ?? 0)
-    };
+    const normalized = normalizeBrandProduct(product, existing);
+    if (!normalized) {
+      return;
+    }
+    next[key] = normalized;
     changed = true;
   });
-  if (changed) {
+  if (changed || replace) {
     localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify(next));
   }
 }
@@ -202,20 +283,19 @@ function loadCatalogProductsList() {
 function mergeProductsById(primary, secondary) {
   const merged = new Map();
   [...primary, ...secondary].forEach((product) => {
-    if (!product || !product.id) {
+    if (!product) {
       return;
     }
-    const key = String(product.id).trim();
+    const key = String(product.id || "").trim();
+    if (!key) {
+      return;
+    }
     const current = merged.get(key) || {};
-    merged.set(key, {
-      ...current,
-      ...product,
-      id: key,
-      image: normalizeImageUrl(product.image || current.image || ""),
-      price: Number(product.price ?? current.price ?? 0),
-      listPrice: Number(product.listPrice ?? current.listPrice ?? product.price ?? 0),
-      rating: Number(product.rating ?? current.rating ?? 0)
-    });
+    const normalized = normalizeBrandProduct(product, current);
+    if (!normalized) {
+      return;
+    }
+    merged.set(key, normalized);
   });
   return Array.from(merged.values());
 }
@@ -246,6 +326,18 @@ function activeProducts(products) {
 function getSelectedBrandKey() {
   const params = new URLSearchParams(window.location.search);
   return normalizeBrandKey(params.get("brand") || "");
+}
+
+function setSelectedBrandInUrl(brandLabel) {
+  const clean = String(brandLabel || "").trim();
+  if (!clean) {
+    return;
+  }
+  const params = new URLSearchParams(window.location.search);
+  params.set("brand", clean);
+  const nextQuery = params.toString();
+  const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
+  window.history.replaceState({}, "", nextUrl);
 }
 
 function buildBrandDirectory(products) {
@@ -341,7 +433,7 @@ function renderDirectory() {
   });
 
   brandDirectoryMeta.textContent = filtered.length === directory.length
-    ? `${directory.length} brands • ${allBrandProducts.length} live products`
+    ? `${directory.length} brands | ${allBrandProducts.length} live products`
     : `Showing ${filtered.length} of ${directory.length} brands`;
 
   if (!filtered.length) {
@@ -373,7 +465,7 @@ function renderDirectory() {
           <p>${escapeHtml(brand.heroProduct || `Shop ${brand.label} products across the store.`)}</p>
           <div class="brand-directory-meta">
             <span class="brand-directory-pill">From ${escapeHtml(money(brand.minPrice))}</span>
-            <span class="brand-directory-pill">${escapeHtml(brand.categories.slice(0, 2).join(" • "))}</span>
+            <span class="brand-directory-pill">${escapeHtml(brand.categories.slice(0, 2).join(" | "))}</span>
           </div>
           <a class="brand-card-action" href="${brandStoreUrl(brand.label)}">Open brand store</a>
         </div>
@@ -388,6 +480,29 @@ function matchesBudget(product, budget) {
   if (budget === "10000-50000") return price >= 10000 && price <= 50000;
   if (budget === "over-50000") return price > 50000;
   return true;
+}
+
+function sortProducts(products, sortKey) {
+  const list = products.slice();
+  if (sortKey === "price-asc") {
+    return list.sort((left, right) => Number(left.price || 0) - Number(right.price || 0));
+  }
+  if (sortKey === "price-desc") {
+    return list.sort((left, right) => Number(right.price || 0) - Number(left.price || 0));
+  }
+  if (sortKey === "rating-desc") {
+    return list.sort((left, right) => {
+      const ratingDelta = Number(right.rating || 0) - Number(left.rating || 0);
+      if (ratingDelta) {
+        return ratingDelta;
+      }
+      return Number(left.price || 0) - Number(right.price || 0);
+    });
+  }
+  if (sortKey === "name-asc") {
+    return list.sort((left, right) => String(left.name || "").localeCompare(String(right.name || "")));
+  }
+  return list;
 }
 
 function getCurrentBrandProducts() {
@@ -432,7 +547,7 @@ function renderCategoryLanes() {
       .sort((left, right) => right[1].count - left[1].count || left[1].label.localeCompare(right[1].label))
       .map(([key, group]) => `
         <button type="button" class="brand-category-chip${activeCategory === key ? " is-active" : ""}" data-brand-category="${escapeHtml(key)}">
-          ${escapeHtml(group.label)} • ${group.count}
+          ${escapeHtml(group.label)} | ${group.count}
         </button>
       `)
   ];
@@ -481,6 +596,7 @@ function getActiveStoreFilters() {
   const category = String(brandCategoryFilter?.value || "all");
   const segment = String(brandSegmentFilter?.value || "all");
   const budget = String(brandBudgetFilter?.value || "all");
+  const sort = String(brandSortFilter?.value || "featured");
 
   if (query) {
     filters.push({
@@ -520,6 +636,16 @@ function getActiveStoreFilters() {
       feedback: "Removed brand budget filter. Focus moved to the budget filter."
     });
   }
+  if (sort !== "featured") {
+    const label = String(brandSortFilter?.selectedOptions?.[0]?.textContent || sort).trim();
+    filters.push({
+      id: "sort",
+      label: `Sort: ${label}`,
+      clear: () => { brandSortFilter.value = "featured"; },
+      focus: brandSortFilter,
+      feedback: "Reset brand sort to featured. Focus moved to the sort control."
+    });
+  }
   return filters;
 }
 
@@ -542,6 +668,11 @@ function renderStoreGrid(products) {
   brandStoreGrid.innerHTML = products.map((product) => {
     const listPrice = Number(product.listPrice || product.price || 0);
     const showListPrice = listPrice > Number(product.price || 0);
+    const segment = normalizeSegment(product.segment);
+    const summary = summarizeDescription(
+      product.description,
+      `${selectedBrandLabel} product with dependable performance and fast delivery support.`
+    );
     return `
       <article class="brand-store-card">
         <div class="brand-store-card-media">
@@ -549,18 +680,18 @@ function renderStoreGrid(products) {
           <img src="${escapeHtml(normalizeImageUrl(product.image))}" alt="${escapeHtml(product.name)}" loading="lazy" />
         </div>
         <div class="brand-store-card-copy">
-          <p class="brand-store-card-kicker">${escapeHtml(product.segment === "b2b" ? "Business ready" : "Retail ready")}</p>
+          <p class="brand-store-card-kicker">${escapeHtml(segment === "b2b" ? "Business ready" : "Retail ready")}</p>
           <div class="brand-store-card-title-row">
             <div>
               <h3><a href="product-detail.html?id=${encodeURIComponent(product.id)}">${escapeHtml(product.name)}</a></h3>
               <div class="brand-store-card-meta">
                 <span class="brand-store-card-pill">${escapeHtml(categoryLabel(product.category))}</span>
-                <span class="brand-store-card-pill">${escapeHtml(product.segment.toUpperCase())}</span>
+                <span class="brand-store-card-pill">${escapeHtml(segment.toUpperCase())}</span>
               </div>
             </div>
             <span class="brand-store-card-rating">${Number(product.rating || 0).toFixed(1)} star</span>
           </div>
-          <p>${escapeHtml(product.description || `${selectedBrandLabel} product with dependable performance and fast delivery support.`)}</p>
+          <p>${escapeHtml(summary)}</p>
           <div class="brand-store-card-price-row">
             <span class="brand-store-card-price">${escapeHtml(money(product.price))}</span>
             ${showListPrice ? `<span class="brand-store-card-list-price">${escapeHtml(money(listPrice))}</span>` : ""}
@@ -580,6 +711,7 @@ function applyStoreFilters() {
   const category = String(brandCategoryFilter?.value || "all");
   const segment = String(brandSegmentFilter?.value || "all");
   const budget = String(brandBudgetFilter?.value || "all");
+  const sort = String(brandSortFilter?.value || "featured");
 
   renderCategoryLanes();
 
@@ -594,18 +726,27 @@ function applyStoreFilters() {
     return queryMatch && categoryMatch && segmentMatch && budgetMatch;
   });
 
-  renderStoreGrid(filtered);
+  renderStoreGrid(sortProducts(filtered, sort));
   filterChipController?.update();
 }
 
 function renderPageState() {
-  const requestedBrand = String(new URLSearchParams(window.location.search).get("brand") || "").trim();
+  let requestedBrand = String(new URLSearchParams(window.location.search).get("brand") || "").trim();
+  const directory = buildBrandDirectory(allBrandProducts);
+
   selectedBrandProducts = getCurrentBrandProducts();
+  if ((!requestedBrand || !selectedBrandProducts.length) && directory.length) {
+    const fallbackBrand = directory[0].label;
+    setSelectedBrandInUrl(fallbackBrand);
+    requestedBrand = fallbackBrand;
+    selectedBrandProducts = getCurrentBrandProducts();
+  }
+
   selectedBrandLabel = selectedBrandProducts[0]?.brand || requestedBrand;
   renderDirectory();
-  renderIntroStats(selectedBrandProducts, buildBrandDirectory(allBrandProducts));
+  renderIntroStats(selectedBrandProducts, directory);
 
-  if (!requestedBrand || !selectedBrandProducts.length) {
+  if (!selectedBrandProducts.length) {
     renderEmptyBrandSelection(requestedBrand);
     return;
   }
@@ -627,8 +768,8 @@ async function loadBrandProducts() {
     if (!response.ok || !data || !Array.isArray(data.products)) {
       return;
     }
-    cacheCatalogProducts(data.products);
-    allBrandProducts = activeProducts(mergeProductsById(loadCatalogProductsList(), fallbackBrandProducts));
+    cacheCatalogProducts(data.products, { replace: true });
+    allBrandProducts = activeProducts(mergeProductsById(data.products, []));
     renderPageState();
   } catch (error) {
     return;
@@ -640,6 +781,7 @@ brandSearch?.addEventListener("input", applyStoreFilters);
 brandCategoryFilter?.addEventListener("change", applyStoreFilters);
 brandSegmentFilter?.addEventListener("change", applyStoreFilters);
 brandBudgetFilter?.addEventListener("change", applyStoreFilters);
+brandSortFilter?.addEventListener("change", applyStoreFilters);
 brandCategoryLanes?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-brand-category]");
   if (!button || !brandCategoryFilter) {
@@ -667,6 +809,9 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
     brandCategoryFilter.value = "all";
     brandSegmentFilter.value = "all";
     brandBudgetFilter.value = "all";
+    if (brandSortFilter) {
+      brandSortFilter.value = "featured";
+    }
   },
   focusAfterClearAll: brandSearch,
   clearAllFeedback: "Removed all brand filters. Focus moved to the search input.",

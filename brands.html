@@ -7,12 +7,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="brands.css?v=20260315a" />
+  <link rel="stylesheet" href="brands.css?v=20260315b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260315a" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
 </head>
 <body>
   <header class="page-header">
-    <a href="index.html" class="brand">ElectroMart</a>
+    <a href="index.html" class="brand">electro<span>mart</span><small>brand stores</small></a>
+    <form id="brandHeaderSearch" class="search-form" role="search">
+      <select id="brandHeaderCatalogSelect" class="search-context-select" aria-label="Browse catalogue">
+        <option value="all">All Catalogue</option>
+        <option value="computer">Computers</option>
+        <option value="laptop">Laptops</option>
+        <option value="printer">Printers</option>
+        <option value="mobile">Mobiles</option>
+        <option value="audio">Audio</option>
+        <option value="accessory">Accessories</option>
+      </select>
+      <div class="search-input-wrap">
+        <input id="brandHeaderSearchInput" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off" />
+      </div>
+      <button type="submit">Search</button>
+    </form>
     <nav class="header-links">
       <a href="index.html">Home</a>
       <a href="products.html">Products</a>
@@ -80,6 +96,13 @@
           <option value="10000-50000">INR 10,000 - INR 50,000</option>
           <option value="over-50000">Above INR 50,000</option>
         </select>
+        <select id="brandSortFilter" aria-label="Sort brand products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating-desc">Rating: High to Low</option>
+          <option value="name-asc">Name: A to Z</option>
+        </select>
       </section>
 
       <section class="brand-products-panel">
@@ -89,6 +112,7 @@
   </main>
 
   <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="brands.js?v=20260315a"></script>
+  <script src="shared-search.js?v=20260315a"></script>
+  <script src="brands.js?v=20260316a"></script>
 </body>
 </html>

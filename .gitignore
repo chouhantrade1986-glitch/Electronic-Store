@@ -26,3 +26,4 @@ qa-*-dom.html
 
 # Keep locked visual baseline images versioned
 !qa-baselines/ui/*.png
+.opencode

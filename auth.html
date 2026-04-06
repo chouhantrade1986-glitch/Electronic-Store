@@ -144,6 +144,66 @@
       </form>
 
       <p id="authMessage" class="auth-message"></p>
+
+      <!-- 2FA Modal -->
+      <div id="twoFAModal" class="auth-modal" style="display: none;">
+        <div class="auth-modal-content">
+          <h2>Enter Two-Factor Code</h2>
+          <p>Your authenticator app has a 6-digit code. Enter it below to complete login.</p>
+          <label>6-Digit Code
+            <input id="twoFACode" type="text" inputmode="numeric" maxlength="6" required />
+          </label>
+          <button id="submitTwoFABtn" type="button">Verify & Login</button>
+          <button id="cancelTwoFABtn" class="auth-link-btn" type="button">Cancel</button>
+        </div>
+      </div>
+
+      <style>
+        .auth-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        .auth-modal-content {
+          background: white;
+          padding: 30px;
+          border-radius: 8px;
+          max-width: 400px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .auth-modal-content h2 {
+          margin-top: 0;
+        }
+        .auth-modal-content button {
+          width: 100%;
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          background: #007bff;
+          color: white;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        .auth-modal-content button:hover:not(.auth-link-btn) {
+          background: #0056b3;
+        }
+        .auth-modal-content .auth-link-btn {
+          background: transparent;
+          color: #007bff;
+          border: none;
+          cursor: pointer;
+          text-decoration: underline;
+          padding: 5px;
+        }
+      </style>
     </section>
   </main>
 

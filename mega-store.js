@@ -4,50 +4,62 @@ const stores = [
   {
     id: 1,
     name: "New York Flagship",
+    city: "New York",
     address: "55 W 34th St, New York, NY",
     hours: "Open: 9 AM - 10 PM",
     phone: "+1 (212) 555-0198",
-    services: ["pickup", "repair", "experience"]
+    services: ["pickup", "repair", "experience"],
+    summary: "Flagship floor with creator demo stations, priority repairs, and after-work pickup windows."
   },
   {
     id: 2,
     name: "Los Angeles Central",
+    city: "Los Angeles",
     address: "8400 Sunset Blvd, Los Angeles, CA",
     hours: "Open: 10 AM - 9 PM",
     phone: "+1 (310) 555-0147",
-    services: ["pickup", "b2b", "experience"]
+    services: ["pickup", "b2b", "experience"],
+    summary: "Best for startup procurement, studio hardware demos, and same-day pickup of in-demand devices."
   },
   {
     id: 3,
     name: "Chicago Downtown",
+    city: "Chicago",
     address: "600 N Michigan Ave, Chicago, IL",
     hours: "Open: 9 AM - 9 PM",
     phone: "+1 (312) 555-0133",
-    services: ["repair", "b2b"]
+    services: ["repair", "b2b"],
+    summary: "Focused on business supply, warranty diagnostics, and installation planning for office fleets."
   },
   {
     id: 4,
     name: "Dallas Tech Hub",
+    city: "Dallas",
     address: "3011 North Stemmons Fwy, Dallas, TX",
     hours: "Open: 10 AM - 10 PM",
     phone: "+1 (469) 555-0112",
-    services: ["pickup", "experience", "b2b"]
+    services: ["pickup", "experience", "b2b"],
+    summary: "Late-hour pickup, project hardware sourcing, and guided gaming or workstation consultations."
   },
   {
     id: 5,
     name: "Seattle Experience Center",
+    city: "Seattle",
     address: "600 Pine St, Seattle, WA",
     hours: "Open: 9 AM - 9 PM",
     phone: "+1 (206) 555-0184",
-    services: ["repair", "experience"]
+    services: ["repair", "experience"],
+    summary: "Hands-on experience zone for creators and professionals comparing premium device setups."
   },
   {
     id: 6,
     name: "Miami Commerce Store",
+    city: "Miami",
     address: "701 Brickell Ave, Miami, FL",
     hours: "Open: 10 AM - 9 PM",
     phone: "+1 (305) 555-0166",
-    services: ["pickup", "b2b"]
+    services: ["pickup", "b2b"],
+    summary: "Built for business buyers needing tax invoices, quick stock confirmation, and pickup handoff."
   }
 ];
 
@@ -127,12 +139,14 @@ function storeCard(store) {
 
   return `
     <article class="store-card">
+      <p class="city-line">${escapeHtml(store.city)}</p>
       <h3>${escapeHtml(store.name)}</h3>
       <p>${escapeHtml(store.address)}</p>
       <p class="hours">${escapeHtml(store.hours)}</p>
+      <p class="store-summary">${escapeHtml(store.summary)}</p>
       <p>${escapeHtml(store.phone)}</p>
       <div class="tags">${tags}</div>
-      <button type="button">Book Visit</button>
+      <button type="button" data-phone="${escapeHtml(store.phone)}">Book Visit</button>
     </article>
   `;
 }
@@ -205,9 +219,23 @@ function filterStores() {
 }
 
 storeSearch.addEventListener("input", filterStores);
+storeSearch.closest("form")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  filterStores();
+});
 serviceFilterList?.addEventListener("change", (event) => {
   if (event.target.closest(".service-filter")) {
     filterStores();
+  }
+});
+storeGrid?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-phone]");
+  if (!button) {
+    return;
+  }
+  const phone = String(button.getAttribute("data-phone") || "").replace(/[^\d+]/g, "");
+  if (phone) {
+    window.location.href = `tel:${phone}`;
   }
 });
 

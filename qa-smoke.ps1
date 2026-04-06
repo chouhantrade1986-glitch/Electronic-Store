@@ -10,6 +10,32 @@ $dbPath = Join-Path $backendDir "src\\data\\db.json"
 $dbBackupPath = Join-Path $backendDir "src\\data\\db.json.bak"
 $tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
 
+function Copy-ItemWithRetry {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string]$Path,
+    [Parameter(Mandatory = $true)]
+    [string]$Destination,
+    [int]$MaxRetries = 8,
+    [int]$RetryDelayMs = 250
+  )
+
+  $attempt = 0
+  while ($true) {
+    try {
+      Copy-Item -Path $Path -Destination $Destination -Force
+      return
+    }
+    catch {
+      $attempt += 1
+      if ($attempt -ge $MaxRetries) {
+        throw
+      }
+      Start-Sleep -Milliseconds $RetryDelayMs
+    }
+  }
+}
+
 function New-FileSnapshot {
   param(
     [Parameter(Mandatory = $true)]
@@ -26,7 +52,7 @@ function New-FileSnapshot {
 
   if ($snapshot.existed) {
     $snapshot.snapshotPath = Join-Path $tempRoot ("electromart-" + $Label + "-" + [guid]::NewGuid().ToString() + ".snapshot")
-    Copy-Item -Path $Path -Destination $snapshot.snapshotPath -Force
+    Copy-ItemWithRetry -Path $Path -Destination $snapshot.snapshotPath
   }
 
   return [pscustomobject]$snapshot
@@ -40,7 +66,7 @@ function Restore-FileSnapshot {
 
   if ($Snapshot.existed) {
     if ($Snapshot.snapshotPath -and (Test-Path $Snapshot.snapshotPath)) {
-      Copy-Item -Path $Snapshot.snapshotPath -Destination $Snapshot.path -Force
+      Copy-ItemWithRetry -Path $Snapshot.snapshotPath -Destination $Snapshot.path
     }
   } elseif (Test-Path $Snapshot.path) {
     Remove-Item -Path $Snapshot.path -Force -ErrorAction SilentlyContinue

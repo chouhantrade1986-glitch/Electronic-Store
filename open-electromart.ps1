@@ -66,22 +66,18 @@ if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
 
 if (-not (Test-UrlReady -Url $frontendUrl)) {
   Write-Host "Starting ElectroMart frontend..."
-  Start-Process -FilePath "powershell" -WorkingDirectory $root -ArgumentList @(
-    "-NoExit",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "node qa-static-server.js"
-  )
+  $nodePath = (Get-Command node -ErrorAction Stop).Source
+  Start-Process -FilePath $nodePath -WorkingDirectory $root -ArgumentList @("qa-static-server.js") -RedirectStandardOutput (Join-Path $root "frontend-start.log") -RedirectStandardError (Join-Path $root "frontend-start.err.log")
 } else {
   Write-Host "Frontend already running."
 }
 
 if (-not (Test-UrlReady -Url $backendHealthUrl)) {
   Write-Host "Starting ElectroMart backend..."
-  Start-Process -FilePath "powershell" -WorkingDirectory $backendDir -ArgumentList @(
-    "-NoExit",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "node src/server.js"
-  )
+  if (-not $nodePath) {
+    $nodePath = (Get-Command node -ErrorAction Stop).Source
+  }
+  Start-Process -FilePath $nodePath -WorkingDirectory $backendDir -ArgumentList @("src/server.js") -RedirectStandardOutput (Join-Path $root "backend-start.log") -RedirectStandardError (Join-Path $root "backend-start.err.log")
 } else {
   Write-Host "Backend already running."
 }

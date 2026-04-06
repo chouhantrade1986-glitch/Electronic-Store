@@ -12,7 +12,7 @@
 <body>
   <header class="site-header">
     <nav class="top-nav">
-      <a href="#" class="brand logo-block" aria-label="ElectroMart home">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
         <span class="brand-main">electro<span class="brand-accent">mart</span></span>
         <span class="brand-sub">.in</span>
       </a>
@@ -47,9 +47,9 @@
           <button type="submit" data-i18n="header.searchBtn">Search</button>
         </form>
         <div class="search-trust-strip" aria-label="Search benefits">
-          <span>Top Deals live</span>
-          <span>Fast delivery</span>
-          <span>GST invoicing available</span>
+          <span data-i18n="header.searchBenefitDeals">Top Deals live</span>
+          <span data-i18n="header.searchBenefitDelivery">Fast delivery</span>
+          <span data-i18n="header.searchBenefitGst">GST invoicing available</span>
         </div>
       </div>
       <div class="nav-actions">
@@ -67,16 +67,16 @@
           </select>
         </div>
         <a href="auth.html" class="account-link nav-action-card">
-          <span>Hello, sign in</span>
+          <span data-i18n="nav.signInPrompt">Hello, sign in</span>
           <strong data-i18n="nav.account">Account</strong>
         </a>
         <a href="orders.html" class="orders-link nav-action-card">
-          <span>Returns</span>
+          <span data-i18n="nav.returnsShort">Returns</span>
           <strong data-i18n="nav.orders">Orders</strong>
         </a>
         <a href="wishlist.html" class="orders-link nav-action-card">
-          <span>Saved</span>
-          <strong>Wishlist</strong>
+          <span data-i18n="nav.saved">Saved</span>
+          <strong data-i18n="nav.wishlist">Wishlist</strong>
         </a>
         <a href="cart.html" class="cart-link"><span data-i18n="nav.cart">Cart</span> <span id="cartCount">0</span></a>
       </div>
@@ -84,206 +84,358 @@
 
     <nav class="category-nav" aria-label="Main categories">
       <button id="megaTrigger" class="mega-trigger" type="button" aria-expanded="false" aria-controls="megaMenu" data-i18n="category.allDepartments">All Departments</button>
-      <a href="todays-deals.html" data-i18n="category.deals">Today's Deals</a>
-      <a href="best-sellers.html" data-i18n="category.bestSellers">Best Sellers</a>
-      <a href="products.html">Products</a>
-      <a href="pc-builder.html">PC Builder</a>
+      <a href="products.html" data-i18n="links.allProducts">All Products</a>
+      <a href="brands.html" data-i18n="links.brandStores">Brand Stores</a>
+      <a href="creator-studio.html" data-i18n="links.creatorStudio">Creator Studio</a>
       <a href="mega-store.html" data-i18n="category.stores">Stores</a>
-      <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
-      <div class="category-more">
-        <button id="quickLinksTrigger" class="quick-links-trigger" type="button" aria-expanded="false" aria-controls="quickLinksMenu" data-i18n="category.more">More</button>
-        <div id="quickLinksMenu" class="quick-links-menu" aria-label="More links">
-          <div class="quick-links-grid">
-            <a href="#" data-i18n="category.gaming">Gaming</a>
-            <a href="#" data-i18n="category.homeOffice">Home Office</a>
-            <a href="creator-studio.html">Creator Studio</a>
-            <a href="#" data-i18n="category.smartHome">Smart Home</a>
-            <a href="#" data-i18n="category.giftCards">Gift Cards</a>
-            <a href="wishlist.html">Wishlist</a>
-          </div>
-          <div class="legal-links" data-menu-managed-container="1">
-            <a href="terms-and-conditions.html">Terms</a>
-            <a href="shipping-policy.html">Shipping</a>
-            <a href="refund-policy.html">Refund</a>
-            <a href="accessibility-statement.html">Accessibility</a>
-            <a href="faq.html">FAQ</a>
-            <a href="review.html">Review</a>
-          </div>
-        </div>
-      </div>
     </nav>
-    <section id="megaMenu" class="mega-menu" aria-label="Departments menu">
+    <section id="megaMenu" class="mega-menu" aria-label="Mega departments menu">
       <div class="mega-column">
         <h3 data-i18n="mega.computers">Computers</h3>
         <a href="laptop.html" data-i18n="mega.laptops">Laptops</a>
         <a href="desktops.html" data-i18n="mega.desktops">Desktops</a>
-        <a href="#" data-i18n="mega.monitors">Monitors</a>
-        <a href="#" data-i18n="mega.storage">Storage</a>
+        <a href="products.html?category=computer" data-i18n="mega.monitors">Monitors</a>
+        <a href="products.html?category=printer" data-i18n="categoryFilter.printer">Printers</a>
       </div>
       <div class="mega-column">
-        <h3 data-i18n="mega.mobile">Mobile</h3>
-        <a href="#" data-i18n="mega.smartphones">Smartphones</a>
-        <a href="#" data-i18n="mega.tablets">Tablets</a>
-        <a href="#" data-i18n="mega.wearables">Wearables</a>
-        <a href="#" data-i18n="mega.chargers">Chargers</a>
+        <h3 data-i18n="categoryFilter.mobile">Mobiles</h3>
+        <a href="products.html?category=mobile" data-i18n="mega.smartphones">Smartphones</a>
+        <a href="products.html?category=mobile" data-i18n="mega.tablets">Tablets</a>
+        <a href="products.html?category=accessory" data-i18n="mega.wearables">Wearables</a>
+        <a href="products.html?category=accessory" data-i18n="mega.chargers">Chargers</a>
+      </div>
+      <div class="mega-column">
+        <h3 data-i18n="mega.components">Components</h3>
+        <a href="pc-builder.html" data-i18n="mega.pcBuilder">PC Builder</a>
+        <a href="products.html?category=accessory" data-i18n="mega.storage">Storage</a>
+        <a href="products.html?category=accessory" data-i18n="mega.memoryCooling">Memory & Cooling</a>
+        <a href="products.html?category=accessory" data-i18n="mega.powerCases">Power & Cases</a>
       </div>
       <div class="mega-column">
         <h3 data-i18n="mega.audioVideo">Audio & Video</h3>
-        <a href="#" data-i18n="mega.headphones">Headphones</a>
-        <a href="#" data-i18n="mega.speakers">Speakers</a>
-        <a href="#" data-i18n="mega.tvTheater">TV & Home Theater</a>
-        <a href="#" data-i18n="mega.microphones">Microphones</a>
+        <a href="products.html?category=audio" data-i18n="mega.headphones">Headphones</a>
+        <a href="products.html?category=audio" data-i18n="mega.speakers">Speakers</a>
+        <a href="products.html?category=audio" data-i18n="mega.tvTheater">TV & Home Theater</a>
+        <a href="products.html?category=audio" data-i18n="mega.microphones">Microphones</a>
+      </div>
+      <div class="mega-column">
+        <h3 data-i18n="mega.businessServices">Business & Services</h3>
+        <a href="catalogs.html" data-i18n="mega.businessCatalogs">Business Catalogs</a>
+        <a href="mega-store.html" data-i18n="mega.megaStores">Mega Stores</a>
+        <a href="compare.html" data-i18n="mega.compareProducts">Compare Products</a>
+        <a href="orders.html" data-i18n="mega.ordersReturns">Orders & Returns</a>
       </div>
       <div class="mega-highlight">
-        <p data-i18n="mega.featuredDeal">Featured Deal</p>
+        <p data-i18n="mega.pick">Mega Department Pick</p>
         <h3 data-i18n="mega.productTitle">Wireless Earbuds Pro</h3>
-        <span data-i18n="mega.priceNow">Now ?79</span>
-        <a href="#" data-i18n="mega.seeOffer">See offer</a>
+        <span data-i18n="mega.price">Now INR 4,799</span>
+        <a href="products.html?category=audio" data-i18n="mega.seeOffer">See offer</a>
       </div>
     </section>
   </header>
 
   <main>
-    <section class="hero" aria-label="Featured promotions">
-      <div class="hero-layout">
-        <aside class="hero-departments" aria-label="Shop by department">
-          <div class="hero-departments-head">
-            <h2>Shop by Department</h2>
-            <a href="products.html">See all</a>
-          </div>
-          <ul class="hero-department-list">
-            <li><a href="laptop.html"><span>Laptops</span><small>Work and gaming</small></a></li>
-            <li><a href="desktops.html"><span>Desktops</span><small>Performance builds</small></a></li>
-            <li><a href="printer.html"><span>Printers</span><small>Home and office</small></a></li>
-            <li><a href="pc-builder.html"><span>PC Builder</span><small>Custom configuration</small></a></li>
-            <li><a href="best-sellers.html"><span>Best Sellers</span><small>Most purchased now</small></a></li>
-            <li><a href="todays-deals.html"><span>Today's Deals</span><small>Limited-time offers</small></a></li>
-          </ul>
-          <a class="hero-department-offer" href="products.html">Bulk and B2B sourcing available</a>
-        </aside>
-        <div class="hero-slider-shell">
+    <section class="hero-carousel" aria-label="Featured promotions">
+      <div class="hero-shell">
+        <div class="hero-viewport">
           <div id="heroTrack" class="hero-track"></div>
-          <button id="heroPrev" class="hero-nav prev" type="button" aria-label="Previous featured slide">&#10094;</button>
-          <button id="heroNext" class="hero-nav next" type="button" aria-label="Next featured slide">&#10095;</button>
-          <div id="heroDots" class="hero-dots" aria-label="Hero slider navigation"></div>
+        </div>
+        <div class="hero-controls">
+          <button id="heroPrev" class="hero-control" type="button" aria-label="Previous promotion">&larr;</button>
+          <div id="heroDots" class="hero-dots" aria-label="Hero slide selector"></div>
+          <button id="heroNext" class="hero-control" type="button" aria-label="Next promotion">&rarr;</button>
         </div>
       </div>
     </section>
 
-    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping highlights"></section>
+    <section class="quick-grid-shell" aria-label="Shopping shortcuts and live buying lanes">
+      <div class="quick-grid-head section-header section-header--stacked">
+        <div>
+          <p class="section-eyebrow" data-i18n="home.discoveryEyebrow">Home discovery</p>
+          <h2 data-i18n="home.discoveryTitle">Amazon-style shopping lanes built from your live catalogue</h2>
+          <p class="section-subtitle" data-i18n="home.discoverySubtitle">Featured shortcuts, sign-in benefits, and creator-ready merchandising update automatically from the same product feed used across the storefront.</p>
+        </div>
+        <a href="products.html" class="section-link" data-i18n="home.exploreCatalog">Explore full catalogue</a>
+      </div>
+      <div class="quick-grid"></div>
+    </section>
 
     <section class="service-strip" aria-label="Key services">
       <article class="service-item">
-        <strong>Free Delivery</strong>
-        <p>On eligible orders across India.</p>
+        <strong data-i18n="service.dispatch">Prime-style dispatch</strong>
+        <p data-i18n="service.dispatchDesc">Same-day processing on flagship and featured inventory.</p>
       </article>
       <article class="service-item">
-        <strong>Secure Payments</strong>
-        <p>UPI, cards, net banking and COD.</p>
+        <strong data-i18n="service.checkout">Secure checkout</strong>
+        <p data-i18n="service.checkoutDesc">Encrypted payments, invoice-ready billing, and saved carts.</p>
       </article>
       <article class="service-item">
-        <strong>Easy Returns</strong>
-        <p>Simple return and refund workflow.</p>
+        <strong data-i18n="service.returns">Easy returns</strong>
+        <p data-i18n="service.returnsDesc">30-day return window with order tracking built in.</p>
       </article>
       <article class="service-item">
-        <strong>Business Support</strong>
-        <p>Bulk quotes and GST invoices.</p>
+        <strong data-i18n="service.business">Business support</strong>
+        <p data-i18n="service.businessDesc">GST invoices, bulk requests, and store pickup coordination.</p>
       </article>
     </section>
 
-    <section class="quick-grid-shell" aria-label="Shopping entry points">
-      <div class="quick-grid-head">
-        <div>
-          <p class="section-eyebrow">Shop faster</p>
-          <h2>Start with the strongest buying paths</h2>
-          <p class="section-subtitle">Jump straight into our highest-conversion categories, creator-focused setups, and quick-repeat shopping journeys.</p>
-        </div>
-        <span class="quick-grid-note">Live catalog, fast delivery, and creator-ready merchandising</span>
-      </div>
-      <div class="quick-grid">
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">Top laptops</span>
-        </div>
-        <h2>Top Picks in Laptops</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80" alt="Laptop deals" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=500&q=80" alt="Laptop discounts" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Work, gaming and creator-ready picks</span>
-          <a href="laptop.html" class="home-card-action">See more</a>
-        </div>
-      </article>
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">Everyday mobile</span>
-        </div>
-        <h2>Mobile Accessories</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80" alt="Phone offers" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=500&q=80" alt="Mobile accessories" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Chargers, cases and fast-moving add-ons</span>
-          <a href="products.html" class="home-card-action">Explore all</a>
-        </div>
-      </article>
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">High demand</span>
-        </div>
-        <h2>Gaming Essentials</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=500&q=80" alt="Gaming laptop" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=500&q=80" alt="Gaming keyboard" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Popular accessories and performance picks</span>
-          <a href="best-sellers.html" class="home-card-action">Shop gaming</a>
-        </div>
-      </article>
-      <article class="home-card sign-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Account benefits</p>
-          <span class="home-card-lane">Fast checkout</span>
-        </div>
-        <h2>Sign in for best experience</h2>
-        <p>Track orders, save addresses and get personalized recommendations.</p>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Secure sign-in and repeat checkout</span>
-          <a href="auth.html" class="signin-btn">Sign in securely</a>
-        </div>
-      </article>
-      </div>
-    </section>
-
-    <section class="category-rail" aria-label="Featured categories">
+    <section class="deal-strip" aria-label="Featured deal strip">
       <div class="section-header section-header--stacked">
         <div>
-          <h2>Featured Categories</h2>
-          <p class="section-subtitle">Jump into the strongest live collections across laptops, creator gear, and fast-moving deals.</p>
+          <p class="section-eyebrow" data-i18n="deal.eyebrow">Live markdowns</p>
+          <h2 data-i18n="deal.title">Deals picked from products already in stock</h2>
+          <p class="section-subtitle" data-i18n="deal.subtitle">The lead tile highlights the strongest live discount, then the rail fans out into high-conversion deal picks.</p>
         </div>
-        <a href="products.html" class="section-link">Browse all products</a>
+        <a href="todays-deals.html" class="section-link" data-i18n="deal.shopTopDeals">Shop top deals</a>
       </div>
-      <p id="categoryRailMeta" class="category-rail-meta">Loading featured category highlights...</p>
-      <div id="categoryRailGrid" class="category-rail-grid">
-        <a href="desktops.html" class="category-rail-card">
-          <span class="category-rail-card__top">
-            <span class="category-rail-card__kicker">Featured lane</span>
-            <span class="category-rail-card__lane">Live now</span>
-          </span>
-          <strong>Computers</strong>
-          <small>Performance builds and desktop-ready picks</small>
-          <span class="category-rail-card__meta">
-            <span>From live catalog</span>
-            <span>High confidence</span>
-          </span>
-          <span class="category-rail-card__cta">Shop now</span>
-        </a>
+      <div class="deal-strip-row"></div>
+    </section>
+
+    <section class="category-rail" aria-label="Featured category rails">
+      <div class="section-header section-header--stacked">
+        <div>
+          <p class="section-eyebrow" data-i18n="rail.eyebrow">Browse by mission</p>
+          <h2 data-i18n="rail.title">Fast category rails for laptops, creator gear, audio, and more</h2>
+        </div>
+        <a href="products.html" class="section-link" data-i18n="rail.browseAll">Browse all categories</a>
+      </div>
+      <p id="categoryRailMeta" class="category-rail-meta" data-i18n="rail.metaLoading">Loading live category highlights.</p>
+      <div id="categoryRailGrid" class="category-rail-grid"></div>
+    </section>
+
+    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping momentum highlights"></section>
+
+    <section class="products-section" aria-label="Featured retail products">
+      <div class="section-header section-header--stacked">
+        <div>
+          <p class="section-eyebrow" data-i18n="products.eyebrow">Best of retail</p>
+          <h2 data-i18n="products.title">Featured products surfaced from your homepage search and filters</h2>
+          <p id="b2cResultMeta" class="section-subtitle">Loading homepage product picks.</p>
+        </div>
+        <a href="products.html" class="section-link" data-i18n="products.viewAll">See all products</a>
+      </div>
+      <div id="b2cProductGrid" class="product-grid"></div>
+    </section>
+
+    <!-- Customer Testimonials & Reviews -->
+    <section class="customer-testimonials" aria-label="Customer reviews and testimonials">
+      <div class="testimonials-header">
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <span class="badge-icon">⭐</span>
+            <div class="badge-content">
+              <strong>4.8/5</strong>
+              <small>Average Rating</small>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <span class="badge-icon">👥</span>
+            <div class="badge-content">
+              <strong>10,000+</strong>
+              <small>Happy Customers</small>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <span class="badge-icon">🚚</span>
+            <div class="badge-content">
+              <strong>99.9%</strong>
+              <small>On-Time Delivery</small>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <span class="badge-icon">🛡️</span>
+            <div class="badge-content">
+              <strong>100%</strong>
+              <small>Secure Checkout</small>
+            </div>
+          </div>
+        </div>
+        <div class="testimonials-title">
+          <p class="section-eyebrow" data-i18n="testimonials.eyebrow">Verified buyer voices</p>
+          <h2 data-i18n="testimonials.title">What Our Customers Say</h2>
+          <p class="section-subtitle" data-i18n="testimonials.subtitle">Real reviews from verified buyers across gaming, home office, creator, and business orders.</p>
+        </div>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Rajesh Kumar" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Rajesh Kumar</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">5.0</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Excellent service! Ordered a gaming laptop and it arrived in perfect condition. The delivery was super fast and the packaging was professional. Will definitely shop again."</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Gaming Laptop Pro 16GB</span>
+              <span class="review-date">2 weeks ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card featured">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=100&q=80" alt="Priya Sharma" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Priya Sharma</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">5.0</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Best electronics store in India! I bought multiple items for my home office setup. Everything was genuine, prices were competitive, and customer support was outstanding. Highly recommended!"</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Creator Studio Bundle</span>
+              <span class="review-date">1 month ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Amit Patel" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Amit Patel</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">4.5</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Great experience with ElectroMart! The product quality is excellent and the website is very user-friendly. Got my wireless headphones at a great price with free delivery."</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Wireless Headphones Pro</span>
+              <span class="review-date">3 weeks ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80" alt="Sneha Reddy" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Sneha Reddy</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+                <span class="rating-text">4.0</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Good selection of products and reasonable prices. The return policy is hassle-free which gives confidence while shopping. Would recommend for electronics shopping."</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Smartphone Accessories</span>
+              <span class="review-date">1 month ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="Vikram Singh" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Vikram Singh</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">5.0</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Outstanding customer service! Had an issue with my order and the support team resolved it within hours. The product quality and delivery speed exceeded my expectations."</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Gaming Monitor 27"</span>
+              <span class="review-date">2 weeks ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="customer-avatar">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Kavita Jain" loading="lazy" />
+            </div>
+            <div class="customer-info">
+              <h4>Kavita Jain</h4>
+              <div class="customer-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">4.5</span>
+              </div>
+              <small class="verified-badge">✓ Verified Purchase</small>
+            </div>
+          </div>
+          <div class="testimonial-content">
+            <p>"Perfect for business purchases! Got GST invoice immediately and bulk pricing was very competitive. The B2B support team was very helpful with our requirements."</p>
+            <div class="testimonial-meta">
+              <span class="product-name">Office Laptop Bundle</span>
+              <span class="review-date">3 weeks ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonials-cta">
+        <a href="products.html" class="cta-button">Start Shopping Now</a>
+        <p>Join thousands of satisfied customers</p>
       </div>
     </section>
 
@@ -312,93 +464,676 @@
       </div>
     </section>
 
-    <section class="deal-strip" aria-label="Today's deals">
-      <div class="deal-strip-head">
-        <div>
-          <p class="section-eyebrow">Fast-moving discounts</p>
-          <h2>Today&apos;s Deals</h2>
-          <p class="deal-strip-subtitle">Live picks ranked by savings, ratings, and fast-delivery confidence.</p>
-        </div>
-        <div class="deal-strip-actions">
-          <span class="deal-strip-note">Bank offers and EMI on select picks</span>
-          <a href="todays-deals.html" class="deal-strip-link">See all deals</a>
-        </div>
-      </div>
-      <div class="deal-strip-row">
-        <a href="product-detail.html?id=3" class="deal-tile deal-tile--featured" aria-label="Open Headphones deal">
-          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" alt="Headphones deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Featured deal</small>
-            <h3>Audio offers built for quick checkout</h3>
-            <p class="deal-price-line"><span>Deal</span> Up to 40% off audio gear</p>
-            <small class="deal-price-meta">Live savings across headphones and creator audio picks</small>
-            <small class="deal-delivery-note">Fast delivery on selected featured stock</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=6" class="deal-tile" aria-label="Open Tablet deal">
-          <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80" alt="Tablet deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Tablet</small>
-            <h3>Tablet value picks under Rs. 30,000</h3>
-            <p class="deal-price-line"><span>Deal</span> Tablets under Rs. 30,000</p>
-            <small class="deal-price-meta">Strong value options for work, study, and travel</small>
-            <small class="deal-delivery-note">Extra bank offer live</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=4" class="deal-tile" aria-label="Open TV deal">
-          <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="TV deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">TV</small>
-            <h3>Smart TV offers this week</h3>
-            <p class="deal-price-line"><span>Deal</span> Smart TV offers this week</p>
-            <small class="deal-price-meta">Weekend viewing picks with screen-size variety</small>
-            <small class="deal-delivery-note">No-cost EMI available</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=8" class="deal-tile" aria-label="Open Speaker deal">
-          <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=500&q=80" alt="Speaker deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Audio</small>
-            <h3>Smart speakers starting Rs. 2,999</h3>
-            <p class="deal-price-line"><span>Deal</span> Smart speakers starting Rs. 2,999</p>
-            <small class="deal-price-meta">Compact picks for desks, rooms, and everyday music</small>
-            <small class="deal-delivery-note">Fast delivery eligible</small>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <section class="support-cta">
-      <div>
-        <h2>Need help with a business or custom setup?</h2>
-        <p>Talk to our support team for product guidance, GST billing and bulk purchase assistance.</p>
-      </div>
-      <a href="faq.html" class="support-cta-btn">Get Support</a>
-    </section>
-
-    <section class="new-arrivals-window" aria-label="Newly added products">
+    <!-- Today's Hot Deals -->
+    <section class="todays-deals" aria-label="Today's deals">
       <div class="section-header">
-        <h2>Newly Added Products</h2>
-        <p id="newArrivalsMeta">Showing 0 products</p>
+        <h2>Today's Best Deals</h2>
+        <a href="todays-deals.html" class="section-link">See all deals →</a>
       </div>
-      <p class="new-arrivals-subtitle">Latest products added from your admin dashboard will appear here automatically.</p>
-      <div id="newArrivalsGrid" class="product-grid"></div>
+      <div class="hot-deals-carousel">
+        <a href="product-detail.html?id=3" class="hot-deal-tile">
+          <div class="deal-image-container">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" alt="Headphones deal" loading="lazy" />
+            <span class="deal-badge">40% OFF</span>
+          </div>
+          <h3>Premium Audio Headphones</h3>
+          <p class="deal-rating">⭐⭐⭐⭐⭐ (2,480 ratings)</p>
+          <p class="deal-pricing"><span class="price-now">₹2,499</span> <span class="price-original">₹4,199</span></p>
+          <p class="deal-delivery">Free delivery by tomorrow</p>
+        </a>
+        <a href="product-detail.html?id=1" class="hot-deal-tile">
+          <div class="deal-image-container">
+            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80" alt="Laptop deal" loading="lazy" />
+            <span class="deal-badge">35% OFF</span>
+          </div>
+          <h3>Gaming Laptop 16GB RAM</h3>
+          <p class="deal-rating">⭐⭐⭐⭐ (1,250 ratings)</p>
+          <p class="deal-pricing"><span class="price-now">₹54,999</span> <span class="price-original">₹84,999</span></p>
+          <p class="deal-delivery">Free delivery</p>
+        </a>
+        <a href="product-detail.html?id=6" class="hot-deal-tile">
+          <div class="deal-image-container">
+            <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80" alt="Tablet deal" loading="lazy" />
+            <span class="deal-badge">Best Seller</span>
+          </div>
+          <h3>10-inch HD Tablet</h3>
+          <p class="deal-rating">⭐⭐⭐⭐⭐ (5,100 ratings)</p>
+          <p class="deal-pricing"><span class="price-now">₹12,999</span> <span class="price-original">₹19,999</span></p>
+          <p class="deal-delivery">Free delivery by tomorrow</p>
+        </a>
+        <a href="product-detail.html?id=4" class="hot-deal-tile">
+          <div class="deal-image-container">
+            <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="TV deal" loading="lazy" />
+            <span class="deal-badge">Trending</span>
+          </div>
+          <h3>55" 4K Smart TV</h3>
+          <p class="deal-rating">⭐⭐⭐⭐ (890 ratings)</p>
+          <p class="deal-pricing"><span class="price-now">₹34,999</span> <span class="price-original">₹59,999</span></p>
+          <p class="deal-delivery">Free installation included</p>
+        </a>
+      </div>
     </section>
 
-    <section class="curated-showcase" aria-label="Top rated products">
+    <!-- Trending Products Section -->
+    <section class="trending-products" aria-label="Trending products">
       <div class="section-header">
-        <h2>Top Rated Products</h2>
-        <a href="products.html" class="section-link">Browse all</a>
+        <div class="trending-header">
+          <div class="trending-title">
+            <span class="trending-fire" aria-hidden="true">🔥</span>
+            <div class="trending-copy">
+              <p class="section-eyebrow">Live buyer momentum</p>
+              <h2>Trending Now</h2>
+              <p class="section-subtitle">See the fastest-moving accessories, creator gear, and performance upgrades shoppers are adding right now.</p>
+            </div>
+          </div>
+          <div class="trending-meta">
+            <span class="trending-pill">Popular among buyers</span>
+            <span class="trending-update">Updated hourly</span>
+          </div>
+        </div>
+        <a href="products.html?filter=trending" class="section-link">See all trending →</a>
       </div>
-      <div id="topRatedGrid" class="product-grid"></div>
+
+      <div class="trending-stats">
+        <div class="stat-item">
+          <span class="stat-number" data-target="15420">15,420</span>
+          <span class="stat-label">Products sold today</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="892">892</span>
+          <span class="stat-label">New trending items</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="98">98%</span>
+          <span class="stat-label">Customer satisfaction</span>
+        </div>
+      </div>
+
+      <div class="trending-carousel">
+        <button class="carousel-nav prev" aria-label="Previous trending products">‹</button>
+        <div class="trending-grid">
+          <div class="trending-card">
+            <div class="trending-rank">#1</div>
+            <div class="trending-image">
+              <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=300&q=80" alt="Wireless Gaming Mouse" loading="lazy" />
+              <div class="trending-badge">+127% this week</div>
+            </div>
+            <div class="trending-content">
+              <h3>Wireless Gaming Mouse RGB</h3>
+              <div class="trending-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-count">(3,240)</span>
+              </div>
+              <div class="trending-price">
+                <span class="current-price">₹2,499</span>
+                <span class="original-price">₹3,999</span>
+                <span class="discount">38% off</span>
+              </div>
+              <div class="trending-actions">
+                <button class="quick-add-btn" data-product-id="mouse-1">Add to Cart</button>
+                <button class="wishlist-btn" data-product-id="mouse-1">♡</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="trending-card">
+            <div class="trending-rank">#2</div>
+            <div class="trending-image">
+              <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=300&q=80" alt="Mechanical Keyboard" loading="lazy" />
+              <div class="trending-badge">+95% this week</div>
+            </div>
+            <div class="trending-content">
+              <h3>Mechanical Gaming Keyboard</h3>
+              <div class="trending-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-count">(1,890)</span>
+              </div>
+              <div class="trending-price">
+                <span class="current-price">₹8,999</span>
+                <span class="original-price">₹12,999</span>
+                <span class="discount">31% off</span>
+              </div>
+              <div class="trending-actions">
+                <button class="quick-add-btn" data-product-id="keyboard-1">Add to Cart</button>
+                <button class="wishlist-btn" data-product-id="keyboard-1">♡</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="trending-card">
+            <div class="trending-rank">#3</div>
+            <div class="trending-image">
+              <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=300&q=80" alt="Gaming Headset" loading="lazy" />
+              <div class="trending-badge">+78% this week</div>
+            </div>
+            <div class="trending-content">
+              <h3>RGB Gaming Headset 7.1</h3>
+              <div class="trending-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-count">(2,450)</span>
+              </div>
+              <div class="trending-price">
+                <span class="current-price">₹4,299</span>
+                <span class="original-price">₹6,499</span>
+                <span class="discount">34% off</span>
+              </div>
+              <div class="trending-actions">
+                <button class="quick-add-btn" data-product-id="headset-1">Add to Cart</button>
+                <button class="wishlist-btn" data-product-id="headset-1">♡</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="trending-card">
+            <div class="trending-rank">#4</div>
+            <div class="trending-image">
+              <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=300&q=80" alt="SSD Storage" loading="lazy" />
+              <div class="trending-badge">+156% this week</div>
+            </div>
+            <div class="trending-content">
+              <h3>1TB NVMe SSD Storage</h3>
+              <div class="trending-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-count">(4,120)</span>
+              </div>
+              <div class="trending-price">
+                <span class="current-price">₹6,499</span>
+                <span class="original-price">₹9,999</span>
+                <span class="discount">35% off</span>
+              </div>
+              <div class="trending-actions">
+                <button class="quick-add-btn" data-product-id="ssd-1">Add to Cart</button>
+                <button class="wishlist-btn" data-product-id="ssd-1">♡</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="trending-card">
+            <div class="trending-rank">#5</div>
+            <div class="trending-image">
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=300&q=80" alt="Webcam" loading="lazy" />
+              <div class="trending-badge">+203% this week</div>
+            </div>
+            <div class="trending-content">
+              <h3>4K Webcam with Auto Focus</h3>
+              <div class="trending-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-count">(987)</span>
+              </div>
+              <div class="trending-price">
+                <span class="current-price">₹3,999</span>
+                <span class="original-price">₹5,999</span>
+                <span class="discount">33% off</span>
+              </div>
+              <div class="trending-actions">
+                <button class="quick-add-btn" data-product-id="webcam-1">Add to Cart</button>
+                <button class="wishlist-btn" data-product-id="webcam-1">♡</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-nav next" aria-label="Next trending products">›</button>
+      </div>
+
+      <div class="trending-recommendations">
+        <h3>Dynamic Recommendations</h3>
+        <div class="recommendation-tags">
+          <span class="tag active">Gaming</span>
+          <span class="tag">Productivity</span>
+          <span class="tag">Streaming</span>
+          <span class="tag">Home Office</span>
+          <span class="tag">Mobile</span>
+        </div>
+      </div>
     </section>
 
-    <section class="curated-showcase" aria-label="Recommended products">
+    <!-- Brand Showcase Section -->
+    <section class="brand-showcase" aria-label="Partner brands">
+      <div class="section-header">
+        <div class="brand-header-content">
+          <p class="section-eyebrow">Trusted storefront partners</p>
+          <h2>Shop by Brand</h2>
+          <p class="section-subtitle">Discover premium products, launch offers, and verified assortments from the brands customers search for most.</p>
+        </div>
+        <a href="brands.html" class="section-link">View all brands →</a>
+      </div>
+
+      <div class="brand-stats">
+        <div class="brand-stat">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Partner Brands</span>
+        </div>
+        <div class="brand-stat">
+          <span class="stat-number">50,000+</span>
+          <span class="stat-label">Products Available</span>
+        </div>
+        <div class="brand-stat">
+          <span class="stat-number">99.8%</span>
+          <span class="stat-label">Authenticity Guarantee</span>
+        </div>
+      </div>
+
+      <div class="brand-grid">
+        <div class="brand-card featured">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Dell-Logo.png" alt="Dell" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Dell</h3>
+            <p>Premium laptops, desktops, and workstations for professionals</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Up to 40% off</span>
+              <span class="product-count">2,500+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=dell" class="brand-link">Shop Dell</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/HP-Logo.png" alt="HP" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>HP</h3>
+            <p>Innovative computing solutions and accessories</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Up to 35% off</span>
+              <span class="product-count">1,800+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=hp" class="brand-link">Shop HP</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Apple-Logo.png" alt="Apple" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Apple</h3>
+            <p>Premium ecosystem of devices and accessories</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Special pricing</span>
+              <span class="product-count">950+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=apple" class="brand-link">Shop Apple</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Samsung-Logo.png" alt="Samsung" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Samsung</h3>
+            <p>Smartphones, TVs, and home appliances</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Up to 30% off</span>
+              <span class="product-count">3,200+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=samsung" class="brand-link">Shop Samsung</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Asus-Logo.png" alt="ASUS" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>ASUS</h3>
+            <p>Gaming laptops, monitors, and components</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Gaming deals</span>
+              <span class="product-count">1,400+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=asus" class="brand-link">Shop ASUS</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Lenovo-Logo.png" alt="Lenovo" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Lenovo</h3>
+            <p>Business and consumer computing solutions</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Up to 45% off</span>
+              <span class="product-count">2,100+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=lenovo" class="brand-link">Shop Lenovo</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Acer-Logo.png" alt="Acer" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Acer</h3>
+            <p>Affordable computing for everyone</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Budget deals</span>
+              <span class="product-count">1,600+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=acer" class="brand-link">Shop Acer</a>
+          </div>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-logo">
+            <img src="https://logos-world.net/wp-content/uploads/2020/11/Microsoft-Logo.png" alt="Microsoft" loading="lazy" />
+          </div>
+          <div class="brand-content">
+            <h3>Microsoft</h3>
+            <p>Software, Surface devices, and accessories</p>
+            <div class="brand-deals">
+              <span class="deal-tag">Surface deals</span>
+              <span class="product-count">750+ products</span>
+            </div>
+          </div>
+          <div class="brand-actions">
+            <a href="products.html?brand=microsoft" class="brand-link">Shop Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-cta">
+        <div class="brand-cta-content">
+          <h3>Can't find your preferred brand?</h3>
+          <p>We work with 500+ brands to bring you the best selection</p>
+          <a href="brands.html" class="brand-cta-button">Browse All Brands</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Signup Section -->
+    <section class="newsletter-signup" aria-label="Newsletter subscription">
+      <div class="newsletter-container">
+        <div class="newsletter-content">
+          <div class="newsletter-icon">
+            <span class="mail-icon">📧</span>
+          </div>
+          <div class="newsletter-text">
+            <p class="section-eyebrow">Inbox-only offers</p>
+            <h2>Get 10% off your first order</h2>
+            <p class="section-subtitle">Join 50,000+ shoppers for exclusive offers, early access to sales, restock alerts, and product updates tailored to the categories you browse.</p>
+            <div class="newsletter-benefits">
+              <div class="benefit-item">
+                <span class="benefit-icon">🎁</span>
+                <span>Exclusive deals & discounts</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🚚</span>
+                <span>Early access to flash sales</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🆕</span>
+                <span>New product notifications</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">📱</span>
+                <span>Weekly tech tips & guides</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="newsletter-form">
+          <form class="signup-form" id="newsletterForm">
+            <div class="form-group">
+              <label for="newsletterEmail" class="sr-only">Email address</label>
+              <input
+                type="email"
+                id="newsletterEmail"
+                name="email"
+                placeholder="Enter your email address"
+                required
+                autocomplete="email"
+              />
+              <button type="submit" class="signup-button">
+                <span class="button-text">Subscribe Now</span>
+                <span class="button-loading" style="display: none;">Subscribing...</span>
+              </button>
+            </div>
+
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" name="offers" checked />
+                <span class="checkmark"></span>
+                Send me exclusive offers and deals
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="updates" checked />
+                <span class="checkmark"></span>
+                Keep me updated on new products
+              </label>
+            </div>
+
+            <p class="privacy-notice">
+              By subscribing, you agree to our <a href="privacy-policy.html">Privacy Policy</a> and consent to receive marketing emails. You can unsubscribe at any time.
+            </p>
+          </form>
+
+          <div class="social-proof">
+            <div class="subscribers-count">
+              <span class="count-number">50,000+</span>
+              <span class="count-label">Happy Subscribers</span>
+            </div>
+            <div class="social-links">
+              <span class="social-label">Follow us:</span>
+              <a href="#" class="social-link" aria-label="Facebook">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.017 0C8.396 0 7.996.014 6.79.067 5.584.12 4.775.302 4.082.566c-.726.28-1.337.69-1.948 1.3C1.523 2.477 1.113 3.088.833 3.814c-.264.693-.446 1.502-.5 2.708C.28 7.728.267 8.128.267 11.75s.014 3.022.067 4.228c.054 1.206.236 2.015.5 2.708.28.726.69 1.337 1.3 1.948.611.611 1.222 1.021 1.948 1.3.693.264 1.502.446 2.708.5C7.996 23.72 8.396 23.733 12.017 23.733s4.021-.014 5.227-.067c1.206-.054 2.015-.236 2.708-.5.726-.28 1.337-.69 1.948-1.3.611-.611 1.021-1.222 1.3-1.948.264-.693.446-1.502.5-2.708.053-1.206.067-1.606.067-5.228s-.014-4.021-.067-5.227c-.054-1.206-.236-2.015-.5-2.708-.28-.726-.69-1.337-1.3-1.948C21.523 1.523 20.912.99 20.186.833c-.693-.264-1.502-.446-2.708-.5C16.04.28 15.64.267 12.017.267zM12.017 5.837c3.404 0 6.163 2.76 6.163 6.163s-2.76 6.163-6.163 6.163S5.854 15.604 5.854 12.01 8.613 5.854 12.017 5.854zm0 10.163c2.209 0 4-1.79 4-4s-1.791-4-4-4-4 1.791-4 4 1.791 4 4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link" aria-label="Twitter">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" class="social-link" aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Proof & Trust Section -->
+    <section class="trust-showcase" aria-label="Social proof and trust indicators">
+      <div class="section-header">
+        <h2>Trusted by Millions</h2>
+        <a href="about.html" class="section-link">Learn more about our guarantees →</a>
+      </div>
+      <div class="trust-cards">
+        <div class="trust-card">
+          <span class="trust-icon">👥</span>
+          <strong>1,000,000+</strong>
+          <p>Verified customers</p>
+        </div>
+        <div class="trust-card">
+          <span class="trust-icon">🛡️</span>
+          <strong>100%</strong>
+          <p>Authenticity guarantee</p>
+        </div>
+        <div class="trust-card">
+          <span class="trust-icon">💰</span>
+          <strong>30-day</strong>
+          <p>Money-back guarantee</p>
+        </div>
+        <div class="trust-card">
+          <span class="trust-icon">📦</span>
+          <strong>Live tracking</strong>
+          <p>Order status updates</p>
+        </div>
+      </div>
+
+      <div class="order-tracking-preview">
+        <div class="tracking-header">
+          <h3>Live Order Tracking Preview</h3>
+          <p>See the progress of your order in real-time.</p>
+        </div>
+        <div class="tracking-status">
+          <span class="step completed">Order placed</span>
+          <span class="step completed">Packed</span>
+          <span class="step in-progress">Shipped</span>
+          <span class="step">Out for delivery</span>
+          <span class="step">Delivered</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seasonal Promotions Section -->
+    <section class="seasonal-promotions" aria-label="Seasonal offers and flash sales">
+      <div class="section-header">
+        <h2>Seasonal Promotions</h2>
+        <a href="deals.html" class="section-link">Discover all offers →</a>
+      </div>
+
+      <div class="promotions-grid">
+        <article class="promo-card">
+          <img src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=600&q=80" alt="Festival sale" loading="lazy" />
+          <div class="promo-content">
+            <span class="promo-tag">Diwali Sale</span>
+            <h3>Up to 60% off on home electronics</h3>
+            <p>Limited time festival offers on laptops, TVs, and kitchen appliances.</p>
+            <div class="countdown" data-deadline="2026-04-10T23:59:59Z">
+              <span class="countdown-item"><strong class="days">0</strong> days</span>
+              <span class="countdown-item"><strong class="hours">0</strong> hrs</span>
+              <span class="countdown-item"><strong class="minutes">0</strong> mins</span>
+              <span class="countdown-item"><strong class="seconds">0</strong> secs</span>
+            </div>
+          </div>
+        </article>
+        <article class="promo-card">
+          <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=600&q=80" alt="Flash sale" loading="lazy" />
+          <div class="promo-content">
+            <span class="promo-tag">Weekly Flash</span>
+            <h3>Flash Deals: 2 hours left</h3>
+            <p>Pick popular items at deep discounts before stock runs out.</p>
+            <div class="countdown" data-deadline="2026-04-01T18:00:00Z">
+              <span class="countdown-item"><strong class="days">0</strong> days</span>
+              <span class="countdown-item"><strong class="hours">0</strong> hrs</span>
+              <span class="countdown-item"><strong class="minutes">0</strong> mins</span>
+              <span class="countdown-item"><strong class="seconds">0</strong> secs</span>
+            </div>
+          </div>
+        </article>
+        <article class="promo-card">
+          <img src="https://images.unsplash.com/photo-1512251385166-1bb92caee1e1?auto=format&fit=crop&w=600&q=80" alt="New year deals" loading="lazy" />
+          <div class="promo-content">
+            <span class="promo-tag">Summer Savings</span>
+            <h3>Buy more, save more</h3>
+            <p>Extra discounts on orders above ₹10,000.</p>
+            <div class="countdown" data-deadline="2026-04-30T23:59:59Z">
+              <span class="countdown-item"><strong class="days">0</strong> days</span>
+              <span class="countdown-item"><strong class="hours">0</strong> hrs</span>
+              <span class="countdown-item"><strong class="minutes">0</strong> mins</span>
+              <span class="countdown-item"><strong class="seconds">0</strong> secs</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Newly Added Products -->
+<section class="product-showcase" aria-label="Sponsored products">
+      <div class="section-header">
+        <h3>🔥 Sponsored</h3>
+        <a href="#" class="section-link" style="font-size: 0.9rem;">Sponsored · Learn more</a>
+      </div>
+      <div id="sponsoredGrid" class="product-grid product-showcase-grid sponsored-products"></div>
+    </section>
+
+    <section class="product-showcase" aria-label="Newly added products">
+      <div class="section-header">
+        <h2>New Arrivals</h2>
+        <a href="products.html" class="section-link">Shop all new →</a>
+      </div>
+      <div class="upsell-section">
+        <div id="newArrivalsGrid" class="product-grid product-showcase-grid"></div>
+        <div class="upsell-carousel">
+          <h4>Frequently bought together</h4>
+          <div id="newArrivalsUpsell" class="product-grid" style="grid-template-columns: repeat(3,1fr);"></div>
+        </div>
+      </div>
+      <p id="newArrivalsMeta" class="showcase-meta">Latest products added</p>
+    </section>
+
+    <!-- Top Rated Products -->
+    <section class="product-showcase" aria-label="Top rated products">
+      <div class="section-header">
+        <h2>Best Sellers</h2>
+        <a href="products.html" class="section-link">See more →</a>
+      </div>
+      <div id="topRatedGrid" class="product-grid product-showcase-grid"></div>
+    </section>
+
+    <!-- Recommended For You -->
+<section class="product-showcase" aria-label="Recommended products">
       <div class="section-header">
         <h2>Recommended For You</h2>
-        <a href="wishlist.html" class="section-link">View wishlist</a>
+        <a href="products.html" class="section-link">Discover more →</a>
       </div>
-      <div id="recommendedGrid" class="product-grid"></div>
+      <div class="upsell-section">
+        <div id="recommendedGrid" class="product-grid product-showcase-grid"></div>
+        <div class="upsell-carousel">
+          <h4>From the same seller</h4>
+          <div id="recommendedUpsell" class="product-grid" style="grid-template-columns: repeat(3,1fr);"></div>
+        </div>
+      </div>
     </section>
 
     <section id="recentlyViewedSection" class="curated-showcase" aria-label="Recently viewed products" hidden>
@@ -417,6 +1152,75 @@
       <div id="storeGrid" class="store-grid"></div>
     </section>
   </main>
+
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <button class="fab-main" id="fabMain" aria-label="Quick actions">
+      <span class="fab-icon">+</span>
+    </button>
+
+    <div class="fab-menu" id="fabMenu">
+      <button class="fab-item" data-action="cart" aria-label="View cart">
+        <span class="fab-item-icon">🛒</span>
+        <span class="fab-item-text">Cart</span>
+        <span class="cart-count fab-badge">0</span>
+      </button>
+
+      <button class="fab-item" data-action="wishlist" aria-label="View wishlist">
+        <span class="fab-item-icon">♡</span>
+        <span class="fab-item-text">Wishlist</span>
+        <span class="wishlist-count fab-badge">0</span>
+      </button>
+
+      <button class="fab-item" data-action="compare" aria-label="Compare products">
+        <span class="fab-item-icon">⚖️</span>
+        <span class="fab-item-text">Compare</span>
+        <span class="compare-count fab-badge">0</span>
+      </button>
+
+      <button class="fab-item" data-action="chat" aria-label="Live chat">
+        <span class="fab-item-icon">💬</span>
+        <span class="fab-item-text">Chat</span>
+      </button>
+
+      <button class="fab-item" data-action="top" aria-label="Back to top">
+        <span class="fab-item-icon">⬆️</span>
+        <span class="fab-item-text">Top</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="scroll-progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Live Chat Widget -->
+  <div class="live-chat-widget" id="liveChatWidget">
+    <div class="chat-header">
+      <div class="chat-avatar">
+        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=40&q=80" alt="Support Agent" />
+        <div class="online-indicator"></div>
+      </div>
+      <div class="chat-info">
+        <h4>Customer Support</h4>
+        <span class="chat-status">Online</span>
+      </div>
+      <button class="chat-close" aria-label="Close chat">×</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message received">
+        <p>Hi! How can we help you today? 😊</p>
+        <span class="message-time">2 min ago</span>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" placeholder="Type your message..." id="chatInput" />
+      <button class="chat-send" aria-label="Send message">📤</button>
+    </div>
+  </div>
 
   <div id="locationModal" class="location-modal" role="dialog" aria-modal="true" aria-labelledby="locationTitle" hidden>
     <div class="location-modal__backdrop" data-close-location-modal></div>
@@ -470,35 +1274,67 @@
   </div>
 
   <footer class="site-footer">
-    <div class="footer-top">
-      <h3 data-i18n="footer.backToTop">Back to top</h3>
+    <div class="footer-content">
+      <div class="footer-top-banner">
+        <button class="back-to-top-btn">Back to top</button>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-column">
+          <h4>Get to Know Us</h4>
+          <a href="#" data-i18n="footer.about">About ElectroMart</a>
+          <a href="#" data-i18n="footer.careers">Careers</a>
+          <a href="#" data-i18n="footer.press">Press Releases</a>
+          <a href="#" data-i18n="footer.blog">Blog</a>
+        </div>
+        <div class="footer-column">
+          <h4>Connect With Us</h4>
+          <a href="#" data-i18n="footer.facebook">Facebook</a>
+          <a href="#" data-i18n="footer.twitter">Twitter</a>
+          <a href="#" data-i18n="footer.instagram">Instagram</a>
+          <a href="#" data-i18n="footer.linkedin">LinkedIn</a>
+        </div>
+        <div class="footer-column">
+          <h4>Shop</h4>
+          <a href="laptop.html">Laptops</a>
+          <a href="desktops.html">Desktops</a>
+          <a href="products.html?category=audio">Audio</a>
+          <a href="products.html?category=accessory">Accessories</a>
+          <a href="pc-builder.html">PC Builder</a>
+        </div>
+        <div class="footer-column">
+          <h4>Help & Support</h4>
+          <a href="auth.html">Your Account</a>
+          <a href="orders.html">Your Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="faq.html">FAQs</a>
+          <a href="accessibility-statement.html">Accessibility</a>
+        </div>
+        <div class="footer-column">
+          <h4>Policies</h4>
+          <a href="shipping-policy.html">Shipping Policy</a>
+          <a href="refund-policy.html">Returns & Refunds</a>
+          <a href="terms-and-conditions.html">Terms & Conditions</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <span class="footer-brand">electromart<span class="brand-accent">.in</span></span>
+          <p class="footer-tagline">Your trusted electronics marketplace</p>
+        </div>
+
+        <div class="footer-legal">
+          <p class="copyright" data-i18n="footer.copyright">© 2026 ElectroMart. All rights reserved.</p>
+          <div class="footer-badges">
+            <span class="badge">100% Secure Checkout</span>
+            <span class="badge">Free & Easy Returns</span>
+            <span class="badge">24/7 Customer Support</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="footer-columns">
-      <div>
-        <h4 data-i18n="footer.getToKnowUs">Get to Know Us</h4>
-        <a href="#" data-i18n="footer.about">About</a>
-        <a href="#" data-i18n="footer.careers">Careers</a>
-        <a href="#" data-i18n="footer.press">Press</a>
-      </div>
-      <div>
-        <h4 data-i18n="footer.makeMoney">Make Money with Us</h4>
-        <a href="#" data-i18n="footer.sellProducts">Sell Products</a>
-        <a href="#" data-i18n="footer.affiliate">Become an Affiliate</a>
-        <a href="#" data-i18n="footer.advertise">Advertise</a>
-      </div>
-      <div>
-        <h4 data-i18n="footer.help">Help</h4>
-        <a href="auth.html" data-i18n="footer.yourAccount">Your Account</a>
-        <a href="shipping-policy.html" data-i18n="footer.shippingRates">Shipping Rates</a>
-        <a href="refund-policy.html" data-i18n="footer.returns">Returns</a>
-        <a href="wishlist.html">Wishlist</a>
-        <a href="terms-and-conditions.html">Terms & Conditions</a>
-        <a href="accessibility-statement.html">Accessibility Statement</a>
-        <a href="faq.html">FAQ</a>
-        <a href="review.html">Review</a>
-      </div>
-    </div>
-    <p class="copyright" data-i18n="footer.copyright">Copyright 2026 ElectroMart clone experience</p>
   </footer>
 
   <script src="script.js?v=20260315d"></script>

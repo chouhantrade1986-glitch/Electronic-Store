@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const { verifyWebhookSignature } = require("./webhookSignature");
 
 const RAZORPAY_API_BASE = "https://api.razorpay.com/v1";
 
@@ -173,7 +174,8 @@ function verifyRazorpayWebhookSignature(rawBody, signature) {
   if (!payload || !signature) {
     return false;
   }
-  return safeCompare(buildSignature(payload, config.webhookSecret), String(signature).trim());
+
+  return verifyWebhookSignature(payload, String(signature).trim(), config.webhookSecret);
 }
 
 function buildRazorpayCheckoutPayload(payment, order, user) {
