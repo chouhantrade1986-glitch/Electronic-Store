@@ -1,6 +1,8 @@
 name: Release Guardrails
 
 on:
+  schedule:
+    - cron: "30 4 * * 1"
   workflow_dispatch:
     inputs:
       target_api_base_url:
@@ -109,7 +111,7 @@ jobs:
 
   postdeploy:
     needs: preflight
-    if: ${{ inputs.target_api_base_url != '' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_api_base_url != '' }}
     runs-on: windows-latest
     timeout-minutes: 10
 

@@ -1,6 +1,6 @@
 # Release Guardrails
 
-Last updated: April 5, 2026
+Last updated: April 6, 2026
 
 ## Goal
 
@@ -79,6 +79,19 @@ Manual GitHub workflow:
 
 - [.github/workflows/release-guardrails.yml](./.github/workflows/release-guardrails.yml)
 
+Weekly cadence:
+
+- Automatic run schedule: every Monday at `04:30 UTC` via workflow cron
+- Manual fallback trigger: `workflow_dispatch` on the same workflow
+- Primary owner: `@chouhantrade1986-glitch`
+- Backup owner/escalation contact: incident secondary channel `slack:#incident-ops`
+
+Missed-cadence escalation path (if no successful weekly run within 7 days):
+
+1. Trigger `release-guardrails` manually with `workflow_dispatch`.
+2. Post the run URL in the weekly audit update and `PROJECT-AUDIT.md` evidence snapshot.
+3. Escalate in `slack:#incident-ops` if the catch-up run is not completed within 24 hours.
+
 Workflow jobs:
 
 1. `preflight` runs release preflight gate
@@ -90,3 +103,8 @@ Workflow jobs:
 Latest committed dry-run evidence:
 
 - `release-evidence/rollback-dry-run-*.json`
+
+Latest two cadence runs:
+
+1. [run 24003104432](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432) - run number `4`, `success`, April 5, 2026
+2. [run 24001858163](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24001858163) - run number `3`, `success`, April 5, 2026
