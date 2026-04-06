@@ -9,6 +9,7 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 - Data store: JSON by default, or SQLite for core commerce and catalog entities when `DB_PROVIDER=sqlite`
 - Payments: simulated flow or Razorpay, depending on backend env
 - QA: API smoke, browser smoke, JSON/JUnit reports, Windows CI workflow
+- API reference: [docs/API.md](./docs/API.md)
 
 ## Project Audit Status (March 13, 2026)
 
