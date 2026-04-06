@@ -72,8 +72,13 @@ Current policy avoids low-traffic noise by requiring minimum request volume in l
 
 Review this baseline weekly after collecting real production metrics.
 
+Latest review evidence:
+
+- Reviewed on April 6, 2026: [docs/ALERT-THRESHOLD-BASELINE-REVIEW-2026-04-06.md](./docs/ALERT-THRESHOLD-BASELINE-REVIEW-2026-04-06.md)
+- Review outcome: thresholds unchanged for this cycle
+
 ## Weekly Review Ownership
 
 - Baseline threshold review owner: `@chouhantrade1986-glitch`
-- Current calibration task: [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36)
+- Latest completed calibration task: [Issue #34](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/34)
 - Next scheduled review window: Week of April 13, 2026
