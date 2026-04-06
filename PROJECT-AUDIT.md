@@ -21,6 +21,7 @@ Last updated: April 6, 2026
 - Backend dependency audit: **0 vulnerabilities** (`npm.cmd --prefix backend audit --audit-level=high`, April 6, 2026)
 - Alert threshold baseline review: **completed** ([Issue #34](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/34), April 6, 2026)
 - Weekly release-guardrails cadence policy: **completed** ([Issue #35](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/35), April 6, 2026)
+- Weekly audit evidence automation: **completed** ([Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36), April 6, 2026; command `npm run audit:evidence:weekly`)
 
 ## Weighted Audit Breakdown
 
@@ -32,14 +33,14 @@ Last updated: April 6, 2026
 | Production readiness | 10 / 10 |
 | **Total** | **98 / 100** |
 
-## Remaining Backlog (1%)
+## Remaining Backlog (0%)
 
-1. Automate weekly audit evidence snapshot publishing to avoid stale run links. Owner: `@chouhantrade1986-glitch`. Tracking: [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36).
+1. No blocking backlog item remains in the current audit scope.
 
 ## Step-by-Step Next Sequence
 
 1. Keep branch protection and workflow-governance checks green on each change.
-2. Complete [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36) to automate evidence snapshot generation before the next weekly audit cycle.
+2. Run `npm run audit:evidence:weekly` at the start of each weekly audit cycle and paste snippet output into the evidence section.
 3. Keep weekly release-guardrails runs current in [RELEASE-GUARDRAILS.md](./RELEASE-GUARDRAILS.md) cadence records.
 4. Re-run the alert threshold baseline review in the week of April 13, 2026 using [docs/ALERT-THRESHOLD-BASELINE-REVIEW-2026-04-06.md](./docs/ALERT-THRESHOLD-BASELINE-REVIEW-2026-04-06.md).
 

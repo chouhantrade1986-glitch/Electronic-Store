@@ -15,6 +15,7 @@
     "release:preflight": "powershell -ExecutionPolicy Bypass -File .\\release-preflight.ps1",
     "release:verify:postdeploy": "npm.cmd --prefix backend run job:release:verify --",
     "release:rollback:dry": "powershell -ExecutionPolicy Bypass -File .\\release-rollback-dry-run.ps1",
+    "audit:evidence:weekly": "powershell -ExecutionPolicy Bypass -File .\\scripts\\ci\\generate-weekly-audit-evidence.ps1",
     "cleanup:artifacts": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1 -Apply",
     "cleanup:artifacts:dry": "powershell -ExecutionPolicy Bypass -File .\\cleanup-generated-artifacts.ps1",
     "branch:protect:main": "powershell -ExecutionPolicy Bypass -File .\\set-main-branch-protection.ps1",
