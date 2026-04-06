@@ -1,6 +1,6 @@
 # Production Incident Runbook
 
-Last updated: April 5, 2026
+Last updated: April 6, 2026
 
 ## Escalation Path
 
@@ -71,3 +71,9 @@ Current policy avoids low-traffic noise by requiring minimum request volume in l
 - `ALERT_MAX_LATENCY_MS_5M=5000`
 
 Review this baseline weekly after collecting real production metrics.
+
+## Weekly Review Ownership
+
+- Baseline threshold review owner: `@chouhantrade1986-glitch`
+- Current calibration task: [Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36)
+- Next scheduled review window: Week of April 13, 2026
