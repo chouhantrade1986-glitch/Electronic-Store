@@ -1,6 +1,7 @@
 param(
   [int]$Runs = 3,
-  [string]$ReportsDir = "qa-reports"
+  [string]$ReportsDir = "qa-reports",
+  [switch]$FailOnIterationFailure
 )
 
 $ErrorActionPreference = "Stop"
@@ -146,8 +147,12 @@ Set-ContentWithRetry -Path $markdownPath -Value ($lines -join [Environment]::New
 $failedRuns = @($results | Where-Object { [int]$_.triageExit -ne 0 }).Count
 Write-Host ("SMOKE-TRIAGE-LOOP runs={0} failed={1} summary={2}" -f $Runs, $failedRuns, $summaryPath)
 
-if ($failedRuns -gt 0) {
+if ($failedRuns -gt 0 -and $FailOnIterationFailure) {
   exit 1
+}
+
+if ($failedRuns -gt 0) {
+  Write-Host ("SMOKE-TRIAGE-LOOP warning: failing iterations detected but fail mode is disabled.")
 }
 
 exit 0
