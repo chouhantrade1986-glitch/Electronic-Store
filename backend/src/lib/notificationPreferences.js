@@ -1,14 +1,3 @@
-const DEFAULT_NOTIFICATION_PREFERENCES = {
-  emailEnabled: true,
-  smsEnabled: false,
-  whatsappEnabled: false,
-  smsProvider: "twilio",
-  whatsappProvider: "twilio",
-  orderShipped: true,
-  orderDelivered: true,
-  orderCancelled: true
-};
-
 function normalizeNotificationPreferences(value) {
   const source = value && typeof value === "object" ? value : {};
   return {
@@ -64,15 +53,9 @@ function isNotificationChannelEnabledForEvent(user, channel, eventKey) {
   return preferences[preferenceKey] !== false;
 }
 
-function isOrderEmailEnabledForEvent(user, eventKey) {
-  return isNotificationChannelEnabledForEvent(user, "email", eventKey);
-}
-
 module.exports = {
-  DEFAULT_NOTIFICATION_PREFERENCES,
   normalizeNotificationPreferences,
   getOrderPreferenceKey,
   getChannelPreferenceKey,
-  isNotificationChannelEnabledForEvent,
-  isOrderEmailEnabledForEvent
+  isNotificationChannelEnabledForEvent
 };
