@@ -905,6 +905,7 @@ async function resumePendingPayment(orderId) {
 
     const checkoutResult = await openRazorpayCheckout(payment);
     if (checkoutResult.dismissed) {
+      await fetchOrders();
       showOrderToast({
         title: "Payment window closed",
         message: "You can resume the same order again from this page.",
