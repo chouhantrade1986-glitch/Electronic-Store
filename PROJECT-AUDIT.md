@@ -1,6 +1,6 @@
 # Project Audit - Electronic Store
 
-Last updated: April 7, 2026
+Last updated: April 8, 2026
 
 ## Overall Progress
 
@@ -13,15 +13,24 @@ Last updated: April 7, 2026
 - Backend unit tests: **74/74 passed** (`npm.cmd --prefix backend run test:unit`, April 6, 2026)
 - Smoke API flow: **pass** (health, pages, auth, orders, admin, jobs)
 - Smoke UI flow: **pass** (auth, cart, account, admin, checkout, wishlist, invoice, orders)
-- Latest CI smoke workflow: **pass** (`smoke-suite`, [run 24114353240](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24114353240), April 8, 2026)
+- Latest CI smoke workflow: **pass** (`smoke-suite`, [run 24115873609](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24115873609), April 8, 2026)
 - Latest release guardrails workflow: **pass** (`release-guardrails`, [run 24003104432](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432), April 5, 2026)
 - Latest workflow action governance run: **pass** (`workflow-action-governance`, [run 24040986859](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24040986859), April 6, 2026)
 - Latest weekly intake automation run: **pass** (`a2z-weekly-audit-intake`, [run 24020746868](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24020746868), April 6, 2026)
 - Main branch protection: **enabled** (required check `smoke`, strict checks enabled, admin enforcement enabled)
-- Backend dependency audit: **0 vulnerabilities** (`npm.cmd --prefix backend audit --audit-level=high`, April 6, 2026)
+- Backend dependency audit: **0 vulnerabilities** (`npm.cmd --prefix backend audit --audit-level=high`, April 8, 2026)
 - Alert threshold baseline review: **completed** ([Issue #34](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/34), April 6, 2026)
 - Weekly release-guardrails cadence policy: **completed** ([Issue #35](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/35), April 6, 2026)
 - Weekly audit evidence automation: **completed** ([Issue #36](https://github.com/chouhantrade1986-glitch/Electronic-Store/issues/36), April 6, 2026; command `npm run audit:evidence:weekly`)
+
+## Weekly CI Evidence Snapshot (2026-04-08T04:04:04Z)
+
+| Workflow | Run | Status | Created (UTC) |
+| --- | --- | --- | --- |
+| `smoke-suite.yml` | [run 314](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24115873609) | completed / success | 2026-04-08T03:34:31Z |
+| `release-guardrails.yml` | [run 4](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432) | completed / success | 2026-04-05T14:36:15Z |
+| `workflow-action-governance.yml` | [run 9](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24040986859) | completed / success | 2026-04-06T03:52:34Z |
+| `a2z-weekly-audit-intake.yml` | [run 4](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24020746868) | completed / success | 2026-04-06T05:57:34Z |
 
 ## Weighted Audit Breakdown
 
