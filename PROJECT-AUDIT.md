@@ -13,7 +13,7 @@ Last updated: April 7, 2026
 - Backend unit tests: **74/74 passed** (`npm.cmd --prefix backend run test:unit`, April 6, 2026)
 - Smoke API flow: **pass** (health, pages, auth, orders, admin, jobs)
 - Smoke UI flow: **pass** (auth, cart, account, admin, checkout, wishlist, invoice, orders)
-- Latest CI smoke workflow: **pass** (`smoke-suite`, [run 24119381257](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24119381257), April 8, 2026)
+- Latest CI smoke workflow: **pass** (`smoke-suite`, [run 24120354969](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24120354969), April 8, 2026)
 - Latest release guardrails workflow: **pass** (`release-guardrails`, [run 24003104432](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432), April 5, 2026)
 - Latest workflow action governance run: **pass** (`workflow-action-governance`, [run 24040986859](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24040986859), April 6, 2026)
 - Latest weekly intake automation run: **pass** (`a2z-weekly-audit-intake`, [run 24020746868](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24020746868), April 6, 2026)
