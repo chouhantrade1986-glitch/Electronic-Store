@@ -2435,6 +2435,17 @@ body.quick-view-open {
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
 }
 
+.location-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
 .location-modal__content h2 {
   margin: 0;
   font-size: 1.5rem;

@@ -210,6 +210,7 @@ const locationCity = document.getElementById("locationCity");
 const locationPostal = document.getElementById("locationPostal");
 const locationCancel = document.getElementById("locationCancel");
 const locationSave = document.getElementById("locationSave");
+const locationClose = document.getElementById("locationClose");
 const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const LOCATION_STORAGE_KEY = "electromart_location_v1";
@@ -581,6 +582,10 @@ function initLocationPicker() {
   locationTrigger.addEventListener("click", openLocationModal);
   locationCancel.addEventListener("click", closeLocationModal);
   locationSave.addEventListener("click", handleLocationSave);
+
+  if (locationClose) {
+    locationClose.addEventListener("click", closeLocationModal);
+  }
 
   locationModal.addEventListener("click", (event) => {
     if (event.target.matches("[data-close-location-modal]")) {
