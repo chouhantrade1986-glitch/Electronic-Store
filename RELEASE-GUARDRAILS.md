@@ -1,6 +1,6 @@
 # Release Guardrails
 
-Last updated: April 6, 2026
+Last updated: April 8, 2026
 
 ## Goal
 
@@ -108,3 +108,9 @@ Latest two cadence runs:
 
 1. [run 24003104432](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432) - run number `4`, `success`, April 5, 2026
 2. [run 24001858163](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24001858163) - run number `3`, `success`, April 5, 2026
+
+Weekly cadence gap — April 6, 2026:
+
+- Monday April 6 scheduled cron run (`30 4 * * 1`) was not recorded as of April 8, 2026.
+- Action: trigger `release-guardrails` via `workflow_dispatch` from the [Actions tab](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/workflows/release-guardrails.yml) and add the new run URL to this record.
+- Escalation: if not completed within 24 hours, post in `slack:#incident-ops` per the missed-cadence escalation path above.
