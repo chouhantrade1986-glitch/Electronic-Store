@@ -18,6 +18,8 @@ if errorlevel 1 (
   exit /b 1
 )
 
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0backend\setup-local-env.ps1"
+
 if not exist node_modules (
   echo Installing backend dependencies...
   call npm install

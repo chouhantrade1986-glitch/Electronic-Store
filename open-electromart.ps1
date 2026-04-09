@@ -51,6 +51,8 @@ if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
   exit 1
 }
 
+& (Join-Path $backendDir "setup-local-env.ps1")
+
 if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
   Write-Host "Backend dependencies not found. Installing once..."
   Push-Location $backendDir
