@@ -82,6 +82,7 @@ async function main() {
   if (!backendEnvFileExists && !hasJwtSecret) {
     backendEnv.JWT_SECRET = crypto.randomBytes(32).toString("hex");
     console.log("backend/.env not found. Using temporary local JWT_SECRET for this session.");
+    console.log("Auth tokens issued in this session will be invalid after restart. Create backend/.env for a persistent secret.");
   }
 
   const backend = spawnProcess("node", ["src/server.js"], BACKEND_DIR, backendEnv);
@@ -89,8 +90,8 @@ async function main() {
   attachExitHandler(backend, "Backend");
   attachExitHandler(frontend, "Frontend");
 
-  await waitForUrl(BACKEND_HEALTH_URL, 30000, "Backend failed to start.");
-  await waitForUrl(FRONTEND_URL, 30000, "Frontend failed to start.");
+  await waitForUrl(BACKEND_HEALTH_URL, 30000, `Backend failed to start at ${BACKEND_HEALTH_URL}. Check backend logs and port 4000 conflicts.`);
+  await waitForUrl(FRONTEND_URL, 30000, `Frontend failed to start at ${FRONTEND_URL}. Check frontend logs and port 5500 conflicts.`);
 
   console.log("");
   console.log("ElectroMart is running:");

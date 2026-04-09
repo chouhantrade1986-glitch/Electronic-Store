@@ -38,6 +38,7 @@ npm start
 ```
 
 `npm start` runs the backend API (`http://127.0.0.1:4000/api`) and the frontend static server (`http://127.0.0.1:5500/index.html`) together in one terminal session.
+If `backend/.env` does not exist and `JWT_SECRET` is not set, the launcher uses a temporary in-memory secret for that run only.
 
 ### 1. Install backend dependencies
 
