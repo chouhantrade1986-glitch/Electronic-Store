@@ -1,6 +1,7 @@
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
+const crypto = require("crypto");
 const { spawn } = require("child_process");
 
 const ROOT = __dirname;
@@ -75,8 +76,10 @@ function attachExitHandler(child, serviceName) {
 
 async function main() {
   const backendEnv = { ...process.env };
-  if (!fs.existsSync(BACKEND_ENV_PATH) && !String(backendEnv.JWT_SECRET || "").trim()) {
-    backendEnv.JWT_SECRET = `local-dev-jwt-${Date.now()}`;
+  const backendEnvFileExists = fs.existsSync(BACKEND_ENV_PATH);
+  const hasJwtSecret = Boolean(String(backendEnv.JWT_SECRET || "").trim());
+  if (!backendEnvFileExists && !hasJwtSecret) {
+    backendEnv.JWT_SECRET = crypto.randomBytes(32).toString("hex");
     console.log("backend/.env not found. Using temporary local JWT_SECRET for this session.");
   }
 
