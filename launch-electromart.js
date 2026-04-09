@@ -7,7 +7,8 @@ const { spawn } = require("child_process");
 const ROOT = __dirname;
 const BACKEND_DIR = path.join(ROOT, "backend");
 const BACKEND_ENV_PATH = path.join(BACKEND_DIR, ".env");
-const BACKEND_URL = "http://127.0.0.1:4000/api/health";
+const BACKEND_API_URL = "http://127.0.0.1:4000/api";
+const BACKEND_HEALTH_URL = `${BACKEND_API_URL}/health`;
 const FRONTEND_URL = "http://127.0.0.1:5500/index.html";
 
 let shuttingDown = false;
@@ -88,13 +89,13 @@ async function main() {
   attachExitHandler(backend, "Backend");
   attachExitHandler(frontend, "Frontend");
 
-  await waitForUrl(BACKEND_URL, 30000, "Backend failed to start.");
+  await waitForUrl(BACKEND_HEALTH_URL, 30000, "Backend failed to start.");
   await waitForUrl(FRONTEND_URL, 30000, "Frontend failed to start.");
 
   console.log("");
   console.log("ElectroMart is running:");
   console.log(`Frontend: ${FRONTEND_URL}`);
-  console.log(`Backend:  ${BACKEND_URL}`);
+  console.log(`Backend:  ${BACKEND_API_URL}`);
   console.log("Press Ctrl+C to stop both services.");
 }
 
