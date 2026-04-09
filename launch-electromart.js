@@ -1,0 +1,104 @@
+const fs = require("fs");
+const http = require("http");
+const path = require("path");
+const { spawn } = require("child_process");
+
+const ROOT = __dirname;
+const BACKEND_DIR = path.join(ROOT, "backend");
+const BACKEND_ENV_PATH = path.join(BACKEND_DIR, ".env");
+const BACKEND_URL = "http://127.0.0.1:4000/api/health";
+const FRONTEND_URL = "http://127.0.0.1:5500/index.html";
+
+let shuttingDown = false;
+const childProcesses = [];
+
+function spawnProcess(command, args, cwd, env) {
+  const child = spawn(command, args, {
+    cwd,
+    env,
+    stdio: "inherit"
+  });
+  childProcesses.push(child);
+  return child;
+}
+
+function checkUrl(url) {
+  return new Promise((resolve) => {
+    const request = http.get(url, (response) => {
+      response.resume();
+      resolve(response.statusCode >= 200 && response.statusCode < 300);
+    });
+    request.on("error", () => resolve(false));
+    request.setTimeout(2000, () => {
+      request.destroy();
+      resolve(false);
+    });
+  });
+}
+
+async function waitForUrl(url, timeoutMs, errorMessage) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    // eslint-disable-next-line no-await-in-loop
+    if (await checkUrl(url)) {
+      return;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => setTimeout(resolve, 400));
+  }
+  throw new Error(errorMessage);
+}
+
+function shutdown(exitCode = 0) {
+  if (shuttingDown) {
+    return;
+  }
+  shuttingDown = true;
+  childProcesses.forEach((child) => {
+    if (!child.killed) {
+      child.kill("SIGTERM");
+    }
+  });
+  process.exit(exitCode);
+}
+
+function attachExitHandler(child, serviceName) {
+  child.on("exit", (code) => {
+    if (shuttingDown) {
+      return;
+    }
+    const normalizedCode = typeof code === "number" ? code : 1;
+    console.error(`${serviceName} exited with code ${normalizedCode}.`);
+    shutdown(normalizedCode);
+  });
+}
+
+async function main() {
+  const backendEnv = { ...process.env };
+  if (!fs.existsSync(BACKEND_ENV_PATH) && !String(backendEnv.JWT_SECRET || "").trim()) {
+    backendEnv.JWT_SECRET = `local-dev-jwt-${Date.now()}`;
+    console.log("backend/.env not found. Using temporary local JWT_SECRET for this session.");
+  }
+
+  const backend = spawnProcess("node", ["src/server.js"], BACKEND_DIR, backendEnv);
+  const frontend = spawnProcess("node", ["qa-static-server.js"], ROOT, process.env);
+  attachExitHandler(backend, "Backend");
+  attachExitHandler(frontend, "Frontend");
+
+  await waitForUrl(BACKEND_URL, 30000, "Backend failed to start.");
+  await waitForUrl(FRONTEND_URL, 30000, "Frontend failed to start.");
+
+  console.log("");
+  console.log("ElectroMart is running:");
+  console.log(`Frontend: ${FRONTEND_URL}`);
+  console.log(`Backend:  ${BACKEND_URL}`);
+  console.log("Press Ctrl+C to stop both services.");
+}
+
+process.on("SIGINT", () => shutdown(0));
+process.on("SIGTERM", () => shutdown(0));
+
+main().catch((error) => {
+  console.error(error.message);
+  shutdown(1);
+});

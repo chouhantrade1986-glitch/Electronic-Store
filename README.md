@@ -27,6 +27,18 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Local Setup
 
+### Quick launch (frontend + backend)
+
+```powershell
+npm ci
+cd backend
+npm ci
+cd ..
+npm start
+```
+
+`npm start` runs the backend API (`http://127.0.0.1:4000/api/health`) and the frontend static server (`http://127.0.0.1:5500/index.html`) together in one terminal session.
+
 ### 1. Install backend dependencies
 
 ```powershell
