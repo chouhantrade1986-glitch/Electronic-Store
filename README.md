@@ -10,6 +10,13 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 - Payments: simulated flow or Razorpay, depending on backend env
 - QA: API smoke, browser smoke, JSON/JUnit reports, Windows CI workflow
 
+## Platform Compatibility
+
+- Supported operating systems: Microsoft Windows, macOS, Linux, Android, iOS, and Chrome OS
+- Recommended browsers: latest Chrome, Edge, Safari, and Firefox (last 2 stable versions)
+- Mobile optimization enabled through shared compatibility assets: `android-compat.js` and `android-compat.css`
+- Legacy browser behavior: unsupported modern JS engines show a warning banner and should be upgraded for full checkout/account/admin flows
+
 ## Project Audit Status (April 6, 2026)
 
 - Completed: **100%**
@@ -103,6 +110,12 @@ or
 ```powershell
 cd backend
 npm run dev
+```
+
+Cross-platform alternative (Windows/macOS/Linux/Chrome OS terminal):
+
+```bash
+npm --prefix backend run dev
 ```
 
 Backend default URL: `http://127.0.0.1:4000`
@@ -217,6 +230,12 @@ If `SQLITE_DB_PATH` is blank, the backend uses `backend/src/data/electromart.sql
 
 ```powershell
 run-frontend.bat
+```
+
+Cross-platform alternative (Windows/macOS/Linux/Chrome OS terminal):
+
+```bash
+node qa-static-server.js
 ```
 
 For QA/static serving you can also run:

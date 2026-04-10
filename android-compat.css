@@ -1,0 +1,80 @@
+:root {
+  --os-vh: 1vh;
+  --android-vh: 1vh;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+html.os-mobile {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html.os-mobile body {
+  min-height: calc(var(--os-vh, 1vh) * 100);
+  overscroll-behavior-y: contain;
+}
+
+@supports (padding: max(0px)) {
+  html.os-ios body {
+    padding-bottom: max(0px, var(--safe-bottom));
+  }
+
+  html.os-ios .site-header,
+  html.os-ios .page-header {
+    padding-top: max(0px, var(--safe-top));
+  }
+}
+
+html.os-mobile input,
+html.os-mobile select,
+html.os-mobile textarea,
+html.os-mobile button {
+  font-size: 16px;
+}
+
+html.os-touch a,
+html.os-touch button,
+html.os-touch [role="button"],
+html.os-touch input,
+html.os-touch select,
+html.os-touch textarea,
+html.os-touch label {
+  touch-action: manipulation;
+}
+
+html.os-mobile .fullscreen-viewer,
+html.os-mobile .fullscreen-modal,
+html.os-mobile .image-zoom-pane {
+  max-height: calc(var(--os-vh, 1vh) * 100);
+}
+
+html.os-android .fullscreen-viewer,
+html.os-android .fullscreen-modal,
+html.os-android .image-zoom-pane {
+  max-height: calc(var(--android-vh, 1vh) * 100);
+}
+
+.legacy-browser-notice {
+  position: sticky;
+  top: 0;
+  z-index: 2147483646;
+  padding: 10px 14px;
+  background: #fff4ce;
+  color: #2f2f2f;
+  border-bottom: 1px solid #ffcc66;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+  .search-suggestions,
+  .fullscreen-modal,
+  .notification-center,
+  .brand-popover {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
