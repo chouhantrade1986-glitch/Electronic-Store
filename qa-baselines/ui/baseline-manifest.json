@@ -1,6 +1,6 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-04-10T22:41:52Z",
+    "generatedAt":  "2026-04-11T16:00:12Z",
     "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
@@ -31,8 +31,8 @@
                   },
                   {
                       "name":  "qa-wishlist-browser.png",
-                      "bytes":  69786,
-                      "sha256":  "8520285D3C39A38F11BA0B7972725B75A2542C1983AE5507CE524A4EE79F0D64"
+                      "bytes":  69850,
+                      "sha256":  "EE18DCE61498F199B369215A77F720F38563D23EFB7311910A83163900C81E2D"
                   }
               ]
 }
