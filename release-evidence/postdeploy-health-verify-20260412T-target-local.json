@@ -1,0 +1,163 @@
+{
+  "passed": true,
+  "attempts": 1,
+  "apiBaseUrl": "http://127.0.0.1:4000/api",
+  "healthSnapshot": {
+    "ok": true,
+    "status": "ok",
+    "service": "electromart-backend",
+    "timestamp": "2026-04-11T19:13:55.715Z",
+    "uptimeSeconds": 426,
+    "storageProvider": "sqlite",
+    "dependencies": {
+      "datastore": {
+        "healthy": true,
+        "provider": "sqlite",
+        "sqlite": {
+          "path": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\backend\\src\\data\\electromart.sqlite",
+          "filePresent": true
+        },
+        "summary": {
+          "users": 6,
+          "products": 744
+        },
+        "normalization": {
+          "mode": "compat",
+          "fullyNormalized": true,
+          "unmanagedTopLevelKeys": [],
+          "unmanagedNestedKeysByParent": {},
+          "appState": {
+            "rowCount": 0,
+            "hasFallbackState": false,
+            "keys": []
+          }
+        }
+      },
+      "auth": {
+        "healthy": true
+      },
+      "schedulers": {
+        "orderReservation": {
+          "healthy": true,
+          "enabled": true,
+          "inFlight": false,
+          "intervalMs": 60000
+        },
+        "phoneVerification": {
+          "healthy": true,
+          "enabled": false,
+          "active": false,
+          "inFlight": false,
+          "intervalMs": 43200000,
+          "channels": [
+            "sms",
+            "email"
+          ]
+        }
+      },
+      "integrations": {
+        "razorpay": {
+          "provider": "razorpay",
+          "enabled": true
+        },
+        "drive": {
+          "configured": false
+        },
+        "twilio": {
+          "sms": {
+            "channel": "sms",
+            "configured": false,
+            "mode": "disabled"
+          },
+          "whatsapp": {
+            "channel": "whatsapp",
+            "configured": false,
+            "mode": "disabled"
+          }
+        }
+      }
+    }
+  },
+  "metricsSnapshot": {
+    "generatedAt": "2026-04-11T19:14:00.486Z",
+    "process": {
+      "startedAt": "2026-04-11T19:06:55.548Z",
+      "uptimeSeconds": 426,
+      "pid": 2700,
+      "memory": {
+        "rss": 147664896,
+        "heapTotal": 122507264,
+        "heapUsed": 80857056,
+        "external": 2775595,
+        "arrayBuffers": 19567
+      }
+    },
+    "requests": {
+      "total": 1,
+      "errors": 0,
+      "lastMinute": 1,
+      "lastFiveMinutes": 1,
+      "perMinuteAverageLastFiveMinutes": 0.2,
+      "errorRateLastFiveMinutes": 0,
+      "duration": {
+        "averageMs": 4621,
+        "maxMs": 4621
+      }
+    },
+    "breakdown": {
+      "statusCodes": {
+        "200": 1
+      },
+      "topRoutes": {
+        "GET /api/health": 1
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "health-ok",
+      "passed": true,
+      "details": {
+        "status": "ok"
+      }
+    },
+    {
+      "name": "health-datastore",
+      "passed": true,
+      "details": {
+        "provider": "sqlite"
+      }
+    },
+    {
+      "name": "health-auth",
+      "passed": true,
+      "details": {}
+    },
+    {
+      "name": "health-order-reservation-scheduler",
+      "passed": true,
+      "details": {}
+    },
+    {
+      "name": "metrics-process-started",
+      "passed": true,
+      "details": {
+        "startedAt": "2026-04-11T19:06:55.548Z"
+      }
+    },
+    {
+      "name": "metrics-request-total",
+      "passed": true,
+      "details": {
+        "total": 1
+      }
+    },
+    {
+      "name": "metrics-generated-at",
+      "passed": true,
+      "details": {
+        "generatedAt": "2026-04-11T19:14:00.486Z"
+      }
+    }
+  ]
+}
