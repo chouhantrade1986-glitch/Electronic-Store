@@ -1,1 +1,38 @@
-﻿{"baselineType":"ui-visual","generatedAt":"2026-04-05T12:22:07Z","sourceDir":"C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui","destinationDir":"C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui","files":[{"name":"qa-auth-browser.png","bytes":9790,"sha256":"39791B5B55B035D8279DF029B0EC5E35E12D1D5EACBB346FBB85D6D37A0A5C8C"},{"name":"qa-account-browser.png","bytes":13699,"sha256":"BABA2205A807FB5400E0ADC966348102BF7943C4B93F6DE0433C5540ACA0B41A"},{"name":"qa-invoice-browser.png","bytes":157088,"sha256":"736BC4F17C54181577D74E9DAB5C42F269166D1D22D53010708092538C3CED7D"},{"name":"qa-checkout-browser.png","bytes":13545,"sha256":"B39B0C0AC0D5631EAD95E9FB43CD4FEE256D87D7FC8E1248CE2ADCC4A4294240"},{"name":"qa-orders-browser.png","bytes":11244,"sha256":"105C46634E2D8B6DEE6B2247F403E25648A6501992F76DE06226EE2DDEC84C1C"},{"name":"qa-wishlist-browser.png","bytes":98653,"sha256":"899E127A3E05F65256BA30B189133D2252D4335CB6BA5E02E23BD812FF8EDE93"}]}
+﻿{
+    "baselineType":  "ui-visual",
+    "generatedAt":  "2026-04-10T22:41:52Z",
+    "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
+    "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
+    "files":  [
+                  {
+                      "name":  "qa-auth-browser.png",
+                      "bytes":  9518,
+                      "sha256":  "1253F8923A22145091C7B302F9691712E15FCD140DCFC40F8A52603DCCD48F6A"
+                  },
+                  {
+                      "name":  "qa-account-browser.png",
+                      "bytes":  13341,
+                      "sha256":  "A8471CE3AC711E6B7663DBD2E966E4CE8882F727E27451D7B31ED75535D2ACA4"
+                  },
+                  {
+                      "name":  "qa-invoice-browser.png",
+                      "bytes":  167568,
+                      "sha256":  "30FF0B2133BA4B2A1CA8D709B60E69E10BDA48B04F404E5C64A21C5E4F9E675F"
+                  },
+                  {
+                      "name":  "qa-checkout-browser.png",
+                      "bytes":  12343,
+                      "sha256":  "215874D83F105A33827A8A054CC4A2B9811CC126D94A7DB8DF37A815AEF844A8"
+                  },
+                  {
+                      "name":  "qa-orders-browser.png",
+                      "bytes":  10766,
+                      "sha256":  "590AF75280B415F1F5CF18A978B1365AF39732AF22C6A83190D801E7779355E3"
+                  },
+                  {
+                      "name":  "qa-wishlist-browser.png",
+                      "bytes":  69786,
+                      "sha256":  "8520285D3C39A38F11BA0B7972725B75A2542C1983AE5507CE524A4EE79F0D64"
+                  }
+              ]
+}

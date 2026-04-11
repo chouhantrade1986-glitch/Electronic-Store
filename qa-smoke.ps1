@@ -72,6 +72,36 @@ function Get-PageCheck {
   }
 }
 
+function Invoke-RestMethodWithRetry {
+  param(
+    [Parameter(Mandatory = $true)]
+    [scriptblock]$Request,
+    [int]$MaxAttempts = 3,
+    [int]$RetryDelayMs = 250
+  )
+
+  $attempt = 0
+  while ($true) {
+    try {
+      return & $Request
+    }
+    catch {
+      $attempt += 1
+      $message = [string]$_.Exception.Message
+      $isTransientConnectionError =
+        ($message -match "expected to be kept alive was closed by the server") -or
+        ($message -match "Unable to connect to the remote server") -or
+        ($message -match "forcibly closed by the remote host")
+
+      if ($attempt -ge $MaxAttempts -or -not $isTransientConnectionError) {
+        throw
+      }
+
+      Start-Sleep -Milliseconds ($RetryDelayMs * $attempt)
+    }
+  }
+}
+
 function Post-Json {
   param(
     [Parameter(Mandatory = $true)]
@@ -81,7 +111,9 @@ function Post-Json {
     [hashtable]$Headers = @{}
   )
 
-  return Invoke-RestMethod -Uri $Url -Method Post -Headers $Headers -ContentType "application/json" -Body ($Body | ConvertTo-Json -Depth 10)
+  return Invoke-RestMethodWithRetry -Request {
+    Invoke-RestMethod -Uri $Url -Method Post -Headers $Headers -DisableKeepAlive -ContentType "application/json" -Body ($Body | ConvertTo-Json -Depth 10)
+  }
 }
 
 function Patch-Json {
@@ -93,7 +125,9 @@ function Patch-Json {
     [hashtable]$Headers = @{}
   )
 
-  return Invoke-RestMethod -Uri $Url -Method Patch -Headers $Headers -ContentType "application/json" -Body ($Body | ConvertTo-Json -Depth 10)
+  return Invoke-RestMethodWithRetry -Request {
+    Invoke-RestMethod -Uri $Url -Method Patch -Headers $Headers -DisableKeepAlive -ContentType "application/json" -Body ($Body | ConvertTo-Json -Depth 10)
+  }
 }
 
 function Invoke-OtpLogin {
