@@ -1,0 +1,21 @@
+﻿{
+    "kind":  "release-rollback-dry-run",
+    "generatedAt":  "2026-04-11T01:40:44.2278434Z",
+    "currentCommit":  "429a58dd9affbd4ec0cdcc0c3b4dbc8ddff64c0a",
+    "targetCommit":  "4b6b95d81bf850805079eb4be3890051756f0e7c",
+    "reason":  "Controlled rollback dry run",
+    "apiBaseUrl":  "http://127.0.0.1:4000/api",
+    "recentCommits":  [
+                          "429a58d ci(release): retry smoke step on transient preflight failures",
+                          "4b6b95d feat(ui): roll out amazon-style theme across pages and harden smoke requests",
+                          "be10d7f Merge branch \u0027main\u0027 into feat/cross-os-compat-2026-04-11",
+                          "07e2769 fix(frontend): improve cross-platform compatibility across web clients",
+                          "7fcbf11 docs(audit): refresh weekly smoke evidence (2026-12-21)"
+                      ],
+    "rollbackSteps":  [
+                          "Verify incident trigger and confirm rollback decision against release checklist.",
+                          "Redeploy commit 4b6b95d81bf850805079eb4be3890051756f0e7c using the deployment platform\u0027s last-known-good promotion flow.",
+                          "Run backend release verification: cd backend \u0026\u0026 npm.cmd run job:release:verify -- --api-base-url=http://127.0.0.1:4000/api.",
+                          "If verification passes, announce rollback completion and link this dry-run evidence in the incident timeline."
+                      ]
+}

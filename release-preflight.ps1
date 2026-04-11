@@ -41,7 +41,13 @@ function Invoke-ReleaseStep {
       $attempt += 1
 
       try {
+        $global:LASTEXITCODE = 0
         $attemptOutput = (& $Script 2>&1 | Out-String).Trim()
+        $nativeExitCode = $LASTEXITCODE
+        if (($nativeExitCode -is [int]) -and ($nativeExitCode -ne 0)) {
+          throw "Command exited with code $nativeExitCode.`n$attemptOutput"
+        }
+
         if ($attempt -gt 1) {
           $output = ($attemptOutputs + @("Attempt $attempt succeeded:", $attemptOutput)) -join "`n"
         } else {
