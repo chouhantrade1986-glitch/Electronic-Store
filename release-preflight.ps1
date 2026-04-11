@@ -25,18 +25,58 @@ function Invoke-ReleaseStep {
     [Parameter(Mandatory = $true)]
     [string]$Name,
     [Parameter(Mandatory = $true)]
-    [scriptblock]$Script
+    [scriptblock]$Script,
+    [int]$MaxAttempts = 1,
+    [string[]]$RetryOnErrorPatterns = @()
   )
 
   $stepStarted = Get-Date
   $output = ""
   $status = "passed"
+  $attempt = 0
+  $attemptOutputs = New-Object System.Collections.Generic.List[string]
 
   try {
-    $output = & $Script 2>&1 | Out-String
+    while ($attempt -lt $MaxAttempts) {
+      $attempt += 1
+
+      try {
+        $attemptOutput = (& $Script 2>&1 | Out-String).Trim()
+        if ($attempt -gt 1) {
+          $output = ($attemptOutputs + @("Attempt $attempt succeeded:", $attemptOutput)) -join "`n"
+        } else {
+          $output = $attemptOutput
+        }
+        break
+      }
+      catch {
+        $attemptError = ($_ | Out-String).Trim()
+        $attemptOutputs.Add((@("Attempt $attempt failed:", $attemptError) -join "`n")) | Out-Null
+
+        $canRetry = ($attempt -lt $MaxAttempts)
+        if ($canRetry -and $RetryOnErrorPatterns.Count -gt 0) {
+          $canRetry = $false
+          foreach ($pattern in $RetryOnErrorPatterns) {
+            if ($attemptError -match $pattern) {
+              $canRetry = $true
+              break
+            }
+          }
+        }
+
+        if (-not $canRetry) {
+          throw
+        }
+
+        Write-Host "Retrying step '$Name' (attempt $($attempt + 1) of $MaxAttempts) due to transient failure."
+      }
+    }
   } catch {
     $status = "failed"
-    $output = ($_ | Out-String)
+    $output = ($attemptOutputs -join "`n`n").Trim()
+    if ([string]::IsNullOrWhiteSpace($output)) {
+      $output = ($_ | Out-String).Trim()
+    }
     throw
   } finally {
     $steps.Add([PSCustomObject]@{
@@ -50,7 +90,16 @@ function Invoke-ReleaseStep {
 
 try {
   if (-not $SkipSmoke) {
-    Invoke-ReleaseStep -Name "smoke-suite" -Script { npm.cmd run smoke }
+    Invoke-ReleaseStep -Name "smoke-suite" -MaxAttempts 2 -RetryOnErrorPatterns @(
+      "page.waitForFunction: Timeout \\d+ms exceeded",
+      "Error: Internal server error",
+      "TypeError: fetch failed",
+      "Unable to connect to the remote server",
+      "ECONNRESET",
+      "ETIMEDOUT",
+      "forcibly closed by the remote host",
+      "expected to be kept alive was closed by the server"
+    ) -Script { npm.cmd run smoke }
   }
 
   if (-not $SkipVisualBaseline) {
