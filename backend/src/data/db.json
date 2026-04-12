@@ -299,6 +299,41 @@
           "actor": "user"
         }
       ]
+    },
+    {
+      "id": "20e0f650-b880-4339-9c76-881e9c743a86",
+      "name": "Ops Admin",
+      "email": "ops@example.com",
+      "mobile": "9876543210",
+      "passwordHash": "$2a$10$s0K5incBMCIjHWnzmpBmF.27lrYM4o.TTjSXPTsMGOXvjLtO6hENm",
+      "role": "admin",
+      "address": "Jaipur",
+      "notificationPreferences": {
+        "emailEnabled": true,
+        "smsEnabled": false,
+        "whatsappEnabled": false,
+        "smsProvider": "twilio",
+        "whatsappProvider": "twilio",
+        "orderShipped": true,
+        "orderDelivered": true,
+        "orderCancelled": true
+      },
+      "securityPreferences": {
+        "twoFactorEnabled": false,
+        "loginAlertsEnabled": true
+      },
+      "sessionVersion": 1,
+      "authActivity": [],
+      "phoneVerification": {
+        "verifiedForMobile": "",
+        "verifiedAt": null,
+        "pendingCode": "",
+        "pendingMobile": "",
+        "pendingExpiresAt": null,
+        "lastRequestedAt": null,
+        "failedAttempts": 0,
+        "lockedUntil": null
+      }
     }
   ],
   "products": [
@@ -23768,6 +23803,30 @@
     }
   ],
   "adminAuditTrail": [
+    {
+      "id": "f06b474d-d122-4757-aad6-f7a8624d51d8",
+      "createdAt": "2026-04-05T18:42:31.478Z",
+      "category": "admin",
+      "actionKey": "admin_created",
+      "actionLabel": "Real admin created",
+      "actorId": "20e0f650-b880-4339-9c76-881e9c743a86",
+      "actorEmail": "ops@example.com",
+      "actorName": "Ops Admin",
+      "requestId": "job:create-admin",
+      "ip": "",
+      "entityType": "user",
+      "entityId": "20e0f650-b880-4339-9c76-881e9c743a86",
+      "orderId": "",
+      "paymentId": "",
+      "caseId": "",
+      "status": "success",
+      "summary": "Real admin account created successfully.",
+      "targetIds": [],
+      "details": {
+        "source": "create_real_admin_job",
+        "promoteExisting": false
+      }
+    },
     {
       "id": "45ccf74a-9eab-4480-ada7-07d9dfa4cb73",
       "createdAt": "2026-03-09T03:05:22.803Z",
