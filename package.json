@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Root tooling for ElectroMart smoke and browser QA flows.",
   "scripts": {
+    "start": "node launch-electromart.js",
     "csv:preflight": "node tools/csv-preflight-check.js",
     "csv:convert:wix": "node tools/convert-wix-catalog-csv.js",
     "csv:convert:project": "node tools/convert-wix-catalog-csv.js",
