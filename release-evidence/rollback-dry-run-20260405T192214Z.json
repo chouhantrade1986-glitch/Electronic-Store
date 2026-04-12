@@ -1,0 +1,21 @@
+﻿{
+    "kind":  "release-rollback-dry-run",
+    "generatedAt":  "2026-04-05T19:22:14.1801970Z",
+    "currentCommit":  "bb7002bf719629d929afa1649eba6865f32a5c25",
+    "targetCommit":  "933d89ad64b40a11d7ea288b800b9ee3a564a4e4",
+    "reason":  "Controlled rollback dry run",
+    "apiBaseUrl":  "http://127.0.0.1:4000/api",
+    "recentCommits":  [
+                          "bb7002b fix(ui): guard classList usage and improve weekly intake automation (#18)",
+                          "933d89a chore(audit): add weekly Amazon-style A2Z cadence intake (#16)",
+                          "8a85b89 Merge pull request #15 from chouhantrade1986-glitch/audit/a2z-closure-2026-04-05",
+                          "484dc66 audit(a2z): close governance security and docs gaps",
+                          "f9413aa Merge pull request #14 from chouhantrade1986-glitch/chore/workflow-action-governance-2026-04-05"
+                      ],
+    "rollbackSteps":  [
+                          "Verify incident trigger and confirm rollback decision against release checklist.",
+                          "Redeploy commit 933d89ad64b40a11d7ea288b800b9ee3a564a4e4 using the deployment platform\u0027s last-known-good promotion flow.",
+                          "Run backend release verification: cd backend \u0026\u0026 npm.cmd run job:release:verify -- --api-base-url=http://127.0.0.1:4000/api.",
+                          "If verification passes, announce rollback completion and link this dry-run evidence in the incident timeline."
+                      ]
+}
