@@ -34,6 +34,21 @@ Electronic Store is a storefront and admin dashboard built with static HTML/CSS/
 
 ## Local Setup
 
+### Quick Launch (Frontend + Backend)
+
+```powershell
+npm ci
+npm --prefix backend ci
+npm start
+```
+
+`npm start` runs both local services in one terminal session:
+
+- Frontend: `http://127.0.0.1:5500/index.html`
+- Backend API: `http://127.0.0.1:4000/api`
+
+If `backend/.env` does not exist and `JWT_SECRET` is not set, the launcher injects a temporary in-memory secret for that run.
+
 ### 1. Install backend dependencies
 
 ```powershell
