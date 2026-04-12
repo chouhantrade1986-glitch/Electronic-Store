@@ -1,0 +1,251 @@
+:root {
+  --amz-ink: #0f1111;
+  --amz-header: #131921;
+  --amz-header-2: #232f3e;
+  --amz-link: #007185;
+  --amz-link-hover: #c7511f;
+  --amz-bg: #eaeded;
+  --amz-surface: #ffffff;
+  --amz-border: #d5d9d9;
+  --amz-border-strong: #a2a6ac;
+  --amz-cta: #ffd814;
+  --amz-cta-border: #fcd200;
+  --amz-cta-hover: #f7ca00;
+  --amz-text-subtle: #565959;
+  --amz-text-body: #37475a;
+  --amz-surface-soft: #f7fafa;
+  --amz-brand-amber: #ff9900;
+  --amz-radius-control: 8px;
+  --amz-btn-height: 40px;
+  --amz-btn-pad-x: 14px;
+  --amz-radius-card: 8px;
+  --amz-shadow-card: 0 1px 2px rgba(15, 17, 17, 0.12);
+  --amz-shadow-card-hover: 0 2px 8px rgba(15, 17, 17, 0.16);
+}
+
+html,
+body {
+  background: var(--amz-bg) !important;
+  color: var(--amz-ink) !important;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: var(--amz-link-hover);
+}
+
+:is(.site-header, .page-header, .top-nav, .admin-portal-header, .amazon-topbar, .invoice-header) {
+  background: var(--amz-header) !important;
+  color: #ffffff !important;
+  border-color: #3a4553 !important;
+  box-shadow: 0 1px 3px rgba(15, 17, 17, 0.32) !important;
+}
+
+:is(.sub-nav, .category-nav, .dept-menu, .amazon-subbar) {
+  background: var(--amz-header-2) !important;
+  color: #ffffff !important;
+}
+
+:is(.sub-nav a, .category-nav a, .header-links a, .nav-actions a, .dept-menu a, .top-nav a, .top-links a) {
+  border-radius: 4px;
+}
+
+:is(.sub-nav a:hover, .category-nav a:hover, .header-links a:hover, .nav-actions a:hover, .dept-menu a:hover, .top-links a:hover) {
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.brand-accent,
+.top-nav .brand span {
+  color: var(--amz-brand-amber) !important;
+}
+
+:is(.search-form, .header-search) {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+:is(.search-form button, .header-search button) {
+  background: var(--amz-cta) !important;
+  border-color: var(--amz-cta-border) !important;
+  color: var(--amz-ink) !important;
+  box-shadow: none !important;
+}
+
+:is(.search-form button:hover, .header-search button:hover) {
+  background: var(--amz-cta-hover) !important;
+}
+
+:is(.search-form select, .search-context, .search-context-select) {
+  background: #f3f3f3 !important;
+  color: var(--amz-ink) !important;
+}
+
+:is(.search-form input, .header-search input, input, select, textarea) {
+  border-color: var(--amz-border) !important;
+}
+
+.section-link,
+.home-card-link,
+.deal-strip-link,
+.quick-view-details-link,
+.suggestion-clear {
+  color: var(--amz-link) !important;
+}
+
+.section-link:hover,
+.home-card-link:hover,
+.deal-strip-link:hover,
+.quick-view-details-link:hover,
+.suggestion-clear:hover {
+  color: var(--amz-link-hover) !important;
+}
+
+:is(
+  .hero-btn,
+  .home-card-action,
+  .signin-btn,
+  .collection-spotlight-primary,
+  .support-cta-btn,
+  .add-btn,
+  .store-card button,
+  .cart-link,
+  .primary-btn,
+  .location-save,
+  .deal-tile__cta,
+  .category-rail-card__cta,
+  .momentum-card__cta,
+  .mega-highlight a
+) {
+  background: var(--amz-cta) !important;
+  border: 1px solid var(--amz-cta-border) !important;
+  color: var(--amz-ink) !important;
+  border-radius: var(--amz-radius-control) !important;
+  min-height: var(--amz-btn-height) !important;
+  padding: 0 var(--amz-btn-pad-x) !important;
+  box-shadow: none !important;
+}
+
+:is(
+  .hero-btn:hover,
+  .home-card-action:hover,
+  .signin-btn:hover,
+  .collection-spotlight-primary:hover,
+  .support-cta-btn:hover,
+  .add-btn:hover,
+  .store-card button:hover,
+  .cart-link:hover,
+  .primary-btn:hover,
+  .location-save:hover,
+  .deal-tile__cta:hover,
+  .category-rail-card__cta:hover,
+  .momentum-card__cta:hover,
+  .mega-highlight a:hover
+) {
+  background: var(--amz-cta-hover) !important;
+}
+
+:is(
+  .secondary-btn,
+  .collection-spotlight-secondary,
+  .wishlist-btn,
+  .quick-view-link,
+  .location-cancel,
+  .hero-btn.secondary
+) {
+  background: #ffffff !important;
+  border: 1px solid var(--amz-border-strong) !important;
+  color: var(--amz-ink) !important;
+  border-radius: var(--amz-radius-control) !important;
+  min-height: var(--amz-btn-height) !important;
+  padding: 0 var(--amz-btn-pad-x) !important;
+  box-shadow: none !important;
+}
+
+:is(
+  .secondary-btn:hover,
+  .collection-spotlight-secondary:hover,
+  .wishlist-btn:hover,
+  .quick-view-link:hover,
+  .location-cancel:hover,
+  .hero-btn.secondary:hover
+) {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: var(--amz-ink) !important;
+}
+
+:is(
+  .product-card,
+  .home-card,
+  .home-mini-tile,
+  .deal-tile,
+  .category-rail-card,
+  .feature-card,
+  .store-card,
+  .listing-panel,
+  .momentum-card,
+  .collection-spotlight-copy,
+  .collection-spotlight-panel,
+  .admin-status-card,
+  .admin-checklist,
+  .curated-showcase,
+  .new-arrivals-window,
+  .deal-strip,
+  .category-rail,
+  .service-item,
+  .quick-grid-head,
+  .hero-departments,
+  .hero-slider-shell,
+  .location-modal__content,
+  .quick-view-panel,
+  .qa-card,
+  .card
+) {
+  background: var(--amz-surface) !important;
+  border: 1px solid var(--amz-border) !important;
+  border-radius: var(--amz-radius-card) !important;
+  box-shadow: var(--amz-shadow-card) !important;
+}
+
+:is(.home-card:hover, .home-mini-tile:hover, .deal-tile:hover, .category-rail-card:hover, .product-card:hover, .card:hover) {
+  border-color: var(--amz-border-strong) !important;
+  box-shadow: var(--amz-shadow-card-hover) !important;
+  transform: none !important;
+}
+
+:is(.section-eyebrow, .home-card-kicker, .deal-kicker, .collection-spotlight-eyebrow) {
+  color: var(--amz-text-subtle) !important;
+}
+
+:is(.quick-grid-note, .deal-strip-note, .home-card-badge, .deal-lane, .category-rail-card__lane, .category-rail-card__meta span) {
+  background: var(--amz-surface-soft) !important;
+  border-color: var(--amz-border) !important;
+  color: var(--amz-text-body) !important;
+}
+
+:is(.deal-strip::before, .category-rail::before) {
+  background: var(--amz-brand-amber) !important;
+  height: 3px !important;
+}
+
+:is(.hero, .quick-grid-shell, .home-momentum-band) {
+  margin-top: 0 !important;
+}
+
+:is(.support-cta, .momentum-card--primary) {
+  background: var(--amz-header-2) !important;
+  color: #ffffff !important;
+}
+
+.site-footer {
+  background: #131a22 !important;
+  color: #dddddd !important;
+}
+
+.footer-top {
+  background: #37475a !important;
+}

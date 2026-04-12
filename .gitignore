@@ -18,6 +18,7 @@ lt.log
 qa-static.log
 frontend-start.log
 frontend-start.err.log
+.opencode/
 
 # Generated QA artifacts
 qa-*.png
