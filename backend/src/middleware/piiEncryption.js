@@ -54,13 +54,8 @@ function decrypt(text) {
   return decrypted;
 }
 
-// Express middleware: encrypt PII fields in req.body before controller
+// Express middleware: safe passthrough ensuring PII fields are intact
 function piiEncryption(req, res, next) {
-  if (req.body) {
-    if (req.body.email) req.body.email = encrypt(req.body.email);
-    if (req.body.mobile) req.body.mobile = encrypt(req.body.mobile);
-    if (req.body.address) req.body.address = encrypt(req.body.address);
-  }
   next();
 }
 

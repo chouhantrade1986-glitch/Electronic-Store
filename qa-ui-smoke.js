@@ -110,7 +110,8 @@ async function waitFor(check, timeoutMs, message) {
     }
     await sleep(250);
   }
-  throw new Error(message);
+  const resolved = typeof message === "function" ? await message() : message;
+  throw new Error(resolved);
 }
 
 async function requestJson(pathname, options = {}) {
@@ -180,9 +181,13 @@ async function resolveSmokeProduct() {
   }
 }
 
-function startProcess(command, args, cwd) {
+function startProcess(command, args, cwd, extraEnv = {}) {
   const child = spawn(command, args, {
     cwd,
+    env: {
+      ...process.env,
+      ...extraEnv
+    },
     stdio: ["ignore", "pipe", "pipe"],
     windowsHide: true
   });
@@ -265,7 +270,7 @@ async function runAuthSmoke(browser) {
         await page.waitForFunction(() => {
           const button = document.getElementById("generateOtpBtn");
           return button && button.disabled === false;
-        }, { timeout: 70000 });
+        }, undefined, { timeout: 75000 });
       }
 
       await page.click("#generateOtpBtn");
@@ -485,6 +490,12 @@ async function runAccountSmoke(browser, customerSession) {
       dialogs.push(dialog.message());
       await dialog.accept();
     });
+    page.on("pageerror", (err) => {
+      console.error("ACCOUNT PAGE ERROR:", err.message);
+    });
+    page.on("console", (msg) => {
+      console.log("ACCOUNT CONSOLE:", msg.text());
+    });
     const readToastMessages = async () => page.evaluate(() => {
       return Array.from(document.querySelectorAll("#accountToastStack .em-toast-message"))
         .map((item) => String(item.textContent || "").trim())
@@ -530,7 +541,7 @@ async function runAccountSmoke(browser, customerSession) {
     await waitFor(
       async () => hasDialogOrToastMessage(/profile saved/i),
       15000,
-      "Account profile save confirmation did not appear."
+      async () => "Account profile save confirmation did not appear. Toasts: " + JSON.stringify(await readToastMessages()) + ", Dialogs: " + JSON.stringify(dialogs)
     );
 
     const toastMessages = await readToastMessages();
@@ -563,6 +574,12 @@ async function runAccountSmoke(browser, customerSession) {
 async function runAdminDashboardSmoke(browser, adminSession) {
   return withSessionPage(browser, adminSession, async (page) => {
     const screenshotPath = artifactPath("qa-admin-dashboard-browser.png");
+    page.on("pageerror", (err) => {
+      console.error("ADMIN PAGE ERROR:", err.message);
+    });
+    page.on("console", (msg) => {
+      console.log("ADMIN CONSOLE:", msg.text());
+    });
     const normalizeText = (value) => String(value || "").replace(/\s+/g, " ").trim();
     const chipLabels = async (panelSelector) => {
       const labels = await page.locator(`${panelSelector} .listing-filter-chip .listing-filter-chip-label`).allTextContents();
@@ -1283,7 +1300,9 @@ async function main() {
   let browser;
 
   try {
-    backendProcess = startProcess("node", ["src/server.js"], BACKEND_DIR);
+    backendProcess = startProcess("node", ["src/server.js"], BACKEND_DIR, {
+      AUTH_OTP_REQUEST_COOLDOWN_MS: "15000"
+    });
     frontendProcess = startProcess("node", ["qa-static-server.js"], ROOT);
 
     await waitFor(async () => {
