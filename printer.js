@@ -198,9 +198,13 @@ function saveCartMap(cartMap) {
 }
 
 function syncCartCount() {
+  if (!cartCount) {
+    return;
+  }
   const total = Object.values(loadCartMap()).reduce((sum, qty) => sum + Number(qty || 0), 0);
   cartCount.textContent = String(total);
 }
+
 
 function escapeHtml(value) {
   return String(value || "")
@@ -359,12 +363,13 @@ function getSortLabel(value) {
 
 function getActivePrinterFilters() {
   const filters = [];
-  const query = String(searchInput.value || "").trim();
-  const segment = String(segmentFilter.value || "all");
+  const query = String(searchInput?.value || "").trim();
+  const segment = String(segmentFilter?.value || "all");
   const selectedBrands = getSelectedBrands();
-  const type = String(typeFilter.value || "all");
-  const useCase = String(useFilter.value || "all");
-  const sortValue = String(sortFilter.value || "relevance");
+  const type = String(typeFilter?.value || "all");
+  const useCase = String(useFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
 
   if (query) {
     filters.push({
@@ -447,12 +452,13 @@ function getActivePrinterFilters() {
 function filterPrinters() {
   const source = getMergedPrinters();
   syncDynamicBrandUI(source);
-  const query = String(searchInput.value || "").trim().toLowerCase();
-  const segment = String(segmentFilter.value || "all");
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const segment = String(segmentFilter?.value || "all");
   const selectedBrands = getSelectedBrands();
-  const type = String(typeFilter.value || "all");
-  const useCase = String(useFilter.value || "all");
-  const sortValue = String(sortFilter.value || "relevance");
+  const type = String(typeFilter?.value || "all");
+  const useCase = String(useFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
 
   const filtered = source.filter((item) => {
     const text = `${item.name} ${item.brand || ""} ${item.type} ${item.useCase} ${item.speed} ${item.connectivity}`.toLowerCase();
@@ -468,8 +474,9 @@ function filterPrinters() {
   filterChipController?.update();
 }
 
-searchInput.addEventListener("input", filterPrinters);
-segmentFilter.addEventListener("change", filterPrinters);
+searchInput?.addEventListener("input", filterPrinters);
+segmentFilter?.addEventListener("change", filterPrinters);
+
 brandFilterList?.addEventListener("change", (event) => {
   if (event.target.closest(".brand-filter")) {
     filterPrinters();

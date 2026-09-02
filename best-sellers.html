@@ -8,51 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
   <link rel="stylesheet" href="best-sellers.css?v=20260315a" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314a" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="page-header">
-    <nav class="top-nav">
-      <a href="index.html" class="brand">electro<span>mart</span><small>best sellers</small></a>
-      <form class="search-shell" role="search">
-        <input id="searchInput" type="search" placeholder="Search best sellers by product or category" aria-label="Search best sellers" />
-      </form>
-      <div class="top-links">
-        <a href="products.html">Products</a>
-        <a href="desktops.html">Computers</a>
-        <a href="laptop.html">Laptops</a>
-        <a href="printer.html">Printers</a>
-        <a href="auth.html">Account</a>
-        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-
-    <nav class="sub-nav" aria-label="Best sellers navigation">
-      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
-      <a href="best-sellers.html" class="active">Best Sellers</a>
-      <a href="todays-deals.html">Today's Deals</a>
-      <a href="products.html">All Products</a>
-      <a href="desktops.html">Computers</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="printer.html">Printers</a>
-      <a href="terms-and-conditions.html">Terms</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-    <section id="deptMenu" class="dept-menu" aria-label="Best seller categories">
-      <a href="best-sellers.html?category=laptop">Top Laptops</a>
-      <a href="best-sellers.html?category=mobile">Top Mobiles</a>
-      <a href="best-sellers.html?category=audio">Top Audio</a>
-      <a href="best-sellers.html?category=accessory">Top Accessories</a>
-    </section>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="best-main">
     <section class="hero">
@@ -117,6 +82,7 @@
   <script src="best-sellers.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="header.js"></script>
 </body>
 </html>
 

@@ -1,4 +1,22 @@
-﻿const CART_STORAGE_KEY = "electromart_cart_v1";
+﻿const priceRangeFilter = document.getElementById("priceRangeFilter");
+const discountFilter = document.getElementById("discountFilter");
+function filterDeals() {
+  let filtered = [...deals];
+  const discountValue = Number(discountFilter?.value || 0);
+  // Price range dropdown logic
+  if (priceRangeFilter && priceRangeFilter.value !== "all") {
+    const [min, max] = priceRangeFilter.value.split("-").map(Number);
+    filtered = filtered.filter(d => d.dealPrice >= min && d.dealPrice <= max);
+  }
+  if (discountValue > 0) {
+    filtered = filtered.filter(d => discountPercent(d.oldPrice, d.dealPrice) >= discountValue);
+  }
+  render(filtered);
+}
+
+if (priceRangeFilter) priceRangeFilter.addEventListener("change", filterDeals);
+if (discountFilter) discountFilter.addEventListener("change", filterDeals);
+const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
 
 const deals = [
@@ -202,15 +220,91 @@ function syncDynamicBrandUI() {
   }).join("");
 }
 
+
+function getDealBadge(item) {
+  // Example logic for badge selection (could be randomized or based on data)
+  if (item.dealPrice <= 100) return { label: "Lightning Deal", class: "badge-lightning" };
+  if (item.brand === "AstraTech" || item.brand === "Vector") return { label: "Best Seller", class: "badge-best" };
+  if (item.oldPrice - item.dealPrice > 300) return { label: "Limited Stock", class: "badge-limited" };
+  return { label: "Deal", class: "badge-default" };
+}
+
+
+// Helper: get expiry timestamp (simulate 6 hours from page load for demo)
+
+// Helper: get stock/claim progress (simulate for demo)
+function getDealProgress(item) {
+  // In a real app, this would come from backend/deal data
+  // Simulate: 30-90% claimed, staggered by id
+  return 30 + ((item.id * 17) % 61); // 30-90%
+}
+function getDealExpiry(item) {
+  // In real app, this would come from backend/deal data
+  if (!item._expiry) {
+    // Simulate expiry 6 hours from now for all deals
+    item._expiry = Date.now() + 6 * 60 * 60 * 1000 + (item.id * 10000); // Stagger for demo
+  }
+  return item._expiry;
+}
+
+function formatCountdown(ms) {
+  if (ms <= 0) return "Expired";
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function getPrimeTag(item) {
+  // Example: show Prime for Vector and Nimbus brands, Featured for lowest price
+  if (item.brand === "Vector" || item.brand === "Nimbus") {
+    return '<span class="prime-tag">Prime</span>';
+  }
+  if (item.dealPrice === Math.min(...deals.map(d => d.dealPrice))) {
+    return '<span class="featured-tag">Featured</span>';
+  }
+  return '';
+}
+
+function getDealRating(item) {
+  // Demo: random rating and review count per deal
+  const rating = (Math.round((4 + (item.id % 10) * 0.13) * 10) / 10).toFixed(1); // 4.0-5.0
+  const reviews = 50 + (item.id * 13) % 350;
+  return { rating, reviews };
+}
+
+function renderStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating - full >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return '<span class="deal-stars">' +
+    '★'.repeat(full) +
+    (half ? '½' : '') +
+    '<span class="deal-star-empty">' + '☆'.repeat(empty) + '</span>' +
+    '</span>';
+}
+
 function dealCard(item) {
+  // Preview overlay content (demo) -- only show on keyboard focus, not on hover
+  const preview = `<div class='deal-preview-overlay' tabindex="-1"><strong>Quick View:</strong> ${escapeHtml(item.name)}<br>Brand: ${escapeHtml(item.brand)}<br>Discount: ${discountPercent(item.oldPrice, item.dealPrice)}%</div>`;
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
   const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
   const discount = discountPercent(item.oldPrice, item.dealPrice);
 
+  const badge = getDealBadge(item);
+  const expiry = getDealExpiry(item);
+  const countdownId = `deal-timer-${item.id}`;
+  const progress = getDealProgress(item);
+  const { rating, reviews } = getDealRating(item);
+
   return `
-    <article class="deal-card">
+    <article class="deal-card" tabindex="0" onmouseenter="this.querySelector('.deal-preview-overlay').style.opacity=0" onmouseleave="this.querySelector('.deal-preview-overlay').style.opacity=''">
+      <div class="deal-badge ${badge.class}">${badge.label}</div>
+      ${getPrimeTag(item)}
       <a class="deal-card-media" href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
+        ${preview}
       </a>
       <div class="content">
         <p class="card-kicker">Limited time deal</p>
@@ -219,6 +313,17 @@ function dealCard(item) {
         <div class="price-row">
           <span class="price-now">${escapeHtml(money(item.dealPrice))}</span>
           <span class="discount">${escapeHtml(String(discount))}% off</span>
+        </div>
+        <div class="deal-rating-row">
+          ${renderStars(rating)}
+          <span class="deal-rating-label">${rating} | ${reviews} reviews</span>
+        </div>
+        <div class="deal-timer-row"><span class="deal-timer-label">Ends in:</span> <span class="deal-timer" id="${countdownId}">${formatCountdown(expiry - Date.now())}</span></div>
+        <div class="deal-progress-row">
+          <div class="deal-progress-bar-bg">
+            <div class="deal-progress-bar" style="width:${progress}%"></div>
+          </div>
+          <span class="deal-progress-label">${progress}% claimed</span>
         </div>
         <p class="price-meta">M.R.P. <s>${escapeHtml(money(item.oldPrice))}</s> - grab it before the next refresh.</p>
         <p class="delivery-note">FREE delivery by tomorrow on eligible pincodes</p>
@@ -229,6 +334,49 @@ function dealCard(item) {
       </div>
     </article>
   `;
+}
+
+// Timer update loop
+function startDealCountdowns() {
+  setInterval(() => {
+    deals.forEach((item) => {
+      const expiry = getDealExpiry(item);
+      const el = document.getElementById(`deal-timer-${item.id}`);
+      if (el) {
+        el.textContent = formatCountdown(expiry - Date.now());
+      }
+    });
+  }, 1000);
+}
+
+
+// Start countdowns after DOM loads
+function setupDealCardActions() {
+  // Quick Add to Cart feedback
+  dealsGrid?.addEventListener("click", function (e) {
+    const btn = e.target.closest(".add-btn");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    if (!id) return;
+    addToCart(id);
+    btn.disabled = true;
+    const oldText = btn.textContent;
+    btn.textContent = "Added!";
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    }, 2000);
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    startDealCountdowns();
+    setupDealCardActions();
+  });
+} else {
+  startDealCountdowns();
+  setupDealCardActions();
 }
 
 function render(list) {

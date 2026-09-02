@@ -8,46 +8,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
   <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="orders.css" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="top-nav top-nav--search">
-      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
-        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
-        <span class="brand-sub">orders</span>
-      </a>
-      <form class="header-search" action="products.html" method="get" data-shared-search="1">
-        <span class="search-context">All Products</span>
-        <div class="search-input-wrap">
-          <input type="search" name="q" placeholder="Search products" aria-label="Search products" />
-        </div>
-        <button type="submit">Search</button>
-      </form>
-      <div class="header-actions">
-        <a href="auth.html">Account</a>
-        <a href="cart.html">Cart</a>
-        <a href="products.html">Products</a>
-      </div>
-    </nav>
-    <nav class="sub-nav">
-      <a href="index.html">Home</a>
-      <a href="todays-deals.html">Today's Deals</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="mega-store.html">Mega Store</a>
-      <a href="terms-and-conditions.html">Customer Service</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="orders-main">
     <section class="orders-head">
@@ -88,6 +59,7 @@
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
+  <script src="header.js"></script>
 </html>
 
 

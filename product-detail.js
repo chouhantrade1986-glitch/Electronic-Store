@@ -831,7 +831,10 @@ function cacheCatalogProducts(productsList) {
 function syncCartCount() {
   const cartMap = loadCartMap();
   const total = Object.values(cartMap).reduce((sum, qty) => sum + Number(qty || 0), 0);
-  cartCount.textContent = String(total);
+  const cartCountEl = document.getElementById("cartCount");
+  if (cartCountEl) {
+    cartCountEl.textContent = String(total);
+  }
 }
 
 function syncWishlistButton(productId) {

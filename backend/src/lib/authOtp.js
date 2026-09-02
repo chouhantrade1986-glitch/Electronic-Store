@@ -107,8 +107,14 @@ function ensureAuthOtpCollection(db) {
   if (!Array.isArray(db.authOtpChallenges)) {
     db.authOtpChallenges = [];
   }
+  const THIRTY_DAYS_AGO = Date.now() - 30 * 24 * 60 * 60 * 1000;
   db.authOtpChallenges = db.authOtpChallenges
     .map((item) => normalizeAuthOtpChallenge(item))
+    .filter((item) => {
+      // Only keep OTPs created within the last 30 days
+      const createdAt = new Date(item.createdAt).getTime();
+      return Number.isFinite(createdAt) && createdAt >= THIRTY_DAYS_AGO;
+    })
     .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
     .slice(0, AUTH_OTP_HISTORY_LIMIT);
   return db.authOtpChallenges;

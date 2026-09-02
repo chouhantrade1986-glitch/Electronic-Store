@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --ink: #111827;
   --navy: #0046be;
   --navy-light: #003087;
@@ -32,12 +32,13 @@ a {
 
 .top-nav {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 180px auto 1fr auto;
   gap: 12px;
   align-items: center;
-  padding: 10px 16px;
+  padding: 10px 18px;
   background: var(--navy);
-  color: #f8fafc;
+  color: var(--white);
+  border-bottom: 1px solid #3a4553;
 }
 
 .brand {

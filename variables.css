@@ -1,0 +1,102 @@
+/* Amazon Theme Variables */
+:root {
+  /* Colors */
+  --amazon-ink: #0f1111;
+  --amazon-navy: #131921;
+  --amazon-navy-light: #232f3e;
+  --amazon-blue: #007185;
+  --amazon-orange: #ffd814;
+  --amazon-orange-border: #fcd200;
+  --amazon-orange-hover: #f7ca00;
+  
+  --amazon-light: #F3F3F3;
+  --amazon-dark: #131921;
+
+  /* Grays */
+  --amazon-gray-100: #eaeded;
+  --amazon-gray-200: #d5d9d9;
+  --amazon-gray-600: #565959;
+  --amazon-white: #ffffff;
+
+  /* Text Colors */
+  --amazon-text-body: #37475a;
+  --amazon-text-muted: #475569;
+  --amazon-text-subtle: #565959;
+
+  /* Surfaces & Accents */
+  --amazon-surface-soft: #f7fafa;
+  --amazon-brand-amber: #ff9900;
+  --amazon-price-red: #B12704;
+  --amazon-rating-orange: #FFA500;
+
+  /* UI Elements */
+  --amazon-radius-card: 8px;
+  --amazon-shadow-card-rest: 0 1px 2px rgba(15, 17, 17, 0.12);
+  --amazon-shadow-card-hover: 0 2px 8px rgba(15, 17, 17, 0.16);
+  --amazon-btn-radius: 8px;
+  --amazon-btn-height: 40px;
+  --amazon-btn-padding-x: 14px;
+
+  /* Fonts */
+  --amazon-font-base: "Barlow", sans-serif;
+  --amazon-font-modern: 'Inter', 'Roboto', 'Barlow', Arial, sans-serif;
+  
+  /* Fallback aliases to map existing variables to new ones */
+  --ink: var(--amazon-ink);
+  --navy: var(--amazon-navy);
+  --navy-light: var(--amazon-navy-light);
+  --blue: var(--amazon-blue);
+  --orange: var(--amazon-orange);
+  --orange-border: var(--amazon-orange-border);
+  --orange-hover: var(--amazon-orange-hover);
+  --gray-100: var(--amazon-gray-100);
+  --gray-200: var(--amazon-gray-200);
+  --gray-600: var(--amazon-gray-600);
+  --white: var(--amazon-white);
+  --text-body: var(--amazon-text-body);
+  --text-muted: var(--amazon-text-muted);
+  --text-subtle: var(--amazon-text-subtle);
+  --surface-soft: var(--amazon-surface-soft);
+  --brand-amber: var(--amazon-brand-amber);
+  --radius-card: var(--amazon-radius-card);
+  --shadow-card-rest: var(--amazon-shadow-card-rest);
+  --shadow-card-hover: var(--amazon-shadow-card-hover);
+  --btn-radius: var(--amazon-btn-radius);
+  --btn-height: var(--amazon-btn-height);
+  --btn-padding-x: var(--amazon-btn-padding-x);
+  --font-base: var(--amazon-font-base);
+  --font-modern: var(--amazon-font-modern);
+}
+
+body.dark-mode {
+    --amazon-ink: #f0f0f0;
+    --amazon-navy: #1a1a1a;
+    --amazon-navy-light: #2c2c2c;
+    --amazon-blue: #4da6ff;
+    --amazon-orange: #ffb700;
+    --amazon-orange-border: #cc9900;
+    --amazon-orange-hover: #ffcc33;
+    
+    --amazon-light: #222;
+    --amazon-dark: #f0f0f0;
+  
+    /* Grays */
+    --amazon-gray-100: #333;
+    --amazon-gray-200: #555;
+    --amazon-gray-600: #aaa;
+    --amazon-white: #121212;
+  
+    /* Text Colors */
+    --amazon-text-body: #ccc;
+    --amazon-text-muted: #999;
+    --amazon-text-subtle: #888;
+  
+    /* Surfaces & Accents */
+    --amazon-surface-soft: #2a2a2a;
+    --amazon-brand-amber: #ff9900;
+    --amazon-price-red: #ff6666;
+    --amazon-rating-orange: #ffcc00;
+    
+    --amazon-shadow-card-rest: 0 1px 2px rgba(255, 255, 255, 0.05);
+    --amazon-shadow-card-hover: 0 2px 8px rgba(255, 255, 255, 0.1);
+}

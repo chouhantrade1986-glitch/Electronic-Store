@@ -24,41 +24,7 @@ a {
   text-decoration: none;
 }
 
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  background: var(--navy);
-  color: var(--white);
-}
-
-.brand {
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.header-links {
-  display: flex;
-  gap: 14px;
-  font-weight: 600;
-  align-items: center;
-}
-
-#cartCount {
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  background: var(--orange);
-  color: var(--navy);
-  border-radius: 999px;
-  margin-left: 4px;
-}
+/* Legacy page-header and brand styles removed - now using shared header.js component with styles.css */
 
 .store-main {
   width: min(1200px, 92vw);
@@ -229,10 +195,7 @@ a {
 }
 
 @media (max-width: 720px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  /* Legacy page-header responsive styles removed - now using shared header.js component */
 
   .header-links {
     justify-content: space-between;

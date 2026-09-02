@@ -23,48 +23,13 @@ body {
     linear-gradient(180deg, #f5f9ff 0%, var(--brand-bg) 100%);
 }
 
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: rgba(12, 24, 46, 0.96);
-  box-shadow: 0 12px 32px rgba(2, 6, 23, 0.2);
-}
-
-.brand {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.8rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-}
-
-.header-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.header-links a {
-  color: #f8fbff;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.header-links a[aria-current="page"] {
-  color: var(--brand-accent);
-}
+/* Legacy page-header and brand styles removed - now using shared header.js component with styles.css */
 
 .brands-main {
-  width: min(1180px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 2rem 0 4rem;
+  width: min(1260px, 94vw);
+  margin: 18px auto 24px;
+  display: grid;
+  gap: 12px;
 }
 
 .brand-intro,
@@ -486,10 +451,7 @@ body {
 }
 
 @media (max-width: 720px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  /* Legacy page-header responsive styles removed - now using shared header.js component */
 
   .header-links {
     justify-content: flex-start;

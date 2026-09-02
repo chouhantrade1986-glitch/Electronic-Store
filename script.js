@@ -1,4 +1,4 @@
-﻿const products = [
+const products = [
   { id: 1, name: "AstraBook Pro 14", brand: "AstraTech", segment: "b2c", category: "laptop", price: 999, rating: 4.6, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
   { id: 2, name: "Nimbus Phone X", brand: "Nimbus", segment: "b2c", category: "mobile", price: 749, rating: 4.5, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
   { id: 3, name: "Pulse ANC Headphones", brand: "PulseWave", segment: "b2c", category: "audio", price: 179, rating: 4.4, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" },
@@ -2703,3 +2703,34 @@ initLocationPicker();
 syncCartCount();
 renderHomeSurface();
 void fetchHomeProductsFromApi();
+
+// Back to Top Button Functionality for Homepage
+const backToTopHomeBtn = document.getElementById('backToTopHome');
+if (backToTopHomeBtn) {
+  backToTopHomeBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Style the button
+  backToTopHomeBtn.style.cssText = `
+    background: none;
+    border: none;
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  `;
+  
+  backToTopHomeBtn.addEventListener('mouseenter', () => {
+    backToTopHomeBtn.style.color = '#ffd814';
+  });
+  
+  backToTopHomeBtn.addEventListener('mouseleave', () => {
+    backToTopHomeBtn.style.color = '#f8fafc';
+  });
+}

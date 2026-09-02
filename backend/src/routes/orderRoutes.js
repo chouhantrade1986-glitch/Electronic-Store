@@ -39,6 +39,7 @@ const {
 } = require("../lib/afterSalesCases");
 const { logInfo } = require("../lib/logger");
 
+const piiEncryption = require("../middleware/piiEncryption");
 const router = express.Router();
 
 function createHttpError(status, message) {
@@ -95,7 +96,7 @@ function withOrderAfterSales(db, order) {
   };
 }
 
-router.post("/", requireAuth, async (req, res) => {
+router.post("/", requireAuth, piiEncryption, async (req, res) => {
   const {
     items = [],
     shippingAddress = "",
@@ -207,7 +208,7 @@ router.get("/:id", requireAuth, (req, res) => {
   return res.json(withOrderAfterSales(db, order));
 });
 
-router.post("/:id/after-sales", requireAuth, async (req, res) => {
+router.post("/:id/after-sales", requireAuth, piiEncryption, async (req, res) => {
   try {
     const committed = await withWriteLock(async () => {
       const currentDb = readDb();
@@ -259,7 +260,7 @@ router.post("/:id/after-sales", requireAuth, async (req, res) => {
   }
 });
 
-router.patch("/:id/cancel", requireAuth, async (req, res) => {
+router.patch("/:id/cancel", requireAuth, piiEncryption, async (req, res) => {
   const db = readDb();
   const order = db.orders.find((item) => item.id === req.params.id);
   if (!order) {

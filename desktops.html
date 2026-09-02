@@ -3,62 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart Computers</title>
+  
+  <!-- Primary Meta Tags -->
+  <title>Desktop Computers - ElectroMart | Best Prices on PCs & Components</title>
+  <meta name="description" content="Shop desktop computers, barebone systems, branded PCs, and components at ElectroMart. Find the perfect desktop for gaming, work, and home use." />
+  <meta name="keywords" content="desktop computers, PC, barebone systems, branded desktops, gaming PC, office computer" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Desktop Computers - ElectroMart" />
+  <meta property="og:description" content="Shop desktop computers and components at best prices" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://electromart.in/desktops.html" />
+  
+  <!-- Structured Data - ItemList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Desktop Computers",
+    "description": "Browse our collection of desktop computers and components",
+    "url": "https://electromart.in/desktops.html"
+  }
+  </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
   <link rel="stylesheet" href="desktops.css?v=20260315b" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314a" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="page-header">
-    <nav class="top-nav">
-      <a href="index.html" class="brand">electro<span>mart</span><small>computers</small></a>
-      <form class="search-shell" role="search">
-        <input id="searchInput" type="search" placeholder="Search computers by model, processor, purpose" aria-label="Search computers" />
-      </form>
-      <div class="top-links">
-      <a href="products.html">Products</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="pc-builder.html">PC Builder</a>
-      <a href="auth.html">Account</a>
-      <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-
-    <nav class="sub-nav" aria-label="Computer navigation">
-      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
-      <a href="desktops.html" class="active">Computers</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="pc-builder.html">PC Builder</a>
-      <a href="products.html">All Products</a>
-      <a href="todays-deals.html">Deals</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="terms-and-conditions.html">Terms</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-    <section id="deptMenu" class="dept-menu" aria-label="Computer departments">
-      <a href="barebone-desktop.html">Barebone Desktop</a>
-      <a href="branded-desktop.html">Branded Desktop</a>
-      <a href="cpu-processor.html">CPU (Processor)</a>
-      <a href="cpu-fan.html">CPU (Fan)</a>
-      <a href="motherboard.html">Motherboard</a>
-      <a href="desktop-ram-memory.html">Desktop RAM (Memory)</a>
-      <a href="graphics-card-gpu.html">Graphics Card (GPU)</a>
-      <a href="cabinet.html">Cabinet</a>
-      <a href="cabinet-fan.html">Cabinet Fan</a>
-      <a href="power-supply-smps.html">Power Supply (SMPS)</a>
-      <a href="ups-ups-batteries.html">UPS | UPS Batteries</a>
-    </section>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="desktop-main">
     <section class="hero">
@@ -76,8 +59,16 @@
       <aside class="panel refine-panel">
         <div class="panel-head">
           <h2>Refine Results</h2>
-          <p>Amazon style filters</p>
+          <p>Refine filters</p>
         </div>
+        <div class="search-bar-wrap" aria-label="Category search">
+          <div class="search-bar">
+            <input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search desktop computers" aria-label="Search desktops" />
+            <button id="searchSubmit" type="button" aria-label="Search">Search</button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Search suggestions" hidden></div>
+        </div>
+
         <section class="filters" aria-label="Filter computers">
           <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
             <p class="brand-filter-empty">Loading brands...</p>
@@ -87,6 +78,7 @@
             <option value="b2c">B2C</option>
             <option value="b2b">B2B</option>
           </select>
+
           <select id="processorFilter" aria-label="Filter processor">
             <option value="all">All Processors</option>
             <option value="intel">Intel</option>
@@ -146,6 +138,7 @@
   <script src="desktops.js?v=20260315b"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="header.js"></script>
 </body>
 </html>
 

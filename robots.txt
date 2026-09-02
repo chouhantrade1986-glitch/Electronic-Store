@@ -1,0 +1,19 @@
+# ElectroMart robots.txt
+# Allow all crawlers to access the site
+User-agent: *
+Allow: /
+
+# Block admin/backend/internal-only paths from being indexed
+Disallow: /backend/
+Disallow: /admin.html
+Disallow: /admin-dashboard.html
+Disallow: /qa-
+Disallow: /tools/
+Disallow: /scripts/
+Disallow: /imports/
+Disallow: /release-evidence/
+Disallow: /qa-reports/
+Disallow: /qa-baselines/
+
+# Sitemap location
+Sitemap: https://06037w7q-5500.inc1.devtunnels.ms/sitemap.xml

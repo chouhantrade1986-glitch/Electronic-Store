@@ -266,12 +266,18 @@ function ensureSeedData() {
   }
 
   ensureAdminAuditTrailCollection(db);
-
+  // (Removed misplaced filter/slice lines above)
   if (!Array.isArray(db.paymentWebhookEvents)) {
     db.paymentWebhookEvents = [];
   } else {
+    // Prune events older than 90 days, then trim to last 200
+    const NINETY_DAYS_AGO = Date.now() - 90 * 24 * 60 * 60 * 1000;
     db.paymentWebhookEvents = db.paymentWebhookEvents
-      .filter((item) => item && typeof item === "object")
+      .filter((item) => {
+        if (!item || typeof item !== "object") return false;
+        const createdAt = new Date(item.createdAt || item.timestamp || item.eventTime || item.time || 0).getTime();
+        return Number.isFinite(createdAt) && createdAt >= NINETY_DAYS_AGO;
+      })
       .slice(-200);
   }
 

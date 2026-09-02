@@ -1,426 +1,629 @@
+<!-- User Avatar & Greeting Enhancement -->
+<!-- Collapsible Sidebar Sections Enhancement -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart</title>
+  
+  <!-- Primary Meta Tags -->
+  <title>ElectroMart - India's Best Electronics Store | Desktops, Laptops, Components</title>
+  <meta name="description" content="Shop the latest desktops, laptops, PC components, and electronics at ElectroMart. Best prices, fast delivery, and expert support for all your tech needs." />
+  <meta name="keywords" content="electronics, computers, desktops, laptops, PC components, CPU, GPU, motherboard, RAM, online shopping, India" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/" />
+  <meta property="og:title" content="ElectroMart - India's Best Electronics Store" />
+  <meta property="og:description" content="Shop desktops, laptops, PC components & electronics. Best prices & fast delivery." />
+  <meta property="og:image" content="https://electromart.in/og-image.jpg" />
+  <meta property="og:site_name" content="ElectroMart" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/" />
+  <meta property="twitter:title" content="ElectroMart - India's Best Electronics Store" />
+  <meta property="twitter:description" content="Shop desktops, laptops, PC components & electronics. Best prices & fast delivery." />
+  <meta property="twitter:image" content="https://electromart.in/twitter-image.jpg" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://electromart.in/" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="msapplication-TileColor" content="#0f172a" />
+  
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ElectroMart",
+    "url": "https://electromart.in",
+    "logo": "https://electromart.in/logo.png",
+    "description": "India's premier electronics store offering desktops, laptops, and PC components",
+    "sameAs": [
+      "https://facebook.com/electromart",
+      "https://twitter.com/electromart",
+      "https://instagram.com/electromart"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-XXX-XXX-XXXX",
+      "contactType": "customer service",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  }
+  </script>
+  
+  <!-- Structured Data - WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "ElectroMart",
+    "url": "https://electromart.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://electromart.in/products.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260315d" />
-
+  <link rel="stylesheet" href="styles.css?v=20260424a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-<body>
-  <header class="site-header">
-    <nav class="top-nav">
-      <a href="#" class="brand logo-block" aria-label="ElectroMart home">
-        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
-        <span class="brand-sub">.in</span>
-      </a>
-      <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
-        <span data-i18n="header.deliverTo">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
-      </button>
-      <div class="search-stack">
-        <form id="searchForm" class="search-form" role="search">
-          <select id="categoryFilter" aria-label="Filter category">
-            <option id="catAll" value="all">All Catalogue</option>
-            <option id="catComputer" value="computer">Computers</option>
-            <option id="catLaptop" value="laptop">Laptops</option>
-            <option id="catPrinter" value="printer">Printers</option>
-            <option id="catMobile" value="mobile">Mobiles</option>
-            <option id="catAudio" value="audio">Audio</option>
-            <option id="catAccessory" value="accessory">Accessories</option>
-          </select>
-          <div class="search-input-wrap">
-            <input id="searchInput" type="search" list="smartKeywordList" placeholder="Search electronics" aria-label="Search products" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
-            <div id="searchSuggestions" class="search-suggestions" hidden></div>
-          </div>
-          <datalist id="smartKeywordList">
-            <option value="gaming"></option>
-            <option value="budget"></option>
-            <option value="premium"></option>
-            <option value="audio"></option>
-            <option value="mobile"></option>
-            <option value="laptop"></option>
-            <option value="under 500"></option>
-            <option value="above 1000"></option>
-          </datalist>
-          <button type="submit" data-i18n="header.searchBtn">Search</button>
-        </form>
-        <div class="search-trust-strip" aria-label="Search benefits">
-          <span>Top Deals live</span>
-          <span>Fast delivery</span>
-          <span>GST invoicing available</span>
-        </div>
-      </div>
-      <div class="nav-actions">
-        <div class="lang-wrap">
-          <label for="languageSelect" class="lang-label" data-i18n="header.language">Language</label>
-          <select id="languageSelect" class="language-select" aria-label="Select language">
-            <option value="en">EN</option>
-            <option value="hi">HI</option>
-            <option value="ta">TA</option>
-            <option value="te">TE</option>
-            <option value="kn">KN</option>
-            <option value="ml">ML</option>
-            <option value="bn">BN</option>
-            <option value="mr">MR</option>
-          </select>
-        </div>
-        <a href="auth.html" class="account-link nav-action-card">
-          <span>Hello, sign in</span>
-          <strong data-i18n="nav.account">Account</strong>
-        </a>
-        <a href="orders.html" class="orders-link nav-action-card">
-          <span>Returns</span>
-          <strong data-i18n="nav.orders">Orders</strong>
-        </a>
-        <a href="wishlist.html" class="orders-link nav-action-card">
-          <span>Saved</span>
-          <strong>Wishlist</strong>
-        </a>
-        <a href="cart.html" class="cart-link"><span data-i18n="nav.cart">Cart</span> <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-
-    <nav class="category-nav" aria-label="Main categories">
-      <button id="megaTrigger" class="mega-trigger" type="button" aria-expanded="false" aria-controls="megaMenu" data-i18n="category.allDepartments">All Departments</button>
-      <a href="todays-deals.html" data-i18n="category.deals">Today's Deals</a>
-      <a href="best-sellers.html" data-i18n="category.bestSellers">Best Sellers</a>
-      <a href="products.html">Products</a>
-      <a href="pc-builder.html">PC Builder</a>
-      <a href="mega-store.html" data-i18n="category.stores">Stores</a>
-      <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
-      <div class="category-more">
-        <button id="quickLinksTrigger" class="quick-links-trigger" type="button" aria-expanded="false" aria-controls="quickLinksMenu" data-i18n="category.more">More</button>
-        <div id="quickLinksMenu" class="quick-links-menu" aria-label="More links">
-          <div class="quick-links-grid">
-            <a href="#" data-i18n="category.gaming">Gaming</a>
-            <a href="#" data-i18n="category.homeOffice">Home Office</a>
-            <a href="creator-studio.html">Creator Studio</a>
-            <a href="#" data-i18n="category.smartHome">Smart Home</a>
-            <a href="#" data-i18n="category.giftCards">Gift Cards</a>
-            <a href="wishlist.html">Wishlist</a>
-          </div>
-          <div class="legal-links" data-menu-managed-container="1">
-            <a href="terms-and-conditions.html">Terms</a>
-            <a href="shipping-policy.html">Shipping</a>
-            <a href="refund-policy.html">Refund</a>
-            <a href="accessibility-statement.html">Accessibility</a>
-            <a href="faq.html">FAQ</a>
-            <a href="review.html">Review</a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <section id="megaMenu" class="mega-menu" aria-label="Departments menu">
-      <div class="mega-column">
-        <h3 data-i18n="mega.computers">Computers</h3>
-        <a href="laptop.html" data-i18n="mega.laptops">Laptops</a>
-        <a href="desktops.html" data-i18n="mega.desktops">Desktops</a>
-        <a href="#" data-i18n="mega.monitors">Monitors</a>
-        <a href="#" data-i18n="mega.storage">Storage</a>
-      </div>
-      <div class="mega-column">
-        <h3 data-i18n="mega.mobile">Mobile</h3>
-        <a href="#" data-i18n="mega.smartphones">Smartphones</a>
-        <a href="#" data-i18n="mega.tablets">Tablets</a>
-        <a href="#" data-i18n="mega.wearables">Wearables</a>
-        <a href="#" data-i18n="mega.chargers">Chargers</a>
-      </div>
-      <div class="mega-column">
-        <h3 data-i18n="mega.audioVideo">Audio & Video</h3>
-        <a href="#" data-i18n="mega.headphones">Headphones</a>
-        <a href="#" data-i18n="mega.speakers">Speakers</a>
-        <a href="#" data-i18n="mega.tvTheater">TV & Home Theater</a>
-        <a href="#" data-i18n="mega.microphones">Microphones</a>
-      </div>
-      <div class="mega-highlight">
-        <p data-i18n="mega.featuredDeal">Featured Deal</p>
-        <h3 data-i18n="mega.productTitle">Wireless Earbuds Pro</h3>
-        <span data-i18n="mega.priceNow">Now Rs. 79</span>
-        <a href="#" data-i18n="mega.seeOffer">See offer</a>
-      </div>
-    </section>
-  </header>
+   <body>
+    <div id="headerContainer"></div>
 
   <main>
-    <section class="hero" aria-label="Featured promotions">
-      <div class="hero-layout">
-        <aside class="hero-departments" aria-label="Shop by department">
-          <div class="hero-departments-head">
-            <h2>Shop by Department</h2>
-            <a href="products.html">See all</a>
+
+        <!-- Hero/Banner Section Start -->
+        <section class="hero-section" style="margin-bottom:2.5rem;">
+          <div id="heroCarousel" class="hero-carousel hero-carousel--amazon">
+            <div class="hero-slide active fade-in" data-hero-variant="night" style="background: linear-gradient(135deg, #232f3e 0%, #131921 100%); color: white;">
+              <div class="hero-content">
+                <h1 style="color: #ff9900; font-size: 3rem;">Great Indian Festival</h1>
+                <p>Up to 70% Off on Electronics & Accessories. 10% Instant Discount on HDFC Bank Cards.</p>
+                <a href="todays-deals.html">Shop Deals Now</a>
+              </div>
+              <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80" alt="Great Indian Festival Sale" />
+            </div>
+            <div class="hero-slide fade-in" data-hero-variant="sunrise" style="background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%); color: white;">
+              <div class="hero-content">
+                <h1 style="color: #fbbf24;">New Launch: Nimbus X Pro</h1>
+                <p>Experience the ultimate flagship. Pre-order now and get free ANC headphones worth ₹4,999.</p>
+                <a href="products.html?search=nimbus">Pre-order Now</a>
+              </div>
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80" alt="Nimbus X Pro Launch" />
+            </div>
+            <div class="hero-slide fade-in" data-hero-variant="ocean" style="background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white;">
+              <div class="hero-content">
+                <h1 style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Blockbuster TV Deals</h1>
+                <p>Upgrade your home entertainment. Up to 50% Off on 4K Smart TVs.</p>
+                <a href="products.html?search=tv">Explore TVs</a>
+              </div>
+              <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&q=80" alt="Blockbuster TV Deals" />
+            </div>
+            <button class="hero-prev" aria-label="Previous banner">&#10094;</button>
+            <button class="hero-next" aria-label="Next banner">&#10095;</button>
+            <div class="hero-indicators" id="heroIndicators"></div>
           </div>
-          <ul class="hero-department-list">
-            <li><a href="laptop.html"><span>Laptops</span><small>Work and gaming</small></a></li>
-            <li><a href="desktops.html"><span>Desktops</span><small>Performance builds</small></a></li>
-            <li><a href="printer.html"><span>Printers</span><small>Home and office</small></a></li>
-            <li><a href="pc-builder.html"><span>PC Builder</span><small>Custom configuration</small></a></li>
-            <li><a href="best-sellers.html"><span>Best Sellers</span><small>Most purchased now</small></a></li>
-            <li><a href="todays-deals.html"><span>Today's Deals</span><small>Limited-time offers</small></a></li>
-          </ul>
-          <a class="hero-department-offer" href="products.html">Bulk and B2B sourcing available</a>
-        </aside>
-        <div class="hero-slider-shell">
-          <div id="heroTrack" class="hero-track"></div>
-          <button id="heroPrev" class="hero-nav prev" type="button" aria-label="Previous featured slide">&#10094;</button>
-          <button id="heroNext" class="hero-nav next" type="button" aria-label="Next featured slide">&#10095;</button>
-          <div id="heroDots" class="hero-dots" aria-label="Hero slider navigation"></div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <section id="homeMomentumBand" class="home-momentum-band" aria-label="Shopping highlights"></section>
+            <!-- Amazon-style Top Picks (Direct Product Listings) -->
+            <section class="top-picks-section" style="max-width: 1400px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2.5rem;">
+              <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-left: 0.5rem;">Top Picks for You</h2>
+              <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: flex-start;">
+                
+                <!-- Product 1 -->
+                <div style="flex: 1 1 200px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
+                  <a href="laptop.html" style="text-decoration: none; color: inherit;">
+                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=250&q=80" alt="ProBook 15" style="width: 100%; height: 160px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.2rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ProBook 15" Laptop</h3>
+                    <div style="color: #e77600; font-size: 0.9rem; margin-bottom: 0.2rem;">⭐⭐⭐⭐⭐ <span style="color: #007185; font-size: 0.8rem;">(4,129)</span></div>
+                    <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <span style="font-size: 1.25rem; font-weight: 700; color: #0f1111;">₹64,990</span>
+                      <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">₹75,000</span>
+                    </div>
+                  </a>
+                  <button style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;">Add to Cart</button>
+                </div>
 
-    <section class="service-strip" aria-label="Key services">
-      <article class="service-item">
-        <strong>Free Delivery</strong>
-        <p>On eligible orders across India.</p>
-      </article>
-      <article class="service-item">
-        <strong>Secure Payments</strong>
-        <p>UPI, cards, net banking and COD.</p>
-      </article>
-      <article class="service-item">
-        <strong>Easy Returns</strong>
-        <p>Simple return and refund workflow.</p>
-      </article>
-      <article class="service-item">
-        <strong>Business Support</strong>
-        <p>Bulk quotes and GST invoices.</p>
-      </article>
-    </section>
+                <!-- Product 2 -->
+                <div style="flex: 1 1 200px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
+                  <a href="products.html?search=audio" style="text-decoration: none; color: inherit;">
+                    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=250&q=80" alt="Noise Cancelling Headphones" style="width: 100%; height: 160px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.2rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Aura ANC Headphones</h3>
+                    <div style="color: #e77600; font-size: 0.9rem; margin-bottom: 0.2rem;">⭐⭐⭐⭐½ <span style="color: #007185; font-size: 0.8rem;">(1,850)</span></div>
+                    <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <span style="font-size: 1.25rem; font-weight: 700; color: #0f1111;">₹4,499</span>
+                      <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">₹7,999</span>
+                    </div>
+                  </a>
+                  <button style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;">Add to Cart</button>
+                </div>
 
-    <section class="quick-grid-shell" aria-label="Shopping entry points">
-      <div class="quick-grid-head">
-        <div>
-          <p class="section-eyebrow">Shop faster</p>
-          <h2>Start with the strongest buying paths</h2>
-          <p class="section-subtitle">Jump straight into our highest-conversion categories, creator-focused setups, and quick-repeat shopping journeys.</p>
-        </div>
-        <span class="quick-grid-note">Live catalog, fast delivery, and creator-ready merchandising</span>
-      </div>
-      <div class="quick-grid">
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">Top laptops</span>
-        </div>
-        <h2>Top Picks in Laptops</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80" alt="Laptop deals" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=500&q=80" alt="Laptop discounts" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Work, gaming and creator-ready picks</span>
-          <a href="laptop.html" class="home-card-action">See more</a>
-        </div>
-      </article>
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">Everyday mobile</span>
-        </div>
-        <h2>Mobile Accessories</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80" alt="Phone offers" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?auto=format&fit=crop&w=500&q=80" alt="Mobile accessories" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Chargers, cases and fast-moving add-ons</span>
-          <a href="products.html" class="home-card-action">Explore all</a>
-        </div>
-      </article>
-      <article class="home-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Shop lane</p>
-          <span class="home-card-lane">High demand</span>
-        </div>
-        <h2>Gaming Essentials</h2>
-        <div class="home-card-grid">
-          <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=500&q=80" alt="Gaming laptop" loading="lazy" />
-          <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=500&q=80" alt="Gaming keyboard" loading="lazy" />
-        </div>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Popular accessories and performance picks</span>
-          <a href="best-sellers.html" class="home-card-action">Shop gaming</a>
-        </div>
-      </article>
-      <article class="home-card sign-card">
-        <div class="home-card__top">
-          <p class="home-card-kicker">Account benefits</p>
-          <span class="home-card-lane">Fast checkout</span>
-        </div>
-        <h2>Sign in for best experience</h2>
-        <p>Track orders, save addresses and get personalized recommendations.</p>
-        <div class="home-card-footer">
-          <span class="home-card-proof">Secure sign-in and repeat checkout</span>
-          <a href="auth.html" class="signin-btn">Sign in securely</a>
-        </div>
-      </article>
-      </div>
-    </section>
+                <!-- Product 3 -->
+                <div style="flex: 1 1 200px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
+                  <a href="products.html?search=watch" style="text-decoration: none; color: inherit;">
+                    <img src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=250&q=80" alt="Smartwatch 4" style="width: 100%; height: 160px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.2rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">FitTrack Pro Watch</h3>
+                    <div style="color: #e77600; font-size: 0.9rem; margin-bottom: 0.2rem;">⭐⭐⭐⭐ <span style="color: #007185; font-size: 0.8rem;">(5,622)</span></div>
+                    <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <span style="font-size: 1.25rem; font-weight: 700; color: #0f1111;">₹2,999</span>
+                      <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">₹5,999</span>
+                    </div>
+                  </a>
+                  <button style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;">Add to Cart</button>
+                </div>
+                
+                <!-- Product 4 -->
+                <div style="flex: 1 1 200px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
+                  <a href="products.html?search=mobile" style="text-decoration: none; color: inherit;">
+                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=250&q=80" alt="Smartphone" style="width: 100%; height: 160px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.2rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Nexus Phone 12</h3>
+                    <div style="color: #e77600; font-size: 0.9rem; margin-bottom: 0.2rem;">⭐⭐⭐⭐⭐ <span style="color: #007185; font-size: 0.8rem;">(12,045)</span></div>
+                    <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <span style="font-size: 1.25rem; font-weight: 700; color: #0f1111;">₹34,990</span>
+                      <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">₹45,000</span>
+                    </div>
+                  </a>
+                  <button style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;">Add to Cart</button>
+                </div>
 
-    <section class="category-rail" aria-label="Featured categories">
-      <div class="section-header section-header--stacked">
-        <div>
-          <h2>Featured Categories</h2>
-          <p class="section-subtitle">Jump into the strongest live collections across laptops, creator gear, and fast-moving deals.</p>
-        </div>
-        <a href="products.html" class="section-link">Browse all products</a>
-      </div>
-      <p id="categoryRailMeta" class="category-rail-meta">Loading featured category highlights...</p>
-      <div id="categoryRailGrid" class="category-rail-grid">
-        <a href="desktops.html" class="category-rail-card">
-          <span class="category-rail-card__top">
-            <span class="category-rail-card__kicker">Featured lane</span>
-            <span class="category-rail-card__lane">Live now</span>
-          </span>
-          <strong>Computers</strong>
-          <small>Performance builds and desktop-ready picks</small>
-          <span class="category-rail-card__meta">
-            <span>From live catalog</span>
-            <span>High confidence</span>
-          </span>
-          <span class="category-rail-card__cta">Shop now</span>
-        </a>
-      </div>
-    </section>
+              </div>
+            </section>
 
-    <section id="creatorStudioSection" class="collection-spotlight" aria-label="Creator Studio collection" hidden>
-      <div class="collection-spotlight-copy">
-        <p class="collection-spotlight-eyebrow">New collection</p>
-        <h2>Creator Studio</h2>
-        <p>Build a smarter editing, streaming, and design desk with hand-picked laptops, audio gear, docks, and display tools.</p>
-        <ul class="collection-spotlight-list">
-          <li>Color-accurate displays and workstation-ready laptops</li>
-          <li>USB microphones, capture gear, and sharper desk accessories</li>
-          <li>Fast setup paths for streaming, editing, and design workflows</li>
-        </ul>
-        <div id="creatorStudioStats" class="collection-spotlight-stats"></div>
-        <div class="collection-spotlight-actions">
-          <a href="creator-studio.html" class="collection-spotlight-primary">Explore Creator Studio</a>
-          <a href="products.html?search=creator" class="collection-spotlight-secondary">Search creator-ready gear</a>
-        </div>
-      </div>
-      <div class="collection-spotlight-panel">
-        <div class="section-header">
-          <h3>Featured setup picks</h3>
-          <p id="creatorStudioMeta">Loading creator picks</p>
-        </div>
-        <div id="creatorStudioGrid" class="product-grid"></div>
-      </div>
-    </section>
+        <!-- Amazon-style Deals Section -->
+        <section class="deal-strip" aria-label="Deals">
+          <div class="deal-strip-head" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div class="deal-kicker" style="color: #cc0c39; font-weight: 700; text-transform: uppercase; font-size: 0.85rem;">Deal of the Day</div>
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2 style="margin: 0;">Today's Hot Deals</h2>
+                <div id="liveDealTimer" class="countdown-timer"></div>
+              </div>
+            </div>
+            <div class="deal-strip-actions">
+              <a class="deal-strip-link" href="todays-deals.html" style="color: #007185; text-decoration: none; font-weight: 500;">See all deals</a>
+            </div>
+          </div>
+          <div id="homeDealsGrid" class="amz-deal-strip-row" aria-label="Deal products" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none;">
+            <!-- Filled by inline script below -->
+          </div>
+        </section>
 
-    <section class="deal-strip" aria-label="Today's deals">
-      <div class="deal-strip-head">
-        <div>
-          <p class="section-eyebrow">Fast-moving discounts</p>
-          <h2>Today&apos;s Deals</h2>
-          <p class="deal-strip-subtitle">Live picks ranked by savings, ratings, and fast-delivery confidence.</p>
-        </div>
-        <div class="deal-strip-actions">
-          <span class="deal-strip-note">Bank offers and EMI on select picks</span>
-          <a href="todays-deals.html" class="deal-strip-link">See all deals</a>
-        </div>
-      </div>
-      <div class="deal-strip-row">
-        <a href="product-detail.html?id=3" class="deal-tile deal-tile--featured" aria-label="Open Headphones deal">
-          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" alt="Headphones deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Featured deal</small>
-            <h3>Audio offers built for quick checkout</h3>
-            <p class="deal-price-line"><span>Deal</span> Up to 40% off audio gear</p>
-            <small class="deal-price-meta">Live savings across headphones and creator audio picks</small>
-            <small class="deal-delivery-note">Fast delivery on selected featured stock</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=6" class="deal-tile" aria-label="Open Tablet deal">
-          <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80" alt="Tablet deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Tablet</small>
-            <h3>Tablet value picks under Rs. 30,000</h3>
-            <p class="deal-price-line"><span>Deal</span> Tablets under Rs. 30,000</p>
-            <small class="deal-price-meta">Strong value options for work, study, and travel</small>
-            <small class="deal-delivery-note">Extra bank offer live</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=4" class="deal-tile" aria-label="Open TV deal">
-          <img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=500&q=80" alt="TV deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">TV</small>
-            <h3>Smart TV offers this week</h3>
-            <p class="deal-price-line"><span>Deal</span> Smart TV offers this week</p>
-            <small class="deal-price-meta">Weekend viewing picks with screen-size variety</small>
-            <small class="deal-delivery-note">No-cost EMI available</small>
-          </span>
-        </a>
-        <a href="product-detail.html?id=8" class="deal-tile" aria-label="Open Speaker deal">
-          <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=500&q=80" alt="Speaker deal" loading="lazy" />
-          <span class="deal-copy">
-            <small class="deal-kicker">Audio</small>
-            <h3>Smart speakers starting Rs. 2,999</h3>
-            <p class="deal-price-line"><span>Deal</span> Smart speakers starting Rs. 2,999</p>
-            <small class="deal-price-meta">Compact picks for desks, rooms, and everyday music</small>
-            <small class="deal-delivery-note">Fast delivery eligible</small>
-          </span>
-        </a>
-      </div>
-    </section>
 
-    <section class="support-cta">
-      <div>
-        <h2>Need help with a business or custom setup?</h2>
-        <p>Talk to our support team for product guidance, GST billing and bulk purchase assistance.</p>
-      </div>
-      <a href="faq.html" class="support-cta-btn">Get Support</a>
-    </section>
+            <!-- Amazon-style Personalization & History -->
+            <section class="amz-dense-grid-container" style="max-width: 1400px; margin: 0 auto; padding: 0 1rem; margin-bottom: 1rem;">
+              <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; padding-left: 0.5rem;">Keep shopping for</h2>
+              <div style="display: flex; gap: 1rem; overflow-x: auto; padding: 0.5rem; scrollbar-width: none;">
+                <a href="laptop.html" style="flex: 0 0 150px; text-decoration: none; border: 1px solid #e3e6e6; border-radius: 4px; padding: 0.5rem; background: #fff;">
+                  <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=150&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Laptop">
+                  <span style="font-size: 0.85rem; color: #0f1111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Gaming Laptops</span>
+                </a>
+                <a href="products.html?search=mobile" style="flex: 0 0 150px; text-decoration: none; border: 1px solid #e3e6e6; border-radius: 4px; padding: 0.5rem; background: #fff;">
+                  <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Phone">
+                  <span style="font-size: 0.85rem; color: #0f1111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Smartphones & Accessories</span>
+                </a>
+                <a href="products.html?search=audio" style="flex: 0 0 150px; text-decoration: none; border: 1px solid #e3e6e6; border-radius: 4px; padding: 0.5rem; background: #fff;">
+                  <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Headphones">
+                  <span style="font-size: 0.85rem; color: #0f1111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Wireless Audio Devices</span>
+                </a>
+                <a href="products.html?search=watch" style="flex: 0 0 150px; text-decoration: none; border: 1px solid #e3e6e6; border-radius: 4px; padding: 0.5rem; background: #fff;">
+                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Watch">
+                  <span style="font-size: 0.85rem; color: #0f1111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Smartwatches</span>
+                </a>
+              </div>
+            </section>
 
-    <section class="new-arrivals-window" aria-label="Newly added products">
-      <div class="section-header">
-        <h2>Newly Added Products</h2>
-        <p id="newArrivalsMeta">Showing 0 products</p>
-      </div>
-      <p class="new-arrivals-subtitle">Latest products added from your admin dashboard will appear here automatically.</p>
-      <div id="newArrivalsGrid" class="product-grid"></div>
-    </section>
+            <!-- Amazon-style 4-in-1 Grid Section -->
+            <section class="amz-dense-grid-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; padding: 0 1rem; margin-bottom: 2rem;">
+              
+              <!-- Card 1: 4-in-1 Grid -->
+              <div class="amz-quad-card" style="background: #fff; padding: 0.75rem; border-radius: 0; box-shadow: none; display: flex; flex-direction: column;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f1111;">Gaming accessories</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem; flex-grow: 1;">
+                  <a href="products.html?search=headset" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Headsets">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Headsets</span>
+                  </a>
+                  <a href="products.html?search=keyboard" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Keyboards">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Keyboards</span>
+                  </a>
+                  <a href="products.html?search=mouse" style="text-decoration: none; text-align: left;">
+                    <img src="product-placeholder.svg" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Mice">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Computer mice</span>
+                  </a>
+                  <a href="products.html?search=chair" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Chairs">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Chairs</span>
+                  </a>
+                </div>
+                <a href="best-sellers.html" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">See more</a>
+              </div>
 
-    <section class="curated-showcase" aria-label="Top rated products">
-      <div class="section-header">
-        <h2>Top Rated Products</h2>
-        <a href="products.html" class="section-link">Browse all</a>
-      </div>
-      <div id="topRatedGrid" class="product-grid"></div>
-    </section>
+              <!-- Card 2: 4-in-1 Grid -->
+              <div class="amz-quad-card" style="background: #fff; padding: 0.75rem; border-radius: 0; box-shadow: none; display: flex; flex-direction: column;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f1111;">Refresh your space</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem; flex-grow: 1;">
+                  <a href="products.html?search=monitor" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Monitors">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Monitors</span>
+                  </a>
+                  <a href="products.html?search=storage" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1628557044797-f21a177c37ec?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Storage">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Storage</span>
+                  </a>
+                  <a href="products.html?search=printer" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Printers">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Printers</span>
+                  </a>
+                  <a href="products.html?search=router" style="text-decoration: none; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1544144433-d50aff500b91?w=150&q=80" style="width: 100%; height: 100px; object-fit: contain; margin-bottom: 0.25rem;" alt="Networking">
+                    <span style="font-size: 0.75rem; color: #0f1111;">Networking</span>
+                  </a>
+                </div>
+                <a href="products.html" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">See more</a>
+              </div>
 
-    <section class="curated-showcase" aria-label="Recommended products">
-      <div class="section-header">
-        <h2>Recommended For You</h2>
-        <a href="wishlist.html" class="section-link">View wishlist</a>
-      </div>
-      <div id="recommendedGrid" class="product-grid"></div>
-    </section>
+              <!-- Card 3: Single Feature Promo (Ecosystem Branding snippet) -->
+              <div class="amz-quad-card" style="background: #fff; padding: 0.75rem; border-radius: 0; box-shadow: none; display: flex; flex-direction: column;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f1111;">Discover ElectroMart Plus</h3>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                  <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300&q=80" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 0.5rem;" alt="ElectroMart Plus">
+                  <p style="font-size: 0.9rem; color: #0f1111; margin-bottom: 0.5rem;">Fast, free delivery on millions of items.</p>
+                </div>
+                <a href="#" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Explore Plus Benefits</a>
+              </div>
 
-    <section id="recentlyViewedSection" class="curated-showcase" aria-label="Recently viewed products" hidden>
-      <div class="section-header">
-        <h2>Recently Viewed</h2>
-        <a href="products.html" class="section-link">Keep shopping</a>
-      </div>
-      <div id="recentlyViewedGrid" class="product-grid"></div>
-    </section>
+              <!-- Card 4: Single Image Top Category -->
+              <div class="amz-quad-card" style="background: #fff; padding: 0.75rem; border-radius: 0; box-shadow: none; display: flex; flex-direction: column;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f1111;">Top Laptops for Creators</h3>
+                <div style="flex-grow: 1; display: flex; flex-direction: column;">
+                  <a href="laptop.html" style="text-decoration: none;">
+                    <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 0.5rem;" alt="Creator Laptops">
+                  </a>
+                </div>
+                <a href="laptop.html" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Shop Laptops</a>
+              </div>
 
-    <section id="stores" class="stores-section">
-      <div class="section-header">
-        <h2 data-i18n="stores.title">Our Stores</h2>
-        <p data-i18n="stores.subtitle">Visit a nearby ElectroMart location</p>
-      </div>
-      <div id="storeGrid" class="store-grid"></div>
-    </section>
+            </section>
+            
+
+            <!-- Why Shop With Us Section Start -->
+            <section class="why-shop-section" style="padding: 2.5rem 0 2rem 0; background: linear-gradient(90deg, #e0eafc 10%, #cfdef3 100%); margin-bottom: 2.5rem; border-radius: 1.5rem; box-shadow: 0 4px 24px rgba(44,83,100,0.08);">
+              <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 2.5rem; align-items: stretch; justify-content: space-between;">
+                <div style="flex: 1 1 200px; min-width: 180px; text-align: center;">
+                  <span style="font-size:2.2rem;">🚚</span>
+                  <h4>Fast Delivery</h4>
+                  <p>Get your orders delivered quickly across India.</p>
+                </div>
+                <div style="flex: 1 1 200px; min-width: 180px; text-align: center;">
+                  <span style="font-size:2.2rem;">🔒</span>
+                  <h4>Secure Payments</h4>
+                  <p>UPI, cards, net banking, and COD supported.</p>
+                </div>
+                <div style="flex: 1 1 200px; min-width: 180px; text-align: center;">
+                  <span style="font-size:2.2rem;">🔄</span>
+                  <h4>Easy Returns</h4>
+                  <p>Simple return and refund workflow for peace of mind.</p>
+                </div>
+                <div style="flex: 1 1 200px; min-width: 180px; text-align: center;">
+                  <span style="font-size:2.2rem;">💼</span>
+                  <h4>Business Support</h4>
+                  <p>Bulk quotes, GST invoices, and dedicated support.</p>
+                </div>
+              </div>
+            </section>
+            <!-- Why Shop With Us Section End -->
+            <!-- Amazon-style Recommendations Section -->
+            <section class="recommendations-section" style="padding: 2.5rem 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+              <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                <h2 style="margin-bottom: 2rem;">Recommended for You</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+                  <div style="flex: 1 1 250px; min-width: 200px; background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; backdrop-filter: blur(10px);">
+                    <img src='https://images.unsplash.com/photo-1583394838336-acd977736f90?w=200&q=80' alt='Gaming Laptop' style='width: 100%; border-radius: 0.5rem; margin-bottom: 1rem;'>
+                    <h3>Gaming Laptops</h3>
+                    <p>High-performance laptops for gamers</p>
+                    <a href='laptop.html' style='color: #ffd700; text-decoration: none; font-weight: bold;'>Explore</a>
+                  </div>
+                  <div style="flex: 1 1 250px; min-width: 200px; background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; backdrop-filter: blur(10px);">
+                    <img src='https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=200&q=80' alt='Wireless Headphones' style='width: 100%; border-radius: 0.5rem; margin-bottom: 1rem;'>
+                    <h3>Wireless Audio</h3>
+                    <p>Premium sound quality on the go</p>
+                    <a href='products.html?search=audio' style='color: #ffd700; text-decoration: none; font-weight: bold;'>Explore</a>
+                  </div>
+                  <div style="flex: 1 1 250px; min-width: 200px; background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; backdrop-filter: blur(10px);">
+                    <img src='https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&q=80' alt='Smartphones' style='width: 100%; border-radius: 0.5rem; margin-bottom: 1rem;'>
+                    <h3>Latest Smartphones</h3>
+                    <p>Cutting-edge mobile technology</p>
+                    <a href='products.html?search=mobile' style='color: #ffd700; text-decoration: none; font-weight: bold;'>Explore</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+        <style>
+                  /* Amazon-style homepage refinements */
+                  .featured-section, .why-shop-section, .testimonials-section, .newsletter-section {
+                    margin-left: auto;
+                    margin-right: auto;
+                    max-width: 1200px;
+                    border-radius: 1.2rem;
+                    box-shadow: 0 2px 12px rgba(44,83,100,0.08);
+                    margin-bottom: 2.5rem;
+                  }
+                  .featured-section > div, .why-shop-section > div, .testimonials-section > div {
+                    gap: 2rem;
+                  }
+                  .featured-section h3, .why-shop-section h4, .testimonials-section h2 {
+                    font-weight: 700;
+                    margin-bottom: 0.5rem;
+                  }
+                  .featured-section a, .why-shop-section a {
+                    color: #007185;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: color 0.2s;
+                  }
+                  .featured-section a:hover, .why-shop-section a:hover {
+                    color: #c7511f;
+                  }
+                  .featured-section div[style*='background: #fff'], .testimonials-section div[style*='background: #fff'] {
+                    border: 1px solid #e3e6e6;
+                    box-shadow: 0 1px 4px rgba(44,83,100,0.06);
+                  }
+                  .newsletter-section input[type='email'] {
+                    border: 1px solid #e3e6e6;
+                    background: #f8f9fa;
+                  }
+                  .newsletter-section button {
+                    background: #ffd814;
+                    color: #111;
+                    border: 1px solid #fcd200;
+                    font-weight: 700;
+                    transition: background 0.2s;
+                  }
+                  .newsletter-section button:hover {
+                    background: #f7ca00;
+                  }
+                  .site-footer {
+                    background: #232f3e;
+                    color: #fff;
+                    padding-top: 2.5rem;
+                    border-top: 1px solid #37475a;
+                  }
+                  .footer-columns {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 2.5rem;
+                    justify-content: space-between;
+                    padding-bottom: 2rem;
+                  }
+                  .footer-columns h4 {
+                    color: #fff;
+                    font-size: 1.1rem;
+                    margin-bottom: 1rem;
+                  }
+                  .footer-columns a {
+                    color: #ddd;
+                    text-decoration: none;
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    font-size: 1rem;
+                    transition: color 0.2s;
+                  }
+                  .footer-columns a:hover {
+                    color: #ffd814;
+                  }
+                  .footer-top {
+                    background: #37475a;
+                    text-align: center;
+                    padding: 1rem 0;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    color: #fff;
+                    letter-spacing: 0.5px;
+                  }
+                  .copyright {
+                    text-align: center;
+                    color: #bbb;
+                    font-size: 0.95rem;
+                    padding-bottom: 1.5rem;
+                  }
+                  @media (max-width: 900px) {
+                    .footer-columns {
+                      flex-direction: column;
+                      gap: 1.5rem;
+                    }
+                    .featured-section > div, .why-shop-section > div, .testimonials-section > div {
+                      flex-direction: column;
+                      gap: 1.5rem;
+                    }
+                  }
+            .hero-indicators { position: absolute; left: 50%; bottom: 1.2rem; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 3; }
+            .hero-indicators .dot { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.6); border: 2px solid #fbbf24; cursor: pointer; transition: background 0.2s, border 0.2s; }
+            .hero-indicators .dot.active { background: #fbbf24; border-color: #fff; }
+            .fade-in { animation: fadeIn 0.7s; }
+          .hero-carousel { position: relative; overflow: hidden; border-radius: 1.5rem; box-shadow: 0 8px 32px rgba(44,83,100,0.18); }
+          .hero-slide { display: none; align-items: center; justify-content: space-between; padding: 2.5rem 2rem; min-height: 260px; }
+          .hero-slide.active { display: flex; animation: fadeIn 0.7s; }
+          .hero-content { flex: 1 1 400px; min-width: 260px; padding-right: 2rem; padding-left: 4rem; z-index: 2; position: relative; }
+          .hero-content h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1.2rem; letter-spacing: -1px; line-height: 1.1; }
+          .hero-content p { font-size: 1.2rem; margin-bottom: 1.5rem; font-weight: 600; }
+          .hero-content a { display: inline-block; background: #fbbf24; color: #1e293b; font-weight: 700; padding: 0.8rem 2rem; border-radius: 2rem; text-decoration: none; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(251,191,36,0.12); margin-top: 0.5rem; transition: background 0.2s; }
+          .hero-content a:hover { background: #ffe066; }
+          .hero-slide img { flex: 1 1 400px; min-width: 260px; max-width: 400px; border-radius: 1.5rem; box-shadow: 0 8px 32px rgba(44,83,100,0.18); background: #fff; min-height: 220px; object-fit: cover; margin-left: 2rem; }
+          .hero-prev, .hero-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(30,41,59,0.85); color: #fff; border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; width: 3.5rem; height: 3.5rem; font-size: 1.8rem; cursor: pointer; z-index: 2; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+          .hero-prev { left: 1rem; }
+          .hero-next { right: 1rem; }
+          .hero-prev:hover, .hero-next:hover { background: #fbbf24; color: #222; }
+          .add-to-cart-btn:hover { background: #f7ca00 !important; box-shadow: 0 2px 5px rgba(15,17,17,0.15); transform: translateY(-1px); }
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          @media (max-width: 900px) { .hero-slide, .hero-slide.active { flex-direction: column; text-align: center; padding: 2rem 1rem; } .hero-content { padding-right: 0; padding-left: 0; } .hero-slide img { margin-left: 0; margin-top: 1.5rem; } }
+          .site-header { position: sticky; top: 0; z-index: 1000; }
+        </style>
+        <script>
+          (function() {
+            const slides = document.querySelectorAll('.hero-slide');
+            const prevBtn = document.querySelector('.hero-prev');
+            const nextBtn = document.querySelector('.hero-next');
+            const indicators = document.getElementById('heroIndicators');
+            let current = 0;
+            let timer = null;
+
+            // Create indicators
+            function renderIndicators() {
+              indicators.innerHTML = '';
+              slides.forEach((_, i) => {
+                const dot = document.createElement('span');
+                dot.className = 'dot' + (i === current ? ' active' : '');
+                dot.addEventListener('click', () => { showSlide(i); stopAuto(); startAuto(); });
+                indicators.appendChild(dot);
+              });
+            }
+
+            function showSlide(idx) {
+              slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === idx);
+                if (i === idx) {
+                  slide.classList.add('fade-in');
+                } else {
+                  slide.classList.remove('fade-in');
+                }
+              });
+              current = idx;
+              renderIndicators();
+            }
+            function nextSlide() {
+              showSlide((current + 1) % slides.length);
+            }
+            function prevSlide() {
+              showSlide((current - 1 + slides.length) % slides.length);
+            }
+            function startAuto() {
+              timer = setInterval(nextSlide, 4000);
+            }
+            function stopAuto() {
+              clearInterval(timer);
+            }
+            prevBtn.addEventListener('click', () => { prevSlide(); stopAuto(); startAuto(); });
+            nextBtn.addEventListener('click', () => { nextSlide(); stopAuto(); startAuto(); });
+            showSlide(0);
+            startAuto();
+          })();
+        </script>
+        <!-- Hero/Banner Section End -->
+
+        <script>
+          (function() {
+            // Simple homepage deal cards (uses same demo data as products.js fallbacks)
+            const deals = [
+              { id: 'd1', name: 'Vector Gaming Laptop', image: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&q=80', rating: 4.8, price: 64990, oldPrice: 85000, discount: 24, badge: 'Deal of the Day', cta: 'Add to Cart', claimed: 85 },
+              { id: 'd2', name: 'AstraBook Pro 14"', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80', rating: 4.6, price: 49990, oldPrice: 65000, discount: 23, badge: 'Top Deal', cta: 'Add to Cart', claimed: 60 },
+              { id: 'd3', name: 'Nimbus Phone X', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80', rating: 4.5, price: 29990, oldPrice: 39990, discount: 25, badge: 'Deal of the Day', cta: 'Add to Cart', claimed: 90 },
+              { id: 'd4', name: 'Pulse ANC Headphones', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80', rating: 4.4, price: 3499, oldPrice: 7999, discount: 56, badge: '', cta: 'Add to Cart', claimed: 45 }
+            ];
+
+            const grid = document.getElementById('homeDealsGrid');
+            if (!grid) return;
+
+            function moneyINR(n) {
+              try { return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n); } catch { return '₹' + n; }
+            }
+
+            grid.innerHTML = deals.map((d, i) => `
+              <div style="flex: 0 0 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 4px; padding: 1rem; position: relative; display: flex; flex-direction: column;">
+                ${d.badge ? `<div style="position: absolute; top: 10px; left: 10px; background: #cc0c39; color: white; padding: 4px 8px; font-size: 0.75rem; font-weight: bold; border-radius: 2px; z-index: 1;">${d.badge}</div>` : ''}
+                <a href="products.html?search=${encodeURIComponent(d.name)}" style="text-decoration: none; color: inherit; flex-grow: 1; display: flex; flex-direction: column;">
+                  <img src="${d.image}" alt="${d.name}" style="width: 100%; height: 150px; object-fit: contain; margin-bottom: 1rem;" loading="lazy" />
+                  
+                  <!-- Urgency Progress Bar -->
+                  <div style="margin: 0.5rem 0; width: 100%; background: #e3e6e6; border-radius: 4px; height: 8px; overflow: hidden;">
+                    <div style="width: ${d.claimed}%; background: #cc0c39; height: 100%;"></div>
+                  </div>
+                  <div style="font-size: 0.75rem; color: #565959; margin-bottom: 0.5rem;">${d.claimed}% Claimed</div>
+
+                  <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <span style="background: #cc0c39; color: white; padding: 2px 6px; border-radius: 2px; font-size: 0.8rem; font-weight: bold;">${d.discount}% off</span>
+                    <span style="color: #cc0c39; font-size: 0.8rem; font-weight: 700;">Limited time deal</span>
+                  </div>
+                  <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <span style="font-size: 1.25rem; font-weight: 700; color: #0f1111;">${moneyINR(d.price)}</span>
+                    <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">M.R.P.: ${moneyINR(d.oldPrice)}</span>
+                  </div>
+                  <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.5rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${d.name}</h3>
+                  <div id="claimProgress-${i}" data-claim-progress="${Math.floor(Math.random() * 40) + 60}"></div>
+                </a>
+                <button style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500; margin-top: auto;">${d.cta}</button>
+              </div>
+            `).join('');
+
+            // Initialize countdown timer (ends at midnight today)
+            const now = new Date();
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            if (window.AmazonUI && window.AmazonUI.CountdownTimer) {
+              new window.AmazonUI.CountdownTimer('liveDealTimer', endOfDay);
+            }
+
+            // Initialize progress bars
+            setTimeout(() => {
+              document.querySelectorAll('[data-claim-progress]').forEach(el => {
+                const percentage = parseInt(el.dataset.claimProgress);
+                if (window.AmazonUI && window.AmazonUI.ClaimProgressBar) {
+                  new window.AmazonUI.ClaimProgressBar(el.id, percentage);
+                }
+              });
+            }, 100);
+          })();
+        </script>
+
+
+        <!-- Amazon-style Recently Viewed Section -->
+            <section class="recommendations-section" style="padding: 2.5rem 0; background: #fff; border-top: 1px solid #e3e6e6;">
+              <div style="max-width: 1400px; margin: 0 auto; padding: 0 1rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #0f1111;">Your browsing history</h2>
+                <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none;">
+                  <a href="laptop.html" style="flex: 0 0 160px; text-decoration: none; color: inherit; display: flex; flex-direction: column; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=160&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="ProBook 15">
+                    <span style="color: #007185; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">ProBook 15" Laptop</span>
+                    <span style="color: #b12704; font-size: 0.9rem; font-weight: 700;">₹64,990</span>
+                  </a>
+                  <a href="products.html?search=audio" style="flex: 0 0 160px; text-decoration: none; color: inherit; display: flex; flex-direction: column; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=160&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Headphones">
+                    <span style="color: #007185; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">Aura ANC Headphones</span>
+                    <span style="color: #b12704; font-size: 0.9rem; font-weight: 700;">₹4,499</span>
+                  </a>
+                  <a href="products.html?search=watch" style="flex: 0 0 160px; text-decoration: none; color: inherit; display: flex; flex-direction: column; text-align: left;">
+                    <img src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=160&q=80" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="Watch">
+                    <span style="color: #007185; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;">FitTrack Pro Watch</span>
+                    <span style="color: #b12704; font-size: 0.9rem; font-weight: 700;">₹2,999</span>
+                  </a>
+                </div>
+              </div>
+            </section>
+
+    <!-- Removed duplicate and legacy homepage sections for a clean Amazon-style layout -->
   </main>
+
 
   <div id="locationModal" class="location-modal" role="dialog" aria-modal="true" aria-labelledby="locationTitle" hidden>
     <div class="location-modal__backdrop" data-close-location-modal></div>
@@ -475,39 +678,77 @@
 
   <footer class="site-footer">
     <div class="footer-top">
-      <h3 data-i18n="footer.backToTop">Back to top</h3>
+      <button id="backToTopHome" class="back-to-top-link" type="button">Back to top</button>
     </div>
     <div class="footer-columns">
       <div>
-        <h4 data-i18n="footer.getToKnowUs">Get to Know Us</h4>
-        <a href="#" data-i18n="footer.about">About</a>
-        <a href="#" data-i18n="footer.careers">Careers</a>
-        <a href="#" data-i18n="footer.press">Press</a>
+        <h4>Get to Know Us</h4>
+        <a href="#">About ElectroMart</a>
+        <a href="#">Careers</a>
+        <a href="#">Press Releases</a>
+        <a href="#">ElectroMart Cares</a>
       </div>
       <div>
-        <h4 data-i18n="footer.makeMoney">Make Money with Us</h4>
-        <a href="#" data-i18n="footer.sellProducts">Sell Products</a>
-        <a href="#" data-i18n="footer.affiliate">Become an Affiliate</a>
-        <a href="#" data-i18n="footer.advertise">Advertise</a>
+        <h4>Connect with Us</h4>
+        <a href="#">Facebook</a>
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">YouTube</a>
       </div>
       <div>
-        <h4 data-i18n="footer.help">Help</h4>
-        <a href="auth.html" data-i18n="footer.yourAccount">Your Account</a>
-        <a href="shipping-policy.html" data-i18n="footer.shippingRates">Shipping Rates</a>
-        <a href="refund-policy.html" data-i18n="footer.returns">Returns</a>
-        <a href="wishlist.html">Wishlist</a>
-        <a href="terms-and-conditions.html">Terms & Conditions</a>
-        <a href="accessibility-statement.html">Accessibility Statement</a>
-        <a href="faq.html">FAQ</a>
-        <a href="review.html">Review</a>
+        <h4>Make Money with Us</h4>
+        <a href="#">Sell on ElectroMart</a>
+        <a href="#">Become an Affiliate</a>
+        <a href="#">Fulfilment by ElectroMart</a>
+        <a href="#">Advertise Your Products</a>
+      </div>
+      <div>
+        <h4>Let Us Help You</h4>
+        <a href="account.html">Your Account</a>
+        <a href="orders.html">Your Orders</a>
+        <a href="shipping-policy.html">Shipping Rates & Policies</a>
+        <a href="refund-policy.html">Returns & Replacements</a>
+        <a href="faq.html">Help</a>
+      </div>
+      <div style="flex: 1 1 200px; min-width: 250px;">
+        <h4>Stay Updated</h4>
+        <p style="color: #ddd; font-size: 0.9rem; margin-bottom: 0.5rem;">Subscribe for exclusive deals</p>
+        <form style="display: flex; gap: 0.5rem;">
+          <input type="email" placeholder="Your email" required style="padding: 0.5rem; border-radius: 4px; border: none; flex-grow: 1; min-width: 0;">
+          <button type="submit" style="padding: 0.5rem 1rem; border-radius: 4px; border: none; background: #ffd814; font-weight: bold; cursor: pointer; color: #111;">Subscribe</button>
+        </form>
       </div>
     </div>
-    <p class="copyright" data-i18n="footer.copyright">Copyright 2026 ElectroMart clone experience</p>
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="footer-logo">
+          <span>electro<span style="color:#ffe000">mart</span></span>
+        </div>
+        <div class="footer-selectors">
+          <select>
+            <option>English</option>
+            <option>Hindi</option>
+          </select>
+          <select>
+            <option>INR - Indian Rupee</option>
+            <option>USD - US Dollar</option>
+          </select>
+          <select>
+            <option>🇮🇳 India</option>
+            <option>🇺🇸 United States</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <p class="copyright">© 1996-2026, ElectroMart.com, Inc. or its affiliates</p>
   </footer>
 
+  <script src="header.js"></script>
   <script src="script.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+
 </body>
 </html>
 

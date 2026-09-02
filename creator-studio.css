@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: light;
   --studio-bg: #eef4fb;
   --studio-ink: #142132;
@@ -23,26 +23,12 @@ body {
   color: var(--studio-ink);
 }
 
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: rgba(16, 23, 35, 0.96);
-  color: #fff;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-}
+/* Legacy page-header and brand styles removed - now using shared header.js component with styles.css */
 
-.brand {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
+.studio-main {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
 }
 
 .header-links {
@@ -605,10 +591,7 @@ body {
 }
 
 @media (max-width: 720px) {
-  .page-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+  /* Legacy page-header responsive styles removed - now using shared header.js component */
 
   .header-links {
     width: 100%;

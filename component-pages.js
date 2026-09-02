@@ -139,9 +139,13 @@ function saveCartMap(cartMap) {
 }
 
 function syncCartCount() {
+  if (!cartCount) {
+    return;
+  }
   const total = Object.values(loadCartMap()).reduce((sum, qty) => sum + Number(qty || 0), 0);
   cartCount.textContent = String(total);
 }
+
 
 function escapeHtml(value) {
   return String(value || "")
@@ -500,11 +504,20 @@ function getActiveListingFilters() {
 }
 
 function applyFilters() {
-  const query = String(searchInput.value || "").trim().toLowerCase();
+  const query = String(searchInput?.value || "").trim().toLowerCase();
   syncDynamicBrandUI();
   const selectedBrands = getSelectedBrands();
-  const segment = String(segmentFilter.value || "all");
-  const sortValue = String(sortFilter.value || "relevance");
+  const segment = String(segmentFilter?.value || "all");
+  const sortValue = String(sortFilter?.value || "relevance");
+
+
+
+  // If base inventory is empty, show empty state.
+  if (!Array.isArray(pageItems) || !pageItems.length) {
+    render([]);
+    filterChipController?.update();
+    return;
+  }
 
   const filtered = pageItems.filter((item) => {
     const text = `${item.name} ${item.brand} ${item.spec}`.toLowerCase();
@@ -514,23 +527,31 @@ function applyFilters() {
     return queryMatch && brandMatch && segmentMatch;
   });
 
-  render(sortItems(filtered, sortValue));
+  // Robust UX: if filters eliminate everything, recover to show unfiltered list.
+  // This prevents pages like barebone-desktop.html showing "Showing 0 products"
+  // while fallback inventory exists.
+  const shouldRecover = filtered.length === 0 && pageItems.length > 0;
+  const safeList = shouldRecover ? pageItems : filtered;
+
+  render(sortItems(safeList, sortValue));
   filterChipController?.update();
 }
+
 
 pageTitle.textContent = pageConfig.title;
 pageHeadline.textContent = pageConfig.headline;
 pageSubtitle.textContent = pageConfig.subtitle;
 
-searchInput.addEventListener("input", applyFilters);
-segmentFilter.addEventListener("change", applyFilters);
-sortFilter.addEventListener("change", applyFilters);
+searchInput?.addEventListener("input", applyFilters);
+segmentFilter?.addEventListener("change", applyFilters);
+sortFilter?.addEventListener("change", applyFilters);
 ensureBrandFilterHost();
 brandFilterList?.addEventListener("change", (event) => {
   if (event.target.closest(".brand-filter")) {
     applyFilters();
   }
 });
+
 
 document.addEventListener("click", (event) => {
   if (!event.target.classList.contains("add-btn")) {

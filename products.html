@@ -3,188 +3,362 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart Products</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="products.css?v=20260315a" />
-  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
-  <script src="android-compat.js?v=20260410a"></script>
+  <title>All Products - ElectroMart | Shop Electronics Online</title>
+  <meta name="description" content="Browse all electronics products at ElectroMart. Laptops, desktops, mobiles, audio devices and accessories with best prices." />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260603a" />
+  <link rel="stylesheet" href="products.css?v=20260607b" />
+  <link rel="stylesheet" href="android-compat.css" />
 </head>
 <body>
-  <header class="site-header">
-    <nav class="top-nav">
-      <a href="index.html" class="brand">electro<span>mart</span><small>all products</small></a>
-      <form id="searchForm" class="search-form" role="search">
-        <select id="searchCatalogSelect" class="search-context-select" aria-label="Browse catalogue">
-          <option value="all">All Catalogue</option>
-          <option value="computer">Computers</option>
-          <option value="laptop">Laptops</option>
-          <option value="printer">Printers</option>
-          <option value="mobile">Mobiles</option>
-          <option value="audio">Audio</option>
-          <option value="accessory">Accessories</option>
-        </select>
-        <div class="search-input-wrap">
-          <input id="searchInput" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off" />
-          <div id="searchSuggestions" class="search-suggestions" hidden></div>
-        </div>
-        <button type="submit">Search</button>
-      </form>
-      <div class="header-links" aria-label="Account and links">
-        <a href="auth.html">Account</a>
-        <a href="orders.html">Orders</a>
-        <a href="wishlist.html">Wishlist</a>
-        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-    <nav class="sub-nav" aria-label="Quick links">
-      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
+  <div id="headerContainer"></div>
+
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="breadcrumb-container">
       <a href="index.html">Home</a>
-      <a href="products.html" class="active">All Products</a>
-      <a href="brands.html">Brands</a>
-      <a href="todays-deals.html">Today's Deals</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="wishlist.html">Wishlist</a>
-      <a href="mega-store.html">Mega Store</a>
-      <a href="terms-and-conditions.html">Customer Service</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-    <section id="deptMenu" class="dept-menu" aria-label="All departments">
-      <a href="desktops.html">Computers</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="printer.html">Printers</a>
-      <a href="products.html?category=mobile">Mobiles</a>
-      <a href="products.html?category=audio">Audio</a>
-      <a href="products.html?category=accessory">Accessories</a>
-      <a href="pc-builder.html">PC Builder</a>
-      <a href="todays-deals.html">Today's Deals</a>
-    </section>
-  </header>
+      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-current">All Products</span>
+    </div>
+  </nav>
 
   <main class="products-main">
-    <p class="breadcrumbs">Electronics &gt; All Products</p>
-    <section class="results-layout">
-      <aside class="filters-panel" aria-label="Filters">
-        <h2>Filters</h2>
-        <div class="filter-actions">
-          <button id="resetFiltersBtn" type="button" class="reset-btn">Reset Filters</button>
+    <div class="results-layout">
+      <!-- Enhanced Filter Sidebar -->
+      <aside class="filters-panel refine-panel">
+        <div class="panel-head">
+          <h2>Filters</h2>
+          <button id="clearAllFilters" class="clear-filters-btn" style="font-size: 12px; color: #007185; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear all</button>
         </div>
-        <div class="filter-group">
-          <h3>Brand</h3>
-          <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
-            <p class="brand-filter-empty">Loading brands...</p>
+        
+        <!-- Active Filters Display -->
+        <div id="activeFiltersContainer" class="active-filters-container" style="padding: 12px 16px; border-bottom: 1px solid #e7e7e7; display: none;">
+          <p style="margin: 0 0 8px; font-size: 12px; color: #565959; font-weight: 600;">Active filters:</p>
+          <div id="activeFiltersList" class="active-filters-list" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+        </div>
+
+        <div class="filters">
+          <!-- Category Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Category</h3>
+            <select id="categoryFilter" class="filter-select">
+              <option value="all">All Categories</option>
+              <option value="laptop">Laptops</option>
+              <option value="computer">Computers & Desktops</option>
+              <option value="mobile">Mobiles & Tablets</option>
+              <option value="audio">Audio & Headphones</option>
+              <option value="accessory">Accessories</option>
+            </select>
           </div>
-        </div>
-        <div class="filter-group">
-          <label for="segmentFilter">Segment</label>
-          <select id="segmentFilter" aria-label="Filter segment">
-            <option value="all">All Segments</option>
-            <option value="b2c">B2C</option>
-            <option value="b2b">B2B</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="categoryFilter">Category</label>
-          <select id="categoryFilter" aria-label="Filter category">
-            <option value="all">All Categories</option>
-            <option value="laptop">Laptops</option>
-            <option value="mobile">Mobiles</option>
-            <option value="audio">Audio</option>
-            <option value="accessory">Accessories</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <h3>Price</h3>
-          <label for="minPriceRange">Min Price</label>
-          <input id="minPriceRange" type="range" min="0" max="250000" value="0" />
-          <p class="range-meta">Min: <span id="minPriceValue">0</span></p>
-          <label for="maxPriceRange">Max Price</label>
-          <input id="maxPriceRange" type="range" min="0" max="250000" value="250000" />
-          <p class="range-meta">Max: <span id="maxPriceValue">250000</span></p>
-        </div>
-        <div class="filter-group">
-          <h3>Customer Rating</h3>
-          <div class="rating-filter" role="group" aria-label="Filter by rating">
-            <button type="button" class="rating-chip active" data-rating="0">All</button>
-            <button type="button" class="rating-chip" data-rating="4">4? & above</button>
-            <button type="button" class="rating-chip" data-rating="4.5">4.5? & above</button>
+
+          <!-- Price Range Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Price</h3>
+            <div class="price-range-filter">
+              <div class="price-display">
+                <span>₹<span id="minPriceValue">0</span></span>
+                <span> - </span>
+                <span>₹<span id="maxPriceValue">2,00,000</span></span>
+              </div>
+              <div class="price-sliders">
+                <input id="minPriceRange" type="range" min="0" max="200000" value="0" step="1000">
+                <input id="maxPriceRange" type="range" min="0" max="200000" value="200000" step="1000">
+              </div>
+              <div class="price-presets">
+                <button class="price-preset-btn" data-min="0" data-max="10000">Under ₹10,000</button>
+                <button class="price-preset-btn" data-min="10000" data-max="30000">₹10k - ₹30k</button>
+                <button class="price-preset-btn" data-min="30000" data-max="50000">₹30k - ₹50k</button>
+                <button class="price-preset-btn" data-min="50000" data-max="200000">Above ₹50k</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Brand Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Brand</h3>
+            <div class="brand-filter-list">
+              <label class="brand-checkbox">
+                <input type="checkbox" value="AstraTech" class="brand-filter">
+                <span>AstraTech</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Nimbus" class="brand-filter">
+                <span>Nimbus</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="PulseWave" class="brand-filter">
+                <span>PulseWave</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="TechPro" class="brand-filter">
+                <span>TechPro</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="DigitalMax" class="brand-filter">
+                <span>DigitalMax</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Rating Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Customer Rating</h3>
+            <div class="rating-filter-list">
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="4" class="rating-filter">
+                <span class="rating-stars">★★★★☆</span>
+                <span>& Up</span>
+              </label>
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="3" class="rating-filter">
+                <span class="rating-stars">★★★☆☆</span>
+                <span>& Up</span>
+              </label>
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="2" class="rating-filter">
+                <span class="rating-stars">★★☆☆☆</span>
+                <span>& Up</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Availability Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Availability</h3>
+            <div class="availability-filter">
+              <label class="availability-checkbox">
+                <input type="checkbox" id="inStockOnly" class="stock-filter">
+                <span>Include Out of Stock</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Delivery Options -->
+          <div class="filter-section">
+            <h3 class="filter-section-title">Delivery Options</h3>
+            <div class="delivery-filter">
+              <label class="delivery-checkbox">
+                <input type="checkbox" id="freeDelivery" class="delivery-filter">
+                <span>Free Delivery</span>
+              </label>
+              <label class="delivery-checkbox">
+                <input type="checkbox" id="nextDayDelivery" class="delivery-filter">
+                <span>Next Day Delivery</span>
+              </label>
+            </div>
           </div>
         </div>
       </aside>
+
+      <!-- Products Panel -->
       <section class="products-panel">
-        <div class="panel-head">
-          <h1 id="resultsHeading">Results</h1>
-          <div class="panel-controls">
-            <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 products</p>
-            <label for="sortFilter">Sort by:</label>
-            <select id="sortFilter">
-              <option value="relevance">Featured</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="rating-desc">Avg. Customer Review</option>
+        <div class="panel-head results-header">
+          <div class="results-info">
+            <h1>All Products</h1>
+            <p id="resultMeta">Loading products...</p>
+          </div>
+          
+          <div class="sort-filter-row">
+            <!-- Enhanced Search -->
+            <div class="product-search-enhanced">
+              <input type="text" id="productSearch" placeholder="Search in all products..." aria-label="Search products" />
+              <button id="searchBtn" aria-label="Search">🔍</button>
+            </div>
+            
+            <!-- Sort Options -->
+            <div class="sort-options">
+              <label for="sortSelect">Sort by:</label>
+              <select id="sortSelect">
+                <option value="relevance">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Avg. Customer Review</option>
+                <option value="newest">Newest Arrivals</option>
+                <option value="bestseller">Best Sellers</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle" style="padding: 12px 16px; border-bottom: 1px solid #e7e7e7; display: flex; justify-content: space-between; align-items: center;">
+          <div class="view-options">
+            <button class="view-btn active" data-view="grid" aria-label="Grid view">⊞ Grid</button>
+            <button class="view-btn" data-view="list" aria-label="List view">☰ List</button>
+          </div>
+          <div class="items-per-page">
+            <label for="itemsPerPage">Show:</label>
+            <select id="itemsPerPage">
+              <option value="20">20 per page</option>
+              <option value="40">40 per page</option>
+              <option value="60">60 per page</option>
             </select>
           </div>
         </div>
-        <p id="activeFilterMeta" class="active-filter-meta">Filters: None</p>
-        <div id="activeFilterChips" class="active-filter-chips" aria-label="Active filters" hidden></div>
-        <p id="filterChipFeedback" class="filter-chip-feedback" hidden></p>
-        <p id="filterLiveStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-        <div id="productsGrid" class="products-grid" role="region" aria-labelledby="resultsHeading" aria-busy="false"></div>
-        <div id="resultsFooter" class="results-footer" hidden>
-          <p id="resultsWindowMeta" class="results-window-meta" role="status" aria-live="polite" aria-atomic="true"></p>
-          <button id="loadMoreBtn" type="button" class="load-more-btn">Load More Products</button>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="products-grid">
+          <!-- Products will render here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none; text-align: center; padding: 48px 24px;">
+          <p style="font-size: 18px; color: #565959; margin-bottom: 16px;">No products found matching your filters.</p>
+          <button id="clearFiltersBtn" style="background: #ffd814; border: 1px solid #fcd200; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">Clear all filters</button>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination-container" style="display: flex; justify-content: center; gap: 8px; padding: 24px 0; margin-top: 24px; border-top: 1px solid #e7e7e7;">
+          <!-- Pagination buttons will be rendered here -->
         </div>
       </section>
-    </section>
+    </div>
   </main>
 
-  <div id="quickViewModal" class="quick-view-modal" role="dialog" aria-modal="true" aria-labelledby="quickViewTitle" hidden>
-    <div class="quick-view-backdrop" data-close-quick-view></div>
-    <section class="quick-view-panel">
-      <button id="quickViewClose" class="quick-view-close" type="button" aria-label="Close quick view">&times;</button>
-      <div class="quick-view-layout">
-        <div class="quick-view-media">
-          <img id="quickViewImage" src="" alt="" />
-        </div>
-        <div class="quick-view-copy">
-          <p id="quickViewEyebrow" class="quick-view-eyebrow"></p>
-          <h2 id="quickViewTitle"></h2>
-          <p id="quickViewRating" class="quick-view-rating"></p>
-          <p id="quickViewPrice" class="quick-view-price"></p>
-          <p id="quickViewMeta" class="quick-view-meta"></p>
-          <p id="quickViewDescription" class="quick-view-description"></p>
-          <div class="quick-view-actions">
-            <button id="quickViewAddBtn" class="add-btn" type="button">Add to Cart</button>
-            <button id="quickViewWishlistBtn" class="wishlist-btn" type="button">Save to Wishlist</button>
-            <a id="quickViewDetailsLink" href="products.html" class="view-link">Open full details</a>
-          </div>
+  <!-- Product Details Modal -->
+  <div id="productModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="">
+        <div class="modal-details">
+          <h2 id="modalTitle"></h2>
+          <div id="modalRating" class="rating"></div>
+          <div id="modalPrice" class="price"></div>
+          <p id="modalDescription">Detailed description of the product would go here. This includes specifications, features, and benefits.</p>
+          <button id="modalAddToCart">Add to Cart</button>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 
-  <script src="products.js?v=20260315q"></script>
-  <script src="menu-manager.js?v=20260313c"></script>
-  <script src="auth-state.js?v=20260313c"></script>
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top-btn" aria-label="Back to top" style="display: none;">
+    ↑ Top
+  </button>
+
+  <!-- Compare Products Bar -->
+  <div id="compareBar" class="compare-bar" style="display: none;">
+    <div class="compare-bar-content">
+      <span class="compare-icon">⚖️</span>
+      <span class="compare-text">
+        Comparing <strong id="compareCount">0</strong> items: 
+        <span id="compareItems"></span>
+      </span>
+      <a href="compare.html" class="compare-view-btn">View Comparison</a>
+      <button id="clearCompare" class="compare-clear-btn">Clear All</button>
+    </div>
+  </div>
+
+  <!-- Amazon-Style Quick View Side Drawer -->
+  <div class="quick-view-drawer-overlay" id="qvDrawerOverlay"></div>
+  <div class="quick-view-drawer" id="qvDrawer" role="dialog" aria-modal="true" aria-labelledby="qvProductName">
+    <div class="drawer-header">
+      <h3 class="drawer-title">Quick View</h3>
+      <button class="drawer-close" id="qvDrawerClose" type="button" aria-label="Close quick view">&times;</button>
+    </div>
+    <div class="drawer-content">
+      <!-- Product Image -->
+      <div class="qv-image-section">
+        <img id="qvImage" src="" alt="" />
+        <span class="qv-badge" id="qvBadge" style="display:none;"></span>
+      </div>
+
+      <!-- Product Details -->
+      <div class="qv-details-section">
+        <p class="qv-category" id="qvCategory"></p>
+        <h2 class="qv-product-name" id="qvProductName"></h2>
+
+        <!-- Rating -->
+        <div class="qv-rating">
+          <span class="stars" id="qvStars"></span>
+          <span class="rating-value" id="qvRatingValue"></span>
+          <span class="rating-count" id="qvRatingCount"></span>
+        </div>
+
+        <!-- Price -->
+        <div class="qv-price-section">
+          <div class="price-main">
+            <span class="price-symbol">&#8377;</span>
+            <span class="price-amount" id="qvPriceAmount"></span>
+          </div>
+          <div class="price-discount">
+            <span class="discount-percent" id="qvDiscountPercent" style="display:none;"></span>
+            <span class="price-mrp" id="qvMrp"></span>
+          </div>
+          <p class="price-savings" id="qvSavings" style="display:none;"></p>
+        </div>
+
+        <!-- Delivery Badges -->
+        <div class="qv-delivery-badges" id="qvDeliveryBadges">
+          <span class="prime-delivery-badge">&#x1F69A; Next-Day Delivery</span>
+          <span class="free-delivery-badge">&#x2714; FREE Delivery</span>
+        </div>
+
+        <div class="qv-delivery-promise">
+          <span class="delivery-icon">&#x1F4E6;</span>
+          <span class="delivery-text">Estimated delivery by Tomorrow, if ordered within 2 hrs</span>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="qv-trust-badges">
+          <span class="trust-item">7 Days Replacement</span>
+          <span class="trust-divider">|</span>
+          <span class="trust-item">Secure Payment</span>
+          <span class="trust-divider">|</span>
+          <span class="trust-item">Free Returns</span>
+        </div>
+
+        <!-- Product Features -->
+        <div class="qv-features-section" id="qvFeaturesSection" style="display:none;">
+          <h4 class="features-title">About this item</h4>
+          <ul class="features-list" id="qvFeaturesList"></ul>
+        </div>
+
+        <!-- Stock Status -->
+        <div class="qv-stock-status in-stock" id="qvStockStatus">In Stock</div>
+
+        <!-- Quantity Selector -->
+        <div class="qv-quantity-selector">
+          <label for="qvQuantity">Qty:</label>
+          <select class="quantity-dropdown" id="qvQuantity">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="qv-actions">
+          <button class="qv-add-to-cart-btn" id="qvAddToCart" type="button">Add to Cart</button>
+          <button class="qv-buy-now-btn" id="qvBuyNow" type="button">Buy Now</button>
+          <button class="qv-wishlist-btn" id="qvWishlist" type="button">&#x2661; Add to Wishlist</button>
+        </div>
+      </div>
+
+      <!-- Frequently Bought Together -->
+      <div class="qv-fbt-section" id="qvFbtSection" style="display:none;">
+        <h4 class="fbt-title">Frequently Bought Together</h4>
+        <div class="fbt-images-row" id="qvFbtImages"></div>
+        <div class="fbt-text-list" id="qvFbtList"></div>
+        <div class="fbt-total">
+          <span class="fbt-total-label" id="qvFbtTotalLabel">Total price (<strong id="qvFbtItemCount">0</strong> items):</span>
+          <strong id="qvFbtTotalAmount">&#8377;0</strong>
+        </div>
+        <button class="fbt-add-all-btn" id="qvFbtAddAll" type="button">Add all to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="header.js"></script>
+  <script src="products.js?v=20260607b"></script>
+  <script src="amazon-ui-enhancements.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -66,6 +66,7 @@ const {
   writeSqliteOrderPaymentCollections
 } = require("../lib/sqliteOrdersPayments");
 
+const piiEncryption = require("../middleware/piiEncryption");
 const router = express.Router();
 
 router.use(requireAuth, requireAdmin);
@@ -377,7 +378,7 @@ router.get("/after-sales", (req, res) => {
   });
 });
 
-router.post("/after-sales", (req, res) => {
+router.post("/after-sales", piiEncryption, (req, res) => {
   const db = readDb();
   ensureAfterSalesCollections(db);
   const orderId = String(req.body && req.body.orderId ? req.body.orderId : "").trim();
@@ -435,7 +436,7 @@ router.post("/after-sales", (req, res) => {
   });
 });
 
-router.patch("/after-sales/:id", async (req, res) => {
+router.patch("/after-sales/:id", piiEncryption, async (req, res) => {
   const requestedStatus = String(req.body && req.body.status ? req.body.status : "").trim().toLowerCase();
   const requestedTypeRaw = String(req.body && req.body.type ? req.body.type : "").trim().toLowerCase();
 
@@ -604,7 +605,7 @@ router.get("/phone-verification-automation", (req, res) => {
   return res.json(getPhoneVerificationAutomationSnapshot(db, Number(req.query.limit || 50)));
 });
 
-router.patch("/phone-verification-automation/settings", (req, res) => {
+router.patch("/phone-verification-automation/settings", piiEncryption, (req, res) => {
   const db = readDb();
   const currentSettings = ensurePhoneVerificationAutomationSettings(db);
   const channels = Array.isArray(req.body && req.body.channels) ? req.body.channels : [];
@@ -630,7 +631,7 @@ router.patch("/phone-verification-automation/settings", (req, res) => {
   });
 });
 
-router.post("/phone-verification-automation/run", async (req, res) => {
+router.post("/phone-verification-automation/run", piiEncryption, async (req, res) => {
   const result = await executePhoneVerificationAutomationJob({
     limit: Number(req.body && req.body.limit ? req.body.limit : 25),
     actor: req.user && req.user.email ? req.user.email : "admin",
@@ -643,7 +644,7 @@ router.post("/phone-verification-automation/run", async (req, res) => {
   });
 });
 
-router.post("/order-notifications/:id/resend", async (req, res) => {
+router.post("/order-notifications/:id/resend", piiEncryption, async (req, res) => {
   const db = readDb();
   const result = await resendOrderNotification(db, req.params.id, {
     triggeredBy: "admin-resend",
@@ -776,7 +777,7 @@ router.get("/inventory-settings", (req, res) => {
   return res.json(normalizeInventorySettings(db.inventorySettings, productSource));
 });
 
-router.patch("/inventory-settings", (req, res) => {
+router.patch("/inventory-settings", piiEncryption, (req, res) => {
   const db = readDb();
   const productSource = isSqliteProductQueriesEnabled() ? listSqliteProducts({ status: "all" }) : db.products;
   const nextSettings = normalizeInventorySettings(req.body || {}, productSource);
@@ -867,7 +868,7 @@ router.get("/back-in-stock/requests", (req, res) => {
   });
 });
 
-router.post("/back-in-stock/notify/:productId", async (req, res) => {
+router.post("/back-in-stock/notify/:productId", piiEncryption, async (req, res) => {
   const db = readDb();
   ensureBackInStockCollections(db);
   const productId = String(req.params.productId || "");
@@ -896,7 +897,7 @@ router.post("/back-in-stock/notify/:productId", async (req, res) => {
   }
 });
 
-router.patch("/back-in-stock/requests/:id/status", (req, res) => {
+router.patch("/back-in-stock/requests/:id/status", piiEncryption, (req, res) => {
   const db = readDb();
   ensureBackInStockCollections(db);
   const result = setBackInStockRequestStatus(db, req.params.id, req.body && req.body.status);
@@ -907,7 +908,7 @@ router.patch("/back-in-stock/requests/:id/status", (req, res) => {
   return res.json(result.request);
 });
 
-router.post("/media/upload-drive", async (req, res) => {
+router.post("/media/upload-drive", piiEncryption, async (req, res) => {
   const payload = req.body || {};
   const files = Array.isArray(payload.files) ? payload.files : [];
   const folderId = String(payload.folderId || "").trim();
@@ -974,7 +975,7 @@ router.post("/media/upload-drive", async (req, res) => {
   }
 });
 
-router.patch("/orders/:id/status", async (req, res) => {
+router.patch("/orders/:id/status", piiEncryption, async (req, res) => {
   const { status } = req.body || {};
   const allowed = ["processing", "shipped", "delivered", "cancelled"];
   if (!allowed.includes(status)) {

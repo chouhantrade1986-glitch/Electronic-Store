@@ -5,6 +5,13 @@ $backendDir = Join-Path $root "backend"
 $frontendUrl = "http://127.0.0.1:5500/index.html"
 $backendHealthUrl = "http://127.0.0.1:4000/api/health"
 
+# Define log file paths for easier debugging
+$tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
+$frontendLog = Join-Path $tempRoot "electromart-frontend.log"
+$frontendErrLog = Join-Path $tempRoot "electromart-frontend-err.log"
+$backendLog = Join-Path $tempRoot "electromart-backend.log"
+$backendErrLog = Join-Path $tempRoot "electromart-backend-err.log"
+
 function Test-UrlReady {
   param(
     [Parameter(Mandatory = $true)]
@@ -66,22 +73,14 @@ if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
 
 if (-not (Test-UrlReady -Url $frontendUrl)) {
   Write-Host "Starting ElectroMart frontend..."
-  Start-Process -FilePath "powershell" -WorkingDirectory $root -ArgumentList @(
-    "-NoExit",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "node qa-static-server.js"
-  )
+  Start-Process -FilePath "node" -ArgumentList "qa-static-server.js" -WorkingDirectory $root -RedirectStandardOutput $frontendLog -RedirectStandardError $frontendErrLog -PassThru -WindowStyle Hidden
 } else {
   Write-Host "Frontend already running."
 }
 
 if (-not (Test-UrlReady -Url $backendHealthUrl)) {
   Write-Host "Starting ElectroMart backend..."
-  Start-Process -FilePath "powershell" -WorkingDirectory $backendDir -ArgumentList @(
-    "-NoExit",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "node src/server.js"
-  )
+  Start-Process -FilePath "node" -ArgumentList "src/server.js" -WorkingDirectory $backendDir -RedirectStandardOutput $backendLog -RedirectStandardError $backendErrLog -PassThru -WindowStyle Hidden
 } else {
   Write-Host "Backend already running."
 }
@@ -92,8 +91,27 @@ $backendReady = Wait-UrlReady -Url $backendHealthUrl -TimeoutSeconds 30
 
 if (-not ($frontendReady -and $backendReady)) {
   Write-Host ""
-  Write-Host "ElectroMart did not come online in time."
-  Write-Host "Keep the frontend and backend PowerShell windows open and check them for errors."
+  Write-Host "-----------------------------------------------------------------" -ForegroundColor Red
+  Write-Host "ERROR: ElectroMart did not come online in time." -ForegroundColor Red
+  Write-Host "-----------------------------------------------------------------" -ForegroundColor Red
+  Write-Host ""
+  Write-Host "This usually means one of the servers failed to start."
+  Write-Host "Please check the logs below for errors."
+  Write-Host ""
+
+  if (-not $frontendReady) {
+    Write-Host "Frontend server log ($frontendLog):" -ForegroundColor Yellow
+    if (Test-Path $frontendLog) {
+      Get-Content $frontendLog -Tail 20 | Out-String | Write-Host
+    }
+  }
+
+  if (-not $backendReady) {
+    Write-Host "Backend server log ($backendLog):" -ForegroundColor Yellow
+    if (Test-Path $backendLog) {
+      Get-Content $backendLog -Tail 20 | Out-String | Write-Host
+    }
+  }
   Read-Host "Press Enter to close"
   exit 1
 }
