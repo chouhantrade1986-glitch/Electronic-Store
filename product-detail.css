@@ -102,6 +102,21 @@ a {
   color: #e2e8f0;
 }
 
+.sub-nav a {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #f1f5f9;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.sub-nav a:hover {
+  border-color: #7dd3fc;
+  background: rgba(15, 23, 42, 0.38);
+}
+
 .detail-main {
   width: min(1380px, 96vw);
   margin: 14px auto 28px;
@@ -372,6 +387,10 @@ a {
   padding: 10px;
   display: grid;
   gap: 8px;
+}
+
+.back-in-stock-panel[hidden] {
+  display: none !important;
 }
 
 .back-in-stock-panel h3 {

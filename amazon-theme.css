@@ -820,3 +820,30 @@ body {
   }
 }
 
+/* ===== AMAZON CATEGORY SUB-NAV ===== */
+.category-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--amazon-navy, #232f3e);
+  padding: 6px 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.category-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 8px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.category-nav a:hover {
+  border-color: #ffffff;
+}
+
+
