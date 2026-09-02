@@ -1727,8 +1727,22 @@ function renderProduct(product) {
   productBrand.textContent = `Brand: ${product.brand}`;
   brandStoreLink.textContent = `${product.brand}`;
   brandStoreLink.href = `brands.html?brand=${encodeURIComponent(String(product.brand || "").trim())}`;
-  brandStoreLink.setAttribute("aria-label", `Open ${String(product.brand || "this").trim()} brand store`);
-  productRating.innerHTML = `${product.rating} &#9733;`;
+function renderStarCharacters(rating) {
+  const r = Math.max(0, Math.min(5, Number(rating || 0)));
+  const full = Math.floor(r);
+  const half = r - full >= 0.25 && r - full < 0.75 ? 1 : 0;
+  const roundedFull = r - full >= 0.75 ? full + 1 : full;
+  const empty = 5 - roundedFull - half;
+  return "\u2605".repeat(roundedFull) + (half ? "\u25D0" : "") + "\u2606".repeat(Math.max(0, empty));
+}
+
+  const starChars = renderStarCharacters(product.rating);
+  const reviewCount = Number(product.reviewCount || 480);
+  productRating.innerHTML = `
+    <span class="rating-stars-display" style="color: #de7921; font-size: 1.1rem; letter-spacing: 1px;">${starChars}</span>
+    <span class="rating-value-text" style="font-weight: 700; margin: 0 6px; color: #0f1111;">${Number(product.rating || 0).toFixed(1)}</span>
+    <a href="#reviewsBlock" class="rating-count-link" style="color: #007185; text-decoration: none; font-size: 0.95rem;">${reviewCount.toLocaleString("en-IN")} ratings</a>
+  `;
   const price = Number(product.price || 0);
   const listPrice = Number(product.listPrice || product.price || 0);
   const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;
