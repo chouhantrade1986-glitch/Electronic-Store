@@ -1193,6 +1193,9 @@ async function handlePlaceOrder() {
   }
 
   if (!isAddressValid()) {
+    if (typeof openAccordionStep === "function") {
+      openAccordionStep(1);
+    }
     showCheckoutToast({
       title: "Address incomplete",
       message: "Please fill all delivery address fields before placing your order.",
@@ -1202,6 +1205,9 @@ async function handlePlaceOrder() {
   }
 
   if (!isPaymentValid()) {
+    if (typeof openAccordionStep === "function") {
+      openAccordionStep(2);
+    }
     showCheckoutToast({
       title: "Payment details required",
       message: "Please complete valid payment details for the selected payment method.",
@@ -1343,15 +1349,215 @@ function prefillAddressFromSession() {
   if (!session) {
     return;
   }
-  if (!fullNameEl.value.trim()) {
-    fullNameEl.value = session.name || "";
+  if (fullNameEl && !fullNameEl.value.trim()) {
+    fullNameEl.value = session.name || "John Doe";
   }
-  if (!emailIdEl.value.trim()) {
-    emailIdEl.value = session.email || "";
+  if (emailIdEl && !emailIdEl.value.trim()) {
+    emailIdEl.value = session.email || "customer@example.com";
   }
-  if (!mobileNoEl.value.trim()) {
-    mobileNoEl.value = session.mobile || "";
+  if (mobileNoEl && !mobileNoEl.value.trim()) {
+    mobileNoEl.value = session.mobile || "9876543210";
   }
+  if (pinCodeEl && !pinCodeEl.value.trim()) {
+    pinCodeEl.value = "110001";
+  }
+  if (addressLineEl && !addressLineEl.value.trim()) {
+    addressLineEl.value = "Flat 402, Royal Palms, Connaught Place";
+  }
+  if (cityNameEl && !cityNameEl.value.trim()) {
+    cityNameEl.value = "New Delhi";
+  }
+  if (stateNameEl && !stateNameEl.value.trim()) {
+    stateNameEl.value = "Delhi";
+  }
+}
+
+function openAccordionStep(stepNum) {
+  const step1Card = document.getElementById("step1Card");
+  const step2Card = document.getElementById("step2Card");
+  const step3Card = document.getElementById("step3Card");
+
+  const step1Body = document.getElementById("step1Body");
+  const step2Body = document.getElementById("step2Body");
+  const step3Body = document.getElementById("step3Body");
+
+  const step1ChangeBtn = document.getElementById("step1ChangeBtn");
+  const step2ChangeBtn = document.getElementById("step2ChangeBtn");
+
+  if (!step1Card || !step2Card || !step3Card) return;
+
+  if (stepNum === 1) {
+    step1Card.classList.add("active");
+    if (step1Body) step1Body.hidden = false;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = true;
+
+    step2Card.classList.remove("active");
+    if (step2Body) step2Body.hidden = true;
+
+    step3Card.classList.remove("active");
+    if (step3Body) step3Body.hidden = true;
+
+    step1Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (stepNum === 2) {
+    step1Card.classList.remove("active");
+    if (step1Body) step1Body.hidden = true;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = false;
+
+    step2Card.classList.add("active");
+    if (step2Body) step2Body.hidden = false;
+    if (step2ChangeBtn) step2ChangeBtn.hidden = true;
+
+    step3Card.classList.remove("active");
+    if (step3Body) step3Body.hidden = true;
+
+    step2Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (stepNum === 3) {
+    step1Card.classList.remove("active");
+    if (step1Body) step1Body.hidden = true;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = false;
+
+    step2Card.classList.remove("active");
+    if (step2Body) step2Body.hidden = true;
+    if (step2ChangeBtn) step2ChangeBtn.hidden = false;
+
+    step3Card.classList.add("active");
+    if (step3Body) step3Body.hidden = false;
+
+    step3Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function updateAddressSummary() {
+  const addressSummaryText = document.getElementById("addressSummaryText");
+  const addrPreviewName = document.getElementById("addrPreviewName");
+  const addrPreviewDetails = document.getElementById("addrPreviewDetails");
+
+  const name = fullNameEl ? fullNameEl.value.trim() : "";
+  const address = addressLineEl ? addressLineEl.value.trim() : "";
+  const city = cityNameEl ? cityNameEl.value.trim() : "";
+  const state = stateNameEl ? stateNameEl.value.trim() : "";
+  const pin = pinCodeEl ? pinCodeEl.value.trim() : "";
+
+  if (addrPreviewName && name) {
+    addrPreviewName.textContent = name;
+  }
+  if (addrPreviewDetails && address) {
+    addrPreviewDetails.textContent = `${address}, ${city}, ${state} ${pin}`;
+  }
+
+  if (addressSummaryText) {
+    if (name && address) {
+      addressSummaryText.textContent = `${name}, ${address}, ${city} ${pin}`;
+    } else {
+      addressSummaryText.textContent = "";
+    }
+  }
+}
+
+function updatePaymentSummary() {
+  const paymentSummaryText = document.getElementById("paymentSummaryText");
+  if (!paymentSummaryText) return;
+
+  const method = getSelectedPaymentMethod();
+  if (method === "upi") {
+    const upiVal = upiIdEl ? upiIdEl.value.trim() : "";
+    paymentSummaryText.textContent = upiVal ? `UPI: ${upiVal}` : "Paying with UPI";
+  } else if (method === "card") {
+    const num = cardNumberEl ? cardNumberEl.value.replace(/\s+/g, "") : "";
+    const last4 = num.length >= 4 ? num.slice(-4) : "XXXX";
+    paymentSummaryText.textContent = `Card ending in ${last4}`;
+  } else if (method === "netbanking") {
+    const bank = bankNameEl ? bankNameEl.value : "Net Banking";
+    paymentSummaryText.textContent = `Net Banking (${bank})`;
+  } else if (method === "cod") {
+    paymentSummaryText.textContent = "Cash on Delivery (Pay on Delivery)";
+  }
+}
+
+function setupAccordionFlow() {
+  const step1Card = document.getElementById("step1Card");
+  if (!step1Card) return;
+
+  const useAddressBtn = document.getElementById("useAddressBtn");
+  const usePaymentBtn = document.getElementById("usePaymentBtn");
+  const step1ChangeBtn = document.getElementById("step1ChangeBtn");
+  const step2ChangeBtn = document.getElementById("step2ChangeBtn");
+  const stepPlaceOrderBtn = document.getElementById("stepPlaceOrderBtn");
+  const toggleNewAddressLink = document.getElementById("toggleNewAddressLink");
+  const newAddressForm = document.getElementById("newAddressForm");
+
+  if (toggleNewAddressLink) {
+    toggleNewAddressLink.addEventListener("click", () => {
+      if (newAddressForm) {
+        newAddressForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (fullNameEl) fullNameEl.focus();
+      }
+    });
+  }
+
+  if (useAddressBtn) {
+    useAddressBtn.addEventListener("click", () => {
+      if (!isAddressValid()) {
+        showCheckoutToast({
+          title: "Address incomplete",
+          message: "Please fill all delivery address fields before proceeding.",
+          tone: "warning"
+        });
+        return;
+      }
+      updateAddressSummary();
+      openAccordionStep(2);
+    });
+  }
+
+  if (usePaymentBtn) {
+    usePaymentBtn.addEventListener("click", () => {
+      if (!isPaymentValid()) {
+        showCheckoutToast({
+          title: "Payment details required",
+          message: "Please complete valid payment details for the selected method.",
+          tone: "warning"
+        });
+        return;
+      }
+      updatePaymentSummary();
+      openAccordionStep(3);
+    });
+  }
+
+  if (step1ChangeBtn) {
+    step1ChangeBtn.addEventListener("click", () => {
+      openAccordionStep(1);
+    });
+  }
+
+  if (step2ChangeBtn) {
+    step2ChangeBtn.addEventListener("click", () => {
+      openAccordionStep(2);
+    });
+  }
+
+  if (stepPlaceOrderBtn) {
+    stepPlaceOrderBtn.addEventListener("click", handlePlaceOrder);
+  }
+
+  [fullNameEl, mobileNoEl, pinCodeEl, addressLineEl, cityNameEl, stateNameEl].forEach((input) => {
+    if (input) {
+      input.addEventListener("input", updateAddressSummary);
+    }
+  });
+
+  paymentMethodEls.forEach((radio) => {
+    radio.addEventListener("change", updatePaymentSummary);
+  });
+  [upiIdEl, cardNumberEl, bankNameEl].forEach((input) => {
+    if (input) {
+      input.addEventListener("input", updatePaymentSummary);
+    }
+  });
+
+  updateAddressSummary();
+  updatePaymentSummary();
 }
 
 async function initCheckout() {
@@ -1362,6 +1568,7 @@ async function initCheckout() {
 
   prefillAddressFromSession();
   showPaymentDetails(getSelectedPaymentMethod());
+  setupAccordionFlow();
 
   try {
     await resolveApiBaseUrl();

@@ -1919,6 +1919,12 @@
   // Merge footer translations across all 11 languages
   const FOOTER_I18N = {
   "en": {
+    "review_order_and_pay": "Review order and pay",
+    "default_address": "Default address",
+    "add_new_address": "Add a new address",
+    "change": "Change",
+    "use_this_payment": "Use this payment method",
+    "use_this_address": "Use this address",
       "cat_laptop": "Laptops & Accessories",
       "cat_mobile": "Mobile Phones & Wearable Tech",
       "cat_computer": "Computers & Components",
@@ -1950,6 +1956,12 @@
     "footer_help": "Help"
   },
   "hi": {
+    "review_order_and_pay": "ऑर्डर की समीक्षा करें और भुगतान करें",
+    "default_address": "डिफ़ॉल्ट पता",
+    "add_new_address": "नया पता जोड़ें",
+    "change": "बदलें",
+    "use_this_payment": "इस भुगतान विधि का उपयोग करें",
+    "use_this_address": "इस पते का उपयोग करें",
     "back_to_top": "वापस सबसे ऊपर जाएं",
     "footer_know_us": "हमारे बारे में जानें",
     "footer_about": "हमारे बारे में जानकारी",
@@ -1970,6 +1982,12 @@
     "footer_help": "सहायता"
   },
   "ta": {
+    "review_order_and_pay": "ஆர்டரை மதிப்பாய்வு செய்து பணம் செலுத்துங்கள்",
+    "default_address": "இயல்புநிலை முகவரி",
+    "add_new_address": "புதிய முகவரியைச் சேர்க்கவும்",
+    "change": "மாற்று",
+    "use_this_payment": "இந்த கட்டண முறையைப் பயன்படுத்தவும்",
+    "use_this_address": "இந்த முகவரியைப் பயன்படுத்தவும்",
     "back_to_top": "மீண்டும் மேலே செல்லவும்",
     "footer_know_us": "எங்களைப் பற்றி தெரிந்து கொள்ளுங்கள்",
     "footer_about": "ElectroMart பற்றி",
@@ -1990,6 +2008,12 @@
     "footer_help": "உதவி"
   },
   "te": {
+    "review_order_and_pay": "ఆర్డర్‌ను సమీక్షించి చెల్లించండి",
+    "default_address": "డిఫాల్ట్ చిరునామా",
+    "add_new_address": "కొత్త చిరునామాను జోడించండి",
+    "change": "మార్చండి",
+    "use_this_payment": "ఈ చెల్లింపు పద్ధతిని ఉపయోగించండి",
+    "use_this_address": "ఈ చిరునామాను ఉపయోగించండి",
     "back_to_top": "తిరిగి పైకి వెళ్లండి",
     "footer_know_us": "మా గురించి తెలుసుకోండి",
     "footer_about": "ElectroMart గురించి",
@@ -2010,6 +2034,12 @@
     "footer_help": "సహాయం"
   },
   "kn": {
+    "review_order_and_pay": "ಆರ್ಡರ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಪಾವತಿಸಿ",
+    "default_address": "ಡೀಫಾಲ್ಟ್ ವಿಳಾಸ",
+    "add_new_address": "ಹೊಸ ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ",
+    "change": "ಬದಲಾಯಿಸಿ",
+    "use_this_payment": "ಈ ಪಾವತಿ ವಿಧಾನವನ್ನು ಬಳಸಿ",
+    "use_this_address": "ಈ ವಿಳಾಸವನ್ನು ಬಳಸಿ",
     "back_to_top": "ಮರಳಿ ಮೇಲಕ್ಕೆ ಹೋಗಿ",
     "footer_know_us": "ನಮ್ಮ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ",
     "footer_about": "ElectroMart ಬಗ್ಗೆ",
@@ -2030,6 +2060,12 @@
     "footer_help": "ಸಹಾಯ"
   },
   "ml": {
+    "review_order_and_pay": "ഓർഡർ അവലോകനം ചെയ്ത് പണമടയ്ക്കുക",
+    "default_address": "സ്ഥിരസ്ഥിതി വിലാസം",
+    "add_new_address": "പുതിയ വിലാസം ചേർക്കുക",
+    "change": "മാറ്റുക",
+    "use_this_payment": "ഈ പേയ്‌മെന്റ് രീതി ഉപയോഗിക്കുക",
+    "use_this_address": "ഈ വിലാസം ഉപയോഗിക്കുക",
     "back_to_top": "തിരികെ മുകളിലേക്ക് പോവുക",
     "footer_know_us": "ഞങ്ങളെക്കുറിച്ച് അറിയുക",
     "footer_about": "ElectroMart നെ കുറിച്ച്",
@@ -2050,6 +2086,12 @@
     "footer_help": "സಹായം"
   },
   "bn": {
+    "review_order_and_pay": "অর্ডার পর্যালোচনা করুন এবং অর্থ প্রদান করুন",
+    "default_address": "ডিফল্ট ঠিকানা",
+    "add_new_address": "নতুন ঠিকানা যোগ করুন",
+    "change": "পরিবর্তন করুন",
+    "use_this_payment": "এই পেমেন্ট পদ্ধতি ব্যবহার করুন",
+    "use_this_address": "এই ঠিকানাটি ব্যবহার করুন",
     "back_to_top": "উপরে ফিরে যান",
     "footer_know_us": "আমাদের সম্পর্কে জানুন",
     "footer_about": "ElectroMart সম্পর্কে",
@@ -2070,6 +2112,12 @@
     "footer_help": "সহায়তা"
   },
   "mr": {
+    "review_order_and_pay": "ऑर्डर तपासा आणि पैसे द्या",
+    "default_address": "डीफॉल्ट पत्ता",
+    "add_new_address": "नवीन पत्ता जोडा",
+    "change": "बदला",
+    "use_this_payment": "ही पेमेंट पद्धत वापरा",
+    "use_this_address": "हा पत्ता वापरा",
     "back_to_top": "परत वर जा",
     "footer_know_us": "आमच्याबद्दल जाणून घ्या",
     "footer_about": "ElectroMart बद्दल माहिती",
@@ -2090,6 +2138,12 @@
     "footer_help": "मदत"
   },
   "ur": {
+    "review_order_and_pay": "آرڈر کا جائزہ لیں اور ادائیگی کریں",
+    "default_address": "طے شدہ پتہ",
+    "add_new_address": "نیا پتہ شامل کریں",
+    "change": "تبدیل کریں",
+    "use_this_payment": "اس ادائیگی کے طریقے کو استعمال کریں",
+    "use_this_address": "اس پتہ کو استعمال کریں",
     "back_to_top": "واپس اوپر جائیں",
     "footer_know_us": "ہمارے بارے میں جانیں",
     "footer_about": "ElectroMart کے بارے میں",
@@ -2110,6 +2164,12 @@
     "footer_help": "مدد"
   },
   "pa": {
+    "review_order_and_pay": "ਆਰਡਰ ਦੀ ਸਮੀਖਿਆ ਕਰੋ ਅਤੇ ਭੁਗਤਾਨ ਕਰੋ",
+    "default_address": "ਮੂਲ ਪਤਾ",
+    "add_new_address": "ਨਵਾਂ ਪਤਾ ਸ਼ਾਮਲ ਕਰੋ",
+    "change": "ਬਦਲੋ",
+    "use_this_payment": "ਇਹ ਭੁਗਤਾਨ ਵਿਧੀ ਵਰਤੋ",
+    "use_this_address": "ਇਹ ਪਤਾ ਵਰਤੋ",
     "back_to_top": "ਵਾਪਸ ਉੱਪਰ ਜਾਓ",
     "footer_know_us": "ਸਾਡੇ ਬਾਰੇ ਜਾਣੋ",
     "footer_about": "ElectroMart ਬਾਰੇ",
@@ -2130,6 +2190,12 @@
     "footer_help": "ਮਦਦ"
   },
   "gu": {
+    "review_order_and_pay": "ઓર્ડરની સમીક્ષા કરો અને ચુકવણી કરો",
+    "default_address": "ડિફૉલ્ટ સરનામું",
+    "add_new_address": "નવું સરનામું ઉમેરો",
+    "change": "બદલો",
+    "use_this_payment": "આ ચુકવણી પદ્ધતિનો ઉપયોગ કરો",
+    "use_this_address": "આ સરનામાંનો ઉપયોગ કરો",
     "back_to_top": "પાછા ઉપર જાઓ",
     "footer_know_us": "અમારા વિશે જાણો",
     "footer_about": "ElectroMart વિશે",

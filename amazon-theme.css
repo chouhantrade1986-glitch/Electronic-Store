@@ -4209,5 +4209,223 @@ body:has(#heroCarousel) main {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   8. AMAZON INDIA CHECKOUT ACCORDION (PHASE 4)
+   ========================================================================== */
+body.checkout-page {
+  background: #eaeded !important;
+}
+
+.checkout-main {
+  max-width: 1480px !important;
+  width: 96% !important;
+  margin: 20px auto 40px auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 360px !important;
+  gap: 24px !important;
+  align-items: start !important;
+}
+
+.checkout-flow h1 {
+  font-size: 1.75rem !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  margin: 0 0 16px 0 !important;
+}
+
+/* Amazon Accordion Step Card */
+.amz-step {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  padding: 16px 20px !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.amz-step.active {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 0 1px #e77600 !important;
+}
+
+.amz-step-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.amz-step-title-wrap {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  flex: 1 !important;
+}
+
+.amz-step-num {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  min-width: 20px !important;
+}
+
+.amz-step-title {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+}
+
+.amz-step-summary {
+  font-size: 0.9rem !important;
+  color: #565959 !important;
+  margin: 4px 0 0 0 !important;
+  line-height: 1.4 !important;
+}
+
+.amz-step-change-btn {
+  background: none !important;
+  border: none !important;
+  color: #007185 !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  padding: 2px 6px !important;
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+}
+
+.amz-step-change-btn:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.amz-step-body {
+  margin-top: 14px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid #e7e7e7 !important;
+}
+
+.amz-step-body[hidden] {
+  display: none !important;
+}
+
+/* Amazon Address Radio Card */
+.amz-address-card {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 12px !important;
+  background: #ffffff !important;
+  display: flex !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+  cursor: pointer !important;
+  transition: border-color 0.15s ease, background 0.15s ease !important;
+}
+
+.amz-address-card.selected {
+  border-color: #007185 !important;
+  background: #f0f8f9 !important;
+}
+
+.amz-address-badge {
+  display: inline-block !important;
+  background: #007185 !important;
+  color: #ffffff !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  margin-left: 6px !important;
+  vertical-align: middle !important;
+}
+
+/* Amazon Action Buttons */
+.amz-btn-primary {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  padding: 8px 22px !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: background 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.amz-btn-primary:hover {
+  background: #f7ca00 !important;
+  border-color: #f2c200 !important;
+}
+
+.amz-btn-secondary {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: background 0.15s ease !important;
+}
+
+.amz-btn-secondary:hover {
+  background: #f7fafa !important;
+}
+
+/* Sticky Buy Box */
+.amz-checkout-summary-box {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 16px 20px !important;
+  box-shadow: none !important;
+  position: sticky !important;
+  top: 80px !important;
+}
+
+.amz-checkout-summary-box #placeOrderBtn {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  width: 100% !important;
+  padding: 10px 16px !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  margin-bottom: 12px !important;
+  transition: background 0.15s ease !important;
+}
+
+.amz-checkout-summary-box #placeOrderBtn:hover {
+  background: #f7ca00 !important;
+}
+
+.amz-checkout-summary-box .grand-total {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #b12704 !important;
+  border-top: 1px solid #e7e7e7 !important;
+  padding-top: 10px !important;
+  margin-top: 10px !important;
+}
+
+@media (max-width: 900px) {
+  .checkout-main {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
 
 
