@@ -2151,7 +2151,7 @@ function renderSuggestionCard(item, query) {
   if (item.type === "product" && item.image) {
     media = `
       <span class="suggestion-media suggestion-thumb" aria-hidden="true">
-        <img src="${escapeSuggestionHtml(item.image)}" alt="" loading="lazy" />
+        <img src="${escapeSuggestionHtml(item.image)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
       </span>
     `;
   } else if (item.type === "history") {
@@ -2424,7 +2424,30 @@ function renderSearchSuggestions() {
     return;
   }
 
-  const sourceProducts = getHomeProducts().filter((item) => item.segment !== "b2b");
+  let memoryCatalog = [];
+  if (typeof window !== "undefined") {
+    if (Array.isArray(window.EM_CATALOG) && window.EM_CATALOG.length) {
+      memoryCatalog = window.EM_CATALOG;
+    } else if (window.EM_CATALOG_MAP && typeof window.EM_CATALOG_MAP === "object") {
+      memoryCatalog = typeof window.EM_CATALOG_MAP.values === "function"
+        ? Array.from(window.EM_CATALOG_MAP.values())
+        : Object.values(window.EM_CATALOG_MAP);
+    }
+  }
+  const homeProds = getHomeProducts().filter((item) => item.segment !== "b2b");
+  const mergedSearchMap = new Map();
+  homeProds.forEach((p) => {
+    if (p && p.id) mergedSearchMap.set(String(p.id), p);
+  });
+  memoryCatalog.forEach((p) => {
+    if (p && p.id && !mergedSearchMap.has(String(p.id))) {
+      const normalized = mapHomeCatalogProduct(p) || p;
+      if (normalized.segment !== "b2b") {
+        mergedSearchMap.set(String(p.id), normalized);
+      }
+    }
+  });
+  const sourceProducts = Array.from(mergedSearchMap.values());
 
   // 1. Scoped Category Match (Amazon style: e.g. "laptop in Laptops & Accessories")
   const scopedCat = MAIN_SEARCH_CATEGORIES.find(
@@ -2461,20 +2484,31 @@ function renderSearchSuggestions() {
 
   // 3. Product Matches (top 4)
   const productMatches = sourceProducts
-    .filter((item) => `${item.name} ${item.brand} ${item.category}`.toLowerCase().includes(query))
+    .filter((item) => {
+      const titleHi = (item.title && typeof item.title === "object" && item.title.hi) || "";
+      const titleEn = (item.title && typeof item.title === "object" && item.title.en) || item.name || "";
+      const brand = item.brand || "";
+      const cat = item.category || "";
+      const sku = item.sku || "";
+      return `${titleEn} ${titleHi} ${brand} ${cat} ${sku}`.toLowerCase().includes(query);
+    })
     .slice(0, 4)
     .map((item) => {
       const stockState = getProductStockState(item);
+      const title = (typeof window !== "undefined" && typeof window.getLocalizedTitle === "function")
+        ? window.getLocalizedTitle(item)
+        : (item.name || `Product #${item.id}`);
+      const thumb = item.image || (Array.isArray(item.images) && item.images[0]) || "";
       return {
         type: "product",
         value: String(item.id),
-        label: item.name,
+        label: title,
         meta: `${item.brand} | ${money(item.price)}`,
         kicker: Number(item.rating || 0) > 0 ? `★ ${Number(item.rating).toFixed(1)}` : "",
         stockRank: stockState.rank,
         priceText: money(item.price),
         action: "View",
-        image: normalizeImageUrl(item.image || "")
+        image: normalizeImageUrl(thumb)
       };
     });
 

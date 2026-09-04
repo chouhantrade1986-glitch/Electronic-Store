@@ -218,7 +218,7 @@
     if (item.type === "product" && item.image) {
       media = `
         <span class="suggestion-media suggestion-thumb" aria-hidden="true">
-          <img src="${escapeHtml(item.image)}" alt="" loading="lazy" />
+          <img src="${escapeHtml(item.image)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
         </span>
       `;
     } else if (item.type === "history") {
@@ -284,7 +284,36 @@
   }
 
   function getCatalogProducts() {
-    return Object.values(loadCatalogMap()).filter(
+    let memoryProducts = [];
+    if (typeof window !== "undefined") {
+      if (Array.isArray(window.EM_CATALOG) && window.EM_CATALOG.length) {
+        memoryProducts = window.EM_CATALOG;
+      } else if (window.EM_CATALOG_MAP && typeof window.EM_CATALOG_MAP === "object") {
+        memoryProducts = typeof window.EM_CATALOG_MAP.values === "function"
+          ? Array.from(window.EM_CATALOG_MAP.values())
+          : Object.values(window.EM_CATALOG_MAP);
+      } else if (Array.isArray(window.EM_PRODUCTS) && window.EM_PRODUCTS.length) {
+        memoryProducts = window.EM_PRODUCTS;
+      }
+    }
+    const cachedMap = loadCatalogMap();
+    const cachedList = Object.values(cachedMap);
+
+    const merged = new Map();
+    memoryProducts.forEach((item) => {
+      if (item && item.id) {
+        merged.set(String(item.id), item);
+      }
+    });
+    cachedList.forEach((item) => {
+      if (item && item.id) {
+        const idStr = String(item.id);
+        const existing = merged.get(idStr);
+        merged.set(idStr, { ...(existing || {}), ...item });
+      }
+    });
+
+    return Array.from(merged.values()).filter(
       (item) => item && item.id && Number(item.price || 0) > 0
     );
   }
@@ -637,12 +666,24 @@
     }
 
     const products = getCatalogProducts();
+    const selectedCategory = normalizeCategorySlug(
+      input.form?.querySelector('select[data-search-catalog="1"]')?.value || "all"
+    );
+    const categoryFilteredProducts = selectedCategory && selectedCategory !== "all"
+      ? products.filter((item) => {
+          const cat = normalizeCategorySlug(item.category || "");
+          return cat === selectedCategory || cat.includes(selectedCategory);
+        })
+      : products;
+    const pool = categoryFilteredProducts.length ? categoryFilteredProducts : products;
 
     // 1. Scoped Category Match (Amazon style: e.g. "laptop in Laptops & Accessories")
-    const scopedCatKey = DEFAULT_CATALOG_ORDER.find((cat) => {
-      const lbl = categoryLabel(cat).toLowerCase();
-      return lbl.includes(query) || query.includes(cat);
-    });
+    const scopedCatKey = (selectedCategory && selectedCategory !== "all")
+      ? selectedCategory
+      : DEFAULT_CATALOG_ORDER.find((cat) => {
+          const lbl = categoryLabel(cat).toLowerCase();
+          return lbl.includes(query) || query.includes(cat);
+        });
     const scopedSuggestions = scopedCatKey ? [{
       type: "scoped",
       value: query,
@@ -673,21 +714,33 @@
       }));
 
     // 3. Product matches (top 4)
-    const productMatches = products
-      .filter((item) =>
-        `${item.name} ${item.brand} ${item.category}`.toLowerCase().includes(query)
-      )
+    const productMatches = pool
+      .filter((item) => {
+        const titleHi = (item.title && typeof item.title === "object" && item.title.hi) || "";
+        const titleEn = (item.title && typeof item.title === "object" && item.title.en) || item.name || "";
+        const brand = item.brand || "";
+        const cat = item.category || "";
+        const sku = item.sku || "";
+        return `${titleEn} ${titleHi} ${brand} ${cat} ${sku}`.toLowerCase().includes(query);
+      })
       .slice(0, 4)
-      .map((item) => ({
-        type: "product",
-        value: String(item.id),
-        label: String(item.name || `Product #${item.id}`),
-        meta: `${item.brand || "ElectroMart"} | ${money(item.price)}`,
-        kicker: Number(item.rating || 0) > 0 ? `★ ${Number(item.rating).toFixed(1)}` : "",
-        action: "View",
-        image: normalizeImageUrl(item.image || ""),
-        priceText: money(item.price)
-      }));
+      .map((item) => {
+        const title = (typeof window !== "undefined" && typeof window.getLocalizedTitle === "function")
+          ? window.getLocalizedTitle(item)
+          : (item.name || `Product #${item.id}`);
+        const thumb = item.image || (Array.isArray(item.images) && item.images[0]) || "";
+        const ratingNum = Number(item.rating || 0);
+        return {
+          type: "product",
+          value: String(item.id),
+          label: String(title),
+          meta: `${item.brand || "ElectroMart"} | ${money(item.price)}`,
+          kicker: ratingNum > 0 ? `★ ${ratingNum.toFixed(1)}` : "",
+          action: "View",
+          image: normalizeImageUrl(thumb),
+          priceText: money(item.price)
+        };
+      });
 
     const markup = [
       renderSuggestionGroup("", scopedSuggestions, query),
