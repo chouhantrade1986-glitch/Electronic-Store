@@ -9,7 +9,7 @@
   --amazon-orange-border: #fcd200;
   --amazon-orange-hover: #f7ca00;
   
-  --amazon-light: #F3F3F3;
+  --amazon-light: #e3e6e6;
   --amazon-dark: #131921;
 
   /* Grays */
@@ -30,7 +30,7 @@
   --amazon-rating-orange: #FFA500;
 
   /* UI Elements */
-  --amazon-radius-card: 8px;
+  --amazon-radius-card: 4px;
   --amazon-shadow-card-rest: 0 1px 2px rgba(15, 17, 17, 0.12);
   --amazon-shadow-card-hover: 0 2px 8px rgba(15, 17, 17, 0.16);
   --amazon-btn-radius: 8px;
@@ -38,8 +38,8 @@
   --amazon-btn-padding-x: 14px;
 
   /* Fonts */
-  --amazon-font-base: "Barlow", sans-serif;
-  --amazon-font-modern: 'Inter', 'Roboto', 'Barlow', Arial, sans-serif;
+  --amazon-font-base: "Amazon Ember", Arial, sans-serif;
+  --amazon-font-modern: "Amazon Ember", Arial, sans-serif;
   
   /* Fallback aliases to map existing variables to new ones */
   --ink: var(--amazon-ink);

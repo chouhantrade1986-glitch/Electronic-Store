@@ -23,18 +23,18 @@
   <main class="account-layout">
     <aside class="account-sidebar">
       <div class="account-sidebar-head">
-        <h1>My Account</h1>
+        <h1 data-i18n="your_account_title">My Account</h1>
         <span id="accountPhoneVerificationBadge" class="verification-badge pending">Phone Pending</span>
       </div>
-      <button class="menu-btn active" data-panel="overview" type="button">Overview</button>
+      <button class="menu-btn active" data-panel="overview" type="button" data-i18n="account_overview">Overview</button>
       <button class="menu-btn" data-panel="notifications" type="button">Notifications</button>
-      <button class="menu-btn" data-panel="profile" type="button">Profile</button>
-      <button class="menu-btn" data-panel="addresses" type="button">Addresses</button>
-      <button class="menu-btn" data-panel="payments" type="button">Payments</button>
-      <button class="menu-btn" data-panel="security" type="button">Security</button>
+      <button class="menu-btn" data-panel="profile" type="button" data-i18n="account_profile">Profile</button>
+      <button class="menu-btn" data-panel="addresses" type="button" data-i18n="account_addresses">Addresses</button>
+      <button class="menu-btn" data-panel="payments" type="button" data-i18n="account_payments">Payments</button>
+      <button class="menu-btn" data-panel="security" type="button" data-i18n="account_security">Security</button>
       <button class="menu-btn" data-panel="business" type="button">Business Profile</button>
       <a id="adminDashboardLink" class="menu-btn" href="admin-dashboard.html" hidden>Admin Dashboard</a>
-      <button id="signOutBtn" class="menu-btn signout-btn" type="button">Sign Out</button>
+      <button id="signOutBtn" class="menu-btn signout-btn" type="button" data-i18n="sign_out">Sign Out</button>
     </aside>
 
     <section class="account-content">
@@ -319,6 +319,9 @@
     </section>
   </main>
 
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>

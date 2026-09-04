@@ -1748,6 +1748,9 @@ function debounceFetch() {
 }
 
 function productCard(product) {
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : ((window.EM_TRANSLATIONS && window.EM_TRANSLATIONS.en) ? window.EM_TRANSLATIONS.en : {});
+
   const segment = product.segment || "b2c";
   const image = normalizeImageUrl(product.image) || fallbackImage();
   const ribbon = getRibbonLabel(product);
@@ -1762,15 +1765,23 @@ function productCard(product) {
   const onImageError = "handleProductImageError(this)";
   const couponAmount = isCouponEligible(product);
 
-  /* --- Ribbon / Badge (one per product, hierarchy enforced) --- */
+  /* --- Ribbon / Badge --- */
+  let ribbonLabel = ribbon ? ribbon.label : "";
+  if (ribbonLabel === "BEST SELLER") {
+    ribbonLabel = t.badge_best_seller || "BEST SELLER";
+  } else if (ribbonLabel === "DEAL") {
+    ribbonLabel = t.deal_badge || "DEAL";
+  } else if (ribbonLabel === "BULK VALUE") {
+    ribbonLabel = t.bulk_value || "BULK VALUE";
+  }
   const ribbonHtml = ribbon
-    ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbon.label}</span>`
+    ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbonLabel}</span>`
     : "";
 
   /* --- Star characters --- */
   const starChars = rating > 0 ? renderStarCharacters(rating) : "";
 
-  /* --- Rating row (Amazon-style: stars + value + count) --- */
+  /* --- Rating row --- */
   let ratingHtml = "";
   if (rating > 0) {
     ratingHtml = `
@@ -1782,63 +1793,66 @@ function productCard(product) {
   } else {
     ratingHtml = `
       <div class="rating-row">
-        <span class="rating-count-link" style="color: #007185; font-size: 12px;">New arrival</span>
+        <span class="rating-count-link" style="color: #007185; font-size: 12px;">${t.new_arrival || "New arrival"}</span>
       </div>`;
   }
 
-  /* --- Price section (Amazon-style) --- */
+  /* --- Price section --- */
   let priceHtml = `
     <div class="price-section">
       <div class="price-current-amazon">
-        <span class="price-symbol">\u20B9</span>${price.toLocaleString("en-IN")}
+        <span class="price-symbol">₹</span>${price.toLocaleString("en-IN")}
       </div>`;
   if (discountPercent > 0) {
     priceHtml += `
       <div class="price-mrp-row">
-        <span class="mrp-label">M.R.P.:</span>
-        <span class="mrp-value">\u20B9${listPrice.toLocaleString("en-IN")}</span>
-        <span class="price-discount-tag">(${discountPercent}% off)</span>
+        <span class="mrp-label">${t.mrp || "M.R.P.:"}</span>
+        <span class="mrp-value">₹${listPrice.toLocaleString("en-IN")}</span>
+        <span class="price-discount-tag">(${discountPercent}% ${t.percent_off || "off"})</span>
       </div>`;
     if (savings > 0) {
-      priceHtml += `<div class="price-savings-row">You save: \u20B9${savings.toLocaleString("en-IN")}</div>`;
+      priceHtml += `<div class="price-savings-row">${t.you_save || "You save:"} ₹${savings.toLocaleString("en-IN")}</div>`;
     }
   }
   priceHtml += `</div>`;
 
-  /* --- Coupon checkbox (Amazon-style, on select products) --- */
+  /* --- Coupon checkbox --- */
   let couponHtml = "";
   if (couponAmount) {
     couponHtml = `
       <label class="card-coupon-box">
         <input type="checkbox" class="card-coupon-checkbox" data-product-id="${product.id}" data-coupon-amount="${couponAmount}" />
-        <span class="card-coupon-text">Apply <strong>\u20B9${couponAmount}</strong> coupon</span>
+        <span class="card-coupon-text">${t.apply_coupon_prefix || "Apply"} <strong>₹${couponAmount}</strong> ${t.apply_coupon_suffix || "coupon"}</span>
       </label>`;
   }
 
-  /* --- Stock urgency (FOMO) — show when stock is low --- */
+  /* --- Stock urgency --- */
   let stockUrgencyHtml = "";
   if (Number.isFinite(stock) && stock > 0 && stock <= 5) {
-    stockUrgencyHtml = `<div class="card-stock-urgency">Only ${stock} left in stock \u2014 order soon</div>`;
+    const urgencyText = t.only_left_stock
+      ? t.only_left_stock.replace("{count}", stock)
+      : `Only ${stock} left in stock — order soon`;
+    stockUrgencyHtml = `<div class="card-stock-urgency">${urgencyText}</div>`;
   }
 
-  /* --- Delivery promise (Prime-style) --- */
+  /* --- Delivery promise --- */
   const deliveryHtml = segment === "b2c"
     ? `<div class="card-delivery-promise">
-        <span class="delivery-truck-icon">\uD83D\uDE9A</span>
-        <span class="delivery-text-fast">FREE delivery <span class="delivery-date">Tomorrow</span></span>
+        <span class="delivery-truck-icon">🚚</span>
+        <span class="delivery-text-fast">${t.free_delivery_tomorrow || "FREE delivery Tomorrow"}</span>
       </div>`
     : `<div class="card-delivery-promise">
-        <span class="delivery-truck-icon">\uD83D\uDCE6</span>
+        <span class="delivery-truck-icon">📦</span>
         <span class="delivery-text-free">Business delivery options available</span>
       </div>`;
 
-  /* --- Bulk note (B2B) --- */
+  /* --- Bulk note --- */
   const bulkMeta = segment === "b2b" && product.moq
-    ? `<p class="bulk-note">MOQ: ${product.moq} units \u2022 Bulk pricing available</p>`
+    ? `<p class="bulk-note">MOQ: ${product.moq} units • Bulk pricing available</p>`
     : "";
 
   /* --- Brand line --- */
-  const brandHtml = `<p class="product-brand" style="margin:0;font-size:12px;color:#565959;">by <a href="${brandStoreUrl(product.brand || "ElectroMart")}" style="color:#007185;text-decoration:none;">${product.brand || "ElectroMart"}</a></p>`;
+  const brandHtml = `<p class="product-brand" style="margin:0;font-size:12px;color:#565959;">${t.by_brand || "by"} <a href="${brandStoreUrl(product.brand || "ElectroMart")}" style="color:#007185;text-decoration:none;">${product.brand || "ElectroMart"}</a></p>`;
 
   return `
     <article class="product-card">
@@ -1848,7 +1862,7 @@ function productCard(product) {
       </a>
       <div class="content">
         ${brandHtml}
-        <h3><a class="title-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
+        <h3><a class="title-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : product.name}</a></h3>
         ${ratingHtml}
         ${priceHtml}
         ${couponHtml}
@@ -1857,13 +1871,13 @@ function productCard(product) {
         ${bulkMeta}
         <div class="card-atc-row">
           <button class="card-atc-btn" data-id="${product.id}" data-name="${product.name}" data-price="${Number(product.price || 0)}" data-image="${image}" type="button">
-            <span class="atc-icon">\uD83D\uDED2</span> Add to Cart
+            <span class="atc-icon">🛒</span> ${t.add_to_cart || "Add to Cart"}
           </button>
-          <button class="card-quick-view-link" data-quick-view-id="${product.id}" type="button">Quick view</button>
+          <button class="card-quick-view-link" data-quick-view-id="${product.id}" type="button">${t.quick_view || "Quick view"}</button>
         </div>
         <div class="card-links-row">
-          <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">View details</a>
-          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button"><span class="heart-icon">${wishlisted ? "\u2665" : "\u2661"}</span> ${wishlisted ? "Wishlisted" : "Wishlist"}</button>
+          <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${t.view_details || "View details"}</a>
+          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button"><span class="heart-icon">${wishlisted ? "♥" : "♡"}</span> ${wishlisted ? (t.wishlisted || "Wishlisted") : (t.wishlist || "Wishlist")}</button>
         </div>
       </div>
     </article>
@@ -1998,9 +2012,11 @@ function renderFBTSection(product) {
 
 function syncDrawerWishlistState(productId) {
   if (!qvWishlist) return;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const active = isWishlisted(productId);
   qvWishlist.classList.toggle("active", active);
-  qvWishlist.innerHTML = active ? "\u2665 Wishlisted" : "\u2661 Add to Wishlist";
+  qvWishlist.innerHTML = active ? `♥ ${t.wishlisted || "Wishlisted"}` : `♡ ${t.add_to_wishlist || "Add to Wishlist"}`;
 }
 
 function closeQuickViewDrawer() {
@@ -2108,6 +2124,24 @@ function openQuickViewDrawer(productId) {
   /* Quantity */
   if (qvQuantity) qvQuantity.value = "1";
 
+  /* Apply i18n to Quick View Drawer */
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  if (qvAddToCart) qvAddToCart.textContent = t.add_to_cart || "Add to Cart";
+  if (qvBuyNow) qvBuyNow.textContent = t.buy_now || "Buy Now";
+  if (qvStockStatus) {
+    if (stock > 0) {
+      qvStockStatus.className = "qv-stock-status in-stock";
+      qvStockStatus.textContent = stock > 5 ? (t.in_stock || "In Stock") : (t.only_left_stock ? t.only_left_stock.replace("{count}", stock) : `Only ${stock} left in stock - order soon`);
+    } else {
+      qvStockStatus.className = "qv-stock-status out-of-stock";
+      qvStockStatus.textContent = t.out_of_stock || "Out of Stock";
+    }
+  }
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(currentLang);
+  }
+
   /* Wishlist state */
   syncDrawerWishlistState(currentQuickViewProductId);
 
@@ -2127,25 +2161,30 @@ function closeQuickViewModal() { closeQuickViewDrawer(); }
 function renderProducts(list) {
   lastRenderedProducts = list.slice();
   fullResultSet = list.slice();
+  window.allLoadedProducts = fullResultSet;
+  window.renderProductsList = (items) => {
+    if (Array.isArray(items) && items.length) {
+      renderProducts(items);
+    } else {
+      renderProducts(fullResultSet);
+    }
+  };
   setProductsGridBusy(false);
 
   if (!list.length) {
-    visibleResultCount = 0;
-    resultMeta.textContent = "Showing 0 products";
     productsGrid.innerHTML = renderZeroResultsState();
     if (resultsFooter) {
       resultsFooter.hidden = true;
     }
-    if (resultsWindowMeta) {
-      resultsWindowMeta.textContent = "";
-    }
-    flushFilterAnnouncement(resultMeta.textContent);
+    syncQuickViewDrawerTargets();
     return;
   }
 
   visibleResultCount = Math.min(list.length, Math.max(PRODUCTS_INITIAL_RENDER_LIMIT, visibleResultCount || 0));
   const visibleItems = list.slice(0, visibleResultCount);
-  resultMeta.textContent = `Showing ${visibleItems.length} of ${list.length} products`;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  resultMeta.textContent = `${t.showing || "Showing"} ${visibleItems.length} ${t.of || "of"} ${list.length} ${t.products || "products"}`;
   productsGrid.innerHTML = visibleItems.map(productCard).join("");
 
   if (resultsFooter && resultsWindowMeta && loadMoreBtn) {

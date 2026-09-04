@@ -16,54 +16,54 @@
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-  <body>
-    <div id="headerContainer"></div>
+<body>
+  <div id="headerContainer"></div>
 
   <main class="auth-main">
     <section class="auth-panel">
-      <h1 id="authHeading">Sign in or create account</h1>
-      <p id="authSubheading">Access your orders, saved profile, and account settings.</p>
+      <h1 id="authHeading" data-i18n="auth_heading">Sign in or create account</h1>
+      <p id="authSubheading" data-i18n="auth_subheading">Access your orders, saved profile, and account settings.</p>
       <section id="adminAccessCard" class="admin-access-card" hidden>
         <div>
-          <strong id="adminAccessTitle">Admin access</strong>
-          <p id="adminAccessCopy">Use your admin account to open Seller Central and manage the store dashboard.</p>
+          <strong id="adminAccessTitle" data-i18n="seller_central_access">Seller Central access</strong>
+          <p id="adminAccessCopy" data-i18n="seller_central_copy">Use your admin account to open Seller Central and manage store operations.</p>
         </div>
         <div class="admin-access-actions">
-          <a id="adminAccessPrimaryLink" class="auth-chip auth-chip-primary" href="admin.html">Admin Panel</a>
-          <a id="adminAccessSecondaryLink" class="auth-chip" href="index.html">Back to Store</a>
+          <a id="adminAccessPrimaryLink" class="auth-chip auth-chip-primary" href="admin.html" data-i18n="admin_panel_home">Admin Panel Home</a>
+          <a id="adminAccessSecondaryLink" class="auth-chip" href="index.html" data-i18n="back_to_store">Back to Store</a>
         </div>
       </section>
 
       <div class="tab-row">
-        <button id="signinTab" class="tab-btn active" type="button">Sign In</button>
-        <button id="signupTab" class="tab-btn" type="button">Create Account</button>
+        <button id="signinTab" class="tab-btn active" type="button" data-i18n="signin_tab">Sign In</button>
+        <button id="signupTab" class="tab-btn" type="button" data-i18n="create_account_tab">Create Account</button>
       </div>
 
       <form id="signinForm" class="auth-form active">
-        <label>OTP Delivery
+        <label><span data-i18n="otp_delivery">OTP Delivery</span>
           <select id="signinMethod" required>
-            <option value="email">Email</option>
-            <option value="mobile">Mobile Number</option>
+            <option value="email" data-i18n="otp_email">Email</option>
+            <option value="mobile" data-i18n="otp_mobile">Mobile Number</option>
           </select>
         </label>
-        <label>Email or Mobile
+        <label><span data-i18n="email_or_mobile">Email or Mobile</span>
           <input id="signinIdentifier" type="text" required />
         </label>
-        <label>Password
+        <label><span data-i18n="password">Password</span>
           <input id="signinPassword" type="password" required />
         </label>
         <div class="auth-inline-actions">
-          <button id="forgotPasswordBtn" class="auth-link-btn" type="button">Forgot password?</button>
+          <button id="forgotPasswordBtn" class="auth-link-btn" type="button" data-i18n="forgot_password">Forgot password?</button>
         </div>
-        <button id="generateOtpBtn" type="button">Send OTP</button>
+        <button id="generateOtpBtn" type="button" data-i18n="send_otp">Send OTP</button>
         <div id="signinOtpAssist" class="otp-assist" hidden>
           <p id="signinOtpDestination" class="otp-assist-line"></p>
           <p id="signinOtpTimer" class="otp-assist-line subtle"></p>
         </div>
-        <label>Enter OTP
+        <label><span data-i18n="enter_otp">Enter OTP</span>
           <input id="signinOtp" type="text" inputmode="numeric" maxlength="6" required />
         </label>
-        <button type="submit">Login with OTP</button>
+        <button type="submit" data-i18n="login_with_otp">Login with OTP</button>
       </form>
 
       <form id="resetForm" class="auth-form">
@@ -131,11 +131,11 @@
     </section>
   </main>
 
+  <script src="translations.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
   <script src="auth.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
 </body>
-  <script src="header.js"></script>
 </html>
-
-

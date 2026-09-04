@@ -27,8 +27,8 @@
       <!-- Enhanced Filter Sidebar -->
       <aside class="filters-panel refine-panel">
         <div class="panel-head">
-          <h2>Filters</h2>
-          <button id="clearAllFilters" class="clear-filters-btn" style="font-size: 12px; color: #007185; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear all</button>
+          <h2 data-i18n="filter_by">Filters</h2>
+          <button id="clearAllFilters" class="clear-filters-btn" style="font-size: 12px; color: #007185; background: none; border: none; cursor: pointer; text-decoration: underline;" data-i18n="clear_all">Clear all</button>
         </div>
         
         <!-- Active Filters Display -->
@@ -40,20 +40,20 @@
         <div class="filters">
           <!-- Category Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Category</h3>
+            <h3 class="filter-section-title" data-i18n="category">Category</h3>
             <select id="categoryFilter" class="filter-select">
-              <option value="all">All Categories</option>
-              <option value="laptop">Laptops</option>
-              <option value="computer">Computers & Desktops</option>
-              <option value="mobile">Mobiles & Tablets</option>
-              <option value="audio">Audio & Headphones</option>
-              <option value="accessory">Accessories</option>
+              <option value="all" data-i18n="all_categories">All Categories</option>
+              <option value="laptop" data-i18n="laptops">Laptops</option>
+              <option value="computer" data-i18n="computers">Computers & Desktops</option>
+              <option value="mobile" data-i18n="mobiles">Mobiles & Tablets</option>
+              <option value="audio" data-i18n="audio_headphones">Audio & Headphones</option>
+              <option value="accessory" data-i18n="accessories">Accessories</option>
             </select>
           </div>
 
           <!-- Price Range Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Price</h3>
+            <h3 class="filter-section-title" data-i18n="price">Price</h3>
             <div class="price-range-filter">
               <div class="price-display">
                 <span id="minPriceValue">₹0</span>
@@ -65,17 +65,17 @@
                 <input id="maxPriceRange" type="range" min="0" max="200000" value="200000" step="1000">
               </div>
               <div class="price-presets">
-                <button class="price-preset-btn" data-min="0" data-max="10000">Under ₹10,000</button>
-                <button class="price-preset-btn" data-min="10000" data-max="30000">₹10k - ₹30k</button>
-                <button class="price-preset-btn" data-min="30000" data-max="50000">₹30k - ₹50k</button>
-                <button class="price-preset-btn" data-min="50000" data-max="200000">Above ₹50k</button>
+                <button class="price-preset-btn" data-min="0" data-max="10000" data-i18n="price_under_10k">Under ₹10,000</button>
+                <button class="price-preset-btn" data-min="10000" data-max="30000" data-i18n="price_10k_30k">₹10k - ₹30k</button>
+                <button class="price-preset-btn" data-min="30000" data-max="50000" data-i18n="price_30k_50k">₹30k - ₹50k</button>
+                <button class="price-preset-btn" data-min="50000" data-max="200000" data-i18n="price_above_50k">Above ₹50k</button>
               </div>
             </div>
           </div>
 
           <!-- Brand Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Brand</h3>
+            <h3 class="filter-section-title" data-i18n="brands">Brand</h3>
             <div class="brand-filter-list">
               <label class="brand-checkbox">
                 <input type="checkbox" value="AstraTech" class="brand-filter">
@@ -102,7 +102,7 @@
 
           <!-- Rating Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Customer Rating</h3>
+            <h3 class="filter-section-title" data-i18n="avg_customer_review">Customer Rating</h3>
             <div class="rating-filter-list">
               <label class="rating-checkbox">
                 <input type="radio" name="rating" value="4" class="rating-filter">
@@ -124,26 +124,26 @@
 
           <!-- Availability Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Availability</h3>
+            <h3 class="filter-section-title" data-i18n="availability">Availability</h3>
             <div class="availability-filter">
               <label class="availability-checkbox">
                 <input type="checkbox" id="inStockOnly" class="stock-filter">
-                <span>Include Out of Stock</span>
+                <span data-i18n="include_out_of_stock">Include Out of Stock</span>
               </label>
             </div>
           </div>
 
           <!-- Delivery Options -->
           <div class="filter-section">
-            <h3 class="filter-section-title">Delivery Options</h3>
+            <h3 class="filter-section-title" data-i18n="delivery_options">Delivery Options</h3>
             <div class="delivery-filter">
               <label class="delivery-checkbox">
                 <input type="checkbox" id="freeDelivery" class="delivery-filter">
-                <span>Free Delivery</span>
+                <span data-i18n="free_delivery_check">Free Delivery</span>
               </label>
               <label class="delivery-checkbox">
                 <input type="checkbox" id="nextDayDelivery" class="delivery-filter">
-                <span>Next Day Delivery</span>
+                <span data-i18n="next_day_delivery">Next Day Delivery</span>
               </label>
             </div>
           </div>
@@ -161,20 +161,20 @@
           <div class="sort-filter-row">
             <!-- Enhanced Search -->
             <div class="product-search-enhanced">
-              <input type="text" id="productSearch" placeholder="Search in all products..." aria-label="Search products" />
+              <input type="text" id="productSearch" placeholder="Search in all products..." data-i18n-placeholder="search_in_products" aria-label="Search products" />
               <button id="searchBtn" aria-label="Search">🔍</button>
             </div>
             
             <!-- Sort Options -->
             <div class="sort-options">
-              <label for="sortSelect">Sort by:</label>
+              <label for="sortSelect" data-i18n="sort_by">Sort by:</label>
               <select id="sortSelect">
-                <option value="relevance">Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Avg. Customer Review</option>
-                <option value="newest">Newest Arrivals</option>
-                <option value="bestseller">Best Sellers</option>
+                <option value="relevance" data-i18n="sort_featured">Featured</option>
+                <option value="price-low" data-i18n="price_low_high">Price: Low to High</option>
+                <option value="price-high" data-i18n="price_high_low">Price: High to Low</option>
+                <option value="rating" data-i18n="avg_customer_review">Avg. Customer Review</option>
+                <option value="newest" data-i18n="newest_arrivals">Newest Arrivals</option>
+                <option value="bestseller" data-i18n="best_sellers">Best Sellers</option>
               </select>
             </div>
           </div>
@@ -183,15 +183,15 @@
         <!-- View Toggle -->
         <div class="view-toggle" style="padding: 12px 16px; border-bottom: 1px solid #e7e7e7; display: flex; justify-content: space-between; align-items: center;">
           <div class="view-options">
-            <button class="view-btn active" data-view="grid" aria-label="Grid view">⊞ Grid</button>
-            <button class="view-btn" data-view="list" aria-label="List view">☰ List</button>
+            <button class="view-btn active" data-view="grid" aria-label="Grid view" data-i18n="grid_view">⊞ Grid</button>
+            <button class="view-btn" data-view="list" aria-label="List view" data-i18n="list_view">☰ List</button>
           </div>
           <div class="items-per-page">
-            <label for="itemsPerPage">Show:</label>
+            <label for="itemsPerPage" data-i18n="show_label">Show:</label>
             <select id="itemsPerPage">
-              <option value="20">20 per page</option>
-              <option value="40">40 per page</option>
-              <option value="60">60 per page</option>
+              <option value="20" data-i18n="per_page_20">20 per page</option>
+              <option value="40" data-i18n="per_page_40">40 per page</option>
+              <option value="60" data-i18n="per_page_60">60 per page</option>
             </select>
           </div>
         </div>
@@ -291,36 +291,36 @@
 
         <!-- Delivery Badges -->
         <div class="qv-delivery-badges" id="qvDeliveryBadges">
-          <span class="prime-delivery-badge">&#x1F69A; Next-Day Delivery</span>
-          <span class="free-delivery-badge">&#x2714; FREE Delivery</span>
+          <span class="prime-delivery-badge" data-i18n="next_day_delivery_badge">&#x1F69A; Next-Day Delivery</span>
+          <span class="free-delivery-badge" data-i18n="free_delivery_badge">&#x2714; FREE Delivery</span>
         </div>
 
         <div class="qv-delivery-promise">
           <span class="delivery-icon">&#x1F4E6;</span>
-          <span class="delivery-text">Estimated delivery by Tomorrow, if ordered within 2 hrs</span>
+          <span class="delivery-text" data-i18n="estimated_delivery_tomorrow">Estimated delivery by Tomorrow, if ordered within 2 hrs</span>
         </div>
 
         <!-- Trust Badges -->
         <div class="qv-trust-badges">
-          <span class="trust-item">7 Days Replacement</span>
+          <span class="trust-item" data-i18n="days_replacement_7">7 Days Replacement</span>
           <span class="trust-divider">|</span>
-          <span class="trust-item">Secure Payment</span>
+          <span class="trust-item" data-i18n="secure_payment">Secure Payment</span>
           <span class="trust-divider">|</span>
-          <span class="trust-item">Free Returns</span>
+          <span class="trust-item" data-i18n="free_returns">Free Returns</span>
         </div>
 
         <!-- Product Features -->
         <div class="qv-features-section" id="qvFeaturesSection" style="display:none;">
-          <h4 class="features-title">About this item</h4>
+          <h4 class="features-title" data-i18n="about_this_item">About this item</h4>
           <ul class="features-list" id="qvFeaturesList"></ul>
         </div>
 
         <!-- Stock Status -->
-        <div class="qv-stock-status in-stock" id="qvStockStatus">In Stock</div>
+        <div class="qv-stock-status in-stock" id="qvStockStatus" data-i18n="in_stock">In Stock</div>
 
         <!-- Quantity Selector -->
         <div class="qv-quantity-selector">
-          <label for="qvQuantity">Qty:</label>
+          <label for="qvQuantity" data-i18n="qty">Qty:</label>
           <select class="quantity-dropdown" id="qvQuantity">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -337,26 +337,29 @@
 
         <!-- Action Buttons -->
         <div class="qv-actions">
-          <button class="qv-add-to-cart-btn" id="qvAddToCart" type="button">Add to Cart</button>
-          <button class="qv-buy-now-btn" id="qvBuyNow" type="button">Buy Now</button>
-          <button class="qv-wishlist-btn" id="qvWishlist" type="button">&#x2661; Add to Wishlist</button>
+          <button class="qv-add-to-cart-btn" id="qvAddToCart" type="button" data-i18n="add_to_cart">Add to Cart</button>
+          <button class="qv-buy-now-btn" id="qvBuyNow" type="button" data-i18n="buy_now">Buy Now</button>
+          <button class="qv-wishlist-btn" id="qvWishlist" type="button" data-i18n="add_to_wishlist">&#x2661; Add to Wishlist</button>
         </div>
       </div>
 
       <!-- Frequently Bought Together -->
       <div class="qv-fbt-section" id="qvFbtSection" style="display:none;">
-        <h4 class="fbt-title">Frequently Bought Together</h4>
+        <h4 class="fbt-title" data-i18n="fbt_title">Frequently Bought Together</h4>
         <div class="fbt-images-row" id="qvFbtImages"></div>
         <div class="fbt-text-list" id="qvFbtList"></div>
         <div class="fbt-total">
           <span class="fbt-total-label" id="qvFbtTotalLabel">Total price (<strong id="qvFbtItemCount">0</strong> items):</span>
           <strong id="qvFbtTotalAmount">&#8377;0</strong>
         </div>
-        <button class="fbt-add-all-btn" id="qvFbtAddAll" type="button">Add all to Cart</button>
+        <button class="fbt-add-all-btn" id="qvFbtAddAll" type="button" data-i18n="add_all_to_cart">Add all to Cart</button>
       </div>
     </div>
   </div>
 
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="products.js?v=20260607b"></script>
   <script src="amazon-ui-enhancements.js"></script>

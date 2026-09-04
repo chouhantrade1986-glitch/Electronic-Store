@@ -271,14 +271,17 @@ function applyAuthModeUi() {
   const isAdminMode = authMode === "admin";
   adminAccessCard.hidden = !isAdminMode;
 
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+
   if (!isAdminMode) {
-    authHeading.textContent = "Sign in or create account";
-    authSubheading.textContent = "Access your orders, saved profile, and account settings.";
+    authHeading.textContent = t.auth_heading || "Sign in or create account";
+    authSubheading.textContent = t.auth_subheading || "Access your orders, saved profile, and account settings.";
     return;
   }
 
-  authHeading.textContent = "Admin sign in";
-  authSubheading.textContent = "Use an admin account to open Seller Central and manage store operations.";
+  authHeading.textContent = t.admin_signin_title || "Admin sign in";
+  authSubheading.textContent = t.admin_signin_copy || "Use an admin account to open Seller Central and manage store operations.";
   signupTab.hidden = true;
   if (signupForm.classList.contains("active")) {
     setActiveView("signin");
@@ -289,21 +292,21 @@ function applyAuthModeUi() {
   }
 
   if (session && String(session.role || "").toLowerCase() === "admin") {
-    adminAccessTitle.textContent = "Admin session detected";
-    adminAccessCopy.textContent = "Your admin session is already active. Open the dashboard directly or switch user if needed.";
+    adminAccessTitle.textContent = t.admin_session_detected || "Admin session detected";
+    adminAccessCopy.textContent = t.admin_session_copy || "Your admin session is already active. Open the dashboard directly or switch user if needed.";
     adminAccessPrimaryLink.href = "admin-dashboard.html";
-    adminAccessPrimaryLink.textContent = "Open Admin Dashboard";
+    adminAccessPrimaryLink.textContent = t.open_admin_dashboard || "Open Admin Dashboard";
     adminAccessSecondaryLink.href = "account.html";
-    adminAccessSecondaryLink.textContent = "Admin Account";
+    adminAccessSecondaryLink.textContent = t.admin_account || "Admin Account";
     return;
   }
 
-  adminAccessTitle.textContent = "Seller Central access";
-  adminAccessCopy.textContent = "Sign in with your admin account. Customer and demo accounts remain unchanged.";
+  adminAccessTitle.textContent = t.seller_central_access || "Seller Central access";
+  adminAccessCopy.textContent = t.seller_central_copy || "Sign in with your admin account. Customer and demo accounts remain unchanged.";
   adminAccessPrimaryLink.href = "admin.html";
-  adminAccessPrimaryLink.textContent = "Admin Panel Home";
+  adminAccessPrimaryLink.textContent = t.admin_panel_home || "Admin Panel Home";
   adminAccessSecondaryLink.href = "index.html";
-  adminAccessSecondaryLink.textContent = "Back to Store";
+  adminAccessSecondaryLink.textContent = t.back_to_store || "Back to Store";
 }
 
 function saveSession(payload) {

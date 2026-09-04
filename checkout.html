@@ -25,7 +25,7 @@
       <p id="apiStatus" class="api-status">Connecting to secure order server...</p>
 
       <section class="flow-card">
-        <h2>1. Delivery address</h2>
+        <h2 data-i18n="shipping_address">1. Delivery address</h2>
         <div class="form-grid">
           <label>Full name<input id="fullName" type="text" placeholder="Enter full name" /></label>
           <label>Mobile number<input id="mobileNo" type="tel" placeholder="Enter mobile number" /></label>
@@ -38,7 +38,7 @@
       </section>
 
       <section class="flow-card">
-        <h2>2. Payment method</h2>
+        <h2 data-i18n="payment_method">2. Payment method</h2>
         <div class="payment-options">
           <label class="payment-option active">
             <input type="radio" name="paymentMethod" value="upi" checked />
@@ -108,12 +108,12 @@
       </section>
 
       <section class="flow-card">
-        <h2>3. Review items</h2>
+        <h2 data-i18n="review_items">3. Review items</h2>
         <div id="checkoutItems" class="checkout-items"></div>
       </section>
 
       <section class="flow-card">
-        <h2>4. Delivery slot</h2>
+        <h2 data-i18n="delivery_slot">4. Delivery slot</h2>
         <label class="delivery-slot-label">Choose a delivery window
           <select id="deliverySlotSelect"></select>
         </label>
@@ -123,7 +123,7 @@
     </section>
 
     <aside class="order-summary">
-      <h2>Order Summary</h2>
+      <h2 data-i18n="order_summary">Order Summary</h2>
       <div class="coupon-box">
         <label for="couponInput">Coupon code</label>
         <div class="coupon-row">
@@ -134,18 +134,21 @@
         <button id="removeCouponBtn" type="button" class="remove-coupon-btn" hidden>Remove coupon</button>
       </div>
       <p id="discountRow" hidden><span>Discount:</span> <strong id="discountValue">&#8377;0</strong></p>
-      <p><span>Items:</span> <strong id="summaryItems">0</strong></p>
-      <p><span>Subtotal:</span> <strong id="subtotalValue">₹0</strong></p>
-      <p><span>Shipping:</span> <strong id="shippingValue">₹0</strong></p>
-      <p><span>Tax:</span> <strong id="taxValue">₹0</strong></p>
-      <p class="grand-total"><span>Order total:</span> <strong id="totalValue">₹0</strong></p>
-      <button id="placeOrderBtn" type="button">Place your order</button>
+      <p><span data-i18n="items">Items:</span> <strong id="summaryItems">0</strong></p>
+      <p><span data-i18n="cart_subtotal">Subtotal:</span> <strong id="subtotalValue">₹0</strong></p>
+      <p><span data-i18n="shipping">Shipping:</span> <strong id="shippingValue">₹0</strong></p>
+      <p><span data-i18n="tax">Tax:</span> <strong id="taxValue">₹0</strong></p>
+      <p class="grand-total"><span data-i18n="order_total">Order total:</span> <strong id="totalValue">₹0</strong></p>
+      <button id="placeOrderBtn" type="button" data-i18n="place_order">Place your order</button>
       <p id="gatewaySummaryNote" class="gateway-summary-note" hidden>Razorpay secure checkout will open on the next step.</p>
       <p class="delivery-note">Expected delivery: 2-4 business days.</p>
       <p class="secure-line">By placing your order, you agree to ElectroMart terms.</p>
     </aside>
   </main>
 
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>

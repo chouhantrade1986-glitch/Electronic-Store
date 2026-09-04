@@ -12,6 +12,14 @@
   box-sizing: border-box;
 }
 
+[hidden],
+.product-detail[hidden],
+.missing-state[hidden],
+.detail-card[hidden],
+.detail-info-table[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: "Barlow", sans-serif;
@@ -270,6 +278,57 @@ a {
   border: 0;
   border-top: 1px solid #e5e7eb;
   margin: 0 0 10px;
+}
+
+.amazon-price-block {
+  margin: 12px 0;
+}
+.deal-badge-pill {
+  background-color: #cc0c39;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.price-row-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.discount-percent-val {
+  color: #cc0c39;
+  font-size: 28px;
+  font-weight: 300;
+}
+.currency-symbol {
+  font-size: 14px;
+  font-weight: 400;
+  vertical-align: super;
+}
+.main-price-val {
+  font-size: 28px;
+  font-weight: 500;
+  color: #0f1111;
+}
+.price-fraction {
+  font-size: 14px;
+  font-weight: 400;
+}
+.mrp-tax-row {
+  color: #565959;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.mrp-strikethrough {
+  text-decoration: line-through;
+}
+.tax-inclusive {
+  color: #0f1111;
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 .price {

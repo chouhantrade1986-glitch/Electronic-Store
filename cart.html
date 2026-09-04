@@ -21,13 +21,13 @@
   <main class="cart-main">
     <section class="cart-listing">
       <div class="section-head">
-        <h1>Your Cart</h1>
+        <h1 data-i18n="shopping_cart">Your Cart</h1>
         <p id="cartMeta">0 items</p>
       </div>
-      <p class="price-col-head">Price</p>
+      <p class="price-col-head" data-i18n="price">Price</p>
       <div id="cartItems" class="cart-items"></div>
       <div class="cart-actions">
-        <button id="clearCart" class="clear-btn" type="button">Clear Cart</button>
+        <button id="clearCart" class="clear-btn" type="button" data-i18n="clear_cart">Clear Cart</button>
       </div>
     </section>
 
@@ -35,51 +35,38 @@
       <p class="summary-items" id="summaryItems">Subtotal (0 items):</p>
       <p class="summary-total"><strong id="totalValue">INR 0</strong></p>
       <div class="delivery-box">
-        <h2>Delivery Estimate</h2>
+        <h2 data-i18n="delivery_estimate">Delivery Estimate</h2>
         <p id="cartDeliveryEstimate" class="delivery-estimate">Choose a slot at checkout for the earliest available delivery window.</p>
         <p id="cartReservationMessage" class="reservation-message"></p>
       </div>
       <div class="coupon-box">
-        <label for="couponInput">Coupon code</label>
+        <label for="couponInput" data-i18n="coupon_code">Coupon code</label>
         <div class="coupon-row">
           <input id="couponInput" type="text" placeholder="SAVE10" />
-          <button id="applyCouponBtn" type="button">Apply</button>
+          <button id="applyCouponBtn" type="button" data-i18n="apply">Apply</button>
         </div>
         <p id="couponMessage" class="coupon-message"></p>
         <button id="removeCouponBtn" type="button" class="remove-coupon-btn" hidden>Remove coupon</button>
       </div>
-      <button id="checkoutBtn" type="button">Proceed to Checkout</button>
-      <p class="secure-line">Secure checkout with encrypted payment.</p>
+      <button id="checkoutBtn" type="button" data-i18n="proceed_to_buy">Proceed to Checkout</button>
+      <p class="secure-line" data-i18n="secure_checkout">Secure checkout with encrypted payment.</p>
       <hr />
-      <h2>Order Summary</h2>
-      <p><span>Subtotal</span><strong id="subtotalValue">INR 0</strong></p>
-      <p><span>Shipping</span><strong id="shippingValue">INR 0</strong></p>
-      <p id="discountRow" hidden><span>Discount</span><strong id="discountValue">-INR 0</strong></p>
-      <p><span>Tax</span><strong id="taxValue">INR 0</strong></p>
-      <p class="total"><span>Order Total</span><strong id="orderTotalValue">INR 0</strong></p>
+      <h2 data-i18n="order_summary">Order Summary</h2>
+      <p><span data-i18n="cart_subtotal">Subtotal</span><strong id="subtotalValue">INR 0</strong></p>
+      <p><span data-i18n="shipping">Shipping</span><strong id="shippingValue">INR 0</strong></p>
+      <p id="discountRow" hidden><span data-i18n="discount">Discount</span><strong id="discountValue">-INR 0</strong></p>
+      <p><span data-i18n="tax">Tax</span><strong id="taxValue">INR 0</strong></p>
+      <p class="total"><span data-i18n="order_total">Order Total</span><strong id="orderTotalValue">INR 0</strong></p>
     </aside>
   </main>
 
-  <script src="cart.js"></script>
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
   <script src="header.js"></script>
+  <script src="cart.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

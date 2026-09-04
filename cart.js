@@ -135,6 +135,14 @@ function loadCatalogMap() {
   }
 }
 
+function saveCatalogMap(catalogMap) {
+  try {
+    localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify(catalogMap));
+  } catch (error) {
+    return;
+  }
+}
+
 function getCatalogProduct(productId) {
   const key = String(productId || "").trim();
   if (!key) {
@@ -144,6 +152,43 @@ function getCatalogProduct(productId) {
   const cached = loadCatalogMap();
   if (cached[key]) {
     return cached[key];
+  }
+
+  // Check live 751-product catalog from products-data.js
+  if (typeof window !== "undefined") {
+    if (window.EM_CATALOG_MAP) {
+      const p = typeof window.EM_CATALOG_MAP.get === "function" 
+        ? window.EM_CATALOG_MAP.get(key) 
+        : window.EM_CATALOG_MAP[key];
+      if (p) {
+        const mapped = {
+          id: String(p.id),
+          name: p.name || p.title || `Product #${p.id}`,
+          price: Number(p.price || 0),
+          image: (Array.isArray(p.images) && p.images[0]) || p.image || fallbackCatalogImage,
+          stock: p.stock !== undefined ? Number(p.stock) : 10
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
+
+    if (Array.isArray(window.EM_CATALOG)) {
+      const p = window.EM_CATALOG.find((item) => String(item.id) === key);
+      if (p) {
+        const mapped = {
+          id: String(p.id),
+          name: p.name || p.title || `Product #${p.id}`,
+          price: Number(p.price || 0),
+          image: (Array.isArray(p.images) && p.images[0]) || p.image || fallbackCatalogImage,
+          stock: p.stock !== undefined ? Number(p.stock) : 10
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
   }
 
   return catalog.find((item) => String(item.id) === key) || null;
@@ -290,19 +335,19 @@ function loadDeliverySlotState() {
 
 function cartItemCard(row) {
   return `
-    <article class="cart-item">
-      <a href="product-detail.html?id=${encodeURIComponent(row.id)}">
+    <article class="cart-item" data-id="${row.id}">
+      <a class="item-thumb" href="product-detail.html?id=${encodeURIComponent(row.id)}">
         <img src="${row.image}" alt="${row.name}" loading="lazy" />
       </a>
       <div>
-        <h3 class="item-title"><a href="product-detail.html?id=${encodeURIComponent(row.id)}">${row.name}</a></h3>
-        <p class="item-stock">In Stock</p>
+        <h3 class="item-title"><a href="product-detail.html?id=${encodeURIComponent(row.id)}">${window.getLocalizedTitle ? window.getLocalizedTitle(row, currentLang) : row.name}</a></h3>
+        <p class="item-stock" data-i18n="in_stock">In Stock</p>
         <p class="item-price">${money(row.price)} each</p>
         <div class="qty-controls">
           <button class="qty-btn" data-action="decrease" data-id="${row.id}" type="button">-</button>
           <strong>${row.quantity}</strong>
           <button class="qty-btn" data-action="increase" data-id="${row.id}" type="button">+</button>
-          <button class="remove-btn" data-action="remove" data-id="${row.id}" type="button">Remove</button>
+          <button class="remove-btn" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete">Remove</button>
         </div>
       </div>
       <strong class="item-total">${money(row.quantity * row.price)}</strong>
@@ -317,8 +362,13 @@ function renderCart() {
   const reservation = getReservationState(rows);
   const deliverySlot = loadDeliverySlotState();
 
-  cartMetaEl.textContent = `${itemCount} items`;
-  summaryItemsEl.textContent = `Subtotal (${itemCount} items):`;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+  const subtotalLabel = t.cart_subtotal || "Subtotal";
+  const itemsLabel = t.items || "items";
+
+  cartMetaEl.textContent = `${itemCount} ${itemsLabel}`;
+  summaryItemsEl.textContent = `${subtotalLabel} (${itemCount} ${itemsLabel}):`;
   subtotalEl.textContent = money(subtotal);
   shippingEl.textContent = money(shipping);
   taxEl.textContent = money(tax);
@@ -357,12 +407,21 @@ function renderCart() {
   }
 
   if (rows.length === 0) {
-    cartItemsEl.innerHTML = "<div class='empty-message'>Your cart is empty. Add items from the store.</div>";
+    const emptyMsg = t.cart_empty || "Your cart is empty. Add items from the store.";
+    cartItemsEl.innerHTML = `<div class='empty-message' data-i18n="cart_empty">${emptyMsg}</div>`;
+    if (typeof window.applyFullPageTranslation === "function") {
+      window.applyFullPageTranslation(currentLang);
+    }
     return;
   }
 
   cartItemsEl.innerHTML = rows.map(cartItemCard).join("");
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(currentLang);
+  }
 }
+
+window.renderCart = renderCart;
 
 function updateQuantity(productId, change) {
   const key = String(productId || "").trim();

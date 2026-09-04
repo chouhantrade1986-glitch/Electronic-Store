@@ -4,6 +4,19 @@
   
   const CART_STORAGE_KEY = "electromart_cart_v1";
   
+  if (typeof window.applyFullPageTranslation !== 'function' && typeof document !== 'undefined') {
+    const transScript = document.createElement('script');
+    transScript.src = 'translations.js';
+    transScript.onload = () => {
+      if (typeof applySavedLanguage === 'function') {
+        applySavedLanguage();
+      }
+    };
+    if (document.head) {
+      document.head.appendChild(transScript);
+    }
+  }
+  
   function loadCartMap() {
     try {
       const raw = localStorage.getItem(CART_STORAGE_KEY);
@@ -23,171 +36,301 @@
     }
   }
   
+  function getLocalizedNavText(key, fallbackText) {
+    const lang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+    const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[lang]) ? window.EM_TRANSLATIONS[lang] : (typeof translations !== "undefined" ? translations[lang] : null);
+    return (dict && dict[key]) ? dict[key] : (fallbackText || key);
+  }
+
   function injectHeader() {
     const container = document.getElementById('headerContainer');
     if (!container) return;
     
     container.innerHTML = `
     <header class="site-header" id="siteHeader">
-     <nav class="top-nav">
-       <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
-         <span class="brand-main">electro<span class="brand-accent">mart</span></span>
-         <span class="brand-sub">.in</span>
-       </a>
-       <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
-         <span data-i18n="header.deliverTo">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
-       </button>
-       <div class="search-stack">
-         <form id="searchForm" class="search-form" role="search" data-shared-search="1">
-           <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
-             <option id="catAll" value="all">All Catalogue</option>
-             <option id="catComputer" value="computer">Computers</option>
-             <option id="catLaptop" value="laptop">Laptops</option>
-             <option id="catPrinter" value="printer">Printers</option>
-             <option id="catMobile" value="mobile">Mobiles</option>
-             <option id="catAudio" value="audio">Audio</option>
-             <option id="catAccessory" value="accessory">Accessories</option>
-           </select>
-           <div class="search-input-wrap">
-             <input id="searchInput" type="search" list="smartKeywordList" placeholder="Search electronics" aria-label="Search products" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
-             <div id="searchSuggestions" class="search-suggestions" hidden></div>
-             <datalist id="smartKeywordList">
-               <option value="gaming"></option>
-               <option value="budget"></option>
-               <option value="premium"></option>
-               <option value="audio"></option>
-               <option value="mobile"></option>
-               <option value="laptop"></option>
-               <option value="under 500"></option>
-               <option value="above 1000"></option>
-             </datalist>
-           </div>
-           <button type="submit" data-i18n="header.searchBtn">Search</button>
-         </form>
-         <div class="search-trust-strip" aria-label="Search benefits">
-           <span>Top Deals live</span>
-           <span>Fast delivery</span>
-           <span>GST invoicing available</span>
-         </div>
-       </div>
-       <div class="nav-actions">
-         <a href="auth.html" class="account-link nav-action-card">
-           <span>Hello, sign in</span>
-           <strong data-i18n="nav.account">Account</strong>
-         </a>
-         <a href="orders.html" class="orders-link nav-action-card">
-           <span>Orders</span>
-           <strong data-i18n="nav.orders">Orders</strong>
-         </a>
-         <a href="wishlist.html" class="orders-link nav-action-card">
-           <span>Wishlist</span>
-           <strong>Wishlist</strong>
-         </a>
-         <a href="cart.html" class="cart-link"><span data-i18n="nav.cart">Cart</span> <span id="cartCount">0</span></a>
-       </div>
-     </nav>
+      <nav class="top-nav">
+        <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+          <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+          <span class="brand-sub">.in</span>
+        </a>
+        <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
+          <span class="deliver-to-prefix"><span data-i18n="deliver_to_prefix">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong></span>
+        </button>
+        <div class="search-stack search-bar-wrapper">
+          <form id="searchForm" class="search-form" role="search" data-shared-search="1">
+            <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
+              <option id="catAll" data-i18n="categoryFilter.all" value="all">All Categories</option>
+              <option id="catComputer" data-i18n="categoryFilter.computer" value="computer">Computers &amp; Desktops</option>
+              <option id="catLaptop" data-i18n="categoryFilter.laptop" value="laptop">Laptops &amp; Accessories</option>
+              <option id="catComponents" data-i18n="categoryFilter.components" value="components">Components &amp; Parts</option>
+              <option id="catPrinter" data-i18n="categoryFilter.printer" value="printer">Printers &amp; Cartridges</option>
+              <option id="catAudio" data-i18n="categoryFilter.audio" value="audio">Audio &amp; Headphones</option>
+              <option id="catMobile" data-i18n="categoryFilter.mobile" value="mobile">Mobile Accessories</option>
+            </select>
+            <div class="search-input-wrap">
+              <input id="searchInput" type="search" placeholder="Search ElectroMart.in" data-i18n-placeholder="search_placeholder" aria-label="Search products" autocomplete="off" />
+              <button id="searchClearBtn" class="search-clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+              <div id="searchSuggestions" class="search-suggestions" hidden></div>
+            </div>
+            <button id="searchSubmitBtn" class="search-submit-btn" type="submit" aria-label="Submit search">
+              <svg class="search-lens-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="#0f1111" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+        <div class="nav-actions">
+          <div class="nav-lang-dropdown-wrap">
+            <a href="language-settings.html" class="nav-lang-picker nav-action-card" title="Change Language">
+              <span class="flag-icon">🇮🇳</span>
+              <span class="lang-text">EN</span>
+              <span class="nav-arrow">▾</span>
+            </a>
+            <div class="lang-flyout-menu" id="navLangFlyout" aria-label="Language options">
+              <div class="flyout-arrow"></div>
+              <div class="lang-flyout-list">
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="en" /> <span>English - EN</span></label>
+                <div class="lang-flyout-divider"></div>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="hi" /> <span>हिन्दी - HI</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ta" /> <span>தமிழ் - TA</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="te" /> <span>తెలుగు - TE</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="kn" /> <span>ಕನ್ನಡ - KN</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ml" /> <span>മലയാളം - ML</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="bn" /> <span>বাংলা - BN</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="mr" /> <span>मराठी - MR</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ur" /> <span>اردو - UR</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="pa" /> <span>ਪੰਜਾਬੀ - PA</span></label>
+                <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="gu" /> <span>ગુજરાતી - GU</span></label>
+              </div>
+              <div class="lang-flyout-footer">
+                <a href="language-settings.html" data-i18n="lang_info_title">भाषा सेटिंग बदलें ›</a>
+              </div>
+            </div>
+          </div>
+          <div class="nav-account-dropdown-wrap">
+            <a href="auth.html" class="account-link nav-action-card" id="navAccountTrigger">
+              <span data-i18n="hello_sign_in">Hello, sign in</span>
+              <strong data-i18n="account_lists">Account &amp; Lists ▾</strong>
+            </a>
+            <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
+              <div class="flyout-arrow"></div>
+              <div class="flyout-top-signin">
+                <a href="auth.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
+                <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="auth.html" data-i18n="start_here">Start here.</a></p>
+              </div>
+              <div class="flyout-columns">
+                <div class="flyout-col">
+                  <h3 data-i18n="nav.yourLists">Your Lists</h3>
+                  <a href="wishlist.html" data-i18n="nav.createWishlist">Create a Wish List</a>
+                  <a href="wishlist.html" data-i18n="nav.wishAnyWebsite">Wish from Any Website</a>
+                  <a href="wishlist.html" data-i18n="nav.yourSavedItems">Your Saved Items</a>
+                  <a href="products.html" data-i18n="nav.discoverStyle">Discover Your Style</a>
+                  <a href="mega-store.html" data-i18n="nav.exploreShowroom">Explore Showroom</a>
+                </div>
+                <div class="flyout-col">
+                  <h3 data-i18n="footer.yourAccount">Your Account</h3>
+                  <a href="account.html" data-i18n="footer.yourAccount">Your Account</a>
+                  <a href="orders.html" data-i18n="nav.orders">Your Orders</a>
+                  <a href="wishlist.html" data-i18n="footer.wishlist">Your Wish List</a>
+                  <a href="todays-deals.html" data-i18n="nav.yourRecommendations">Your Recommendations</a>
+                  <a href="pc-builder.html" data-i18n="dept.pcBuilder">PC Builder &amp; Custom PC</a>
+                  <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
+                  <a href="faq.html" data-i18n="footer.faq">FAQ &amp; Help</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="orders.html" class="orders-link nav-action-card">
+            <span data-i18n="returns">Returns</span>
+            <strong data-i18n="orders">&amp; Orders</strong>
+          </a>
+          <a href="cart.html" class="cart-link nav-action-card" aria-label="Shopping Cart">
+            <div class="cart-icon-container">
+              <span id="cartCount" class="cart-count-badge">0</span>
+              <svg class="cart-trolley-icon" viewBox="0 0 38 32" width="38" height="32" aria-hidden="true">
+                <path fill="#ffffff" d="M10 24c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zm18 0c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zM8.5 6L11 18h18l3.6-12H8.5zM6.1 2H2v3h2.6l4.6 15.6c-.3.5-.5 1.1-.5 1.7 0 1.7 1.3 3 3 3h19v-3H11.8c-.2 0-.3-.1-.3-.3l.1-.6 1.4-2.4H28c1.1 0 2.1-.6 2.6-1.6l4.9-10.4c.3-.6.1-1.3-.4-1.7-.5-.4-1.2-.4-1.7-.1L32 5H7.2L6.1 2z"/>
+              </svg>
+            </div>
+            <span class="cart-text" data-i18n="cart">Cart</span>
+          </a>
+        </div>
+      </nav>
 
-     <nav class="category-nav home-main-nav" aria-label="Main navigation">
-       <button id="deptTrigger" class="dept-trigger amazon-hamburger" type="button" aria-expanded="false" aria-controls="deptSidebar">
-         <span class="hamburger-icon" aria-hidden="true">
-           <span></span><span></span><span></span>
-         </span>
-         <span class="hamburger-label">All</span>
-       </button>
-     </nav>
+      <nav class="category-nav home-main-nav" aria-label="Main navigation">
+        <button id="deptTrigger" class="dept-trigger amazon-hamburger" type="button" aria-expanded="false" aria-controls="deptSidebar">
+          <span class="hamburger-icon" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="hamburger-label" data-i18n="all">All</span>
+        </button>
+        <div class="category-quick-links">
+          <a href="todays-deals.html" class="category-quick-link" data-i18n="todays_deals">Today's Deals</a>
+          <a href="best-sellers.html" class="category-quick-link" data-i18n="best_sellers">Best Sellers</a>
+          <a href="products.html" class="category-quick-link" data-i18n="all_products">All Products</a>
+          <a href="products.html?search=mobile" class="category-quick-link" data-i18n="mobiles">Mobiles</a>
+          <a href="laptop.html" class="category-quick-link" data-i18n="laptops">Laptops</a>
+          <a href="pc-builder.html" class="category-quick-link" data-i18n="pc_builder">PC Builder</a>
+          <a href="creator-studio.html" class="category-quick-link" data-i18n="creator_studio">Creator Studio</a>
+          <a href="faq.html" class="category-quick-link" data-i18n="customer_service">Customer Service</a>
+        </div>
+        <div class="category-nav-promo">
+          <a href="products.html?search=gst" class="category-promo-link" data-i18n="fast_delivery">⚡ Fast Delivery | GST Invoicing</a>
+        </div>
+      </nav>
 
-       <!-- Amazon-style All Departments Sidebar -->
-       <div id="deptOverlay" class="dept-overlay" hidden></div>
-       <aside id="deptSidebar" class="dept-sidebar" aria-label="All departments" hidden>
-         <button id="deptClose" class="dept-close" aria-label="Close departments menu">&times;</button>
-         <nav class="dept-sidebar-nav">
-                                   <div class="dept-sidebar-footer">
-                                     <div class="footer-links">
-                                       <a href="about.html" target="_blank">About</a>
-                                       <a href="contact.html" target="_blank">Contact</a>
-                                       <a href="https://twitter.com/" target="_blank" aria-label="Twitter" class="footer-social"><svg width="18" height="18" viewBox="0 0 20 20"><path fill="#1da1f2" d="M20 3.924a8.18 8.18 0 0 1-2.357.646A4.118 4.118 0 0 0 19.448 2.3a8.224 8.224 0 0 1-2.605.996A4.107 4.107 0 0 0 9.85 7.034a11.65 11.65 0 0 1-8.457-4.287a4.106 4.106 0 0 0 1.27 5.482A4.073 4.073 0 0 1 .8 7.15v.052a4.108 4.108 0 0 0 3.292 4.025a4.095 4.095 0 0 1-1.853.07a4.108 4.108 0 0 0 3.834 2.85A8.233 8.233 0 0 1 0 17.54a11.616 11.616 0 0 0 6.29 1.84c7.547 0 11.675-6.155 11.675-11.49c0-.175-.004-.349-.012-.522A8.18 8.18 0 0 0 20 3.924z"/></svg></a>
-                                       <a href="https://facebook.com/" target="_blank" aria-label="Facebook" class="footer-social"><svg width="18" height="18" viewBox="0 0 20 20"><path fill="#1877f3" d="M18.896 0H1.104C.494 0 0 .494 0 1.104v17.792C0 19.506.494 20 1.104 20h9.583v-7.745H8.077v-3.02h2.61V7.413c0-2.587 1.582-3.997 3.892-3.997c1.107 0 2.057.082 2.334.119v2.707h-1.602c-1.257 0-1.5.597-1.5 1.474v1.934h3l-.391 3.02h-2.609V20h5.116c.61 0 1.104-.494 1.104-1.104V1.104C20 .494 19.506 0 18.896 0"/></svg></a>
-                                     </div>
-                                     <div class="footer-copy">&copy; 2026 ElectroMart</div>
-                                   </div>
-                           <div class="sidebar-theme-toggle">
-                             <label class="theme-switch">
-                               <input type="checkbox" id="themeToggle">
-                               <span class="slider"></span>
-                             </label>
-                             <span class="theme-label" id="themeLabel">Light Mode</span>
-                           </div>
-                   <div class="dept-search-box">
-                     <input type="text" id="deptQuickSearch" placeholder="Search departments..." aria-label="Search departments" autocomplete="off">
-                   </div>
-                   <!-- Accessibility: ARIA roles for navigation -->
-                   <ul class="dept-nav-list" role="menu" aria-label="Departments">
-           <div class="dept-signin-block">
-             <span class="signin-icon" id="sidebarAvatar" aria-hidden="true">👤</span>
-             <span class="signin-text" id="sidebarGreeting"><strong>Hello,</strong> <a href="auth.html">sign in</a></span>
-           </div>
-           <h2 class="dept-sidebar-title">All Departments</h2>
-           <!-- Trending Section -->
-           <div class="dept-section">
-             <div class="dept-label">Trending</div>
-             <a class="dept-link" href="best-sellers.html">Best Sellers</a>
-             <a class="dept-link" href="products.html">New Arrivals</a>
-             <a class="dept-link" href="products.html">Top Rated</a>
-           </div>
-           <div class="dept-divider"></div>
+      <!-- Amazon-style All Departments Sidebar -->
+      <div id="deptOverlay" class="dept-overlay" hidden></div>
+      <aside id="deptSidebar" class="dept-sidebar" aria-label="All departments" hidden>
+        <div class="dept-header-signin">
+          <div class="dept-header-user">
+            <span class="dept-header-avatar" id="sidebarAvatar" aria-hidden="true">👤</span>
+            <span class="dept-header-greeting" id="sidebarGreeting" data-i18n="hello_sign_in_menu"><strong>Hello,</strong> <a href="auth.html">sign in</a></span>
+          </div>
+          <button id="deptCloseInside" class="dept-close-inside" type="button" aria-label="Close menu">&times;</button>
+        </div>
 
-         <!-- Shop by Category Section -->
-         <div class="dept-section">
-           <div class="dept-label collapsible-label" tabindex="0" data-section="shop-category" role="menuitem" aria-expanded="true">Shop by Category <span class="collapse-arrow">&#9660;</span></div>
-           <a class="dept-link" href="desktops.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="10" rx="2" fill="#0a4b78"/></svg></span>Desktops <span class="badge badge-hot">Hot</span></a>
-           <a class="dept-link" href="barebone-desktop.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="6" rx="1.5" fill="#0a4b78"/></svg></span>Barebone Desktop</a>
-           <a class="dept-link" href="branded-desktop.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="4" y="6" width="12" height="8" rx="2" fill="#0a4b78"/></svg></span>Branded Desktop</a>
-           <a class="dept-link" href="laptop.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="5" rx="1.5" fill="#0a4b78"/><rect x="5" y="13" width="10" height="2" rx="1" fill="#0a4b78"/></svg></span>Laptops <span class="badge badge-new">New</span></a>
-           <a class="dept-link" href="cpu-processor.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="6" y="6" width="8" height="8" rx="2" fill="#0a4b78"/></svg></span>CPU / Processor</a>
-           <a class="dept-link" href="motherboard.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="3" y="8" width="14" height="4" rx="1.5" fill="#0a4b78"/></svg></span>Motherboard</a>
-           <a class="dept-link" href="desktop-ram-memory.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="8" width="10" height="4" rx="1" fill="#0a4b78"/></svg></span>Desktop RAM</a>
-           <a class="dept-link" href="graphics-card-gpu.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="4" y="9" width="12" height="2" rx="1" fill="#0a4b78"/></svg></span>Graphics Card / GPU <span class="badge badge-sale">Sale</span></a>
-           <a class="dept-link" href="power-supply-smps.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="7" y="8" width="6" height="4" rx="1" fill="#0a4b78"/></svg></span>Power Supply / SMPS</a>
-           <a class="dept-link" href="cabinet.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="10" height="6" rx="2" fill="#0a4b78"/></svg></span>Cabinet</a>
-           <a class="dept-link" href="cabinet-fan.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="#0a4b78"/></svg></span>Cabinet Fan</a>
-           <a class="dept-link" href="printer.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="4" y="8" width="12" height="4" rx="1.5" fill="#0a4b78"/></svg></span>Printer</a>
-           <a class="dept-link" href="pc-builder.html"><span class="dept-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="6" y="7" width="8" height="6" rx="1.5" fill="#0a4b78"/></svg></span>PC Builder</a>
-         </div>
-         <div class="dept-divider"></div>
+        <!-- Multi-Panel Sliding Layout -->
+        <div class="dept-slider-track" id="deptSliderTrack">
+          <!-- MAIN PANEL -->
+          <div class="dept-panel" id="deptMainPanel">
+            <!-- Trending -->
+            <div class="dept-section-title" data-i18n="menu_trending">Trending</div>
+            <a class="dept-menu-item" href="best-sellers.html" data-i18n="best_sellers">Best Sellers</a>
+            <a class="dept-menu-item" href="todays-deals.html" data-i18n="todays_deals">Today's Deals</a>
+            <a class="dept-menu-item" href="products.html?filter=new" data-i18n="new_arrivals">New Arrivals</a>
 
-         <!-- Help & Settings Section -->
-         <div class="dept-section">
-           <div class="dept-label collapsible-label" tabindex="0" data-section="help-settings" role="menuitem" aria-expanded="true">Help & Settings <span class="collapse-arrow">&#9660;</span></div>
-           <a class="dept-link" href="account.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" fill="#0a4b78"/><rect x="3" y="13" width="14" height="5" rx="2.5" fill="#0a4b78"/></svg></span>Your Account</a>
-           <a class="dept-link" href="orders.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="12" rx="2" fill="#0a4b78"/><rect x="6" y="2" width="8" height="3" rx="1.5" fill="#0a4b78"/></svg></span>Your Orders</a>
-           <span class="notif-badge" id="ordersNotif"></span>
-           <span class="notif-badge" id="wishlistNotif"></span>
-           <a class="dept-link" href="faq.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#0a4b78" stroke-width="2"/><text x="10" y="15" text-anchor="middle" font-size="12" fill="#0a4b78">?</text></svg></span>FAQ</a>
-           <a class="dept-link" href="auth.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#0a4b78" stroke-width="2"/><path d="M10 6v4l3 3" stroke="#0a4b78" stroke-width="2" stroke-linecap="round"/></svg></span>Sign In</a>
-           <a class="dept-link" href="shipping-policy.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="7" width="16" height="8" rx="2" fill="#0a4b78"/><rect x="5" y="5" width="10" height="2" rx="1" fill="#0a4b78"/></svg></span>Shipping Policy</a>
-           <a class="dept-link" href="refund-policy.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#0a4b78" stroke-width="2"/><path d="M7 10l3 3 3-3" stroke="#0a4b78" stroke-width="2" stroke-linecap="round"/></svg></span>Refund Policy</a>
-           <a class="dept-link" href="terms.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="2" fill="#0a4b78"/></svg></span>Terms &amp; Conditions</a>
-           <a class="dept-link" href="accessibility-statement.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#0a4b78" stroke-width="2"/></svg></span>Accessibility Statement</a>
-           <a class="dept-link" href="review.html"><span class="dept-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="7" width="14" height="6" rx="2" fill="#0a4b78"/></svg></span>Customer Reviews</a>
-         </div>
-       </nav>
-     </aside>
-   </header>
+            <hr class="dept-menu-divider" />
+
+            <!-- Shop by Department -->
+            <div class="dept-section-title" data-i18n="menu_shop_department">Shop by Department</div>
+            <button class="dept-menu-item dept-submenu-trigger" type="button" data-submenu="pc-components">
+              <span data-i18n="components_parts">PC Components &amp; Parts</span>
+              <span class="dept-arrow" aria-hidden="true">›</span>
+            </button>
+            <button class="dept-menu-item dept-submenu-trigger" type="button" data-submenu="laptops-desktops">
+              <span data-i18n="laptops_desktops">Laptops &amp; Desktops</span>
+              <span class="dept-arrow" aria-hidden="true">›</span>
+            </button>
+            <a class="dept-menu-item" href="products.html?search=mobile">
+              <span data-i18n="mobiles_accessories">Mobiles &amp; Accessories</span>
+              <span class="dept-arrow" aria-hidden="true">›</span>
+            </a>
+            <a class="dept-menu-item" href="products.html?search=audio">
+              <span data-i18n="audio_headphones">Audio &amp; Headphones</span>
+              <span class="dept-arrow" aria-hidden="true">›</span>
+            </a>
+            <div id="deptShopMore" class="dept-collapsible" hidden>
+              <a class="dept-menu-item" href="printer.html">
+                <span data-i18n="printers_office">Printers &amp; Office</span>
+                <span class="dept-arrow" aria-hidden="true">›</span>
+              </a>
+              <a class="dept-menu-item" href="barebone-desktop.html">
+                <span data-i18n="barebone_desktops">Barebone Desktops</span>
+                <span class="dept-arrow" aria-hidden="true">›</span>
+              </a>
+              <a class="dept-menu-item" href="branded-desktop.html">
+                <span data-i18n="branded_desktops">Branded Desktops</span>
+                <span class="dept-arrow" aria-hidden="true">›</span>
+              </a>
+              <a class="dept-menu-item" href="pc-builder.html">
+                <span data-i18n="pc_builder_custom">PC Builder (Custom Rig)</span>
+                <span class="dept-arrow" aria-hidden="true">›</span>
+              </a>
+            </div>
+            <button id="deptSeeAllBtn" class="dept-menu-item dept-see-all-btn" type="button" aria-expanded="false">
+              <span id="deptSeeAllLabel" data-i18n="see_all">See all</span>
+              <span class="dept-toggle-arrow" id="deptSeeAllArrow" aria-hidden="true">▾</span>
+            </button>
+
+            <hr class="dept-menu-divider" />
+
+            <!-- Programs & Features -->
+            <div class="dept-section-title" data-i18n="menu_programs">Programs &amp; Features</div>
+            <a class="dept-menu-item" href="pc-builder.html" data-i18n="pc_builder_custom">PC Builder (Custom Rig)</a>
+            <a class="dept-menu-item" href="creator-studio.html" data-i18n="creator_studio">Creator Studio</a>
+            <a class="dept-menu-item" href="products.html?search=gst" data-i18n="business_gst_invoicing">Business &amp; GST Invoicing</a>
+            <a class="dept-menu-item" href="brands.html" data-i18n="top_brands_store">Top Brands Store</a>
+
+            <hr class="dept-menu-divider" />
+
+            <!-- Help & Settings -->
+            <div class="dept-section-title" data-i18n="menu_help_settings">Help &amp; Settings</div>
+            <a class="dept-menu-item" href="account.html" data-i18n="your_account">Your Account</a>
+            <a class="dept-menu-item" href="orders.html" data-i18n="returns_orders">Returns &amp; Orders</a>
+            <a class="dept-menu-item dept-drawer-lang-link" href="language-settings.html">🇮🇳 <span class="dept-drawer-lang-text" id="deptDrawerLangText">English</span></a>
+            <a class="dept-menu-item" href="faq.html" data-i18n="customer_service_help">Customer Service / Help</a>
+            <a class="dept-menu-item" href="auth.html" data-i18n="sign_in">Sign In</a>
+          </div>
+
+          <!-- SUBMENU PANEL -->
+          <div class="dept-panel" id="deptSubPanel">
+            <div class="dept-back-row" id="deptBackBtn" role="button" tabindex="0">
+              <span class="dept-back-arrow">‹</span> <strong data-i18n="main_menu">MAIN MENU</strong>
+            </div>
+            <div class="dept-section-title drawer-subcategory-title" id="deptSubTitle" data-i18n="drawer_subcategory">Subcategory</div>
+            <div id="deptSubList"></div>
+          </div>
+        </div>
+      </aside>
+      <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
+    </header>
     `;
     
     syncCartCount();
+    applySavedLanguage();
 
     // All Departments Sidebar Logic
     const deptTrigger = document.getElementById('deptTrigger');
     const deptSidebar = document.getElementById('deptSidebar');
     const deptOverlay = document.getElementById('deptOverlay');
     const deptClose = document.getElementById('deptClose');
+    const deptCloseInside = document.getElementById('deptCloseInside');
+    const sliderTrack = document.getElementById('deptSliderTrack');
+    const subTitle = document.getElementById('deptSubTitle');
+    const subList = document.getElementById('deptSubList');
+    const backBtn = document.getElementById('deptBackBtn');
+    const deptSeeAllBtn = document.getElementById('deptSeeAllBtn');
+    const deptShopMore = document.getElementById('deptShopMore');
+    const deptSeeAllLabel = document.getElementById('deptSeeAllLabel');
+    const deptSeeAllArrow = document.getElementById('deptSeeAllArrow');
+
+    const subcategories = {
+      'pc-components': {
+        title: 'PC Components & Parts',
+        titleKey: 'components_parts',
+        items: [
+          { name: 'Motherboard', url: 'motherboard.html', key: 'subcat_motherboard' },
+          { name: 'Desktop RAM / Memory', url: 'desktop-ram-memory.html', key: 'subcat_ram' },
+          { name: 'CPU / Processors', url: 'cpu-processor.html', key: 'subcat_cpu' },
+          { name: 'Graphics Card / GPU', url: 'graphics-card-gpu.html', key: 'subcat_gpu' },
+          { name: 'Power Supply / SMPS', url: 'power-supply-smps.html', key: 'subcat_smps' },
+          { name: 'Cabinet / PC Cases', url: 'cabinet.html', key: 'subcat_cabinet' },
+          { name: 'Cabinet Fan & Cooling', url: 'cabinet-fan.html', key: 'subcat_cooling' },
+          { name: 'PC Builder Tool', url: 'pc-builder.html', key: 'subcat_pc_tool' },
+          { name: 'All in PC Components', url: 'products.html?category=computer', key: 'subcat_all_components' }
+        ]
+      },
+      'laptops-desktops': {
+        title: 'Laptops & Desktops',
+        titleKey: 'laptops_desktops',
+        items: [
+          { name: 'All Laptops', url: 'laptop.html', key: 'subcat_all_laptops' },
+          { name: 'Gaming Laptops', url: 'laptop.html?filter=gaming', key: 'subcat_gaming_laptops' },
+          { name: 'Branded Desktops', url: 'branded-desktop.html', key: 'subcat_branded_desktops' },
+          { name: 'Barebone Desktops', url: 'barebone-desktop.html', key: 'subcat_barebone_desktops' },
+          { name: 'All Desktop Computers', url: 'desktops.html', key: 'subcat_all_desktops' }
+        ]
+      }
+    };
 
     function openSidebar() {
       if (!deptSidebar || !deptOverlay) return;
       deptSidebar.removeAttribute('hidden');
       deptOverlay.removeAttribute('hidden');
-      // Small delay to ensure CSS transition works after removing hidden
+      if (deptClose) {
+        deptClose.removeAttribute('hidden');
+        deptClose.classList.add('visible');
+      }
       setTimeout(() => {
         deptSidebar.classList.add('open');
       }, 10);
@@ -197,25 +340,214 @@
     function closeSidebar() {
       if (!deptSidebar || !deptOverlay) return;
       deptSidebar.classList.remove('open');
+      if (deptClose) {
+        deptClose.classList.remove('visible');
+      }
+      if (sliderTrack) sliderTrack.classList.remove('in-subpanel');
+      if (deptShopMore) {
+        deptShopMore.setAttribute('hidden', '');
+        if (deptSeeAllBtn) deptSeeAllBtn.setAttribute('aria-expanded', 'false');
+        if (deptSeeAllLabel) deptSeeAllLabel.textContent = 'See all';
+        if (deptSeeAllArrow) deptSeeAllArrow.textContent = '▾';
+      }
       if (deptTrigger) deptTrigger.setAttribute('aria-expanded', 'false');
-      // Wait for transition to finish before hiding elements
       setTimeout(() => {
         deptSidebar.setAttribute('hidden', '');
         deptOverlay.setAttribute('hidden', '');
-      }, 250); // Matches 0.25s transition in CSS
+        if (deptClose) deptClose.setAttribute('hidden', '');
+      }, 280);
     }
 
-    if (deptTrigger) {
-      deptTrigger.addEventListener('click', openSidebar);
+    if (deptTrigger) deptTrigger.addEventListener('click', openSidebar);
+    if (deptClose) deptClose.addEventListener('click', closeSidebar);
+    if (deptCloseInside) deptCloseInside.addEventListener('click', closeSidebar);
+    if (deptOverlay) deptOverlay.addEventListener('click', closeSidebar);
+
+    // See all / See less toggle in drawer
+    if (deptSeeAllBtn && deptShopMore) {
+      deptSeeAllBtn.addEventListener('click', () => {
+        const isHidden = deptShopMore.hasAttribute('hidden');
+        if (isHidden) {
+          deptShopMore.removeAttribute('hidden');
+          deptSeeAllBtn.setAttribute('aria-expanded', 'true');
+          if (deptSeeAllLabel) deptSeeAllLabel.textContent = 'See less';
+          if (deptSeeAllArrow) deptSeeAllArrow.textContent = '▴';
+        } else {
+          deptShopMore.setAttribute('hidden', '');
+          deptSeeAllBtn.setAttribute('aria-expanded', 'false');
+          if (deptSeeAllLabel) deptSeeAllLabel.textContent = 'See all';
+          if (deptSeeAllArrow) deptSeeAllArrow.textContent = '▾';
+        }
+      });
     }
-    if (deptClose) {
-      deptClose.addEventListener('click', closeSidebar);
+
+    // Submenu click events
+    if (deptSidebar) {
+      const triggers = deptSidebar.querySelectorAll('.dept-submenu-trigger');
+      triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          const key = trigger.dataset.submenu;
+          const data = subcategories[key];
+          if (!data || !sliderTrack || !subTitle || !subList) return;
+
+          const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+          const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+          subTitle.textContent = (data.titleKey && dict[data.titleKey]) ? dict[data.titleKey] : data.title;
+          subList.innerHTML = data.items.map(item => {
+            const label = (item.key && dict[item.key]) ? dict[item.key] : item.name;
+            return `
+            <a class="dept-menu-item" href="${item.url}" data-i18n="${item.key || ''}">
+              <span>${label}</span>
+            </a>
+          `;
+          }).join('');
+
+          sliderTrack.classList.add('in-subpanel');
+        });
+      });
     }
-    if (deptOverlay) {
-      deptOverlay.addEventListener('click', closeSidebar);
+
+    if (backBtn && sliderTrack) {
+      backBtn.addEventListener('click', () => {
+        sliderTrack.classList.remove('in-subpanel');
+      });
     }
+
+    // Search clear button and search history handling
+    const searchInput = document.getElementById('searchInput');
+    const searchClearBtn = document.getElementById('searchClearBtn');
+    const searchForm = document.getElementById('searchForm');
+
+    if (searchInput && searchClearBtn) {
+      const toggleClearBtn = () => {
+        if (searchInput.value.trim().length > 0) {
+          searchClearBtn.removeAttribute('hidden');
+        } else {
+          searchClearBtn.setAttribute('hidden', '');
+        }
+      };
+
+      searchInput.addEventListener('input', toggleClearBtn);
+      searchInput.addEventListener('keyup', toggleClearBtn);
+
+      searchClearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        searchInput.value = '';
+        searchClearBtn.setAttribute('hidden', '');
+        searchInput.focus();
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        searchInput.dispatchEvent(new Event('focus', { bubbles: true }));
+      });
+    }
+
+    if (searchForm && searchInput) {
+      searchForm.addEventListener('submit', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          try {
+            const raw = localStorage.getItem('electromart_search_history_v1');
+            const history = raw ? JSON.parse(raw) : [];
+            const updated = Array.from(new Set([query, ...history])).slice(0, 8);
+            localStorage.setItem('electromart_search_history_v1', JSON.stringify(updated));
+          } catch {}
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && deptSidebar && deptSidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    });
   }
   
+  // Apply language immediately on load
+  const LANGUAGE_STORAGE_KEY = "electromart_lang_v1";
+  const LANGUAGE_DISPLAY_NAMES = {
+    en: "English",
+    hi: "हिन्दी - HI",
+    ta: "தமிழ் - TA",
+    te: "తెలుగు - TE",
+    kn: "ಕನ್ನಡ - KN",
+    ml: "മലയാളം - ML",
+    bn: "বাংলা - BN",
+    mr: "मराठी - MR",
+    ur: "اردو - UR",
+    pa: "ਪੰਜਾਬੀ - PA",
+    gu: "ગુજરાતી - GU"
+  };
+
+  function applySavedLanguage() {
+    try {
+      const savedLang = (localStorage.getItem(LANGUAGE_STORAGE_KEY) || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+
+      // 1. Sync header language badges and radio inputs
+      document.querySelectorAll('.lang-text, #currentLangCode').forEach(el => {
+        el.textContent = savedLang.toUpperCase();
+      });
+      document.querySelectorAll('input[name="headerLangRadio"]').forEach(radio => {
+        radio.checked = (radio.value === savedLang);
+      });
+
+      // 2. Sync hamburger sidebar drawer language link text & subcategory title
+      document.querySelectorAll('.dept-drawer-lang-text, #deptDrawerLangText').forEach(el => {
+        el.textContent = LANGUAGE_DISPLAY_NAMES[savedLang] || "English";
+      });
+      const subTitleEl = document.getElementById('deptSubTitle');
+      if (subTitleEl) {
+        const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[savedLang]) ? window.EM_TRANSLATIONS[savedLang] : (window.translations && window.translations[savedLang] ? window.translations[savedLang] : null);
+        if (dict && dict.drawer_subcategory) {
+          subTitleEl.textContent = dict.drawer_subcategory;
+        }
+      }
+
+      // 3. Sync footer language dropdown selectors
+      document.querySelectorAll('#footerLanguageSelect, .footer-language-select, #languageSelect').forEach(el => {
+        if (el.value !== savedLang) {
+          el.value = savedLang;
+        }
+      });
+
+      document.documentElement.lang = savedLang;
+
+      if (typeof window.applyFullPageTranslation === 'function') {
+        window.applyFullPageTranslation(savedLang);
+      }
+    } catch (e) {
+      console.warn("applySavedLanguage error:", e);
+    }
+  }
+  applySavedLanguage();
+
+  // Listen for changes from header and footer language selectors
+  document.addEventListener('change', (e) => {
+    if (e.target && e.target.name === 'headerLangRadio') {
+      const nextLang = String(e.target.value || 'en').toLowerCase();
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLang);
+      localStorage.setItem('electromart_lang', nextLang);
+      applySavedLanguage();
+      if (typeof window.applyTranslations === 'function') {
+        window.applyTranslations();
+      }
+      return;
+    }
+    if (e.target && (e.target.id === 'footerLanguageSelect' || e.target.classList.contains('footer-language-select'))) {
+      const nextLang = String(e.target.value || 'en').toLowerCase();
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLang);
+      localStorage.setItem('electromart_lang', nextLang);
+      applySavedLanguage();
+      if (typeof window.applyTranslations === 'function') {
+        window.applyTranslations();
+      }
+    }
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === LANGUAGE_STORAGE_KEY || e.key === 'electromart_lang') {
+      applySavedLanguage();
+    }
+  });
+
   // Apply theme immediately on load
   const THEME_STORAGE_KEY = "electromart_theme_v1";
   function applySavedTheme() {
@@ -478,170 +810,6 @@
   }
 
   initProductHoverEffect();
-
-  // Amazon-style Search Auto-Suggestions
-  function initSearchSuggestions() {
-    const searchInput = document.getElementById('searchInput');
-    const suggestionsBox = document.getElementById('searchSuggestions');
-    
-    if (!searchInput || !suggestionsBox) return;
-
-    const RECENT_SEARCHES_KEY = 'electromart_recent_searches';
-    const TRENDING_SEARCHES = [
-      'gaming laptop',
-      'wireless headphones',
-      'smartphone under 20000',
-      'mechanical keyboard',
-      '4k monitor',
-      'bluetooth speaker'
-    ];
-
-    let debounceTimer;
-
-    function getRecentSearches() {
-      try {
-        const searches = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]');
-        return searches.slice(0, 5); // Show max 5 recent searches
-      } catch {
-        return [];
-      }
-    }
-
-    function saveRecentSearch(query) {
-      if (!query || query.trim().length < 2) return;
-      
-      try {
-        let searches = getRecentSearches();
-        // Remove duplicate if exists
-        searches = searches.filter(s => s.toLowerCase() !== query.toLowerCase());
-        // Add to beginning
-        searches.unshift(query.trim());
-        // Keep only last 10
-        searches = searches.slice(0, 10);
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(searches));
-      } catch {}
-    }
-
-    function renderSuggestions(suggestions, type) {
-      if (!suggestions || suggestions.length === 0) {
-        suggestionsBox.hidden = true;
-        suggestionsBox.innerHTML = '';
-        return;
-      }
-
-      const html = suggestions.map(item => {
-        const icon = type === 'recent' ? '🕐' : (type === 'trending' ? '🔥' : '🔍');
-        return `
-          <div class="suggestion-item" data-query="${item}" role="option">
-            <span class="suggestion-icon">${icon}</span>
-            <span class="suggestion-text">${item}</span>
-          </div>
-        `;
-      }).join('');
-
-      suggestionsBox.innerHTML = html;
-      suggestionsBox.hidden = false;
-    }
-
-    function showDefaultSuggestions() {
-      const recent = getRecentSearches();
-      const trending = TRENDING_SEARCHES;
-
-      if (recent.length > 0) {
-        renderSuggestions(recent, 'recent');
-      } else {
-        renderSuggestions(trending, 'trending');
-      }
-    }
-
-    // Show suggestions on focus
-    searchInput.addEventListener('focus', () => {
-      if (searchInput.value.trim().length === 0) {
-        showDefaultSuggestions();
-      }
-    });
-
-    // Handle input with debounce
-    searchInput.addEventListener('input', (e) => {
-      clearTimeout(debounceTimer);
-      const query = e.target.value.trim();
-
-      if (query.length === 0) {
-        showDefaultSuggestions();
-        return;
-      }
-
-      if (query.length < 2) {
-        suggestionsBox.hidden = true;
-        return;
-      }
-
-      // Debounce API call or filtering
-      debounceTimer = setTimeout(() => {
-        // For now, just hide suggestions during typing
-        // In future, integrate with backend search API
-        suggestionsBox.hidden = true;
-      }, 300);
-    });
-
-    // Handle suggestion click
-    suggestionsBox.addEventListener('click', (e) => {
-      const item = e.target.closest('.suggestion-item');
-      if (!item) return;
-
-      const query = item.dataset.query;
-      searchInput.value = query;
-      suggestionsBox.hidden = true;
-      saveRecentSearch(query);
-
-      // Trigger search form submission
-      const searchForm = document.getElementById('searchForm');
-      if (searchForm) {
-        searchForm.dispatchEvent(new Event('submit', { cancelable: true }));
-      }
-    });
-
-    // Hide suggestions on click outside
-    document.addEventListener('click', (e) => {
-      if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-        suggestionsBox.hidden = true;
-      }
-    });
-
-    // Keyboard navigation
-    searchInput.addEventListener('keydown', (e) => {
-      const items = suggestionsBox.querySelectorAll('.suggestion-item');
-      if (items.length === 0) return;
-
-      const currentIndex = Array.from(items).findIndex(item => item.classList.contains('active'));
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-        items.forEach(item => item.classList.remove('active'));
-        items[nextIndex].classList.add('active');
-        items[nextIndex].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-        items.forEach(item => item.classList.remove('active'));
-        items[prevIndex].classList.add('active');
-        items[prevIndex].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'Enter') {
-        if (currentIndex >= 0) {
-          e.preventDefault();
-          items[currentIndex].click();
-        }
-      } else if (e.key === 'Escape') {
-        suggestionsBox.hidden = true;
-      }
-    });
-  }
-
-  // Initialize search suggestions after header is injected
-  setTimeout(() => {
-    initSearchSuggestions();
-  }, 100);
 
 })();
 

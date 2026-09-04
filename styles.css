@@ -742,14 +742,8 @@ a {
 }
 
 .search-form button::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111827' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='m20 20-4.2-4.2'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  flex: none;
+  content: none !important;
+  display: none !important;
 }
 
 .search-form button:hover {
@@ -1057,35 +1051,57 @@ a {
   text-transform: uppercase;
 }
 
-.cart-link #cartCount {
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  background: #0f1111;
-  color: #f8fafc;
-  border-radius: 999px;
-  margin-left: 0;
-}
-
 .cart-link {
   display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--orange-border);
-  background: var(--orange);
-  color: #0f1111 !important;
-  border-radius: var(--btn-radius);
-  min-height: var(--btn-height);
-  padding: 0 var(--btn-padding-x);
-  font-weight: 800;
+  align-items: flex-end;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 6px 10px;
+  color: #ffffff;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+  font-weight: 700;
   box-shadow: none;
 }
 
-.nav-actions .cart-link:hover {
-  border-color: #f2c200;
-  background: var(--orange-hover);
-  transform: none;
+.cart-link:hover {
+  border-color: #ffffff;
+  background: transparent;
+}
+
+.cart-icon-container {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 32px;
+  width: 38px;
+}
+
+.cart-link #cartCount,
+.cart-count-badge {
+  position: absolute;
+  top: -3px;
+  left: 13px;
+  color: #f08804;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  width: 19px;
+  height: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+.cart-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
 }
 
 .category-nav {

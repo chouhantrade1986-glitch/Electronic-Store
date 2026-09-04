@@ -241,7 +241,8 @@ const productKeywordLine = document.getElementById("productKeywordLine");
 const productDescription = document.getElementById("productDescription");
 const productSpecs = document.getElementById("productSpecs");
 const addToCartBtn = document.getElementById("addToCartBtn");
-const wishlistBtn = document.getElementById("wishlistBtn");
+const wishlistBtn = document.getElementById("saveWishlistBtn") || document.getElementById("wishlistBtn");
+const saveWishlistBtn = wishlistBtn;
 const compareBtn = document.getElementById("compareBtn");
 const cartCount = document.getElementById("cartCount");
 const crumbName = document.getElementById("crumbName");
@@ -314,35 +315,115 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;");
 }
 
+function renderAmazonPrice(product, priceVal, listPriceVal, discountVal, trans) {
+  if (!product) return;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = trans || ((window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {});
+  
+  const price = priceVal != null ? Number(priceVal) : Number(product.price || 0);
+  const listPrice = listPriceVal != null ? Number(listPriceVal) : Number(product.listPrice || product.mrp || product.price || 0);
+  const discount = discountVal != null ? Number(discountVal) : (listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0);
+
+  // 1. Deal Badge (Lightning Deal)
+  const dealBadge = document.getElementById("dealBadgePill") || document.querySelector(".deal-badge-pill");
+  if (dealBadge) {
+    if (discount > 0 || product.featured) {
+      dealBadge.textContent = t.lightning_deal || "लाइटनिंग डील";
+      dealBadge.style.display = "inline-block";
+    } else {
+      dealBadge.style.display = "none";
+    }
+  }
+
+  // 2. Discount percentage (-33% / -20% in bold red)
+  const discountEl = document.getElementById("productDiscountPercent");
+  if (discountEl) {
+    if (discount > 0) {
+      discountEl.textContent = `-${discount}%`;
+      discountEl.style.display = "inline";
+    } else {
+      discountEl.style.display = "none";
+    }
+  }
+
+  // 3. Main price and optional fraction
+  const mainPriceEl = document.getElementById("productMainPrice");
+  if (mainPriceEl) {
+    mainPriceEl.textContent = Math.floor(price).toLocaleString("en-IN");
+  }
+
+  const fractionEl = document.getElementById("productPriceFraction") || document.querySelector(".price-fraction");
+  if (fractionEl) {
+    const fraction = price % 1 !== 0 ? (price % 1).toFixed(2).slice(2) : "";
+    fractionEl.textContent = fraction;
+  }
+
+  // 4. MRP strikethrough & Tax inclusive
+  const mrpEl = document.getElementById("productMrpPrice");
+  const mrpTaxRow = document.getElementById("mrpTaxRow") || document.querySelector(".mrp-tax-row");
+  if (mrpEl) {
+    if (listPrice > price) {
+      mrpEl.textContent = `₹${Math.floor(listPrice).toLocaleString("en-IN")}`;
+      mrpEl.style.display = "inline";
+      if (mrpTaxRow) {
+        const mrpLabel = mrpTaxRow.querySelector(".mrp-label");
+        if (mrpLabel) mrpLabel.style.display = "inline";
+      }
+    } else {
+      mrpEl.style.display = "none";
+      if (mrpTaxRow) {
+        const mrpLabel = mrpTaxRow.querySelector(".mrp-label");
+        if (mrpLabel) mrpLabel.style.display = "none";
+      }
+    }
+  }
+
+  const taxInclusive = document.querySelector(".tax-inclusive");
+  if (taxInclusive) {
+    taxInclusive.textContent = t.inclusive_all_taxes || "सभी टैक्स सहित";
+  }
+}
+window.renderAmazonPrice = renderAmazonPrice;
+
 function renderOffers(price, listPrice, category) {
   if (!offersBlock || !offersGrid) {
     return;
   }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const savings = Math.max(0, Number(listPrice) - Number(price));
   const offers = [
     {
-      title: "Bank Offer",
-      text: savings > 0
+      key: "sub_bank_offer",
+      title: t.sub_bank_offer || "Bank Offer",
+      descKey: "partner_card_cashback",
+      text: t.partner_card_cashback || (savings > 0
         ? `Extra 5% cashback with partner cards on orders above ${money(Math.max(1999, price))}.`
-        : "Flat 5% cashback with selected credit cards."
+        : "Flat 5% cashback with selected credit cards.")
     },
     {
-      title: "No Cost EMI",
-      text: `EMI starts from ${money(Math.max(299, Math.round(price / 24)))} per month.`
+      key: "sub_no_cost_emi",
+      title: t.sub_no_cost_emi || "No Cost EMI",
+      descKey: "no_cost_emi_subtext",
+      text: t.no_cost_emi_subtext || `EMI starts from ${money(Math.max(299, Math.round(price / 24)))} per month.`
     },
     {
-      title: "Exchange Offer",
-      text: `Exchange your old ${category} and get up to ${money(Math.round(price * 0.18))} off.`
+      key: "sub_exchange_offer",
+      title: t.sub_exchange_offer || "Exchange Offer",
+      descKey: "exchange_offer_subtext",
+      text: t.exchange_offer_subtext || `Exchange your old ${category} and get up to ${money(Math.round(price * 0.18))} off.`
     },
     {
-      title: "Partner Offer",
-      text: "GST invoice available and business purchase support."
+      key: "sub_partner_offer",
+      title: t.sub_partner_offer || "Partner Offer",
+      descKey: "partner_offer_subtext",
+      text: t.partner_offer_subtext || "GST invoice available and business purchase support."
     }
   ];
   offersGrid.innerHTML = offers.map((item) => `
     <article class="offer-item">
-      <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+      <h3 data-i18n="${item.key}">${escapeHtml(item.title)}</h3>
+      <p data-i18n="${item.descKey}">${escapeHtml(item.text)}</p>
     </article>
   `).join("");
   offersBlock.hidden = false;
@@ -352,15 +433,35 @@ function renderServices(product, isInStock) {
   if (!servicesBlock || !serviceDeliveryText || !serviceReturnText || !serviceWarrantyText || !serviceSellerText) {
     return;
   }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const categoryFamily = getProductCategoryFamily(product);
+
+  const deliveryH3 = servicesBlock.querySelector('[data-i18n="sub_delivery"]') || servicesBlock.querySelectorAll(".service-item h3")[0];
+  const returnsH3 = servicesBlock.querySelector('[data-i18n="sub_returns"]') || servicesBlock.querySelectorAll(".service-item h3")[1];
+  const warrantyH3 = servicesBlock.querySelector('[data-i18n="sub_warranty"]') || servicesBlock.querySelectorAll(".service-item h3")[2];
+  const sellerH3 = servicesBlock.querySelector('[data-i18n="sub_seller"]') || servicesBlock.querySelectorAll(".service-item h3")[3];
+
+  if (deliveryH3) deliveryH3.textContent = t.sub_delivery || "Delivery";
+  if (returnsH3) returnsH3.textContent = t.sub_returns || "Returns";
+  if (warrantyH3) warrantyH3.textContent = t.sub_warranty || "Warranty";
+  if (sellerH3) sellerH3.textContent = t.sub_seller || "Seller";
+
   serviceDeliveryText.textContent = isInStock
-    ? "FREE delivery by tomorrow in select cities."
-    : "Delivery date will be shown after stock update.";
-  serviceReturnText.textContent = "7-day replacement, no-questions-asked for defective items.";
-  serviceWarrantyText.textContent = categoryFamily === "laptop" || categoryFamily === "computer"
-    ? "1 Year manufacturer warranty + service center support."
-    : "6 Months to 1 Year standard brand warranty.";
-  serviceSellerText.textContent = `${product.brand} Authorized Seller | GST invoice available.`;
+    ? (t.free_delivery_subtext || "FREE delivery by tomorrow in select cities.")
+    : (t.delivery_date_after_stock || "Delivery date will be shown after stock update.");
+  serviceDeliveryText.setAttribute("data-i18n", "free_delivery_subtext");
+
+  serviceReturnText.textContent = t.return_subtext || "7 दिनों में आसान रिप्लेसमेंट";
+  serviceReturnText.setAttribute("data-i18n", "return_subtext");
+
+  serviceWarrantyText.textContent = (categoryFamily === "laptop" || categoryFamily === "computer")
+    ? (t.warranty_1yr_subtext || t.warranty_subtext || "1 Year manufacturer warranty + service center support.")
+    : (t.warranty_std_subtext || "6 Months to 1 Year standard brand warranty.");
+  serviceWarrantyText.setAttribute("data-i18n", "warranty_subtext");
+
+  serviceSellerText.textContent = `${product.brand ? product.brand + " " : ""}${t.seller_subtext || "अधिकृत विक्रेता एवं जीएसटी चालान उपलब्ध"}`;
+  serviceSellerText.setAttribute("data-i18n", "seller_subtext");
   servicesBlock.hidden = false;
 }
 
@@ -368,25 +469,49 @@ function renderReviewSummary(product) {
   if (!reviewsBlock || !reviewHeadline || !reviewBars) {
     return;
   }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
+
   const rating = Math.max(0, Math.min(5, Number(product.rating || 0)));
   const totalReviews = Math.max(8, Math.round(42 + (rating * 37)));
-  reviewHeadline.innerHTML = `${rating.toFixed(1)} &#9733; from ${totalReviews.toLocaleString("en-IN")} ratings`;
+  reviewHeadline.innerHTML = `${rating.toFixed(1)} &#9733; (${totalReviews.toLocaleString("en-IN")} ${t.global_ratings || t.ratings_label || "रेटिंग"})`;
 
   const base = Math.max(20, Math.round((rating / 5) * 100));
   const distribution = [
-    { stars: "5 star", value: Math.min(92, base + 20) },
-    { stars: "4 star", value: Math.min(80, Math.max(5, base - 5)) },
-    { stars: "3 star", value: Math.min(60, Math.max(4, base - 25)) },
-    { stars: "2 star", value: Math.min(35, Math.max(3, base - 45)) },
-    { stars: "1 star", value: Math.min(22, Math.max(2, base - 60)) }
+    { stars: 5, value: Math.min(92, base + 20) },
+    { stars: 4, value: Math.min(80, Math.max(5, base - 5)) },
+    { stars: 3, value: Math.min(60, Math.max(4, base - 25)) },
+    { stars: 2, value: Math.min(35, Math.max(3, base - 45)) },
+    { stars: 1, value: Math.min(22, Math.max(2, base - 60)) }
   ];
+  const starWord = t.tbl_rating || "स्टार";
   reviewBars.innerHTML = distribution.map((item) => `
     <div class="review-bar">
-      <span>${item.stars}</span>
+      <span>${item.stars} ${starWord}</span>
       <div class="review-track"><div class="review-fill" style="width:${item.value}%"></div></div>
       <span>${item.value}%</span>
     </div>
   `).join("");
+
+  const translateBtn = document.getElementById("translateReviewsBtn");
+  if (translateBtn) {
+    translateBtn.textContent = t.translate_reviews_btn || "Translate all reviews";
+  }
+
+  const reviewsList = document.getElementById("customerReviewsList");
+  if (reviewsList) {
+    reviewsList.innerHTML = `
+      <div class="sample-review-item" style="border-top: 1px solid #e7e7e7; padding: 14px 0; margin-top: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-weight: 600; font-size: 0.95rem;">Rahul S.</span>
+          <span style="color: #c45500; font-size: 0.85rem; font-weight: 600;">${t.verified_purchase || "Verified Purchase"}</span>
+        </div>
+        <div style="color: #de7921; font-size: 0.95rem; margin-bottom: 4px;">★★★★★ <strong style="color: #0f1111; margin-left: 4px;">${t.val_top_review_title || "Excellent quality and fast delivery"}</strong></div>
+        <p style="font-size: 0.92rem; color: #333; line-height: 1.4;">${t.val_sample_review || "Authentic product with genuine warranty. Fully satisfied with ElectroMart service."}</p>
+      </div>
+    `;
+  }
+
   reviewsBlock.hidden = false;
 }
 
@@ -394,24 +519,26 @@ function renderQa(product) {
   if (!qaBlock || !qaList) {
     return;
   }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
   const qa = [
     {
-      q: "Does this product include GST invoice?",
-      a: "Yes, GST invoice is available for all eligible orders."
+      q: t.qa_q1 || "Does this product include GST invoice?",
+      a: t.qa_a1 || "Yes, GST invoice is available for all eligible orders."
     },
     {
-      q: "Is this suitable for office and home use?",
-      a: `Yes, ${product.name} is suitable for both regular office and home usage.`
+      q: t.qa_q2 || "Is this suitable for office and home use?",
+      a: t.qa_a2 || `Yes, ${product.name} is suitable for both regular office and home usage.`
     },
     {
-      q: "What is the return policy?",
-      a: "Replacement is available within 7 days if the item is damaged or not working."
+      q: t.qa_q3 || "What is the return policy?",
+      a: t.qa_a3 || "Replacement is available within 7 days if the item is damaged or not working."
     }
   ];
   qaList.innerHTML = qa.map((item) => `
     <article class="qa-item">
-      <h3>Q: ${escapeHtml(item.q)}</h3>
-      <p>A: ${escapeHtml(item.a)}</p>
+      <h3><strong>${t.qa_q_prefix || "Q:"}</strong> ${escapeHtml(item.q)}</h3>
+      <p><strong>${t.qa_a_prefix || "A:"}</strong> ${escapeHtml(item.a)}</p>
     </article>
   `).join("");
   qaBlock.hidden = false;
@@ -838,13 +965,16 @@ function syncCartCount() {
 }
 
 function syncWishlistButton(productId) {
-  if (!wishlistBtn) {
+  const targetWishlistBtn = document.getElementById("saveWishlistBtn") || wishlistBtn;
+  if (!targetWishlistBtn) {
     return;
   }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const active = isWishlisted(productId);
-  wishlistBtn.classList.toggle("active", active);
-  wishlistBtn.textContent = active ? "Wishlisted" : "Save to Wishlist";
-  wishlistBtn.setAttribute("data-id", String(productId || ""));
+  targetWishlistBtn.classList.toggle("active", active);
+  targetWishlistBtn.textContent = active ? (t.wishlisted || "Wishlisted") : (t.save_to_wishlist || "Save to Wishlist");
+  targetWishlistBtn.setAttribute("data-id", String(productId || ""));
 }
 
 function syncCompareButton(productId) {
@@ -1014,25 +1144,28 @@ function buildProductCategorySignal(product) {
 
 function getProductCategoryFamily(product) {
   const fallbackCategory = asCleanText(product?.category, "accessory").toLowerCase();
+  if (fallbackCategory.includes("laptop")) {
+    return "laptop";
+  }
   const signal = buildProductCategorySignal(product);
 
-  if (/(printer|plotter|scanner|ink|toner|cartridge|label printer|all printer)/.test(signal)) {
-    return "printer";
+  if (/\b(laptop|notebook|macbook|chromebook|thinkpad|ideapad|zenbook|vivobook)\b/i.test(signal)) {
+    return "laptop";
   }
-  if (/(headphone|headset|earbud|earphone|speaker|soundbar|microphone|audio|home theater)/.test(signal)) {
+  if (/\b(headphone|headset|earbud|earphone|speaker|soundbar|microphone|audio|home theater)\b/i.test(signal)) {
     return "audio";
   }
-  if (/(battery|keyboard|adapter|charger|cable|case|cover|power bank|mouse|pendrive|ssd enclosure|cooler|fan|dock|hub|bag|accessory)/.test(signal)) {
+  if (/\b(printers?|plotters?|scanners?|inkjet|laserjet|toners?|cartridges?|label printer|all printer)\b/i.test(signal)) {
+    return "printer";
+  }
+  if (/\b(battery|keyboard|adapter|charger|cable|case|cover|power bank|mouse|pendrive|ssd enclosure|cooler|fan|dock|hub|bag|accessory)\b/i.test(signal)) {
     return "accessory";
   }
-  if (/(desktop|workstation|cabinet|all in one|aio|monitor|computer|gaming pc|office tower|assembled pc|mini pc)/.test(signal)) {
+  if (/\b(desktop|workstation|cabinet|all in one|aio|monitor|computer|gaming pc|office tower|assembled pc|mini pc)\b/i.test(signal)) {
     return "computer";
   }
-  if (/(mobile|smartphone|phone|tablet|wearable|smartwatch|watch)/.test(signal)) {
+  if (/\b(mobile|smartphone|phone|tablet|wearable|smartwatch|watch)\b/i.test(signal)) {
     return "mobile";
-  }
-  if (/(laptop|notebook|macbook|chromebook)/.test(signal)) {
-    return "laptop";
   }
 
   if (["laptop", "mobile", "audio", "accessory", "computer", "printer"].includes(fallbackCategory)) {
@@ -1040,6 +1173,7 @@ function getProductCategoryFamily(product) {
   }
   return fallbackCategory || "accessory";
 }
+window.getProductCategoryFamily = getProductCategoryFamily;
 
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -1050,14 +1184,17 @@ function getLocalProductById(productId) {
   if (!productId) {
     return null;
   }
-  const catalogProduct = loadCatalogMap()[productId];
-  const staticProduct = allProducts.find((product) => String(product.id) === productId);
+  const emMap = window.EM_CATALOG_MAP || {};
+  const emList = window.EM_CATALOG || [];
+  const catalogProduct = emMap[productId] || emList.find((p) => String(p.id) === String(productId)) || loadCatalogMap()[productId];
+  const staticProduct = allProducts.find((product) => String(product.id) === String(productId));
   const mappedCatalog = catalogProduct ? mapApiProduct(catalogProduct) : null;
   const mappedStatic = staticProduct ? mapApiProduct(staticProduct) : null;
   return mergeProductSources(mappedCatalog, mappedStatic);
 }
 
 function mapApiProduct(product) {
+  if (!product) return null;
   const id = asCleanText(product.id);
   const name = asCleanText(product.name, id ? `Product #${id}` : "Unknown Product");
   const brand = asCleanText(product.brand, "Generic");
@@ -1069,8 +1206,23 @@ function mapApiProduct(product) {
     brand,
     segment,
     category,
-    price: Number(product.price || 0),
-    listPrice: Number(product.listPrice || product.price || 0),
+    title: product.title || null,
+    aboutSpecs: product.aboutSpecs || null,
+    price: (function() {
+      let p = Number(product.price || 0);
+      if (p >= 50000 && (category.includes("battery") || category.includes("keyboard") || category.includes("adaptor") || category.includes("adapter") || category.includes("cooling") || category.includes("accessories") || category.includes("accessory") || name.toLowerCase().includes("battery") || name.toLowerCase().includes("keyboard"))) {
+        p = Math.round(p / 100);
+      }
+      return p;
+    })(),
+    listPrice: (function() {
+      let lp = Number(product.listPrice || product.price || 0);
+      let p = Number(product.price || 0);
+      if (lp >= 50000 && (category.includes("battery") || category.includes("keyboard") || category.includes("adaptor") || category.includes("adapter") || category.includes("cooling") || category.includes("accessories") || category.includes("accessory") || name.toLowerCase().includes("battery") || name.toLowerCase().includes("keyboard"))) {
+        lp = Math.round(lp / 100);
+      }
+      return lp;
+    })(),
     rating: Number(product.rating || 0),
     image: normalizeImageUrl(product.image || ""),
     images: parseMediaEntries(product.images),
@@ -1078,7 +1230,7 @@ function mapApiProduct(product) {
     media: parseMediaEntries(product.media),
     moq: Number(product.moq || 0),
     stock: Number(product.stock || 0),
-    description: asCleanText(product.description || ""),
+    description: typeof product.description === "object" ? product.description : asCleanText(product.description || ""),
     keywords: parseKeywordList(product.keywords),
     sku: asCleanText(product.sku || ""),
     status: asCleanText(product.status || "active", "active").toLowerCase(),
@@ -1086,6 +1238,7 @@ function mapApiProduct(product) {
     featured: Boolean(product.featured)
   };
 }
+window.mapApiProduct = mapApiProduct;
 
 function mergeProductListsById(...lists) {
   const merged = new Map();
@@ -1209,6 +1362,8 @@ function mergeProductSources(primary, secondary) {
   return {
     id: asCleanText(a.id || b.id),
     name: asCleanText(a.name || b.name, "Unknown Product"),
+    title: a.title || b.title || null,
+    aboutSpecs: a.aboutSpecs || b.aboutSpecs || null,
     brand: asCleanText(a.brand || b.brand, "Generic"),
     segment: asCleanText(a.segment || b.segment, "b2c").toLowerCase(),
     category: asCleanText(a.category || b.category, "accessory").toLowerCase(),
@@ -1221,7 +1376,7 @@ function mergeProductSources(primary, secondary) {
     media: mergedMedia,
     moq: pickNumber(a.moq, b.moq, 0),
     stock: pickNumber(a.stock, b.stock, 0),
-    description: asCleanText(a.description || b.description || ""),
+    description: (typeof a.description === "object" ? a.description : (typeof b.description === "object" ? b.description : asCleanText(a.description || b.description || ""))),
     keywords: Array.isArray(a.keywords) && a.keywords.length ? a.keywords : (Array.isArray(b.keywords) ? b.keywords : []),
     sku: asCleanText(a.sku || b.sku || ""),
     status: asCleanText(a.status || b.status || "active", "active").toLowerCase(),
@@ -1655,12 +1810,16 @@ function renderRelatedProducts(items) {
     relatedBlock.hidden = true;
     return;
   }
-  relatedGrid.innerHTML = items.map((item) => `
-    <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-item">
-      <img src="${normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL}" alt="${item.name}" loading="lazy" />
-      <p>${item.name}</p>
-    </a>
-  `).join("");
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  relatedGrid.innerHTML = items.map((item) => {
+    const locTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(item, currentLang) : (item.title || item.name || "")).trim();
+    return `
+      <a href="product-detail.html?id=${encodeURIComponent(item.id)}" class="related-item">
+        <img src="${normalizeImageUrl(item.image) || FALLBACK_IMAGE_URL}" alt="${escapeHtml(locTitle)}" loading="lazy" />
+        <p>${escapeHtml(locTitle)}</p>
+      </a>
+    `;
+  }).join("");
   relatedBlock.hidden = false;
 }
 
@@ -1708,7 +1867,161 @@ async function hydrateRelatedProducts(product) {
   renderRelatedProducts(buildRelatedProducts(product, mergeProductListsById(remoteCandidates, localCandidates)));
 }
 
+function renderProductInfoTable(product, stockCount, categoryFamily, price, listPrice) {
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
+
+  const statusUpper = String(product.status || "active").toUpperCase();
+  const statusMap = {
+    ACTIVE: t.val_active || "सक्रिय",
+    INACTIVE: t.val_inactive || "निष्क्रिय"
+  };
+  const featuredMap = {
+    Yes: t.val_yes || "हाँ",
+    No: t.val_no || "नहीं",
+    true: t.val_yes || "हाँ",
+    false: t.val_no || "नहीं"
+  };
+
+  if (infoSku) infoSku.textContent = product.sku || "--";
+  if (infoBrand) infoBrand.textContent = product.brand || "--";
+    const catFamily = categoryFamily || getProductCategoryFamily(product);
+  const localizedCat = (window.getLocalizedCategory ? window.getLocalizedCategory(catFamily, currentLang) : "") || t["cat_" + catFamily] || formatCategoryLabel(catFamily);
+  if (infoCategory) infoCategory.textContent = localizedCat;
+  if (infoSegment) infoSegment.textContent = String(product.segment || "--").toUpperCase();
+  if (infoPrice) infoPrice.textContent = money(price != null ? price : product.price);
+  if (infoListPrice) infoListPrice.textContent = money(listPrice != null ? listPrice : (product.listPrice || product.price));
+  if (infoStock) infoStock.textContent = (stockCount == null || stockCount === "") ? (t.val_available || "उपलब्ध") : String(stockCount);
+  if (infoStatus) infoStatus.textContent = statusMap[statusUpper] || statusUpper;
+  if (infoFulfillment) infoFulfillment.textContent = String(product.fulfillment || "fbm").toUpperCase();
+  if (infoMoq) infoMoq.textContent = Number(product.moq || 0) > 0 ? String(product.moq) : "--";
+  if (infoFeatured) infoFeatured.textContent = featuredMap[product.featured] || (product.featured ? (t.val_yes || "हाँ") : (t.val_no || "नहीं"));
+    const kwMap = {
+    "Mobile and Wearable Tech": t.kw_mobile_wearable || "मोबाइल और वियरेबल तकनीक",
+    "lenovo": "Lenovo",
+    "laptop": t.cat_laptop || "लैपटॉप",
+    "business laptop": t.kw_business_laptop || "बिज़नेस लैपटॉप",
+    "ryzen 5": "Ryzen 5"
+  };
+  if (infoKeywords) {
+    if (Array.isArray(product.keywords) && product.keywords.length) {
+      infoKeywords.textContent = product.keywords.map(k => kwMap[k] || k).join(", ");
+    } else {
+      infoKeywords.textContent = "--";
+    }
+  }
+  if (infoRating) infoRating.innerHTML = `${product.rating} &#9733;`;
+
+  const tableContainer = document.getElementById("productInfoTable") || detailInfoTable;
+  if (tableContainer) {
+    tableContainer.querySelectorAll("[data-i18n]").forEach((el) => {
+      const k = el.getAttribute("data-i18n");
+      if (t[k]) el.textContent = t[k];
+    });
+  }
+
+  if (detailInfoTable) detailInfoTable.hidden = false;
+}
+window.renderProductInfoTable = renderProductInfoTable;
+
+
+function localizeSpec(spec, t) {
+  if (!spec) return "";
+  let s = String(spec);
+  return s
+    .replace(/\bCapacity\b/gi, t.spec_capacity || "Capacity")
+    .replace(/\bVoltage\b/gi, t.spec_voltage || "Voltage")
+    .replace(/\bWarranty Details?\b/gi, t.spec_warranty || "Warranty Details")
+    .replace(/\bHigh performance processor\b/gi, t.spec_high_performance || "High performance processor")
+    .replace(/\bSSD storage\b/gi, t.spec_ssd_storage || "SSD storage")
+    .replace(/\bLong battery life\b/gi, t.spec_battery_life || "Long battery life")
+    .replace(/\bAMOLED display\b/gi, t.spec_amoled_display || "AMOLED display")
+    .replace(/\bFast charging\b/gi, t.spec_fast_charging || "Fast charging")
+    .replace(/\bMulti-camera setup\b/gi, t.spec_multi_camera || "Multi-camera setup")
+    .replace(/\bBluetooth 5\.2\b/gi, t.spec_bluetooth || "Bluetooth 5.2")
+    .replace(/\bDeep bass\b/gi, t.spec_deep_bass || "Deep bass")
+    .replace(/\bLow-latency mode\b/gi, t.spec_low_latency || "Low-latency mode")
+    .replace(/\bDurable build\b/gi, t.spec_durable_build || "Durable build")
+    .replace(/\bWarranty included\b/gi, t.spec_warranty_included || "Warranty included")
+    .replace(/\bUniversal compatibility\b/gi, t.spec_universal_compat || "Universal compatibility")
+    .replace(/\bQuality assured\b/gi, t.spec_quality_assured || "Quality assured")
+    .replace(/\bTrusted by customers\b/gi, t.spec_trusted_customers || "Trusted by customers")
+    .replace(/\bFast delivery options\b/gi, t.spec_fast_delivery || "Fast delivery options");
+}
+
+function renderFrequentlyBoughtTogether(product, t) {
+  const container = document.getElementById("frequentlyBoughtContainer");
+  if (!container) return;
+  const candidates = allProducts.filter(p => p.id !== product.id && p.category === product.category);
+  const bundleItem = candidates.length > 0 ? candidates[0] : (allProducts.find(p => p.id !== product.id) || null);
+  if (!bundleItem) {
+    container.hidden = true;
+    return;
+  }
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const mainTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : product.name).trim();
+  const bundleItemTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(bundleItem, currentLang) : bundleItem.name).trim();
+  const total = Number(product.price || 0) + Number(bundleItem.price || 0);
+  container.innerHTML = `
+    <h2>${t.frequently_bought_together || "Frequently bought together"}</h2>
+    <div class="bundle-flex" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-top: 12px;">
+      <div class="bundle-images" style="display: flex; align-items: center; gap: 12px;">
+        <img src="${product.image}" alt="${escapeHtml(mainTitle)}" style="width: 90px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;" />
+        <span style="font-size: 1.5rem; font-weight: bold; color: #555;">+</span>
+        <img src="${bundleItem.image}" alt="${escapeHtml(bundleItemTitle)}" style="width: 90px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;" />
+      </div>
+      <div class="bundle-details" style="flex: 1; min-width: 250px;">
+        <p style="font-size: 1.05rem; margin-bottom: 8px;">
+          <strong>${t.cart_subtotal || "Total"}:</strong> <span style="color: #b12704; font-size: 1.25rem; font-weight: bold;">${money(total)}</span>
+        </p>
+        <div style="font-size: 0.9rem; color: #333; margin-bottom: 12px;">
+          <label style="display: block; margin-bottom: 4px;"><input type="checkbox" checked disabled /> <strong>${t.val_this_item || "This item:"}</strong> <span class="this-item-title">${escapeHtml(mainTitle)}</span> (${money(product.price)})</label>
+          <label style="display: block;"><input type="checkbox" id="bundleAccCheckbox" checked /> <span class="bundle-item-title">${escapeHtml(bundleItemTitle)}</span> (${money(bundleItem.price)})</label>
+        </div>
+        <button type="button" id="addBundleBtn" class="primary-btn" style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 8px 18px; font-weight: 600; cursor: pointer;">
+          ${t.add_both_to_cart || "Add both to Cart"}
+        </button>
+      </div>
+    </div>
+  `;
+  container.hidden = false;
+
+  const btn = document.getElementById("addBundleBtn");
+  if (btn) {
+    btn.onclick = () => {
+      addProductToCart(product.id, 1);
+      const chk = document.getElementById("bundleAccCheckbox");
+      if (chk && chk.checked) {
+        addProductToCart(bundleItem.id, 1);
+      }
+      syncCartCount();
+      btn.textContent = t.cart_success_added || "Added to Cart!";
+      setTimeout(() => {
+        btn.textContent = t.add_both_to_cart || "Add both to Cart";
+      }, 2000);
+    };
+  }
+}
+
+
+let activeRenderedProduct = null;
+function renderProductHeader(product) {
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const localizedTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : (product.title || product.name || "")).trim();
+  const titleEl = document.getElementById("productName") || document.getElementById("productTitle") || document.querySelector("h2.product-title") || document.querySelector("h1.product-title");
+  if (titleEl) titleEl.textContent = localizedTitle;
+  const breadcrumbTitle = document.getElementById("crumbName") || document.getElementById("breadcrumbProductTitle");
+  if (breadcrumbTitle) breadcrumbTitle.textContent = localizedTitle;
+  const bundleTitle = document.querySelector(".this-item-title") || document.getElementById("bundleMainTitle");
+  if (bundleTitle) bundleTitle.textContent = localizedTitle;
+  document.title = localizedTitle + " - ElectroMart";
+  if (productImage) productImage.alt = localizedTitle;
+}
+window.renderProductHeader = renderProductHeader;
 function renderProduct(product) {
+  activeRenderedProduct = product;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
   currentProductRecord = product;
   cacheCatalogProduct(product);
   saveRecentlyViewed(product.id);
@@ -1722,11 +2035,36 @@ function renderProduct(product) {
   }
   renderMediaThumbs(mediaItems);
   setMainMedia(mediaItems[0], 0);
-  productImage.alt = product.name;
-  productName.textContent = product.name;
-  productBrand.textContent = `Brand: ${product.brand}`;
-  brandStoreLink.textContent = `${product.brand}`;
+  const localizedTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : (product.title || product.name || "")).trim();
+  const localizedDesc = (window.getLocalizedDescription ? window.getLocalizedDescription(product, currentLang) : "").trim();
+  const localizedSpecs = window.getLocalizedSpecs ? window.getLocalizedSpecs(product, currentLang) : [];
+
+  productImage.alt = localizedTitle;
+  productImage.onerror = function() {
+    this.onerror = null;
+    this.src = FALLBACK_IMAGE_URL;
+  };
+  productName.textContent = localizedTitle;
+  
+  // 1. Localized Breadcrumb
+  const breadcrumbEl = document.getElementById("productBreadcrumb");
+  if (breadcrumbEl) {
+    breadcrumbEl.innerHTML = `<a href="products.html" data-i18n="breadcrumb_products">${t.breadcrumb_products || "Products"}</a> &gt; <span id="crumbName">${escapeHtml(localizedTitle)}</span>`;
+  }
+  renderProductHeader(product);
+
+  // 2. Localized Brand & Store Link
+  productBrand.textContent = `${t.brand_label || "Brand:"} ${product.brand}`;
+  const cleanVisitStore = String(t.visit_store_prefix || "Store").replace(/:\s*$/, "").trim();
+  const brandStoreText = (currentLang === "en")
+    ? `Visit the ${product.brand} Store`
+    : `${product.brand} ${cleanVisitStore}`.replace(/:\s*$/, "").trim();
+  brandStoreLink.textContent = brandStoreText;
   brandStoreLink.href = `brands.html?brand=${encodeURIComponent(String(product.brand || "").trim())}`;
+  const productBrandRow = document.getElementById("productBrandRow");
+  if (productBrandRow) {
+    productBrandRow.innerHTML = `<a id="brandStoreLink" href="brands.html?brand=${encodeURIComponent(String(product.brand || "").trim())}" class="brand-store-link">${brandStoreText}</a>`;
+  }
 function renderStarCharacters(rating) {
   const r = Math.max(0, Math.min(5, Number(rating || 0)));
   const full = Math.floor(r);
@@ -1741,7 +2079,7 @@ function renderStarCharacters(rating) {
   productRating.innerHTML = `
     <span class="rating-stars-display" style="color: #de7921; font-size: 1.1rem; letter-spacing: 1px;">${starChars}</span>
     <span class="rating-value-text" style="font-weight: 700; margin: 0 6px; color: #0f1111;">${Number(product.rating || 0).toFixed(1)}</span>
-    <a href="#reviewsBlock" class="rating-count-link" style="color: #007185; text-decoration: none; font-size: 0.95rem;">${reviewCount.toLocaleString("en-IN")} ratings</a>
+    <a href="#reviewsBlock" class="rating-count-link" style="color: #007185; text-decoration: none; font-size: 0.95rem;">${reviewCount.toLocaleString("en-IN")} ${t.ratings_label || "ratings"}</a>
   `;
   const price = Number(product.price || 0);
   const listPrice = Number(product.listPrice || product.price || 0);
@@ -1752,14 +2090,18 @@ function renderStarCharacters(rating) {
   productPrice.textContent = money(price);
   buyBoxPrice.textContent = money(price);
   productListPrice.textContent = listPrice > price ? `M.R.P.: ${money(listPrice)}` : "";
-  productDealMeta.textContent = discountPercent > 0 ? `You save ${money(listPrice - price)} (${discountPercent}% off)` : "Everyday low price";
+  if (productDealMeta) {
+    productDealMeta.textContent = "";
+    productDealMeta.style.display = "none";
+  }
+  renderAmazonPrice(product, price, listPrice, discountPercent, t);
   buyBoxMrp.textContent = listPrice > price ? `M.R.P.: ${money(listPrice)}` : "";
-  buyBoxSavings.textContent = discountPercent > 0 ? `Save ${money(listPrice - price)} (${discountPercent}% off)` : "";
+  buyBoxSavings.textContent = discountPercent > 0 ? `${t.you_save || "Save"} ${money(listPrice - price)} (${discountPercent}% off)` : "";
   productSegment.textContent = product.segment;
-  const fallbackDescription = `Explore ${product.name} for ${product.category} needs with trusted performance and reliable support.`;
-  const descriptionRaw = String(product.description || "").trim();
-  if (!descriptionRaw) {
-    productDescription.textContent = fallbackDescription;
+  const fallbackDescription = `Explore ${localizedTitle} for ${product.category} needs with trusted performance and reliable support.`;
+  const descriptionRaw = String(localizedDesc || product.description || "").trim();
+  if (!descriptionRaw || descriptionRaw.includes("I'm a product description")) {
+    productDescription.textContent = localizedDesc || fallbackDescription;
   } else if (/<[a-z][\s\S]*>/i.test(descriptionRaw) || /&[a-z]+;/i.test(descriptionRaw)) {
     const sanitized = descriptionRaw
       .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
@@ -1767,72 +2109,274 @@ function renderStarCharacters(rating) {
       .replace(/\son\w+='[^']*'/gi, "");
     productDescription.innerHTML = sanitized;
   } else {
-    productDescription.textContent = descriptionRaw;
+    productDescription.textContent = localizedDesc || descriptionRaw;
   }
-  productStockMeta.textContent = `Stock: ${stockCount == null ? "Available" : stockCount} | Status: ${String(product.status || "active").toUpperCase()} | Fulfillment: ${String(product.fulfillment || "fbm").toUpperCase()}`;
-  productKeywordLine.textContent = Array.isArray(product.keywords) && product.keywords.length
-    ? `Keywords: ${product.keywords.join(", ")}`
-    : "";
-  deliveryText.textContent = product.segment === "b2c" ? "FREE delivery by tomorrow" : "Business delivery options available";
+  const statusUpper = String(product.status || "active").toUpperCase();
+  const statusMap = {
+    ACTIVE: t.val_active || "सक्रिय",
+    INACTIVE: t.val_inactive || "निष्क्रिय"
+  };
+  const metaRow = document.getElementById("productQuickMeta") || productStockMeta;
+  if (metaRow) {
+    metaRow.innerHTML = `${t.tbl_stock || "उपलब्ध स्टॉक"}: ${stockCount == null ? (t.val_available || "उपलब्ध") : stockCount} | ${t.tbl_status || "स्थिति"}: ${statusMap[statusUpper] || statusUpper} | ${t.tbl_fulfillment || "फुलफिलमेंट"}: ${String(product.fulfillment || "fbm").toUpperCase()}`;
+  }
+  if (productKeywordLine) {
+    productKeywordLine.style.display = "none";
+  }
+  deliveryText.textContent = product.segment === "b2c" ? (t.free_delivery_tomorrow || "FREE delivery by tomorrow") : "Business delivery options available";
+  const taxInfoEl = document.getElementById("taxInfo");
+  if (taxInfoEl) {
+    taxInfoEl.textContent = t.inclusive_all_taxes || "Inclusive of all taxes";
+  }
+  const buyBoxMeta = document.getElementById("buyBoxMetaDetails");
+  if (buyBoxMeta) {
+    buyBoxMeta.innerHTML = `
+      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-top: 6px; color: #565959;">
+        <span>${t.ships_from || "Ships from:"}</span> <strong style="color: #0f1111;">ElectroMart</strong>
+      </div>
+      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-top: 4px; color: #565959;">
+        <span>${t.sold_by || "Sold by:"}</span> <strong style="color: #0f1111;">${product.brand || "ElectroMart"} Retail</strong>
+      </div>
+      <div class="meta-row" style="font-size: 0.88rem; margin-top: 4px; color: #007185;">
+        <span>${t.payment_secure || "Payment: Secure transaction"}</span>
+      </div>
+    `;
+  }
   availabilityText.textContent = isInStock
-    ? (product.segment === "b2c" ? "In Stock" : "In Stock for business orders")
-    : "Currently unavailable";
+    ? (product.segment === "b2c" ? (t.in_stock || "In Stock") : `${t.in_stock || "In Stock"} (B2B)`)
+    : (t.out_of_stock || "Currently unavailable");
+  const stockEl = document.querySelector(".stock-status");
+  if (stockEl && isInStock) {
+    stockEl.textContent = t.in_stock || "In Stock";
+  }
   availabilityText.classList.toggle("in-stock", isInStock);
   addToCartBtn.disabled = !isInStock;
-  addToCartBtn.textContent = isInStock ? "Add to Cart" : "Out of Stock";
+  addToCartBtn.textContent = isInStock ? (t.add_to_cart || "Add to Cart") : (t.out_of_stock || "Out of Stock");
   setBackInStockPanelState(product, isInStock);
-  crumbName.textContent = product.name;
+  if (crumbName) {
+    crumbName.textContent = localizedTitle;
+  }
   const productCategoryFamily = getProductCategoryFamily(product);
   renderOffers(price, listPrice, productCategoryFamily);
+  renderFrequentlyBoughtTogether(product, t);
   renderServices(product, isInStock);
   renderReviewSummary(product);
   renderQa(product);
 
   renderRecentlyViewedDetailSection();
 
-  const defaultSpecs = specMap[productCategoryFamily] || ["Quality assured", "Trusted by customers", "Fast delivery options"];
-  const keywordSpecs = Array.isArray(product.keywords) ? product.keywords.slice(0, 6) : [];
-  const specs = keywordSpecs.length ? keywordSpecs : defaultSpecs;
-  productSpecs.innerHTML = specs.map((spec) => `<li>${spec}</li>`).join("");
+  const isBattery = /\b(battery|बैटरी)\b/i.test(String(product.name || "") + " " + String(product.title || "") + " " + String(product.category || "") + " " + String(product.sku || ""));
+  
+  const batteryFallbackSpecs = currentLang === "hi" ? [
+    "प्रीमियम ग्रेड लिथियम-आयन लैपटॉप बैटरी",
+    "सटीक फिटिंग और ओवर-चार्जिंग प्रोटेक्शन सर्किट",
+    "लंबे समय तक चलने वाली बैटरी लाइफ और तेज़ चार्जिंग सपोर्ट",
+    "1 वर्ष की निर्माता वारंटी और रिप्लेसमेंट सपोर्ट"
+  ] : [
+    "Premium grade Lithium-ion laptop battery",
+    "Precision fit with over-charging protection circuit",
+    "Long battery life and fast charging support",
+    "1 Year manufacturer warranty and replacement support"
+  ];
 
-  infoSku.textContent = product.sku || "--";
-  infoBrand.textContent = product.brand;
-  infoCategory.textContent = formatCategoryLabel(productCategoryFamily);
-  infoSegment.textContent = product.segment.toUpperCase();
-  infoPrice.textContent = money(price);
-  infoListPrice.textContent = money(listPrice);
-  infoStock.textContent = stockCount == null ? "Available" : String(stockCount);
-  infoStatus.textContent = String(product.status || "active").toUpperCase();
-  infoFulfillment.textContent = String(product.fulfillment || "fbm").toUpperCase();
-  infoMoq.textContent = Number(product.moq || 0) > 0 ? String(product.moq) : "--";
-  infoFeatured.textContent = product.featured ? "Yes" : "No";
-  infoKeywords.textContent = Array.isArray(product.keywords) && product.keywords.length ? product.keywords.join(", ") : "--";
-  infoRating.innerHTML = `${product.rating} &#9733;`;
-  detailInfoTable.hidden = false;
+  const rawKeywords = Array.isArray(product.keywords) ? product.keywords.map(k => String(k || "").trim().toLowerCase()) : [];
+  const candidateSpecs = (Array.isArray(localizedSpecs) && localizedSpecs.length) ? localizedSpecs : (Array.isArray(product.aboutSpecs) ? product.aboutSpecs : []);
+  
+  const cleanSpecs = candidateSpecs.filter(spec => {
+    const s = String(spec || "").replace(/^[-•\s]+/, "").trim().toLowerCase();
+    if (!s) return false;
+    if (rawKeywords.includes(s)) return false;
+    if (["laptop battery", "lenovo laptop battery", "lenovo store"].includes(s)) return false;
+    return true;
+  });
+
+  let finalSpecs = [];
+  if (cleanSpecs.length > 0) {
+    finalSpecs = cleanSpecs;
+  } else if (isBattery) {
+    finalSpecs = batteryFallbackSpecs;
+  } else {
+    finalSpecs = specMap[productCategoryFamily] || ["Quality assured", "Trusted by customers", "Fast delivery options"];
+  }
+
+  productSpecs.innerHTML = finalSpecs.map((spec) => `<li>${localizeSpec(spec, t)}</li>`).join("");
+  
+  const bulletMap = {
+    "High performance processor": t.spec_high_performance || "उच्च प्रदर्शन प्रोसेसर",
+    "SSD storage": t.spec_ssd_storage || "एसएसडी स्टोरेज",
+    "Long battery life": t.spec_battery_life || "लंबी बैटरी लाइफ",
+    "Mobile and Wearable Tech": t.spec_mobile_wearable || "मोबाइल और वियरेबल तकनीक",
+    "Water resistant IP68": t.spec_water_resistant || "वॉटर रेसिस्टेंट IP68",
+    "Up to 7 days battery life": t.spec_battery_7days || "7 दिनों तक की बैटरी लाइफ",
+    "Premium grade Lithium-ion laptop battery": "प्रीमियम ग्रेड लिथियम-आयन लैपटॉप बैटरी",
+    "Precision fit with over-charging protection circuit": "सटीक फिटिंग और ओवर-चार्जिंग प्रोटेक्शन सर्किट",
+    "Extended battery life and fast-charging support": "लंबे समय तक चलने वाली बैटरी लाइफ और तेज़ चार्जिंग सपोर्ट",
+    "Long battery life and fast charging support": "लंबे समय तक चलने वाली बैटरी लाइफ और तेज़ चार्जिंग सपोर्ट",
+    "1 Year manufacturer warranty and replacement support": "1 वर्ष की निर्माता वारंटी और रिप्लेसमेंट सपोर्ट"
+  };
+  document.querySelectorAll("#productSpecs li, #aboutItemBulletList li").forEach((li) => {
+    const text = String(li && li.textContent || "").trim();
+    if (bulletMap[text]) li.textContent = bulletMap[text];
+  });
+
+  renderProductInfoTable(product, stockCount, productCategoryFamily, price, listPrice);
 
   addToCartBtn.setAttribute("data-id", String(product.id));
   syncWishlistButton(product.id);
   syncCompareButton(product.id);
   void hydrateRelatedProducts(product);
+  localizeBatterySpecs();
 }
+
+function localizeBatterySpecs() {
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  if (currentLang !== "hi") return;
+  const specTranslations = [
+    { en: /Capacity:\s*/gi, hi: "क्षमता: " },
+    { en: /Voltage:\s*/gi, hi: "वोल्टेज: " },
+    { en: /Number of cells?:\s*/gi, hi: "सेल की संख्या: " },
+    { en: /Warranty Details:\s*/gi, hi: "वारंटी विवरण: " },
+    { en: /1\s*Year\s+warranty\.?/gi, hi: "1 वर्ष की वारंटी।" },
+    { en: /12-months replacement warranty\.?/gi, hi: "12 महीने की रिप्लेसमेंट वारंटी।" },
+    { en: /Quality Lenovo(?:\s|&nbsp;)+Yoga(?:\s|&nbsp;)+Battery/gi, hi: "उच्च गुणवत्ता वाली लेनोवो योगा बैटरी" },
+    { en: /Quality\s+Lenovo(?:\s|&nbsp;)+[A-Z0-9\.\s]+(?:\s|&nbsp;)+Battery/gi, hi: "उच्च गुणवत्ता वाली लेनोवो बैटरी" },
+    { en: /6 Months to 1 Year standard brand warranty\.?/gi, hi: "6 महीने से 1 वर्ष की मानक ब्रांड वारंटी।" },
+    { en: /1 Year brand warranty with replacement support\.?/gi, hi: "1 वर्ष की ब्रांड वारंटी और रिप्लेसमेंट सपोर्ट।" },
+    { en: /100%\s*compatible\s+with\s+your\s+(?:Lenovo\s+)?laptop/gi, hi: "आपके लैपटॉप के साथ 100% संगत" },
+    { en: /identical size, including all electronic safety measures\.?/gi, hi: "सटीक आकार, सभी इलेक्ट्रॉनिक सुरक्षा मानकों सहित।" },
+    { en: /identical size, including all safety measures\.?/gi, hi: "सटीक आकार, सभी सुरक्षा मानकों सहित।" },
+    { en: /Highly Compatible(?:\s|&nbsp;)+[A-Za-z0-9\s]+?Battery for\s*/gi, hi: "अत्यधिक संगत बैटरी: " },
+    { en: /Highly Compatible battery for\s*/gi, hi: "अत्यधिक संगत बैटरी: " },
+    { en: /Highly Compatible for Lenovo 45N1704 battery for ThinkPad YOGA S1-S240 Laptops\.?/gi, hi: "ThinkPad YOGA S1-S240 लैपटॉप के लिए Lenovo 45N1704 बैटरी के साथ पूर्ण संगत।" },
+    { en: /Compatible Part Numbers:\s*/gi, hi: "संगत पार्ट नंबर: " },
+    { en: /Compatible with Laptop Models:\s*/gi, hi: "लैपटॉप मॉडल के साथ संगत: " },
+    { en: /Package Content:\s*/gi, hi: "पैकेज सामग्री: " },
+    { en: /Battery Use Tip:\s*/gi, hi: "बैटरी उपयोग टिप्स: " }
+  ];
+
+  const batteryPhrases = {
+    "Number of cell:": "सेल की संख्या:",
+    "Number of cells:": "सेल की संख्या:",
+    "identical size, including all electronic safety measures.": "सटीक आकार, सभी इलेक्ट्रॉनिक सुरक्षा मानकों सहित।",
+    "identical size, including all safety measures.": "सटीक आकार, सभी सुरक्षा मानकों सहित।",
+    "Compatible with Laptop Models:": "लैपटॉप मॉडल के साथ संगत:",
+    "Package Content:": "पैकेज सामग्री:",
+    "Battery Use Tip:": "बैटरी उपयोग टिप्स:"
+  };
+
+  document.querySelectorAll(".product-key-features li, .product-description-block p, .product-description-block div, .service-item p, #productSpecs li, #aboutItemBulletList li, #productDescription li, #productDescription p, #productDescription, #productDescription div").forEach((el) => {
+    let html = el.innerHTML;
+    let modified = false;
+
+    Object.keys(batteryPhrases).forEach(enKey => {
+      if (html.includes(enKey)) {
+        html = html.replaceAll(enKey, batteryPhrases[enKey]);
+        modified = true;
+      }
+    });
+
+    specTranslations.forEach((rule) => {
+      if (rule.en.test(html)) {
+        html = html.replace(rule.en, rule.hi);
+        modified = true;
+      }
+    });
+    if (modified) {
+      el.innerHTML = html;
+    }
+  });
+
+  // Remove any dummy keyword bullets from specs lists
+  document.querySelectorAll("#productSpecs li, #aboutItemBulletList li").forEach((li) => {
+    const txt = (li.textContent || "").replace(/^[-•\s]+/, "").trim().toLowerCase();
+    if (["laptop battery", "lenovo laptop battery", "lenovo store"].includes(txt)) {
+      li.remove();
+    }
+  });
+
+  // Ensure authentic battery bullets if list became empty for battery products
+  const specList = document.querySelector("#productSpecs") || document.querySelector("#aboutItemBulletList");
+  if (specList && (!specList.children || specList.children.length === 0) && (!specList.innerHTML || !specList.innerHTML.trim())) {
+    const isBatteryProduct = (document.title || "").includes("बैटरी") || (document.title || "").includes("Battery") || /battery/i.test(window.location?.search || "");
+    if (isBatteryProduct) {
+      specList.innerHTML = `
+        <li>प्रीमियम ग्रेड लिथियम-आयन लैपटॉप बैटरी</li>
+        <li>सटीक फिटिंग और ओवर-चार्जिंग प्रोटेक्शन सर्किट</li>
+        <li>लंबे समय तक चलने वाली बैटरी लाइफ और तेज़ चार्जिंग सपोर्ट</li>
+        <li>1 वर्ष की निर्माता वारंटी और रिप्लेसमेंट सपोर्ट</li>
+      `;
+    }
+  }
+
+  const kwRow = document.querySelector(".keywords-row") || document.getElementById("productKeywordLine");
+  if (kwRow) {
+    kwRow.style.display = "none";
+  }
+}
+window.localizeBatterySpecs = localizeBatterySpecs;
+
+async function loadProductSafely(productId) {
+  let product = null;
+  const rawId = String(productId || "").trim();
+
+  // 1. Direct match in local catalog map / list (EM_CATALOG)
+  if (rawId) {
+    const emMap = window.EM_CATALOG_MAP || {};
+    const emList = window.EM_CATALOG || [];
+    const directMatch = emMap[rawId] || emList.find((p) => String(p.id) === rawId);
+    if (directMatch) {
+      product = mapApiProduct(directMatch);
+    }
+  }
+
+  // 2. Local product resolver (localStorage cache or static products)
+  if (!product && rawId) {
+    product = getLocalProductById(rawId);
+  }
+
+  // 3. API product lookup
+  if (rawId) {
+    try {
+      const apiProduct = await fetchProductFromApi(rawId);
+      if (apiProduct) {
+        product = product ? mergeProductSources(apiProduct, product) : apiProduct;
+      }
+    } catch (_) {}
+  }
+
+  // 4. Fallback if product is null or incomplete
+  const isComplete = (p) => p && p.id && (p.name || p.title) && p.price != null;
+  if (!isComplete(product)) {
+    const catalog = window.EM_CATALOG || [];
+    if (catalog.length > 0) {
+      product = mapApiProduct(catalog[0]);
+    } else if (allProducts && allProducts.length > 0) {
+      product = mapApiProduct(allProducts[0]);
+    }
+  }
+
+  return product;
+}
+window.loadProductSafely = loadProductSafely;
 
 async function initProductPage() {
   const productId = getProductIdFromUrl();
-  if (!productId) {
-    missingState.hidden = false;
-    return;
-  }
-
-  const localProduct = getLocalProductById(productId);
-  const apiProduct = await fetchProductFromApi(productId);
-  const selectedProduct = mergeProductSources(apiProduct, localProduct);
+  const selectedProduct = await loadProductSafely(productId);
   if (!selectedProduct) {
-    missingState.hidden = false;
+    if (missingState) missingState.hidden = false;
+    if (productDetail) productDetail.hidden = true;
     return;
   }
 
+  if (missingState) missingState.hidden = true;
+
+  if (window.EM_CATALOG_MAP && selectedProduct.id && !window.EM_CATALOG_MAP[String(selectedProduct.id)]) {
+    window.EM_CATALOG_MAP[String(selectedProduct.id)] = selectedProduct;
+  }
+
+  window.currentLoadedProduct = selectedProduct;
   renderProduct(selectedProduct);
-  productDetail.hidden = false;
+  if (productDetail) productDetail.hidden = false;
 }
 
 addToCartBtn.addEventListener("click", () => {
@@ -1966,3 +2510,36 @@ closeFullscreenViewer();
 syncCartCount();
 bindZoomEvents();
 initProductPage();
+
+
+window.renderProductDetailPage = function(prod) {
+  const target = (prod && typeof prod === "object") ? prod : (window.currentLoadedProduct || activeRenderedProduct);
+  if (target) {
+    renderProduct(target);
+  }
+};
+
+
+// 1. Global Language State Auto-Read on Page Load
+document.addEventListener("DOMContentLoaded", () => {
+  const currentLang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+  if (typeof applyFullPageTranslation === "function") {
+    applyFullPageTranslation(currentLang);
+  }
+  if (typeof renderProductDetailPage === "function" && (window.currentLoadedProduct || activeRenderedProduct)) {
+    renderProductDetailPage(window.currentLoadedProduct || activeRenderedProduct);
+  }
+  if (typeof localizeBatterySpecs === "function") {
+    localizeBatterySpecs();
+  }
+});
+
+window.addEventListener("languageChanged", () => {
+  const currentProd = window.currentLoadedProduct || (typeof activeRenderedProduct !== "undefined" ? activeRenderedProduct : null);
+  if (currentProd && typeof renderAmazonPrice === "function") {
+    renderAmazonPrice(currentProd);
+  }
+  if (typeof localizeBatterySpecs === "function") {
+    localizeBatterySpecs();
+  }
+});

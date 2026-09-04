@@ -1,4 +1,4 @@
-﻿const priceRangeFilter = document.getElementById("priceRangeFilter");
+const priceRangeFilter = document.getElementById("priceRangeFilter");
 const discountFilter = document.getElementById("discountFilter");
 function filterDeals() {
   let filtered = [...deals];
@@ -286,13 +286,22 @@ function renderStars(rating) {
 }
 
 function dealCard(item) {
-  // Preview overlay content (demo) -- only show on keyboard focus, not on hover
-  const preview = `<div class='deal-preview-overlay' tabindex="-1"><strong>Quick View:</strong> ${escapeHtml(item.name)}<br>Brand: ${escapeHtml(item.brand)}<br>Discount: ${discountPercent(item.oldPrice, item.dealPrice)}%</div>`;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : ((window.EM_TRANSLATIONS && window.EM_TRANSLATIONS.en) ? window.EM_TRANSLATIONS.en : {});
+
+  // Preview overlay content
+  const preview = `<div class='deal-preview-overlay' tabindex="-1"><strong>${t.quick_view || "Quick View"}:</strong> ${escapeHtml(item.name)}<br>${t.brands || "Brand"}: ${escapeHtml(item.brand)}<br>${t.discount || "Discount"}: ${discountPercent(item.oldPrice, item.dealPrice)}%</div>`;
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
   const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
   const discount = discountPercent(item.oldPrice, item.dealPrice);
 
-  const badge = getDealBadge(item);
+  const rawBadge = getDealBadge(item);
+  let badgeText = rawBadge.label;
+  if (badgeText === "Best Seller") badgeText = t.badge_best_seller || "Best Seller";
+  else if (badgeText === "Lightning Deal") badgeText = t.lightning_deal || "Lightning Deal";
+  else if (badgeText === "Limited Stock") badgeText = t.limited_stock || "Limited Stock";
+  else if (badgeText === "Deal") badgeText = t.deal_badge || "Deal";
+
   const expiry = getDealExpiry(item);
   const countdownId = `deal-timer-${item.id}`;
   const progress = getDealProgress(item);
@@ -300,36 +309,36 @@ function dealCard(item) {
 
   return `
     <article class="deal-card" tabindex="0" onmouseenter="this.querySelector('.deal-preview-overlay').style.opacity=0" onmouseleave="this.querySelector('.deal-preview-overlay').style.opacity=''">
-      <div class="deal-badge ${badge.class}">${badge.label}</div>
+      <div class="deal-badge ${rawBadge.class}">${badgeText}</div>
       ${getPrimeTag(item)}
       <a class="deal-card-media" href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
         ${preview}
       </a>
       <div class="content">
-        <p class="card-kicker">Limited time deal</p>
-        <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
-        <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
+        <p class="card-kicker">${t.limited_time_deal_badge || "Limited time deal"}</p>
+        <h3><a href="${detailUrl}">${escapeHtml(window.getLocalizedTitle ? window.getLocalizedTitle(item, currentLang) : item.name)}</a></h3>
+        <p><a class="brand-line" href="${brandUrl}">${t.by_brand || "by"} ${escapeHtml(item.brand)}</a></p>
         <div class="price-row">
           <span class="price-now">${escapeHtml(money(item.dealPrice))}</span>
-          <span class="discount">${escapeHtml(String(discount))}% off</span>
+          <span class="discount">${escapeHtml(String(discount))}% ${t.percent_off || "off"}</span>
         </div>
         <div class="deal-rating-row">
           ${renderStars(rating)}
-          <span class="deal-rating-label">${rating} | ${reviews} reviews</span>
+          <span class="deal-rating-label">${rating} | ${reviews} ${t.reviews_label || "reviews"}</span>
         </div>
-        <div class="deal-timer-row"><span class="deal-timer-label">Ends in:</span> <span class="deal-timer" id="${countdownId}">${formatCountdown(expiry - Date.now())}</span></div>
+        <div class="deal-timer-row"><span class="deal-timer-label">${t.ends_in || "Ends in:"}</span> <span class="deal-timer" id="${countdownId}">${formatCountdown(expiry - Date.now())}</span></div>
         <div class="deal-progress-row">
           <div class="deal-progress-bar-bg">
             <div class="deal-progress-bar" style="width:${progress}%"></div>
           </div>
-          <span class="deal-progress-label">${progress}% claimed</span>
+          <span class="deal-progress-label">${progress}% ${t.claimed || "claimed"}</span>
         </div>
-        <p class="price-meta">M.R.P. <s>${escapeHtml(money(item.oldPrice))}</s> - grab it before the next refresh.</p>
-        <p class="delivery-note">FREE delivery by tomorrow on eligible pincodes</p>
+        <p class="price-meta">${t.mrp || "M.R.P."} <s>${escapeHtml(money(item.oldPrice))}</s> - ${t.grab_before_refresh || "grab it before the next refresh."}</p>
+        <p class="delivery-note">${t.free_delivery_pincode || "FREE delivery by tomorrow on eligible pincodes"}</p>
         <div class="card-actions">
-          <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
-          <a class="view-link" href="${detailUrl}">View details</a>
+          <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">${t.add_to_cart || "Add to Cart"}</button>
+          <a class="view-link" href="${detailUrl}">${t.view_details || "View details"}</a>
         </div>
       </div>
     </article>
@@ -383,9 +392,11 @@ function render(list) {
   if (!resultMeta || !dealsGrid) {
     return;
   }
-  resultMeta.textContent = `Showing ${list.length} deals`;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  resultMeta.textContent = `${list.length} ${t.showing_x_deals || "डील्स दिखाई जा रही हैं"}`;
   if (!list.length) {
-    dealsGrid.innerHTML = "<div class='empty'>No exact deal matches found. Try clearing one filter or broadening the search.</div>";
+    dealsGrid.innerHTML = `<div class='empty'>${t.no_deals_found || "No exact deal matches found. Try clearing one filter or broadening the search."}</div>`;
     return;
   }
   dealsGrid.innerHTML = list.map(dealCard).join("");
@@ -559,3 +570,8 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
   getResultSummary: () => String(resultMeta?.textContent || "").trim()
 });
 filterDeals();
+
+window.renderTodaysDeals = function() {
+  filterDeals();
+};
+window.filterDeals = filterDeals;

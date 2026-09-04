@@ -201,24 +201,35 @@ function syncDynamicBrandUI() {
 function card(item) {
   const detailUrl = `product-detail.html?id=${encodeURIComponent(item.id)}`;
   const brandUrl = `brands.html?brand=${encodeURIComponent(String(item.brand || "").trim())}`;
+  const lang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[lang]) || (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS.en) || {};
+
+  const bestSellerBadge = dict.badge_best_seller || "BEST SELLER";
+  const soldSuffix = dict.sold_this_month || "sold this month";
+  const addToCartText = dict.add_to_cart || "Add to Cart";
+  const viewDetailsText = dict.view_details || "View details";
+  const starRatingText = dict.star_rating || "star rating";
+
+  const soldDisplay = item.soldCount ? `${(item.soldCount / 1000).toFixed(1)}k ${soldSuffix}` : item.sold;
+
   return `
     <article class="product-card">
       <a class="product-card-media" href="${detailUrl}" aria-label="Open ${escapeHtml(item.name)}">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
       </a>
       <div class="content">
-        <p class="card-kicker">Best seller</p>
-        <h3><a href="${detailUrl}">${escapeHtml(item.name)}</a></h3>
+        <p class="card-kicker"><span class="badge" data-i18n="badge_best_seller">${escapeHtml(bestSellerBadge)}</span></p>
+        <h3><a href="${detailUrl}">${escapeHtml(window.getLocalizedTitle ? window.getLocalizedTitle(item, lang) : item.name)}</a></h3>
         <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
         <div class="rating-line">
-          <span class="rating">${escapeHtml(String(item.rating.toFixed(1)))} star rating</span>
-          <span class="sold-tag">${escapeHtml(item.sold)}</span>
+          <span class="rating">${escapeHtml(String(item.rating.toFixed(1)))} ${escapeHtml(starRatingText)}</span>
+          <span class="sold-tag">${escapeHtml(soldDisplay)}</span>
         </div>
         <p class="price">${escapeHtml(money(item.price))}</p>
         <p class="price-meta">Popular pick in ${escapeHtml(categoryLabel(item.category))} with fast checkout ready.</p>
         <div class="card-actions">
-          <button class="add-btn" data-id="${escapeHtml(item.id)}" type="button">Add to Cart</button>
-          <a class="view-link" href="${detailUrl}">View details</a>
+          <button class="add-btn btn-cart" data-id="${escapeHtml(item.id)}" type="button" data-i18n="add_to_cart">${escapeHtml(addToCartText)}</button>
+          <a class="view-link btn-details" href="${detailUrl}" data-i18n="view_details">${escapeHtml(viewDetailsText)}</a>
         </div>
       </div>
     </article>
@@ -229,12 +240,19 @@ function render(list) {
   if (!resultMeta || !bestGrid) {
     return;
   }
-  resultMeta.textContent = `Showing ${list.length} products`;
+  const lang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[lang]) || (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS.en) || {};
+  const showingText = dict.showing || "Showing";
+  const productsText = dict.products || "products";
+  resultMeta.textContent = `${showingText} ${list.length} ${productsText}`;
   if (!list.length) {
-    bestGrid.innerHTML = "<div class='empty'>No exact matches found. Try clearing one filter or broadening the search.</div>";
+    bestGrid.innerHTML = `<div class='empty'>${dict.no_matches_found || "No exact matches found. Try clearing one filter or broadening the search."}</div>`;
     return;
   }
   bestGrid.innerHTML = list.map(card).join("");
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(lang);
+  }
 }
 
 function getSortLabel(value) {
@@ -408,3 +426,5 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
   getResultSummary: () => String(resultMeta?.textContent || "").trim()
 });
 filterBestSellers();
+
+window.renderBestSellers = filterBestSellers;

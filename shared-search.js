@@ -16,7 +16,7 @@
     currency: "INR",
     maximumFractionDigits: 2
   });
-  const DEFAULT_CATALOG_ORDER = ["computer", "laptop", "printer", "mobile", "audio", "accessory"];
+  const DEFAULT_CATALOG_ORDER = ["computer", "laptop", "components", "printer", "audio", "mobile"];
 
   let fetchedCatalog = false;
   let fetchPromise = null;
@@ -144,13 +144,13 @@
   function categoryLabel(value) {
     const normalized = normalizeCategorySlug(value);
     const knownLabels = {
-      all: "All Catalogue",
-      accessory: "Accessories",
-      audio: "Audio",
-      computer: "Computers",
-      laptop: "Laptops",
-      mobile: "Mobiles",
-      printer: "Printers"
+      all: "All Categories",
+      computer: "Computers & Desktops",
+      laptop: "Laptops & Accessories",
+      components: "Components & Parts (RAM, SSD, GPU)",
+      printer: "Printers & Cartridges",
+      audio: "Audio & Headphones",
+      mobile: "Mobile Accessories"
     };
     if (knownLabels[normalized]) {
       return knownLabels[normalized];
@@ -214,14 +214,18 @@
   }
 
   function renderSuggestionItem(item, query) {
-    const media =
-      item.type === "product" && item.image
-        ? `
-          <span class="suggestion-media suggestion-thumb" aria-hidden="true">
-            <img src="${escapeHtml(item.image)}" alt="" loading="lazy" />
-          </span>
-        `
-        : `<span class="suggestion-media suggestion-icon suggestion-icon--${escapeHtml(item.type)}" aria-hidden="true"></span>`;
+    let media = "";
+    if (item.type === "product" && item.image) {
+      media = `
+        <span class="suggestion-media suggestion-thumb" aria-hidden="true">
+          <img src="${escapeHtml(item.image)}" alt="" loading="lazy" />
+        </span>
+      `;
+    } else if (item.type === "history") {
+      media = `<span class="suggestion-media suggestion-clock" aria-hidden="true">🕒</span>`;
+    } else {
+      media = `<span class="suggestion-media suggestion-icon suggestion-icon--${escapeHtml(item.type)}" aria-hidden="true">🔍</span>`;
+    }
 
     const kicker = item.kicker
       ? `<span class="suggestion-kicker">${escapeHtml(item.kicker)}</span>`
@@ -240,12 +244,14 @@
       ? `<span class="suggestion-trailing">${trailingBits.join("")}</span>`
       : "";
 
+    const categoryAttr = item.category ? ` data-suggestion-category="${escapeHtml(item.category)}"` : "";
+
     return `
-      <button class="suggestion-item suggestion-item--${escapeHtml(item.type)}" type="button" data-suggestion-type="${escapeHtml(item.type)}" data-suggestion-value="${escapeHtml(item.value)}">
+      <button class="suggestion-item suggestion-item--${escapeHtml(item.type)}" type="button" data-suggestion-type="${escapeHtml(item.type)}" data-suggestion-value="${escapeHtml(item.value)}"${categoryAttr}>
         ${media}
         <span class="suggestion-copy">
           ${kicker}
-          <span class="suggestion-label">${highlightQuery(item.label, query)}</span>
+          <span class="suggestion-label">${item.type === "scoped" ? item.label : highlightQuery(item.label, query)}</span>
           ${meta}
         </span>
         ${trailing}
@@ -332,7 +338,13 @@
   function createSearchButton() {
     const button = document.createElement("button");
     button.type = "submit";
-    button.textContent = "Search";
+    button.className = "search-submit-btn";
+    button.setAttribute("aria-label", "Submit search");
+    button.innerHTML = `
+      <svg class="search-lens-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path fill="#0f1111" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+    `;
     return button;
   }
 
@@ -343,6 +355,18 @@
       wrap.className = "search-input-wrap";
       input.parentNode.insertBefore(wrap, input);
       wrap.appendChild(input);
+    }
+    let clearBtn = wrap.querySelector(".search-clear-btn");
+    if (!clearBtn) {
+      clearBtn = document.createElement("button");
+      clearBtn.className = "search-clear-btn";
+      clearBtn.type = "button";
+      clearBtn.setAttribute("aria-label", "Clear search");
+      clearBtn.innerHTML = "&times;";
+      if (!input.value.trim()) {
+        clearBtn.setAttribute("hidden", "");
+      }
+      wrap.appendChild(clearBtn);
     }
     return wrap;
   }
@@ -433,8 +457,14 @@
     if (!submitButton) {
       submitButton = createSearchButton();
       form.appendChild(submitButton);
-    } else if (!String(submitButton.textContent || "").trim()) {
-      submitButton.textContent = "Search";
+    } else if (!submitButton.querySelector("svg") && !String(submitButton.textContent || "").trim()) {
+      const createdBtn = createSearchButton();
+      const svg = createdBtn.querySelector("svg");
+      if (svg) {
+        submitButton.appendChild(svg);
+      } else {
+        submitButton.textContent = "Search";
+      }
     }
 
     return { form, input, catalogSelect };
@@ -587,13 +617,13 @@
       }
       host.innerHTML = renderSuggestionGroup(
         "Recent Searches",
-        recent.map((item) => ({
+        recent.slice(0, 4).map((item) => ({
           type: "history",
           value: item,
           label: item,
-          meta: "Recent search",
-          kicker: "Recent",
-          action: "Use"
+          meta: "",
+          kicker: "",
+          action: ""
         })),
         ""
       );
@@ -607,25 +637,42 @@
     }
 
     const products = getCatalogProducts();
-    const categoryMatches = Array.from(
-      new Set(
-        products
-          .map((item) => normalizeCategorySlug(item.category))
-          .filter(
-            (category) => category && categoryLabel(category).toLowerCase().includes(query)
-          )
-      )
-    )
-      .slice(0, 2)
-      .map((category) => ({
-        type: "category",
-        value: category,
-        label: categoryLabel(category),
-        meta: "Browse category",
-        kicker: "Category",
-        action: "Browse"
+
+    // 1. Scoped Category Match (Amazon style: e.g. "laptop in Laptops & Accessories")
+    const scopedCatKey = DEFAULT_CATALOG_ORDER.find((cat) => {
+      const lbl = categoryLabel(cat).toLowerCase();
+      return lbl.includes(query) || query.includes(cat);
+    });
+    const scopedSuggestions = scopedCatKey ? [{
+      type: "scoped",
+      value: query,
+      category: scopedCatKey,
+      label: `${escapeHtml(query)} <strong class="suggestion-scope-tag">in ${escapeHtml(categoryLabel(scopedCatKey))}</strong>`,
+      meta: "",
+      kicker: "",
+      action: ""
+    }] : [];
+
+    // 2. Popular Tech Keyword Predictions
+    const TECH_KEYWORDS = [
+      "laptop", "gaming laptop", "laptop ram", "laptop ssd", "wireless headphones", 
+      "bluetooth earphones", "smartphones", "mechanical keyboard", "gaming mouse", 
+      "pc cabinet", "cpu processor", "graphics card gpu", "all in one printer", 
+      "color printer", "desktop computer", "power supply smps", "ram ddr4", "nvme ssd"
+    ];
+    const keywordMatches = TECH_KEYWORDS
+      .filter((kw) => kw.includes(query) && kw !== query)
+      .slice(0, 4)
+      .map((kw) => ({
+        type: "keyword",
+        value: kw,
+        label: kw,
+        meta: "",
+        kicker: "",
+        action: ""
       }));
 
+    // 3. Product matches (top 4)
     const productMatches = products
       .filter((item) =>
         `${item.name} ${item.brand} ${item.category}`.toLowerCase().includes(query)
@@ -635,15 +682,17 @@
         type: "product",
         value: String(item.id),
         label: String(item.name || `Product #${item.id}`),
-        meta: `${item.brand || "ElectroMart"} | ${categoryLabel(normalizeCategorySlug(item.category))}`,
-        kicker: Number(item.rating || 0) > 0 ? `${Number(item.rating).toFixed(1)} rated` : "Top match",
+        meta: `${item.brand || "ElectroMart"} | ${money(item.price)}`,
+        kicker: Number(item.rating || 0) > 0 ? `★ ${Number(item.rating).toFixed(1)}` : "",
         action: "View",
         image: normalizeImageUrl(item.image || ""),
         priceText: money(item.price)
       }));
+
     const markup = [
-      renderSuggestionGroup("Categories", categoryMatches, query),
-      renderSuggestionGroup("Top Matches", productMatches, query)
+      renderSuggestionGroup("", scopedSuggestions, query),
+      renderSuggestionGroup("Suggestions", keywordMatches, query),
+      renderSuggestionGroup("Products", productMatches, query)
     ]
       .filter(Boolean)
       .join("");
@@ -755,10 +804,16 @@
       const item = items[activeSuggestionIndex];
       const type = item.getAttribute("data-suggestion-type");
       const value = String(item.getAttribute("data-suggestion-value") || "").trim();
+      const category = String(item.getAttribute("data-suggestion-category") || "").trim();
       closeSuggestions(suggestions);
       resetSuggestionNavigation();
       if (type === "product" && value) {
         window.location.href = `product-detail.html?id=${encodeURIComponent(value)}`;
+        return true;
+      }
+      if (type === "scoped" && value) {
+        rememberSearchQuery(value);
+        window.location.href = buildProductsSearchUrl(value, category || "all");
         return true;
       }
       if (type === "category" && value) {
@@ -766,7 +821,7 @@
         window.location.href = buildProductsSearchUrl("", value);
         return true;
       }
-      if (type === "history" && value) {
+      if ((type === "history" || type === "keyword") && value) {
         input.value = value;
         rememberSearchQuery(value);
         window.location.href = buildProductsSearchUrl(value, catalogSelect?.value || "all");
@@ -903,10 +958,16 @@
       }
       const type = item.getAttribute("data-suggestion-type");
       const value = String(item.getAttribute("data-suggestion-value") || "").trim();
+      const category = String(item.getAttribute("data-suggestion-category") || "").trim();
       closeSuggestions(suggestions);
       resetSuggestionNavigation();
       if (type === "product" && value) {
         window.location.href = `product-detail.html?id=${encodeURIComponent(value)}`;
+        return;
+      }
+      if (type === "scoped" && value) {
+        rememberSearchQuery(value);
+        window.location.href = buildProductsSearchUrl(value, category || "all");
         return;
       }
       if (type === "category" && value) {
@@ -914,12 +975,32 @@
         window.location.href = buildProductsSearchUrl("", value);
         return;
       }
-      if (type === "history" && value) {
+      if ((type === "history" || type === "keyword") && value) {
         input.value = value;
         rememberSearchQuery(value);
         window.location.href = buildProductsSearchUrl(value, catalogSelect?.value || "all");
       }
     });
+
+    const clearBtn = form.querySelector(".search-clear-btn");
+    if (clearBtn) {
+      const syncClearBtn = () => {
+        if (input.value.trim().length > 0) {
+          clearBtn.removeAttribute("hidden");
+        } else {
+          clearBtn.setAttribute("hidden", "");
+        }
+      };
+      input.addEventListener("input", syncClearBtn);
+      input.addEventListener("keyup", syncClearBtn);
+      clearBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        input.value = "";
+        clearBtn.setAttribute("hidden", "");
+        input.focus();
+        renderSuggestions(input, suggestions);
+      });
+    }
 
     document.addEventListener("click", (event) => {
       if (!form.contains(event.target)) {
