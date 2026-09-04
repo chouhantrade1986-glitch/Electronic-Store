@@ -2721,6 +2721,159 @@
     "sort_featured": "વિશેષ"
   }
 };
+  
+  // Amazon India Cart i18n additions
+  const AMAZON_CART_I18N = {
+  "en": {
+    "free_delivery_qualified": "Your order qualifies for FREE Delivery.",
+    "free_delivery_choose": "Choose this option at checkout.",
+    "add_more_for_free_delivery": "Add items worth ₹{amount} more for FREE Delivery.",
+    "deselect_all_items": "Deselect all items",
+    "save_for_later": "Save for later",
+    "see_more_like_this": "See more like this",
+    "saved_for_later_title": "Saved for later",
+    "move_to_cart": "Move to cart",
+    "this_is_a_gift": "This order contains a gift",
+    "emi_available": "EMI Available",
+    "qty_label": "Qty:"
+  },
+  "hi": {
+    "free_delivery_qualified": "आपका ऑर्डर मुफ़्त डिलीवरी के लिए योग्य है।",
+    "free_delivery_choose": "चेकआउट पर यह विकल्प चुनें।",
+    "add_more_for_free_delivery": "मुफ़्त डिलीवरी के लिए ₹{amount} के योग्य आइटम और जोड़ें।",
+    "deselect_all_items": "सभी आइटम अचयनित करें",
+    "save_for_later": "बाद के लिए सहेजें",
+    "see_more_like_this": "इसके जैसे और देखें",
+    "saved_for_later_title": "बाद के लिए सहेजे गए आइटम",
+    "move_to_cart": "कार्ट में ले जाएं",
+    "this_is_a_gift": "इस ऑर्डर में उपहार शामिल है",
+    "emi_available": "ईएमआई उपलब्ध",
+    "qty_label": "मात्रा:"
+  },
+  "ta": {
+    "free_delivery_qualified": "உங்கள் ஆர்டர் இலவச டெலிவரிக்கு தகுதியுடையது.",
+    "free_delivery_choose": "செக்அவுட்டில் இந்த விருப்பத்தைத் தேர்ந்தெடுக்கவும்.",
+    "add_more_for_free_delivery": "இலவச டெலிவரிக்கு மேலும் ₹{amount} மதிப்புள்ள பொருட்களைச் சேர்க்கவும்.",
+    "deselect_all_items": "அனைத்து பொருட்களையும் தேர்வுநீக்கு",
+    "save_for_later": "பின்னருக்கு சேமிக்கவும்",
+    "see_more_like_this": "இது போன்ற மேலும் காண்க",
+    "saved_for_later_title": "பின்னருக்கு சேமிக்கப்பட்ட பொருட்கள்",
+    "move_to_cart": "கார்ட்டுக்கு நகர்த்தவும்",
+    "this_is_a_gift": "இந்த ஆர்டரில் பரிசு உள்ளது",
+    "emi_available": "இஎம்ஐ கிடைக்கிறது",
+    "qty_label": "அளவு:"
+  },
+  "te": {
+    "free_delivery_qualified": "మీ ఆర్డర్ ఉచిత డెలివరీకి అర్హత పొందింది.",
+    "free_delivery_choose": "చెక్‌అవుట్ వద్ద ఈ ఎంపికను ఎంచుకోండి.",
+    "add_more_for_free_delivery": "ఉచిత డెలివరీ కోసం ఇంకా ₹{amount} విలువైన వస్తువులను జోడించండి.",
+    "deselect_all_items": "అన్ని వస్తువులను ఎంపిక తీసివేయండి",
+    "save_for_later": "తర్వాత కోసం సేవ్ చేయండి",
+    "see_more_like_this": "ఇలాంటివి మరిన్ని చూడండి",
+    "saved_for_later_title": "తర్వాత కోసం సేవ్ చేసిన అంశాలు",
+    "move_to_cart": "కార్ట్‌కు తరలించండి",
+    "this_is_a_gift": "ఈ ఆర్డర్‌లో బహుమతి ఉంది",
+    "emi_available": "ఈఎంఐ అందుబాటులో ఉంది",
+    "qty_label": "పరిమాణం:"
+  },
+  "kn": {
+    "free_delivery_qualified": "ನಿಮ್ಮ ಆರ್ಡರ್ ಉಚಿತ ವಿತರಣೆಗೆ ಅರ್ಹವಾಗಿದೆ.",
+    "free_delivery_choose": "ಚೆಕ್‌ಔಟ್‌ನಲ್ಲಿ ಈ ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ.",
+    "add_more_for_free_delivery": "ಉಚಿತ ವಿತರಣೆಗಾಗಿ ಇನ್ನೂ ₹{amount} ಮೌಲ್ಯದ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಿ.",
+    "deselect_all_items": "ಎಲ್ಲಾ ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ರದ್ದುಮಾಡಿ",
+    "save_for_later": "ನಂತರಕ್ಕಾಗಿ ಉಳಿಸಿ",
+    "see_more_like_this": "ಇದರಂತೆಯೇ ಇನ್ನಷ್ಟು ನೋಡಿ",
+    "saved_for_later_title": "ನಂತರಕ್ಕಾಗಿ ಉಳಿಸಲಾದ ವಸ್ತುಗಳು",
+    "move_to_cart": "ಕಾರ್ಟ್‌ಗೆ ಸರಿಸಿ",
+    "this_is_a_gift": "ಈ ಆರ್ಡರ್‌ನಲ್ಲಿ ಉಡುಗೊರೆ ಇದೆ",
+    "emi_available": "ಇಎಂಐ ಲಭ್ಯವಿದೆ",
+    "qty_label": "ಪ್ರಮಾಣ:"
+  },
+  "ml": {
+    "free_delivery_qualified": "നിങ്ങളുടെ ഓർഡർ സൗജന്യ ഡെലിവറിക്ക് അർഹത നേടിയിരിക്കുന്നു.",
+    "free_delivery_choose": "ചെക്ക്ഔട്ടിൽ ഈ ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക.",
+    "add_more_for_free_delivery": "സൗജന്യ ഡെലിവറിക്ക് ₹{amount} മൂല്യമുള്ള കൂടുതൽ ഇനങ്ങൾ ചേർക്കുക.",
+    "deselect_all_items": "എല്ലാ ഇനങ്ങളും തിരഞ്ഞെടുക്കാതിരിക്കുക",
+    "save_for_later": "പിന്നീടേക്ക് സംരക്ഷിക്കുക",
+    "see_more_like_this": "ഇതുപോലുള്ള കൂടുതൽ കാണുക",
+    "saved_for_later_title": "പിന്നീടേക്ക് സംരക്ഷിച്ച ഇനങ്ങൾ",
+    "move_to_cart": "കാർട്ടിലേക്ക് മാറ്റുക",
+    "this_is_a_gift": "ഈ ഓർഡറിൽ സമ്മാനം അടങ്ങിയിരിക്കുന്നു",
+    "emi_available": "ഇഎംഐ ലഭ്യമാണ്",
+    "qty_label": "അളവ്:"
+  },
+  "bn": {
+    "free_delivery_qualified": "আপনার অর্ডার বিনামূল্যে ডেলিভারির জন্য যোগ্য।",
+    "free_delivery_choose": "চেকআউটে এই বিকল্পটি নির্বাচন করুন।",
+    "add_more_for_free_delivery": "বিনামূল্যে ডেলিভারির জন্য আরও ₹{amount} মূল্যের আইটেম যোগ করুন।",
+    "deselect_all_items": "সমস্ত আইটেম অনির্বাচন করুন",
+    "save_for_later": "পরের জন্য সংরক্ষণ করুন",
+    "see_more_like_this": "এর মতো আরও দেখুন",
+    "saved_for_later_title": "পরের জন্য সংরক্ষিত আইটেম",
+    "move_to_cart": "কার্টে স্থানান্তর করুন",
+    "this_is_a_gift": "এই অর্ডারে উপহার রয়েছে",
+    "emi_available": "ইএমআই উপলব্ধ",
+    "qty_label": "পরিমাণ:"
+  },
+  "mr": {
+    "free_delivery_qualified": "तुमची ऑर्डर मोफत डिलिव्हरीसाठी पात्र आहे.",
+    "free_delivery_choose": "चेकआउटवर हा पर्याय निवडा.",
+    "add_more_for_free_delivery": "मोफत डिलिव्हरीसाठी आणखी ₹{amount} चे पात्र आयटम जोडा.",
+    "deselect_all_items": "सर्व आयटम अननिवडा",
+    "save_for_later": "नंतरसाठी जतन करा",
+    "see_more_like_this": "यासारखे आणखी पहा",
+    "saved_for_later_title": "नंतरसाठी जतन केलेले आयटम",
+    "move_to_cart": "कार्टमध्ये हलवा",
+    "this_is_a_gift": "या ऑर्डरमध्ये भेटवस्तू समाविष्ट आहे",
+    "emi_available": "ईएमआय उपलब्ध",
+    "qty_label": "प्रमाण:"
+  },
+  "ur": {
+    "free_delivery_qualified": "آپ کا آرڈر مفت ترسیل کے لیے اہل ہے۔",
+    "free_delivery_choose": "چیک آؤٹ پر یہ آپشن منتخب کریں۔",
+    "add_more_for_free_delivery": "مفت ترسیل کے لیے مزید ₹{amount} کی اشیاء شامل کریں۔",
+    "deselect_all_items": "تمام اشیاء کو غیر منتخب کریں",
+    "save_for_later": "بعد کے لیے محفوظ کریں",
+    "see_more_like_this": "اس جیسی مزید دیکھیں",
+    "saved_for_later_title": "بعد کے لیے محفوظ اشیاء",
+    "move_to_cart": "کارٹ میں منتقل کریں",
+    "this_is_a_gift": "اس آرڈر میں تحفہ شامل ہے",
+    "emi_available": "ای ایم آئی دستیاب ہے",
+    "qty_label": "مقدار:"
+  },
+  "pa": {
+    "free_delivery_qualified": "ਤੁਹਾਡਾ ਆਰਡਰ ਮੁਫ਼ਤ ਡਿਲੀਵਰੀ ਲਈ ਯੋਗ ਹੈ।",
+    "free_delivery_choose": "ਚੈੱਕਆਉਟ 'ਤੇ ਇਹ ਵਿਕਲਪ ਚੁਣੋ।",
+    "add_more_for_free_delivery": "ਮੁਫ਼ਤ ਡਿਲੀਵਰੀ ਲਈ ₹{amount} ਦੇ ਹੋਰ ਆਈਟਮ ਸ਼ਾਮਲ ਕਰੋ।",
+    "deselect_all_items": "ਸਾਰੇ ਆਈਟਮ ਅਣ-ਚੁਣੋ",
+    "save_for_later": "ਬਾਅਦ ਲਈ ਸੰਭਾਲੋ",
+    "see_more_like_this": "ਇਸ ਵਰਗੇ ਹੋਰ ਦੇਖੋ",
+    "saved_for_later_title": "ਬਾਅਦ ਲਈ ਸੰਭਾਲੇ ਗਏ ਆਈਟਮ",
+    "move_to_cart": "ਕਾਰਟ ਵਿੱਚ ਭੇਜੋ",
+    "this_is_a_gift": "ਇਸ ਆਰਡਰ ਵਿੱਚ ਇੱਕ ਤੋਹਫ਼ਾ ਸ਼ਾਮਲ ਹੈ",
+    "emi_available": "ਈਐੱਮਆਈ ਉਪਲਬਧ ਹੈ",
+    "qty_label": "ਮਾਤਰਾ:"
+  },
+  "gu": {
+    "free_delivery_qualified": "તમારો ઓર્ડર મફત ડિલિવરી માટે પાત્ર છે.",
+    "free_delivery_choose": "ચેકઆઉટ પર આ વિકલ્પ પસંદ કરો.",
+    "add_more_for_free_delivery": "મફત ડિલિવરી માટે વધુ ₹{amount} ની પાત્ર વસ્તુઓ ઉમેરો.",
+    "deselect_all_items": "બધી વસ્તુઓ અસિલેક્ટ કરો",
+    "save_for_later": "પછી માટે સાચવો",
+    "see_more_like_this": "આના જેવું વધુ જુઓ",
+    "saved_for_later_title": "પછી માટે સાચવેલી વસ્તુઓ",
+    "move_to_cart": "કાર્ટમાં ખસેડો",
+    "this_is_a_gift": "આ ઓર્ડરમાં ભેટ શામેલ છે",
+    "emi_available": "ઇએમઆઇ ઉપલબ્ધ છે",
+    "qty_label": "જથ્થો:"
+  }
+};
+  Object.keys(AMAZON_CART_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], AMAZON_CART_I18N[lang]);
+    }
+  });
+
   Object.keys(INTERNAL_I18N).forEach((lang) => {
     if (translations[lang]) {
       Object.assign(translations[lang], INTERNAL_I18N[lang]);

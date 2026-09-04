@@ -194,8 +194,48 @@ function getCatalogProduct(productId) {
   return catalog.find((item) => String(item.id) === key) || null;
 }
 
+const UNSELECTED_STORAGE_KEY = "electromart_unselected_cart_v1";
+const SAVED_STORAGE_KEY = "electromart_saved_for_later_v1";
+
+function loadUnselectedMap() {
+  try {
+    const raw = localStorage.getItem(UNSELECTED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveUnselectedMap(unselectedMap) {
+  try {
+    localStorage.setItem(UNSELECTED_STORAGE_KEY, JSON.stringify(unselectedMap));
+  } catch (error) {
+    return;
+  }
+}
+
+function loadSavedMap() {
+  try {
+    const raw = localStorage.getItem(SAVED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveSavedMap(savedMap) {
+  try {
+    localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(savedMap));
+  } catch (error) {
+    return;
+  }
+}
+
 function getCartRows() {
   const cartMap = loadCartMap();
+  const unselectedMap = loadUnselectedMap();
   return Object.entries(cartMap)
     .map(([id, qty]) => {
       if (Number(qty) <= 0) {
@@ -209,7 +249,8 @@ function getCartRows() {
           name: `Product #${id}`,
           price: 0,
           image: fallbackCatalogImage,
-          quantity: Number(qty)
+          quantity: Number(qty),
+          selected: !unselectedMap[String(id)]
         };
       }
 
@@ -219,7 +260,9 @@ function getCartRows() {
         price: Number(product.price || 0),
         image: product.image || fallbackCatalogImage,
         stock: Number(product.stock),
-        quantity: Number(qty)
+        quantity: Number(qty),
+        category: product.category || "",
+        selected: !unselectedMap[String(id)]
       };
     })
     .filter(Boolean);
@@ -298,9 +341,10 @@ function evaluateCoupon(code, subtotal, shipping) {
 }
 
 function getPricingBreakdown(rows) {
-  const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
-  const subtotal = rows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-  const shipping = itemCount > 0 ? 19 : 0;
+  const selectedRows = rows.filter((row) => row.selected !== false);
+  const itemCount = selectedRows.reduce((sum, row) => sum + row.quantity, 0);
+  const subtotal = selectedRows.reduce((sum, row) => sum + row.price * row.quantity, 0);
+  const shipping = itemCount > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
@@ -333,26 +377,97 @@ function loadDeliverySlotState() {
   }
 }
 
-function cartItemCard(row) {
+function cartItemCard(row, currentLang) {
+  const isSelected = row.selected !== false;
+  const title = window.getLocalizedTitle ? window.getLocalizedTitle(row, currentLang) : row.name;
+
+  // Qty options up to max(10, row.quantity)
+  const maxOptions = Math.max(10, row.quantity);
+  const qtyOptions = [];
+  for (let i = 1; i <= maxOptions; i++) {
+    qtyOptions.push(`<option value="${i}" ${i === row.quantity ? 'selected' : ''}>${i}${i === 10 && maxOptions === 10 ? '+' : ''}</option>`);
+  }
+
   return `
     <article class="cart-item" data-id="${row.id}">
+      <div class="cart-item-check-wrap">
+        <input type="checkbox" class="cart-item-checkbox" data-action="toggle-select" data-id="${row.id}" ${isSelected ? 'checked' : ''} aria-label="Select item" />
+      </div>
       <a class="item-thumb" href="product-detail.html?id=${encodeURIComponent(row.id)}">
         <img src="${row.image}" alt="${row.name}" loading="lazy" />
       </a>
-      <div>
-        <h3 class="item-title"><a href="product-detail.html?id=${encodeURIComponent(row.id)}">${window.getLocalizedTitle ? window.getLocalizedTitle(row, currentLang) : row.name}</a></h3>
+      <div class="cart-item-details">
+        <h3 class="item-title">
+          <a href="product-detail.html?id=${encodeURIComponent(row.id)}">${title}</a>
+        </h3>
         <p class="item-stock" data-i18n="in_stock">In Stock</p>
-        <p class="item-price">${money(row.price)} each</p>
-        <div class="qty-controls">
-          <button class="qty-btn" data-action="decrease" data-id="${row.id}" type="button">-</button>
-          <strong>${row.quantity}</strong>
-          <button class="qty-btn" data-action="increase" data-id="${row.id}" type="button">+</button>
-          <button class="remove-btn" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete">Remove</button>
+        <div class="amz-prime-delivery-tag">
+          <strong>Prime</strong> <span>Eligible for FREE Shipping</span>
+        </div>
+        <label class="cart-item-gift">
+          <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
+        </label>
+        
+        <div class="amz-item-actions-row">
+          <div class="amz-qty-select-wrap">
+            <span style="font-size:12px;color:#565959;margin-right:4px;" data-i18n="qty_label">Qty:</span>
+            <select class="amz-qty-select" data-action="change-qty" data-id="${row.id}">
+              ${qtyOptions.join("")}
+            </select>
+          </div>
+          <span class="amz-action-divider">|</span>
+          <button class="amz-action-link" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete">Delete</button>
+          <span class="amz-action-divider">|</span>
+          <button class="amz-action-link" data-action="save-for-later" data-id="${row.id}" type="button" data-i18n="save_for_later">Save for later</button>
+          <span class="amz-action-divider">|</span>
+          <button class="amz-action-link" data-action="see-more" data-id="${row.id}" type="button" data-i18n="see_more_like_this">See more like this</button>
+          <span class="amz-action-divider">|</span>
+          <button class="amz-action-link" data-action="share" data-id="${row.id}" type="button">Share</button>
         </div>
       </div>
       <strong class="item-total">${money(row.quantity * row.price)}</strong>
     </article>
   `;
+}
+
+function renderSavedForLater() {
+  const section = document.getElementById("savedForLaterSection");
+  const list = document.getElementById("savedItemsList");
+  if (!section || !list) return;
+
+  const savedMap = loadSavedMap();
+  const entries = Object.entries(savedMap).filter(([_, qty]) => Number(qty) > 0);
+
+  if (entries.length === 0) {
+    section.hidden = true;
+    list.innerHTML = "";
+    return;
+  }
+
+  section.hidden = false;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+
+  list.innerHTML = entries.map(([id, qty]) => {
+    const product = getCatalogProduct(id);
+    const name = product ? product.name : `Product #${id}`;
+    const price = product ? product.price : 0;
+    const image = product ? product.image : fallbackCatalogImage;
+    const title = window.getLocalizedTitle ? window.getLocalizedTitle({ id, name }, currentLang) : name;
+
+    return `
+      <div class="amz-saved-card" data-id="${id}">
+        <div class="amz-saved-thumb">
+          <a href="product-detail.html?id=${encodeURIComponent(id)}">
+            <img src="${image}" alt="${name}" loading="lazy" />
+          </a>
+        </div>
+        <a class="amz-saved-title" href="product-detail.html?id=${encodeURIComponent(id)}">${title}</a>
+        <div class="amz-saved-price">${money(price)}</div>
+        <button class="amz-move-to-cart-btn" data-action="move-to-cart" data-id="${id}" type="button" data-i18n="move_to_cart">Move to cart</button>
+        <button class="amz-saved-delete-btn" data-action="remove-saved" data-id="${id}" type="button" data-i18n="delete">Delete</button>
+      </div>
+    `;
+  }).join("");
 }
 
 function renderCart() {
@@ -366,6 +481,7 @@ function renderCart() {
   const t = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
   const subtotalLabel = t.cart_subtotal || "Subtotal";
   const itemsLabel = t.items || "items";
+  const proceedLabel = t.proceed_to_buy || "Proceed to Buy";
 
   cartMetaEl.textContent = `${itemCount} ${itemsLabel}`;
   summaryItemsEl.textContent = `${subtotalLabel} (${itemCount} ${itemsLabel}):`;
@@ -374,7 +490,66 @@ function renderCart() {
   taxEl.textContent = money(tax);
   totalEl.textContent = money(total);
   orderTotalEl.textContent = money(total);
-  checkoutBtn.disabled = rows.length === 0;
+  checkoutBtn.textContent = `${proceedLabel} (${itemCount} ${itemsLabel})`;
+  checkoutBtn.disabled = itemCount === 0;
+
+  // Update listing bottom subtotal
+  const cartBottomSubtotalLabel = document.getElementById("cartBottomSubtotalLabel");
+  const cartBottomSubtotalValue = document.getElementById("cartBottomSubtotalValue");
+  if (cartBottomSubtotalLabel) {
+    cartBottomSubtotalLabel.textContent = `${subtotalLabel} (${itemCount} ${itemsLabel}):`;
+  }
+  if (cartBottomSubtotalValue) {
+    cartBottomSubtotalValue.textContent = money(subtotal);
+  }
+
+  // Update Deselect All / Select All Button
+  const toggleSelectAllBtn = document.getElementById("toggleSelectAllBtn");
+  if (toggleSelectAllBtn) {
+    const unselectedMap = loadUnselectedMap();
+    const hasUnselected = rows.some((r) => unselectedMap[r.id]);
+    if (hasUnselected) {
+      toggleSelectAllBtn.textContent = t.select_all || "Select all items";
+    } else {
+      toggleSelectAllBtn.textContent = t.deselect_all_items || "Deselect all items";
+    }
+  }
+
+  // Update Free Delivery Qualifier Bar
+  const freeDeliveryBar = document.getElementById("freeDeliveryBar");
+  const fdQualifiedMsg = document.getElementById("fdQualifiedMsg");
+  const fdUnqualifiedMsg = document.getElementById("fdUnqualifiedMsg");
+  const fdProgressBar = document.getElementById("fdProgressBar");
+  const fdProgressText = document.getElementById("fdProgressText");
+  const summaryFdQualifier = document.getElementById("summaryFdQualifier");
+
+  const FD_THRESHOLD = 499;
+  if (freeDeliveryBar) {
+    if (rows.length === 0) {
+      freeDeliveryBar.hidden = true;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = true;
+    } else if (subtotal >= FD_THRESHOLD) {
+      freeDeliveryBar.hidden = false;
+      if (fdQualifiedMsg) fdQualifiedMsg.hidden = false;
+      if (fdUnqualifiedMsg) fdUnqualifiedMsg.hidden = true;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = false;
+    } else {
+      freeDeliveryBar.hidden = false;
+      if (fdQualifiedMsg) fdQualifiedMsg.hidden = true;
+      if (fdUnqualifiedMsg) fdUnqualifiedMsg.hidden = false;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = true;
+
+      const diff = FD_THRESHOLD - subtotal;
+      const progressPercent = Math.min(100, Math.round((subtotal / FD_THRESHOLD) * 100));
+      if (fdProgressBar) {
+        fdProgressBar.style.width = `${progressPercent}%`;
+      }
+      if (fdProgressText) {
+        const template = t.add_more_for_free_delivery || "Add items worth ₹{amount} more for FREE Delivery.";
+        fdProgressText.innerHTML = template.replace("{amount}", diff.toLocaleString("en-IN"));
+      }
+    }
+  }
 
   if (couponInput) {
     couponInput.value = coupon.code || "";
@@ -407,21 +582,34 @@ function renderCart() {
   }
 
   if (rows.length === 0) {
-    const emptyMsg = t.cart_empty || "Your cart is empty. Add items from the store.";
-    cartItemsEl.innerHTML = `<div class='empty-message' data-i18n="cart_empty">${emptyMsg}</div>`;
+    const emptyMsg = t.cart_empty || "Your ElectroMart Cart is empty.";
+    cartItemsEl.innerHTML = `
+      <div class="amz-empty-cart-wrap">
+        <img class="amz-empty-cart-img" src="https://m.media-amazon.com/images/G/31/cart/empty/kettle-desaturated._CB424694257_.svg" alt="Empty Cart" onerror="this.style.display='none'" />
+        <div class="amz-empty-cart-content">
+          <h2 data-i18n="cart_empty">${emptyMsg}</h2>
+          <p style="color:#565959;font-size:14px;margin:0 0 10px;">Check your Saved for later items below or discover great deals across all categories.</p>
+          <a href="todays-deals.html" class="amz-empty-deals-btn" data-i18n="todays_deals">Explore Today's Deals</a>
+        </div>
+      </div>
+    `;
+    renderSavedForLater();
     if (typeof window.applyFullPageTranslation === "function") {
       window.applyFullPageTranslation(currentLang);
     }
     return;
   }
 
-  cartItemsEl.innerHTML = rows.map(cartItemCard).join("");
+  cartItemsEl.innerHTML = rows.map((row) => cartItemCard(row, currentLang)).join("");
+  renderSavedForLater();
+
   if (typeof window.applyFullPageTranslation === "function") {
     window.applyFullPageTranslation(currentLang);
   }
 }
 
 window.renderCart = renderCart;
+window.renderSavedForLater = renderSavedForLater;
 
 function updateQuantity(productId, change) {
   const key = String(productId || "").trim();
@@ -435,8 +623,31 @@ function updateQuantity(productId, change) {
 
   if (next <= 0) {
     delete cartMap[key];
+    const unselectedMap = loadUnselectedMap();
+    delete unselectedMap[key];
+    saveUnselectedMap(unselectedMap);
   } else {
     cartMap[key] = next;
+  }
+
+  saveCartMap(cartMap);
+  renderCart();
+}
+
+function setQuantity(productId, newQty) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const qty = parseInt(newQty, 10);
+  const cartMap = loadCartMap();
+
+  if (isNaN(qty) || qty <= 0) {
+    delete cartMap[key];
+    const unselectedMap = loadUnselectedMap();
+    delete unselectedMap[key];
+    saveUnselectedMap(unselectedMap);
+  } else {
+    cartMap[key] = qty;
   }
 
   saveCartMap(cartMap);
@@ -452,9 +663,62 @@ function removeItem(productId) {
   const cartMap = loadCartMap();
   delete cartMap[key];
   saveCartMap(cartMap);
+
+  const unselectedMap = loadUnselectedMap();
+  delete unselectedMap[key];
+  saveUnselectedMap(unselectedMap);
+
   renderCart();
 }
 
+function saveForLater(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const cartMap = loadCartMap();
+  const qty = Number(cartMap[key] || 1);
+  delete cartMap[key];
+  saveCartMap(cartMap);
+
+  const unselectedMap = loadUnselectedMap();
+  delete unselectedMap[key];
+  saveUnselectedMap(unselectedMap);
+
+  const savedMap = loadSavedMap();
+  savedMap[key] = (savedMap[key] || 0) + qty;
+  saveSavedMap(savedMap);
+
+  renderCart();
+}
+
+function moveToCart(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const savedMap = loadSavedMap();
+  const qty = Number(savedMap[key] || 1);
+  delete savedMap[key];
+  saveSavedMap(savedMap);
+
+  const cartMap = loadCartMap();
+  cartMap[key] = (cartMap[key] || 0) + qty;
+  saveCartMap(cartMap);
+
+  renderCart();
+}
+
+function removeSavedItem(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const savedMap = loadSavedMap();
+  delete savedMap[key];
+  saveSavedMap(savedMap);
+
+  renderSavedForLater();
+}
+
+// Global click delegation
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) {
@@ -469,25 +733,90 @@ document.addEventListener("click", (event) => {
 
   if (action === "increase") {
     updateQuantity(productId, 1);
-  }
-
-  if (action === "decrease") {
+  } else if (action === "decrease") {
     updateQuantity(productId, -1);
-  }
-
-  if (action === "remove") {
+  } else if (action === "remove") {
     removeItem(productId);
+  } else if (action === "save-for-later") {
+    saveForLater(productId);
+  } else if (action === "move-to-cart") {
+    moveToCart(productId);
+  } else if (action === "remove-saved") {
+    removeSavedItem(productId);
+  } else if (action === "see-more") {
+    const row = getCatalogProduct(productId);
+    const cat = row?.category || "all";
+    window.location.href = `products.html?category=${encodeURIComponent(cat)}`;
+  } else if (action === "share") {
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('cart.html', '')}product-detail.html?id=${encodeURIComponent(productId)}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("Product link copied to clipboard!");
+      }).catch(() => {});
+    } else {
+      prompt("Copy product link:", shareUrl);
+    }
   }
 });
 
+// Change event delegation for Qty dropdown and Checkboxes
+document.addEventListener("change", (event) => {
+  const select = event.target.closest("select[data-action='change-qty']");
+  if (select) {
+    const productId = select.getAttribute("data-id");
+    setQuantity(productId, select.value);
+    return;
+  }
+
+  const checkbox = event.target.closest("input[data-action='toggle-select']");
+  if (checkbox) {
+    const productId = checkbox.getAttribute("data-id");
+    const unselectedMap = loadUnselectedMap();
+    if (checkbox.checked) {
+      delete unselectedMap[String(productId)];
+    } else {
+      unselectedMap[String(productId)] = true;
+    }
+    saveUnselectedMap(unselectedMap);
+    renderCart();
+    return;
+  }
+});
+
+// Deselect / Select all button
+const toggleSelectAllBtn = document.getElementById("toggleSelectAllBtn");
+if (toggleSelectAllBtn) {
+  toggleSelectAllBtn.addEventListener("click", () => {
+    const rows = getCartRows();
+    const unselectedMap = loadUnselectedMap();
+    const hasUnselected = rows.some((r) => unselectedMap[r.id]);
+
+    if (hasUnselected) {
+      // Select all
+      rows.forEach((r) => {
+        delete unselectedMap[r.id];
+      });
+    } else {
+      // Deselect all
+      rows.forEach((r) => {
+        unselectedMap[r.id] = true;
+      });
+    }
+
+    saveUnselectedMap(unselectedMap);
+    renderCart();
+  });
+}
+
 clearCartBtn.addEventListener("click", () => {
   saveCartMap({});
+  saveUnselectedMap({});
   clearCouponState();
   renderCart();
 });
 
 checkoutBtn.addEventListener("click", () => {
-  const rows = getCartRows();
+  const rows = getCartRows().filter((r) => r.selected !== false);
   if (rows.length === 0) {
     return;
   }
@@ -497,9 +826,9 @@ checkoutBtn.addEventListener("click", () => {
 if (applyCouponBtn) {
   applyCouponBtn.addEventListener("click", () => {
     const code = normalizeCouponCode(couponInput?.value || "");
-    const rows = getCartRows();
+    const rows = getCartRows().filter((r) => r.selected !== false);
     const subtotal = rows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-    const shipping = rows.length > 0 ? 19 : 0;
+    const shipping = rows.length > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
     const coupon = evaluateCoupon(code, subtotal, shipping);
     if (!coupon.code) {
       clearCouponState();

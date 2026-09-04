@@ -15,30 +15,97 @@
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-<body>
+<body class="cart-page">
   <div id="headerContainer"></div>
 
   <main class="cart-main">
-    <section class="cart-listing">
-      <div class="section-head">
-        <h1 data-i18n="shopping_cart">Your Cart</h1>
-        <p id="cartMeta">0 items</p>
+    <div class="cart-left-col">
+      <!-- Amazon India Free Delivery Qualifier Bar -->
+      <div id="freeDeliveryBar" class="amz-free-delivery-bar" hidden>
+        <div class="amz-fd-qualified" id="fdQualifiedMsg" hidden>
+          <svg class="amz-fd-check-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <div class="amz-fd-text">
+            <strong data-i18n="free_delivery_qualified">Your order qualifies for FREE Delivery.</strong>
+            <span class="amz-fd-subtext" data-i18n="free_delivery_choose">Choose this option at checkout.</span>
+          </div>
+        </div>
+        <div class="amz-fd-unqualified" id="fdUnqualifiedMsg">
+          <div class="amz-fd-text" id="fdProgressText">
+            <span data-i18n="add_more_for_free_delivery">Add items worth ₹499 more for FREE Delivery.</span>
+          </div>
+          <div class="amz-fd-progress-wrap">
+            <div id="fdProgressBar" class="amz-fd-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
       </div>
-      <p class="price-col-head" data-i18n="price">Price</p>
-      <div id="cartItems" class="cart-items"></div>
-      <div class="cart-actions">
-        <button id="clearCart" class="clear-btn" type="button" data-i18n="clear_cart">Clear Cart</button>
-      </div>
-    </section>
 
+      <!-- Main Cart Listing -->
+      <section class="cart-listing">
+        <div class="section-head">
+          <div>
+            <h1 data-i18n="shopping_cart">Shopping Cart</h1>
+            <button id="toggleSelectAllBtn" class="amz-deselect-link" type="button" data-i18n="deselect_all_items">Deselect all items</button>
+            <span id="cartMeta" style="display:none;">0 items</span>
+          </div>
+          <p class="price-col-head" data-i18n="price">Price</p>
+        </div>
+
+        <div id="cartItems" class="cart-items"></div>
+
+        <!-- Bottom Subtotal row on listing -->
+        <div id="cartBottomSubtotal" class="amz-cart-subtotal-row">
+          <span id="cartBottomSubtotalLabel">Subtotal (0 items):</span>
+          <strong id="cartBottomSubtotalValue">₹0.00</strong>
+        </div>
+
+        <div class="cart-actions">
+          <button id="clearCart" class="clear-btn" type="button" data-i18n="clear_cart">Clear Cart</button>
+        </div>
+      </section>
+
+      <!-- Saved For Later Section -->
+      <section id="savedForLaterSection" class="amz-saved-for-later" hidden>
+        <h2 data-i18n="saved_for_later_title">Saved for later</h2>
+        <div id="savedItemsList" class="amz-saved-grid"></div>
+      </section>
+    </div>
+
+    <!-- Right Sidebar Buy Box -->
     <aside class="cart-summary">
+      <div id="summaryFdQualifier" class="amz-fd-qualified" style="margin-bottom: 12px;" hidden>
+        <svg class="amz-fd-check-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <div class="amz-fd-text" style="font-size: 13px;">
+          <strong data-i18n="free_delivery_qualified">Your order qualifies for FREE Delivery.</strong>
+        </div>
+      </div>
+
       <p class="summary-items" id="summaryItems">Subtotal (0 items):</p>
-      <p class="summary-total"><strong id="totalValue">INR 0</strong></p>
+      <p class="summary-total"><strong id="totalValue">₹0.00</strong></p>
+
+      <div class="amz-gift-check-wrap">
+        <input type="checkbox" id="giftOrderCheck" />
+        <label for="giftOrderCheck" data-i18n="this_is_a_gift">This order contains a gift</label>
+      </div>
+
+      <button id="checkoutBtn" type="button" data-i18n="proceed_to_buy">Proceed to Buy</button>
+
+      <div class="amz-emi-banner">
+        <span data-i18n="emi_available">EMI Available</span>
+        <a href="javascript:void(0);" onclick="alert('EMI options from HDFC, ICICI, SBI starting at ₹1,499/mo.');">Details</a>
+      </div>
+
+      <p class="secure-line" data-i18n="secure_checkout">Secure checkout with encrypted payment.</p>
+
       <div class="delivery-box">
         <h2 data-i18n="delivery_estimate">Delivery Estimate</h2>
         <p id="cartDeliveryEstimate" class="delivery-estimate">Choose a slot at checkout for the earliest available delivery window.</p>
         <p id="cartReservationMessage" class="reservation-message"></p>
       </div>
+
       <div class="coupon-box">
         <label for="couponInput" data-i18n="coupon_code">Coupon code</label>
         <div class="coupon-row">
@@ -48,15 +115,14 @@
         <p id="couponMessage" class="coupon-message"></p>
         <button id="removeCouponBtn" type="button" class="remove-coupon-btn" hidden>Remove coupon</button>
       </div>
-      <button id="checkoutBtn" type="button" data-i18n="proceed_to_buy">Proceed to Checkout</button>
-      <p class="secure-line" data-i18n="secure_checkout">Secure checkout with encrypted payment.</p>
+
       <hr />
       <h2 data-i18n="order_summary">Order Summary</h2>
-      <p><span data-i18n="cart_subtotal">Subtotal</span><strong id="subtotalValue">INR 0</strong></p>
-      <p><span data-i18n="shipping">Shipping</span><strong id="shippingValue">INR 0</strong></p>
-      <p id="discountRow" hidden><span data-i18n="discount">Discount</span><strong id="discountValue">-INR 0</strong></p>
-      <p><span data-i18n="tax">Tax</span><strong id="taxValue">INR 0</strong></p>
-      <p class="total"><span data-i18n="order_total">Order Total</span><strong id="orderTotalValue">INR 0</strong></p>
+      <p><span data-i18n="cart_subtotal">Subtotal</span><strong id="subtotalValue">₹0.00</strong></p>
+      <p><span data-i18n="shipping">Shipping</span><strong id="shippingValue">₹0.00</strong></p>
+      <p id="discountRow" hidden><span data-i18n="discount">Discount</span><strong id="discountValue">-₹0.00</strong></p>
+      <p><span data-i18n="tax">Tax</span><strong id="taxValue">₹0.00</strong></p>
+      <p class="total"><span data-i18n="order_total">Order Total</span><strong id="orderTotalValue">₹0.00</strong></p>
     </aside>
   </main>
 

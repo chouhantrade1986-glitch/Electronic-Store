@@ -2774,3 +2774,584 @@ select:focus-visible {
   background: #e3e6e6 !important;
 }
 
+/* ==========================================================================
+   AMAZON INDIA SHOPPING CART & SAVED FOR LATER THEME ENHANCEMENTS
+   ========================================================================== */
+
+body.cart-page,
+body:has(.cart-main) {
+  background-color: #eaeded !important;
+  color: #0f1111 !important;
+  font-family: "Amazon Ember", Arial, sans-serif !important;
+}
+
+.cart-main {
+  width: min(1500px, 96vw) !important;
+  margin: 20px auto 40px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 340px !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 992px) {
+  .cart-main {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* --- Free Delivery Progress / Qualifier Bar --- */
+.amz-free-delivery-bar {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 14px 18px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.amz-fd-qualified {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.amz-fd-check-icon {
+  width: 22px !important;
+  height: 22px !important;
+  flex-shrink: 0 !important;
+  color: #067d62 !important;
+}
+
+.amz-fd-text {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: #0f1111 !important;
+}
+
+.amz-fd-text strong {
+  color: #067d62 !important;
+  font-weight: 700 !important;
+}
+
+.amz-fd-subtext {
+  font-size: 13px !important;
+  color: #565959 !important;
+}
+
+.amz-fd-progress-wrap {
+  margin-top: 8px !important;
+  background: #e7e7e7 !important;
+  border-radius: 999px !important;
+  height: 8px !important;
+  overflow: hidden !important;
+}
+
+.amz-fd-progress-fill {
+  background: #007185 !important;
+  height: 100% !important;
+  border-radius: 999px !important;
+  transition: width 0.3s ease !important;
+}
+
+/* --- Cart Listing Main Container --- */
+.cart-listing {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 20px 24px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.cart-listing .section-head {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-end !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  padding-bottom: 8px !important;
+}
+
+.cart-listing .section-head h1 {
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+.amz-deselect-link {
+  font-size: 13px !important;
+  color: #007185 !important;
+  cursor: pointer !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-top: 4px !important;
+  display: inline-block !important;
+}
+
+.amz-deselect-link:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.price-col-head {
+  text-align: right !important;
+  color: #565959 !important;
+  font-size: 14px !important;
+  margin: 6px 0 0 !important;
+  font-weight: 400 !important;
+}
+
+/* --- Cart Items Rows --- */
+.cart-items {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.cart-item {
+  display: grid !important;
+  grid-template-columns: 24px 140px 1fr auto !important;
+  gap: 16px !important;
+  padding: 16px 0 !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  border-top: none !important;
+  align-items: start !important;
+  transition: background 0.15s ease !important;
+}
+
+.cart-item:hover {
+  background: transparent !important;
+}
+
+.cart-item-check-wrap {
+  display: flex !important;
+  align-items: flex-start !important;
+  padding-top: 4px !important;
+}
+
+.cart-item-checkbox {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: #007185 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+}
+
+.cart-item .item-thumb {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 140px !important;
+  height: 140px !important;
+  background: #ffffff !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+.cart-item .item-thumb img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.cart-item-details {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.cart-item .item-title {
+  margin: 0 !important;
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.cart-item .item-title a {
+  color: #007185 !important;
+  text-decoration: none !important;
+}
+
+.cart-item .item-title a:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.cart-item .item-stock {
+  margin: 2px 0 0 !important;
+  font-size: 12px !important;
+  color: #007600 !important;
+  font-weight: 600 !important;
+}
+
+.amz-prime-delivery-tag {
+  font-size: 12px !important;
+  color: #565959 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.amz-prime-delivery-tag strong {
+  color: #007185 !important;
+}
+
+.cart-item-gift {
+  font-size: 12px !important;
+  color: #565959 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 2px 0 !important;
+}
+
+/* --- Actions Row: Qty dropdown and Action Links --- */
+.amz-item-actions-row {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 8px !important;
+}
+
+.amz-qty-select-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: #f0f2f2 !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 5px rgba(15, 17, 17, 0.1) !important;
+  padding: 3px 8px !important;
+}
+
+.amz-qty-select-wrap:hover {
+  background: #e3e6e6 !important;
+}
+
+.amz-qty-select {
+  background: transparent !important;
+  border: none !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.amz-action-divider {
+  color: #d5d9d9 !important;
+  font-size: 13px !important;
+  user-select: none !important;
+}
+
+.amz-action-link {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  color: #007185 !important;
+  cursor: pointer !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+}
+
+.amz-action-link:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.cart-item .item-total {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* --- Cart Subtotal Row at Bottom of Listing --- */
+.amz-cart-subtotal-row {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  padding: 16px 0 4px !important;
+  font-size: 18px !important;
+  color: #0f1111 !important;
+}
+
+.amz-cart-subtotal-row strong {
+  font-weight: 700 !important;
+}
+
+/* --- Cart Actions (Clear Cart) --- */
+.cart-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 10px !important;
+}
+
+.cart-actions .clear-btn {
+  background: none !important;
+  border: none !important;
+  color: #007185 !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  text-decoration: none !important;
+}
+
+.cart-actions .clear-btn:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* --- Right Sidebar: Amazon Buy Box Summary --- */
+.cart-summary {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  position: sticky !important;
+  top: 80px !important;
+}
+
+.cart-summary .summary-items {
+  margin: 0 !important;
+  font-size: 18px !important;
+  color: #0f1111 !important;
+  line-height: 1.3 !important;
+}
+
+.cart-summary .summary-total {
+  margin: 4px 0 12px !important;
+}
+
+.cart-summary .summary-total strong {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+}
+
+.amz-gift-check-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  color: #0f1111 !important;
+  margin-bottom: 16px !important;
+}
+
+.amz-gift-check-wrap input[type="checkbox"] {
+  accent-color: #007185 !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+}
+
+/* --- Proceed to Buy Amazon Yellow Button --- */
+#checkoutBtn {
+  width: 100% !important;
+  height: 36px !important;
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, border-color 0.15s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#checkoutBtn:hover:not(:disabled) {
+  background: #f7ca00 !important;
+  border-color: #f2c200 !important;
+}
+
+#checkoutBtn:active:not(:disabled) {
+  background: #f0b800 !important;
+}
+
+#checkoutBtn:disabled {
+  background: #e0e0e0 !important;
+  border-color: #d5d9d9 !important;
+  color: #888888 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+.amz-emi-banner {
+  margin: 12px 0 !important;
+  padding: 8px 12px !important;
+  background: #f7fafa !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  color: #0f1111 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.amz-emi-banner a {
+  color: #007185 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+
+.amz-emi-banner a:hover {
+  text-decoration: underline !important;
+  color: #c7511f !important;
+}
+
+/* --- Saved For Later Section --- */
+.amz-saved-for-later {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 20px 24px !important;
+  margin-top: 20px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.amz-saved-for-later h2 {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 16px !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  padding-bottom: 8px !important;
+}
+
+.amz-saved-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.amz-saved-card {
+  border: 1px solid #e7e7e7 !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+}
+
+.amz-saved-thumb {
+  height: 120px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 8px !important;
+}
+
+.amz-saved-thumb img {
+  max-height: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+}
+
+.amz-saved-title {
+  font-size: 13px !important;
+  color: #007185 !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  height: 34px !important;
+  overflow: hidden !important;
+  margin: 0 0 4px !important;
+}
+
+.amz-saved-price {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 8px !important;
+}
+
+.amz-move-to-cart-btn {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  margin-bottom: 6px !important;
+}
+
+.amz-move-to-cart-btn:hover {
+  background: #f7ca00 !important;
+}
+
+.amz-saved-delete-btn {
+  background: none !important;
+  border: none !important;
+  color: #007185 !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+.amz-saved-delete-btn:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* --- Empty Cart State --- */
+.amz-empty-cart-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+  padding: 24px 0 !important;
+}
+
+.amz-empty-cart-img {
+  width: 140px !important;
+  height: auto !important;
+  opacity: 0.8 !important;
+}
+
+.amz-empty-cart-content h2 {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin: 0 0 8px !important;
+  color: #0f1111 !important;
+}
+
+.amz-empty-deals-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  text-decoration: none !important;
+  margin-top: 10px !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+}
+
+.amz-empty-deals-btn:hover {
+  background: #f7ca00 !important;
+}
+
+
