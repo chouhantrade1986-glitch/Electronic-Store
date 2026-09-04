@@ -1014,6 +1014,25 @@ function syncCategoryFilterOptions() {
     (c) => `<option value="${c.value}"${c.value === activeValue ? ' selected="selected"' : ''}>${c.label}</option>`
   ).join("");
   categoryFilter.value = MAIN_SEARCH_CATEGORIES.some((c) => c.value === activeValue) ? activeValue : "all";
+  syncNavCategoryLabel();
+}
+
+function syncNavCategoryLabel() {
+  const select = document.getElementById("categoryFilter");
+  const label = document.getElementById("navCategoryLabel");
+  if (!select || !label) return;
+  const shortLabels = {
+    all: "All",
+    computer: "Computers",
+    laptop: "Laptops",
+    components: "Components",
+    printer: "Printers",
+    audio: "Audio",
+    mobile: "Mobiles"
+  };
+  const val = select.value || "all";
+  const display = shortLabels[val] || (select.options[select.selectedIndex]?.text?.split('&')[0]?.trim() || "All");
+  label.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
 }
 
 function saveCartMap(cartMap) {
@@ -1104,6 +1123,16 @@ function rememberSearchQuery(query) {
     return;
   }
   saveSearchHistory([value, ...loadSearchHistory()]);
+}
+
+function removeSearchHistoryItem(query) {
+  const value = String(query || "").trim();
+  if (!value) {
+    return;
+  }
+  const history = loadSearchHistory();
+  const updated = history.filter((item) => item.toLowerCase() !== value.toLowerCase());
+  saveSearchHistory(updated);
 }
 
 function getProductStockState(product) {
@@ -2173,6 +2202,9 @@ function renderSuggestionCard(item, query) {
   if (item.action) {
     trailingParts.push(`<span class="suggestion-action">${escapeSuggestionHtml(item.action)}</span>`);
   }
+  if (item.type === "history") {
+    trailingParts.push(`<span class="suggestion-remove-btn" role="button" tabindex="0" title="Delete from search history" aria-label="Delete ${escapeSuggestionHtml(item.value)} from search history" data-remove-history="${escapeSuggestionHtml(item.value)}">&times;</span>`);
+  }
   const trailing = trailingParts.length
     ? `<span class="suggestion-trailing">${trailingParts.join("")}</span>`
     : "";
@@ -2184,7 +2216,7 @@ function renderSuggestionCard(item, query) {
       ${media}
       <span class="suggestion-copy">
         ${kicker}
-        <span class="suggestion-label">${item.type === "scoped" ? item.label : highlightSuggestionQuery(item.label, query)}</span>
+        <span class="suggestion-label${item.type === "history" ? " suggestion-label--history" : ""}">${item.type === "scoped" ? item.label : highlightSuggestionQuery(item.label, query)}</span>
         ${meta}
       </span>
       ${trailing}
@@ -2742,7 +2774,7 @@ searchInput.addEventListener("focus", renderSearchSuggestions);
 searchInput.addEventListener("keydown", handleSearchSuggestionKeydown);
 if (searchSuggestions) {
   searchSuggestions.addEventListener("mousedown", (event) => {
-    if (event.target.closest("[data-suggestion-type], [data-clear-search-history]")) {
+    if (event.target.closest("[data-suggestion-type], [data-clear-search-history], [data-remove-history]")) {
       event.preventDefault();
     }
   });
@@ -2770,6 +2802,15 @@ if (searchSuggestions) {
   });
   searchSuggestions.addEventListener("keydown", handleSuggestionListKeydown);
   searchSuggestions.addEventListener("click", (event) => {
+    const removeBtn = event.target.closest("[data-remove-history]");
+    if (removeBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      const queryToRemove = removeBtn.getAttribute("data-remove-history");
+      removeSearchHistoryItem(queryToRemove);
+      renderSearchSuggestions();
+      return;
+    }
     const clearButton = event.target.closest("[data-clear-search-history]");
     if (clearButton) {
       event.preventDefault();
@@ -2791,7 +2832,12 @@ if (searchSuggestions) {
     handleSearchSuggestionSelection(type, value, category);
   });
 }
-categoryFilter.addEventListener("change", filterProducts);
+if (categoryFilter) {
+  categoryFilter.addEventListener("change", () => {
+    filterProducts();
+    syncNavCategoryLabel();
+  });
+}
 const allLangSelectors = document.querySelectorAll("#languageSelect, #footerLanguageSelect, .footer-language-select");
 allLangSelectors.forEach((sel) => {
   sel.addEventListener("change", (event) => {

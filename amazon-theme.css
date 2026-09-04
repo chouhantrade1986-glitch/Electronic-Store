@@ -178,6 +178,35 @@ body {
   font-size: 13px;
 }
 
+.suggestion-item--history .suggestion-label,
+.suggestion-item--history .suggestion-label--history {
+  color: #562774 !important;
+  font-weight: 500 !important;
+}
+
+.suggestion-remove-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  color: #767676 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  user-select: none !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.suggestion-remove-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  color: #111111 !important;
+}
+
 .suggestion-meta {
   font-size: 12px;
   color: #565959;
@@ -1175,6 +1204,60 @@ body {
   padding: 0 !important;
   box-sizing: border-box !important;
   transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+}
+
+/* ===== AMAZON SEARCH CATEGORY SELECTOR FACADE (ALL ▾) ===== */
+.nav-search-facade-wrap {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #e6e6e6 !important;
+  border-right: 1px solid #cdcdcd !important;
+  border-radius: 4px 0 0 4px !important;
+  padding: 0 10px !important;
+  height: 100% !important;
+  min-height: 38px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.nav-search-facade-wrap:hover {
+  background-color: #d4d4d4 !important;
+}
+
+.nav-search-facade-text {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #555555 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  user-select: none !important;
+}
+
+.nav-search-facade-text .nav-arrow {
+  font-size: 9px !important;
+  color: #555555 !important;
+  margin-top: 1px !important;
+}
+
+.nav-search-facade-wrap select#categoryFilter,
+.nav-search-facade-wrap select.search-context-select {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
 }
 
 .search-form select,

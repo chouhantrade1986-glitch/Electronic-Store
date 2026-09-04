@@ -52,6 +52,16 @@
     saveSearchHistory([value, ...loadSearchHistory()]);
   }
 
+  function removeSearchHistoryItem(query) {
+    const value = String(query || "").trim();
+    if (!value) {
+      return;
+    }
+    const history = loadSearchHistory();
+    const updated = history.filter((item) => item.toLowerCase() !== value.toLowerCase());
+    saveSearchHistory(updated);
+  }
+
   function normalizeImageUrl(value) {
     const raw = String(value || "").trim();
     if (!raw) {
@@ -240,6 +250,9 @@
     if (item.action) {
       trailingBits.push(`<span class="suggestion-action">${escapeHtml(item.action)}</span>`);
     }
+    if (item.type === "history") {
+      trailingBits.push(`<span class="suggestion-remove-btn" role="button" tabindex="0" title="Delete from search history" aria-label="Delete ${escapeHtml(item.value)} from search history" data-remove-history="${escapeHtml(item.value)}">&times;</span>`);
+    }
     const trailing = trailingBits.length
       ? `<span class="suggestion-trailing">${trailingBits.join("")}</span>`
       : "";
@@ -251,7 +264,7 @@
         ${media}
         <span class="suggestion-copy">
           ${kicker}
-          <span class="suggestion-label">${item.type === "scoped" ? item.label : highlightQuery(item.label, query)}</span>
+          <span class="suggestion-label${item.type === "history" ? " suggestion-label--history" : ""}">${item.type === "scoped" ? item.label : highlightQuery(item.label, query)}</span>
           ${meta}
         </span>
         ${trailing}
@@ -412,11 +425,32 @@
     return suggestions;
   }
 
+  function syncNavCategoryLabel(form) {
+    if (!form) return;
+    const select = form.querySelector('select[data-search-catalog="1"], select.search-context-select');
+    const label = form.querySelector('.nav-search-facade-text, #navCategoryLabel');
+    if (!select || !label) return;
+    const shortLabels = {
+      all: "All",
+      computer: "Computers",
+      laptop: "Laptops",
+      components: "Components",
+      printer: "Printers",
+      audio: "Audio",
+      mobile: "Mobiles"
+    };
+    const val = select.value || "all";
+    const display = shortLabels[val] || (select.options[select.selectedIndex]?.text?.split('&')[0]?.trim() || "All");
+    label.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
+  }
+
   function ensureSearchContext(form, input) {
     const queryCategory = normalizeCategorySlug(
       new URLSearchParams(window.location.search).get("category") || ""
     );
     let context = form.querySelector('select[data-search-catalog="1"], select.search-context-select');
+    let facadeWrap = form.querySelector(".nav-search-facade-wrap");
+
     if (!context) {
       const legacyContext = form.querySelector(".search-context");
       context = document.createElement("select");
@@ -431,6 +465,15 @@
         }
       }
     }
+
+    if (!facadeWrap && context && context.parentNode) {
+      facadeWrap = document.createElement("div");
+      facadeWrap.className = "nav-search-facade-wrap";
+      facadeWrap.innerHTML = `<span class="nav-search-facade-text">All <span class="nav-arrow">▾</span></span>`;
+      context.parentNode.insertBefore(facadeWrap, context);
+      facadeWrap.appendChild(context);
+    }
+
     const nextValue =
       normalizeCategorySlug(form.dataset.sharedSearchCategory || "") ||
       queryCategory ||
@@ -441,6 +484,7 @@
     context.setAttribute("aria-label", "Browse catalogue");
     context.innerHTML = buildCatalogOptionsMarkup(nextValue);
     context.value = getSearchCatalogOptions().includes(nextValue) ? nextValue : "all";
+    syncNavCategoryLabel(form);
     return context;
   }
 
@@ -996,17 +1040,19 @@
     });
     input.addEventListener("keydown", handleSuggestionKeydown);
     if (catalogSelect) {
+      syncNavCategoryLabel(form);
       catalogSelect.addEventListener("change", () => {
         const value = normalizeCategorySlug(catalogSelect.value || "all") || "all";
         catalogSelect.value = getSearchCatalogOptions().includes(value) ? value : "all";
         form.dataset.sharedSearchCategory = catalogSelect.value;
+        syncNavCategoryLabel(form);
         closeSuggestions(suggestions);
         resetSuggestionNavigation();
       });
     }
 
     suggestions.addEventListener("mousedown", (event) => {
-      if (event.target.closest("[data-suggestion-type], [data-clear-search-history]")) {
+      if (event.target.closest("[data-suggestion-type], [data-clear-search-history], [data-remove-history]")) {
         event.preventDefault();
       }
     });
@@ -1025,6 +1071,15 @@
     });
 
     suggestions.addEventListener("click", (event) => {
+      const removeButton = event.target.closest("[data-remove-history]");
+      if (removeButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        const queryToRemove = removeButton.getAttribute("data-remove-history");
+        removeSearchHistoryItem(queryToRemove);
+        renderSuggestions(input, suggestions);
+        return;
+      }
       const clearButton = event.target.closest("[data-clear-search-history]");
       if (clearButton) {
         event.preventDefault();

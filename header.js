@@ -58,15 +58,18 @@
         </button>
         <div class="search-stack search-bar-wrapper">
           <form id="searchForm" class="search-form" role="search" action="products.html" method="get" data-shared-search="1">
-            <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
-              <option id="catAll" data-i18n="categoryFilter.all" value="all">All Categories</option>
-              <option id="catComputer" data-i18n="categoryFilter.computer" value="computer">Computers &amp; Desktops</option>
-              <option id="catLaptop" data-i18n="categoryFilter.laptop" value="laptop">Laptops &amp; Accessories</option>
-              <option id="catComponents" data-i18n="categoryFilter.components" value="components">Components &amp; Parts</option>
-              <option id="catPrinter" data-i18n="categoryFilter.printer" value="printer">Printers &amp; Cartridges</option>
-              <option id="catAudio" data-i18n="categoryFilter.audio" value="audio">Audio &amp; Headphones</option>
-              <option id="catMobile" data-i18n="categoryFilter.mobile" value="mobile">Mobile Accessories</option>
-            </select>
+            <div class="nav-search-facade-wrap" id="navCategoryFacadeWrap">
+              <span class="nav-search-facade-text" id="navCategoryLabel">All <span class="nav-arrow">▾</span></span>
+              <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
+                <option id="catAll" data-i18n="categoryFilter.all" value="all">All Categories</option>
+                <option id="catComputer" data-i18n="categoryFilter.computer" value="computer">Computers &amp; Desktops</option>
+                <option id="catLaptop" data-i18n="categoryFilter.laptop" value="laptop">Laptops &amp; Accessories</option>
+                <option id="catComponents" data-i18n="categoryFilter.components" value="components">Components &amp; Parts</option>
+                <option id="catPrinter" data-i18n="categoryFilter.printer" value="printer">Printers &amp; Cartridges</option>
+                <option id="catAudio" data-i18n="categoryFilter.audio" value="audio">Audio &amp; Headphones</option>
+                <option id="catMobile" data-i18n="categoryFilter.mobile" value="mobile">Mobile Accessories</option>
+              </select>
+            </div>
             <div class="search-input-wrap">
               <input id="searchInput" type="search" name="search" placeholder="Search ElectroMart.in" data-i18n-placeholder="search_placeholder" aria-label="Search products" autocomplete="off" />
               <button id="searchClearBtn" class="search-clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
@@ -452,6 +455,31 @@
           } catch {}
         }
       });
+    }
+
+    // Amazon-style Category dropdown label sync (All ▾)
+    function syncNavCategoryLabel() {
+      const categorySelect = document.getElementById('categoryFilter');
+      const labelEl = document.getElementById('navCategoryLabel');
+      if (!categorySelect || !labelEl) return;
+      const val = categorySelect.value || "all";
+      const shortLabels = {
+        all: "All",
+        computer: "Computers",
+        laptop: "Laptops",
+        components: "Components",
+        printer: "Printers",
+        audio: "Audio",
+        mobile: "Mobiles"
+      };
+      const display = shortLabels[val] || (categorySelect.options[categorySelect.selectedIndex]?.text?.split('&')[0]?.trim() || "All");
+      labelEl.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
+    }
+
+    const categorySelectEl = document.getElementById('categoryFilter');
+    if (categorySelectEl) {
+      categorySelectEl.addEventListener('change', syncNavCategoryLabel);
+      syncNavCategoryLabel();
     }
 
     document.addEventListener('keydown', (e) => {
