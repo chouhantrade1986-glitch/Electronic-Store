@@ -320,6 +320,104 @@
     }
   }
 
+  function addToCart(prodOrId, btnEl) {
+    try {
+      let id, name, price, image;
+      if (typeof prodOrId === "object" && prodOrId !== null) {
+        id = String(prodOrId.id || "p1");
+        name = prodOrId.name || "Product";
+        price = Number(prodOrId.price || 0);
+        image = prodOrId.image || "";
+      } else {
+        id = String(prodOrId || "p1");
+        name = "Product #" + id;
+        price = 0;
+        image = "";
+      }
+
+      if (typeof localStorage !== "undefined") {
+        const cartKey = "electromart_cart_v1";
+        let cartMap = {};
+        try {
+          const raw = localStorage.getItem(cartKey);
+          cartMap = raw ? JSON.parse(raw) : {};
+          if (!cartMap || typeof cartMap !== "object") cartMap = {};
+        } catch (e) {
+          cartMap = {};
+        }
+        cartMap[id] = (Number(cartMap[id]) || 0) + 1;
+        localStorage.setItem(cartKey, JSON.stringify(cartMap));
+
+        const catalogKey = "electromart_catalog_v1";
+        let catMap = {};
+        try {
+          const rawCat = localStorage.getItem(catalogKey);
+          catMap = rawCat ? JSON.parse(rawCat) : {};
+          if (!catMap || typeof catMap !== "object") catMap = {};
+        } catch (e) {
+          catMap = {};
+        }
+        if (!catMap[id]) {
+          catMap[id] = { id: id, name: name, price: price, image: image };
+          localStorage.setItem(catalogKey, JSON.stringify(catMap));
+        }
+
+        if (typeof window !== "undefined" && typeof window.syncCartCount === "function") {
+          window.syncCartCount();
+        } else if (typeof document !== "undefined" && document.querySelectorAll) {
+          const totalCount = Object.values(cartMap).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+          const badges = document.querySelectorAll(".cart-count, #cartCount");
+          badges.forEach((b) => { b.textContent = String(totalCount); });
+        }
+      }
+
+      // Visual feedback
+      const btn = btnEl || (typeof event !== "undefined" && event ? (event.currentTarget || event.target) : null);
+      if (btn && btn.classList && btn.classList.add) {
+        const origText = btn.innerHTML;
+        btn.classList.add("btn-added");
+        btn.innerHTML = "✓ Added";
+        setTimeout(() => {
+          btn.classList.remove("btn-added");
+          btn.innerHTML = origText;
+        }, 1500);
+      }
+
+      if (typeof window !== "undefined" && typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
+        window.dispatchEvent(new CustomEvent("electromart:cart-updated"));
+      }
+    } catch (err) {
+      console.warn("addToCart error:", err);
+    }
+  }
+
+  function setupCarouselPaddles() {
+    if (typeof document === "undefined" || !document.querySelectorAll) return;
+    try {
+      const wrappers = document.querySelectorAll(".amz-carousel-wrapper");
+      if (!wrappers || !wrappers.length) return;
+      wrappers.forEach((wrapper) => {
+        if (wrapper.dataset && wrapper.dataset.paddlesAttached === "true") return;
+        if (wrapper.dataset) wrapper.dataset.paddlesAttached = "true";
+        const row = wrapper.querySelector(".amz-deal-strip-row, .amz-shelf-row, #homeTopPicksGrid, #homeDealsGrid, #homeRecommendedShelfRow, #homeBrowsingHistoryRow");
+        const prevBtn = wrapper.querySelector(".amz-carousel-paddle.prev");
+        const nextBtn = wrapper.querySelector(".amz-carousel-paddle.next");
+        if (row && prevBtn) {
+          prevBtn.addEventListener("click", () => {
+            row.scrollBy({ left: -420, behavior: "smooth" });
+          });
+        }
+        if (row && nextBtn) {
+          nextBtn.addEventListener("click", () => {
+            row.scrollBy({ left: 420, behavior: "smooth" });
+          });
+        }
+      });
+    } catch (e) {
+      // safe fallback in test environments
+    }
+  }
+
   function renderHomepageProducts(lang) {
     const activeLang = (lang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
     const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[activeLang]) ? window.EM_TRANSLATIONS[activeLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
@@ -334,7 +432,7 @@
       topPicksContainer.innerHTML = HOMEPAGE_TOP_PICKS.map((prod) => {
         const titleText = (prod.title && (prod.title[activeLang] || prod.title.en)) || "Product";
         return `
-          <div class="deal-card product-card" style="flex: 1 1 200px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 4px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
+          <div class="deal-card product-card" style="flex: 0 0 230px; max-width: 250px; background: #fff; border: 1px solid #e3e6e6; border-radius: 4px; padding: 1rem; display: flex; flex-direction: column; text-align: left;">
             <a href="${prod.link}" style="text-decoration: none; color: inherit;">
               <img src="${prod.image}" alt="${titleText}" style="width: 100%; height: 160px; object-fit: contain; margin-bottom: 0.5rem;" loading="lazy">
               <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.2rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${titleText}">${titleText}</h3>
@@ -344,7 +442,7 @@
                 <span style="font-size: 0.85rem; color: #565959; text-decoration: line-through;">${moneyINR(prod.mrp)}</span>
               </div>
             </a>
-            <button style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;" onclick="addToCart({id: '${prod.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${prod.price}, image: '${prod.image}'})">${addToCartText}</button>
+            <button class="amz-hp-atc-btn add-to-cart-btn" style="margin-top: auto; background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500;" onclick="addToCart({id: '${prod.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${prod.price}, image: '${prod.image}'}, this)">${addToCartText}</button>
           </div>
         `;
       }).join("");
@@ -378,7 +476,7 @@
               <h3 style="font-size: 1rem; font-weight: 500; margin: 0 0 0.5rem 0; color: #0f1111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${titleText}">${titleText}</h3>
               <div id="claimProgress-${i}" data-claim-progress="${d.claimed}"></div>
             </a>
-            <button style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500; margin-top: auto;" onclick="addToCart({id: '${d.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${d.price}, image: '${d.image}'})">${addToCartText}</button>
+            <button class="amz-hp-atc-btn add-to-cart-btn" style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 0.5rem; width: 100%; cursor: pointer; font-weight: 500; margin-top: auto;" onclick="addToCart({id: '${d.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${d.price}, image: '${d.image}'}, this)">${addToCartText}</button>
           </div>
         `;
       }).join("");
@@ -405,7 +503,7 @@
               <div class="amz-shelf-price"><sup>₹</sup>${prod.price.toLocaleString("en-IN")}</div>
               <div class="amz-shelf-mrp">M.R.P.: ${moneyINR(prod.mrp)}</div>
             </div>
-            <button class="amz-shelf-add-btn add-btn" type="button" onclick="addToCart({id: '${prod.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${prod.price}, image: '${prod.image}'})">${addToCartText}</button>
+            <button class="amz-hp-atc-btn amz-shelf-add-btn add-btn" type="button" onclick="addToCart({id: '${prod.id}', name: '${titleText.replace(/'/g, "\\'")}', price: ${prod.price}, image: '${prod.image}'}, this)">${addToCartText}</button>
           </div>
         `;
       }).join("");
@@ -425,6 +523,8 @@
         `;
       }).join("");
     }
+
+    setupCarouselPaddles();
   }
 
   // Export globally
@@ -433,6 +533,8 @@
   window.HOMEPAGE_DEALS = HOMEPAGE_DEALS;
   window.renderHomepageProducts = renderHomepageProducts;
   window.renderProducts = renderHomepageProducts;
+  window.addToCart = addToCart;
+  window.setupCarouselPaddles = setupCarouselPaddles;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
