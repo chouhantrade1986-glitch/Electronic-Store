@@ -15,7 +15,8 @@ const API_BASE_URL = (() => {
 const productsGrid = document.getElementById("productsGrid");
 const resultMeta = document.getElementById("resultMeta");
 const segmentFilter = document.getElementById("segmentFilter");
-const categoryFilter = document.getElementById("categoryFilter");
+const categoryFilter = document.getElementById("sidebarCategoryFilter") || document.querySelector(".filters-panel select.filter-select, aside select.filter-select, #categoryFilter");
+const headerCategoryFilter = document.querySelector(".nav-search-facade-wrap select, .site-header select.search-context-select");
 const searchCatalogSelect = document.getElementById("searchCatalogSelect");
 const searchInput = document.getElementById("searchInput");
 const searchForm = document.getElementById("searchForm");
@@ -358,6 +359,28 @@ function syncSearchCategoryControls(nextValue) {
   const safeValue = allowed.has(normalized) ? normalized : "all";
   if (categoryFilter) {
     categoryFilter.value = safeValue;
+  }
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  if (headerCat && headerCat !== categoryFilter) {
+    if (headerCat.querySelector(`option[value="${safeValue}"]`)) {
+      headerCat.value = safeValue;
+    } else {
+      headerCat.value = "all";
+    }
+    const labelEl = document.getElementById("navCategoryLabel");
+    if (labelEl) {
+      const shortLabels = {
+        all: "All",
+        computer: "Computers",
+        laptop: "Laptops",
+        components: "Parts",
+        printer: "Printers",
+        audio: "Audio",
+        mobile: "Mobiles"
+      };
+      const display = shortLabels[headerCat.value] || headerCat.options[headerCat.selectedIndex]?.text || "All";
+      labelEl.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
+    }
   }
   if (searchCatalogSelect) {
     searchCatalogSelect.value = safeValue;
@@ -2259,7 +2282,15 @@ function resetAllFilters() {
   if (segmentFilter) {
     segmentFilter.value = "all";
   }
-  categoryFilter.value = "all";
+  if (categoryFilter) {
+    categoryFilter.value = "all";
+  }
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  if (headerCat && headerCat !== categoryFilter) {
+    headerCat.value = "all";
+    const labelEl = document.getElementById("navCategoryLabel");
+    if (labelEl) labelEl.innerHTML = `All <span class="nav-arrow">▾</span>`;
+  }
   if (searchCatalogSelect) {
     searchCatalogSelect.value = "all";
   }
@@ -2272,13 +2303,17 @@ function resetAllFilters() {
   getBrandFilters().forEach((checkbox) => {
     checkbox.checked = false;
   });
+  syncDynamicCategoryUI();
   updatePriceLabels();
   visibleResultCount = PRODUCTS_INITIAL_RENDER_LIMIT;
   fetchProductsFromApi();
 }
 
 function buildQueryParams() {
-  const selectedCategory = normalizeCategory(searchCatalogSelect?.value || categoryFilter.value);
+  const sidebarCategory = categoryFilter ? normalizeCategory(categoryFilter.value) : "all";
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  const headerCategory = headerCat && headerCat !== categoryFilter ? normalizeCategory(headerCat.value) : "all";
+  const selectedCategory = sidebarCategory !== "all" ? sidebarCategory : (headerCategory !== "all" ? headerCategory : normalizeCategory(searchCatalogSelect?.value || "all"));
   const selectedSegment = segmentFilter?.value || "all";
   const query = (searchInput?.value || "").trim();
   const minPrice = Number(minPriceRange.value);
@@ -2408,7 +2443,8 @@ if (loadMoreBtn) {
 if (searchForm) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    syncSearchCategoryControls(searchCatalogSelect?.value || categoryFilter.value || "all");
+    const activeCat = headerCategoryFilter?.value || searchCatalogSelect?.value || categoryFilter?.value || "all";
+    syncSearchCategoryControls(activeCat);
     rememberSearchQuery(searchInput?.value || "");
     fetchProductsFromApi();
   });
@@ -2417,10 +2453,19 @@ if (searchForm) {
 if (segmentFilter) {
   segmentFilter.addEventListener("change", fetchProductsFromApi);
 }
-categoryFilter.addEventListener("change", () => {
-  syncSearchCategoryControls(categoryFilter.value || "all");
-  fetchProductsFromApi();
-});
+if (categoryFilter) {
+  categoryFilter.addEventListener("change", () => {
+    syncSearchCategoryControls(categoryFilter.value || "all");
+    fetchProductsFromApi();
+  });
+}
+const headerCatEl = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+if (headerCatEl && headerCatEl !== categoryFilter) {
+  headerCatEl.addEventListener("change", () => {
+    syncSearchCategoryControls(headerCatEl.value || "all");
+    fetchProductsFromApi();
+  });
+}
 if (searchCatalogSelect) {
   searchCatalogSelect.addEventListener("change", () => {
     syncSearchCategoryControls(searchCatalogSelect.value || "all");

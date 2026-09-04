@@ -1022,6 +1022,11 @@ body.quick-view-open {
     border-radius: 8px 0 0 8px;
   }
 
+  .nav-search-facade-wrap .search-context-select {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
   .search-input-wrap,
   .search-form button {
     width: 100%;

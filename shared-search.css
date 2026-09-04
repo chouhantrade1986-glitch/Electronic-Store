@@ -1,4 +1,4 @@
-﻿form[data-shared-search="1"] {
+form[data-shared-search="1"] {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   min-height: 46px;
@@ -54,6 +54,20 @@ form[data-shared-search="1"] .search-context-select {
   color: #334155;
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+form[data-shared-search="1"] .nav-search-facade-wrap .search-context-select {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+form[data-shared-search="1"] .search-submit-btn,
+form[data-shared-search="1"] button#searchSubmitBtn {
+  min-width: 45px !important;
+  width: 45px !important;
+  max-width: 45px !important;
+  padding: 0 !important;
 }
 
 form[data-shared-search="1"] .search-input-wrap {
