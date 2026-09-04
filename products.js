@@ -70,6 +70,7 @@ const qvFbtAddAll = document.getElementById("qvFbtAddAll");
 const searchSuggestions = document.getElementById("searchSuggestions");
 
 let selectedMinRating = 0;
+let selectedMinDiscount = 0;
 let currentQuickViewProductId = "";
 let lastRenderedProducts = [];
 let fullResultSet = [];
@@ -1796,6 +1797,8 @@ function productCard(product) {
     ribbonLabel = t.deal_badge || "DEAL";
   } else if (ribbonLabel === "BULK VALUE") {
     ribbonLabel = t.bulk_value || "BULK VALUE";
+  } else if (ribbonLabel && (ribbonLabel.includes("Choice") || ribbonLabel === "ElectroMart’s Choice")) {
+    ribbonLabel = t.amazons_choice || "Amazon's Choice";
   }
   const ribbonHtml = ribbon
     ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbonLabel}</span>`
@@ -1820,9 +1823,22 @@ function productCard(product) {
       </div>`;
   }
 
+  /* --- Social proof --- */
+  let socialProofHtml = "";
+  if (reviewCount >= 10) {
+    let countStr = "100";
+    if (reviewCount >= 500) countStr = "2K";
+    else if (reviewCount >= 250) countStr = "1K";
+    else if (reviewCount >= 100) countStr = "500";
+    else if (reviewCount >= 50) countStr = "200";
+    const proofTemplate = t.bought_in_past_month || "{count}+ bought in past month";
+    socialProofHtml = `<p class="card-social-proof">${proofTemplate.replace("{count}", countStr)}</p>`;
+  }
+
   /* --- Price section --- */
   let priceHtml = `
     <div class="price-section">
+      ${discountPercent >= 10 ? `<span class="price-deal-tag">-${discountPercent}%</span>` : ""}
       <div class="price-current-amazon">
         <span class="price-symbol">₹</span>${price.toLocaleString("en-IN")}
       </div>`;
@@ -1887,6 +1903,7 @@ function productCard(product) {
         ${brandHtml}
         <h3><a class="title-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : product.name}</a></h3>
         ${ratingHtml}
+        ${socialProofHtml}
         ${priceHtml}
         ${couponHtml}
         ${deliveryHtml}
@@ -2299,6 +2316,20 @@ function resetAllFilters() {
   minPriceRange.value = String(minPriceRange.min || 0);
   maxPriceRange.value = String(maxPriceRange.max || 16000);
   selectedMinRating = 0;
+  selectedMinDiscount = 0;
+  const minInp = document.getElementById("minPriceInput");
+  const maxInp = document.getElementById("maxPriceInput");
+  if (minInp) minInp.value = "";
+  if (maxInp) maxInp.value = "";
+  document.querySelectorAll(".amz-dept-link").forEach((el) => {
+    el.classList.toggle("active", el.getAttribute("data-category") === "all");
+  });
+  document.querySelectorAll(".amz-rating-item").forEach((el) => el.classList.remove("active"));
+  document.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+  const payCod = document.getElementById("payOnDelivery");
+  if (payCod) payCod.checked = false;
+  const inStockOnly = document.getElementById("inStockOnly");
+  if (inStockOnly) inStockOnly.checked = false;
   syncRatingChipUI();
   getBrandFilters().forEach((checkbox) => {
     checkbox.checked = false;
@@ -2371,7 +2402,22 @@ function applyClientFilters(sourceProducts) {
     const priceMatch = Number(item.price || 0) >= priceFloor && Number(item.price || 0) <= priceCeil;
     const ratingMatch = Number(item.rating || 0) >= selectedMinRating;
     const brandMatch = !checkedBrands.length || checkedBrands.includes(item.brand);
-    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch;
+
+    // Discount filter
+    const listPrice = Number(item.listPrice || item.price || 0);
+    const price = Number(item.price || 0);
+    const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;
+    const discountMatch = !selectedMinDiscount || discountPercent >= selectedMinDiscount;
+
+    // Availability / Stock filter
+    const inStockOnly = document.getElementById("inStockOnly");
+    const stockMatch = inStockOnly && inStockOnly.checked ? true : (Number(item.stock) > 0 || isNaN(Number(item.stock)));
+
+    // Pay on Delivery filter
+    const payOnDelivery = document.getElementById("payOnDelivery");
+    const codMatch = !payOnDelivery || !payOnDelivery.checked ? true : (item.segment !== "b2b");
+
+    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch && discountMatch && stockMatch && codMatch;
   });
 
   if (selectedSort === "price_asc") {
@@ -2814,6 +2860,111 @@ if (qvFbtAddAll) {
   });
 }
 
+function setupAmazonListingFilters() {
+  // 1. Department Tree
+  const deptTree = document.getElementById("amzDeptTree");
+  if (deptTree) {
+    deptTree.addEventListener("click", (e) => {
+      const link = e.target.closest(".amz-dept-link");
+      if (!link) return;
+      e.preventDefault();
+      const cat = link.getAttribute("data-category") || "all";
+      deptTree.querySelectorAll(".amz-dept-link").forEach((el) => el.classList.remove("active"));
+      link.classList.add("active");
+      if (categoryFilter) {
+        categoryFilter.value = cat;
+      }
+      syncSearchCategoryControls(cat);
+      fetchProductsFromApi();
+    });
+  }
+
+  // 2. Customer Star Ratings
+  const ratingList = document.getElementById("amzRatingList");
+  if (ratingList) {
+    ratingList.addEventListener("click", (e) => {
+      const item = e.target.closest(".amz-rating-item");
+      if (!item) return;
+      e.preventDefault();
+      const rating = Number(item.getAttribute("data-rating") || 0);
+      if (selectedMinRating === rating) {
+        selectedMinRating = 0;
+        item.classList.remove("active");
+      } else {
+        selectedMinRating = rating;
+        ratingList.querySelectorAll(".amz-rating-item").forEach((el) => el.classList.remove("active"));
+        item.classList.add("active");
+      }
+      syncRatingChipUI();
+      fetchProductsFromApi();
+    });
+  }
+
+  // 3. Discount Links
+  const discountList = document.getElementById("amzDiscountList");
+  if (discountList) {
+    discountList.addEventListener("click", (e) => {
+      const link = e.target.closest(".amz-discount-link");
+      if (!link) return;
+      e.preventDefault();
+      const discount = Number(link.getAttribute("data-discount") || 0);
+      if (selectedMinDiscount === discount) {
+        selectedMinDiscount = 0;
+        link.classList.remove("active");
+      } else {
+        selectedMinDiscount = discount;
+        discountList.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+        link.classList.add("active");
+      }
+      fetchProductsFromApi();
+    });
+  }
+
+  // 4. Min/Max Go Button
+  const priceGoBtn = document.getElementById("priceGoBtn");
+  const minPriceInput = document.getElementById("minPriceInput");
+  const maxPriceInput = document.getElementById("maxPriceInput");
+  if (priceGoBtn) {
+    priceGoBtn.addEventListener("click", () => {
+      const minVal = minPriceInput && minPriceInput.value !== "" ? Number(minPriceInput.value) : null;
+      const maxVal = maxPriceInput && maxPriceInput.value !== "" ? Number(maxPriceInput.value) : null;
+      if (minVal !== null && !isNaN(minVal)) {
+        minPriceRange.value = String(Math.max(0, minVal));
+      }
+      if (maxVal !== null && !isNaN(maxVal)) {
+        maxPriceRange.value = String(Math.min(200000, maxVal));
+      }
+      updatePriceLabels();
+      fetchProductsFromApi();
+    });
+  }
+
+  // 5. Price Preset Buttons
+  document.querySelectorAll(".price-preset-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const min = btn.getAttribute("data-min");
+      const max = btn.getAttribute("data-max");
+      if (min !== null) minPriceRange.value = String(min);
+      if (max !== null) maxPriceRange.value = String(max);
+      if (minPriceInput) minPriceInput.value = min || "";
+      if (maxPriceInput) maxPriceInput.value = max || "";
+      updatePriceLabels();
+      fetchProductsFromApi();
+    });
+  });
+
+  // 6. Pay on Delivery & Stock filters
+  const payCod = document.getElementById("payOnDelivery");
+  if (payCod) {
+    payCod.addEventListener("change", fetchProductsFromApi);
+  }
+  const inStockOnly = document.getElementById("inStockOnly");
+  if (inStockOnly) {
+    inStockOnly.addEventListener("change", fetchProductsFromApi);
+  }
+}
+
+setupAmazonListingFilters();
 syncCartCount();
 syncDynamicCategoryUI();
 applyInitialQueryFilters();

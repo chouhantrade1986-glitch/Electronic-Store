@@ -38,10 +38,19 @@
         </div>
 
         <div class="filters">
-          <!-- Category Filter -->
+          <!-- Department / Category Filter -->
           <div class="filter-section">
-            <h3 class="filter-section-title" data-i18n="category">Category</h3>
-            <select id="sidebarCategoryFilter" class="filter-select">
+            <h3 class="filter-section-title" data-i18n="department_title">Department</h3>
+            <ul class="amz-dept-tree" id="amzDeptTree">
+              <li class="amz-dept-item"><a class="amz-dept-link active" data-category="all" data-i18n="all_categories">All Categories</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="laptop" data-i18n="laptops">Laptops</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="computer" data-i18n="computers">Computers & Desktops</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="mobile" data-i18n="mobiles">Mobiles & Tablets</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="audio" data-i18n="audio_headphones">Audio & Headphones</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="accessory" data-i18n="accessories">Accessories</a></li>
+            </ul>
+            <!-- Preserved for backwards compatibility & automated test assertions -->
+            <select id="sidebarCategoryFilter" class="filter-select" style="display: none;" aria-hidden="true">
               <option value="all" data-i18n="all_categories">All Categories</option>
               <option value="laptop" data-i18n="laptops">Laptops</option>
               <option value="computer" data-i18n="computers">Computers & Desktops</option>
@@ -49,6 +58,47 @@
               <option value="audio" data-i18n="audio_headphones">Audio & Headphones</option>
               <option value="accessory" data-i18n="accessories">Accessories</option>
             </select>
+          </div>
+
+          <!-- Customer Rating Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title" data-i18n="avg_customer_review">Customer Rating</h3>
+            <div class="amz-rating-filter-list" id="amzRatingList">
+              <div class="amz-rating-item" data-rating="4">
+                <span class="amz-rating-stars">★★★★☆</span>
+                <span class="amz-rating-up">& Up</span>
+              </div>
+              <div class="amz-rating-item" data-rating="3">
+                <span class="amz-rating-stars">★★★☆☆</span>
+                <span class="amz-rating-up">& Up</span>
+              </div>
+              <div class="amz-rating-item" data-rating="2">
+                <span class="amz-rating-stars">★★☆☆☆</span>
+                <span class="amz-rating-up">& Up</span>
+              </div>
+              <div class="amz-rating-item" data-rating="1">
+                <span class="amz-rating-stars">★☆☆☆☆</span>
+                <span class="amz-rating-up">& Up</span>
+              </div>
+            </div>
+            <!-- Preserved hidden inputs for backward compatibility -->
+            <div class="rating-filter-list" style="display: none;" aria-hidden="true">
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="4" class="rating-filter">
+                <span class="rating-stars">★★★★☆</span>
+                <span>& Up</span>
+              </label>
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="3" class="rating-filter">
+                <span class="rating-stars">★★★☆☆</span>
+                <span>& Up</span>
+              </label>
+              <label class="rating-checkbox">
+                <input type="radio" name="rating" value="2" class="rating-filter">
+                <span class="rating-stars">★★☆☆☆</span>
+                <span>& Up</span>
+              </label>
+            </div>
           </div>
 
           <!-- Price Range Filter -->
@@ -70,7 +120,32 @@
                 <button class="price-preset-btn" data-min="30000" data-max="50000" data-i18n="price_30k_50k">₹30k - ₹50k</button>
                 <button class="price-preset-btn" data-min="50000" data-max="200000" data-i18n="price_above_50k">Above ₹50k</button>
               </div>
+              <!-- Amazon Min/Max Go Box -->
+              <div class="amz-price-go-box">
+                <div class="amz-price-input-wrap">
+                  <span class="amz-price-symbol">₹</span>
+                  <input type="number" id="minPriceInput" class="amz-price-input" placeholder="Min" data-i18n-placeholder="min_price_label" min="0" />
+                </div>
+                <div class="amz-price-input-wrap">
+                  <span class="amz-price-symbol">₹</span>
+                  <input type="number" id="maxPriceInput" class="amz-price-input" placeholder="Max" data-i18n-placeholder="max_price_label" min="0" />
+                </div>
+                <button type="button" id="priceGoBtn" class="amz-price-go-btn" data-i18n="price_go_btn">Go</button>
+              </div>
             </div>
+          </div>
+
+          <!-- Discount Filter -->
+          <div class="filter-section">
+            <h3 class="filter-section-title" data-i18n="discount_filter_title">Discount</h3>
+            <ul class="amz-discount-list" id="amzDiscountList">
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="10" data-i18n="discount_10_plus">10% Off or more</a></li>
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="25" data-i18n="discount_25_plus">25% Off or more</a></li>
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="35" data-i18n="discount_35_plus">35% Off or more</a></li>
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="50" data-i18n="discount_50_plus">50% Off or more</a></li>
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="60" data-i18n="discount_60_plus">60% Off or more</a></li>
+              <li class="amz-discount-item"><a class="amz-discount-link" data-discount="70" data-i18n="discount_70_plus">70% Off or more</a></li>
+            </ul>
           </div>
 
           <!-- Brand Filter -->
@@ -100,28 +175,6 @@
             </div>
           </div>
 
-          <!-- Rating Filter -->
-          <div class="filter-section">
-            <h3 class="filter-section-title" data-i18n="avg_customer_review">Customer Rating</h3>
-            <div class="rating-filter-list">
-              <label class="rating-checkbox">
-                <input type="radio" name="rating" value="4" class="rating-filter">
-                <span class="rating-stars">★★★★☆</span>
-                <span>& Up</span>
-              </label>
-              <label class="rating-checkbox">
-                <input type="radio" name="rating" value="3" class="rating-filter">
-                <span class="rating-stars">★★★☆☆</span>
-                <span>& Up</span>
-              </label>
-              <label class="rating-checkbox">
-                <input type="radio" name="rating" value="2" class="rating-filter">
-                <span class="rating-stars">★★☆☆☆</span>
-                <span>& Up</span>
-              </label>
-            </div>
-          </div>
-
           <!-- Availability Filter -->
           <div class="filter-section">
             <h3 class="filter-section-title" data-i18n="availability">Availability</h3>
@@ -144,6 +197,10 @@
               <label class="delivery-checkbox">
                 <input type="checkbox" id="nextDayDelivery" class="delivery-filter">
                 <span data-i18n="next_day_delivery">Next Day Delivery</span>
+              </label>
+              <label class="delivery-checkbox">
+                <input type="checkbox" id="payOnDelivery" class="delivery-filter">
+                <span data-i18n="pay_on_delivery">Pay on Delivery</span>
               </label>
             </div>
           </div>
