@@ -63,14 +63,71 @@
         <ul id="productSpecs" class="spec-list" data-alias="aboutItemBulletList"></ul>
       </div>
 
-      <aside class="buy-box">
-        <p id="buyBoxPrice" class="buy-price"></p>
+      <aside class="buy-box amazon-buybox" id="amazonBuyBox">
+        <div class="buybox-price-wrap">
+          <span id="buyBoxPrice" class="buy-price"></span>
+        </div>
         <p id="buyBoxMrp" class="buy-mrp"></p>
         <p id="buyBoxSavings" class="buy-savings"></p>
         <p id="taxInfo" class="tax-info" data-i18n="inclusive_all_taxes">Inclusive of all taxes</p>
-        <p id="deliveryText" class="delivery-text"></p>
-        <p id="availabilityText" class="availability in-stock stock-status" data-i18n="in_stock"></p>
+
+        <!-- Amazon Style Delivery Section -->
+        <div class="buybox-delivery-section">
+          <div class="delivery-badge-row">
+            <span class="free-delivery-badge" data-i18n="free_delivery">FREE delivery</span>
+            <span id="deliveryDateHighlight" class="delivery-date-highlight"></span>
+          </div>
+          <p id="deliveryText" class="delivery-text"></p>
+          <div class="buybox-countdown" id="buyboxCountdown">
+            <span data-i18n="order_within">Order within</span> <span class="countdown-timer" id="countdownTimer">4 hrs 18 mins</span>
+          </div>
+          <div class="buybox-location-row" id="buyboxLocationRow">
+            <svg class="buybox-pin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <a href="javascript:void(0)" id="buyboxLocationLink" class="buybox-location-link">
+              <span id="buyboxLocationText">Deliver to New Delhi 110001</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- In Stock Status -->
+        <p id="availabilityText" class="availability in-stock stock-status" data-i18n="in_stock">In stock</p>
+
+        <!-- Quantity Selector -->
+        <div class="buybox-qty-row">
+          <label for="qtySelect" data-i18n="qty_label">Quantity:</label>
+          <select id="qtySelect" class="amazon-qty-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+
+        <!-- Amazon Primary Buttons -->
+        <div class="buybox-buttons">
+          <button id="addToCartBtn" type="button" class="amazon-btn-cart" data-i18n="add_to_cart">Add to Cart</button>
+          <a href="cart.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
+        </div>
+
+        <!-- Fulfilled / Seller Info Table -->
         <div id="buyBoxMetaDetails" class="buybox-meta-details"></div>
+
+        <!-- Secure Transaction line -->
+        <div class="buybox-secure-row">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="#007185"><path d="M12 2C9.24 2 7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm3 8H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v3z"/></svg>
+          <span class="secure-line" data-i18n="secure_transaction">Secure transaction</span>
+        </div>
+
+        <!-- Wishlist & Back to Products -->
+        <div class="buybox-secondary-actions">
+          <button id="saveWishlistBtn" type="button" class="secondary-btn wishlist-btn amazon-wishlist-btn" data-i18n="save_to_wishlist">Add to Wish List</button>
+          <a href="products.html" class="secondary-btn" data-i18n="back_to_products" style="margin-top: 6px; display: block; text-align: center; text-decoration: none; font-size: 12px; padding: 6px 10px; border-radius: 8px; border: 1px solid #d5d9d9; background: #ffffff; color: #0f1111;">Back to products</a>
+        </div>
+
         <section id="backInStockPanel" class="back-in-stock-panel" hidden>
           <h3>Get Notified When Back in Stock</h3>
           <p>Enter your details and we will notify you as soon as this product is available.</p>
@@ -82,19 +139,6 @@
           </form>
           <p id="backInStockMessage" class="back-in-stock-message"></p>
         </section>
-        <label for="qtySelect" data-i18n="qty_label">Qty:</label>
-        <select id="qtySelect">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <button id="addToCartBtn" type="button" data-i18n="add_to_cart">Add to Cart</button>
-        <button id="saveWishlistBtn" type="button" class="secondary-btn wishlist-btn" data-i18n="save_to_wishlist">Save to Wishlist</button>
-        <a href="cart.html" class="buy-now-btn" data-i18n="buy_now">Buy Now</a>
-        <a href="products.html" class="secondary-btn" data-i18n="back_to_products">Back to products</a>
-        <p class="secure-line" data-i18n="secure_transaction">Secure transaction</p>
       </aside>
     </section>
 

@@ -2123,6 +2123,46 @@ function renderStarCharacters(rating) {
   if (productKeywordLine) {
     productKeywordLine.style.display = "none";
   }
+  // Amazon Style Dynamic Delivery Date & Location
+  const deliveryDateHighlight = document.getElementById("deliveryDateHighlight");
+  if (deliveryDateHighlight) {
+    const d = new Date();
+    d.setDate(d.getDate() + (product.segment === "b2c" ? 1 : 2));
+    try {
+      const formattedDate = d.toLocaleDateString(currentLang === "hi" ? "hi-IN" : "en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+      deliveryDateHighlight.textContent = formattedDate;
+    } catch (e) {
+      deliveryDateHighlight.textContent = "Tomorrow";
+    }
+  }
+
+  const buyboxLocText = document.getElementById("buyboxLocationText");
+  if (buyboxLocText) {
+    const savedPin = (typeof localStorage !== "undefined" && localStorage.getItem("electromart_delivery_pincode")) || "";
+    const locPrefix = currentLang === "hi" ? "डिलीवरी: " : "Deliver to ";
+    buyboxLocText.textContent = savedPin ? `${locPrefix} ${savedPin}` : `${locPrefix} New Delhi 110001`;
+  }
+
+  const buyboxLocLink = document.getElementById("buyboxLocationLink");
+  if (buyboxLocLink && !buyboxLocLink._bound) {
+    buyboxLocLink._bound = true;
+    buyboxLocLink.addEventListener("click", () => {
+      const pin = prompt(currentLang === "hi" ? "डिलीवरी पिनकोड दर्ज करें:" : "Enter Delivery Pincode:", "110001");
+      if (pin && /^\d{6}$/.test(pin.trim())) {
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("electromart_delivery_pincode", pin.trim());
+        }
+        if (buyboxLocText) {
+          buyboxLocText.textContent = `${currentLang === "hi" ? "डिलीवरी: " : "Deliver to "} ${pin.trim()}`;
+        }
+      }
+    });
+  }
+
   deliveryText.textContent = product.segment === "b2c" ? (t.free_delivery_tomorrow || "FREE delivery by tomorrow") : "Business delivery options available";
   const taxInfoEl = document.getElementById("taxInfo");
   if (taxInfoEl) {
@@ -2131,13 +2171,16 @@ function renderStarCharacters(rating) {
   const buyBoxMeta = document.getElementById("buyBoxMetaDetails");
   if (buyBoxMeta) {
     buyBoxMeta.innerHTML = `
-      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-top: 6px; color: #565959;">
+      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 4px; color: #565959;">
         <span>${t.ships_from || "Ships from:"}</span> <strong style="color: #0f1111;">ElectroMart</strong>
       </div>
-      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-top: 4px; color: #565959;">
+      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 4px; color: #565959;">
         <span>${t.sold_by || "Sold by:"}</span> <strong style="color: #0f1111;">${product.brand || "ElectroMart"} Retail</strong>
       </div>
-      <div class="meta-row" style="font-size: 0.88rem; margin-top: 4px; color: #007185;">
+      <div class="meta-row" style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 4px; color: #565959;">
+        <span>${t.returns_label || "Returns:"}</span> <strong style="color: #007185;">${t.returns_period || "7 days Replacement"}</strong>
+      </div>
+      <div class="meta-row" style="font-size: 0.85rem; margin-top: 4px; color: #007185;">
         <span>${t.payment_secure || "Payment: Secure transaction"}</span>
       </div>
     `;

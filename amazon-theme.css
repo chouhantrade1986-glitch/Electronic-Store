@@ -2409,3 +2409,235 @@ select:focus-visible {
 .lang-flyout-footer a:hover {
   text-decoration: underline !important;
 }
+
+/* ==========================================================================
+   AMAZON INDIA BUY BOX (AUTHENTIC UI/UX)
+   ========================================================================== */
+.amazon-buybox {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 16px 16px 14px !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.3) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: 290px !important;
+  align-content: start !important;
+  position: sticky !important;
+  top: 90px !important;
+}
+
+.buybox-price-wrap {
+  display: flex !important;
+  align-items: flex-start !important;
+  color: #0f1111 !important;
+  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.buybox-currency {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  top: 4px !important;
+  margin-right: 2px !important;
+}
+
+.amazon-buybox .buy-price {
+  font-size: 26px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.buybox-fraction {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  top: 3px !important;
+  margin-left: 2px !important;
+}
+
+.amazon-buybox .tax-info {
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: #565959 !important;
+}
+
+.buybox-delivery-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  padding: 8px 0 !important;
+  border-top: 1px solid #e7e7e7 !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  font-size: 13px !important;
+}
+
+.delivery-badge-row {
+  line-height: 1.4 !important;
+}
+
+.free-delivery-badge {
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin-right: 4px !important;
+}
+
+.delivery-date-highlight {
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+}
+
+.buybox-countdown {
+  font-size: 12px !important;
+  color: #0f1111 !important;
+}
+
+.countdown-timer {
+  color: #b12704 !important;
+  font-weight: 600 !important;
+}
+
+.buybox-location-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  margin-top: 4px !important;
+}
+
+.buybox-pin-icon {
+  stroke: #007185 !important;
+  flex-shrink: 0 !important;
+}
+
+.buybox-location-link {
+  color: #007185 !important;
+  text-decoration: none !important;
+  font-size: 12px !important;
+}
+
+.buybox-location-link:hover {
+  text-decoration: underline !important;
+  color: #c7511f !important;
+}
+
+.amazon-buybox .availability.in-stock {
+  color: #007600 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin: 4px 0 !important;
+}
+
+.buybox-qty-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 4px 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.amazon-qty-select {
+  background: #f0f2f2 !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 4px 10px !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213,217,217,.5) !important;
+  outline: none !important;
+}
+
+.amazon-qty-select:focus {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 3px 2px rgba(228,121,17,.5) !important;
+}
+
+.buybox-buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  margin: 6px 0 !important;
+}
+
+.amazon-btn-cart {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  color: #0f1111 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  height: 35px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px 0 rgba(213,217,217,.5) !important;
+  transition: all 0.15s ease-in-out !important;
+  text-align: center !important;
+}
+
+.amazon-btn-cart:hover {
+  background: #f7ca00 !important;
+  border-color: #f2c200 !important;
+}
+
+.amazon-btn-buynow {
+  background: #ffa41c !important;
+  border: 1px solid #ff8f00 !important;
+  border-radius: 20px !important;
+  color: #0f1111 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  height: 35px !important;
+  line-height: 33px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px 0 rgba(213,217,217,.5) !important;
+  transition: all 0.15s ease-in-out !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  display: block !important;
+}
+
+.amazon-btn-buynow:hover {
+  background: #fa8900 !important;
+  border-color: #e57b00 !important;
+  color: #0f1111 !important;
+}
+
+.buybox-meta-details {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  font-size: 12px !important;
+  padding: 8px 0 !important;
+  border-top: 1px solid #e7e7e7 !important;
+}
+
+.buybox-secure-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 12px !important;
+  color: #007185 !important;
+}
+
+.amazon-wishlist-btn {
+  background: #edf0f3 !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  color: #0f1111 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  height: 30px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  margin-top: 4px !important;
+}
+
+.amazon-wishlist-btn:hover {
+  background: #e3e6e6 !important;
+}
+
