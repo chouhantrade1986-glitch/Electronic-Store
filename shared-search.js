@@ -742,10 +742,43 @@
         };
       });
 
+    const allMatchesCount = pool.filter((item) => {
+      const titleHi = (item.title && typeof item.title === "object" && item.title.hi) || "";
+      const titleEn = (item.title && typeof item.title === "object" && item.title.en) || item.name || "";
+      const brand = item.brand || "";
+      const cat = item.category || "";
+      const sku = item.sku || "";
+      return `${titleEn} ${titleHi} ${brand} ${cat} ${sku}`.toLowerCase().includes(query);
+    }).length;
+
+    const currentLang = (typeof localStorage !== "undefined" && (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en")).toLowerCase();
+    const isHindi = currentLang === "hi";
+    const seeAllLabel = isHindi
+      ? `"${escapeHtml(query)}" के सभी परिणाम देखें`
+      : `See all results for "${escapeHtml(query)}"`;
+    const countBadge = isHindi
+      ? `(${allMatchesCount} उत्पाद) ›`
+      : `(${allMatchesCount} results) ›`;
+
+    const seeAllMarkup = allMatchesCount > 0 ? `
+      <div class="suggestion-footer">
+        <button class="suggestion-item suggestion-item--see-all" type="button" data-suggestion-type="see-all" data-suggestion-value="${escapeHtml(query)}"${selectedCategory !== "all" ? ` data-suggestion-category="${escapeHtml(selectedCategory)}"` : ""}>
+          <span class="suggestion-media suggestion-icon" aria-hidden="true">🔍</span>
+          <span class="suggestion-copy">
+            <span class="suggestion-label">${seeAllLabel}</span>
+          </span>
+          <span class="suggestion-trailing">
+            <span class="suggestion-action suggestion-see-all-count">${countBadge}</span>
+          </span>
+        </button>
+      </div>
+    ` : "";
+
     const markup = [
       renderSuggestionGroup("", scopedSuggestions, query),
       renderSuggestionGroup("Suggestions", keywordMatches, query),
-      renderSuggestionGroup("Products", productMatches, query)
+      renderSuggestionGroup("Products", productMatches, query),
+      seeAllMarkup
     ]
       .filter(Boolean)
       .join("");
@@ -874,10 +907,10 @@
         window.location.href = buildProductsSearchUrl("", value);
         return true;
       }
-      if ((type === "history" || type === "keyword") && value) {
+      if ((type === "history" || type === "keyword" || type === "see-all") && value) {
         input.value = value;
         rememberSearchQuery(value);
-        window.location.href = buildProductsSearchUrl(value, catalogSelect?.value || "all");
+        window.location.href = buildProductsSearchUrl(value, category || catalogSelect?.value || "all");
         return true;
       }
       return true;
@@ -1028,10 +1061,10 @@
         window.location.href = buildProductsSearchUrl("", value);
         return;
       }
-      if ((type === "history" || type === "keyword") && value) {
+      if ((type === "history" || type === "keyword" || type === "see-all") && value) {
         input.value = value;
         rememberSearchQuery(value);
-        window.location.href = buildProductsSearchUrl(value, catalogSelect?.value || "all");
+        window.location.href = buildProductsSearchUrl(value, category || catalogSelect?.value || "all");
       }
     });
 

@@ -8,7 +8,7 @@
       <span class="deliver-to-prefix"><span data-i18n="deliver_to_prefix">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong></span>
     </button>
     <div class="search-stack search-bar-wrapper">
-      <form id="searchForm" class="search-form" role="search" data-shared-search="1">
+      <form id="searchForm" class="search-form" role="search" action="products.html" method="get" data-shared-search="1">
         <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
           <option id="catAll" data-i18n="categoryFilter.all" value="all">All Categories</option>
           <option id="catComputer" data-i18n="categoryFilter.computer" value="computer">Computers &amp; Desktops</option>
@@ -19,7 +19,7 @@
           <option id="catMobile" data-i18n="categoryFilter.mobile" value="mobile">Mobile Accessories</option>
         </select>
         <div class="search-input-wrap">
-          <input id="searchInput" type="search" placeholder="Search ElectroMart.in" data-i18n-placeholder="search_placeholder" aria-label="Search products" autocomplete="off" />
+          <input id="searchInput" type="search" name="search" placeholder="Search ElectroMart.in" data-i18n-placeholder="search_placeholder" aria-label="Search products" autocomplete="off" />
           <button id="searchClearBtn" class="search-clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
           <div id="searchSuggestions" class="search-suggestions" hidden></div>
         </div>

@@ -210,6 +210,32 @@ body {
   font-weight: 700;
 }
 
+.suggestion-footer {
+  border-top: 1px solid #e7e7e7;
+  background: #fbfbfb;
+  margin-top: 2px;
+}
+
+.suggestion-item--see-all {
+  font-weight: 600 !important;
+  color: #007185 !important;
+  padding: 10px 14px !important;
+  background: transparent;
+}
+
+.suggestion-item--see-all:hover,
+.suggestion-item--see-all.is-active,
+.suggestion-item--see-all.active {
+  background: #f0f2f2 !important;
+  color: #c7511f !important;
+}
+
+.suggestion-see-all-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #007185;
+}
+
 .suggestion-empty {
   padding: 14px;
   font-size: 13px;
