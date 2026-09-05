@@ -31,6 +31,17 @@
       </div>
     </section>
 
+    <!-- Amazon-Style Horizontal Department Filter Bar -->
+    <nav class="amz-dept-pills-bar" id="dealsDeptBar" aria-label="Department filters">
+      <button type="button" class="amz-dept-pill active" data-category="all" data-i18n="all_deals">All Deals</button>
+      <button type="button" class="amz-dept-pill" data-category="laptop" data-i18n="laptops">Laptops</button>
+      <button type="button" class="amz-dept-pill" data-category="mobile" data-i18n="mobiles">Mobiles</button>
+      <button type="button" class="amz-dept-pill" data-category="audio" data-i18n="audio_headphones">Audio</button>
+      <button type="button" class="amz-dept-pill" data-category="accessory" data-i18n="accessories">Accessories</button>
+      <button type="button" class="amz-dept-pill" data-category="computer" data-i18n="computers">Computers</button>
+      <button type="button" class="amz-dept-pill" data-category="creator-studio" data-i18n="creator_studio">Creator Studio</button>
+    </nav>
+
     <section class="amazon-layout">
       <aside class="panel refine-panel">
         <div class="panel-head">
@@ -95,6 +106,19 @@
           <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 deals</p>
         </div>
         <p class="result-note" data-i18n="limited_time_pricing_note">Limited-time pricing updates daily.</p>
+        
+        <!-- Deal Type Quick Filter Pills -->
+        <div class="amz-deal-types-bar" id="dealTypeBar">
+          <button type="button" class="amz-deal-type-pill active" data-type="all" data-deal-type="all" data-i18n="all_deals">All Deals</button>
+          <button type="button" class="amz-deal-type-pill" data-type="dotd" data-deal-type="dotd" data-i18n="deal_of_the_day">Deal of the Day</button>
+          <button type="button" class="amz-deal-type-pill" data-type="lightning" data-deal-type="lightning" data-i18n="lightning_deals">Lightning Deals</button>
+          <button type="button" class="amz-deal-type-pill" data-type="under500" data-deal-type="under500" data-i18n="under_500_deals">Under ₹500</button>
+          <button type="button" class="amz-deal-type-pill" data-type="halfprice" data-deal-type="fifty_plus" data-i18n="half_price_deals">50% Off or More</button>
+        </div>
+
+        <!-- Featured Deal Spotlight Banner -->
+        <div id="dealsSpotlightBanner"></div>
+
         <div id="dealsGrid" class="deals-grid"></div>
       </section>
     </section>

@@ -1,4 +1,8 @@
-﻿const CART_STORAGE_KEY = "electromart_cart_v1";
+const CART_STORAGE_KEY = "electromart_cart_v1";
+const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
+
+const bestSellers = [
+const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
 
 const bestSellers = [
@@ -9,6 +13,27 @@ const bestSellers = [
   { id: 5, name: "Orbit Mechanical Keyboard", brand: "OrbitX", category: "accessory", collections: ["accessory", "computer"], price: 109, rating: 4.5, sold: "1.5k sold this month", soldCount: 1500, image: "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=900&q=80" },
   { id: 8, name: "Echo Smart Speaker", brand: "EchoSphere", category: "audio", collections: ["audio"], price: 89, rating: 4.4, sold: "2.7k sold this month", soldCount: 2700, image: "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=900&q=80" }
 ];
+
+if (typeof window !== "undefined" && Array.isArray(window.EM_CATALOG) && window.EM_CATALOG.length) {
+  const existingIds = new Set(bestSellers.map((x) => String(x.id)));
+  window.EM_CATALOG.forEach((p, idx) => {
+    if (!existingIds.has(String(p.id)) && (p.rating >= 4.0 || p.bestseller)) {
+      bestSellers.push({
+        id: p.id,
+        name: p.name,
+        brand: p.brand || "ElectroMart",
+        category: p.category || "accessory",
+        collections: [p.category || "accessory"],
+        price: p.price,
+        rating: p.rating || 4.5,
+        sold: `${(1.5 + (idx % 5) * 0.4).toFixed(1)}k sold this month`,
+        soldCount: Math.round(1500 + (idx % 5) * 400),
+        image: p.image || (p.images && p.images[0]) || ""
+      });
+      existingIds.add(String(p.id));
+    }
+  });
+}
 
 const bestGrid = document.getElementById("bestGrid");
 const resultMeta = document.getElementById("resultMeta");
@@ -210,6 +235,10 @@ function card(item) {
   const viewDetailsText = dict.view_details || "View details";
   const starRatingText = dict.star_rating || "star rating";
 
+  const rank = typeof arguments[1] === "number" ? arguments[1] + 1 : (item.rank || item._rank || 0);
+  const rankClass = rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : "rank-general";
+  const rankBadgeHtml = rank > 0 ? `<span class="amz-rank-badge ${rankClass}">#${rank}</span>` : "";
+
   const soldDisplay = item.soldCount ? `${(item.soldCount / 1000).toFixed(1)}k ${soldSuffix}` : item.sold;
 
   return `
@@ -218,7 +247,7 @@ function card(item) {
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" />
       </a>
       <div class="content">
-        <p class="card-kicker"><span class="badge" data-i18n="badge_best_seller">${escapeHtml(bestSellerBadge)}</span></p>
+        <p class="card-kicker">${rankBadgeHtml}<span class="badge" data-i18n="badge_best_seller">${escapeHtml(bestSellerBadge)}</span></p>
         <h3><a href="${detailUrl}">${escapeHtml(window.getLocalizedTitle ? window.getLocalizedTitle(item, lang) : item.name)}</a></h3>
         <p><a class="brand-line" href="${brandUrl}">by ${escapeHtml(item.brand)}</a></p>
         <div class="rating-line">
@@ -249,7 +278,7 @@ function render(list) {
     bestGrid.innerHTML = `<div class='empty'>${dict.no_matches_found || "No exact matches found. Try clearing one filter or broadening the search."}</div>`;
     return;
   }
-  bestGrid.innerHTML = list.map(card).join("");
+  bestGrid.innerHTML = list.map((item, idx) => card(item, idx)).join("");
   if (typeof window.applyFullPageTranslation === "function") {
     window.applyFullPageTranslation(lang);
   }
@@ -342,6 +371,36 @@ function applyInitialCategoryFromUrl() {
   }
 }
 
+function syncDeptPillsUI(activeCategory) {
+  const bar = document.getElementById("bestSellersDeptBar");
+  if (!bar) return;
+  const target = normalizeCategory(activeCategory || "all");
+  const pills = bar.querySelectorAll(".amz-dept-pill");
+  pills.forEach((p) => {
+    const pillCat = normalizeCategory(p.getAttribute("data-category") || "all");
+    if (pillCat === target) {
+      p.classList.add("active");
+    } else {
+      p.classList.remove("active");
+    }
+  });
+}
+
+function initBestSellersDeptPills() {
+  const bar = document.getElementById("bestSellersDeptBar");
+  if (!bar) return;
+  bar.addEventListener("click", (e) => {
+    const pill = e.target.closest(".amz-dept-pill");
+    if (!pill) return;
+    const cat = pill.getAttribute("data-category") || "all";
+    if (categoryFilter) {
+      categoryFilter.value = cat;
+    }
+    syncDeptPillsUI(cat);
+    filterBestSellers();
+  });
+}
+
 function filterBestSellers() {
   const query = String(searchInput?.value || "").trim().toLowerCase();
   const category = normalizeCategory(categoryFilter?.value || "all");
@@ -350,6 +409,7 @@ function filterBestSellers() {
 
   syncDynamicCategoryUI();
   syncDynamicBrandUI();
+  syncDeptPillsUI(category);
 
   const filtered = bestSellers.filter((item) => {
     const collections = normalizeCollectionValues(item.collections, item.category);
@@ -409,6 +469,7 @@ syncCartCount();
 syncDynamicCategoryUI();
 applyInitialCategoryFromUrl();
 syncDynamicBrandUI();
+initBestSellersDeptPills();
 filterChipController = window.ElectroMartListingFilterChips?.init({
   mountAfter: ".result-note",
   getFilters: getActiveListingFilters,
@@ -419,6 +480,7 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
       checkbox.checked = false;
     });
     if (sortFilter) sortFilter.value = "relevance";
+    syncDeptPillsUI("all");
   },
   focusAfterClearAll: () => searchInput?.focus(),
   clearAllFeedback: "Removed all listing filters. Focus moved to the search input.",

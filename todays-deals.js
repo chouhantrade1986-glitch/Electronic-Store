@@ -1,21 +1,6 @@
 const priceRangeFilter = document.getElementById("priceRangeFilter");
 const discountFilter = document.getElementById("discountFilter");
-function filterDeals() {
-  let filtered = [...deals];
-  const discountValue = Number(discountFilter?.value || 0);
-  // Price range dropdown logic
-  if (priceRangeFilter && priceRangeFilter.value !== "all") {
-    const [min, max] = priceRangeFilter.value.split("-").map(Number);
-    filtered = filtered.filter(d => d.dealPrice >= min && d.dealPrice <= max);
-  }
-  if (discountValue > 0) {
-    filtered = filtered.filter(d => discountPercent(d.oldPrice, d.dealPrice) >= discountValue);
-  }
-  render(filtered);
-}
-
-if (priceRangeFilter) priceRangeFilter.addEventListener("change", filterDeals);
-if (discountFilter) discountFilter.addEventListener("change", filterDeals);
+let currentDealType = "all";
 const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
 
@@ -355,13 +340,17 @@ function startDealCountdowns() {
         el.textContent = formatCountdown(expiry - Date.now());
       }
     });
+    const spotTimer = document.getElementById("spotlight-timer");
+    if (spotTimer && deals.length > 0) {
+      const firstExpiry = getDealExpiry(deals[0]);
+      spotTimer.textContent = formatCountdown(firstExpiry - Date.now());
+    }
   }, 1000);
 }
 
-
 // Start countdowns after DOM loads
 function setupDealCardActions() {
-  // Quick Add to Cart feedback
+  // Quick Add to Cart feedback on dealsGrid
   dealsGrid?.addEventListener("click", function (e) {
     const btn = e.target.closest(".add-btn");
     if (!btn) return;
@@ -376,6 +365,74 @@ function setupDealCardActions() {
       btn.textContent = oldText;
     }, 2000);
   });
+
+  // Quick Add on Spotlight Banner
+  const spotlightBanner = document.getElementById("dealsSpotlightBanner");
+  spotlightBanner?.addEventListener("click", function (e) {
+    const btn = e.target.closest(".add-btn");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    if (!id) return;
+    addToCart(id);
+    btn.disabled = true;
+    const oldText = btn.textContent;
+    btn.classList.add("added");
+    btn.textContent = "✓ Added!";
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove("added");
+      btn.textContent = oldText;
+    }, 2000);
+  });
+}
+
+function renderSpotlightDeal(deal) {
+  const spotlightBanner = document.getElementById("dealsSpotlightBanner");
+  if (!spotlightBanner) return;
+  if (!deal) {
+    spotlightBanner.innerHTML = "";
+    return;
+  }
+
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  const discount = discountPercent(deal.oldPrice, deal.dealPrice);
+  const detailUrl = `product-detail.html?id=${encodeURIComponent(deal.id)}`;
+  const expiry = getDealExpiry(deal);
+  const progress = getDealProgress(deal);
+  const title = escapeHtml(window.getLocalizedTitle ? window.getLocalizedTitle(deal, currentLang) : deal.name);
+
+  spotlightBanner.innerHTML = `
+    <div class="amz-spotlight-deal">
+      <div class="amz-spotlight-media">
+        <a href="${detailUrl}">
+          <img class="amz-spotlight-img" src="${escapeHtml(deal.image)}" alt="${title}" loading="lazy" />
+        </a>
+      </div>
+      <div class="amz-spotlight-info">
+        <span class="amz-spotlight-badge">${escapeHtml(t.deal_of_the_day || "Deal of the Day")}</span>
+        <h3 class="amz-spotlight-title"><a href="${detailUrl}">${title}</a></h3>
+        <div class="amz-spotlight-price-row">
+          <span class="amz-spotlight-discount">-${discount}%</span>
+          <span class="amz-spotlight-price">${escapeHtml(money(deal.dealPrice))}</span>
+          <span class="amz-spotlight-mrp">${t.mrp || "M.R.P."} <s>${escapeHtml(money(deal.oldPrice))}</s></span>
+        </div>
+        <div class="amz-spotlight-meta-row">
+          <span class="amz-spotlight-timer">⏱️ ${t.ends_in || "Ends in:"} <span id="spotlight-timer">${formatCountdown(expiry - Date.now())}</span></span>
+          <div class="amz-spotlight-progress-wrap">
+            <div class="amz-spotlight-progress-bar">
+              <div class="amz-spotlight-progress-fill" style="width:${progress}%"></div>
+            </div>
+            <span>${progress}% ${t.claimed || "claimed"}</span>
+          </div>
+        </div>
+        <div class="amz-spotlight-actions">
+          <button class="amz-spotlight-btn add-btn" data-id="${escapeHtml(deal.id)}" type="button">${t.add_to_cart || "Add to Cart"}</button>
+          <a class="amz-spotlight-link" href="${detailUrl}">${t.view_details || "View details"} &rsaquo;</a>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 if (document.readyState === "loading") {
@@ -395,6 +452,11 @@ function render(list) {
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   resultMeta.textContent = `${list.length} ${t.showing_x_deals || "डील्स दिखाई जा रही हैं"}`;
+  
+  if (typeof renderSpotlightDeal === "function") {
+    renderSpotlightDeal(list.length > 0 ? list[0] : null);
+  }
+
   if (!list.length) {
     dealsGrid.innerHTML = `<div class='empty'>${t.no_deals_found || "No exact deal matches found. Try clearing one filter or broadening the search."}</div>`;
     return;
@@ -486,21 +548,104 @@ function applyInitialCategoryFromUrl() {
   }
 }
 
+function syncDeptPillsUI(activeCategory) {
+  const pills = document.querySelectorAll("#dealsDeptBar .amz-dept-pill");
+  pills.forEach((pill) => {
+    const cat = pill.getAttribute("data-category");
+    if (cat === activeCategory) {
+      pill.classList.add("active");
+    } else {
+      pill.classList.remove("active");
+    }
+  });
+}
+
+function initDealsDeptPills() {
+  const deptBar = document.getElementById("dealsDeptBar");
+  if (!deptBar || deptBar._bound) return;
+  deptBar._bound = true;
+
+  deptBar.addEventListener("click", (e) => {
+    const pill = e.target.closest(".amz-dept-pill");
+    if (!pill) return;
+    const cat = pill.getAttribute("data-category") || "all";
+    if (categoryFilter) {
+      categoryFilter.value = cat;
+    }
+    syncDeptPillsUI(cat);
+
+    try {
+      const url = new URL(window.location.href);
+      if (cat === "all") {
+        url.searchParams.delete("category");
+      } else {
+        url.searchParams.set("category", cat);
+      }
+      window.history.replaceState({}, "", url.toString());
+    } catch (e) {}
+
+    filterDeals();
+  });
+}
+
+function initDealTypePills() {
+  const typeBar = document.getElementById("dealTypeBar");
+  if (!typeBar || typeBar._bound) return;
+  typeBar._bound = true;
+
+  typeBar.addEventListener("click", (e) => {
+    const pill = e.target.closest(".amz-deal-type-pill");
+    if (!pill) return;
+    typeBar.querySelectorAll(".amz-deal-type-pill").forEach((p) => p.classList.remove("active"));
+    pill.classList.add("active");
+    currentDealType = pill.getAttribute("data-type") || "all";
+    filterDeals();
+  });
+}
+
 function filterDeals() {
   const query = String(searchInput?.value || "").trim().toLowerCase();
   const category = normalizeCategory(categoryFilter?.value || "all");
   const sortValue = String(sortFilter?.value || "relevance");
   const selectedBrands = getSelectedBrands();
+  const discountValue = Number(discountFilter?.value || 0);
 
   syncDynamicCategoryUI();
   syncDynamicBrandUI();
+  syncDeptPillsUI(category);
 
   const filtered = deals.filter((item) => {
     const collections = normalizeCollectionValues(item.collections, item.category);
     const queryMatch = !query || `${item.name} ${item.brand} ${collections.join(" ")}`.toLowerCase().includes(query);
     const categoryMatch = category === "all" || collections.includes(category);
     const brandMatch = !selectedBrands.length || selectedBrands.includes(item.brand);
-    return queryMatch && categoryMatch && brandMatch;
+
+    // Price range dropdown logic
+    let priceMatch = true;
+    if (priceRangeFilter && priceRangeFilter.value !== "all") {
+      const [min, max] = priceRangeFilter.value.split("-").map(Number);
+      priceMatch = item.dealPrice >= min && item.dealPrice <= max;
+    }
+
+    // Discount dropdown logic
+    let discMatch = true;
+    if (discountValue > 0) {
+      discMatch = discountPercent(item.oldPrice, item.dealPrice) >= discountValue;
+    }
+
+    // Deal type pill filter
+    let typeMatch = true;
+    if (currentDealType === "dotd") {
+      typeMatch = item.id === 1 || item.id === 7 || discountPercent(item.oldPrice, item.dealPrice) >= 20;
+    } else if (currentDealType === "lightning") {
+      typeMatch = item.id === 3 || item.id === 8 || item.id === 5;
+    } else if (currentDealType === "under500") {
+      typeMatch = Number(item.dealPrice || 0) < 500;
+    } else if (currentDealType === "halfprice") {
+      typeMatch = discountPercent(item.oldPrice, item.dealPrice) >= 50;
+    }
+
+    return queryMatch && categoryMatch && brandMatch && priceMatch && discMatch && typeMatch;
   });
 
   render(sortDeals(filtered, sortValue));
@@ -512,6 +657,12 @@ if (searchInput) {
 }
 if (categoryFilter) {
   categoryFilter.addEventListener("change", filterDeals);
+}
+if (priceRangeFilter) {
+  priceRangeFilter.addEventListener("change", filterDeals);
+}
+if (discountFilter) {
+  discountFilter.addEventListener("change", filterDeals);
 }
 if (brandFilterList) {
   brandFilterList.addEventListener("change", (event) => {
@@ -553,6 +704,8 @@ syncCartCount();
 syncDynamicCategoryUI();
 applyInitialCategoryFromUrl();
 syncDynamicBrandUI();
+initDealsDeptPills();
+initDealTypePills();
 filterChipController = window.ElectroMartListingFilterChips?.init({
   mountAfter: ".result-note",
   getFilters: getActiveListingFilters,
@@ -563,6 +716,8 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
       checkbox.checked = false;
     });
     if (sortFilter) sortFilter.value = "relevance";
+    if (priceRangeFilter) priceRangeFilter.value = "all";
+    if (discountFilter) discountFilter.value = "all";
   },
   focusAfterClearAll: () => searchInput?.focus(),
   clearAllFeedback: "Removed all listing filters. Focus moved to the search input.",

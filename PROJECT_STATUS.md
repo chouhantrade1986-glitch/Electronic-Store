@@ -10,9 +10,9 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 38 / 38 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 39 / 39 टेस्ट सूट्स उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **112 / 112 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **113 / 113 (100% Pass Rate)** |
 
 ---
 
@@ -23,7 +23,7 @@
 - **कीमतें (Pricing):** सभी उत्पादों और एक्सेसरीज़ में प्रामाणिक भारतीय रुपये (₹ INR)।
 - **कैटलॉग फॉलबैक:** कार्ट और प्रोडक्ट डिटेल पेजों पर तेज़ इन-मेमोरी लुकअप।
 
-### B. अमेज़न इंडिया UI/UX थीम (Amazon India Theme - Phases 1 to 10 Completed)
+### B. अमेज़न इंडिया UI/UX थीम (Amazon India Theme - Phases 1 to 11 Completed)
 - **चरण 1 (Shopping Cart Upgrade - `cart.html`, `cart.js`):**
   - ₹499+ फ़्री डिलीवरी प्रोग्रेस व क्वालिफायर बार (ग्रीन चेकमार्क बैज)।
   - आइटम सिलेक्शन/अचयन चेकबॉक्स, "Deselect/Select all" टॉगल, और अमेज़न एक्शन बार।
@@ -91,6 +91,13 @@
   - `header.js` द्वारा स्टोर-वाइड डायनामिक मोडल इंजेक्शन (पेज पर मोडल न होने पर भी सभी पेजों पर निर्बाध कार्य)।
   - 100% बैकवर्ड कम्पैटिबिलिटी: पुराने QA IDs (`#locationModal`, `#locationTitle`, `#locationCity`, `#locationPostal`, `#locationCancel`, `#locationSave`, `data-close-location-modal`) पूर्णतः सुरक्षित।
   - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-location-modal.js` (100% पास)।
+- **चरण 11 (Deals & Best Sellers Dedicated Hubs - `todays-deals.html`, `todays-deals.js`, `best-sellers.html`, `best-sellers.js`):**
+  - प्रामाणिक अमेज़न इंडिया डिपार्टमेंट पिल बार (`#dealsDeptBar`, `#bestSellersDeptBar`) विथ स्मूथ हॉरिजॉन्टल स्क्रोलिंग व ऑटो सिंक।
+  - डील टाइप पिल्स (`#dealTypeBar`): All Deals, Deal of the Day, Lightning Deals, Under ₹500, 50% Off or More।
+  - फीचर्ड डील ऑफ द डे स्पॉटलाइट शोकेस बैनर (`#dealsSpotlightBanner`, `.amz-spotlight-deal`) विथ लाइव एक्सपायरी काउंटडाउन और क्लेम प्रोग्रेस बार।
+  - बेस्ट सेलर्स पोडियम रैंक रिबन्स (`.amz-rank-badge`): गोल्ड ग्रेडिएंट (`#1`), सिल्वर ग्रेडिएंट (`#2`), ब्रॉन्ज ग्रेडिएंट (`#3`), और नेवी-येलो (`#4+`)।
+  - फुल कैटलॉग इंटीग्रेशन (`products-data.js` / `window.EM_CATALOG`)।
+  - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-deals-and-best-sellers.js` (100% पास)।
 
 ### C. 11 भारतीय भाषाओं का i18n अनुवाद इंजन (Multilingual Engine)
 - **डिक्शनरी (`translations.js`):** हिंदी (`hi`), तमिल (`ta`), तेलुगु (`te`), मराठी (`mr`), बंगाली (`bn`), गुजराती (`gu`), कन्नड़ (`kn`), मलयालम (`ml`), पंजाबी (`pa`), उर्दू (`ur`), अंग्रेजी (`en`)।
