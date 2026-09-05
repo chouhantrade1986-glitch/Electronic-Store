@@ -2224,25 +2224,50 @@ function renderStarCharacters(rating) {
     }
   }
 
+  const updateBuyboxLocation = (city, postal) => {
+    if (!buyboxLocText) return;
+    const locPrefix = currentLang === "hi" ? "डिलीवरी: " : "Deliver to ";
+    if (city && postal) {
+      buyboxLocText.textContent = `${locPrefix} ${city} ${postal}`;
+    } else if (postal) {
+      buyboxLocText.textContent = `${locPrefix} ${postal}`;
+    } else {
+      buyboxLocText.textContent = `${locPrefix} New Delhi 110001`;
+    }
+  };
+
   const buyboxLocText = document.getElementById("buyboxLocationText");
   if (buyboxLocText) {
-    const savedPin = (typeof localStorage !== "undefined" && localStorage.getItem("electromart_delivery_pincode")) || "";
-    const locPrefix = currentLang === "hi" ? "डिलीवरी: " : "Deliver to ";
-    buyboxLocText.textContent = savedPin ? `${locPrefix} ${savedPin}` : `${locPrefix} New Delhi 110001`;
+    let savedLoc = null;
+    try {
+      const raw = localStorage.getItem("electromart_delivery_location");
+      savedLoc = raw ? JSON.parse(raw) : null;
+    } catch (e) {}
+    const savedPin = savedLoc?.postal || (typeof localStorage !== "undefined" && localStorage.getItem("electromart_delivery_pincode")) || "";
+    const savedCity = savedLoc?.city || "";
+    updateBuyboxLocation(savedCity, savedPin);
   }
 
   const buyboxLocLink = document.getElementById("buyboxLocationLink");
   if (buyboxLocLink && !buyboxLocLink._bound) {
     buyboxLocLink._bound = true;
-    buyboxLocLink.addEventListener("click", () => {
-      const pin = prompt(currentLang === "hi" ? "डिलीवरी पिनकोड दर्ज करें:" : "Enter Delivery Pincode:", "110001");
-      if (pin && /^\d{6}$/.test(pin.trim())) {
-        if (typeof localStorage !== "undefined") {
-          localStorage.setItem("electromart_delivery_pincode", pin.trim());
-        }
-        if (buyboxLocText) {
-          buyboxLocText.textContent = `${currentLang === "hi" ? "डिलीवरी: " : "Deliver to "} ${pin.trim()}`;
-        }
+    buyboxLocLink.addEventListener("click", (e) => {
+      if (e) e.preventDefault();
+      if (typeof window.openLocationModal === "function") {
+        window.openLocationModal();
+      } else {
+        const trigger = document.getElementById("locationTrigger");
+        if (trigger) trigger.click();
+      }
+    });
+  }
+
+  if (!window._buyboxLocEventBound) {
+    window._buyboxLocEventBound = true;
+    window.addEventListener("electromart:locationChanged", (e) => {
+      const detail = e && e.detail;
+      if (detail) {
+        updateBuyboxLocation(detail.city, detail.postal);
       }
     });
   }

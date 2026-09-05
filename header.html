@@ -4,8 +4,15 @@
       <span class="brand-main">electro<span class="brand-accent">mart</span></span>
       <span class="brand-sub">.in</span>
     </a>
-    <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
-      <span class="deliver-to-prefix"><span data-i18n="deliver_to_prefix">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong></span>
+    <button class="deliver-btn nav-deliver-box" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
+      <svg class="nav-location-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <div class="deliver-text-group">
+        <span class="deliver-to-label" data-i18n="deliver_to_prefix">Deliver to</span>
+        <strong class="deliver-location" id="deliveryLocationText">New Delhi 110001</strong>
+      </div>
     </button>
     <div class="search-stack search-bar-wrapper">
       <form id="searchForm" class="search-form" role="search" action="products.html" method="get" data-shared-search="1">

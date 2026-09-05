@@ -548,26 +548,64 @@
 
   <div id="locationModal" class="location-modal" role="dialog" aria-modal="true" aria-labelledby="locationTitle" hidden>
     <div class="location-modal__backdrop" data-close-location-modal></div>
-    <section class="location-modal__content">
-      <h2 id="locationTitle" data-i18n="location.title">Choose your location</h2>
-      <p data-i18n="location.subtitle">Select a delivery location to see product availability and delivery options.</p>
-      <div class="location-form">
-        <label for="locationCity" data-i18n="location.cityLabel">City</label>
-        <select id="locationCity">
-          <option value="New Delhi">New Delhi</option>
-          <option value="Mumbai">Mumbai</option>
-          <option value="Bengaluru">Bengaluru</option>
-          <option value="Jaipur">Jaipur</option>
-          <option value="Hyderabad">Hyderabad</option>
-          <option value="Chennai">Chennai</option>
-        </select>
-
-        <label for="locationPostal" data-i18n="location.postalLabel">PIN code</label>
-        <input id="locationPostal" type="text" inputmode="numeric" maxlength="10" placeholder="110001" data-i18n-placeholder="location.postalPlaceholder" />
+    <section class="location-modal__content amz-location-card">
+      <div class="amz-location-header">
+        <h2 id="locationTitle" class="amz-location-title" data-i18n="location_choose_title">Choose your location</h2>
+        <button type="button" class="amz-location-close-btn" data-close-location-modal aria-label="Close">&times;</button>
       </div>
+      <p class="amz-location-subtitle" data-i18n="location_subtitle">Select a delivery location to see product availability and delivery options.</p>
+
+      <div id="amzLocationAuthSection" class="amz-location-section">
+        <div class="amz-location-signin-box">
+          <a href="auth.html" class="amz-location-signin-btn" data-i18n="location_signin_btn">Sign in to see your addresses</a>
+        </div>
+      </div>
+
+      <div class="amz-location-divider">
+        <span data-i18n="location_or_pincode">or enter an Indian PIN code</span>
+      </div>
+
+      <form id="amzLocationPincodeForm" class="amz-location-form" onsubmit="return false;">
+        <div class="amz-location-pincode-wrap">
+          <input id="locationPostal" class="amz-location-input" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit PIN code" data-i18n-placeholder="location_pincode_placeholder" autocomplete="postal-code" />
+          <button id="locationSave" class="amz-location-apply-btn" type="submit" data-i18n="location_apply_btn">Apply</button>
+        </div>
+        <div id="locationPostalError" class="amz-location-error" role="alert" data-i18n="location_invalid_pincode">Please enter a valid 6-digit Indian PIN code.</div>
+      </form>
+
+      <select id="locationCity" style="display:none;" aria-hidden="true">
+        <option value="New Delhi">New Delhi</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Bengaluru">Bengaluru</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Pune">Pune</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Lucknow">Lucknow</option>
+      </select>
+
+      <div class="amz-location-divider">
+        <span data-i18n="location_or_city">or select a major city</span>
+      </div>
+
+      <div class="amz-location-metros-grid" id="amzMajorMetrosGrid">
+        <button type="button" class="amz-metro-pill" data-city="New Delhi" data-postal="110001">New Delhi 110001</button>
+        <button type="button" class="amz-metro-pill" data-city="Mumbai" data-postal="400001">Mumbai 400001</button>
+        <button type="button" class="amz-metro-pill" data-city="Bengaluru" data-postal="560001">Bengaluru 560001</button>
+        <button type="button" class="amz-metro-pill" data-city="Hyderabad" data-postal="500001">Hyderabad 500001</button>
+        <button type="button" class="amz-metro-pill" data-city="Chennai" data-postal="600001">Chennai 600001</button>
+        <button type="button" class="amz-metro-pill" data-city="Kolkata" data-postal="700001">Kolkata 700001</button>
+        <button type="button" class="amz-metro-pill" data-city="Pune" data-postal="411001">Pune 411001</button>
+        <button type="button" class="amz-metro-pill" data-city="Ahmedabad" data-postal="380001">Ahmedabad 380001</button>
+        <button type="button" class="amz-metro-pill" data-city="Jaipur" data-postal="302001">Jaipur 302001</button>
+        <button type="button" class="amz-metro-pill" data-city="Lucknow" data-postal="226001">Lucknow 226001</button>
+        <button type="button" class="amz-metro-pill" data-city="Chandigarh" data-postal="160001">Chandigarh 160001</button>
+      </div>
+
       <div class="location-actions">
-        <button id="locationCancel" type="button" class="location-cancel" data-i18n="location.cancel">Cancel</button>
-        <button id="locationSave" type="button" class="location-save" data-i18n="location.save">Save location</button>
+        <button id="locationCancel" type="button" class="location-cancel" data-close-location-modal data-i18n="location.cancel">Cancel</button>
       </div>
     </section>
   </div>

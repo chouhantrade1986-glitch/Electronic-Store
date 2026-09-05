@@ -631,20 +631,416 @@
     observer.observe(cartCountEl, { childList: true, characterData: true, subtree: true });
   }
 
+  // ===== PHASE 10: UNIVERSAL DELIVERY LOCATION & PINCODE MODAL MANAGER =====
+  const LOCATION_STORAGE_KEY = "electromart_location_v1";
+
+  const INDIAN_PINCODE_MAP = {
+    "11": "New Delhi",
+    "12": "Haryana",
+    "13": "Haryana",
+    "14": "Punjab",
+    "15": "Punjab",
+    "16": "Chandigarh",
+    "17": "Himachal Pradesh",
+    "18": "Jammu & Kashmir",
+    "19": "Jammu & Kashmir",
+    "20": "Uttar Pradesh",
+    "21": "Uttar Pradesh",
+    "22": "Lucknow",
+    "23": "Uttar Pradesh",
+    "24": "Uttar Pradesh",
+    "25": "Uttar Pradesh",
+    "26": "Uttarakhand",
+    "27": "Uttar Pradesh",
+    "28": "Uttar Pradesh",
+    "30": "Jaipur",
+    "31": "Rajasthan",
+    "32": "Rajasthan",
+    "33": "Rajasthan",
+    "34": "Jodhpur",
+    "36": "Gujarat",
+    "37": "Gujarat",
+    "38": "Ahmedabad",
+    "39": "Surat",
+    "40": "Mumbai",
+    "41": "Pune",
+    "42": "Maharashtra",
+    "43": "Maharashtra",
+    "44": "Nagpur",
+    "45": "Indore",
+    "46": "Bhopal",
+    "47": "Gwalior",
+    "48": "Jabalpur",
+    "49": "Raipur",
+    "50": "Hyderabad",
+    "51": "Andhra Pradesh",
+    "52": "Vijayawada",
+    "53": "Visakhapatnam",
+    "56": "Bengaluru",
+    "57": "Karnataka",
+    "58": "Karnataka",
+    "59": "Belagavi",
+    "60": "Chennai",
+    "61": "Tamil Nadu",
+    "62": "Madurai",
+    "63": "Coimbatore",
+    "64": "Coimbatore",
+    "67": "Kozhikode",
+    "68": "Kochi",
+    "69": "Thiruvananthapuram",
+    "70": "Kolkata",
+    "71": "West Bengal",
+    "72": "West Bengal",
+    "73": "Siliguri",
+    "74": "West Bengal",
+    "75": "Bhubaneswar",
+    "76": "Odisha",
+    "77": "Odisha",
+    "78": "Guwahati",
+    "79": "Northeast",
+    "80": "Patna",
+    "81": "Bihar",
+    "82": "Bihar",
+    "83": "Ranchi",
+    "84": "Bihar",
+    "85": "Bihar"
+  };
+
+  const MAJOR_METROS = [
+    { city: "New Delhi", postal: "110001" },
+    { city: "Mumbai", postal: "400001" },
+    { city: "Bengaluru", postal: "560001" },
+    { city: "Hyderabad", postal: "500001" },
+    { city: "Chennai", postal: "600001" },
+    { city: "Kolkata", postal: "700001" },
+    { city: "Pune", postal: "411001" },
+    { city: "Ahmedabad", postal: "380001" },
+    { city: "Jaipur", postal: "302001" },
+    { city: "Lucknow", postal: "226001" },
+    { city: "Chandigarh", postal: "160001" }
+  ];
+
+  function resolveCityFromPincode(pin) {
+    const clean = String(pin || "").replace(/\D/g, "");
+    if (clean.length === 6) {
+      const prefix = clean.slice(0, 2);
+      if (INDIAN_PINCODE_MAP[prefix]) {
+        return INDIAN_PINCODE_MAP[prefix];
+      }
+    }
+    return "India";
+  }
+
+  function loadDeliveryLocation() {
+    try {
+      const raw = localStorage.getItem(LOCATION_STORAGE_KEY) || localStorage.getItem("electromart_delivery_location");
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (parsed && typeof parsed === "object") {
+        const city = String(parsed.city || "").trim();
+        const postal = String(parsed.postal || "").trim();
+        if (city || postal) {
+          return { city: city || "New Delhi", postal: postal || "110001" };
+        }
+      }
+      const legacyPin = localStorage.getItem("electromart_delivery_pincode");
+      if (legacyPin && /^\d{6}$/.test(legacyPin.trim())) {
+        const pin = legacyPin.trim();
+        return { city: resolveCityFromPincode(pin), postal: pin };
+      }
+    } catch (e) {}
+    return { city: "New Delhi", postal: "110001" };
+  }
+
+  function saveDeliveryLocation(city, postal) {
+    const pref = { city: city || "New Delhi", postal: postal || "110001" };
+    try {
+      localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(pref));
+      localStorage.setItem("electromart_delivery_location", JSON.stringify(pref));
+      localStorage.setItem("electromart_delivery_pincode", pref.postal);
+      localStorage.setItem("electromart_delivery_city", pref.city);
+    } catch (e) {}
+
+    const locEl = document.getElementById("deliveryLocationText");
+    if (locEl) {
+      locEl.textContent = `${pref.city} ${pref.postal}`;
+    }
+
+    const postalInput = document.getElementById("locationPostal");
+    if (postalInput) {
+      postalInput.value = pref.postal;
+    }
+
+    const citySelect = document.getElementById("locationCity");
+    if (citySelect) {
+      citySelect.value = pref.city;
+    }
+
+    window.dispatchEvent(new CustomEvent("electromart:locationChanged", { detail: pref }));
+  }
+
+  function ensureLocationModal() {
+    let modal = document.getElementById("locationModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "locationModal";
+      modal.className = "location-modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("aria-labelledby", "locationTitle");
+      modal.hidden = true;
+      modal.innerHTML = `
+        <div class="location-modal__backdrop" data-close-location-modal></div>
+        <section class="location-modal__content amz-location-card">
+          <div class="amz-location-header">
+            <h2 id="locationTitle" class="amz-location-title" data-i18n="location_choose_title">Choose your location</h2>
+            <button type="button" class="amz-location-close-btn" data-close-location-modal aria-label="Close">&times;</button>
+          </div>
+          <p id="locationSubtitle" class="amz-location-subtitle" data-i18n="location_subtitle">Select a delivery location to see product availability and delivery options.</p>
+
+          <div id="amzLocationAuthSection" class="amz-location-section"></div>
+
+          <div class="amz-location-divider">
+            <span data-i18n="location_or_pincode">or enter an Indian PIN code</span>
+          </div>
+
+          <form id="amzLocationPincodeForm" class="amz-location-form" onsubmit="return false;">
+            <div class="amz-location-pincode-wrap">
+              <input id="locationPostal" class="amz-location-input" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit PIN code" data-i18n-placeholder="location_pincode_placeholder" autocomplete="postal-code" />
+              <button id="locationSave" class="amz-location-apply-btn" type="submit" data-i18n="location_apply_btn">Apply</button>
+            </div>
+            <div id="locationPostalError" class="amz-location-error" role="alert" data-i18n="location_invalid_pincode">Please enter a valid 6-digit Indian PIN code.</div>
+          </form>
+
+          <select id="locationCity" style="display:none;" aria-hidden="true">
+            <option value="New Delhi">New Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Pune">Pune</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Lucknow">Lucknow</option>
+          </select>
+
+          <div class="amz-location-divider">
+            <span data-i18n="location_or_city">or select a major city</span>
+          </div>
+
+          <div class="amz-location-metros-grid" id="amzMajorMetrosGrid"></div>
+
+          <div class="location-actions">
+            <button id="locationCancel" type="button" class="location-cancel" data-close-location-modal data-i18n="location.cancel">Cancel</button>
+          </div>
+        </section>
+      `;
+      document.body.appendChild(modal);
+    }
+    return modal;
+  }
+
+  function populateLocationAuthSection() {
+    const container = document.getElementById("amzLocationAuthSection");
+    if (!container) return;
+
+    let user = null;
+    try {
+      const rawUser = localStorage.getItem("electromart_auth_v1");
+      user = rawUser ? JSON.parse(rawUser) : null;
+    } catch (e) {}
+
+    let profile = null;
+    try {
+      const rawProfile = localStorage.getItem("electromart_profile_v1");
+      profile = rawProfile ? JSON.parse(rawProfile) : null;
+    } catch (e) {}
+
+    const addressText = (profile && profile.address) || (user && user.address) || "";
+    const userName = (user && user.name) || (profile && profile.fullName) || "";
+
+    if (user && addressText) {
+      const currentLoc = loadDeliveryLocation();
+      container.innerHTML = `
+        <div class="amz-location-addresses-list">
+          <div class="amz-location-address-card selected" id="amzSavedAddrCard">
+            <span style="font-size: 16px;">📍</span>
+            <div class="amz-location-addr-info">
+              <span class="amz-location-addr-name">${userName}</span>
+              <span class="amz-location-addr-text">${addressText}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      const card = document.getElementById("amzSavedAddrCard");
+      if (card) {
+        card.addEventListener("click", () => {
+          const pinMatch = addressText.match(/\\b([1-9][0-9]{5})\\b/);
+          if (pinMatch) {
+            const pin = pinMatch[1];
+            const city = resolveCityFromPincode(pin);
+            saveDeliveryLocation(city, pin);
+          } else {
+            saveDeliveryLocation(currentLoc.city, currentLoc.postal);
+          }
+          closeLocationModal();
+        });
+      }
+    } else {
+      container.innerHTML = `
+        <div class="amz-location-signin-box">
+          <a href="auth.html" class="amz-location-signin-btn" data-i18n="location_signin_btn">Sign in to see your addresses</a>
+        </div>
+      `;
+    }
+  }
+
+  function populateMajorMetros(currentPostal) {
+    const grid = document.getElementById("amzMajorMetrosGrid");
+    if (!grid) return;
+
+    grid.innerHTML = MAJOR_METROS.map((m) => {
+      const isActive = m.postal === currentPostal;
+      return `<button type="button" class="amz-metro-pill ${isActive ? 'active' : ''}" data-city="${m.city}" data-postal="${m.postal}">${m.city} ${m.postal}</button>`;
+    }).join("");
+
+    grid.querySelectorAll(".amz-metro-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const city = btn.getAttribute("data-city");
+        const postal = btn.getAttribute("data-postal");
+        saveDeliveryLocation(city, postal);
+        closeLocationModal();
+      });
+    });
+  }
+
+  function openLocationModal() {
+    const modal = ensureLocationModal();
+    if (!modal) return;
+
+    const currentLoc = loadDeliveryLocation();
+    populateLocationAuthSection();
+    populateMajorMetros(currentLoc.postal);
+
+    const postalInput = document.getElementById("locationPostal");
+    if (postalInput) {
+      postalInput.value = currentLoc.postal;
+    }
+    const errEl = document.getElementById("locationPostalError");
+    if (errEl) {
+      errEl.classList.remove("visible");
+    }
+
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+    if (postalInput) {
+      setTimeout(() => postalInput.focus(), 50);
+    }
+  }
+
+  function closeLocationModal() {
+    const modal = document.getElementById("locationModal");
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove("modal-open");
+    const trigger = document.getElementById("locationTrigger");
+    if (trigger) trigger.focus();
+  }
+
+  window.openLocationModal = openLocationModal;
+  window.closeLocationModal = closeLocationModal;
+
+  function initDeliveryLocationManager() {
+    // 1. Initial sync of header label
+    const loc = loadDeliveryLocation();
+    updateHeaderLocationText(loc.city, loc.postal);
+
+    // 2. Wire Trigger
+    const trigger = document.getElementById("locationTrigger");
+    if (trigger && !trigger._locBound) {
+      trigger._locBound = true;
+      trigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        openLocationModal();
+      });
+    }
+
+    // 3. Ensure modal and wire modal-level events
+    const modal = ensureLocationModal();
+    if (modal && !modal._eventsBound) {
+      modal._eventsBound = true;
+
+      modal.addEventListener("click", (e) => {
+        if (e.target.matches("[data-close-location-modal]") || e.target.classList.contains("location-modal__backdrop")) {
+          closeLocationModal();
+        }
+      });
+
+      const applyBtn = document.getElementById("locationSave");
+      const postalInput = document.getElementById("locationPostal");
+      const errEl = document.getElementById("locationPostalError");
+      const form = document.getElementById("amzLocationPincodeForm");
+
+      const handleApply = (e) => {
+        if (e) e.preventDefault();
+        if (!postalInput) return;
+        const pin = postalInput.value.trim();
+        if (/^[1-9][0-9]{5}$/.test(pin)) {
+          if (errEl) errEl.classList.remove("visible");
+          const city = resolveCityFromPincode(pin);
+          saveDeliveryLocation(city, pin);
+          closeLocationModal();
+        } else {
+          if (errEl) errEl.classList.add("visible");
+          postalInput.focus();
+        }
+      };
+
+      if (applyBtn) {
+        applyBtn.addEventListener("click", handleApply);
+      }
+      if (form) {
+        form.addEventListener("submit", handleApply);
+      }
+      if (postalInput) {
+        postalInput.addEventListener("input", () => {
+          if (errEl) errEl.classList.remove("visible");
+        });
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal && !modal.hidden) {
+          closeLocationModal();
+        }
+      });
+    }
+
+    // 4. Storage sync across tabs
+    window.addEventListener("storage", (e) => {
+      if (e.key === LOCATION_STORAGE_KEY || e.key === "electromart_delivery_pincode") {
+        const nextLoc = loadDeliveryLocation();
+        updateHeaderLocationText(nextLoc.city, nextLoc.postal);
+      }
+    });
+  }
+
   if (document.getElementById('headerContainer')) {
     injectHeader();
     initThemeToggle();
     initCartObserver();
+    initDeliveryLocationManager();
   } else if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       injectHeader();
       initThemeToggle();
       initCartObserver();
+      initDeliveryLocationManager();
     });
   } else {
     injectHeader();
     initThemeToggle();
     initCartObserver();
+    initDeliveryLocationManager();
   }
   
   // Listen for cart changes from other tabs

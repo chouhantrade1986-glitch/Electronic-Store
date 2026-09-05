@@ -3,7 +3,7 @@
 **अंतिम अद्यतन (Last Updated):** सितंबर 2026  
 **शाखा (Branch):** `main`  
 **वेबसाइट:** `electromart.in`  
-**वर्तमान टेस्ट स्कोर:** **111 / 111 Tests Passing (100%)** — 37 Frontend Suites + 74 Backend Unit Tests
+**वर्तमान टेस्ट स्कोर:** **112 / 112 Tests Passing (100%)** — 38 Frontend Suites + 74 Backend Unit Tests
 
 ---
 
@@ -23,12 +23,12 @@
 
 किसी भी कार्य को शुरू करने से पहले और समाप्त करने के बाद ये कमांड्स चलाना अनिवार्य है:
 
-### A. फ्रंटएंड एवं अनुवाद टेस्ट (37 Test Suites):
+### A. फ्रंटएंड एवं अनुवाद टेस्ट (38 Test Suites):
 ```bash
 cd c:\Users\Admin\Documents\GitHub\Electronic-Store
 node scratch/run_all_tests.js
 ```
-*परिणाम: 37 / 37 PASS होने चाहिए। इसमें 35वां सूट `test-brand-safety-and-legal-compliance.js` है जो सभी 49 HTML पेजों और 11 भाषाओं में Amazon नाम की जांच करता है, और 37वां सूट `test-amazon-auth.js` है।*
+*परिणाम: 38 / 38 PASS होने चाहिए। इसमें 35वां सूट `test-brand-safety-and-legal-compliance.js` है जो सभी 49 HTML पेजों और 11 भाषाओं में Amazon नाम की जांच करता है, 37वां सूट `test-amazon-auth.js` और 38वां सूट `test-amazon-location-modal.js` है।*
 
 ### B. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
@@ -39,7 +39,7 @@ npm run test:unit
 
 ---
 
-## 🚀 3. अब तक पूर्ण हो चुका कार्य (Completed Phases 1 to 9)
+## 🚀 3. अब तक पूर्ण हो चुका कार्य (Completed Phases 1 to 10)
 
 | चरण | विषय / मॉड्यूल | फ़ाइलें | मुख्य फीचर्स |
 | :--- | :--- | :--- | :--- |
@@ -52,6 +52,7 @@ npm run test:unit
 | **Phase 7** | **Your Account Hub** | `account.html`, `account.js` | प्रामाणिक 8-टाइल नेविगेशन ग्रिड, ElectroMart Pay Balance वॉलेट (+₹500/+₹1000), प्राइम कार्ड, 24x7 सपोर्ट। |
 | **Phase 8** | **Wishlist Hub** | `wishlist.html`, `wishlist.js` | 2-कॉलम लेआउट, मल्टी-लिस्ट्स, पब्लिक/प्राइवेट टॉगल, प्राइस ड्रॉप बैज, 1-क्लिक Move to Cart। |
 | **Phase 9** | **Authentication Flow** | `auth.html`, `auth.js`, `auth.css` | सेंटर्ड कार्ड `#authCard`, IN +91 प्रीफ़िक्स, पासवर्ड शो/हाइड टॉगल, Need help अकॉर्डियन, Create account स्विच। |
+| **Phase 10** | **Delivery Location Modal** | `header.js`, `header.html`, `amazon-theme.css`, `index.html`, `product-detail.js` | 6-अंकों का पिनकोड वैलिडेशन, 11 मेट्रो पिल्स, सेव्ड एड्रेस कार्ड, स्टोर-वाइड रीयल-टाइम सिंक। |
 | **Brand Safety** | **ब्रांड सुरक्षा गार्डरेल** | `scratch/test-brand-safety-and-legal-compliance.js` | 0 विज़िबल Amazon नाम, 11 भाषाओं का पूर्ण अनुवाद, ऑटोमेटेड CI रिग्रेशन लॉक। |
 
 ---
@@ -72,12 +73,17 @@ npm run test:unit
   - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-auth.js` (100% पास)।
   - टेस्ट सूट परिणाम: 37 / 37 टेस्ट सूट्स उत्तीर्ण (100%), बैकएंड 74 / 74 उत्तीर्ण (100%), कुल 111 / 111।
 
-### 🔹 चरण 10 (Phase 10): Delivery Location / Pincode Modal
-- **लक्ष्य:** अमेज़न हेडर में स्थित "Deliver to [City] [Pincode]" सेलेक्टर पर क्लिक करने पर पॉपअप मोडल।
-- **मुख्य फीचर्स:**
-  - 6-अंकों का भारतीय पिनकोड इनपुट।
-  - सेव्ड एड्रेस से 1-क्लिक चयन।
-  - पिनकोड के आधार पर डिलीवरी तिथि (जैसे "Get it by Tomorrow, 11 AM") का लाइव कैलकुलेशन।
+### 🔹 चरण 10 (Phase 10): Delivery Location / Pincode Modal — ✅ पूर्ण (COMPLETED)
+- **उपलब्धियां:**
+  - प्रामाणिक अमेज़न इंडिया डिलीवरी लोकेशन मोडल (`#locationModal`, `.location-modal`, `.amz-location-card`)।
+  - 6-अंकों का भारतीय पिनकोड वैलिडेशन (`/^[1-9][0-9]{5}$/`) और स्वतः शहर मैपिंग (11->New Delhi, 40->Mumbai, 56->Bengaluru आदि)।
+  - 11 प्रमुख भारतीय महानगरों के क्विक-सिलेक्शन पिल्स (`.amz-metro-pill`): New Delhi, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad, Jaipur, Lucknow, Chandigarh।
+  - ऑथेंटिकेटेड यूज़र के लिए सेव्ड एड्रेस कार्ड से 1-क्लिक डिलीवरी लोकेशन चयन (`#amzLocationAuthSection`) व साइन-इन सीटीए।
+  - स्टोर-वाइड रीयल-टाइम सिंक्रोनाइज़ेशन: ग्लोबल हेडर (`#locationTrigger`), प्रोडक्ट डिटेल पेज बायबॉक्स (`#buyboxLocationLink`), कार्ट और चेकआउट के बीच तत्काल लाइव लोकेशन अपडेट।
+  - `header.js` द्वारा स्टोर-वाइड डायनामिक मोडल इंजेक्शन (पेज पर मोडल न होने पर भी सभी पेजों पर निर्बाध कार्य)।
+  - 100% बैकवर्ड कम्पैटिबिलिटी: पुराने QA IDs (`#locationModal`, `#locationTitle`, `#locationCity`, `#locationPostal`, `#locationCancel`, `#locationSave`, `data-close-location-modal`) पूर्णतः सुरक्षित।
+  - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-location-modal.js` (100% पास)।
+  - टेस्ट सूट परिणाम: 38 / 38 टेस्ट सूट्स उत्तीर्ण (100%), बैकएंड 74 / 74 उत्तीर्ण (100%), कुल 112 / 112।
 
 ### 🔹 चरण 11 (Phase 11): Deals & Best Sellers Dedicated Hubs
 - **फ़ाइलें:** `todays-deals.html`, `best-sellers.html`
@@ -90,7 +96,7 @@ npm run test:unit
 ---
 
 ## 🔒 5. Git चेकपॉइंट नियम (Commit Protocol)
-काम पूरा होने और सभी 109 टेस्ट पास होने पर इस प्रारूप में कमिट करें:
+काम पूरा होने और सभी 112 टेस्ट पास होने पर इस प्रारूप में कमिट करें:
 ```bash
 git add .
 git commit -m "feat(phase-X): descriptive summary of completed work"

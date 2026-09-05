@@ -10,9 +10,9 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 37 / 37 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 38 / 38 टेस्ट सूट्स उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **111 / 111 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **112 / 112 (100% Pass Rate)** |
 
 ---
 
@@ -23,7 +23,7 @@
 - **कीमतें (Pricing):** सभी उत्पादों और एक्सेसरीज़ में प्रामाणिक भारतीय रुपये (₹ INR)।
 - **कैटलॉग फॉलबैक:** कार्ट और प्रोडक्ट डिटेल पेजों पर तेज़ इन-मेमोरी लुकअप।
 
-### B. अमेज़न इंडिया UI/UX थीम (Amazon India Theme - Phases 1 to 9 Completed)
+### B. अमेज़न इंडिया UI/UX थीम (Amazon India Theme - Phases 1 to 10 Completed)
 - **चरण 1 (Shopping Cart Upgrade - `cart.html`, `cart.js`):**
   - ₹499+ फ़्री डिलीवरी प्रोग्रेस व क्वालिफायर बार (ग्रीन चेकमार्क बैज)।
   - आइटम सिलेक्शन/अचयन चेकबॉक्स, "Deselect/Select all" टॉगल, और अमेज़न एक्शन बार।
@@ -82,6 +82,15 @@
   - अमेज़न येलो पिल प्राइमरी बटन्स (`.amz-btn-auth-primary`), कस्टम फ़ोकस ग्लो, और लीगल नोटिस (शर्तें व गोपनीयता नीति)।
   - 100% बैकवर्ड कम्पैटिबिलिटी: सभी 41+ लेगेसी एडमिन/सेलर सेंट्रल DOM IDs और टेस्ट्स सुरक्षित।
   - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-auth.js` (100% पास)।
+- **चरण 10 (Delivery Location & Pincode Modal - `header.js`, `header.html`, `amazon-theme.css`, `index.html`, `product-detail.js`):**
+  - प्रामाणिक अमेज़न इंडिया डिलीवरी लोकेशन मोडल (`#locationModal`, `.location-modal`, `.amz-location-card`)।
+  - 6-अंकों का भारतीय पिनकोड वैलिडेशन (`/^[1-9][0-9]{5}$/`) और स्वतः शहर मैपिंग (11->New Delhi, 40->Mumbai, 56->Bengaluru आदि)।
+  - 11 प्रमुख भारतीय महानगरों के क्विक-सिलेक्शन पिल्स (`.amz-metro-pill`): New Delhi, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad, Jaipur, Lucknow, Chandigarh।
+  - ऑथेंटिकेटेड यूज़र के लिए सेव्ड एड्रेस कार्ड से 1-क्लिक डिलीवरी लोकेशन चयन (`#amzLocationAuthSection`) व साइन-इन सीटीए।
+  - स्टोर-वाइड रीयल-टाइम सिंक्रोनाइज़ेशन: ग्लोबल हेडर (`#locationTrigger`), प्रोडक्ट डिटेल पेज बायबॉक्स (`#buyboxLocationLink`), कार्ट और चेकआउट के बीच तत्काल लाइव लोकेशन अपडेट।
+  - `header.js` द्वारा स्टोर-वाइड डायनामिक मोडल इंजेक्शन (पेज पर मोडल न होने पर भी सभी पेजों पर निर्बाध कार्य)।
+  - 100% बैकवर्ड कम्पैटिबिलिटी: पुराने QA IDs (`#locationModal`, `#locationTitle`, `#locationCity`, `#locationPostal`, `#locationCancel`, `#locationSave`, `data-close-location-modal`) पूर्णतः सुरक्षित।
+  - 11 भारतीय भाषाओं में i18n अनुवाद और स्वचालित टेस्ट सूट `scratch/test-amazon-location-modal.js` (100% पास)।
 
 ### C. 11 भारतीय भाषाओं का i18n अनुवाद इंजन (Multilingual Engine)
 - **डिक्शनरी (`translations.js`):** हिंदी (`hi`), तमिल (`ta`), तेलुगु (`te`), मराठी (`mr`), बंगाली (`bn`), गुजराती (`gu`), कन्नड़ (`kn`), मलयालम (`ml`), पंजाबी (`pa`), उर्दू (`ur`), अंग्रेजी (`en`)।

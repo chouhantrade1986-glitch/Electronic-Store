@@ -61,11 +61,11 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (37 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (38 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 37 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल और 37वां सूट ऑथेंटिकेशन फ्लो है।)*
+*(सभी 38 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 37वां सूट ऑथेंटिकेशन और 38वां सूट डिलीवरी लोकेशन मोडल है।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
@@ -113,7 +113,7 @@ git commit -m "feat(scope): your descriptive commit message"
 
 ## 6. पूर्ण हो चुके चरण और आगामी रोडमैप (Handover Roadmap)
 
-### A. पूर्ण हो चुके चरण (Phases 1-8 Completed):
+### A. पूर्ण हो चुके चरण (Phases 1-10 Completed):
 - **चरण 1:** Shopping Cart Upgrade (`cart.html`, `cart.js`)
 - **चरण 2:** Products Listing & Faceting (`products.html`, `products.js`)
 - **चरण 3:** Homepage & Quad Overlap Cards (`index.html`, `homepage-products.js`)
@@ -122,11 +122,11 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 6:** Product Detail Page (PDP) Suite (`product-detail.html`, `product-detail.js`)
 - **चरण 7:** Your Account 8-Tile Navigation Hub (`account.html`, `account.js`)
 - **चरण 8:** Wishlist Hub (`wishlist.html`, `wishlist.js`, `wishlist.css`): 2-कॉलम लेआउट, मल्टी-लिस्ट, पब्लिक/प्राइवेट टॉगल, प्राइस ड्रॉप अलर्ट, 1-क्लिक Move to Cart।
-- **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`).
+- **चरण 9:** Authentication Flow (`auth.html`, `auth.js`, `auth.css`): सेंटर्ड ऑथ कार्ड `#authCard`, IN +91 प्रीफ़िक्स, पासवर्ड शो/हाइड टॉगल, Need help अकॉर्डियन, Create account स्विच।
+- **चरण 10:** Delivery Location / Pincode Modal (`header.js`, `header.html`, `amazon-theme.css`, `index.html`, `product-detail.js`): 6-डिजिट पिनकोड वैलिडेशन, 11 मेट्रो पिल्स, सेव्ड एड्रेस कार्ड, स्टोर-वाइड रीयल-टाइम सिंक।
+- **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 9 (Auth Flow - `auth.html`):** अमेज़न इंडिया स्टाइल सेंटर्ड कार्ड (`#authCard`), इंडिया मोबाइल `+91` प्रीफ़िक्स, क्लीन हेल्प अकॉर्डियन।
-- **चरण 10 (Header Location / Pincode Modal):** हेडर में "Deliver to [City] [Pincode]" पर क्लिक करने पर अमेज़न स्टाइल पिनकोड सेलेक्टर मोडल।
 - **चरण 11 (Deals & Best Sellers Grids - `todays-deals.html`, `best-sellers.html`):** डिपार्टमेंट पिल्स (Electronics, Accessories आदि) और Deal of the Day फीचर्ड ग्रिड।
 - **चरण 12 (Seller / Store Admin - `admin-dashboard.html`):** Seller Central स्टाइल डार्क-नेवी डैशबोर्ड और ऑपरेशंस व्यू।
 
