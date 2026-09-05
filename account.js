@@ -1444,13 +1444,46 @@ async function confirmPhoneVerification() {
 }
 
 function setActivePanel(panelName) {
-  menuButtons.forEach((button) => {
+  const currentMenuButtons = document.querySelectorAll(".menu-btn");
+  const currentPanels = document.querySelectorAll(".panel");
+  const breadcrumbSep = document.getElementById("breadcrumbSeparator");
+  const breadcrumbSec = document.getElementById("breadcrumbCurrentSection");
+
+  currentMenuButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.panel === panelName);
   });
 
-  panels.forEach((panel) => {
+  currentPanels.forEach((panel) => {
     panel.classList.toggle("active", panel.id === `panel-${panelName}`);
   });
+
+  if (breadcrumbSep && breadcrumbSec) {
+    if (panelName === "overview" || !panelName) {
+      breadcrumbSep.style.display = "none";
+      breadcrumbSec.style.display = "none";
+      breadcrumbSec.textContent = "";
+    } else {
+      breadcrumbSep.style.display = "inline";
+      breadcrumbSec.style.display = "inline";
+      const sectionLabels = {
+        security: "Login & security",
+        addresses: "Your Addresses",
+        payments: "Payment Options",
+        "pay-balance": "ElectroMart Pay Balance",
+        prime: "Prime Membership",
+        contact: "Contact Us",
+        notifications: "Notification Center",
+        profile: "Profile Details",
+        business: "Business Profile"
+      };
+      breadcrumbSec.textContent = sectionLabels[panelName] || panelName;
+    }
+  }
+
+  const main = document.getElementById("accountMainContainer");
+  if (main && typeof main.scrollIntoView === "function" && panelName !== "overview") {
+    main.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function applyProfile(profile) {
@@ -1805,6 +1838,129 @@ signOutBtn.addEventListener("click", () => {
   window.location.href = "auth.html";
 });
 
+const PAY_BALANCE_KEY = "electromart_pay_balance_v1";
+
+function getPayBalance() {
+  const stored = localStorage.getItem(PAY_BALANCE_KEY);
+  if (stored !== null && !isNaN(parseFloat(stored))) {
+    return parseFloat(stored);
+  }
+  return 2450.00;
+}
+
+function savePayBalance(amount) {
+  localStorage.setItem(PAY_BALANCE_KEY, String(amount));
+}
+
+function updatePayBalanceDisplay() {
+  const amountEl = document.getElementById("accountPayBalanceAmount");
+  if (amountEl) {
+    const bal = getPayBalance();
+    amountEl.textContent = `₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+}
+
+function setupPayBalanceHandlers() {
+  updatePayBalanceDisplay();
+
+  const quickAddBtns = document.querySelectorAll(".quick-add-btn");
+  const customInput = document.getElementById("customAddAmountInput");
+  const addSubmitBtn = document.getElementById("addMoneySubmitBtn");
+  const tableBody = document.getElementById("payTransactionsBody");
+
+  quickAddBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const addVal = btn.dataset.add;
+      if (customInput) {
+        customInput.value = addVal;
+      }
+    });
+  });
+
+  if (addSubmitBtn && customInput) {
+    addSubmitBtn.addEventListener("click", () => {
+      const val = parseFloat(customInput.value);
+      if (isNaN(val) || val <= 0) {
+        showAccountToast({
+          title: "Invalid Amount",
+          message: "Please enter a valid amount to add to ElectroMart Pay balance.",
+          tone: "warning"
+        });
+        return;
+      }
+      const newBal = getPayBalance() + val;
+      savePayBalance(newBal);
+      updatePayBalanceDisplay();
+      customInput.value = "";
+
+      if (tableBody) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>Just now</td>
+          <td>Added Money via UPI</td>
+          <td><span class="badge credit">Credit</span></td>
+          <td class="amount positive">+ ₹${val.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        `;
+        tableBody.insertBefore(tr, tableBody.firstChild);
+      }
+
+      showAccountToast({
+        title: "Balance Updated",
+        message: `₹${val.toLocaleString("en-IN", { minimumFractionDigits: 2 })} added to your ElectroMart Pay balance successfully!`,
+        tone: "success"
+      });
+    });
+  }
+}
+
+function setupContactHandlers() {
+  const startChatBtn = document.getElementById("startLiveChatBtn");
+  const requestCallBtn = document.getElementById("requestCallBackBtn");
+
+  if (startChatBtn) {
+    startChatBtn.addEventListener("click", () => {
+      showAccountToast({
+        title: "Live Chat",
+        message: "Connecting to ElectroMart Support Assistant... You are #1 in queue.",
+        tone: "info"
+      });
+    });
+  }
+
+  if (requestCallBtn) {
+    requestCallBtn.addEventListener("click", () => {
+      showAccountToast({
+        title: "Call Requested",
+        message: "A customer representative will call your verified number (+91 98765 43210) within 2 minutes.",
+        tone: "success"
+      });
+    });
+  }
+}
+
+// Global click delegation for Back to Account buttons & breadcrumb
+document.addEventListener("click", (e) => {
+  const backBtn = e.target.closest("[data-back-to-overview='true']");
+  if (backBtn) {
+    e.preventDefault();
+    setActivePanel("overview");
+    return;
+  }
+  const breadcrumbLink = e.target.closest("#breadcrumbAccountLink");
+  if (breadcrumbLink) {
+    e.preventDefault();
+    setActivePanel("overview");
+    return;
+  }
+  const tileBtn = e.target.closest(".amazon-account-tile[data-panel]") || e.target.closest("[data-panel]");
+  if (tileBtn) {
+    const target = String(tileBtn.dataset.panel || "").trim();
+    if (target) {
+      setActivePanel(target);
+    }
+  }
+});
+
 requireAuthSession();
 loadProfile();
 syncProfileFromBackend();
@@ -1812,6 +1968,8 @@ loadNotificationPreferences();
 loadSecurityCenter();
 loadOrderNotifications();
 syncNotificationFilterControls();
+setupPayBalanceHandlers();
+setupContactHandlers();
 setActivePanel("overview");
 
 function requireAuthSession() {

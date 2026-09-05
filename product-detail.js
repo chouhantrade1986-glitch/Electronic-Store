@@ -2508,11 +2508,38 @@ async function initProductPage() {
 
 addToCartBtn.addEventListener("click", () => {
   const productId = String(addToCartBtn.getAttribute("data-id") || "").trim();
-  const qty = Number(qtySelect.value);
+  const qty = Number(qtySelect ? qtySelect.value : 1);
+  const addQty = Number.isFinite(qty) && qty > 0 ? qty : 1;
   if (productId) {
-    addProductToCart(productId, Number.isFinite(qty) && qty > 0 ? qty : 1);
+    addProductToCart(productId, addQty);
+
+    const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+    const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+    const origText = addToCartBtn.textContent;
+    addToCartBtn.classList.add("btn-added");
+    addToCartBtn.textContent = t.cart_added_feedback || (currentLang === "hi" ? "✓ कार्ट में जोड़ा गया" : "✓ Added to Cart");
+    setTimeout(() => {
+      addToCartBtn.classList.remove("btn-added");
+      addToCartBtn.textContent = origText;
+    }, 1500);
+
+    if (typeof window !== "undefined" && typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
+      window.dispatchEvent(new CustomEvent("cart:updated"));
+    }
   }
 });
+
+const buyNowBtn = document.querySelector(".buy-now-btn");
+if (buyNowBtn) {
+  buyNowBtn.addEventListener("click", () => {
+    const productId = String(addToCartBtn.getAttribute("data-id") || "").trim();
+    const qty = Number(qtySelect ? qtySelect.value : 1);
+    const addQty = Number.isFinite(qty) && qty > 0 ? qty : 1;
+    if (productId) {
+      addProductToCart(productId, addQty);
+    }
+  });
+}
 
 if (wishlistBtn) {
   wishlistBtn.addEventListener("click", () => {

@@ -5215,6 +5215,12 @@ body:has(.orders-main) {
   border-color: #f2c200 !important;
 }
 
+.amazon-btn-cart.btn-added {
+  background: #007600 !important;
+  border-color: #006000 !important;
+  color: #ffffff !important;
+}
+
 .amazon-btn-buynow {
   background: #ffa41c !important;
   border: 1px solid #ff8f00 !important;
@@ -5460,6 +5466,671 @@ body:has(.orders-main) {
   text-decoration: underline !important;
 }
 
+/* ==========================================================================
+   11. AMAZON INDIA YOUR ACCOUNT 8-GRID SUITE (PHASE 7)
+   ========================================================================== */
 
+.amazon-account-page {
+  max-width: 1000px !important;
+  margin: 20px auto 50px auto !important;
+  padding: 0 18px !important;
+  font-family: "Amazon Ember", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  color: #0f1111 !important;
+  box-sizing: border-box !important;
+}
 
+.amazon-account-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 22px !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
 
+.amazon-account-title {
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.amazon-account-header-badges {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+/* Breadcrumb Navigation */
+.amazon-breadcrumb {
+  font-size: 13px !important;
+  margin-bottom: 14px !important;
+  color: #565959 !important;
+}
+
+.amazon-breadcrumb a {
+  color: #007185 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.amazon-breadcrumb a:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.amazon-breadcrumb .breadcrumb-separator {
+  margin: 0 6px !important;
+  color: #888888 !important;
+}
+
+.amazon-breadcrumb .breadcrumb-current {
+  color: #c45500 !important;
+  font-weight: 600 !important;
+}
+
+/* 8-Tile Feature Grid */
+.amazon-account-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 18px !important;
+  margin-bottom: 28px !important;
+}
+
+.amazon-account-tile {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 16px 18px !important;
+  text-decoration: none !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.amazon-account-tile:hover {
+  border-color: #e77600 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  background: #fdfefe !important;
+  transform: translateY(-1px) !important;
+}
+
+.amazon-account-tile:active {
+  transform: scale(0.99) !important;
+}
+
+.tile-icon-box {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.tile-orders-icon {
+  background: #fef8f2 !important;
+  border: 1px solid #fed8b1 !important;
+}
+
+.tile-security-icon {
+  background: #f0f7f8 !important;
+  border: 1px solid #c2e2e5 !important;
+}
+
+.tile-prime-icon {
+  background: #fdf5ea !important;
+  border: 1px solid #f9d8a5 !important;
+}
+
+.tile-addresses-icon {
+  background: #fef8f2 !important;
+  border: 1px solid #fed8b1 !important;
+}
+
+.tile-payments-icon {
+  background: #f2f9f4 !important;
+  border: 1px solid #bce2c7 !important;
+}
+
+.tile-wallet-icon {
+  background: #fdf8ed !important;
+  border: 1px solid #f6e2b3 !important;
+}
+
+.tile-contact-icon {
+  background: #f0f7f8 !important;
+  border: 1px solid #c2e2e5 !important;
+}
+
+.tile-wishlist-icon {
+  background: #fdf2f4 !important;
+  border: 1px solid #fad2d9 !important;
+}
+
+.tile-admin-icon {
+  background: #f5f0f8 !important;
+  border: 1px solid #ded0ea !important;
+}
+
+.tile-text-box {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.tile-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.tile-desc {
+  font-size: 13px !important;
+  color: #565959 !important;
+  margin: 0 !important;
+  line-height: 1.35 !important;
+}
+
+/* Amazon Sublinks Section */
+.amazon-account-sublinks {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 24px !important;
+  border-top: 1px solid #e7e7e7 !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  padding: 24px 0 !important;
+  margin-bottom: 24px !important;
+}
+
+.sublinks-col h4 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 12px 0 !important;
+}
+
+.sublinks-col ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sublinks-col li {
+  margin-bottom: 8px !important;
+}
+
+.sublink-item {
+  color: #007185 !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  text-align: left !important;
+  display: inline-block !important;
+}
+
+.sublink-item:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Back to Account Link Button */
+.amazon-back-to-account-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #007185 !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin-bottom: 18px !important;
+  font-family: inherit !important;
+}
+
+.amazon-back-to-account-btn:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Activity Summary Details */
+.amazon-account-stats-summary {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 16px 20px !important;
+  margin-top: 24px !important;
+}
+
+.stats-summary-header {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+/* Pay Balance Card */
+.pay-balance-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 22px !important;
+  margin-bottom: 24px !important;
+}
+
+.pay-balance-display {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 18px !important;
+}
+
+.pay-balance-label {
+  font-size: 15px !important;
+  color: #565959 !important;
+  font-weight: 500 !important;
+}
+
+.pay-balance-amount {
+  font-size: 30px !important;
+  color: #b12704 !important;
+  font-weight: 700 !important;
+}
+
+.quick-add-buttons {
+  display: flex !important;
+  gap: 12px !important;
+  margin: 10px 0 14px 0 !important;
+  flex-wrap: wrap !important;
+}
+
+.quick-add-btn {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 20px !important;
+  background: #f0f2f2 !important;
+  padding: 7px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.quick-add-btn:hover {
+  background: #e3e6e6 !important;
+  border-color: #007185 !important;
+}
+
+.custom-add-row {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+.custom-add-row input {
+  border: 1px solid #888c8c !important;
+  border-radius: 6px !important;
+  padding: 8px 14px !important;
+  font-size: 14px !important;
+  width: 200px !important;
+  outline: none !important;
+}
+
+.custom-add-row input:focus {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 0 3px rgba(231, 118, 0, 0.2) !important;
+}
+
+.custom-add-row button {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  padding: 8px 24px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  color: #0f1111 !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+}
+
+.custom-add-row button:hover {
+  background: #f7ca00 !important;
+}
+
+/* Pay Transactions Table */
+.pay-transactions-table-wrap {
+  overflow-x: auto !important;
+  margin-top: 12px !important;
+}
+
+.pay-transactions-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 13px !important;
+}
+
+.pay-transactions-table th {
+  background: #f0f2f2 !important;
+  text-align: left !important;
+  padding: 10px 14px !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid #d5d9d9 !important;
+}
+
+.pay-transactions-table td {
+  padding: 12px 14px !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+}
+
+.pay-transactions-table .badge.credit {
+  background: #e6f4ea !important;
+  color: #137333 !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.pay-transactions-table .badge.debit {
+  background: #fce8e6 !important;
+  color: #c5221f !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.pay-transactions-table .amount.positive {
+  color: #007600 !important;
+  font-weight: 700 !important;
+}
+
+.pay-transactions-table .amount.negative {
+  color: #b12704 !important;
+  font-weight: 700 !important;
+}
+
+/* Prime Status Banner */
+.prime-status-banner {
+  background: linear-gradient(135deg, #182330 0%, #232f3e 100%) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.prime-badge-tag {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #002f36 !important;
+  padding: 10px 16px !important;
+  border-radius: 6px !important;
+  border: 1px solid #00a8e1 !important;
+  text-align: center !important;
+}
+
+.prime-logo-txt {
+  font-size: 14px !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.prime-crown-txt {
+  font-size: 16px !important;
+  color: #ffa41c !important;
+  font-weight: 900 !important;
+  letter-spacing: 1px !important;
+}
+
+.prime-status-info h3 {
+  margin: 0 0 6px 0 !important;
+  font-size: 20px !important;
+  color: #ffffff !important;
+}
+
+.prime-status-info p {
+  margin: 0 !important;
+  color: #cccccc !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.prime-benefits-list {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 22px !important;
+}
+
+.prime-benefits-list h3 {
+  margin: 0 0 16px 0 !important;
+  font-size: 18px !important;
+  color: #0f1111 !important;
+}
+
+.prime-benefit-row {
+  display: flex !important;
+  gap: 14px !important;
+  padding: 14px 0 !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.prime-benefit-row:last-child {
+  border-bottom: none !important;
+}
+
+.benefit-check {
+  color: #007600 !important;
+  font-weight: 900 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+.prime-benefit-row strong {
+  display: block !important;
+  font-size: 15px !important;
+  color: #0f1111 !important;
+  margin-bottom: 4px !important;
+}
+
+.prime-benefit-row p {
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: #565959 !important;
+  line-height: 1.4 !important;
+}
+
+/* Contact Us / Help Desk */
+.contact-help-search {
+  margin-bottom: 22px !important;
+}
+
+.contact-help-search input {
+  width: 100% !important;
+  border: 1px solid #888c8c !important;
+  border-radius: 6px !important;
+  padding: 10px 16px !important;
+  font-size: 15px !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+}
+
+.contact-help-search input:focus {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 0 3px rgba(231, 118, 0, 0.2) !important;
+}
+
+.contact-faq-accordion {
+  margin-bottom: 26px !important;
+}
+
+.faq-item {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 6px !important;
+  margin-bottom: 12px !important;
+  overflow: hidden !important;
+}
+
+.faq-summary {
+  padding: 14px 18px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  background: #fbfbfb !important;
+  font-size: 14px !important;
+  outline: none !important;
+}
+
+.faq-summary:hover {
+  background: #f3f3f3 !important;
+}
+
+.faq-content {
+  padding: 14px 18px !important;
+  border-top: 1px solid #eee !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: #333333 !important;
+}
+
+.primary-pill-link {
+  display: inline-block !important;
+  margin-top: 8px !important;
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  text-decoration: none !important;
+}
+
+.primary-pill-link:hover {
+  background: #f7ca00 !important;
+}
+
+.contact-action-cards {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 18px !important;
+}
+
+.contact-action-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  text-align: center !important;
+}
+
+.contact-action-card h4 {
+  margin: 0 0 6px 0 !important;
+  font-size: 16px !important;
+  color: #0f1111 !important;
+}
+
+.contact-action-card p {
+  margin: 0 0 14px 0 !important;
+  font-size: 13px !important;
+  color: #565959 !important;
+}
+
+/* Amazon Addresses Grid */
+.amazon-addresses-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.add-address-card {
+  border: 2px dashed #c4c4c4 !important;
+  border-radius: 8px !important;
+  background: #fcfcfc !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 160px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  color: #565959 !important;
+}
+
+.add-address-card:hover {
+  border-color: #e77600 !important;
+  background: #fffefb !important;
+  color: #0f1111 !important;
+}
+
+.add-address-card .plus-icon {
+  font-size: 36px !important;
+  line-height: 1 !important;
+  margin-bottom: 6px !important;
+  color: #a0a0a0 !important;
+}
+
+.address-card.default-address {
+  border-color: #e77600 !important;
+  position: relative !important;
+}
+
+.default-badge {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #e77600 !important;
+  text-transform: uppercase !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 880px) {
+  .amazon-account-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .amazon-account-sublinks {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .contact-action-cards {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .amazon-account-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .amazon-account-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .amazon-account-tile {
+    padding: 14px 16px !important;
+  }
+}
