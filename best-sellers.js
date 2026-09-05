@@ -2,10 +2,6 @@ const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
 
 const bestSellers = [
-const CART_STORAGE_KEY = "electromart_cart_v1";
-const CATEGORY_PRIORITY_SLUGS = ["laptop", "mobile", "audio", "accessory", "computer", "creator-studio"];
-
-const bestSellers = [
   { id: 7, name: "Vector Gaming Laptop", brand: "Vector", category: "laptop", collections: ["laptop"], price: 1299, rating: 4.8, sold: "2.4k sold this month", soldCount: 2400, image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=900&q=80" },
   { id: 2, name: "Nimbus Phone X", brand: "Nimbus", category: "mobile", collections: ["mobile"], price: 749, rating: 4.7, sold: "3.1k sold this month", soldCount: 3100, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
   { id: 3, name: "Pulse ANC Headphones", brand: "PulseWave", category: "audio", collections: ["audio"], price: 179, rating: 4.6, sold: "1.8k sold this month", soldCount: 1800, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" },
