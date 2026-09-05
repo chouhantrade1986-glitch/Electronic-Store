@@ -113,7 +113,7 @@ git commit -m "feat(scope): your descriptive commit message"
 
 ## 6. पूर्ण हो चुके चरण और आगामी रोडमैप (Handover Roadmap)
 
-### A. पूर्ण हो चुके चरण (Phases 1-7 Completed):
+### A. पूर्ण हो चुके चरण (Phases 1-8 Completed):
 - **चरण 1:** Shopping Cart Upgrade (`cart.html`, `cart.js`)
 - **चरण 2:** Products Listing & Faceting (`products.html`, `products.js`)
 - **चरण 3:** Homepage & Quad Overlap Cards (`index.html`, `homepage-products.js`)
@@ -121,10 +121,10 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 5:** Your Orders & Tracking Hub (`orders.html`, `orders.js`)
 - **चरण 6:** Product Detail Page (PDP) Suite (`product-detail.html`, `product-detail.js`)
 - **चरण 7:** Your Account 8-Tile Navigation Hub (`account.html`, `account.js`)
+- **चरण 8:** Wishlist Hub (`wishlist.html`, `wishlist.js`, `wishlist.css`): 2-कॉलम लेआउट, मल्टी-लिस्ट, पब्लिक/प्राइवेट टॉगल, प्राइस ड्रॉप अलर्ट, 1-क्लिक Move to Cart।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`).
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 8 (Wishlist Hub - `wishlist.html`):** अमेज़न स्टाइल "Your Wish List" लेआउट (पब्लिक/प्राइवेट लिस्ट टॉगल, 1-क्लिक Move to Cart, प्राइस ड्रॉप अलर्ट बैज)।
 - **चरण 9 (Auth Flow - `auth.html`):** अमेज़न इंडिया स्टाइल सेंटर्ड कार्ड (`#authCard`), इंडिया मोबाइल `+91` प्रीफ़िक्स, क्लीन हेल्प अकॉर्डियन।
 - **चरण 10 (Header Location / Pincode Modal):** हेडर में "Deliver to [City] [Pincode]" पर क्लिक करने पर अमेज़न स्टाइल पिनकोड सेलेक्टर मोडल।
 - **चरण 11 (Deals & Best Sellers Grids - `todays-deals.html`, `best-sellers.html`):** डिपार्टमेंट पिल्स (Electronics, Accessories आदि) और Deal of the Day फीचर्ड ग्रिड।
