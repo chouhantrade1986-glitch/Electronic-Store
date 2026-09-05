@@ -1798,7 +1798,7 @@ function productCard(product) {
   } else if (ribbonLabel === "BULK VALUE") {
     ribbonLabel = t.bulk_value || "BULK VALUE";
   } else if (ribbonLabel && (ribbonLabel.includes("Choice") || ribbonLabel === "ElectroMart’s Choice")) {
-    ribbonLabel = t.amazons_choice || "Amazon's Choice";
+    ribbonLabel = t.electromarts_choice || t.amazons_choice || "ElectroMart's Choice";
   }
   const ribbonHtml = ribbon
     ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbonLabel}</span>`

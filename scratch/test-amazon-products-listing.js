@@ -50,7 +50,7 @@ languages.forEach(lang => {
 console.log(`PASS: All ${listingKeys.length} listing keys exist across all 11 languages!`);
 
 // 2. Check authentic Hindi strings
-assert.strictEqual(trans.hi.amazons_choice, "अमेज़न चॉइस");
+assert.strictEqual(trans.hi.amazons_choice, "इलेक्ट्रोमार्ट चॉइस");
 assert.strictEqual(trans.hi.limited_time_deal, "सीमित समय की डील");
 assert.strictEqual(trans.hi.discount_filter_title, "छूट");
 assert.strictEqual(trans.hi.discount_10_plus, "10% या अधिक छूट");

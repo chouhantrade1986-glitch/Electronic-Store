@@ -64,7 +64,7 @@ languages.forEach((lang) => {
 console.log(`PASS: All ${expectedPdpKeys.length} Amazon PDP keys exist across all 11 Indian languages!`);
 
 // 2. Exact Hindi strings verification
-assert.strictEqual(trans.hi.amazons_choice, 'अमेज़न चॉइस');
+assert.strictEqual(trans.hi.amazons_choice, 'इलेक्ट्रोमार्ट चॉइस');
 assert.strictEqual(trans.hi.bought_in_past_month, 'पिछले महीने में 1K+ खरीदे गए');
 assert.strictEqual(trans.hi.bank_offers_title, 'बैंक ऑफर');
 assert.strictEqual(trans.hi.replacement_badge, '7 दिनों में रिप्लेसमेंट');

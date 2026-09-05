@@ -10,9 +10,9 @@
 
 | घटक | टेस्ट सूट | स्थिति | परिणाम |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 34 / 34 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 35 / 35 टेस्ट सूट्स उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **108 / 108 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **109 / 109 (100% Pass Rate)** |
 
 ---
 
@@ -33,7 +33,7 @@
   - अमेज़न स्टाइल 6-कैटेगरी डिपार्टमेंट ट्री और स्टार रेटिंग फ़िल्टर्स (4★ & Up, 3★ & Up)।
   - कस्टम प्राइस रेंज इनपुट्स (₹ Min - ₹ Max) विथ "Go" बटन।
   - 3-लाइन अमेज़न प्राइसिंग स्टैक (लाल डिस्काउंट %, बड़ा बोल्ड ₹ प्राइस, M.R.P. स्ट्राइकथ्रू)।
-  - सोशल प्रूफ बैज ("1K+ bought in past month") और Amazon's Choice बैज।
+  - सोशल प्रूफ बैज ("1K+ bought in past month") और ElectroMart's Choice बैज (स्टाइलिश डार्क पिल)।
 - **चरण 3 (Homepage & Carousels - `index.html`, `homepage-products.js`):**
   - हीरो ओवरलैप 4-इन-1 क्वाड ग्रिड कार्ड्स (`-240px` नेगेटिव मार्जिन विथ अमेज़न फेड ग्रेडिएंट)।
   - 44px × 88px सर्कुलर सेमी-ट्रांसपेरेंट कैरोसेल पैडल्स (Deals, Top Picks, Recommended, Browsing History)।
@@ -52,7 +52,7 @@
   - 4-माइलस्टोन विजुअल ट्रैकिंग प्रोग्रेस स्टेपर (`Ordered` › `Shipped` › `Out for delivery` › `Delivered`)।
 - **चरण 6 (Product Detail Page - PDP Full Suite - `product-detail.html`, `product-detail.js`):**
   - वर्टिकल थंबनेल रेल विथ एम्बर एक्टिव बॉर्डर (`#e77600`) और स्मूथ मैग्निफायर जूम लेंस।
-  - "Amazon's Choice" डार्क बैज और "1K+ bought in past month" सोशल प्रूफ इंडिकेटर।
+  - "ElectroMart's Choice" डार्क बैज और "1K+ bought in past month" सोशल प्रूफ इंडिकेटर।
   - अमेज़न बैंक ऑफर्स व नो कॉस्ट ईएमआई कार्ड्स कैरोसेल (`#offersGrid`).
   - 5 अमेज़न ट्रस्ट बैज स्ट्रिप (7 days Replacement, Free Delivery, 1 Year Warranty, Pay on Delivery, Top Brand) विथ क्लीन SVG आइकन्स।
   - इंटरएक्टिव Frequently Bought Together बंडल विथ रीयल-टाइम चेकबॉक्स सबटोटल रीकैलकुलेशन।
@@ -71,10 +71,15 @@
 - **यूनिवर्सल बस (`universal-i18n-bus.js`):** DOM म्यूटेशन को ट्रैक करके रियल-टाइम में डायनामिक कंटेंट का भी अनुवाद करती है।
 - कार्ट, प्रोडक्ट्स लिस्टिंग, होमपेज, अकॉर्डियन चेकआउट, योर ऑर्डर्स हब, प्रोडक्ट डिटेल पेज (चरण 6), और योर अकाउंट हब (चरण 7) के सभी कीवर्ड्स 11 भाषाओं में 100% उपलब्ध।
 
+### D. ब्रांड सुरक्षा एवं कानूनी अनुपालन (Brand Safety & Legal Compliance - PERMANENT LOCK)
+- **कठोर नियम:** वेबसाइट `electromart.in` पर अमेज़न इंडिया की शैली, लेआउट और UX का उपयोग होता है, परंतु ग्राहक को दिखने वाले किसी भी टेक्स्ट, बैज या अनुवाद में "Amazon" / "अमेज़न" का नाम कभी नहीं आना चाहिए।
+- **स्थायी ऑटोमेटेड गार्डरेल:** `scratch/test-brand-safety-and-legal-compliance.js` को `scratch/run_all_tests.js` में एकीकृत किया गया है। यह सभी 49 HTML पेजों, `translations.js` की सभी 11 भाषाओं और `products.js` को स्कैन करता है। यदि कहीं भी दिखाई देने वाला Amazon नाम आता है, तो टेस्ट तुरंत फेल हो जाता है।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
+- `468c7a8`: feat(brand-safety): enforce pure ElectroMart branding across Amazon-style UI with permanent guardrail test
 - `e4ac24b`: feat(pdp): authentic Amazon India product detail page with bank offers, trust badges, interactive bundle, and 2-column reviews (Phase 6)
 - `a2369e5`: feat(orders): authentic Amazon India Your Orders page with 4-tab bar, two-tier card, and tracking stepper (Phase 5)
 - `3c5efb8`: feat(checkout): authentic Amazon India accordion checkout flow with address cards, payment summary, and review step (Phase 4)

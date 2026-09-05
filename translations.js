@@ -2959,7 +2959,7 @@
     "badge_best_seller": "BEST SELLER",
     "view_details": "View details",
     "sold_this_month": "sold this month",
-    "amazon_style_filters": "Amazon style filters",
+    "amazon_style_filters": "ElectroMart Filters",
     "best_seller_tip": "Best Seller Tip",
     "best_seller_tip_desc": "Open product details to compare ratings and delivery options before buying.",
     "ranked_by_demand": "Ranked by customer demand and ratings.",
@@ -2976,7 +2976,7 @@
     "badge_best_seller": "बेस्ट सेलर",
     "view_details": "विवरण देखें",
     "sold_this_month": "इस महीने बिके",
-    "amazon_style_filters": "अमेज़न स्टाइल फ़िल्टर",
+    "amazon_style_filters": "इलेक्ट्रोमार्ट फ़िल्टर",
     "best_seller_tip": "बेस्ट सेलर टिप",
     "best_seller_tip_desc": "खरीदने से पहले रेटिंग और डिलीवरी विकल्पों की तुलना करने के लिए उत्पाद विवरण खोलें.",
     "ranked_by_demand": "ग्राहकों की मांग और रेटिंग के अनुसार क्रमबद्ध.",
@@ -2993,7 +2993,7 @@
     "badge_best_seller": "பெஸ்ட் செல்லர்",
     "view_details": "விவரங்களைக் காண்க",
     "sold_this_month": "இந்த மாதம் விற்பனையானது",
-    "amazon_style_filters": "Amazon பாணி வடிகட்டிகள்",
+    "amazon_style_filters": "ElectroMart வடிகட்டிகள்",
     "best_seller_tip": "பெஸ்ட் செல்லர் குறிப்பு",
     "best_seller_tip_desc": "வாங்குவதற்கு முன் மதிப்பீடுகள் மற்றும் டெலிவரி விருப்பங்களை ஒப்பிட தயாரிப்பு விவரங்களைத் திறக்கவும்.",
     "ranked_by_demand": "வாடிக்கையாளர் தேவை மற்றும் மதிப்பீடுகளின் அடிப்படையில் தரவரிசைப்படுத்தப்பட்டது.",
@@ -3010,7 +3010,7 @@
     "badge_best_seller": "బెస్ట్ సెల్లర్",
     "view_details": "వివరాలు చూడండి",
     "sold_this_month": "ఈ నెలలో అమ్ముడయ్యాయి",
-    "amazon_style_filters": "అమెజాన్ శైలి ఫిల్టర్లు",
+    "amazon_style_filters": "ఎలక్ట్రోమార్ట్ ఫిల్టర్లు",
     "best_seller_tip": "బెస్ట్ సెల్లర్ చిట్కా",
     "best_seller_tip_desc": "కొనుగోలు చేయడానికి ముందు రేటింగ్‌లు మరియు డెలివరీ ఎంపికలను సరిపోల్చడానికి ఉత్పత్తి వివరాలను తెరవండి.",
     "ranked_by_demand": "కస్టమర్ డిమాండ్ మరియు రేటింగ్‌ల ఆధారంగా ర్యాంక్ చేయబడింది.",
@@ -3027,7 +3027,7 @@
     "badge_best_seller": "ಬೆಸ್ಟ್ ಸೆಲ್ಲರ್",
     "view_details": "ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
     "sold_this_month": "ಈ ತಿಂಗಳು ಮಾರಾಟವಾಗಿದೆ",
-    "amazon_style_filters": "ಅಮೆಜಾನ್ ಶೈಲಿಯ ಫಿಲ್ಟರ್‌ಗಳು",
+    "amazon_style_filters": "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ ಫಿಲ್ಟರ್‌ಗಳು",
     "best_seller_tip": "ಬೆಸ್ಟ್ ಸೆಲ್ಲರ್ ಸಲಹೆ",
     "best_seller_tip_desc": "ಖರೀದಿಸುವ ಮೊದಲು ರೇಟಿಂಗ್‌ಗಳು ಮತ್ತು ವಿತರಣಾ ಆಯ್ಕೆಗಳನ್ನು ಹೋಲಿಸಲು ಉತ್ಪನ್ನದ ವಿವರಗಳನ್ನು ತೆರೆಯಿರಿ.",
     "ranked_by_demand": "ಗ್ರಾಹಕರ ಬೇಡಿಕೆ ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳ ಆಧಾರದ ಮೇಲೆ ಶ್ರೇಯಾಂಕ ನೀಡಲಾಗಿದೆ.",
@@ -3044,7 +3044,7 @@
     "badge_best_seller": "ബെസ്റ്റ് സെല്ലർ",
     "view_details": "വിശദാംശങ്ങൾ കാണുക",
     "sold_this_month": "ഈ മാസം വിറ്റു",
-    "amazon_style_filters": "ആമസോൺ ശൈലിയിലുള്ള ഫിൽട്ടറുകൾ",
+    "amazon_style_filters": "ഇലക്ട്രോമാർട്ട് ഫിൽട്ടറുകൾ",
     "best_seller_tip": "ബെസ്റ്റ് സെല്ലർ ടിപ്പ്",
     "best_seller_tip_desc": "വാങ്ങുന്നതിനുമുമ്പ് റേറ്റിംഗുകളും ഡെലിവറി ഓപ്ഷനുകളും താരതമ്യം ചെയ്യാൻ ഉൽപ്പന്ന വിശദാംശങ്ങൾ തുറക്കുക.",
     "ranked_by_demand": "ഉപഭോക്തൃ ആവശ്യവും റേറ്റിംഗുകളും അടിസ്ഥാനമാക്കി റാങ്ക് ചെയ്‌തിരിക്കുന്നു.",
@@ -3061,7 +3061,7 @@
     "badge_best_seller": "বেস্ট সেলার",
     "view_details": "বিস্তারিত দেখুন",
     "sold_this_month": "এই মাসে বিক্রি হয়েছে",
-    "amazon_style_filters": "অ্যামাজন স্টাইল ফিল্টার",
+    "amazon_style_filters": "ইলেকট্রোমার্ট ফিল্টার",
     "best_seller_tip": "বেস্ট সেলার টিপ",
     "best_seller_tip_desc": "কেনার আগে রেটিং এবং ডেলিভারির বিকল্প তুলনা করতে পণ্যের বিবরণ দেখুন।",
     "ranked_by_demand": "গ্রাহকের চাহিদা এবং রেটিং দ্বারা স্থান দেওয়া হয়েছে।",
@@ -3078,7 +3078,7 @@
     "badge_best_seller": "बेस्ट सेलर",
     "view_details": "तपशील पहा",
     "sold_this_month": "या महिन्यात विकले गेले",
-    "amazon_style_filters": "अ‍ॅमेझॉन शैली फिल्टर",
+    "amazon_style_filters": "इलेक्ट्रोमार्ट फिल्टर",
     "best_seller_tip": "बेस्ट सेलर टीप",
     "best_seller_tip_desc": "खरेदी करण्यापूर्वी रेटिंग आणि वितरण पर्यायांची तुलना करण्यासाठी उत्पादन तपशील उघडा.",
     "ranked_by_demand": "ग्राहकांच्या मागणी आणि रेटिंगनुसार क्रमवारी लावली.",
@@ -3095,7 +3095,7 @@
     "badge_best_seller": "بہترین فروخت کنندہ",
     "view_details": "تفصیلات دیکھیں",
     "sold_this_month": "اس ماہ فروخت ہوئے",
-    "amazon_style_filters": "ایمیزون طرز کے فلٹرز",
+    "amazon_style_filters": "الیکٹرو مارٹ فلٹرز",
     "best_seller_tip": "بہترین فروخت کنندہ ٹپ",
     "best_seller_tip_desc": "خریداری سے پہلے ریٹنگز اور ڈلیوری کے اختیارات کا موازنہ کرنے کے لیے پروڈکٹ کی تفصیلات دیکھیں۔",
     "ranked_by_demand": "صارفین کی مانگ اور درجہ بندی کے مطابق درجہ بندی کی گئی۔",
@@ -3112,7 +3112,7 @@
     "badge_best_seller": "ਬੈਸਟ ਸੇਲਰ",
     "view_details": "ਵੇਰਵੇ ਦੇਖੋ",
     "sold_this_month": "ਇਸ ਮਹੀਨੇ ਵਿਕ ਗਏ",
-    "amazon_style_filters": "ਐਮਾਜ਼ਾਨ ਸਟਾਈਲ ਫਿਲਟਰ",
+    "amazon_style_filters": "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਫਿਲਟਰ",
     "best_seller_tip": "ਬੈਸਟ ਸੇਲਰ ਸੁਝਾਅ",
     "best_seller_tip_desc": "ਖਰੀਦਣ ਤੋਂ ਪਹਿਲਾਂ ਰੇਟਿੰਗਾਂ ਅਤੇ ਡਿਲੀਵਰੀ ਵਿਕਲਪਾਂ ਦੀ ਤੁਲਨਾ ਕਰਨ ਲਈ ਉਤਪਾਦ ਦੇ ਵੇਰਵੇ ਖੋਲ੍ਹੋ।",
     "ranked_by_demand": "ਗਾਹਕਾਂ ਦੀ ਮੰਗ ਅਤੇ ਰੇਟਿੰਗਾਂ ਦੁਆਰਾ ਦਰਜਾਬੰਦੀ ਕੀਤੀ ਗਈ.",
@@ -3129,7 +3129,7 @@
     "badge_best_seller": "બેસ્ટ સેલર",
     "view_details": "વિગતો જુઓ",
     "sold_this_month": "આ મહિને વેચાયા",
-    "amazon_style_filters": "એમેઝોન શૈલી ફિલ્ટર્સ",
+    "amazon_style_filters": "ઇલેક્ટ્રોમાર્ટ ફિલ્ટર્સ",
     "best_seller_tip": "બેસ્ટ સેલર ટીપ",
     "best_seller_tip_desc": "ખરીદતા પહેલા રેટિંગ્સ અને ડિલિવરી વિકલ્પોની તુલના કરવા માટે પ્રોડક્ટ વિગતો ખોલો.",
     "ranked_by_demand": "ગ્રાહકની માંગ અને રેટિંગ્સ દ્વારા ક્રમાંકિત.",
@@ -5669,7 +5669,8 @@
   // Merge Amazon products listing & faceted search i18n
   const AMAZON_PRODUCTS_LISTING_I18N = {
     "en": {
-      "amazons_choice": "Amazon's Choice",
+      "amazons_choice": "ElectroMart's Choice",
+      "electromarts_choice": "ElectroMart's Choice",
       "limited_time_deal": "Limited time deal",
       "bought_in_past_month": "{count}+ bought in past month",
       "discount_filter_title": "Discount",
@@ -5687,7 +5688,8 @@
       "results_for_prefix": "results for"
     },
     "hi": {
-      "amazons_choice": "अमेज़न चॉइस",
+      "amazons_choice": "इलेक्ट्रोमार्ट चॉइस",
+      "electromarts_choice": "इलेक्ट्रोमार्ट चॉइस",
       "limited_time_deal": "सीमित समय की डील",
       "bought_in_past_month": "पिछले महीने में {count}+ खरीदे गए",
       "discount_filter_title": "छूट",
@@ -5705,7 +5707,8 @@
       "results_for_prefix": "परिणाम खोज"
     },
     "ta": {
-      "amazons_choice": "அமேசானின் தேர்வு",
+      "amazons_choice": "எலக்ட்ரோமார்ட்டின் தேர்வு",
+      "electromarts_choice": "எலக்ட்ரோமார்ட்டின் தேர்வு",
       "limited_time_deal": "வரையறுக்கப்பட்ட நேர சலுகை",
       "bought_in_past_month": "கடந்த மாதத்தில் {count}+ வாங்கப்பட்டது",
       "discount_filter_title": "தள்ளுபடி",
@@ -5723,7 +5726,8 @@
       "results_for_prefix": "முடிவுகள்"
     },
     "te": {
-      "amazons_choice": "అమెజాన్స్ ఛాయిస్",
+      "amazons_choice": "ఎలక్ట్రోమార్ట్స్ ఛాయిస్",
+      "electromarts_choice": "ఎలక్ట్రోమార్ట్స్ ఛాయిస్",
       "limited_time_deal": "పరిమిత సమయ డీల్",
       "bought_in_past_month": "గత నెలలో {count}+ కొనుగోలు చేయబడ్డాయి",
       "discount_filter_title": "డిస్కౌంట్",
@@ -5741,7 +5745,8 @@
       "results_for_prefix": "ఫలితాలు"
     },
     "kn": {
-      "amazons_choice": "ಅಮೆಜಾನ್ಸ್ ಚಾಯ್ಸ್",
+      "amazons_choice": "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ಸ್ ಚಾಯ್ಸ್",
+      "electromarts_choice": "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ಸ್ ಚಾಯ್ಸ್",
       "limited_time_deal": "ಸೀಮಿತ ಸಮಯದ ಕೊಡುಗೆ",
       "bought_in_past_month": "ಕಳೆದ ತಿಂಗಳಲ್ಲಿ {count}+ ಖರೀದಿಸಲಾಗಿದೆ",
       "discount_filter_title": "ರಿಯಾಯಿತಿ",
@@ -5759,7 +5764,8 @@
       "results_for_prefix": "ಫಲಿತಾಂಶಗಳು"
     },
     "ml": {
-      "amazons_choice": "ആമസോൺസ് ചോയ്സ്",
+      "amazons_choice": "ഇലക്ട്രോമാർട്ട്സ് ചോയ്സ്",
+      "electromarts_choice": "ഇലക്ട്രോമാർട്ട്സ് ചോയ്സ്",
       "limited_time_deal": "പരിമിത സമയ ഡീൽ",
       "bought_in_past_month": "കഴിഞ്ഞ മാസത്തിൽ {count}+ വാങ്ങിച്ചു",
       "discount_filter_title": "ഡിസ്കൗണ്ട്",
@@ -5777,7 +5783,8 @@
       "results_for_prefix": "ഫലങ്ങൾ"
     },
     "bn": {
-      "amazons_choice": "অ্যামাজন চয়েস",
+      "amazons_choice": "ইলেকট্রোমার্ট চয়েস",
+      "electromarts_choice": "ইলেকট্রোমার্ট চয়েস",
       "limited_time_deal": "সীমিত সময়ের অফার",
       "bought_in_past_month": "গত মাসে {count}+ কেনা হয়েছে",
       "discount_filter_title": "ছাড়",
@@ -5795,7 +5802,8 @@
       "results_for_prefix": "ফলাফল"
     },
     "mr": {
-      "amazons_choice": "अ‍ॅमेझॉन्स चॉइस",
+      "amazons_choice": "इलेक्ट्रोमार्ट्स चॉइस",
+      "electromarts_choice": "इलेक्ट्रोमार्ट्स चॉइस",
       "limited_time_deal": "मर्यादित वेळेची ऑफर",
       "bought_in_past_month": "मागील महिन्यात {count}+ खरेदी केले",
       "discount_filter_title": "सूट",
@@ -5813,7 +5821,8 @@
       "results_for_prefix": "निकाल"
     },
     "ur": {
-      "amazons_choice": "ایمیزون چوائس",
+      "amazons_choice": "الیکٹرو مارٹ چوائس",
+      "electromarts_choice": "الیکٹرو مارٹ چوائس",
       "limited_time_deal": "محدود وقت کی ڈیل",
       "bought_in_past_month": "گزشتہ ماہ میں {count}+ خریدے گئے",
       "discount_filter_title": "رعایت",
@@ -5831,7 +5840,8 @@
       "results_for_prefix": "نتائج"
     },
     "pa": {
-      "amazons_choice": "ਐਮਾਜ਼ਾਨ ਚੁਆਇਸ",
+      "amazons_choice": "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਚੁਆਇਸ",
+      "electromarts_choice": "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਚੁਆਇਸ",
       "limited_time_deal": "ਸੀਮਤ ਸਮੇਂ ਦੀ ਪੇਸ਼ਕਸ਼",
       "bought_in_past_month": "ਪਿਛਲੇ ਮਹੀਨੇ ਵਿੱਚ {count}+ ਖਰੀਦੇ ਗਏ",
       "discount_filter_title": "ਛੋਟ",
@@ -5849,7 +5859,8 @@
       "results_for_prefix": "ਨਤੀਜੇ"
     },
     "gu": {
-      "amazons_choice": "એમેઝોન ચોઇસ",
+      "amazons_choice": "ઇલેક્ટ્રોમાર્ટ ચોઇસ",
+      "electromarts_choice": "ઇલેક્ટ્રોમાર્ટ ચોઇસ",
       "limited_time_deal": "મર્યાદિત સમયની ઑફર",
       "bought_in_past_month": "પાછલા મહિનામાં {count}+ ખરીદાયા",
       "discount_filter_title": "ડિસ્કાઉન્ટ",
@@ -6174,7 +6185,8 @@
   
   const AMAZON_PDP_PAGE_I18N = {
     "en": {
-      "amazons_choice": "Amazon's Choice",
+      "amazons_choice": "ElectroMart's Choice",
+      "electromarts_choice": "ElectroMart's Choice",
       "bought_in_past_month": "1K+ bought in past month",
       "bank_offers_title": "Bank Offer",
       "no_cost_emi_title": "No Cost EMI",
@@ -6196,7 +6208,8 @@
       "quality_assurance": "Quality"
     },
     "hi": {
-      "amazons_choice": "अमेज़न चॉइस",
+      "amazons_choice": "इलेक्ट्रोमार्ट चॉइस",
+      "electromarts_choice": "इलेक्ट्रोमार्ट चॉइस",
       "bought_in_past_month": "पिछले महीने में 1K+ खरीदे गए",
       "bank_offers_title": "बैंक ऑफर",
       "no_cost_emi_title": "नो कॉस्ट EMI",
@@ -6218,7 +6231,8 @@
       "quality_assurance": "गुणवत्ता"
     },
     "ta": {
-      "amazons_choice": "அமேசான் சாய்ஸ்",
+      "amazons_choice": "எலக்ட்ரோமார்ட் சாய்ஸ்",
+      "electromarts_choice": "எலக்ட்ரோமார்ட் சாய்ஸ்",
       "bought_in_past_month": "கடந்த மாதத்தில் 1K+ வாங்கப்பட்டது",
       "bank_offers_title": "வங்கிச் சலுகை",
       "no_cost_emi_title": "நோ காஸ்ட் EMI",
@@ -6240,7 +6254,8 @@
       "quality_assurance": "தரம்"
     },
     "te": {
-      "amazons_choice": "అమెజాన్స్ ఛాయిస్",
+      "amazons_choice": "ఎలక్ట్రోమార్ట్స్ ఛాయిస్",
+      "electromarts_choice": "ఎలక్ట్రోమార్ట్స్ ఛాయిస్",
       "bought_in_past_month": "గత నెలలో 1K+ కొనుగోలు చేయబడింది",
       "bank_offers_title": "బ్యాంక్ ఆఫర్",
       "no_cost_emi_title": "నో కాస్ట్ EMI",
@@ -6262,7 +6277,8 @@
       "quality_assurance": "నాణ్యత"
     },
     "kn": {
-      "amazons_choice": "ಅಮೆಜಾನ್ಸ್ ಚಾಯ್ಸ್",
+      "amazons_choice": "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ಸ್ ಚಾಯ್ಸ್",
+      "electromarts_choice": "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ಸ್ ಚಾಯ್ಸ್",
       "bought_in_past_month": "ಕಳೆದ ತಿಂಗಳಲ್ಲಿ 1K+ ಖರೀದಿಸಲಾಗಿದೆ",
       "bank_offers_title": "ಬ್ಯಾಂಕ್ ಆಫರ್",
       "no_cost_emi_title": "ನೋ ಕಾಸ್ಟ್ EMI",
@@ -6284,7 +6300,8 @@
       "quality_assurance": "ಗುಣಮಟ್ಟ"
     },
     "ml": {
-      "amazons_choice": "ആമസോൺസ് ചോയ്സ്",
+      "amazons_choice": "ഇലക്ട്രോമാർട്ട്സ് ചോയ്സ്",
+      "electromarts_choice": "ഇലക്ട്രോമാർട്ട്സ് ചോയ്സ്",
       "bought_in_past_month": "കഴിഞ്ഞ മാസത്തിൽ 1K+ വാങ്ങിയത്",
       "bank_offers_title": "ബാങ്ക് ഓഫർ",
       "no_cost_emi_title": "നോ കോസ്റ്റ് EMI",
@@ -6306,7 +6323,8 @@
       "quality_assurance": "ഗുണനിലവാരം"
     },
     "bn": {
-      "amazons_choice": "অ্যামাজনস চয়েস",
+      "amazons_choice": "ইলেকট্রোমার্টস চয়েস",
+      "electromarts_choice": "ইলেকট্রোমার্টস চয়েস",
       "bought_in_past_month": "গত মাসে 1K+ কেনা হয়েছে",
       "bank_offers_title": "ব্যাংক অফার",
       "no_cost_emi_title": "নো কস্ট EMI",
@@ -6328,7 +6346,8 @@
       "quality_assurance": "গুণমান"
     },
     "mr": {
-      "amazons_choice": "अॅमेझॉन चॉइस",
+      "amazons_choice": "इलेक्ट्रोमार्ट चॉइस",
+      "electromarts_choice": "इलेक्ट्रोमार्ट चॉइस",
       "bought_in_past_month": "मागील महिन्यात 1K+ खरेदी केले",
       "bank_offers_title": "बँक ऑफर",
       "no_cost_emi_title": "नो कॉस्ट EMI",
@@ -6350,7 +6369,8 @@
       "quality_assurance": "गुणवत्ता"
     },
     "ur": {
-      "amazons_choice": "ایمیزون چوائس",
+      "amazons_choice": "الیکٹرو مارٹ چوائس",
+      "electromarts_choice": "الیکٹرو مارٹ چوائس",
       "bought_in_past_month": "پچھلے مہینے میں 1K+ خریدا گیا",
       "bank_offers_title": "بینک آفر",
       "no_cost_emi_title": "نو کاسٹ EMI",
@@ -6372,7 +6392,8 @@
       "quality_assurance": "معیار"
     },
     "pa": {
-      "amazons_choice": "ਐਮਾਜ਼ਾਨ ਚੁਆਇਸ",
+      "amazons_choice": "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਚੁਆਇਸ",
+      "electromarts_choice": "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਚੁਆਇਸ",
       "bought_in_past_month": "ਪਿਛਲੇ ਮਹੀਨੇ ਵਿੱਚ 1K+ ਖਰੀਦਿਆ ਗਿਆ",
       "bank_offers_title": "ਬੈਂਕ ਆਫਰ",
       "no_cost_emi_title": "ਨੋ ਕਾਸਟ EMI",
@@ -6394,7 +6415,8 @@
       "quality_assurance": "ਗੁਣਵੱਤਾ"
     },
     "gu": {
-      "amazons_choice": "એમેઝોન્સ ચોઇસ",
+      "amazons_choice": "ઇલેક્ટ્રોમાર્ટ્સ ચોઇસ",
+      "electromarts_choice": "ઇલેક્ટ્રોમાર્ટ્સ ચોઇસ",
       "bought_in_past_month": "પાછલા મહિનામાં 1K+ ખરીદ્યા",
       "bank_offers_title": "બેંક ઓફર",
       "no_cost_emi_title": "નો કોસ્ટ EMI",
