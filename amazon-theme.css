@@ -4426,6 +4426,539 @@ body.checkout-page {
   }
 }
 
+/* ==========================================================================
+   9. AMAZON INDIA YOUR ORDERS & TRACKING HUB (PHASE 5)
+   ========================================================================== */
+body.orders-page,
+body:has(.orders-main) {
+  background-color: #eaeded !important;
+  color: #0f1111 !important;
+  font-family: "Amazon Ember", Arial, sans-serif !important;
+}
+
+.orders-main {
+  width: min(1040px, 96vw) !important;
+  margin: 14px auto 40px !important;
+}
+
+/* Amazon Breadcrumb */
+.amz-orders-breadcrumb {
+  font-size: 12px !important;
+  color: #565959 !important;
+  margin-bottom: 8px !important;
+}
+
+.amz-orders-breadcrumb a {
+  color: #007185 !important;
+  text-decoration: none !important;
+}
+
+.amz-orders-breadcrumb a:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Amazon Header Section: Title & Search Bar */
+.amz-orders-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  margin-bottom: 12px !important;
+}
+
+.amz-orders-title-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.amz-orders-title-group h1 {
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* Amazon Orders Search Bar */
+.amz-order-search-box {
+  display: flex !important;
+  align-items: center !important;
+  max-width: 380px !important;
+  width: 100% !important;
+}
+
+.amz-order-search-box input[type="search"] {
+  flex: 1 !important;
+  height: 33px !important;
+  padding: 0 10px !important;
+  font-size: 13px !important;
+  border: 1px solid #888c8c !important;
+  border-right: none !important;
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  outline: none !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 17, 17, 0.15) inset !important;
+}
+
+.amz-order-search-box input[type="search"]:focus {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5) !important;
+}
+
+.amz-order-search-btn {
+  height: 33px !important;
+  padding: 0 14px !important;
+  background: #333333 !important;
+  color: #ffffff !important;
+  border: 1px solid #333333 !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: background 0.15s ease !important;
+}
+
+.amz-order-search-btn:hover {
+  background: #232f3e !important;
+}
+
+/* Amazon 4-Tab Navigation Bar */
+.amz-orders-nav-tabs {
+  display: flex !important;
+  gap: 20px !important;
+  border-bottom: 1px solid #d5d9d9 !important;
+  margin-bottom: 16px !important;
+  overflow-x: auto !important;
+}
+
+.amz-order-tab-btn {
+  background: none !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  padding: 8px 4px 10px 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #565959 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.amz-order-tab-btn:hover {
+  color: #007185 !important;
+}
+
+.amz-order-tab-btn.active {
+  color: #0f1111 !important;
+  font-weight: 700 !important;
+  border-bottom-color: #e77600 !important;
+}
+
+/* Filter Row: Orders placed in <time-select> */
+.amz-orders-filter-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+  font-size: 14px !important;
+  color: #0f1111 !important;
+}
+
+.amz-orders-time-filter-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.amz-orders-time-filter-wrap select {
+  height: 31px !important;
+  padding: 0 24px 0 10px !important;
+  font-size: 13px !important;
+  color: #0f1111 !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  background-color: #f0f2f2 !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.amz-orders-time-filter-wrap select:hover {
+  background-color: #e3e6e6 !important;
+}
+
+.amz-orders-time-filter-wrap select:focus {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5) !important;
+}
+
+/* Notification & Updates Panel */
+.order-updates-panel {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  margin-bottom: 20px !important;
+  padding: 14px 16px !important;
+}
+
+/* ==========================================================================
+   AMAZON TWO-TIER ORDER CARD (.order-card)
+   ========================================================================== */
+.orders-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+.order-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+  margin-bottom: 0 !important;
+}
+
+/* Tier 1: Top Gray Header Bar */
+.order-card .order-top {
+  background-color: #f0f2f2 !important;
+  border-bottom: 1px solid #d5d9d9 !important;
+  padding: 12px 18px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  font-size: 12px !important;
+  color: #565959 !important;
+}
+
+.order-card .order-top-details {
+  display: flex !important;
+  gap: 32px !important;
+  flex-wrap: wrap !important;
+}
+
+.order-card .order-top-details > div p {
+  margin: 0 0 2px 0 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  color: #565959 !important;
+  letter-spacing: 0.03em !important;
+}
+
+.order-card .order-top-details > div strong {
+  font-size: 13px !important;
+  color: #0f1111 !important;
+  font-weight: 500 !important;
+}
+
+.order-card .order-top-right {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 3px !important;
+}
+
+.order-card .order-top-right p {
+  margin: 0 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+.order-card .order-top-right strong {
+  font-size: 13px !important;
+  color: #0f1111 !important;
+  font-weight: 600 !important;
+}
+
+.order-card .order-top-links {
+  display: flex !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+}
+
+.order-card .order-top-links a {
+  color: #007185 !important;
+  text-decoration: none !important;
+}
+
+.order-card .order-top-links a:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Tier 2: Order Body */
+.order-card .order-body {
+  padding: 18px 20px !important;
+  display: grid !important;
+  grid-template-columns: 100px 1fr 220px !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+@media (max-width: 800px) {
+  .order-card .order-body {
+    grid-template-columns: 80px 1fr !important;
+  }
+  .order-card .order-actions {
+    grid-column: 1 / -1 !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+.order-card .order-body img {
+  width: 90px !important;
+  height: 90px !important;
+  object-fit: contain !important;
+  border: 1px solid #e7e7e7 !important;
+  border-radius: 4px !important;
+  padding: 4px !important;
+  background: #ffffff !important;
+}
+
+/* Order Headline & Details */
+.order-delivery-headline {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 6px 0 !important;
+  line-height: 1.3 !important;
+}
+
+.order-delivery-headline.delivered {
+  color: #007600 !important;
+}
+
+.order-delivery-subtext {
+  font-size: 13px !important;
+  color: #565959 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+.order-card .order-product {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.order-card .order-product a {
+  color: #007185 !important;
+  text-decoration: none !important;
+}
+
+.order-card .order-product a:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+.order-card .seller-line {
+  font-size: 12px !important;
+  color: #565959 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.order-card .order-item-price {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #b12704 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+/* Buy it again inline button */
+.amz-buy-again-inline-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  margin-bottom: 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+.amz-buy-again-inline-btn:hover {
+  background: #f7ca00 !important;
+}
+
+/* Actions Column */
+.order-card .order-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+/* Primary Yellow Pill: Track Package */
+.order-card .order-actions .track-btn,
+.order-card .order-actions .resume-payment-btn {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  text-align: center !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: background 0.15s ease !important;
+}
+
+.order-card .order-actions .track-btn:hover,
+.order-card .order-actions .resume-payment-btn:hover {
+  background: #f7ca00 !important;
+}
+
+/* Secondary White Pills: Return, Review, Cancel, Invoice */
+.order-card .order-actions .after-sales-btn,
+.order-card .order-actions .cancel-order-btn,
+.order-card .order-actions .secondary-pill-btn,
+.order-card .order-actions a[href*="invoice.html"] {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 20px !important;
+  padding: 7px 14px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  transition: background 0.15s ease !important;
+}
+
+.order-card .order-actions .after-sales-btn:hover,
+.order-card .order-actions .cancel-order-btn:hover,
+.order-card .order-actions .secondary-pill-btn:hover,
+.order-card .order-actions a[href*="invoice.html"]:hover {
+  background: #f7fafa !important;
+}
+
+/* ==========================================================================
+   AMAZON AUTHENTIC TRACKING STEPPER
+   ========================================================================== */
+.order-tracking-panel {
+  background: #fafafa !important;
+  border-top: 1px solid #e7e7e7 !important;
+  padding: 20px !important;
+}
+
+.amz-tracking-stepper-wrap {
+  margin: 16px 0 24px 0 !important;
+}
+
+.amz-tracking-stepper {
+  display: flex !important;
+  justify-content: space-between !important;
+  position: relative !important;
+  padding: 0 20px !important;
+}
+
+.amz-tracking-stepper::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 12px !important;
+  left: 30px !important;
+  right: 30px !important;
+  height: 4px !important;
+  background: #e7e7e7 !important;
+  z-index: 1 !important;
+}
+
+.amz-tracking-stepper-progress {
+  position: absolute !important;
+  top: 12px !important;
+  left: 30px !important;
+  height: 4px !important;
+  background: #067d62 !important;
+  z-index: 2 !important;
+  transition: width 0.3s ease !important;
+}
+
+.amz-tracking-node {
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.amz-tracking-dot {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: 3px solid #d5d9d9 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.amz-tracking-node.completed .amz-tracking-dot {
+  background: #067d62 !important;
+  border-color: #067d62 !important;
+}
+
+.amz-tracking-node.current .amz-tracking-dot {
+  background: #ffffff !important;
+  border-color: #067d62 !important;
+  box-shadow: 0 0 0 3px rgba(6, 125, 98, 0.2) !important;
+}
+
+.amz-tracking-node.current .amz-tracking-dot::after {
+  content: "" !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: #067d62 !important;
+}
+
+.amz-tracking-node .amz-tracking-label {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #565959 !important;
+}
+
+.amz-tracking-node.completed .amz-tracking-label,
+.amz-tracking-node.current .amz-tracking-label {
+  color: #0f1111 !important;
+  font-weight: 700 !important;
+}
+
 
 
 

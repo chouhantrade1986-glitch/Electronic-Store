@@ -15,6 +15,9 @@ const ordersGrid = document.getElementById("ordersGrid");
 const ordersMeta = document.getElementById("ordersMeta");
 const orderSearch = document.getElementById("orderSearch");
 const statusFilter = document.getElementById("statusFilter");
+const timeFilter = document.getElementById("timeFilter");
+const orderTabs = document.getElementById("orderTabs");
+let currentOrderTab = "orders";
 const ordersPhoneVerificationBadge = document.getElementById("ordersPhoneVerificationBadge");
 const orderNotificationsMeta = document.getElementById("orderNotificationsMeta");
 const orderNotificationsList = document.getElementById("orderNotificationsList");
@@ -1285,6 +1288,42 @@ function buildDeliveryTimeline(order) {
 
 function trackingPanel(order) {
   const tracking = getTrackingSteps(order);
+  const status = String(order.status || "").toLowerCase();
+
+  const milestones = [
+    { key: "ordered", label: "Ordered", i18nKey: "track_milestone_ordered" },
+    { key: "shipped", label: "Shipped", i18nKey: "track_milestone_shipped" },
+    { key: "out_for_delivery", label: "Out for delivery", i18nKey: "track_milestone_out_for_delivery" },
+    { key: "delivered", label: "Delivered", i18nKey: "track_milestone_delivered" }
+  ];
+
+  let currentStageIndex = 0;
+  if (status === "delivered") currentStageIndex = 3;
+  else if (status === "shipped") currentStageIndex = 2;
+  else if (status === "processing") currentStageIndex = 1;
+  else currentStageIndex = 0;
+
+  const stepperProgressPercent = status === "delivered" ? 100 : (currentStageIndex === 2 ? 66 : (currentStageIndex === 1 ? 33 : 8));
+
+  const stepperHtml = `
+    <div class="amz-tracking-stepper-wrap">
+      <div class="amz-tracking-stepper">
+        <div class="amz-tracking-stepper-progress" style="width: ${stepperProgressPercent}%;"></div>
+        ${milestones.map((m, idx) => {
+          const isCompleted = idx <= currentStageIndex;
+          const isCurrent = idx === currentStageIndex;
+          const cls = isCompleted ? (isCurrent ? "current completed" : "completed") : "";
+          return `
+            <div class="amz-tracking-node ${cls}">
+              <div class="amz-tracking-dot">${isCompleted ? "✓" : ""}</div>
+              <span class="amz-tracking-label" data-i18n="${m.i18nKey}">${m.label}</span>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
   const completedCount = tracking.steps.filter((step) => step.completed).length;
   const progressPercent = Math.max(8, Math.round((completedCount / tracking.steps.length) * 100));
 
@@ -1316,7 +1355,8 @@ function trackingPanel(order) {
   `).join("");
 
   return `
-    <div class="tracking-panel" id="tracking-${order.id}" hidden>
+    <div class="tracking-panel order-tracking-panel" id="tracking-${order.id}" hidden>
+      ${stepperHtml}
       <div class="tracking-meta">
         <p><span>Carrier:</span> <strong>${order.tracking.carrier}</strong></p>
         <p><span>Tracking ID:</span> <strong>${order.tracking.trackingId}</strong></p>
@@ -1477,27 +1517,62 @@ function orderCard(order) {
     ? `<p class="payment-hint">This order is waiting for payment capture. Resume checkout to complete it.</p>`
     : "";
   const canCancelOrder = isOrderCancelEligible(order);
+
+  const isDelivered = String(order.status || "").toLowerCase() === "delivered";
+  const isCancelled = String(order.status || "").toLowerCase() === "cancelled";
+  
+  const deliveryHeadline = isDelivered
+    ? `<h2 class="order-delivery-headline delivered">Delivered ${order.tracking?.eta ? `${order.tracking.eta}` : order.date}</h2><p class="order-delivery-subtext">Package was handed directly to resident.</p>`
+    : (isCancelled
+      ? `<h2 class="order-delivery-headline">Order Cancelled</h2><p class="order-delivery-subtext">This order was cancelled and will not ship.</p>`
+      : `<h2 class="order-delivery-headline">Expected Delivery: ${order.tracking?.eta || "Arriving soon"}</h2><p class="order-delivery-subtext">${statusLine(order.status)}</p>`);
+
+  const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
+  const firstProductId = order.productId || (Array.isArray(order.items) && order.items[0]?.productId) || "";
+
   return `
-    <article class="order-card">
+    <article class="order-card" data-order-id="${order.id}">
       <div class="order-top">
-        <div>
-          <p>ORDER PLACED</p>
-          <strong>${order.date}</strong>
+        <div class="order-top-details">
+          <div>
+            <p data-i18n="order_placed_label">ORDER PLACED</p>
+            <strong>${order.date}</strong>
+          </div>
+          <div>
+            <p data-i18n="total_label">TOTAL</p>
+            <strong>${money(order.total)}</strong>
+          </div>
+          <div>
+            <p data-i18n="ship_to_label">SHIP TO</p>
+            <strong title="${escapeHtml(typeof order.shippingAddress === 'string' ? order.shippingAddress : (order.shippingAddress?.addressLine || 'Address'))}">${escapeHtml(recipientName)} ▾</strong>
+          </div>
         </div>
-        <div>
-          <p>TOTAL</p>
-          <strong>${money(order.total)}</strong>
-        </div>
-        <div>
-          <p>ORDER #</p>
-          <strong>${order.idLabel}</strong>
+        <div class="order-top-right">
+          <p><span data-i18n="order_num_label">ORDER #</span> ${order.idLabel}</p>
+          <div class="order-top-links">
+            <a href="javascript:void(0);" class="view-order-details-link track-btn" data-id="${order.id}" data-i18n="view_order_details">View order details</a>
+            <span>|</span>
+            <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" target="_blank" rel="noopener" data-i18n="download_invoice">Invoice ▾</a>
+          </div>
         </div>
       </div>
       <div class="order-body">
-        <img src="${order.image}" alt="${order.product}" loading="lazy" />
-        <div>
-          <h2 class="order-product">${order.product}</h2>
-          <p class="order-date-line">Order date: ${order.date}</p>
+        <a href="product-detail.html?id=${encodeURIComponent(firstProductId)}" aria-label="${escapeHtml(order.product)}">
+          <img src="${order.image}" alt="${order.product}" loading="lazy" />
+        </a>
+        <div class="order-product-info">
+          ${deliveryHeadline}
+          <h3 class="order-product">
+            <a href="product-detail.html?id=${encodeURIComponent(firstProductId)}">${order.product}</a>
+          </h3>
+          <p class="seller-line">Sold by: <strong>ElectroMart Retail Pvt Ltd</strong> | Return eligible within 7 days</p>
+          <p class="order-item-price">${money(order.total)}</p>
+          <button type="button" class="amz-buy-again-inline-btn" data-product-id="${escapeHtml(firstProductId)}" data-product-title="${escapeHtml(order.product)}">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span data-i18n="buy_it_again">Buy it again</span>
+          </button>
           ${couponMeta}
           ${deliveryMeta}
           ${reservationMeta}
@@ -1508,10 +1583,12 @@ function orderCard(order) {
         </div>
         <div class="order-actions">
           ${canResumePayment ? `<button type="button" class="primary resume-payment-btn" data-id="${order.id}">Resume Payment</button>` : ""}
-          ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}">Cancel Order</button>` : ""}
-          <button type="button" class="primary track-btn" data-id="${order.id}">Track package</button>
-          ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}">${order.afterSalesCases.length ? "View Request" : "Request Return / Refund / Exchange"}</button>` : ""}
-          <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" target="_blank" rel="noopener">Download Invoice</a>
+          <button type="button" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</button>
+          ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${order.afterSalesCases.length ? "View Request" : "Return or replace items"}</button>` : ""}
+          ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}" data-i18n="cancel_order">Cancel Order</button>` : ""}
+          <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-i18n="write_review">Write a product review</button>
+          <button type="button" class="secondary-pill-btn seller-feedback-btn" data-id="${order.id}" data-i18n="seller_feedback">Leave seller feedback</button>
+          <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" target="_blank" rel="noopener" data-i18n="download_invoice">Download Invoice</a>
         </div>
       </div>
       ${trackingPanel(order)}
@@ -1572,18 +1649,53 @@ function renderOrders(list) {
 }
 
 function filterOrders() {
-  const query = orderSearch.value.trim().toLowerCase();
-  const status = statusFilter.value;
+  const query = (orderSearch ? orderSearch.value : "").trim().toLowerCase();
+  const status = statusFilter ? statusFilter.value : "all";
+  const timeVal = timeFilter ? timeFilter.value : "past_3_months";
+
+  const now = new Date();
+  const threeMonthsAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
+  const sixMonthsAgo = new Date(now.getTime() - (180 * 24 * 60 * 60 * 1000));
 
   const filtered = orders.filter((order) => {
-    const queryMatch =
+    // 1. Tab filter
+    if (currentOrderTab === "buy_again") {
+      if (order.status === "cancelled") return false;
+    } else if (currentOrderTab === "not_yet_shipped") {
+      if (order.status === "delivered" || order.status === "cancelled") return false;
+    } else if (currentOrderTab === "cancelled") {
+      if (order.status !== "cancelled") return false;
+    }
+
+    // 2. Search query filter
+    const queryMatch = !query ||
       order.id.toLowerCase().includes(query) ||
       order.idLabel.toLowerCase().includes(query) ||
       order.product.toLowerCase().includes(query);
+
+    // 3. Status filter (if set manually)
     const statusMatch = status === "all"
       || (status === "awaiting_payment" && isOrderResumeEligible(order))
       || order.status === status;
-    return queryMatch && statusMatch;
+
+    // 4. Time filter
+    let timeMatch = true;
+    const orderDate = new Date(order.createdAt || order.date);
+    if (!Number.isNaN(orderDate.getTime())) {
+      if (timeVal === "past_3_months") {
+        timeMatch = orderDate >= threeMonthsAgo;
+      } else if (timeVal === "past_6_months") {
+        timeMatch = orderDate >= sixMonthsAgo;
+      } else if (timeVal === "2026") {
+        timeMatch = orderDate.getFullYear() === 2026;
+      } else if (timeVal === "2025") {
+        timeMatch = orderDate.getFullYear() === 2025;
+      } else if (timeVal === "archived") {
+        timeMatch = orderDate < sixMonthsAgo;
+      }
+    }
+
+    return queryMatch && statusMatch && timeMatch;
   });
 
   renderOrders(filtered);
@@ -1652,10 +1764,76 @@ async function fetchOrders() {
   filterOrders();
 }
 
-orderSearch.addEventListener("input", filterOrders);
-statusFilter.addEventListener("change", filterOrders);
+if (orderSearch) orderSearch.addEventListener("input", filterOrders);
+if (statusFilter) statusFilter.addEventListener("change", filterOrders);
+if (timeFilter) timeFilter.addEventListener("change", filterOrders);
+
+if (orderTabs) {
+  orderTabs.addEventListener("click", (e) => {
+    const tabBtn = e.target.closest(".amz-order-tab-btn");
+    if (!tabBtn) return;
+    orderTabs.querySelectorAll(".amz-order-tab-btn").forEach((b) => b.classList.remove("active"));
+    tabBtn.classList.add("active");
+    currentOrderTab = tabBtn.getAttribute("data-tab") || "orders";
+    filterOrders();
+  });
+}
+
+const orderSearchForm = document.getElementById("orderSearchForm");
+if (orderSearchForm) {
+  orderSearchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    filterOrders();
+  });
+}
 
 ordersGrid.addEventListener("click", async (event) => {
+  const buyAgainBtn = event.target.closest(".amz-buy-again-inline-btn");
+  if (buyAgainBtn) {
+    const productId = buyAgainBtn.getAttribute("data-product-id");
+    if (productId) {
+      try {
+        const rawCart = localStorage.getItem("electromart_cart_v1");
+        const cart = rawCart ? JSON.parse(rawCart) : {};
+        cart[productId] = (Number(cart[productId]) || 0) + 1;
+        localStorage.setItem("electromart_cart_v1", JSON.stringify(cart));
+        const total = Object.values(cart).reduce((sum, qty) => sum + Number(qty || 0), 0);
+        const cartCountEl = document.getElementById("cartCount");
+        if (cartCountEl) cartCountEl.textContent = String(total);
+        buyAgainBtn.style.background = "#007600";
+        buyAgainBtn.style.color = "#ffffff";
+        buyAgainBtn.style.borderColor = "#006000";
+        buyAgainBtn.innerHTML = "✓ Added to Cart";
+        setTimeout(() => {
+          buyAgainBtn.style.background = "";
+          buyAgainBtn.style.color = "";
+          buyAgainBtn.style.borderColor = "";
+          buyAgainBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span>Buy it again</span>
+          `;
+        }, 2000);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return;
+  }
+
+  const reviewBtn = event.target.closest(".write-review-btn");
+  if (reviewBtn) {
+    alert("Thank you for choosing to review this product! The review submission form will open shortly.");
+    return;
+  }
+
+  const feedbackBtn = event.target.closest(".seller-feedback-btn");
+  if (feedbackBtn) {
+    alert("Thank you for rating ElectroMart Retail! Your seller feedback is highly appreciated.");
+    return;
+  }
+
   const resumeBtn = event.target.closest(".resume-payment-btn");
   if (resumeBtn) {
     const orderId = String(resumeBtn.getAttribute("data-id") || "").trim();
