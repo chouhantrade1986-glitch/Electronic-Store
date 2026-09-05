@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
-
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
@@ -20,9 +19,19 @@
   <div id="headerContainer"></div>
 
   <main class="auth-main">
-    <section class="auth-panel">
+    <!-- Centered Brand Wordmark -->
+    <div class="amz-auth-logo-wrap">
+      <a href="index.html" class="amz-auth-brand-logo" aria-label="ElectroMart Home">
+        <span class="amz-logo-text">Electro<span class="amz-logo-accent">Mart</span><span class="amz-logo-tld">.in</span></span>
+      </a>
+    </div>
+
+    <!-- Centered Amazon India Auth Card (#authCard) -->
+    <section id="authCard" class="auth-panel amz-auth-card">
       <h1 id="authHeading" data-i18n="auth_heading">Sign in or create account</h1>
       <p id="authSubheading" data-i18n="auth_subheading">Access your orders, saved profile, and account settings.</p>
+
+      <!-- Seller Central / Admin Access Card -->
       <section id="adminAccessCard" class="admin-access-card" hidden>
         <div>
           <strong id="adminAccessTitle" data-i18n="seller_central_access">Seller Central access</strong>
@@ -34,103 +43,220 @@
         </div>
       </section>
 
-      <div class="tab-row">
+      <!-- Tab Navigation Row -->
+      <div class="tab-row" id="authTabsRow">
         <button id="signinTab" class="tab-btn active" type="button" data-i18n="signin_tab">Sign In</button>
         <button id="signupTab" class="tab-btn" type="button" data-i18n="create_account_tab">Create Account</button>
       </div>
 
+      <!-- 1. Sign In Form -->
       <form id="signinForm" class="auth-form active">
-        <label><span data-i18n="otp_delivery">OTP Delivery</span>
+        <label>
+          <span data-i18n="otp_delivery">OTP Delivery</span>
           <select id="signinMethod" required>
             <option value="email" data-i18n="otp_email">Email</option>
             <option value="mobile" data-i18n="otp_mobile">Mobile Number</option>
           </select>
         </label>
-        <label><span data-i18n="email_or_mobile">Email or Mobile</span>
-          <input id="signinIdentifier" type="text" required />
+
+        <label>
+          <span data-i18n="email_or_mobile">Email or Mobile</span>
+          <div class="amz-phone-input-wrap">
+            <span class="amz-country-prefix" aria-label="India country code">IN +91</span>
+            <input id="signinIdentifier" type="text" required placeholder="Enter mobile or email" autocomplete="username" />
+          </div>
         </label>
-        <label><span data-i18n="password">Password</span>
-          <input id="signinPassword" type="password" required />
+
+        <label>
+          <span data-i18n="password">Password</span>
+          <div class="amz-password-wrap">
+            <input id="signinPassword" type="password" required autocomplete="current-password" />
+            <button type="button" class="amz-toggle-pwd-btn" data-target="signinPassword" aria-label="Toggle password visibility" title="Show/Hide password">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
         </label>
-        <div class="auth-inline-actions">
-          <button id="forgotPasswordBtn" class="auth-link-btn" type="button" data-i18n="forgot_password">Forgot password?</button>
-        </div>
+
         <button id="generateOtpBtn" type="button" data-i18n="send_otp">Send OTP</button>
+
         <div id="signinOtpAssist" class="otp-assist" hidden>
           <p id="signinOtpDestination" class="otp-assist-line"></p>
           <p id="signinOtpTimer" class="otp-assist-line subtle"></p>
         </div>
-        <label><span data-i18n="enter_otp">Enter OTP</span>
-          <input id="signinOtp" type="text" inputmode="numeric" maxlength="6" required />
+
+        <label>
+          <span data-i18n="enter_otp">Enter OTP</span>
+          <input id="signinOtp" type="text" inputmode="numeric" maxlength="6" required placeholder="6-digit OTP" />
         </label>
-        <button type="submit" data-i18n="login_with_otp">Login with OTP</button>
+
+        <button type="submit" class="amz-btn-auth-primary" data-i18n="login_with_otp">Login with OTP</button>
+
+        <!-- Terms & Conditions Disclaimer -->
+        <p class="amz-auth-legal">
+          <span data-i18n="auth_terms_prefix">By continuing, you agree to ElectroMart's</span>
+          <a href="terms.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+          <span class="amz-legal-and">&amp;</span>
+          <a href="privacy.html" data-i18n="auth_privacy_notice">Privacy Notice</a>.
+        </p>
+
+        <!-- "Need help?" Accordion -->
+        <details class="amz-auth-help-accordion">
+          <summary class="amz-help-summary">
+            <span data-i18n="auth_need_help">Need help?</span>
+          </summary>
+          <div class="amz-help-content">
+            <button id="forgotPasswordBtn" class="auth-link-btn" type="button" data-i18n="forgot_password">Forgot password?</button>
+            <a href="account.html" class="amz-help-link" data-i18n="auth_other_issues">Other issues with Sign-In</a>
+          </div>
+        </details>
+
+        <!-- New to ElectroMart Divider & Switch -->
+        <div class="amz-auth-divider">
+          <span data-i18n="auth_new_to_electromart">New to ElectroMart?</span>
+        </div>
+
+        <button id="switchToSignupBtn" class="amz-btn-auth-secondary" type="button" data-i18n="auth_create_your_account_btn">
+          Create your ElectroMart account
+        </button>
       </form>
 
+      <!-- 2. Password Assistance / Reset Form -->
       <form id="resetForm" class="auth-form">
-        <p class="auth-form-note">Reset your account password with a one-time OTP.</p>
-        <label>OTP Delivery
+        <p class="auth-form-note" data-i18n="auth_card_title_reset">Reset your account password with a one-time OTP.</p>
+        <label>
+          <span data-i18n="otp_delivery">OTP Delivery</span>
           <select id="resetMethod" required>
-            <option value="email">Email</option>
-            <option value="mobile">Mobile Number</option>
+            <option value="email" data-i18n="otp_email">Email</option>
+            <option value="mobile" data-i18n="otp_mobile">Mobile Number</option>
           </select>
         </label>
-        <label>Email or Mobile
-          <input id="resetIdentifier" type="text" required />
+
+        <label>
+          <span data-i18n="email_or_mobile">Email or Mobile</span>
+          <div class="amz-phone-input-wrap">
+            <span class="amz-country-prefix" aria-label="India country code">IN +91</span>
+            <input id="resetIdentifier" type="text" required placeholder="Enter mobile or email" />
+          </div>
         </label>
-        <label>New Password
-          <input id="resetPassword" type="password" required />
+
+        <label>
+          <span data-i18n="password">New Password</span>
+          <div class="amz-password-wrap">
+            <input id="resetPassword" type="password" required />
+            <button type="button" class="amz-toggle-pwd-btn" data-target="resetPassword" aria-label="Toggle password visibility" title="Show/Hide password">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
         </label>
+
         <div class="auth-inline-actions">
-          <button id="backToSigninBtn" class="auth-link-btn" type="button">Back to sign in</button>
+          <button id="backToSigninBtn" class="auth-link-btn" type="button" data-i18n="signin_tab">Back to sign in</button>
         </div>
-        <button id="generateResetOtpBtn" type="button">Send Reset OTP</button>
+
+        <button id="generateResetOtpBtn" type="button" data-i18n="send_otp">Send Reset OTP</button>
+
         <div id="resetOtpAssist" class="otp-assist" hidden>
           <p id="resetOtpDestination" class="otp-assist-line"></p>
           <p id="resetOtpTimer" class="otp-assist-line subtle"></p>
         </div>
-        <label>Enter OTP
+
+        <label>
+          <span data-i18n="enter_otp">Enter OTP</span>
           <input id="resetOtp" type="text" inputmode="numeric" maxlength="6" required />
         </label>
-        <button type="submit">Reset Password</button>
+
+        <button type="submit" class="amz-btn-auth-primary">Reset Password</button>
       </form>
 
+      <!-- 3. Create Account Form -->
       <form id="signupForm" class="auth-form">
         <label>Customer Name
-          <input id="signupName" type="text" required />
+          <input id="signupName" type="text" required placeholder="First and last name" />
         </label>
+
         <label>Email ID
-          <input id="signupEmail" type="email" required />
+          <input id="signupEmail" type="email" required placeholder="name@example.com" />
         </label>
+
         <label>Mobile Number
-          <input id="signupMobile" type="tel" required />
+          <div class="amz-phone-input-wrap">
+            <span class="amz-country-prefix" aria-label="India country code">IN +91</span>
+            <input id="signupMobile" type="tel" required placeholder="10-digit mobile number" />
+          </div>
         </label>
+
         <label>Password
-          <input id="signupPassword" type="password" required />
+          <div class="amz-password-wrap">
+            <input id="signupPassword" type="password" required placeholder="At least 6 characters" />
+            <button type="button" class="amz-toggle-pwd-btn" data-target="signupPassword" aria-label="Toggle password visibility" title="Show/Hide password">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
         </label>
+
         <label>Full Address
-          <textarea id="signupAddress" rows="3" required></textarea>
+          <textarea id="signupAddress" rows="3" required placeholder="Street address, city, pincode"></textarea>
         </label>
-        <label>OTP Delivery
+
+        <label>
+          <span data-i18n="otp_delivery">OTP Delivery</span>
           <select id="signupOtpMethod" required>
-            <option value="email">Email</option>
-            <option value="mobile">Mobile Number</option>
+            <option value="email" data-i18n="otp_email">Email</option>
+            <option value="mobile" data-i18n="otp_mobile">Mobile Number</option>
           </select>
         </label>
-        <button id="generateSignupOtpBtn" type="button">Send OTP</button>
+
+        <button id="generateSignupOtpBtn" type="button" data-i18n="send_otp">Send OTP</button>
+
         <div id="signupOtpAssist" class="otp-assist" hidden>
           <p id="signupOtpDestination" class="otp-assist-line"></p>
           <p id="signupOtpTimer" class="otp-assist-line subtle"></p>
         </div>
-        <label>Enter OTP
-          <input id="signupOtp" type="text" inputmode="numeric" maxlength="6" required />
+
+        <label>
+          <span data-i18n="enter_otp">Enter OTP</span>
+          <input id="signupOtp" type="text" inputmode="numeric" maxlength="6" required placeholder="6-digit OTP" />
         </label>
-        <button type="submit">Create Account</button>
+
+        <p class="amz-auth-legal">
+          <span data-i18n="auth_terms_prefix">By continuing, you agree to ElectroMart's</span>
+          <a href="terms.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+          <span class="amz-legal-and">&amp;</span>
+          <a href="privacy.html" data-i18n="auth_privacy_notice">Privacy Notice</a>.
+        </p>
+
+        <button type="submit" class="amz-btn-auth-primary">Create Account</button>
+
+        <div class="amz-signup-footer-switch">
+          <span data-i18n="auth_already_have_account">Already have an account?</span>
+          <button id="switchToSigninBtn" class="auth-link-btn" type="button" data-i18n="signin_tab">Sign in ▾</button>
+        </div>
       </form>
 
-      <p id="authMessage" class="auth-message"></p>
+      <p id="authMessage" class="auth-message" role="alert" aria-live="polite"></p>
     </section>
+
+    <!-- Amazon-Style Minimal Auth Footer -->
+    <footer class="amz-auth-footer">
+      <div class="amz-auth-footer-links">
+        <a href="terms.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+        <a href="privacy.html" data-i18n="auth_privacy_notice">Privacy Notice</a>
+        <a href="account.html" data-i18n="auth_help_link">Help</a>
+      </div>
+      <p class="amz-auth-copyright" data-i18n="auth_footer_copyright">© 2026, ElectroMart.in, Inc. or its affiliates</p>
+    </footer>
   </main>
 
+  <!-- Script Loading Sequence in Mandatory Order -->
   <script src="translations.js"></script>
   <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>

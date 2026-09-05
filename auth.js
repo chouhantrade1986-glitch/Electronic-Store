@@ -147,11 +147,27 @@ function setActiveView(mode) {
   const isSignin = mode === "signin";
   const isSignup = mode === "signup";
   const isReset = mode === "reset";
-  signinTab.classList.toggle("active", isSignin || isReset);
-  signupTab.classList.toggle("active", isSignup);
-  signinForm.classList.toggle("active", isSignin);
-  signupForm.classList.toggle("active", isSignup);
-  resetForm.classList.toggle("active", isReset);
+  if (signinTab) signinTab.classList.toggle("active", isSignin || isReset);
+  if (signupTab) signupTab.classList.toggle("active", isSignup);
+  if (signinForm) signinForm.classList.toggle("active", isSignin);
+  if (signupForm) signupForm.classList.toggle("active", isSignup);
+  if (resetForm) resetForm.classList.toggle("active", isReset);
+
+  if (authHeading && authMode !== "admin") {
+    const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+    const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+    if (isSignup) {
+      authHeading.setAttribute("data-i18n", "auth_card_title_signup");
+      authHeading.textContent = t.auth_card_title_signup || "Create Account";
+    } else if (isReset) {
+      authHeading.setAttribute("data-i18n", "auth_card_title_reset");
+      authHeading.textContent = t.auth_card_title_reset || "Password assistance";
+    } else {
+      authHeading.setAttribute("data-i18n", "signin_tab");
+      authHeading.textContent = t.signin_tab || "Sign in";
+    }
+  }
+
   setMessage("");
 }
 
@@ -867,10 +883,43 @@ async function postJson(path, body) {
   return data;
 }
 
-signinTab.addEventListener("click", () => setActiveView("signin"));
-signupTab.addEventListener("click", () => setActiveView("signup"));
-forgotPasswordBtn.addEventListener("click", () => setActiveView("reset"));
-backToSigninBtn.addEventListener("click", () => setActiveView("signin"));
+if (signinTab) signinTab.addEventListener("click", () => setActiveView("signin"));
+if (signupTab) signupTab.addEventListener("click", () => setActiveView("signup"));
+if (forgotPasswordBtn) forgotPasswordBtn.addEventListener("click", () => setActiveView("reset"));
+if (backToSigninBtn) backToSigninBtn.addEventListener("click", () => setActiveView("signin"));
+
+const switchToSignupBtn = document.getElementById("switchToSignupBtn");
+if (switchToSignupBtn) {
+  switchToSignupBtn.addEventListener("click", () => setActiveView("signup"));
+}
+
+const switchToSigninBtn = document.getElementById("switchToSigninBtn");
+if (switchToSigninBtn) {
+  switchToSigninBtn.addEventListener("click", () => setActiveView("signin"));
+}
+
+function setupPasswordToggles() {
+  const toggleButtons = document.querySelectorAll(".amz-toggle-pwd-btn");
+  toggleButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      if (!targetId) return;
+      const targetInput = document.getElementById(targetId);
+      if (!targetInput) return;
+
+      const isPassword = targetInput.type === "password";
+      targetInput.type = isPassword ? "text" : "password";
+      btn.classList.toggle("revealed", isPassword);
+      btn.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+
+      if (isPassword) {
+        btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+      } else {
+        btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+      }
+    });
+  });
+}
 
 generateOtpBtn.addEventListener("click", async () => {
   await resolveApiBaseUrl().catch(() => "");
@@ -1424,6 +1473,7 @@ renderOtpUi("signin");
 renderOtpUi("signup");
 renderOtpUi("reset");
 
+setupPasswordToggles();
 applyAuthModeUi();
 setActiveView("signin");
 

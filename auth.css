@@ -1,11 +1,22 @@
-﻿:root {
-  --ink: #0f172a;
-  --blue: #1d4ed8;
-  --blue-50: #eff6ff;
-  --blue-200: #bfdbfe;
-  --gray-100: #f8fafc;
-  --gray-200: #e2e8f0;
-  --gray-500: #64748b;
+/* ==========================================================================
+   ElectroMart — Amazon India Authentic Auth Flow Theme (auth.css)
+   Phase 9: Centered #authCard, +91 Mobile Prefix, Show/Hide Password,
+   "Need help?" Accordion, Legal Disclaimer, Create Account Switcher, i18n
+   Strict Brand Rule: ElectroMart Only (Zero Customer-Facing Forbidden Names)
+   ========================================================================== */
+
+:root {
+  --ink: #0f1111;
+  --amazon-yellow: #ffd814;
+  --amazon-yellow-hover: #f7ca00;
+  --amazon-orange: #ffa41c;
+  --amazon-orange-hover: #fa8900;
+  --amazon-blue: #007185;
+  --amazon-blue-hover: #c7511f;
+  --amazon-border: #d5d9d9;
+  --amazon-border-focus: #e77600;
+  --amazon-gray-bg: #f0f2f2;
+  --amazon-muted: #565959;
   --white: #ffffff;
 }
 
@@ -15,84 +26,124 @@
 
 body {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: "Barlow", "Amazon Ember", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
-  background: linear-gradient(180deg, #f1f5f9 0%, #eaeded 52%, #e3e8eb 100%);
+  background: #ffffff;
 }
 
 html[lang="hi"] body,
 html[lang="mr"] body {
-  font-family: "Noto Sans Devanagari", sans-serif;
+  font-family: "Noto Sans Devanagari", "Barlow", sans-serif;
 }
 
 html[lang="ta"] body {
-  font-family: "Noto Sans Tamil", sans-serif;
+  font-family: "Noto Sans Tamil", "Barlow", sans-serif;
 }
 
 html[lang="te"] body {
-  font-family: "Noto Sans Telugu", sans-serif;
+  font-family: "Noto Sans Telugu", "Barlow", sans-serif;
 }
 
 html[lang="kn"] body {
-  font-family: "Noto Sans Kannada", sans-serif;
+  font-family: "Noto Sans Kannada", "Barlow", sans-serif;
 }
 
 html[lang="ml"] body {
-  font-family: "Noto Sans Malayalam", sans-serif;
+  font-family: "Noto Sans Malayalam", "Barlow", sans-serif;
 }
 
 html[lang="bn"] body {
-  font-family: "Noto Sans Bengali", sans-serif;
+  font-family: "Noto Sans Bengali", "Barlow", sans-serif;
 }
 
+/* Auth Main Container: Centered Column */
 .auth-main {
-  width: min(560px, 92vw);
-  margin: 30px auto 36px;
+  width: min(400px, 92vw);
+  margin: 20px auto 44px;
 }
 
-.auth-panel {
+/* Brand Wordmark Logo */
+.amz-auth-logo-wrap {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.amz-auth-brand-logo {
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.amz-logo-text {
+  font-size: 28px;
+  font-weight: 800;
+  color: #131921;
+  letter-spacing: -0.5px;
+}
+
+.amz-logo-accent {
+  color: #e77600;
+}
+
+.amz-logo-tld {
+  font-size: 15px;
+  font-weight: 700;
+  color: #007185;
+}
+
+/* Centered Card (#authCard / .amz-auth-card) */
+.auth-panel,
+.amz-auth-card {
   background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--amazon-border);
+  border-radius: 8px;
+  padding: 24px 26px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .auth-panel h1 {
-  margin: 0;
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #0f1111;
+  line-height: 1.25;
 }
 
 .auth-panel > p {
-  margin: 8px 0 14px;
-  color: var(--gray-500);
-  font-weight: 600;
+  margin: 0 0 16px;
+  color: var(--amazon-muted);
+  font-size: 13px;
+  font-weight: 500;
 }
 
+/* Admin / Seller Central Access Card */
 .admin-access-card {
   margin-bottom: 14px;
-  padding: 14px;
-  border: 1px solid #bfdbfe;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+  padding: 12px 14px;
+  border: 1px solid #c8e1fb;
+  border-radius: 8px;
+  background: #f0f7ff;
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .admin-access-card strong {
   display: block;
-  font-size: 1rem;
-  color: #1e3a8a;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0c4a6e;
 }
 
 .admin-access-card p {
-  margin: 6px 0 0;
-  color: var(--gray-500);
-  font-weight: 600;
+  margin: 2px 0 0;
+  color: var(--amazon-muted);
+  font-size: 12.5px;
+  font-weight: 500;
 }
 
 .admin-access-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -100,54 +151,65 @@ html[lang="bn"] body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: 32px;
   padding: 0 12px;
-  border-radius: 999px;
-  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  border: 1px solid var(--amazon-border);
   background: #ffffff;
-  color: #1e3a8a;
-  font-weight: 800;
+  color: #0f1111;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .auth-chip-primary {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
-  color: #f8fafc;
+  background: #232f3e;
+  border-color: #232f3e;
+  color: #ffffff;
 }
 
+.auth-chip-primary:hover {
+  background: #131921;
+}
+
+/* Tab Navigation Row */
 .tab-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 0;
+  border-bottom: 1px solid var(--amazon-border);
+  margin-bottom: 18px;
 }
 
 .tab-btn {
-  border: 1px solid var(--gray-200);
-  background: #f8fafc;
-  color: var(--ink);
-  border-radius: 10px;
-  min-height: 40px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--amazon-muted);
+  min-height: 38px;
   font: inherit;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  transition: all 0.15s ease;
+  padding: 0 8px;
 }
 
 .tab-btn.active {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1e3a8a;
+  border-bottom-color: #e77600;
+  color: #0f1111;
+  font-weight: 700;
 }
 
-.tab-btn:hover {
-  border-color: #93c5fd;
-  background: #eff6ff;
+.tab-btn:hover:not(.active) {
+  color: #0f1111;
 }
 
+/* Forms */
 .auth-form {
   display: none;
-  gap: 10px;
+  gap: 12px;
 }
 
 .auth-form.active {
@@ -155,230 +217,392 @@ html[lang="bn"] body {
 }
 
 .auth-form-note {
-  margin: 0 0 2px;
-  color: var(--gray-500);
-  font-size: 0.94rem;
-  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--amazon-muted);
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .auth-form label {
-  font-size: 0.92rem;
+  font-size: 13px;
   font-weight: 700;
-  color: #334155;
+  color: #0f1111;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.auth-form input {
-  margin-top: 6px;
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"],
+.auth-form input[type="tel"] {
   width: 100%;
-  min-height: 40px;
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
+  height: 34px;
+  border: 1px solid #888c8c;
+  border-radius: 4px;
   padding: 0 10px;
   font: inherit;
+  font-size: 13px;
+  color: #0f1111;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .auth-form textarea {
-  margin-top: 6px;
   width: 100%;
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
-  padding: 10px;
+  border: 1px solid #888c8c;
+  border-radius: 4px;
+  padding: 8px 10px;
   font: inherit;
+  font-size: 13px;
+  color: #0f1111;
   resize: vertical;
+  outline: none;
 }
 
 .auth-form select {
-  margin-top: 6px;
   width: 100%;
-  min-height: 40px;
-  border: 1px solid var(--gray-200);
-  border-radius: 8px;
+  height: 34px;
+  border: 1px solid var(--amazon-border);
+  border-radius: 4px;
   padding: 0 10px;
   font: inherit;
-  background: var(--white);
+  font-size: 13px;
+  color: #0f1111;
+  background: #f0f2f2;
+  cursor: pointer;
+  outline: none;
 }
 
 .auth-form input:focus,
 .auth-form textarea:focus,
 .auth-form select:focus {
-  outline: none;
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.28);
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
 }
 
-.auth-form button {
-  margin-top: 4px;
-  border: none;
-  border-radius: 10px;
-  min-height: 42px;
-  background: var(--blue);
-  color: #f8fafc;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.18s ease, transform 0.18s ease;
-}
-
-.auth-form button:hover:not(:disabled) {
-  background: #1e40af;
-  transform: translateY(-1px);
-}
-
-.auth-inline-actions {
+/* Phone Input with IN +91 Prefix */
+.amz-phone-input-wrap {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-top: -2px;
+  border: 1px solid #888c8c;
+  border-radius: 4px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.amz-phone-input-wrap:focus-within {
+  border-color: #e77600;
+  box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
+}
+
+.amz-country-prefix {
+  padding: 0 10px;
+  background: #f0f2f2;
+  border-right: 1px solid var(--amazon-border);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0f1111;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.amz-phone-input-wrap input {
+  border: none !important;
+  box-shadow: none !important;
+  height: 34px !important;
+  border-radius: 0 !important;
+}
+
+/* Password Wrap with Show/Hide Toggle */
+.amz-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.amz-password-wrap input {
+  padding-right: 36px;
+}
+
+.amz-toggle-pwd-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent !important;
+  border: none !important;
+  color: var(--amazon-muted) !important;
+  cursor: pointer;
+  padding: 4px !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px !important;
+}
+
+.amz-toggle-pwd-btn:hover {
+  color: #0f1111 !important;
+}
+
+/* Primary Submit Button */
+.amz-btn-auth-primary,
+.auth-form button[type="submit"] {
+  margin-top: 6px;
+  width: 100%;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--amazon-yellow);
+  border: 1px solid #fcd200;
+  color: #0f1111;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amz-btn-auth-primary:hover:not(:disabled),
+.auth-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--amazon-yellow-hover);
+  border-color: #f2c200;
+}
+
+/* Secondary Send OTP Button */
+#generateOtpBtn,
+#generateResetOtpBtn,
+#generateSignupOtpBtn {
+  margin-top: 2px;
+  width: 100%;
+  height: 32px;
+  border-radius: 8px;
+  background: #f0f2f2;
+  border: 1px solid var(--amazon-border);
+  color: #0f1111;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background 0.15s ease;
+}
+
+#generateOtpBtn:hover,
+#generateResetOtpBtn:hover,
+#generateSignupOtpBtn:hover {
+  background: #e3e6e6;
+}
+
+/* Legal Disclaimer */
+.amz-auth-legal {
+  margin: 14px 0 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #0f1111;
+}
+
+.amz-auth-legal a {
+  color: var(--amazon-blue);
+  text-decoration: none;
+}
+
+.amz-auth-legal a:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
+}
+
+.amz-legal-and {
+  color: var(--amazon-muted);
+}
+
+/* "Need help?" Accordion */
+.amz-auth-help-accordion {
+  margin: 10px 0 14px;
+  font-size: 13px;
+}
+
+.amz-help-summary {
+  color: var(--amazon-blue);
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.amz-help-summary:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
+}
+
+.amz-help-content {
+  margin-top: 8px;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.amz-help-link {
+  color: var(--amazon-blue);
+  font-size: 12.5px;
+  text-decoration: none;
+}
+
+.amz-help-link:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
+}
+
+/* Text Action Link Buttons */
 .auth-link-btn {
   margin: 0;
   min-height: auto;
   padding: 0;
   border: none;
   background: transparent;
-  color: var(--blue);
+  color: var(--amazon-blue);
   font: inherit;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   text-align: left;
 }
 
 .auth-link-btn:hover {
-  color: #1e3a8a;
+  color: var(--amazon-blue-hover);
   text-decoration: underline;
 }
 
-.auth-form button:disabled {
-  background: #94a3b8;
-  cursor: not-allowed;
+/* "New to ElectroMart?" Section Divider */
+.amz-auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 22px 0 14px;
+  color: #767676;
+  font-size: 12px;
 }
 
+.amz-auth-divider::before,
+.amz-auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.amz-auth-divider span {
+  padding: 0 10px;
+}
+
+/* Secondary Action Button ("Create your ElectroMart account") */
+.amz-btn-auth-secondary {
+  width: 100%;
+  height: 34px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--amazon-border);
+  color: #0f1111;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amz-btn-auth-secondary:hover {
+  background: #f7fafa;
+}
+
+/* Signup Footer Switch ("Already have an account?") */
+.amz-signup-footer-switch {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e7e7e7;
+  font-size: 13px;
+  color: #0f1111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* OTP Assist */
 .otp-assist {
-  margin-top: -2px;
-  padding: 12px 14px;
-  border: 1px solid var(--blue-200);
-  border-radius: 12px;
-  background: var(--blue-50);
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px dashed var(--amazon-border);
+  font-size: 12px;
 }
 
 .otp-assist-line {
-  margin: 0;
-  color: #1e3a8a;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.otp-assist-line + .otp-assist-line {
-  margin-top: 4px;
+  margin: 2px 0;
 }
 
 .otp-assist-line.subtle {
-  color: #475569;
-  font-weight: 600;
+  color: var(--amazon-muted);
 }
 
+/* Auth Message Alert */
 .auth-message {
   min-height: 20px;
   margin: 12px 0 0;
-  color: #166534;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: center;
 }
 
 .auth-message.error {
-  color: #b91c1c;
+  color: #cc0c39;
 }
 
-.em-toast-stack {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 70;
-  display: grid;
-  gap: 10px;
-  width: min(360px, calc(100vw - 24px));
+.auth-message.success {
+  color: #007600;
 }
 
-.em-toast {
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  padding: 12px 14px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
-  display: grid;
-  gap: 8px;
+/* Minimalist Auth Footer */
+.amz-auth-footer {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #eaeded;
+  text-align: center;
 }
 
-.em-toast.success {
-  border-color: #86efac;
-  background: #f0fdf4;
+.amz-auth-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 10px;
 }
 
-.em-toast.error {
-  border-color: #fca5a5;
-  background: #fef2f2;
+.amz-auth-footer-links a {
+  color: var(--amazon-blue);
+  font-size: 11.5px;
+  text-decoration: none;
 }
 
-.em-toast.warning {
-  border-color: #fcd34d;
-  background: #fffbeb;
+.amz-auth-footer-links a:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
 }
 
-.em-toast.info {
-  border-color: #93c5fd;
-  background: #eff6ff;
-}
-
-.em-toast-title {
-  font-size: 0.95rem;
-  color: #0f172a;
-}
-
-.em-toast-message {
+.amz-auth-copyright {
   margin: 0;
-  color: #334155;
-  font-size: 0.9rem;
-  line-height: 1.45;
-}
-
-.em-toast-close {
-  justify-self: start;
-  border: 1px solid #cbd5e1;
-  border-radius: 999px;
-  padding: 5px 10px;
-  background: #ffffff;
-  color: #1f2937;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-@media (max-width: 640px) {
-  .em-toast-stack {
-    right: 12px;
-    left: 12px;
-    width: auto;
-  }
-
-  .admin-access-actions {
-    flex-direction: column;
-  }
-
-  .auth-chip {
-    width: 100%;
-  }
-}
-
-.auth-message.error {
-  color: #991b1b;
-}
-
-@media (max-width: 620px) {
-  .header-links {
-    gap: 10px;
-    font-size: 0.92rem;
-    flex-wrap: wrap;
-  }
+  font-size: 11px;
+  color: var(--amazon-muted);
 }
