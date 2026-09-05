@@ -396,34 +396,41 @@ function renderOffers(price, listPrice, category) {
     {
       key: "sub_bank_offer",
       title: t.sub_bank_offer || "Bank Offer",
+      badge: "14 offers >",
       descKey: "partner_card_cashback",
-      text: t.partner_card_cashback || (savings > 0
-        ? `Extra 5% cashback with partner cards on orders above ${money(Math.max(1999, price))}.`
+      text: t.bank_offer_detail || (savings > 0
+        ? `Upto ₹1,500.00 discount on select Credit Cards on orders above ${money(Math.max(1999, price))}.`
         : "Flat 5% cashback with selected credit cards.")
     },
     {
       key: "sub_no_cost_emi",
       title: t.sub_no_cost_emi || "No Cost EMI",
+      badge: "1 offer >",
       descKey: "no_cost_emi_subtext",
-      text: t.no_cost_emi_subtext || `EMI starts from ${money(Math.max(299, Math.round(price / 24)))} per month.`
-    },
-    {
-      key: "sub_exchange_offer",
-      title: t.sub_exchange_offer || "Exchange Offer",
-      descKey: "exchange_offer_subtext",
-      text: t.exchange_offer_subtext || `Exchange your old ${category} and get up to ${money(Math.round(price * 0.18))} off.`
+      text: t.no_cost_emi_detail || (t.no_cost_emi_subtext || `Avail No Cost EMI on select cards for orders above ₹3,000.`)
     },
     {
       key: "sub_partner_offer",
       title: t.sub_partner_offer || "Partner Offer",
+      badge: "1 offer >",
       descKey: "partner_offer_subtext",
-      text: t.partner_offer_subtext || "GST invoice available and business purchase support."
+      text: t.partner_offer_detail || (t.partner_offer_subtext || "GST invoice available and save up to 28% on business purchases.")
+    },
+    {
+      key: "sub_exchange_offer",
+      title: t.sub_exchange_offer || "Exchange Offer",
+      badge: "Save more >",
+      descKey: "exchange_offer_subtext",
+      text: t.exchange_offer_subtext || `Exchange your old ${category} and get up to ${money(Math.round(price * 0.18))} off.`
     }
   ];
   offersGrid.innerHTML = offers.map((item) => `
-    <article class="offer-item">
-      <h3 data-i18n="${item.key}">${escapeHtml(item.title)}</h3>
-      <p data-i18n="${item.descKey}">${escapeHtml(item.text)}</p>
+    <article class="offer-item amazon-offer-card">
+      <div class="offer-card-top">
+        <h3 data-i18n="${item.key}" class="offer-card-title">${escapeHtml(item.title)}</h3>
+      </div>
+      <p data-i18n="${item.descKey}" class="offer-card-desc">${escapeHtml(item.text)}</p>
+      <span class="offer-card-link">${item.badge}</span>
     </article>
   `).join("");
   offersBlock.hidden = false;
@@ -500,16 +507,71 @@ function renderReviewSummary(product) {
 
   const reviewsList = document.getElementById("customerReviewsList");
   if (reviewsList) {
-    reviewsList.innerHTML = `
-      <div class="sample-review-item" style="border-top: 1px solid #e7e7e7; padding: 14px 0; margin-top: 14px;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-          <span style="font-weight: 600; font-size: 0.95rem;">Rahul S.</span>
-          <span style="color: #c45500; font-size: 0.85rem; font-weight: 600;">${t.verified_purchase || "Verified Purchase"}</span>
+    const reviews = [
+      {
+        author: "Rahul S.",
+        verified: t.verified_purchase || "Verified Purchase",
+        stars: "★★★★★",
+        title: t.val_top_review_title || "Excellent quality and fast delivery",
+        date: "Reviewed in India on 15 August 2026",
+        body: t.val_sample_review || "Authentic product with genuine warranty. Fully satisfied with ElectroMart service.",
+        helpfulCount: 34
+      },
+      {
+        author: "Priya Sharma",
+        verified: t.verified_purchase || "Verified Purchase",
+        stars: "★★★★★",
+        title: currentLang === "hi" ? "बेहतरीन प्रदर्शन और असली वारंटी" : "Top notch performance and genuine warranty",
+        date: "Reviewed in India on 28 July 2026",
+        body: currentLang === "hi" ? "पैकिंग बहुत अच्छी थी और डिलीवरी तय समय से पहले मिल गई। उत्पाद 100% ओरिजिनल है।" : "Packaging was secure and delivery was faster than expected. 100% original product.",
+        helpfulCount: 19
+      },
+      {
+        author: "Vikram Malhotra",
+        verified: t.verified_purchase || "Verified Purchase",
+        stars: "★★★★☆",
+        title: currentLang === "hi" ? "पैसा वसूल सौदा" : "Value for money purchase",
+        date: "Reviewed in India on 10 July 2026",
+        body: currentLang === "hi" ? "दिए गए मूल्य पर यह सबसे अच्छा विकल्प है। कोई शिकायत नहीं।" : "Best choice at this price segment. Build quality and reliability are outstanding.",
+        helpfulCount: 8
+      }
+    ];
+
+    reviewsList.innerHTML = reviews.map((rev, idx) => `
+      <article class="amazon-review-item sample-review-item">
+        <div class="review-author-row">
+          <div class="review-avatar">${rev.author.charAt(0)}</div>
+          <span class="review-author-name">${rev.author}</span>
         </div>
-        <div style="color: #de7921; font-size: 0.95rem; margin-bottom: 4px;">★★★★★ <strong style="color: #0f1111; margin-left: 4px;">${t.val_top_review_title || "Excellent quality and fast delivery"}</strong></div>
-        <p style="font-size: 0.92rem; color: #333; line-height: 1.4;">${t.val_sample_review || "Authentic product with genuine warranty. Fully satisfied with ElectroMart service."}</p>
-      </div>
-    `;
+        <div class="review-rating-row">
+          <span class="review-stars-amber">${rev.stars}</span>
+          <strong class="review-title-bold">${escapeHtml(rev.title)}</strong>
+        </div>
+        <div class="review-date-muted">${rev.date}</div>
+        <div class="review-verified-badge">
+          <span>${rev.verified}</span>
+        </div>
+        <p class="review-body-text">${escapeHtml(rev.body)}</p>
+        <div class="review-helpful-action">
+          <button type="button" class="helpful-pill-btn" id="helpfulBtn_${idx}">
+            ${t.helpful_button || "Helpful"} (<span class="helpful-count">${rev.helpfulCount}</span>)
+          </button>
+          <span class="report-abuse-link">Report</span>
+        </div>
+      </article>
+    `).join("");
+
+    reviewsList.querySelectorAll(".helpful-pill-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn._voted) return;
+        btn._voted = true;
+        const countSpan = btn.querySelector(".helpful-count");
+        if (countSpan) {
+          countSpan.textContent = String(Number(countSpan.textContent) + 1);
+        }
+        btn.classList.add("voted");
+      });
+    });
   }
 
   reviewsBlock.hidden = false;
@@ -1972,13 +2034,13 @@ function renderFrequentlyBoughtTogether(product, t) {
       </div>
       <div class="bundle-details" style="flex: 1; min-width: 250px;">
         <p style="font-size: 1.05rem; margin-bottom: 8px;">
-          <strong>${t.cart_subtotal || "Total"}:</strong> <span style="color: #b12704; font-size: 1.25rem; font-weight: bold;">${money(total)}</span>
+          <strong>${t.cart_subtotal || "Total"}:</strong> <span id="bundleTotalPrice" style="color: #b12704; font-size: 1.25rem; font-weight: bold;">${money(total)}</span>
         </p>
         <div style="font-size: 0.9rem; color: #333; margin-bottom: 12px;">
           <label style="display: block; margin-bottom: 4px;"><input type="checkbox" checked disabled /> <strong>${t.val_this_item || "This item:"}</strong> <span class="this-item-title">${escapeHtml(mainTitle)}</span> (${money(product.price)})</label>
           <label style="display: block;"><input type="checkbox" id="bundleAccCheckbox" checked /> <span class="bundle-item-title">${escapeHtml(bundleItemTitle)}</span> (${money(bundleItem.price)})</label>
         </div>
-        <button type="button" id="addBundleBtn" class="primary-btn" style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 8px 18px; font-weight: 600; cursor: pointer;">
+        <button type="button" id="addBundleBtn" class="primary-btn amazon-btn-cart" style="background: #ffd814; border: 1px solid #fcd200; border-radius: 20px; padding: 8px 18px; font-weight: 600; cursor: pointer;">
           ${t.add_both_to_cart || "Add both to Cart"}
         </button>
       </div>
@@ -1987,17 +2049,30 @@ function renderFrequentlyBoughtTogether(product, t) {
   container.hidden = false;
 
   const btn = document.getElementById("addBundleBtn");
+  const chk = document.getElementById("bundleAccCheckbox");
+  const totalEl = document.getElementById("bundleTotalPrice");
+
+  if (chk && totalEl) {
+    chk.addEventListener("change", () => {
+      const isChecked = chk.checked;
+      const currentTotal = isChecked ? (Number(product.price || 0) + Number(bundleItem.price || 0)) : Number(product.price || 0);
+      totalEl.textContent = money(currentTotal);
+      if (btn) {
+        btn.textContent = isChecked ? (t.add_both_to_cart || "Add both to Cart") : (t.add_to_cart || "Add to Cart");
+      }
+    });
+  }
+
   if (btn) {
     btn.onclick = () => {
       addProductToCart(product.id, 1);
-      const chk = document.getElementById("bundleAccCheckbox");
       if (chk && chk.checked) {
         addProductToCart(bundleItem.id, 1);
       }
       syncCartCount();
       btn.textContent = t.cart_success_added || "Added to Cart!";
       setTimeout(() => {
-        btn.textContent = t.add_both_to_cart || "Add both to Cart";
+        btn.textContent = (chk && chk.checked) ? (t.add_both_to_cart || "Add both to Cart") : (t.add_to_cart || "Add to Cart");
       }, 2000);
     };
   }
@@ -2081,6 +2156,15 @@ function renderStarCharacters(rating) {
     <span class="rating-value-text" style="font-weight: 700; margin: 0 6px; color: #0f1111;">${Number(product.rating || 0).toFixed(1)}</span>
     <a href="#reviewsBlock" class="rating-count-link" style="color: #007185; text-decoration: none; font-size: 0.95rem;">${reviewCount.toLocaleString("en-IN")} ${t.ratings_label || "ratings"}</a>
   `;
+  const choiceBadge = document.getElementById("amazonsChoiceBadge");
+  if (choiceBadge) {
+    const isChoice = Number(product.rating || 0) >= 4.3 || Boolean(product.featured);
+    choiceBadge.style.display = isChoice ? "inline-flex" : "none";
+  }
+  const socialBought = document.getElementById("socialBoughtCount");
+  if (socialBought) {
+    socialBought.textContent = t.bought_in_past_month || "1K+ bought in past month";
+  }
   const price = Number(product.price || 0);
   const listPrice = Number(product.listPrice || product.price || 0);
   const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;

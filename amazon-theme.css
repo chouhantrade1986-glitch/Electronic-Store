@@ -4959,6 +4959,507 @@ body:has(.orders-main) {
   font-weight: 700 !important;
 }
 
+/* =========================================================================
+   10. AMAZON INDIA PRODUCT DETAIL PAGE (PDP) SUITE (PHASE 6)
+   ========================================================================= */
+
+/* Gallery & Media Thumbnails */
+.product-detail .product-media {
+  display: grid !important;
+  grid-template-columns: 52px 1fr !important;
+  gap: 14px !important;
+  position: sticky !important;
+  top: 110px !important;
+}
+
+.product-detail .thumb-rail {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  max-height: 520px !important;
+  overflow-y: auto !important;
+}
+
+.product-detail .thumb {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 4px !important;
+  border: 1px solid #d5d9d9 !important;
+  background: #ffffff !important;
+  padding: 2px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.product-detail .thumb:hover {
+  border-color: #e77600 !important;
+  box-shadow: 0 0 3px rgba(231, 118, 0, 0.4) !important;
+}
+
+.product-detail .thumb.active {
+  border: 2px solid #e77600 !important;
+  box-shadow: 0 0 4px rgba(231, 118, 0, 0.5) !important;
+}
+
+.product-detail .product-media > img {
+  border-radius: 4px !important;
+  border: 1px solid #e7e7e7 !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+/* Product Info & Header */
+.product-info h1 {
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: #0f1111 !important;
+  margin: 0 0 6px !important;
+}
+
+.brand-store-link {
+  color: #007185 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.brand-store-link:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Amazon's Choice Badge & Social Proof */
+.product-badge-social-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 6px 0 10px !important;
+  flex-wrap: wrap !important;
+}
+
+.amazons-choice-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.ac-badge-pill {
+  background: #232f3e !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 2px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.ac-accent {
+  color: #f08804 !important;
+}
+
+.social-bought-count {
+  font-size: 13px !important;
+  color: #565959 !important;
+  font-weight: 500 !important;
+}
+
+/* Bank Offers & No Cost EMI Carousel */
+.amazon-offers-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 14px 16px !important;
+  margin: 16px 0 !important;
+}
+
+.offers-header-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
+
+.offer-tag-icon {
+  flex-shrink: 0 !important;
+}
+
+.amazon-offers-carousel {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.amazon-offer-card {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  background: #ffffff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  transition: all 0.15s ease !important;
+}
+
+.amazon-offer-card:hover {
+  border-color: #a2a6ac !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.offer-card-title {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 4px !important;
+}
+
+.offer-card-desc {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  color: #0f1111 !important;
+  margin: 0 0 10px !important;
+  flex: 1 !important;
+}
+
+.offer-card-link {
+  font-size: 12px !important;
+  color: #007185 !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.offer-card-link:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
+/* Amazon 5-Pillar Trust Badges */
+.amazon-services-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  margin: 16px 0 !important;
+}
+
+.amazon-trust-grid {
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: flex-start !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+}
+
+.trust-badge-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 105px !important;
+}
+
+.trust-badge-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: #f0f2f2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 8px !important;
+  transition: transform 0.15s ease, background 0.15s ease !important;
+}
+
+.trust-badge-item:hover .trust-badge-icon {
+  transform: scale(1.08) !important;
+  background: #e7f4f5 !important;
+}
+
+.trust-badge-item h3 {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 4px !important;
+}
+
+.trust-badge-item p {
+  font-size: 11px !important;
+  color: #007185 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* Buy Box Polish */
+.amazon-buybox {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 18px !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+}
+
+.amazon-btn-cart {
+  background: #ffd814 !important;
+  border: 1px solid #fcd200 !important;
+  border-radius: 20px !important;
+  color: #0f1111 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: all 0.15s ease !important;
+}
+
+.amazon-btn-cart:hover {
+  background: #f7ca00 !important;
+  border-color: #f2c200 !important;
+}
+
+.amazon-btn-buynow {
+  background: #ffa41c !important;
+  border: 1px solid #ff8f00 !important;
+  border-radius: 20px !important;
+  color: #0f1111 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: all 0.15s ease !important;
+}
+
+.amazon-btn-buynow:hover {
+  background: #fa8900 !important;
+}
+
+.amazon-qty-select {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  background: #f0f2f2 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 5px rgba(15, 17, 17, 0.15) !important;
+}
+
+.amazon-wishlist-btn {
+  border: 1px solid #d5d9d9 !important;
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+}
+
+.amazon-wishlist-btn:hover {
+  background: #f7fafa !important;
+}
+
+/* Customer Reviews 2-Column Hub */
+.amazon-reviews-card {
+  background: #ffffff !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  margin: 20px 0 !important;
+}
+
+.amazon-reviews-2col {
+  display: grid !important;
+  grid-template-columns: 320px 1fr !important;
+  gap: 36px !important;
+  margin-top: 16px !important;
+}
+
+@media (max-width: 880px) {
+  .amazon-reviews-2col {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+.review-headline {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 12px !important;
+}
+
+.review-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 13px !important;
+  color: #007185 !important;
+  margin: 6px 0 !important;
+}
+
+.review-track {
+  flex: 1 !important;
+  height: 18px !important;
+  background: #f0f2f2 !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  border: 1px solid #d5d9d9 !important;
+}
+
+.review-fill {
+  height: 100% !important;
+  background: #ffa41c !important;
+}
+
+.by-feature-box {
+  margin-top: 20px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid #e7e7e7 !important;
+}
+
+.by-feature-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  margin: 0 0 10px !important;
+}
+
+.feature-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 13px !important;
+  color: #0f1111 !important;
+  padding: 4px 0 !important;
+}
+
+.feature-stars {
+  color: #de7921 !important;
+  font-weight: 600 !important;
+}
+
+.amazon-btn-write-review {
+  width: 100% !important;
+  padding: 8px 14px !important;
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: all 0.15s ease !important;
+}
+
+.amazon-btn-write-review:hover {
+  background: #f7fafa !important;
+}
+
+.amazon-review-item {
+  padding: 16px 0 !important;
+  border-bottom: 1px solid #e7e7e7 !important;
+}
+
+.review-author-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 6px !important;
+}
+
+.review-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #d5d9d9 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  color: #565959 !important;
+  font-size: 14px !important;
+}
+
+.review-author-name {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+}
+
+.review-rating-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 4px !important;
+}
+
+.review-stars-amber {
+  color: #de7921 !important;
+  font-size: 15px !important;
+  letter-spacing: 1px !important;
+}
+
+.review-title-bold {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+}
+
+.review-date-muted {
+  font-size: 12px !important;
+  color: #565959 !important;
+  margin-bottom: 4px !important;
+}
+
+.review-verified-badge {
+  color: #c45500 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+.review-body-text {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: #0f1111 !important;
+  margin: 0 0 10px !important;
+}
+
+.review-helpful-action {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.helpful-pill-btn {
+  border: 1px solid #d5d9d9 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  padding: 5px 14px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5) !important;
+  transition: all 0.15s ease !important;
+}
+
+.helpful-pill-btn:hover {
+  background: #f7fafa !important;
+}
+
+.helpful-pill-btn.voted {
+  background: #e7f4f5 !important;
+  border-color: #007185 !important;
+  color: #007185 !important;
+}
+
+.report-abuse-link {
+  font-size: 12px !important;
+  color: #565959 !important;
+  cursor: pointer !important;
+}
+
+.report-abuse-link:hover {
+  color: #c7511f !important;
+  text-decoration: underline !important;
+}
+
 
 
 
