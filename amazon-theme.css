@@ -1,6 +1,10 @@
 /* Amazon theme styles - Enhanced for better UX */
 @import url('variables.css');
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 body, button, input, select, textarea {
   background-color: var(--amazon-light);
   font-family: "Amazon Ember", Arial, sans-serif !important;
@@ -4242,14 +4246,16 @@ body:has(#heroCarousel) main {
 /* 4. Amazon Carousel Container & Paddles */
 .amz-carousel-wrapper {
   position: relative !important;
+  padding: 0 40px !important;
+  box-sizing: border-box !important;
 }
 
 .amz-carousel-paddle {
   position: absolute !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  width: 44px !important;
-  height: 88px !important;
+  width: 40px !important;
+  height: 80px !important;
   background-color: rgba(255, 255, 255, 0.95) !important;
   border: 1px solid #d5d9d9 !important;
   border-radius: 4px !important;
@@ -4257,7 +4263,7 @@ body:has(#heroCarousel) main {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 26px !important;
+  font-size: 22px !important;
   color: #0f1111 !important;
   cursor: pointer !important;
   z-index: 20 !important;
@@ -4284,6 +4290,9 @@ body:has(#heroCarousel) main {
 }
 
 @media (max-width: 768px) {
+  .amz-carousel-wrapper {
+    padding: 0 !important;
+  }
   .amz-carousel-paddle {
     display: none !important;
   }
@@ -4311,14 +4320,19 @@ body:has(#heroCarousel) main {
   color: #0f1111 !important;
 }
 
-/* 6. Smooth Scrolling for Horizontal Rows */
+/* 6. Smooth Scrolling and Layout for Horizontal Rows */
 #homeDealsGrid,
 #homeTopPicksGrid,
 #homeRecommendedShelfRow,
 #homeBrowsingHistoryRow {
+  display: flex !important;
+  gap: 1.25rem !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
   scroll-behavior: smooth !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  padding: 0.5rem 0 1rem 0 !important;
 }
 
 #homeDealsGrid::-webkit-scrollbar,
@@ -4326,6 +4340,39 @@ body:has(#heroCarousel) main {
 #homeRecommendedShelfRow::-webkit-scrollbar,
 #homeBrowsingHistoryRow::-webkit-scrollbar {
   display: none !important;
+}
+
+/* Uniform Card Height & Baseline Alignment */
+#homeBrowsingHistoryRow .amz-history-card,
+#homeBrowsingHistoryRow > a {
+  flex: 0 0 170px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 225px !important;
+  background: #ffffff !important;
+  border: 1px solid #e3e6e6 !important;
+  border-radius: 4px !important;
+  padding: 0.75rem !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+#homeBrowsingHistoryRow .amz-history-card:hover,
+#homeBrowsingHistoryRow > a:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-2px) !important;
+}
+
+.deal-card,
+.product-card,
+.amz-shelf-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
 }
 
 /* 7. Yellow Add to Cart Pill Button on Homepage */

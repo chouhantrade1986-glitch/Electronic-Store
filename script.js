@@ -3030,7 +3030,8 @@ void fetchHomeProductsFromApi();
 const footerTopBar = document.querySelector('.footer-top');
 const backToTopHomeBtn = document.getElementById('backToTopHome');
 
-function scrollToTopSmooth() {
+function scrollToTopSmooth(e) {
+  if (e && e.preventDefault) e.preventDefault();
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
@@ -3039,10 +3040,12 @@ function scrollToTopSmooth() {
 
 if (footerTopBar) {
   footerTopBar.addEventListener('click', scrollToTopSmooth);
+  footerTopBar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      scrollToTopSmooth(e);
+    }
+  });
 }
 if (backToTopHomeBtn) {
-  backToTopHomeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    scrollToTopSmooth();
-  });
+  backToTopHomeBtn.addEventListener('click', scrollToTopSmooth);
 }

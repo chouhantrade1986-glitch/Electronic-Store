@@ -512,13 +512,23 @@
     // 4. Browsing History Row
     const historyContainer = document.getElementById("homeBrowsingHistoryRow");
     if (historyContainer) {
-      historyContainer.innerHTML = HOMEPAGE_TOP_PICKS.slice(0, 3).map((prod) => {
+      const historyProducts = [
+        ...HOMEPAGE_TOP_PICKS,
+        ...HOMEPAGE_RECOMMENDED.slice(0, 4)
+      ];
+      historyContainer.innerHTML = historyProducts.map((prod) => {
         const titleText = (prod.title && (prod.title[activeLang] || prod.title.en)) || "Product";
         return `
-          <a href="${prod.link}" style="flex: 0 0 160px; text-decoration: none; color: inherit; display: flex; flex-direction: column; text-align: left;">
-            <img src="${prod.image}" style="width: 100%; height: 120px; object-fit: contain; margin-bottom: 0.5rem;" alt="${titleText}">
-            <span style="color: #007185; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.2rem;" title="${titleText}">${titleText}</span>
-            <span style="color: #b12704; font-size: 0.9rem; font-weight: 700;">${moneyINR(prod.price)}</span>
+          <a href="${prod.link}" class="amz-history-card" style="flex: 0 0 170px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 225px; background: #fff; border: 1px solid #e3e6e6; border-radius: 4px; padding: 0.75rem; text-align: left; box-sizing: border-box;">
+            <div style="display: flex; flex-direction: column;">
+              <div style="width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
+                <img src="${prod.image}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="${titleText}" loading="lazy">
+              </div>
+              <span style="color: #007185; font-size: 0.85rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.3em;" title="${titleText}">${titleText}</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 0.4rem;">
+              <span style="color: #b12704; font-size: 0.95rem; font-weight: 700;">${moneyINR(prod.price)}</span>
+            </div>
           </a>
         `;
       }).join("");
