@@ -191,7 +191,7 @@
     {
       id: "prn-canon-g3010",
       link: "printer.html",
-      image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=300&q=80",
+      image: "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&w=300&q=80",
       rating: "★★★★☆",
       reviews: "3,115",
       dealBadgeKey: "limited_time_deal",

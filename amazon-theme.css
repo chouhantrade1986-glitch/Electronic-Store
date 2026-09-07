@@ -1207,18 +1207,36 @@ h1, h2, h3, h4, h5, h6,
   }
 }
 
+/* ===== HEADER CONTAINER CONSTRAINTS & RIGHT OVERFLOW PREVENTION ===== */
+.site-header,
+#siteHeader,
+#headerContainer {
+  box-sizing: border-box !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
 /* ===== SEARCH BAR AMBER FOCUS & FULL-WIDTH LAYOUT ===== */
+.site-header .top-nav,
 .top-nav {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
   gap: 6px !important;
-  padding: 4px 20px 4px 14px !important;
+  padding: 4px 16px 4px 14px !important;
+  padding-right: 16px !important;
   min-height: 60px !important;
   background: var(--amazon-navy, #131921) !important;
   width: 100% !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.site-header .top-nav.shared-search-ready {
+  flex-wrap: nowrap !important;
 }
 
 .brand.logo-block {
@@ -1236,19 +1254,33 @@ h1, h2, h3, h4, h5, h6,
   flex-shrink: 0 !important;
 }
 
+/* Search bar takes full remaining space between logo/deliver and right nav */
+.site-header .top-nav .search-stack,
+.top-nav .search-stack,
 .search-stack,
 .search-bar-wrapper {
   order: 0 !important;
   flex: 1 1 auto !important;
-  min-width: 160px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   margin: 0 8px !important;
   display: flex !important;
 }
 
-.search-form {
+.site-header .top-nav form[data-shared-search="1"],
+.site-header .top-nav.shared-search-ready form[data-shared-search="1"],
+.top-nav form.search-form,
+.search-form,
+form[data-shared-search="1"] {
+  flex: 1 1 auto !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
   height: 40px !important;
+  min-height: 40px !important;
   display: flex !important;
+  flex-direction: row !important;
   align-items: stretch !important;
   border-radius: 4px !important;
   overflow: hidden !important;
@@ -1256,6 +1288,7 @@ h1, h2, h3, h4, h5, h6,
   border: 1px solid #d5d9d9 !important;
   padding: 0 !important;
   box-sizing: border-box !important;
+  box-shadow: none !important;
   transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
 }
 
@@ -1357,7 +1390,8 @@ h1, h2, h3, h4, h5, h6,
   box-shadow: none !important;
 }
 
-.search-input-wrap {
+.search-input-wrap,
+form[data-shared-search="1"] .search-input-wrap {
   flex: 1 1 auto !important;
   width: 100% !important;
   min-width: 0 !important;
@@ -1367,15 +1401,18 @@ h1, h2, h3, h4, h5, h6,
   margin: 0 !important;
   border: none !important;
   background: #ffffff !important;
+  height: 100% !important;
   z-index: 4 !important;
 }
 
 .search-form input,
-#searchInput {
+#searchInput,
+form[data-shared-search="1"] input[type="search"] {
   flex: 1 1 auto !important;
   width: 100% !important;
-  height: 100% !important;
   min-width: 0 !important;
+  height: 100% !important;
+  min-height: 38px !important;
   padding: 7px 32px 7px 14px !important;
   font-size: 15px !important;
   font-weight: 500 !important;
@@ -1389,10 +1426,12 @@ h1, h2, h3, h4, h5, h6,
   z-index: 4 !important;
   cursor: text !important;
   pointer-events: auto !important;
+  line-height: 1.3 !important;
 }
 
 .search-form input:focus,
-#searchInput:focus {
+#searchInput:focus,
+form[data-shared-search="1"] input[type="search"]:focus {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -1498,7 +1537,10 @@ h1, h2, h3, h4, h5, h6,
   display: flex !important;
   align-items: center !important;
   gap: 2px !important;
+  flex: 0 0 auto !important;
   flex-shrink: 0 !important;
+  margin-left: auto !important;
+  padding-right: 4px !important;
 }
 
 /* Nav Action Cards */
@@ -1692,7 +1734,7 @@ h1, h2, h3, h4, h5, h6,
   background: transparent !important;
   border: 1px solid transparent !important;
   border-radius: 2px !important;
-  padding: 6px 10px !important;
+  padding: 6px 8px !important;
   color: #ffffff !important;
   text-decoration: none !important;
   position: relative !important;
@@ -1701,6 +1743,8 @@ h1, h2, h3, h4, h5, h6,
   box-shadow: none !important;
   min-height: auto !important;
   flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  margin-right: 0 !important;
 }
 
 .cart-link:hover {
@@ -1757,6 +1801,10 @@ h1, h2, h3, h4, h5, h6,
   gap: 4px !important;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  max-width: 100vw !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  flex-wrap: nowrap !important;
 }
 
 .category-nav::-webkit-scrollbar,
@@ -1768,12 +1816,10 @@ h1, h2, h3, h4, h5, h6,
   display: flex !important;
   align-items: center !important;
   gap: 2px !important;
-  flex: 1 1 auto !important;
+  flex: 0 0 auto !important;
   min-width: 0 !important;
-  overflow-x: auto !important;
   white-space: nowrap !important;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible !important;
 }
 
 .category-quick-links::-webkit-scrollbar {
@@ -1791,6 +1837,9 @@ h1, h2, h3, h4, h5, h6,
   transition: border-color 0.15s ease !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
+  display: inline-block !important;
+  text-overflow: clip !important;
+  max-width: none !important;
 }
 
 .category-quick-link:hover {
@@ -1803,6 +1852,7 @@ h1, h2, h3, h4, h5, h6,
   display: flex !important;
   align-items: center !important;
   white-space: nowrap !important;
+  padding-left: 12px !important;
 }
 
 .category-promo-link {
@@ -2099,15 +2149,21 @@ body.dark-mode .dept-menu-divider {
 
 /* Responsive adjustments: maintain single-row Amazon header */
 @media (max-width: 980px) {
+  .site-header .top-nav,
   .top-nav {
     flex-wrap: nowrap !important;
     padding: 4px 10px !important;
+    padding-right: 14px !important;
     gap: 4px !important;
   }
+  .site-header .top-nav .search-stack,
+  .top-nav .search-stack,
   .search-stack,
   .search-bar-wrapper {
     order: 0 !important;
     flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
     margin: 0 4px !important;
   }
   .dept-close-btn {
