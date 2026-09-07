@@ -1242,6 +1242,7 @@ h1, h2, h3, h4, h5, h6,
 .brand.logo-block {
   flex-shrink: 0 !important;
   padding: 6px 8px !important;
+  margin-right: 8px !important;
   border: 1px solid transparent !important;
   border-radius: 2px !important;
 }
@@ -1250,8 +1251,11 @@ h1, h2, h3, h4, h5, h6,
   border-color: #ffffff !important;
 }
 
-.deliver-btn {
+.deliver-btn,
+.nav-deliver-box {
   flex-shrink: 0 !important;
+  margin-left: 2px !important;
+  padding: 6px 9px !important;
 }
 
 /* Search bar takes full remaining space between logo/deliver and right nav */
@@ -4089,6 +4093,16 @@ body:has(#heroCarousel) main {
   background: rgba(255, 255, 255, 0.9) !important;
   border-color: #007185 !important;
   color: #111 !important;
+}
+
+/* Hero Carousel Subtitle Contrast & Readability */
+.hero-content p,
+.hero-slide p,
+[data-hero-variant] .hero-content p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75) !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
 }
 
 /* 3. Hero Overlap 4-Quadrant Cards Grid */

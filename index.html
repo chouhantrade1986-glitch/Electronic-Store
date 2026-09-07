@@ -98,7 +98,7 @@
             <div class="hero-slide active fade-in" data-hero-variant="night" style="background: linear-gradient(135deg, #232f3e 0%, #131921 100%); color: white;">
               <div class="hero-content">
                 <h1 style="color: #ff9900; font-size: 3rem;" data-i18n="hero_slide1_title">Great Indian Festival</h1>
-                <p data-i18n="hero_slide1_subtitle">Up to 70% Off on Electronics & Accessories. 10% Instant Discount on HDFC Bank Cards.</p>
+                <p data-i18n="hero_slide1_subtitle" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">Up to 70% Off on Electronics &amp; Accessories. 10% Instant Discount on HDFC Bank Cards.</p>
                 <a href="todays-deals.html" data-i18n="hero_slide1_cta">Shop Deals Now</a>
               </div>
               <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80" alt="Great Indian Festival Sale" />
@@ -106,7 +106,7 @@
             <div class="hero-slide fade-in" data-hero-variant="sunrise" style="background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%); color: white;">
               <div class="hero-content">
                 <h1 style="color: #fbbf24;" data-i18n="hero_slide2_title">New Launch: Nimbus X Pro</h1>
-                <p data-i18n="hero_slide2_subtitle">Experience the ultimate flagship. Pre-order now and get free ANC headphones worth ₹4,999.</p>
+                <p data-i18n="hero_slide2_subtitle" style="color: #ffffff; text-shadow: 0 2px 5px rgba(0,0,0,0.75); font-size: 1.15rem; font-weight: 500;">Experience the ultimate flagship. Pre-order now and get free ANC headphones worth ₹4,999.</p>
                 <a href="products.html?search=nimbus" data-i18n="hero_slide2_cta">Pre-order Now</a>
               </div>
               <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80" alt="Nimbus X Pro Launch" />
@@ -114,7 +114,7 @@
             <div class="hero-slide fade-in" data-hero-variant="ocean" style="background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white;">
               <div class="hero-content">
                 <h1 style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" data-i18n="hero_slide3_title">Blockbuster TV Deals</h1>
-                <p data-i18n="hero_slide3_subtitle">Upgrade your home entertainment. Up to 50% Off on 4K Smart TVs.</p>
+                <p data-i18n="hero_slide3_subtitle" style="color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">Upgrade your home entertainment. Up to 50% Off on 4K Smart TVs.</p>
                 <a href="products.html?search=tv" data-i18n="hero_slide3_cta">Explore TVs</a>
               </div>
               <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600&q=80" alt="Blockbuster TV Deals" />
@@ -202,12 +202,33 @@
             <a href="#" data-i18n="btn_explore_plus" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Explore Plus Benefits</a>
           </div>
 
-          <!-- Card 4: Single Feature Category (Top Laptops for Creators) -->
+          <!-- Card 4: Symmetrical 2x2 Category Grid (Top Laptops for Creators) -->
           <div class="amz-quad-card">
             <h3 data-i18n="cat_creator_laptops" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; color: #0f1111;">Top Laptops for Creators</h3>
-            <div style="flex-grow: 1; display: flex; flex-direction: column;">
-              <a href="laptop.html" style="text-decoration: none;">
-                <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80" style="width: 100%; height: 210px; object-fit: cover; margin-bottom: 0.75rem; border-radius: 4px;" alt="Creator Laptops">
+            <div class="amz-quad-grid-inner" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; flex-grow: 1;">
+              <a href="laptop.html" style="text-decoration: none; text-align: left;">
+                <div class="amz-quad-thumb-wrap" style="height: 105px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f7f8f8; border-radius: 4px; overflow: hidden; margin-bottom: 0.25rem;">
+                  <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80';" style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" alt="Ultrabooks" loading="lazy">
+                </div>
+                <span style="font-size: 0.75rem; color: #0f1111; font-weight: 500;" data-i18n="item_ultrabooks">Ultrabooks</span>
+              </a>
+              <a href="laptop.html" style="text-decoration: none; text-align: left;">
+                <div class="amz-quad-thumb-wrap" style="height: 105px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f7f8f8; border-radius: 4px; overflow: hidden; margin-bottom: 0.25rem;">
+                  <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=300&q=80" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80';" style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" alt="High Performance" loading="lazy">
+                </div>
+                <span style="font-size: 0.75rem; color: #0f1111; font-weight: 500;" data-i18n="item_gaming_laptops">Performance</span>
+              </a>
+              <a href="laptop.html" style="text-decoration: none; text-align: left;">
+                <div class="amz-quad-thumb-wrap" style="height: 105px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f7f8f8; border-radius: 4px; overflow: hidden; margin-bottom: 0.25rem;">
+                  <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=300&q=80" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80';" style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" alt="2-in-1 Touch" loading="lazy">
+                </div>
+                <span style="font-size: 0.75rem; color: #0f1111; font-weight: 500;" data-i18n="item_touch_laptops">2-in-1 Touch</span>
+              </a>
+              <a href="laptop.html" style="text-decoration: none; text-align: left;">
+                <div class="amz-quad-thumb-wrap" style="height: 105px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f7f8f8; border-radius: 4px; overflow: hidden; margin-bottom: 0.25rem;">
+                  <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=300&q=80" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&q=80';" style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain;" alt="Workstations" loading="lazy">
+                </div>
+                <span style="font-size: 0.75rem; color: #0f1111; font-weight: 500;" data-i18n="item_workstations">Workstations</span>
               </a>
             </div>
             <a href="laptop.html" data-i18n="btn_shop_laptops" style="color: #007185; text-decoration: none; font-size: 0.85rem; font-weight: 500;">Shop Laptops</a>
@@ -399,7 +420,7 @@
           .hero-slide.active { display: flex; animation: fadeIn 0.7s; }
           .hero-content { flex: 1 1 400px; min-width: 260px; padding-right: 2rem; padding-left: 3rem; z-index: 2; position: relative; background: transparent; border: none; box-shadow: none; }
           .hero-content h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1.2rem; letter-spacing: -0.5px; line-height: 1.1; font-family: "Amazon Ember", Arial, sans-serif; }
-          .hero-content p { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500; font-family: "Amazon Ember", Arial, sans-serif; }
+          .hero-content p { font-size: 1.15rem; margin-bottom: 1.5rem; font-weight: 500; font-family: "Amazon Ember", Arial, sans-serif; color: #ffffff !important; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.75) !important; line-height: 1.4; }
           .hero-content a { display: inline-flex; align-items: center; justify-content: center; background: #ffd814; background: linear-gradient(to bottom, #ffd814, #f7ca00); color: #0f1111; font-weight: 700; padding: 0.6rem 2rem; border: 1px solid #fcd200; border-radius: 20px; text-decoration: none; font-size: 1rem; box-shadow: 0 2px 5px rgba(213,217,217,0.5); margin-top: 0.5rem; transition: all 0.2s ease; cursor: pointer; }
           .hero-content a:hover { background: #f7ca00; border-color: #f2c200; box-shadow: 0 2px 5px rgba(15,17,17,0.2); transform: translateY(-1px); }
           .hero-slide img { flex: 1 1 400px; min-width: 260px; max-width: 440px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); background: transparent; min-height: 220px; object-fit: cover; margin-left: 2rem; }
