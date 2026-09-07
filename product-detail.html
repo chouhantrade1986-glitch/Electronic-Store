@@ -22,7 +22,10 @@
     <section id="productDetail" class="product-detail" hidden>
       <div class="product-media">
         <div id="mediaThumbRail" class="thumb-rail"></div>
-        <img id="productImage" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+        <div class="product-image-stage" id="productImageStage">
+          <img id="productImage" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+          <div id="imageZoomLens" class="image-zoom-lens" aria-hidden="true"></div>
+        </div>
         <video id="productVideo" controls playsinline hidden></video>
         <div id="imageZoomPane" class="image-zoom-pane" aria-hidden="true"></div>
       </div>
@@ -116,7 +119,7 @@
         <!-- Amazon Primary Buttons -->
         <div class="buybox-buttons">
           <button id="addToCartBtn" type="button" class="amazon-btn-cart" data-i18n="add_to_cart">Add to Cart</button>
-          <a href="cart.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
+          <a href="checkout.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
         </div>
 
         <!-- Fulfilled / Seller Info Table -->

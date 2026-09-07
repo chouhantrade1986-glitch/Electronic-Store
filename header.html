@@ -4,6 +4,18 @@
       <span class="brand-main">electro<span class="brand-accent">mart</span></span>
       <span class="brand-sub">.in</span>
     </a>
+    <!-- Amazon Distraction-Free Checkout Header Bar (Shown only on checkout) -->
+    <div class="amz-checkout-distraction-free-bar" id="checkoutHeaderBar">
+      <div class="amz-checkout-header-middle">
+        <span class="amz-checkout-header-title" data-i18n="checkout_title">Checkout</span> <span class="amz-checkout-header-cart-wrap">(<a href="cart.html" id="checkoutHeaderCountLink" class="amz-checkout-header-cart-link"><span id="checkoutHeaderItemCount">0</span> <span data-i18n="items">items</span></a>)</span>
+      </div>
+      <div class="amz-checkout-header-secure">
+        <svg class="amz-checkout-lock-icon" viewBox="0 0 24 24" width="18" height="18" fill="#007600" aria-hidden="true">
+          <path d="M12 2C9.24 2 7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm3 8H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v3z"/>
+        </svg>
+        <span class="amz-checkout-lock-text" data-i18n="checkout_secure_badge">100% Secure</span>
+      </div>
+    </div>
     <button class="deliver-btn nav-deliver-box" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
       <svg class="nav-location-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -235,4 +247,58 @@
     </div>
   </aside>
   <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
+
+  <!-- Amazon-style Cart Flyout Drawer -->
+  <div id="cartFlyoutOverlay" class="cart-flyout-overlay" hidden></div>
+  <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" hidden>
+    <div class="cart-flyout-header">
+      <div class="cart-flyout-title-wrap">
+        <span class="cart-flyout-check" aria-hidden="true">✓</span>
+        <h2 class="cart-flyout-title" data-i18n="flyout_added_to_cart">Added to Cart</h2>
+      </div>
+      <button id="cartFlyoutClose" class="cart-flyout-close" type="button" aria-label="Close cart flyout">&times;</button>
+    </div>
+
+    <!-- Active / Added Item Card -->
+    <div class="cart-flyout-item-card" id="cartFlyoutItemCard" style="display: none;">
+      <img id="cartFlyoutItemImg" class="cart-flyout-item-img" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+      <div class="cart-flyout-item-info">
+        <h3 id="cartFlyoutItemTitle" class="cart-flyout-item-title">Product Name</h3>
+        <div class="cart-flyout-item-meta">
+          <span id="cartFlyoutItemQty" class="cart-flyout-item-qty">Qty: 1</span>
+          <span class="cart-flyout-item-sep">|</span>
+          <span id="cartFlyoutItemPrice" class="cart-flyout-item-price">₹0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Delivery Milestone Banner -->
+    <div class="cart-flyout-delivery-banner" id="cartFlyoutDeliveryBanner">
+      <span class="delivery-tick" aria-hidden="true">✓</span>
+      <span class="delivery-text" data-i18n="flyout_free_delivery_eligible">Your order qualifies for FREE Delivery</span>
+    </div>
+
+    <!-- Subtotal & Direct Checkout Actions -->
+    <div class="cart-flyout-actions-box">
+      <div class="cart-flyout-subtotal-row">
+        <span class="subtotal-label" data-i18n="flyout_cart_subtotal">Cart subtotal</span>
+        <span class="subtotal-items" id="cartFlyoutSubtotalItems">(1 item):</span>
+        <span class="subtotal-amount" id="cartFlyoutSubtotalAmount">₹0</span>
+      </div>
+
+      <div class="cart-flyout-buttons">
+        <a href="checkout.html" class="cart-flyout-checkout-btn amazon-btn-cart" id="cartFlyoutCheckoutBtn">
+          <span data-i18n="flyout_proceed_to_checkout">Proceed to checkout</span>
+          <span id="cartFlyoutCheckoutCount">(1 item)</span>
+        </a>
+        <a href="cart.html" class="cart-flyout-cart-btn amazon-btn-secondary" data-i18n="flyout_go_to_cart">Go to Cart</a>
+      </div>
+    </div>
+
+    <!-- Mini Cart Items Preview List -->
+    <div class="cart-flyout-recent-section">
+      <h4 class="cart-flyout-recent-title" data-i18n="shopping_cart">Shopping Cart</h4>
+      <div id="cartFlyoutItemsList" class="cart-flyout-items-list"></div>
+    </div>
+  </aside>
 </header>

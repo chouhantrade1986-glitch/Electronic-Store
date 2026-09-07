@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-<body>
+<body class="checkout-page">
   <div id="headerContainer"></div>
 
   <main class="checkout-main">
@@ -196,15 +196,28 @@
 
         <p id="discountRow" hidden><span>Discount:</span> <strong id="discountValue">&#8377;0</strong></p>
         <p><span data-i18n="items">Items:</span> <strong id="summaryItems">0</strong></p>
-        <p><span data-i18n="cart_subtotal">Subtotal:</span> <strong id="subtotalValue">₹0</strong></p>
+        <p><span id="checkoutSubtotalLabel" data-i18n="cart_subtotal">Subtotal (Excl. Tax):</span> <strong id="subtotalValue">₹0</strong></p>
         <p><span data-i18n="shipping">Shipping:</span> <strong id="shippingValue">₹0</strong></p>
-        <p><span data-i18n="tax">Tax:</span> <strong id="taxValue">₹0</strong></p>
+        <p><span id="checkoutTaxLabel" data-i18n="tax">Estimated GST (18%):</span> <strong id="taxValue">₹0</strong></p>
         <p class="grand-total"><span data-i18n="order_total">Order total:</span> <strong id="totalValue">₹0</strong></p>
         <p id="gatewaySummaryNote" class="gateway-summary-note" hidden>Razorpay secure checkout will open on the next step.</p>
         <p class="delivery-note" style="color: #007600; font-weight: 600; font-size: 0.85rem; margin-top: 8px;">✓ Guaranteed Safe &amp; Secure Checkout</p>
       </div>
     </aside>
   </main>
+
+  <!-- Amazon India Distraction-Free Checkout Minimal Footer -->
+  <footer class="amz-checkout-footer">
+    <div class="amz-checkout-footer-divider"></div>
+    <div class="amz-checkout-footer-links">
+      <a href="terms-and-conditions.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+      <span class="amz-checkout-footer-sep">|</span>
+      <a href="terms-and-conditions.html" data-i18n="auth_privacy_notice">Privacy Notice</a>
+      <span class="amz-checkout-footer-sep">|</span>
+      <a href="faq.html" data-i18n="auth_help_link">Help</a>
+    </div>
+    <p class="amz-checkout-copyright" data-i18n="auth_footer_copyright">&copy; 2026, ElectroMart.in, Inc. or its affiliates</p>
+  </footer>
 
   <script src="translations.js"></script>
   <script src="products-data.js"></script>

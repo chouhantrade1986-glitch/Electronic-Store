@@ -269,7 +269,7 @@ function normalizeOrder(order) {
     return sum + Number(item.quantity || 1) * Number(item.price || 0);
   }, 0));
   const shipping = Number(order.shipping || (items.length ? 19 : 0));
-  const tax = Number(order.tax || subtotal * 0.08);
+  const tax = Number(typeof order.tax === "number" ? order.tax : (order.tax || Math.round(subtotal * 0.18 * 100) / 100));
   const couponCode = String(order.couponCode || "").trim().toUpperCase();
   const discount = Number(order.discount || Math.max(0, subtotal + shipping + tax - Number(order.total || subtotal + shipping + tax)));
   const total = Number(order.total || subtotal + shipping + tax - discount);
@@ -283,10 +283,10 @@ function normalizeOrder(order) {
     shippingAddress: String(order.shippingAddress || "N/A"),
     deliverySlot: order.deliverySlot && typeof order.deliverySlot === "object"
       ? {
-        id: String(order.deliverySlot.id || "").trim(),
-        label: String(order.deliverySlot.label || "").trim(),
-        eta: String(order.deliverySlot.eta || "").trim()
-      }
+          slotId: String(order.deliverySlot.slotId || "std-morning"),
+          label: String(order.deliverySlot.label || "Morning"),
+          eta: String(order.deliverySlot.eta || "Tomorrow 7 AM - 11 AM")
+        }
       : null,
     reservationUntil: String(order.reservationUntil || "").trim(),
     statusHistory: normalizeStatusHistory(order.statusHistory, order.createdAt, order.status),
@@ -295,7 +295,7 @@ function normalizeOrder(order) {
       quantity: Number(item.quantity || 1),
       price: Number(item.price || 0),
       lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || 0)),
-      hsnSac: String(item.hsnSac || "8471")
+      hsnSac: String(item.hsnSac || item.hsnCode || "8471")
     })),
     subtotal,
     shipping,

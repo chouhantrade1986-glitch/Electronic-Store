@@ -697,7 +697,10 @@ function getCartRows() {
         price: Number(product.price || 0),
         image: product.image || fallbackImage(),
         stock: Number(product.stock),
-        quantity: Number(qty)
+        quantity: Number(qty),
+        category: product.category || "",
+        hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
+        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18
       };
     })
     .filter(Boolean);
@@ -799,25 +802,81 @@ function renderCheckoutItems(rows) {
 function getPricingBreakdown(rows) {
   const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
   const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price, 0);
-  const shipping = itemCount > 0 ? 19 : 0;
+  const shipping = itemCount > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
-  const taxableSubtotal = Math.max(0, subtotal - (coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0));
-  const tax = taxableSubtotal * 0.08;
-  const total = subtotal + shipping + tax - coupon.amount;
-  return { itemCount, subtotal, shipping, tax, total, coupon };
+  const nonShippingDiscount = coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0;
+  const discountRatio = subtotal > 0 ? Math.max(0, 1 - (nonShippingDiscount / subtotal)) : 1;
+
+  let totalGst = 0;
+  const gstBreakdownByRate = {};
+
+  rows.forEach((item) => {
+    const itemSubtotal = item.price * item.quantity;
+    const discountedItemSubtotal = itemSubtotal * discountRatio;
+    const rate = typeof item.gstRate === "number" ? item.gstRate : 0.18;
+    const itemGst = discountedItemSubtotal * rate;
+    totalGst += itemGst;
+
+    const rateKey = String(Math.round(rate * 100));
+    gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+  });
+
+  const roundedTax = Math.round(totalGst * 100) / 100;
+  const roundedSubtotal = Math.round(subtotal * 100) / 100;
+  const roundedDiscount = Math.round(coupon.amount * 100) / 100;
+  const total = Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount) * 100) / 100;
+
+  const rates = Object.keys(gstBreakdownByRate);
+  let gstLabelSuffix = "18%";
+  if (rates.length === 1) {
+    gstLabelSuffix = `${rates[0]}%`;
+  } else if (rates.length > 1) {
+    const blended = subtotal > 0 ? Math.round((roundedTax / Math.max(1, subtotal - nonShippingDiscount)) * 100) : 18;
+    gstLabelSuffix = `${blended}%`;
+  }
+
+  return {
+    itemCount,
+    subtotal: roundedSubtotal,
+    shipping,
+    tax: roundedTax,
+    total,
+    coupon,
+    gstBreakdownByRate,
+    gstLabelSuffix
+  };
 }
 
 function renderSummary(rows) {
   currentCheckoutRows = rows.slice();
-  const { itemCount, subtotal, shipping, tax, total, coupon } = getPricingBreakdown(rows);
+  const breakdown = getPricingBreakdown(rows);
+  const { itemCount, subtotal, shipping, tax, total, coupon } = breakdown;
 
   summaryItemsEl.textContent = String(itemCount);
+  const checkoutHeaderCountEl = document.getElementById("checkoutHeaderItemCount");
+  if (checkoutHeaderCountEl) {
+    checkoutHeaderCountEl.textContent = String(itemCount);
+  }
   subtotalEl.textContent = money(subtotal);
   shippingEl.textContent = money(shipping);
   taxEl.textContent = money(tax);
   totalEl.textContent = money(total);
+
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+
+  const checkoutTaxLabel = document.getElementById("checkoutTaxLabel");
+  if (checkoutTaxLabel) {
+    const gstPrefix = t.estimated_gst || "Estimated GST";
+    checkoutTaxLabel.textContent = `${gstPrefix} (${breakdown.gstLabelSuffix || "18%"}):`;
+  }
+  const checkoutSubtotalLabel = document.getElementById("checkoutSubtotalLabel");
+  if (checkoutSubtotalLabel) {
+    checkoutSubtotalLabel.textContent = t.subtotal_excl_tax || "Subtotal (Excl. Tax)";
+  }
+
   if (couponInput) {
     couponInput.value = coupon.code || "";
   }

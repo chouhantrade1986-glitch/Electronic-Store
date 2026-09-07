@@ -7,6 +7,8 @@
   const EM_CATALOG = [
     {
       id: "product_faadad46-7286-8744-5d9a-1263da26d23c",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "KP03 Laptop Battery For HP 729759-241, HSTNN-DB5P, KP03, KP06, 210 G1 Laptops",
       brand: "HP",
       category: "hp-laptop-battery",
@@ -60,6 +62,8 @@
     },
     {
       id: "product_c5367fc4-ca38-9435-27dc-8d383b5faa59",
+      hsnCode: "85171300",
+      gstRate: 0.18,
       brand: "Pantony",
       category: "mobile",
       title: {
@@ -130,6 +134,8 @@
     },
     {
       id: "2",
+      hsnCode: "84713010",
+      gstRate: 0.18,
       brand: "Apple",
       category: "laptop",
       title: {
@@ -174,6 +180,8 @@
     },
     {
       id: "1",
+      hsnCode: "84713010",
+      gstRate: 0.18,
       brand: "AstraTech",
       category: "laptop",
       title: {
@@ -214,6 +222,8 @@
     },
     {
       id: "related_smartphone_z_pixel",
+      hsnCode: "85171300",
+      gstRate: 0.18,
       name: "Smartphone Z Pixel Max 128GB Unlocked",
       brand: "PixelMax",
       category: "mobile",
@@ -230,6 +240,8 @@
     },
     {
       id: "related_corr_playtime",
+      hsnCode: "85171300",
+      gstRate: 0.18,
       name: "Corr Playtime 10.3″",
       brand: "Playtime",
       category: "mobile",
@@ -246,6 +258,8 @@
     },
     {
       id: "related_hv_vr_system",
+      hsnCode: "85287200",
+      gstRate: 0.28,
       name: "HV Virtual Reality System",
       brand: "HyperVision",
       category: "accessory",
@@ -262,6 +276,8 @@
     },
     {
       id: "product_6b489a18-ef31-ee2b-92af-4929d58b70c1",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "L19M3PF4 Laptop battery For Lenovo IdeaPad 5-14ALC05 14ARE05 14ARE05 14ITL05",
       brand: "Lenovo",
       category: "laptop",
@@ -292,6 +308,8 @@
     },
     {
       id: "product_a27ea6d9-02b5-ec8c-d994-f6b6a3ea05cc",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "L18M3PD1 Laptop Battery for Lenovo ThinkPad T14s ,T490S Serie",
       brand: "Lenovo",
       category: "laptop",
@@ -304,6 +322,8 @@
     },
     {
       id: "product_23f723f7-de16-37e8-138b-bd61216f4d08",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "L17M4PE1 Laptop Battery For Lenovo IdeaPad 730S-13IWL S730-13IWL S730-13IML",
       brand: "Lenovo",
       category: "laptop",
@@ -316,6 +336,8 @@
     },
     {
       id: "product_af346ddc-3f42-2797-7450-5d7e781075be",
+      hsnCode: "84733020",
+      gstRate: 0.18,
       name: "Gigabyte H610M H DDR4 Motherboard 12th Gen",
       brand: "Gigabyte",
       category: "computer",
@@ -371,6 +393,8 @@
     },
     {
       id: "product_d5c39a68-42cd-cc7b-d3d5-b3655e13a791",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "45N1704 Laptop Battery For Lenovo ThinkPad Yoga S1 120 S240 20CD/20DA",
       brand: "Lenovo",
       category: "laptop_accessories",
@@ -425,6 +449,8 @@
     },
     {
       id: "product_2cfd9948-2de2-ddcc-dc54-0db0c73eb439",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "L20C4P71 Laptop Battery For Lenovo ThinkPad X1 Carbon Gen 9 10 X1 Yoga",
       brand: "Lenovo",
       category: "laptop_accessories",
@@ -479,6 +505,8 @@
     },
     {
       id: "product_9f938430-1e94-b66e-92f6-297080564c6b",
+      hsnCode: "85076000",
+      gstRate: 0.18,
       name: "L12M4A01 laptop battery for Lenovo IdeaPad Flex 15 14 Z500 S500 notebook battery",
       brand: "Lenovo",
       category: "laptop_accessories",
@@ -530,7 +558,30 @@
           "1 वर्ष की निर्माता वारंटी और रिप्लेसमेंट सपोर्ट"
         ]
       }
-    }
+    },
+    {
+      id: "product_6e397016-3767-97ad-330d-cc55af25cf07",
+      name: "42\" Class Full HD Smart Streamer TV",
+      brand: "ElectroMart Vision",
+      category: "tv-&-home-cinema",
+      segment: "b2c",
+      price: 24999,
+      listPrice: 32999,
+      rating: 4.5,
+      stock: 8,
+      sku: "TV42FHD",
+      hsnCode: "85287200",
+      gstRate: 0.28,
+      image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=900&q=80",
+      title: {
+        en: "42\" Class Full HD Smart Streamer TV",
+        hi: "42\" क्लास फुल HD स्मार्ट स्ट्रीमर टीवी"
+      },
+      description: {
+        en: "Vibrant 42-inch Full HD display with built-in streaming apps, Dolby Audio, and dual HDMI ports.",
+        hi: "42-इंच फुल HD डिस्प्ले, इन-बिल्ट स्ट्रीमिंग ऐप्स, डॉल्बी ऑडियो और ड्यूल HDMI पोर्ट्स के साथ।"
+      }
+    },
   ];
 
   // Category localized names matching Amazon India

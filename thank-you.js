@@ -62,7 +62,7 @@ function normalizeOrder(order) {
   const items = Array.isArray(order.items) ? order.items : [];
   const subtotal = Number(order.subtotal || items.reduce((sum, item) => sum + Number(item.quantity || 1) * Number(item.price || 0), 0));
   const shipping = Number(order.shipping || (items.length ? 19 : 0));
-  const tax = Number(order.tax || subtotal * 0.08);
+  const tax = Number(typeof order.tax === "number" ? order.tax : (order.tax || Math.round(subtotal * 0.18 * 100) / 100));
   const discount = Number(order.discount || Math.max(0, subtotal + shipping + tax - Number(order.total || subtotal + shipping + tax)));
   const total = Number(order.total || subtotal + shipping + tax - discount);
   const deliverySlot = order.deliverySlot && typeof order.deliverySlot === "object"

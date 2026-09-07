@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Indian GST Slabs & Cart Flyout Drawer Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,9 +10,10 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 41 / 41 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 44 / 44 टेस्ट सूट्स उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **115 / 115 (100% Pass Rate)** |
+| **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **118 / 118 (100% Pass Rate)** |
 
 ---
 
@@ -44,6 +45,7 @@
   - सेव्ड एड्रेस रेडियो कार्ड, "+ Add a new address / Edit" टॉगल, और हेडर में लाइव समरी टेक्स्ट।
   - अकॉर्डियन चेंज बटन्स (`#step1ChangeBtn`, `#step2ChangeBtn`) और स्मूथ ऑटो-स्क्रोलिंग।
   - राइट स्टिकी ऑर्डर समरी बॉक्स विथ कूपन इनपुट और "Place your order" अमेज़न येलो बटन।
+  - प्रामाणिक अमेज़न इंडिया डिस्ट्रैक्शन-फ्री चेकआउट हेडर (`#checkoutHeaderBar`) विथ सेंटर्ड टाइटल, डायनामिक कार्ट आइटम काउंट लिंक (`#checkoutHeaderItemCount`), 100% सिक्योर लॉक बैज (`.amz-checkout-header-secure`), और मिनिमलिस्ट फुटर (`.amz-checkout-footer`)।
 - **चरण 5 (Your Orders & Tracking Hub - `orders.html`, `orders.js`):**
   - अमेज़न 4-टैब नेविगेशन बार (`#orderTabs`): "Orders", "Buy Again", "Not Yet Shipped", "Cancelled Orders"।
   - समय अवधि फ़िल्टर (`#timeFilter`) और रीयल-टाइम ऑर्डर काउंट।
@@ -113,7 +115,15 @@
 
 ### D. ब्रांड सुरक्षा एवं कानूनी अनुपालन (Brand Safety & Legal Compliance - PERMANENT LOCK)
 - **कठोर नियम:** वेबसाइट `electromart.in` पर अमेज़न इंडिया की शैली, लेआउट और UX का उपयोग होता है, परंतु ग्राहक को दिखने वाले किसी भी टेक्स्ट, बैज या अनुवाद में "Amazon" / "अमेज़न" का नाम कभी नहीं आना चाहिए।
-- **स्थायी ऑटोमेटेड गार्डरेल:** `scratch/test-brand-safety-and-legal-compliance.js` को `scratch/run_all_tests.js` में एकीकृत किया गया है। यह सभी 49 HTML पेजों, `translations.js` की सभी 11 भाषाओं और `products.js` को स्कैन करता है। यदि कहीं भी दिखाई देने वाला Amazon नाम आता है, तो टेस्ट तुरंत फेल हो जाता है।
+- **स्थायी ऑटोमेटेड गार्डरेल:** `scratch/test-brand-safety-and-legal-compliance.js` को `scratch/run_all_tests.js` में एकीकृत किया गया है। यह सभी 56 HTML पेजों, `translations.js` की सभी 11 भाषाओं और `products.js` को स्कैन करता है। यदि कहीं भी दिखाई देने वाला Amazon नाम आता है, तो टेस्ट तुरंत फेल हो जाता है।
+
+### E. भारतीय GST अनुपालन एवं मल्टी-प्रोडक्ट कार्ट इंजन (Indian GST Compliance - Slabs & Multi-Product Cart)
+- **18% व 28% वैधानिक स्लैब्स:** IT हार्डवेयर, लैपटॉप, बैटरियां, कंपोनेंट्स पर 18% (HSN `84713010`, `85076000`), और 32"+ स्मार्ट टेलीविज़न व लक्ज़री डिस्प्ले पर 28% (HSN `85287200`)।
+- **751 उत्पाद पूरी तरह वर्गीकृत:** `products-data.js` और `backend/src/data/db.json` में प्रत्येक उत्पाद पर प्रामाणिक `hsnCode` और `gstRate` लागू।
+- **मल्टी-प्रोडक्ट कार्ट व सटीक राउंडिंग:** कार्ट व चेकआउट में 18% और 28% के मिश्रित उत्पादों पर अलग-अलग व संयुक्त GST सटीक गणना (`Math.round(totalGst * 100) / 100`) से 0 पैसे का अंतर।
+- **कूपन प्रो-रेशन (Proration):** कूपन डिस्काउंट को लाइन-टोटल के अनुपात में बांटकर सटीक टैक्स गणना।
+- **11 भाषाओं में लेबल्स:** `Subtotal (Excl. Tax)`, `Estimated GST (18% / 28% / blended)`।
+- **स्वचालित टेस्ट सूट:** `scratch/test-indian-gst-compliance.js` (100% पास)।
 
 ---
 

@@ -2,7 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = Number(process.env.FRONTEND_PORT || 5500);
+const PORT = Number(process.argv[2] || process.env.FRONTEND_PORT || 5500);
 const ROOT = process.cwd();
 
 const CONTENT_TYPES = {
@@ -30,6 +30,31 @@ function resolveFile(requestPath) {
 }
 
 const server = http.createServer((req, res) => {
+  if (req.url && (req.url.startsWith("/api/") || req.url === "/api" || req.url.startsWith("/api?"))) {
+    const proxyReq = http.request(
+      {
+        hostname: "127.0.0.1",
+        port: Number(process.env.BACKEND_PORT || 4000),
+        path: req.url,
+        method: req.method,
+        headers: {
+          ...req.headers,
+          host: `127.0.0.1:${process.env.BACKEND_PORT || 4000}`
+        }
+      },
+      (proxyRes) => {
+        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+        proxyRes.pipe(res);
+      }
+    );
+    proxyReq.on("error", (err) => {
+      res.writeHead(502, { "Content-Type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify({ error: "Backend proxy error", message: err.message }));
+    });
+    req.pipe(proxyReq);
+    return;
+  }
+
   const filePath = resolveFile(req.url || "/");
   if (!filePath) {
     res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });

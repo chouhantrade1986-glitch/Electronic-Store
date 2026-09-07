@@ -8193,6 +8193,222 @@
   });
 
 
+
+  // Amazon India Distraction-Free Checkout Header i18n
+  const AMAZON_CHECKOUT_HEADER_I18N = {
+    "en": {
+      "checkout_title": "Checkout",
+      "checkout_secure_badge": "100% Secure",
+      "checkout_item_singular": "item",
+      "checkout_items_plural": "items"
+    },
+    "hi": {
+      "checkout_title": "चेकआउट",
+      "checkout_secure_badge": "100% सुरक्षित",
+      "checkout_item_singular": "आइटम",
+      "checkout_items_plural": "आइटम"
+    },
+    "ta": {
+      "checkout_title": "செக்அவுட்",
+      "checkout_secure_badge": "100% பாதுகாப்பானது",
+      "checkout_item_singular": "பொருள்",
+      "checkout_items_plural": "பொருட்கள்"
+    },
+    "te": {
+      "checkout_title": "చెక్అవుట్",
+      "checkout_secure_badge": "100% సురక్షితం",
+      "checkout_item_singular": "వస్తువు",
+      "checkout_items_plural": "వస్తువులు"
+    },
+    "kn": {
+      "checkout_title": "ಚೆಕ್‌ಔಟ್",
+      "checkout_secure_badge": "100% ಸುರಕ್ಷಿತ",
+      "checkout_item_singular": "ವಸ್ತು",
+      "checkout_items_plural": "ವಸ್ತುಗಳು"
+    },
+    "ml": {
+      "checkout_title": "ചെക്ക്ഔട്ട്",
+      "checkout_secure_badge": "100% സുരക്ഷിതം",
+      "checkout_item_singular": "ഇനം",
+      "checkout_items_plural": "ഇനങ്ങൾ"
+    },
+    "bn": {
+      "checkout_title": "চেকআউট",
+      "checkout_secure_badge": "১০০% নিরাপদ",
+      "checkout_item_singular": "আইটেম",
+      "checkout_items_plural": "আইটেম"
+    },
+    "mr": {
+      "checkout_title": "चेकआउट",
+      "checkout_secure_badge": "100% सुरक्षित",
+      "checkout_item_singular": "आयटम",
+      "checkout_items_plural": "आयटम"
+    },
+    "ur": {
+      "checkout_title": "چیک آؤٹ",
+      "checkout_secure_badge": "100% محفوظ",
+      "checkout_item_singular": "آئٹم",
+      "checkout_items_plural": "اشیاء"
+    },
+    "pa": {
+      "checkout_title": "ਚੈੱਕਆਉਟ",
+      "checkout_secure_badge": "100% ਸੁਰੱਖਿਅਤ",
+      "checkout_item_singular": "ਆਈਟਮ",
+      "checkout_items_plural": "ਆਈਟਮਾਂ"
+    },
+    "gu": {
+      "checkout_title": "ચેકઆઉટ",
+      "checkout_secure_badge": "100% સુરક્ષિત",
+      "checkout_item_singular": "આઇટમ",
+      "checkout_items_plural": "આઇટમો"
+    }
+  };
+
+  Object.keys(AMAZON_CHECKOUT_HEADER_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], AMAZON_CHECKOUT_HEADER_I18N[lang]);
+    }
+  });
+
+  const AMAZON_CART_FLYOUT_I18N = {
+    "en": {
+      "flyout_added_to_cart": "Added to Cart",
+      "flyout_cart_subtotal": "Cart subtotal",
+      "flyout_proceed_to_checkout": "Proceed to checkout",
+      "flyout_go_to_cart": "Go to Cart",
+      "flyout_free_delivery_eligible": "Your order qualifies for FREE Delivery"
+    },
+    "hi": {
+      "flyout_added_to_cart": "कार्ट में जोड़ा गया",
+      "flyout_cart_subtotal": "कार्ट उप-योग",
+      "flyout_proceed_to_checkout": "चेकआउट के लिए आगे बढ़ें",
+      "flyout_go_to_cart": "कार्ट पर जाएं",
+      "flyout_free_delivery_eligible": "आपका ऑर्डर मुफ़्त डिलीवरी के लिए पात्र है"
+    },
+    "ta": {
+      "flyout_added_to_cart": "கார்ட்டில் சேர்க்கப்பட்டது",
+      "flyout_cart_subtotal": "கார்ட் துணை மொத்தம்",
+      "flyout_proceed_to_checkout": "செக்அவுட்டுக்கு தொடரவும்",
+      "flyout_go_to_cart": "கார்ட்டுக்குச் செல்லவும்",
+      "flyout_free_delivery_eligible": "உங்கள் ஆர்டர் இலவச டெலிவரிக்கு தகுதிபெறுகிறது"
+    },
+    "te": {
+      "flyout_added_to_cart": "కార్ట్‌కు జోడించబడింది",
+      "flyout_cart_subtotal": "కార్ట్ సబ్‌టోటల్",
+      "flyout_proceed_to_checkout": "చెక్‌అవుట్‌కు కొనసాగండి",
+      "flyout_go_to_cart": "కార్ట్‌కి వెళ్లండి",
+      "flyout_free_delivery_eligible": "మీ ఆర్డర్ ఉచిత డెలివరీకి అర్హత కలిగి ఉంది"
+    },
+    "kn": {
+      "flyout_added_to_cart": "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ",
+      "flyout_cart_subtotal": "ಕಾರ್ಟ್ ಒಟ್ಟು",
+      "flyout_proceed_to_checkout": "ಚೆಕ್‌ಔಟ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ",
+      "flyout_go_to_cart": "ಕಾರ್ಟ್‌ಗೆ ಹೋಗಿ",
+      "flyout_free_delivery_eligible": "ನಿಮ್ಮ ಆರ್ಡರ್ ಉಚಿತ ಡೆಲಿವರಿಗೆ ಅರ್ಹವಾಗಿದೆ"
+    },
+    "ml": {
+      "flyout_added_to_cart": "കാർട്ടിലേക്ക് ചേർത്തു",
+      "flyout_cart_subtotal": "കാർട്ട് സബ്‌ടോട്ടൽ",
+      "flyout_proceed_to_checkout": "ചെക്ക്ഔട്ടിലേക്ക് പോകുക",
+      "flyout_go_to_cart": "കാർട്ടിലേക്ക് പോകുക",
+      "flyout_free_delivery_eligible": "നിങ്ങളുടെ ഓർഡർ സൗജന്യ ഡെലിവറിക്ക് യോഗ്യമാണ്"
+    },
+    "bn": {
+      "flyout_added_to_cart": "কার্টে যোগ করা হয়েছে",
+      "flyout_cart_subtotal": "কার্ট সাবটোটাল",
+      "flyout_proceed_to_checkout": "চেকআউট করতে এগিয়ে যান",
+      "flyout_go_to_cart": "কার্টে যান",
+      "flyout_free_delivery_eligible": "আপনার অর্ডারটি বিনামূল্যে ডেলিভারির জন্য উপযুক্ত"
+    },
+    "mr": {
+      "flyout_added_to_cart": "कार्टमध्ये जोडले",
+      "flyout_cart_subtotal": "कार्ट सबटोटल",
+      "flyout_proceed_to_checkout": "चेकआउटसाठी पुढे जा",
+      "flyout_go_to_cart": "कार्टवर जा",
+      "flyout_free_delivery_eligible": "तुमची ऑर्डर मोफत डिलिव्हरीसाठी पात्र आहे"
+    },
+    "ur": {
+      "flyout_added_to_cart": "کارٹ میں شامل کر دیا گیا",
+      "flyout_cart_subtotal": "کارٹ سب ٹوٹل",
+      "flyout_proceed_to_checkout": "چیک آؤٹ کے لیے آگے بڑھیں",
+      "flyout_go_to_cart": "کارٹ پر جائیں",
+      "flyout_free_delivery_eligible": "آپ کا آرڈر مفت ڈیلیوری کا اہل ہے"
+    },
+    "pa": {
+      "flyout_added_to_cart": "ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ",
+      "flyout_cart_subtotal": "ਕਾਰਟ ਕੁੱਲ",
+      "flyout_proceed_to_checkout": "ਚੈੱਕਆਉਟ ਲਈ ਅੱਗੇ ਵਧੋ",
+      "flyout_go_to_cart": "ਕਾਰਟ 'ਤੇ ਜਾਓ",
+      "flyout_free_delivery_eligible": "ਤੁਹਾਡਾ ਆਰਡਰ ਮੁਫ਼ਤ ਡਿਲੀਵਰੀ ਲਈ ਯੋਗ ਹੈ"
+    },
+    "gu": {
+      "flyout_added_to_cart": "કાર્ટમાં ઉમેરાયું",
+      "flyout_cart_subtotal": "કાર્ટ સબટોટલ",
+      "flyout_proceed_to_checkout": "ચેકઆઉટ માટે આગળ વધો",
+      "flyout_go_to_cart": "કાર્ટ પર જાઓ",
+      "flyout_free_delivery_eligible": "તમારો ઓર્ડર મફત ડિલિવરી માટે પાત્ર છે"
+    }
+  };
+
+  Object.keys(AMAZON_CART_FLYOUT_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], AMAZON_CART_FLYOUT_I18N[lang]);
+    }
+  });
+
+  const INDIAN_GST_COMPLIANCE_I18N = {
+    en: {
+      estimated_gst: "Estimated GST",
+      subtotal_excl_tax: "Subtotal (Excl. Tax)"
+    },
+    hi: {
+      estimated_gst: "अनुमानित GST",
+      subtotal_excl_tax: "उप-योग (कर रहित)"
+    },
+    ta: {
+      estimated_gst: "மதிப்பிடப்பட்ட ஜிஎஸ்டி (GST)",
+      subtotal_excl_tax: "கூட்டுத்தொகை (வரி தவிர்த்து)"
+    },
+    te: {
+      estimated_gst: "అంచనా వేసిన జీఎస్టీ (GST)",
+      subtotal_excl_tax: "మొత్తం (పన్ను మినహాయించి)"
+    },
+    kn: {
+      estimated_gst: "ಅಂದಾಜು ಜಿಎಸ್‌ಟಿ (GST)",
+      subtotal_excl_tax: "ಉಪಮೊತ್ತ (ತೆರಿಗೆ ಹೊರತುಪಡಿಸಿ)"
+    },
+    ml: {
+      estimated_gst: "കണക്കാക്കിയ ജി.എസ്.ടി (GST)",
+      subtotal_excl_tax: "ആകെത്തുക (നികുതി ഒഴികെ)"
+    },
+    bn: {
+      estimated_gst: "আনুমানিক জিএসটি (GST)",
+      subtotal_excl_tax: "উপ-মোট (কর বাদে)"
+    },
+    mr: {
+      estimated_gst: "अंदाजे जीएसटी (GST)",
+      subtotal_excl_tax: "एकूण (कर वगळून)"
+    },
+    ur: {
+      estimated_gst: "تخمینہ شدہ جی ایس ٹی (GST)",
+      subtotal_excl_tax: "ضمنی کل (ٹیکس کے بغیر)"
+    },
+    pa: {
+      estimated_gst: "ਅਨੁਮਾਨਿਤ ਜੀਐਸਟੀ (GST)",
+      subtotal_excl_tax: "ਸਬਟੋਟਲ (ਟੈਕਸ ਨੂੰ ਛੱਡ ਕੇ)"
+    },
+    gu: {
+      estimated_gst: "અંદાજિત જીએસટી (GST)",
+      subtotal_excl_tax: "પેટાકુલ (કર બાદ કરતાં)"
+    }
+  };
+
+  Object.keys(INDIAN_GST_COMPLIANCE_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], INDIAN_GST_COMPLIANCE_I18N[lang]);
+    }
+  });
+
   window.EM_TRANSLATIONS = translations;
   window.applyFullPageTranslation = applyFullPageTranslation;
 

@@ -34,6 +34,14 @@
     if (cartCountEl) {
       cartCountEl.textContent = String(total);
     }
+    const checkoutCountEl = document.getElementById('checkoutHeaderItemCount');
+    if (checkoutCountEl) {
+      checkoutCountEl.textContent = String(total);
+    }
+  }
+
+  function syncCheckoutHeaderCount() {
+    syncCartCount();
   }
   
   function getLocalizedNavText(key, fallbackText) {
@@ -53,6 +61,18 @@
           <span class="brand-main">electro<span class="brand-accent">mart</span></span>
           <span class="brand-sub">.in</span>
         </a>
+        <!-- Amazon Distraction-Free Checkout Header Bar (Shown only on checkout) -->
+        <div class="amz-checkout-distraction-free-bar" id="checkoutHeaderBar">
+          <div class="amz-checkout-header-middle">
+            <span class="amz-checkout-header-title" data-i18n="checkout_title">Checkout</span> <span class="amz-checkout-header-cart-wrap">(<a href="cart.html" id="checkoutHeaderCountLink" class="amz-checkout-header-cart-link"><span id="checkoutHeaderItemCount">0</span> <span data-i18n="items">items</span></a>)</span>
+          </div>
+          <div class="amz-checkout-header-secure">
+            <svg class="amz-checkout-lock-icon" viewBox="0 0 24 24" width="18" height="18" fill="#007600" aria-hidden="true">
+              <path d="M12 2C9.24 2 7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm3 8H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v3z"/>
+            </svg>
+            <span class="amz-checkout-lock-text" data-i18n="checkout_secure_badge">100% Secure</span>
+          </div>
+        </div>
         <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
           <span class="deliver-to-prefix"><span data-i18n="deliver_to_prefix">Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong></span>
         </button>
@@ -277,6 +297,60 @@
         </div>
       </aside>
       <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
+
+      <!-- Amazon-style Cart Flyout Drawer -->
+      <div id="cartFlyoutOverlay" class="cart-flyout-overlay" hidden></div>
+      <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" hidden>
+        <div class="cart-flyout-header">
+          <div class="cart-flyout-title-wrap">
+            <span class="cart-flyout-check" aria-hidden="true">✓</span>
+            <h2 class="cart-flyout-title" data-i18n="flyout_added_to_cart">Added to Cart</h2>
+          </div>
+          <button id="cartFlyoutClose" class="cart-flyout-close" type="button" aria-label="Close cart flyout">&times;</button>
+        </div>
+
+        <!-- Active / Added Item Card -->
+        <div class="cart-flyout-item-card" id="cartFlyoutItemCard" style="display: none;">
+          <img id="cartFlyoutItemImg" class="cart-flyout-item-img" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+          <div class="cart-flyout-item-info">
+            <h3 id="cartFlyoutItemTitle" class="cart-flyout-item-title">Product Name</h3>
+            <div class="cart-flyout-item-meta">
+              <span id="cartFlyoutItemQty" class="cart-flyout-item-qty">Qty: 1</span>
+              <span class="cart-flyout-item-sep">|</span>
+              <span id="cartFlyoutItemPrice" class="cart-flyout-item-price">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Free Delivery Milestone Banner -->
+        <div class="cart-flyout-delivery-banner" id="cartFlyoutDeliveryBanner">
+          <span class="delivery-tick" aria-hidden="true">✓</span>
+          <span class="delivery-text" data-i18n="flyout_free_delivery_eligible">Your order qualifies for FREE Delivery</span>
+        </div>
+
+        <!-- Subtotal & Direct Checkout Actions -->
+        <div class="cart-flyout-actions-box">
+          <div class="cart-flyout-subtotal-row">
+            <span class="subtotal-label" data-i18n="flyout_cart_subtotal">Cart subtotal</span>
+            <span class="subtotal-items" id="cartFlyoutSubtotalItems">(1 item):</span>
+            <span class="subtotal-amount" id="cartFlyoutSubtotalAmount">₹0</span>
+          </div>
+
+          <div class="cart-flyout-buttons">
+            <a href="checkout.html" class="cart-flyout-checkout-btn amazon-btn-cart" id="cartFlyoutCheckoutBtn">
+              <span data-i18n="flyout_proceed_to_checkout">Proceed to checkout</span>
+              <span id="cartFlyoutCheckoutCount">(1 item)</span>
+            </a>
+            <a href="cart.html" class="cart-flyout-cart-btn amazon-btn-secondary" data-i18n="flyout_go_to_cart">Go to Cart</a>
+          </div>
+        </div>
+
+        <!-- Mini Cart Items Preview List -->
+        <div class="cart-flyout-recent-section">
+          <h4 class="cart-flyout-recent-title" data-i18n="shopping_cart">Shopping Cart</h4>
+          <div id="cartFlyoutItemsList" class="cart-flyout-items-list"></div>
+        </div>
+      </aside>
     </header>
     `;
     
@@ -1024,23 +1098,290 @@
     });
   }
 
+  // --- Amazon-style Cart Flyout Drawer Manager ---
+  function ensureCartFlyout() {
+    let flyout = document.getElementById("cartFlyout");
+    let overlay = document.getElementById("cartFlyoutOverlay");
+
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "cartFlyoutOverlay";
+      overlay.className = "cart-flyout-overlay";
+      overlay.setAttribute("hidden", "");
+      document.body.appendChild(overlay);
+    }
+
+    if (!flyout) {
+      flyout = document.createElement("aside");
+      flyout.id = "cartFlyout";
+      flyout.className = "cart-flyout-drawer";
+      flyout.setAttribute("aria-label", "Shopping Cart Flyout");
+      flyout.setAttribute("hidden", "");
+      flyout.innerHTML = `
+        <div class="cart-flyout-header">
+          <div class="cart-flyout-title-wrap">
+            <span class="cart-flyout-check" aria-hidden="true">✓</span>
+            <h2 class="cart-flyout-title" data-i18n="flyout_added_to_cart">Added to Cart</h2>
+          </div>
+          <button id="cartFlyoutClose" class="cart-flyout-close" type="button" aria-label="Close cart flyout">&times;</button>
+        </div>
+
+        <!-- Active / Added Item Card -->
+        <div class="cart-flyout-item-card" id="cartFlyoutItemCard" style="display: none;">
+          <img id="cartFlyoutItemImg" class="cart-flyout-item-img" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+          <div class="cart-flyout-item-info">
+            <h3 id="cartFlyoutItemTitle" class="cart-flyout-item-title">Product Name</h3>
+            <div class="cart-flyout-item-meta">
+              <span id="cartFlyoutItemQty" class="cart-flyout-item-qty">Qty: 1</span>
+              <span class="cart-flyout-item-sep">|</span>
+              <span id="cartFlyoutItemPrice" class="cart-flyout-item-price">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Free Delivery Milestone Banner -->
+        <div class="cart-flyout-delivery-banner" id="cartFlyoutDeliveryBanner">
+          <span class="delivery-tick" aria-hidden="true">✓</span>
+          <span class="delivery-text" data-i18n="flyout_free_delivery_eligible">Your order qualifies for FREE Delivery</span>
+        </div>
+
+        <!-- Subtotal & Direct Checkout Actions -->
+        <div class="cart-flyout-actions-box">
+          <div class="cart-flyout-subtotal-row">
+            <span class="subtotal-label" data-i18n="flyout_cart_subtotal">Cart subtotal</span>
+            <span class="subtotal-items" id="cartFlyoutSubtotalItems">(1 item):</span>
+            <span class="subtotal-amount" id="cartFlyoutSubtotalAmount">₹0</span>
+          </div>
+
+          <div class="cart-flyout-buttons">
+            <a href="checkout.html" class="cart-flyout-checkout-btn amazon-btn-cart" id="cartFlyoutCheckoutBtn">
+              <span data-i18n="flyout_proceed_to_checkout">Proceed to checkout</span>
+              <span id="cartFlyoutCheckoutCount">(1 item)</span>
+            </a>
+            <a href="cart.html" class="cart-flyout-cart-btn amazon-btn-secondary" data-i18n="flyout_go_to_cart">Go to Cart</a>
+          </div>
+        </div>
+
+        <!-- Mini Cart Items Preview List -->
+        <div class="cart-flyout-recent-section">
+          <h4 class="cart-flyout-recent-title" data-i18n="shopping_cart">Shopping Cart</h4>
+          <div id="cartFlyoutItemsList" class="cart-flyout-items-list"></div>
+        </div>
+      `;
+      document.body.appendChild(flyout);
+    }
+
+    return { flyout, overlay };
+  }
+
+  function openCartFlyout(itemDetails) {
+    const { flyout, overlay } = ensureCartFlyout();
+    if (!flyout || !overlay) return;
+
+    const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+    const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.translations && window.translations[currentLang] ? window.translations[currentLang] : {});
+
+    // Compute Cart Totals & Items from localStorage
+    const cartMap = (() => {
+      try {
+        const raw = localStorage.getItem("electromart_cart_v1");
+        return raw ? JSON.parse(raw) : {};
+      } catch (_) {
+        return {};
+      }
+    })();
+
+    const catalogMap = window.EM_CATALOG_MAP || {};
+    const catalogList = window.EM_CATALOG || [];
+
+    let totalCount = 0;
+    let subtotal = 0;
+    const recentItems = [];
+
+    Object.entries(cartMap).forEach(([id, qtyVal]) => {
+      const qty = Number(qtyVal);
+      if (!Number.isFinite(qty) || qty <= 0) return;
+      totalCount += qty;
+
+      const prod = catalogMap[id] || catalogList.find(p => String(p.id) === String(id));
+      const price = prod ? Number(prod.price || 0) : (itemDetails && String(itemDetails.id) === String(id) ? Number(itemDetails.price || 0) : 0);
+      subtotal += (price * qty);
+
+      if (prod) {
+        recentItems.push({ prod, qty, price });
+      }
+    });
+
+    if (itemDetails && totalCount === 0) {
+      const qty = Number(itemDetails.qty || 1);
+      totalCount = qty;
+      subtotal = Number(itemDetails.price || 0) * qty;
+    }
+
+    // Active Item Card Resolution (Fall back to most recent item in cart if itemDetails wasn't provided)
+    let activeItem = itemDetails;
+    if (!activeItem && recentItems.length > 0) {
+      const latest = recentItems[recentItems.length - 1];
+      activeItem = {
+        id: latest.prod.id,
+        name: latest.prod.name || latest.prod.title,
+        image: latest.prod.image,
+        price: latest.price,
+        qty: latest.qty
+      };
+    }
+
+    const itemCard = document.getElementById("cartFlyoutItemCard");
+    const itemImg = document.getElementById("cartFlyoutItemImg");
+    const itemTitle = document.getElementById("cartFlyoutItemTitle");
+    const itemQty = document.getElementById("cartFlyoutItemQty");
+    const itemPrice = document.getElementById("cartFlyoutItemPrice");
+
+    if (activeItem && itemCard) {
+      itemCard.style.display = "flex";
+      if (itemImg) itemImg.src = activeItem.image || "product-placeholder.svg";
+      const locTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(activeItem, currentLang) : (activeItem.name || activeItem.title || "")).trim();
+      if (itemTitle) itemTitle.textContent = locTitle || "Product";
+      const qty = Number(activeItem.qty || activeItem.quantity || 1);
+      if (itemQty) itemQty.textContent = `${t.qty || "Qty"}: ${qty}`;
+      const price = Number(activeItem.price || 0);
+      if (itemPrice) itemPrice.textContent = `₹${(price * qty).toLocaleString("en-IN")}`;
+    } else if (itemCard) {
+      itemCard.style.display = "none";
+    }
+
+    const subtotalItems = document.getElementById("cartFlyoutSubtotalItems");
+    const subtotalAmount = document.getElementById("cartFlyoutSubtotalAmount");
+    const checkoutCount = document.getElementById("cartFlyoutCheckoutCount");
+
+    const itemWord = totalCount === 1 ? (t.item || "item") : (t.items || "items");
+    if (subtotalItems) subtotalItems.textContent = `(${totalCount} ${itemWord}):`;
+    if (subtotalAmount) subtotalAmount.textContent = `₹${subtotal.toLocaleString("en-IN")}`;
+    if (checkoutCount) checkoutCount.textContent = `(${totalCount} ${itemWord})`;
+
+    const deliveryBanner = document.getElementById("cartFlyoutDeliveryBanner");
+    if (deliveryBanner) {
+      deliveryBanner.style.display = (subtotal >= 499 || totalCount > 0) ? "flex" : "none";
+    }
+
+    const itemsListEl = document.getElementById("cartFlyoutItemsList");
+    if (itemsListEl) {
+      if (recentItems.length > 0) {
+        itemsListEl.innerHTML = recentItems.slice(0, 5).map(({ prod, qty, price }) => {
+          const title = (window.getLocalizedTitle ? window.getLocalizedTitle(prod, currentLang) : (prod.name || prod.title || "")).trim();
+          return `
+            <div class="cart-flyout-mini-item">
+              <img src="${prod.image || 'product-placeholder.svg'}" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" class="mini-item-img" />
+              <div class="mini-item-details">
+                <a href="product-detail.html?id=${encodeURIComponent(prod.id)}" class="mini-item-title">${title}</a>
+                <div class="mini-item-price-qty">
+                  <span class="mini-qty">Qty: ${qty}</span>
+                  <span class="mini-price">₹${(price * qty).toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      } else {
+        itemsListEl.innerHTML = `<p class="mini-cart-empty">${t.cart_empty || "Your cart is empty"}</p>`;
+      }
+    }
+
+    // Localize drawer labels
+    flyout.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (t[key]) el.textContent = t[key];
+    });
+
+    overlay.removeAttribute("hidden");
+    flyout.removeAttribute("hidden");
+    document.body.classList.add("cart-flyout-open");
+
+    void flyout.offsetWidth;
+    overlay.classList.add("open");
+    flyout.classList.add("open");
+
+    const closeBtn = document.getElementById("cartFlyoutClose");
+    if (closeBtn && !closeBtn._bound) {
+      closeBtn._bound = true;
+      closeBtn.addEventListener("click", closeCartFlyout);
+    }
+    if (!overlay._bound) {
+      overlay._bound = true;
+      overlay.addEventListener("click", closeCartFlyout);
+    }
+  }
+
+  function closeCartFlyout() {
+    const flyout = document.getElementById("cartFlyout");
+    const overlay = document.getElementById("cartFlyoutOverlay");
+    if (!flyout) return;
+
+    flyout.classList.remove("open");
+    if (overlay) overlay.classList.remove("open");
+    document.body.classList.remove("cart-flyout-open");
+
+    setTimeout(() => {
+      if (!flyout.classList.contains("open")) {
+        flyout.setAttribute("hidden", "");
+        if (overlay) overlay.setAttribute("hidden", "");
+      }
+    }, 300);
+  }
+
+  window.openCartFlyout = openCartFlyout;
+  window.closeCartFlyout = closeCartFlyout;
+
+  function initCartFlyoutManager() {
+    ensureCartFlyout();
+
+    const closeBtn = document.getElementById("cartFlyoutClose");
+    const overlay = document.getElementById("cartFlyoutOverlay");
+    if (closeBtn && !closeBtn._bound) {
+      closeBtn._bound = true;
+      closeBtn.addEventListener("click", closeCartFlyout);
+    }
+    if (overlay && !overlay._bound) {
+      overlay._bound = true;
+      overlay.addEventListener("click", closeCartFlyout);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const flyout = document.getElementById("cartFlyout");
+        if (flyout && flyout.classList.contains("open")) {
+          closeCartFlyout();
+        }
+      }
+    });
+
+    window.addEventListener("electromart:itemAddedToCart", (e) => {
+      if (e && e.detail) {
+        openCartFlyout(e.detail);
+      }
+    });
+  }
+
   if (document.getElementById('headerContainer')) {
     injectHeader();
     initThemeToggle();
     initCartObserver();
     initDeliveryLocationManager();
+    initCartFlyoutManager();
   } else if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       injectHeader();
       initThemeToggle();
       initCartObserver();
       initDeliveryLocationManager();
+      initCartFlyoutManager();
     });
   } else {
     injectHeader();
     initThemeToggle();
     initCartObserver();
     initDeliveryLocationManager();
+    initCartFlyoutManager();
   }
   
   // Listen for cart changes from other tabs

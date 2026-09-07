@@ -214,6 +214,8 @@ const missingState = document.getElementById("missingState");
 const recentlyViewedDetailSection = document.getElementById("recentlyViewedDetailSection");
 const recentlyViewedDetailGrid = document.getElementById("recentlyViewedDetailGrid");
 const productImage = document.getElementById("productImage");
+const productImageStage = document.getElementById("productImageStage");
+const imageZoomLens = document.getElementById("imageZoomLens");
 const productVideo = document.getElementById("productVideo");
 const mediaThumbRail = document.getElementById("mediaThumbRail");
 const imageZoomPane = document.getElementById("imageZoomPane");
@@ -1579,10 +1581,13 @@ function renderMediaThumbs(mediaItems) {
 }
 
 function hideZoomPane() {
-  if (!imageZoomPane) {
-    return;
+  if (imageZoomPane) {
+    imageZoomPane.classList.remove("show");
   }
-  imageZoomPane.classList.remove("show");
+  if (imageZoomLens) {
+    imageZoomLens.classList.remove("show");
+    imageZoomLens.style.display = "none";
+  }
 }
 
 function setZoomSource(src) {
@@ -1596,15 +1601,65 @@ function setZoomSource(src) {
 
 function updateZoomPanePosition(event) {
   if (!imageZoomPane || !productImage || productImage.hidden || !zoomSourceImage) {
+    hideZoomPane();
     return;
   }
-  const bounds = productImage.getBoundingClientRect();
-  if (!bounds.width || !bounds.height) {
+  if (window.matchMedia("(max-width: 1180px)").matches) {
+    hideZoomPane();
     return;
   }
-  const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
-  const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
-  imageZoomPane.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+
+  const stage = productImageStage || (productImage ? productImage.parentElement : null);
+  const imgBounds = productImage.getBoundingClientRect();
+  const stageBounds = stage ? stage.getBoundingClientRect() : imgBounds;
+
+  if (!imgBounds.width || !imgBounds.height) {
+    hideZoomPane();
+    return;
+  }
+
+  const cursorX = event.clientX;
+  const cursorY = event.clientY;
+
+  // Verify cursor is within image bounds
+  if (
+    cursorX < imgBounds.left ||
+    cursorX > imgBounds.right ||
+    cursorY < imgBounds.top ||
+    cursorY > imgBounds.bottom
+  ) {
+    hideZoomPane();
+    return;
+  }
+
+  const lensW = 140;
+  const lensH = 140;
+
+  const mouseImgX = cursorX - imgBounds.left;
+  const mouseImgY = cursorY - imgBounds.top;
+
+  const maxLensX = Math.max(0, imgBounds.width - lensW);
+  const maxLensY = Math.max(0, imgBounds.height - lensH);
+
+  const clampedLensX = Math.max(0, Math.min(maxLensX, mouseImgX - lensW / 2));
+  const clampedLensY = Math.max(0, Math.min(maxLensY, mouseImgY - lensH / 2));
+
+  const offsetInStageX = imgBounds.left - stageBounds.left;
+  const offsetInStageY = imgBounds.top - stageBounds.top;
+
+  if (imageZoomLens) {
+    imageZoomLens.style.width = `${lensW}px`;
+    imageZoomLens.style.height = `${lensH}px`;
+    imageZoomLens.style.left = `${offsetInStageX + clampedLensX}px`;
+    imageZoomLens.style.top = `${offsetInStageY + clampedLensY}px`;
+    imageZoomLens.style.display = "block";
+    imageZoomLens.classList.add("show");
+  }
+
+  const xRatio = maxLensX > 0 ? clampedLensX / maxLensX : 0.5;
+  const yRatio = maxLensY > 0 ? clampedLensY / maxLensY : 0.5;
+
+  imageZoomPane.style.backgroundPosition = `${xRatio * 100}% ${yRatio * 100}%`;
   imageZoomPane.classList.add("show");
 }
 
@@ -1613,16 +1668,24 @@ function bindZoomEvents() {
     return;
   }
   zoomBound = true;
+
+  const targetEl = productImageStage || productImage;
+
+  targetEl.addEventListener("mousemove", updateZoomPanePosition);
+  targetEl.addEventListener("mouseenter", updateZoomPanePosition);
+  targetEl.addEventListener("mouseleave", hideZoomPane);
+
   productImage.addEventListener("mousemove", updateZoomPanePosition);
   productImage.addEventListener("mouseenter", updateZoomPanePosition);
   productImage.addEventListener("mouseleave", hideZoomPane);
-  productImage.addEventListener("wheel", (event) => {
+
+  targetEl.addEventListener("wheel", (event) => {
     if (window.matchMedia("(max-width: 1180px)").matches) {
       return;
     }
     event.preventDefault();
     const delta = event.deltaY > 0 ? -20 : 20;
-    zoomPaneScale = Math.max(140, Math.min(420, zoomPaneScale + delta));
+    zoomPaneScale = Math.max(160, Math.min(450, zoomPaneScale + delta));
     if (imageZoomPane) {
       imageZoomPane.style.backgroundSize = `${zoomPaneScale}%`;
     }
@@ -2547,6 +2610,14 @@ addToCartBtn.addEventListener("click", () => {
       addToCartBtn.classList.remove("btn-added");
       addToCartBtn.textContent = origText;
     }, 1500);
+
+    const currentProd = window.currentLoadedProduct || (typeof activeRenderedProduct !== "undefined" ? activeRenderedProduct : null);
+    const flyoutPayload = currentProd ? { ...currentProd, qty: addQty } : { id: productId, qty: addQty };
+    if (typeof window.openCartFlyout === "function") {
+      window.openCartFlyout(flyoutPayload);
+    } else {
+      window.dispatchEvent(new CustomEvent("electromart:itemAddedToCart", { detail: flyoutPayload }));
+    }
 
     if (typeof window !== "undefined" && typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
       window.dispatchEvent(new CustomEvent("cart:updated"));

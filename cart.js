@@ -262,6 +262,8 @@ function getCartRows() {
         stock: Number(product.stock),
         quantity: Number(qty),
         category: product.category || "",
+        hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
+        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
         selected: !unselectedMap[String(id)]
       };
     })
@@ -348,10 +350,47 @@ function getPricingBreakdown(rows) {
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
-  const taxableSubtotal = Math.max(0, subtotal - (coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0));
-  const tax = taxableSubtotal * 0.08;
-  const total = subtotal + shipping + tax - coupon.amount;
-  return { itemCount, subtotal, shipping, tax, total, coupon };
+  const nonShippingDiscount = coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0;
+  const discountRatio = subtotal > 0 ? Math.max(0, 1 - (nonShippingDiscount / subtotal)) : 1;
+
+  let totalGst = 0;
+  const gstBreakdownByRate = {};
+
+  selectedRows.forEach((item) => {
+    const itemSubtotal = item.price * item.quantity;
+    const discountedItemSubtotal = itemSubtotal * discountRatio;
+    const rate = typeof item.gstRate === "number" ? item.gstRate : 0.18;
+    const itemGst = discountedItemSubtotal * rate;
+    totalGst += itemGst;
+
+    const rateKey = String(Math.round(rate * 100));
+    gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+  });
+
+  const roundedTax = Math.round(totalGst * 100) / 100;
+  const roundedSubtotal = Math.round(subtotal * 100) / 100;
+  const roundedDiscount = Math.round(coupon.amount * 100) / 100;
+  const total = Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount) * 100) / 100;
+
+  const rates = Object.keys(gstBreakdownByRate);
+  let gstLabelSuffix = "18%";
+  if (rates.length === 1) {
+    gstLabelSuffix = `${rates[0]}%`;
+  } else if (rates.length > 1) {
+    const blended = subtotal > 0 ? Math.round((roundedTax / Math.max(1, subtotal - nonShippingDiscount)) * 100) : 18;
+    gstLabelSuffix = `${blended}%`;
+  }
+
+  return {
+    itemCount,
+    subtotal: roundedSubtotal,
+    shipping,
+    tax: roundedTax,
+    total,
+    coupon,
+    gstBreakdownByRate,
+    gstLabelSuffix
+  };
 }
 
 function getReservationState(rows) {
@@ -488,10 +527,20 @@ function renderCart() {
   subtotalEl.textContent = money(subtotal);
   shippingEl.textContent = money(shipping);
   taxEl.textContent = money(tax);
-  totalEl.textContent = money(total);
+  totalEl.textContent = money(subtotal);
   orderTotalEl.textContent = money(total);
   checkoutBtn.textContent = `${proceedLabel} (${itemCount} ${itemsLabel})`;
   checkoutBtn.disabled = itemCount === 0;
+
+  const cartTaxLabel = document.getElementById("cartTaxLabel");
+  if (cartTaxLabel) {
+    const gstPrefix = t.estimated_gst || "Estimated GST";
+    cartTaxLabel.textContent = `${gstPrefix} (${breakdown.gstLabelSuffix || "18%"}):`;
+  }
+  const subtotalLabelEl = document.getElementById("subtotalLabel");
+  if (subtotalLabelEl) {
+    subtotalLabelEl.textContent = t.subtotal_excl_tax || "Subtotal (Excl. Tax)";
+  }
 
   // Update listing bottom subtotal
   const cartBottomSubtotalLabel = document.getElementById("cartBottomSubtotalLabel");
