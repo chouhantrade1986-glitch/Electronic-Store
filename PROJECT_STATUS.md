@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 17: Amazon-Style Dedicated Auth & Security Suite Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 18: ElectroMart Business B2B Bulk Purchase, GSTIN Verification & RFQ Portal Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 49 / 49 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 50 / 50 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **B2B बल्क व GSTIN पोर्टल टेस्ट** | `node scratch/test-b2b-bulk-purchase-portal.js` | ✅ **PASS** | 9 / 9 ब्लॉक उत्तीर्ण (100%) |
 | **समर्पित ऑथ व सुरक्षा टेस्ट** | `node scratch/test-amazon-login-register.js` | ✅ **PASS** | 7 / 7 ब्लॉक उत्तीर्ण (100%) |
 | **फ़्लाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **सर्च व कैटगरी फ़िल्टरिंग टेस्ट** | `node scratch/test-search-and-category-filtering.js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
@@ -18,7 +19,7 @@
 | **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
 | **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **123 / 123 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **124 / 124 (100% Pass Rate)** |
 
 ---
 
@@ -180,6 +181,17 @@
 - **कूपन प्रो-रेशन (Proration):** कूपन डिस्काउंट को लाइन-टोटल के अनुपात में बांटकर सटीक टैक्स गणना।
 - **11 भाषाओं में लेबल्स:** `Subtotal (Excl. Tax)`, `Estimated GST (18% / 28% / blended)`।
 - **स्वचालित टेस्ट सूट:** `scratch/test-indian-gst-compliance.js` (100% पास)।
+
+### F. ElectroMart Business B2B पोर्टल एवं GSTIN सत्यापन (Phase 18 Completed)
+- **समर्पित B2B पोर्टल (`business.html`, `business.css`, `business.js`):** Amazon Business India शैली में निर्मित एग्जीक्यूटिव नेवी थीम (`#0f1e2e`), कॉर्पोरेट स्टैट्स, और टायर्ड होलसेल ग्रिड।
+- **वैधानिक 15-अंकीय GSTIN सत्यापन:** भारतीय सांविधिक पैटर्न (`^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$`) पर क्लाइंट-साइड रियल-टाइम फीडबैक, 01 से 38 तक राज्य कोड मैपिंग (उदा. 07 -> Delhi, 27 -> Maharashtra), और `electromart_business_profile_v1` में सुरक्षित प्रोफ़ाइल स्टोरेज।
+- **B2B बल्क डिस्काउंट मैट्रिक्स व MOQ:** न्यूनतम ऑर्डर सीमा (MOQ >= 5 यूनिट्स), 5-9 यूनिट्स पर 5% छूट, 10-24 यूनिट्स पर 10% छूट, और 25+ यूनिट्स पर 15% छूट का पारदर्शी स्लैब।
+- **इंटरएक्टिव बल्क कैलकुलेटर:** हार्डवेयर चयन, स्पिनर क्वांटिटी कंट्रोल, थोक छूट व 18%/28% GST इनपुट टैक्स क्रेडिट (ITC) की लाइव गणना, और 1-क्लिक "Add Bulk Order to Cart"।
+- **B2B कार्ट सिंक्रोनाइज़ेशन व लाइन-आइटम बैज:** कार्ट और चेकआउट में `electromart_cart_v1`, `electromart_catalog_v1`, और `electromart_b2b_cart_meta_v1` का सहज समन्वय; प्रत्येक B2B आइटम पर `✓ [Tier] Discount` और `✓ GST ITC Eligible` बैज का दृश्य प्रदर्शन।
+- **RFQ (Request for Quotation) पोर्टल:** 50+ यूनिट्स या कस्टम एंटरप्राइज खरीद हेतु मोडल फॉर्म, इनपुट सत्यापन, स्वतः जनरेटेड ट्रैकिंग आईडी (`EM-RFQ-XXXXXX`), और `electromart_rfq_requests_v1` में डेटा परसिस्टेंस।
+- **माउस व कर्सर इंटरेक्शन (स्थायी नियम):** GSTIN इनपुट, ऑर्गनाइज़ेशन टाइप पिल्स, स्पिनर कंट्रोल्स, टियर कार्ड्स, और RFQ सबमिट बटन पर स्पष्ट `cursor: pointer !important;` और एक्टिव होवर स्टेट्स। साथ ही, बंद होने पर मोडल में `display: none !important; pointer-events: none !important;` द्वारा ज़ीरो-ऑक्लूजन (बिना किसी अनचाहे ओवरले के स्मूथ क्लिक्स)।
+- **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Business (`electromart.in/business` / इलेक्ट्रोमार्ट बिज़नेस); 0 ग्राहक-सामने अमेज़न संदर्भ।
+- **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में B2B कीज और `scratch/test-b2b-bulk-purchase-portal.js` (9/9 ब्लॉक 100% पास)।
 
 ---
 

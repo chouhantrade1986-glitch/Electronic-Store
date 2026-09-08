@@ -254,6 +254,15 @@ function getCartRows() {
         };
       }
 
+      let b2bMeta = {};
+      try {
+        const rawMeta = localStorage.getItem("electromart_b2b_cart_meta_v1");
+        b2bMeta = rawMeta ? JSON.parse(rawMeta) : {};
+      } catch (e) {
+        b2bMeta = {};
+      }
+      const itemB2b = b2bMeta[String(id)] || (product.segment === "b2b" ? { tier: "Wholesale MOQ Ready", itcEligible: true } : null);
+
       return {
         id: String(product.id),
         name: product.name,
@@ -264,6 +273,9 @@ function getCartRows() {
         category: product.category || "",
         hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
         gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
+        segment: product.segment || (itemB2b ? "b2b" : "b2c"),
+        b2bDiscountTier: product.b2bDiscountTier || (itemB2b ? itemB2b.tier : null),
+        itcEligible: product.itcEligible || (itemB2b ? true : false),
         selected: !unselectedMap[String(id)]
       };
     })
@@ -443,6 +455,11 @@ function cartItemCard(row, currentLang) {
         <div class="amz-prime-delivery-tag">
           <strong>Prime</strong> <span>Eligible for FREE Shipping</span>
         </div>
+        ${row.b2bDiscountTier ? `
+        <div class="b2b-cart-badges" style="display:flex;align-items:center;gap:6px;margin:4px 0;flex-wrap:wrap;">
+          <span class="b2b-tier-badge" style="background:#007600;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">✓ ${row.b2bDiscountTier}</span>
+          <span class="b2b-itc-badge" style="color:#007600;font-size:12px;font-weight:600;">✓ GST ITC Eligible</span>
+        </div>` : ''}
         <label class="cart-item-gift">
           <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
         </label>
