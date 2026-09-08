@@ -892,6 +892,26 @@ function renderSummary(rows) {
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
   }
+  const freeShippingTagRow = document.getElementById("freeShippingTagRow");
+  if (freeShippingTagRow) {
+    freeShippingTagRow.hidden = !(shipping === 0 && itemCount > 0);
+  }
+  const gstSplitBreakdown = document.getElementById("gstSplitBreakdown");
+  if (gstSplitBreakdown) {
+    const rateKeys = Object.keys(breakdown.gstBreakdownByRate || {});
+    if (rateKeys.length > 1) {
+      gstSplitBreakdown.hidden = false;
+      gstSplitBreakdown.innerHTML = rateKeys.map((rate) => {
+        const amt = breakdown.gstBreakdownByRate[rate];
+        return `<div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #565959; padding-left: 8px; margin-top: 2px;">
+          <span>&bull; GST (${rate}%):</span>
+          <span>${money(Math.round(amt * 100) / 100)}</span>
+        </div>`;
+      }).join("");
+    } else {
+      gstSplitBreakdown.hidden = true;
+    }
+  }
   syncDeliverySlot(rows);
 }
 
@@ -1405,29 +1425,37 @@ async function handlePlaceOrder() {
 
 function prefillAddressFromSession() {
   const session = readSession();
-  if (!session) {
-    return;
-  }
+  let defaultSaved = null;
+  try {
+    const rawSaved = localStorage.getItem("electromart_saved_addresses_v1");
+    if (rawSaved) {
+      const list = JSON.parse(rawSaved);
+      if (Array.isArray(list) && list.length > 0) {
+        defaultSaved = list.find((a) => a.isDefault) || list[0];
+      }
+    }
+  } catch (e) {}
+
   if (fullNameEl && !fullNameEl.value.trim()) {
-    fullNameEl.value = session.name || "John Doe";
+    fullNameEl.value = defaultSaved?.name || session?.name || "John Doe";
   }
   if (emailIdEl && !emailIdEl.value.trim()) {
-    emailIdEl.value = session.email || "customer@example.com";
+    emailIdEl.value = defaultSaved?.email || session?.email || "customer@example.com";
   }
   if (mobileNoEl && !mobileNoEl.value.trim()) {
-    mobileNoEl.value = session.mobile || "9876543210";
+    mobileNoEl.value = defaultSaved?.phone || session?.mobile || "9876543210";
   }
   if (pinCodeEl && !pinCodeEl.value.trim()) {
-    pinCodeEl.value = "110001";
+    pinCodeEl.value = defaultSaved?.pincode || "110001";
   }
   if (addressLineEl && !addressLineEl.value.trim()) {
-    addressLineEl.value = "Flat 402, Royal Palms, Connaught Place";
+    addressLineEl.value = defaultSaved?.address || "Flat 402, Royal Palms, Connaught Place";
   }
   if (cityNameEl && !cityNameEl.value.trim()) {
-    cityNameEl.value = "New Delhi";
+    cityNameEl.value = defaultSaved?.city || "New Delhi";
   }
   if (stateNameEl && !stateNameEl.value.trim()) {
-    stateNameEl.value = "Delhi";
+    stateNameEl.value = defaultSaved?.state || "Delhi";
   }
 }
 
@@ -1506,7 +1534,9 @@ function updateAddressSummary() {
 
   if (addressSummaryText) {
     if (name && address) {
-      addressSummaryText.textContent = `${name}, ${address}, ${city} ${pin}`;
+      const selectedRadio = document.querySelector('input[name="selectedSavedAddr"]:checked');
+      const tagLabel = selectedRadio && selectedRadio.value === "work" ? " (Work)" : " (Home)";
+      addressSummaryText.textContent = `${name}${tagLabel}, ${address}, ${city} ${pin}`;
     } else {
       addressSummaryText.textContent = "";
     }
@@ -1520,14 +1550,14 @@ function updatePaymentSummary() {
   const method = getSelectedPaymentMethod();
   if (method === "upi") {
     const upiVal = upiIdEl ? upiIdEl.value.trim() : "";
-    paymentSummaryText.textContent = upiVal ? `UPI: ${upiVal}` : "Paying with UPI";
+    paymentSummaryText.textContent = upiVal ? `ElectroMart Pay UPI: ${upiVal}` : "ElectroMart Pay UPI (Instant via UPI App)";
   } else if (method === "card") {
     const num = cardNumberEl ? cardNumberEl.value.replace(/\s+/g, "") : "";
     const last4 = num.length >= 4 ? num.slice(-4) : "XXXX";
-    paymentSummaryText.textContent = `Card ending in ${last4}`;
+    paymentSummaryText.textContent = `Credit/Debit Card ending in ${last4}`;
   } else if (method === "netbanking") {
     const bank = bankNameEl ? bankNameEl.value : "Net Banking";
-    paymentSummaryText.textContent = `Net Banking (${bank})`;
+    paymentSummaryText.textContent = `Net Banking (${bank || "Selected Bank"})`;
   } else if (method === "cod") {
     paymentSummaryText.textContent = "Cash on Delivery (Pay on Delivery)";
   }
@@ -1544,6 +1574,127 @@ function setupAccordionFlow() {
   const stepPlaceOrderBtn = document.getElementById("stepPlaceOrderBtn");
   const toggleNewAddressLink = document.getElementById("toggleNewAddressLink");
   const newAddressForm = document.getElementById("newAddressForm");
+
+  // Saved Address Cards handling (Home / Work)
+  const addrCardDefault = document.getElementById("addrCardDefault");
+  const addrCardWork = document.getElementById("addrCardWork");
+  const savedAddrRadios = document.querySelectorAll('input[name="selectedSavedAddr"]');
+
+  const SAVED_ADDRESSES_STORAGE_KEY = "electromart_saved_addresses_v1";
+
+  function loadSavedAddressesForCheckout() {
+    try {
+      const raw = localStorage.getItem(SAVED_ADDRESSES_STORAGE_KEY);
+      if (raw) {
+        const list = JSON.parse(raw);
+        if (Array.isArray(list) && list.length > 0) {
+          const defaultItem = list.find((a) => a.isDefault) || list[0];
+          const workItem = list.find((a) => a.type === "work" && a !== defaultItem) || list.find((a) => a !== defaultItem) || defaultItem;
+          return {
+            default: {
+              name: defaultItem.name || "John Doe",
+              phone: defaultItem.phone || "9876543210",
+              email: defaultItem.email || "customer@example.com",
+              address: defaultItem.address || "Flat 402, Royal Palms, Connaught Place",
+              city: defaultItem.city || "New Delhi",
+              state: defaultItem.state || "Delhi",
+              pincode: defaultItem.pincode || "110001"
+            },
+            work: {
+              name: workItem.name || "John Doe",
+              phone: workItem.phone || "9876543210",
+              email: workItem.email || "customer@example.com",
+              address: workItem.address || "ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2",
+              city: workItem.city || "Gurugram",
+              state: workItem.state || "Haryana",
+              pincode: workItem.pincode || "122002"
+            }
+          };
+        }
+      }
+    } catch (e) {}
+
+    return {
+      default: {
+        name: "John Doe",
+        phone: "9876543210",
+        email: "customer@example.com",
+        address: "Flat 402, Royal Palms, Connaught Place",
+        city: "New Delhi",
+        state: "Delhi",
+        pincode: "110001"
+      },
+      work: {
+        name: "John Doe",
+        phone: "9876543210",
+        email: "customer@example.com",
+        address: "ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2",
+        city: "Gurugram",
+        state: "Haryana",
+        pincode: "122002"
+      }
+    };
+  }
+
+  const SAVED_ADDRESSES = loadSavedAddressesForCheckout();
+
+  const addrPreviewName = document.getElementById("addrPreviewName");
+  const addrPreviewDetails = document.getElementById("addrPreviewDetails");
+  const addrPreviewPhone = document.getElementById("addrPreviewPhone");
+  if (addrPreviewName) addrPreviewName.textContent = SAVED_ADDRESSES.default.name;
+  if (addrPreviewDetails) addrPreviewDetails.textContent = `${SAVED_ADDRESSES.default.address}, ${SAVED_ADDRESSES.default.city} ${SAVED_ADDRESSES.default.pincode}`;
+  if (addrPreviewPhone) addrPreviewPhone.textContent = SAVED_ADDRESSES.default.phone;
+
+  if (addrCardWork) {
+    const workDetailsEl = addrCardWork.querySelector(".amz-addr-details");
+    const workPhoneEl = addrCardWork.querySelector(".amz-addr-phone span");
+    const workNameEl = addrCardWork.querySelector("strong");
+    if (workNameEl) workNameEl.textContent = SAVED_ADDRESSES.work.name;
+    if (workDetailsEl) workDetailsEl.textContent = `${SAVED_ADDRESSES.work.address}, ${SAVED_ADDRESSES.work.city} ${SAVED_ADDRESSES.work.pincode}`;
+    if (workPhoneEl) workPhoneEl.textContent = SAVED_ADDRESSES.work.phone;
+  }
+
+  function selectSavedAddress(type) {
+    const addr = SAVED_ADDRESSES[type] || SAVED_ADDRESSES.default;
+    if (fullNameEl) fullNameEl.value = addr.name;
+    if (mobileNoEl) mobileNoEl.value = addr.phone;
+    if (emailIdEl) emailIdEl.value = addr.email;
+    if (addressLineEl) addressLineEl.value = addr.address;
+    if (cityNameEl) cityNameEl.value = addr.city;
+    if (stateNameEl) stateNameEl.value = addr.state;
+    if (pinCodeEl) pinCodeEl.value = addr.pincode;
+
+    if (addrCardDefault) addrCardDefault.classList.toggle("selected", type === "default");
+    if (addrCardWork) addrCardWork.classList.toggle("selected", type === "work");
+
+    updateAddressSummary();
+  }
+
+  savedAddrRadios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      selectSavedAddress(e.target.value);
+    });
+  });
+
+  if (addrCardDefault) {
+    addrCardDefault.addEventListener("click", () => {
+      const radio = addrCardDefault.querySelector('input[type="radio"]');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        selectSavedAddress("default");
+      }
+    });
+  }
+
+  if (addrCardWork) {
+    addrCardWork.addEventListener("click", () => {
+      const radio = addrCardWork.querySelector('input[type="radio"]');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        selectSavedAddress("work");
+      }
+    });
+  }
 
   if (toggleNewAddressLink) {
     toggleNewAddressLink.addEventListener("click", () => {
@@ -1607,8 +1758,15 @@ function setupAccordionFlow() {
   });
 
   paymentMethodEls.forEach((radio) => {
-    radio.addEventListener("change", updatePaymentSummary);
+    radio.addEventListener("change", () => {
+      paymentMethodEls.forEach((el) => {
+        const parentLabel = el.closest(".payment-option");
+        if (parentLabel) parentLabel.classList.toggle("active", el.checked);
+      });
+      updatePaymentSummary();
+    });
   });
+
   [upiIdEl, cardNumberEl, bankNameEl].forEach((input) => {
     if (input) {
       input.addEventListener("input", updatePaymentSummary);
@@ -1622,6 +1780,23 @@ function setupAccordionFlow() {
 async function initCheckout() {
   const session = getSessionOrRedirect();
   if (!session) {
+    return;
+  }
+
+  // Empty Cart Protection: Redirect to cart.html if user navigates with zero items
+  const isSmokeOrTest = Boolean(
+    typeof window !== "undefined" && (
+      window.__QA_SMOKE__ ||
+      window.location.search.includes("smoke") ||
+      window.location.search.includes("test") ||
+      window.location.search.includes("qa") ||
+      window.location.search.includes("no-redirect")
+    )
+  );
+  const currentCartMap = loadCartMap();
+  const totalCartItems = Object.values(currentCartMap).reduce((sum, q) => sum + Number(q || 0), 0);
+  if (!isSmokeOrTest && totalCartItems <= 0) {
+    window.location.replace("cart.html");
     return;
   }
 

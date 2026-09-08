@@ -509,7 +509,20 @@ function renderSavedForLater() {
   }).join("");
 }
 
+function syncHeaderCartCount() {
+  const countEl = document.getElementById("cartCount") || document.querySelector(".nav-cart-count");
+  const cartMap = loadCartMap();
+  const total = Object.values(cartMap).reduce((sum, q) => sum + (Number(q) || 0), 0);
+  if (countEl) {
+    countEl.textContent = String(total);
+  }
+  if (typeof window.syncCartCount === "function") {
+    window.syncCartCount();
+  }
+}
+
 function renderCart() {
+  syncHeaderCartCount();
   const rows = getCartRows();
   const breakdown = getPricingBreakdown(rows);
   const { itemCount, subtotal, shipping, tax, total, coupon } = breakdown;

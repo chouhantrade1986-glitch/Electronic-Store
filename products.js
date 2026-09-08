@@ -361,6 +361,12 @@ function syncSearchCategoryControls(nextValue) {
   if (categoryFilter) {
     categoryFilter.value = safeValue;
   }
+  const deptLinks = document.querySelectorAll("#amzDeptTree .amz-dept-link");
+  if (deptLinks.length) {
+    deptLinks.forEach((link) => {
+      link.classList.toggle("active", (link.getAttribute("data-category") || "all") === safeValue);
+    });
+  }
   const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
   if (headerCat && headerCat !== categoryFilter) {
     if (headerCat.querySelector(`option[value="${safeValue}"]`)) {
@@ -391,6 +397,27 @@ function syncSearchCategoryControls(nextValue) {
 
 function getBrandFilters() {
   return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function updateDeptTreeCounts(productsList = mergeProductsById(fallbackProducts, loadCatalogProductsList())) {
+  if (!Array.isArray(productsList) || !productsList.length) return;
+  const counts = { all: productsList.length };
+  productsList.forEach((item) => {
+    const collections = normalizeCollectionValues(item.collections, item.category);
+    collections.forEach((cat) => {
+      const c = String(cat).toLowerCase().trim();
+      counts[c] = (counts[c] || 0) + 1;
+    });
+  });
+  document.querySelectorAll("[data-category-count]").forEach((span) => {
+    const cat = span.getAttribute("data-category-count");
+    if (cat === "all") {
+      span.textContent = `(${productsList.length})`;
+    } else {
+      const cnt = counts[cat] || 0;
+      span.textContent = cnt ? `(${cnt})` : "";
+    }
+  });
 }
 
 const BRAND_ALIAS_MAP = {
@@ -465,7 +492,7 @@ function getProductsForBrandOptions(sourceProducts) {
 }
 
 let _brandSeeMoreExpanded = false;
-const BRAND_FILTER_VISIBLE_COUNT = 6;
+const BRAND_FILTER_VISIBLE_COUNT = 10;
 let _brandSeeMoreDelegationAttached = false;
 
 function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts, loadCatalogProductsList())) {
@@ -515,11 +542,22 @@ function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts,
   const needsToggle = options.length > BRAND_FILTER_VISIBLE_COUNT;
   const isCollapsed = needsToggle && !_brandSeeMoreExpanded;
 
-  /* Move selected brands to the top so checked items are always visible */
+  /* Major brands requested by standard Amazon India electronics catalogue */
+  const majorBrandsOrder = ["Apple", "Samsung", "ASUS", "Sony", "Lenovo", "HP", "Dell", "OnePlus", "boAt", "Logitech"];
+
+  /* Prioritise selected brands first, followed by major catalog brands, then alphabetical */
   const prioritised = [...options].sort((a, b) => {
     const aSelected = selectedBrandKeys.has(a.key) ? 0 : 1;
     const bSelected = selectedBrandKeys.has(b.key) ? 0 : 1;
-    return aSelected - bSelected;
+    if (aSelected !== bSelected) return aSelected - bSelected;
+
+    const aMajorIdx = majorBrandsOrder.findIndex((m) => m.toLowerCase() === a.key.toLowerCase());
+    const bMajorIdx = majorBrandsOrder.findIndex((m) => m.toLowerCase() === b.key.toLowerCase());
+    if (aMajorIdx !== -1 && bMajorIdx !== -1) return aMajorIdx - bMajorIdx;
+    if (aMajorIdx !== -1) return -1;
+    if (bMajorIdx !== -1) return 1;
+
+    return a.label.localeCompare(b.label);
   });
 
   brandFilterList.className = "brand-filter-list" + (isCollapsed ? " collapsed" : "");
@@ -528,7 +566,7 @@ function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts,
     .map((option, idx) => {
       const checked = selectedBrandKeys.has(option.key) ? " checked" : "";
       const extraClass = idx >= BRAND_FILTER_VISIBLE_COUNT ? " brand-filter-item-extra" : "";
-      return `<label class="check-item${extraClass}"><input type="checkbox" class="brand-filter" value="${escapeSuggestionHtml(option.label)}"${checked} /> ${escapeSuggestionHtml(option.label)}</label>`;
+      return `<label class="brand-checkbox check-item${extraClass}"><input type="checkbox" class="brand-filter" value="${escapeSuggestionHtml(option.label)}"${checked} /> <span>${escapeSuggestionHtml(option.label)}</span></label>`;
     })
     .join("") + (needsToggle
     ? `<button type="button" class="brand-see-more-btn${_brandSeeMoreExpanded ? " expanded" : ""}" id="brandSeeMoreBtn">
@@ -1214,6 +1252,12 @@ function mapSort(value) {
   if (value === "rating-desc" || value === "rating") {
     return "rating_desc";
   }
+  if (value === "newest") {
+    return "newest";
+  }
+  if (value === "bestseller") {
+    return "bestseller";
+  }
   return "relevance";
 }
 
@@ -1552,7 +1596,7 @@ function renderActiveFilterMeta() {
     });
   }
   if (state.selectedMinRating > 0) {
-    const label = `Rating: ${state.selectedMinRating}+`;
+    const label = `Rating: ${state.selectedMinRating}★ & Up`;
     summaryBits.push(label);
     chips.push({
       action: "rating",
@@ -1571,16 +1615,62 @@ function renderActiveFilterMeta() {
       ariaLabel: `Reset price range filter`
     });
   }
+  if (selectedMinDiscount > 0) {
+    const label = `Discount: ${selectedMinDiscount}%+ Off`;
+    summaryBits.push(label);
+    chips.push({
+      action: "discount",
+      value: "0",
+      label,
+      ariaLabel: `Remove discount filter ${selectedMinDiscount}% and above`
+    });
+  }
+  const codEl = document.getElementById("payOnDelivery");
+  if (codEl && codEl.checked) {
+    const label = "Pay on Delivery";
+    summaryBits.push(label);
+    chips.push({
+      action: "pay-on-delivery",
+      value: "",
+      label,
+      ariaLabel: "Remove Pay on Delivery filter"
+    });
+  }
+  const freeDelEl = document.getElementById("freeDelivery");
+  if (freeDelEl && freeDelEl.checked) {
+    const label = "Free Delivery";
+    summaryBits.push(label);
+    chips.push({
+      action: "free-delivery",
+      value: "",
+      label,
+      ariaLabel: "Remove Free Delivery filter"
+    });
+  }
+  const inStockEl = document.getElementById("inStockOnly");
+  if (inStockEl && inStockEl.checked) {
+    const label = "Include Out of Stock";
+    summaryBits.push(label);
+    chips.push({
+      action: "in-stock",
+      value: "",
+      label,
+      ariaLabel: "Remove Include Out of Stock filter"
+    });
+  }
 
   const nextSummary = summaryBits.length ? `Filters: ${summaryBits.join(" | ")}` : "Filters: None";
   activeFilterMeta.textContent = nextSummary;
 
+  const activeContainer = document.getElementById("activeFiltersContainer");
   if (activeFilterChips) {
     if (!chips.length) {
       activeFilterChips.hidden = true;
       activeFilterChips.innerHTML = "";
+      if (activeContainer) activeContainer.style.display = "none";
     } else {
       activeFilterChips.hidden = false;
+      if (activeContainer) activeContainer.style.display = "block";
       const filterChipMarkup = chips
         .map((chip) => `
           <button
@@ -2062,7 +2152,13 @@ function syncDrawerWishlistState(productId) {
 function closeQuickViewDrawer() {
   if (!qvDrawer) return;
   qvDrawer.classList.remove("open");
-  if (qvDrawerOverlay) qvDrawerOverlay.style.display = "none";
+  qvDrawer.style.display = "none";
+  qvDrawer.style.pointerEvents = "none";
+  if (qvDrawerOverlay) {
+    qvDrawerOverlay.classList.remove("open");
+    qvDrawerOverlay.style.display = "none";
+    qvDrawerOverlay.style.pointerEvents = "none";
+  }
   document.body.classList.remove("quick-view-open");
   currentQuickViewProductId = "";
 }
@@ -2189,7 +2285,14 @@ function openQuickViewDrawer(productId) {
   renderFBTSection(product);
 
   /* Open the drawer */
-  if (qvDrawerOverlay) qvDrawerOverlay.style.display = "block";
+  if (qvDrawerOverlay) {
+    qvDrawerOverlay.style.display = "block";
+    qvDrawerOverlay.style.pointerEvents = "auto";
+    qvDrawerOverlay.classList.add("open");
+  }
+  qvDrawer.style.display = "flex";
+  qvDrawer.style.pointerEvents = "auto";
+  void qvDrawer.offsetWidth;
   qvDrawer.classList.add("open");
   document.body.classList.add("quick-view-open");
 }
@@ -2197,6 +2300,59 @@ function openQuickViewDrawer(productId) {
 /* Keep old name as alias for backward compat */
 function openQuickViewModal(productId) { openQuickViewDrawer(productId); }
 function closeQuickViewModal() { closeQuickViewDrawer(); }
+
+let currentPage = 1;
+let itemsPerPage = 20;
+
+function renderPagination(totalItems, currentPg, perPage) {
+  const paginationEl = document.getElementById("pagination");
+  if (!paginationEl) return;
+  const totalPages = Math.ceil(totalItems / perPage) || 1;
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = "";
+    paginationEl.style.display = "none";
+    return;
+  }
+  paginationEl.style.display = "flex";
+  let html = "";
+  
+  // Previous button
+  const prevDisabled = currentPg <= 1 ? " disabled" : "";
+  html += `<button type="button" class="pagination-btn pagination-prev"${prevDisabled} data-page="${currentPg - 1}">‹ Previous</button>`;
+
+  // Page numbers
+  const maxButtons = 5;
+  let startPage = Math.max(1, currentPg - 2);
+  let endPage = Math.min(totalPages, currentPg + 2);
+  if (startPage <= 2) {
+    startPage = 1;
+    endPage = Math.min(totalPages, maxButtons);
+  } else if (endPage >= totalPages - 1) {
+    endPage = totalPages;
+    startPage = Math.max(1, totalPages - maxButtons + 1);
+  }
+
+  if (startPage > 1) {
+    html += `<button type="button" class="pagination-btn" data-page="1">1</button>`;
+    if (startPage > 2) html += `<span class="pagination-ellipsis">...</span>`;
+  }
+
+  for (let p = startPage; p <= endPage; p++) {
+    const active = p === currentPg ? " active" : "";
+    html += `<button type="button" class="pagination-btn${active}" data-page="${p}">${p}</button>`;
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) html += `<span class="pagination-ellipsis">...</span>`;
+    html += `<button type="button" class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+  }
+
+  // Next button
+  const nextDisabled = currentPg >= totalPages ? " disabled" : "";
+  html += `<button type="button" class="pagination-btn pagination-next"${nextDisabled} data-page="${currentPg + 1}">Next ›</button>`;
+
+  paginationEl.innerHTML = html;
+}
 
 function renderProducts(list) {
   lastRenderedProducts = list.slice();
@@ -2213,6 +2369,7 @@ function renderProducts(list) {
 
   if (!list.length) {
     productsGrid.innerHTML = renderZeroResultsState();
+    renderPagination(0, 1, itemsPerPage);
     if (resultsFooter) {
       resultsFooter.hidden = true;
     }
@@ -2220,21 +2377,49 @@ function renderProducts(list) {
     return;
   }
 
-  visibleResultCount = Math.min(list.length, Math.max(PRODUCTS_INITIAL_RENDER_LIMIT, visibleResultCount || 0));
-  const visibleItems = list.slice(0, visibleResultCount);
+  const itemsPerPageSelect = document.getElementById("itemsPerPage");
+  if (itemsPerPageSelect) {
+    itemsPerPage = Number(itemsPerPageSelect.value) || 20;
+  }
+
+  const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+  currentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, list.length);
+  const visibleItems = list.slice(startIndex, endIndex);
+
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
-  resultMeta.textContent = `${t.showing || "Showing"} ${visibleItems.length} ${t.of || "of"} ${list.length} ${t.products || "products"}`;
-  productsGrid.innerHTML = visibleItems.map(productCard).join("");
+  
+  const startNum = startIndex + 1;
+  const endNum = endIndex;
+  const activeQuery = (searchInput?.value || "").trim();
+  const activeCat = categoryFilter?.value || "all";
+  const totalStr = list.length > 700 ? `over ${Math.floor(list.length / 100) * 100}` : String(list.length);
 
-  if (resultsFooter && resultsWindowMeta && loadMoreBtn) {
-    const hasMore = visibleItems.length < list.length;
-    resultsFooter.hidden = false;
-    resultsWindowMeta.textContent = hasMore
-      ? `${list.length - visibleItems.length} more products available`
-      : "All matching products loaded";
-    loadMoreBtn.hidden = !hasMore;
-    loadMoreBtn.disabled = !hasMore;
+  if (currentLang === "en") {
+    if (activeQuery) {
+      resultMeta.textContent = `${startNum}-${endNum} of ${totalStr} results for "${activeQuery}"`;
+    } else if (activeCat !== "all") {
+      resultMeta.textContent = `${startNum}-${endNum} of ${list.length} results for "${categoryLabel(activeCat)}"`;
+    } else {
+      resultMeta.textContent = `${startNum}-${endNum} of ${totalStr} results`;
+    }
+  } else {
+    if (activeQuery) {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"} ${t.results_for_prefix || "for"} "${activeQuery}"`;
+    } else if (activeCat !== "all") {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"} (${categoryLabel(activeCat)})`;
+    } else {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"}`;
+    }
+  }
+
+  productsGrid.innerHTML = visibleItems.map(productCard).join("");
+  renderPagination(list.length, currentPage, itemsPerPage);
+
+  if (resultsFooter) {
+    resultsFooter.hidden = true;
   }
   flushFilterAnnouncement(resultMeta.textContent);
 }
@@ -2314,13 +2499,15 @@ function resetAllFilters() {
   sortFilter.value = "relevance";
   searchInput.value = "";
   minPriceRange.value = String(minPriceRange.min || 0);
-  maxPriceRange.value = String(maxPriceRange.max || 16000);
+  maxPriceRange.value = String(maxPriceRange.max || 200000);
   selectedMinRating = 0;
   selectedMinDiscount = 0;
+  currentPage = 1;
   const minInp = document.getElementById("minPriceInput");
   const maxInp = document.getElementById("maxPriceInput");
   if (minInp) minInp.value = "";
   if (maxInp) maxInp.value = "";
+  document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
   document.querySelectorAll(".amz-dept-link").forEach((el) => {
     el.classList.toggle("active", el.getAttribute("data-category") === "all");
   });
@@ -2328,6 +2515,10 @@ function resetAllFilters() {
   document.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
   const payCod = document.getElementById("payOnDelivery");
   if (payCod) payCod.checked = false;
+  const freeDel = document.getElementById("freeDelivery");
+  if (freeDel) freeDel.checked = false;
+  const nextDay = document.getElementById("nextDayDelivery");
+  if (nextDay) nextDay.checked = false;
   const inStockOnly = document.getElementById("inStockOnly");
   if (inStockOnly) inStockOnly.checked = false;
   syncRatingChipUI();
@@ -2401,7 +2592,7 @@ function applyClientFilters(sourceProducts) {
     const segmentMatch = selectedSegment === "all" || item.segment === selectedSegment;
     const priceMatch = Number(item.price || 0) >= priceFloor && Number(item.price || 0) <= priceCeil;
     const ratingMatch = Number(item.rating || 0) >= selectedMinRating;
-    const brandMatch = !checkedBrands.length || checkedBrands.includes(item.brand);
+    const brandMatch = !checkedBrands.length || checkedBrands.some((b) => b.trim().toLowerCase() === String(item.brand || "").trim().toLowerCase());
 
     // Discount filter
     const listPrice = Number(item.listPrice || item.price || 0);
@@ -2417,7 +2608,11 @@ function applyClientFilters(sourceProducts) {
     const payOnDelivery = document.getElementById("payOnDelivery");
     const codMatch = !payOnDelivery || !payOnDelivery.checked ? true : (item.segment !== "b2b");
 
-    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch && discountMatch && stockMatch && codMatch;
+    // Free Delivery filter
+    const freeDelivery = document.getElementById("freeDelivery");
+    const freeDeliveryMatch = !freeDelivery || !freeDelivery.checked ? true : (Number(item.price || 0) >= 499 || item.segment === "b2b");
+
+    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch && discountMatch && stockMatch && codMatch && freeDeliveryMatch;
   });
 
   if (selectedSort === "price_asc") {
@@ -2426,6 +2621,10 @@ function applyClientFilters(sourceProducts) {
     items = items.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
   } else if (selectedSort === "rating_desc") {
     items = items.sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
+  } else if (selectedSort === "newest") {
+    items = items.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  } else if (selectedSort === "bestseller") {
+    items = items.sort((a, b) => (Number(b.rating || 0) * (Number(b.reviewCount || 10))) - (Number(a.rating || 0) * (Number(a.reviewCount || 10))));
   }
 
   return items;
@@ -2449,6 +2648,7 @@ async function fetchProductsFromApi() {
   try {
     response = await fetch(`${API_BASE_URL}/products?${params.toString()}`);
   } catch (error) {
+    updateDeptTreeCounts(fallbackSource);
     renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
@@ -2456,6 +2656,7 @@ async function fetchProductsFromApi() {
 
   const data = await response.json().catch(() => null);
   if (!response.ok || !data || !Array.isArray(data.products)) {
+    updateDeptTreeCounts(fallbackSource);
     renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
@@ -2465,9 +2666,10 @@ async function fetchProductsFromApi() {
   const sourceItems = mergeProductsById(data.products, loadCatalogProductsList());
   syncDynamicCategoryUI();
   syncDynamicBrandUI(sourceItems);
+  updateDeptTreeCounts(sourceItems);
   let items = sourceItems;
   if (!activeQuery && checkedBrands.length > 1) {
-    items = items.filter((item) => checkedBrands.includes(item.brand));
+    items = items.filter((item) => checkedBrands.some((b) => b.trim().toLowerCase() === String(item.brand || "").trim().toLowerCase()));
   }
   items = applyClientFilters(items);
   renderProducts(items);
@@ -2594,15 +2796,20 @@ if (searchSuggestions) {
   });
 }
 if (sortFilter) {
-  sortFilter.addEventListener("change", fetchProductsFromApi);
+  sortFilter.addEventListener("change", () => {
+    currentPage = 1;
+    fetchProductsFromApi();
+  });
 }
 
 minPriceRange.addEventListener("input", () => {
+  currentPage = 1;
   updatePriceLabels();
   fetchProductsFromApi();
 });
 
 maxPriceRange.addEventListener("input", () => {
+  currentPage = 1;
   updatePriceLabels();
   fetchProductsFromApi();
 });
@@ -2610,12 +2817,21 @@ maxPriceRange.addEventListener("input", () => {
 if (brandFilterList) {
   brandFilterList.addEventListener("change", (event) => {
     if (event.target.closest(".brand-filter")) {
+      currentPage = 1;
       fetchProductsFromApi();
     }
   });
 }
 if (resetFiltersBtn) {
   resetFiltersBtn.addEventListener("click", resetAllFilters);
+}
+const clearAllTop = document.getElementById("clearAllFilters");
+if (clearAllTop && clearAllTop !== resetFiltersBtn) {
+  clearAllTop.addEventListener("click", resetAllFilters);
+}
+const clearAllEmpty = document.getElementById("clearFiltersBtn");
+if (clearAllEmpty && clearAllEmpty !== resetFiltersBtn) {
+  clearAllEmpty.addEventListener("click", resetAllFilters);
 }
 
   function animateFilterChipRemoval(chip, callback) {
@@ -2672,10 +2888,34 @@ if (resetFiltersBtn) {
         feedbackMessage = "Removed rating filter. Focus moved to the rating options.";
       } else if (action === "price") {
         minPriceRange.value = String(minPriceRange.min || 0);
-        maxPriceRange.value = String(maxPriceRange.max || 16000);
+        maxPriceRange.value = String(maxPriceRange.max || 200000);
+        const minInp = document.getElementById("minPriceInput");
+        const maxInp = document.getElementById("maxPriceInput");
+        if (minInp) minInp.value = "";
+        if (maxInp) maxInp.value = "";
+        document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
         updatePriceLabels();
         focusTarget = minPriceRange;
         feedbackMessage = "Removed price filter. Focus moved to the minimum price slider.";
+      } else if (action === "discount") {
+        selectedMinDiscount = 0;
+        document.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+        feedbackMessage = "Removed discount filter.";
+      } else if (action === "pay-on-delivery") {
+        const cod = document.getElementById("payOnDelivery");
+        if (cod) cod.checked = false;
+        focusTarget = cod;
+        feedbackMessage = "Removed Pay on Delivery filter.";
+      } else if (action === "free-delivery") {
+        const fd = document.getElementById("freeDelivery");
+        if (fd) fd.checked = false;
+        focusTarget = fd;
+        feedbackMessage = "Removed Free Delivery filter.";
+      } else if (action === "in-stock") {
+        const stk = document.getElementById("inStockOnly");
+        if (stk) stk.checked = false;
+        focusTarget = stk;
+        feedbackMessage = "Removed Out of Stock filter.";
       } else {
         return;
       }
@@ -2755,7 +2995,10 @@ document.addEventListener("click", (event) => {
     if (productId) {
       const active = toggleWishlist(productId);
       wishlistBtn.classList.toggle("active", active);
-      wishlistBtn.textContent = active ? "Wishlisted" : "Wishlist";
+      const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+      const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+      const label = active ? (t.wishlisted || "Wishlisted") : (t.wishlist || "Wishlist");
+      wishlistBtn.innerHTML = `<span class="heart-icon">${active ? "♥" : "♡"}</span> ${label}`;
     }
     return;
   }
@@ -2860,6 +3103,65 @@ if (qvFbtAddAll) {
   });
 }
 
+function setupViewToggleAndPagination() {
+  // 1. Grid / List View Toggle
+  const viewBtns = document.querySelectorAll(".view-btn");
+  const savedView = localStorage.getItem("electromart_view_mode") || "grid";
+  if (productsGrid) {
+    if (savedView === "list") {
+      productsGrid.classList.add("list-view");
+    } else {
+      productsGrid.classList.remove("list-view");
+    }
+  }
+  viewBtns.forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-view") === savedView);
+    btn.addEventListener("click", () => {
+      const mode = btn.getAttribute("data-view") || "grid";
+      viewBtns.forEach((b) => b.classList.toggle("active", b.getAttribute("data-view") === mode));
+      if (productsGrid) {
+        if (mode === "list") {
+          productsGrid.classList.add("list-view");
+        } else {
+          productsGrid.classList.remove("list-view");
+        }
+      }
+      localStorage.setItem("electromart_view_mode", mode);
+    });
+  });
+
+  // 2. Items per page selector
+  const itemsPerPageSelect = document.getElementById("itemsPerPage");
+  if (itemsPerPageSelect) {
+    itemsPerPageSelect.addEventListener("change", () => {
+      itemsPerPage = Number(itemsPerPageSelect.value) || 20;
+      currentPage = 1;
+      if (fullResultSet && fullResultSet.length) {
+        renderProducts(fullResultSet);
+      }
+    });
+  }
+
+  // 3. Pagination click delegation
+  const paginationEl = document.getElementById("pagination");
+  if (paginationEl) {
+    paginationEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pagination-btn");
+      if (!btn || btn.disabled || btn.classList.contains("disabled")) return;
+      const targetPage = Number(btn.getAttribute("data-page"));
+      if (targetPage && targetPage !== currentPage) {
+        currentPage = targetPage;
+        if (fullResultSet && fullResultSet.length) {
+          renderProducts(fullResultSet);
+        }
+        if (productsGrid) {
+          productsGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  }
+}
+
 function setupAmazonListingFilters() {
   // 1. Department Tree
   const deptTree = document.getElementById("amzDeptTree");
@@ -2869,6 +3171,7 @@ function setupAmazonListingFilters() {
       if (!link) return;
       e.preventDefault();
       const cat = link.getAttribute("data-category") || "all";
+      currentPage = 1;
       deptTree.querySelectorAll(".amz-dept-link").forEach((el) => el.classList.remove("active"));
       link.classList.add("active");
       if (categoryFilter) {
@@ -2887,6 +3190,7 @@ function setupAmazonListingFilters() {
       if (!item) return;
       e.preventDefault();
       const rating = Number(item.getAttribute("data-rating") || 0);
+      currentPage = 1;
       if (selectedMinRating === rating) {
         selectedMinRating = 0;
         item.classList.remove("active");
@@ -2908,6 +3212,7 @@ function setupAmazonListingFilters() {
       if (!link) return;
       e.preventDefault();
       const discount = Number(link.getAttribute("data-discount") || 0);
+      currentPage = 1;
       if (selectedMinDiscount === discount) {
         selectedMinDiscount = 0;
         link.classList.remove("active");
@@ -2925,18 +3230,44 @@ function setupAmazonListingFilters() {
   const minPriceInput = document.getElementById("minPriceInput");
   const maxPriceInput = document.getElementById("maxPriceInput");
   if (priceGoBtn) {
-    priceGoBtn.addEventListener("click", () => {
-      const minVal = minPriceInput && minPriceInput.value !== "" ? Number(minPriceInput.value) : null;
-      const maxVal = maxPriceInput && maxPriceInput.value !== "" ? Number(maxPriceInput.value) : null;
+    const handlePriceGo = () => {
+      let minVal = minPriceInput && minPriceInput.value !== "" ? Number(minPriceInput.value) : null;
+      let maxVal = maxPriceInput && maxPriceInput.value !== "" ? Number(maxPriceInput.value) : null;
+      if (minVal !== null && maxVal !== null && minVal > maxVal) {
+        const tmp = minVal;
+        minVal = maxVal;
+        maxVal = tmp;
+        minPriceInput.value = minVal;
+        maxPriceInput.value = maxVal;
+      }
       if (minVal !== null && !isNaN(minVal)) {
         minPriceRange.value = String(Math.max(0, minVal));
       }
       if (maxVal !== null && !isNaN(maxVal)) {
         maxPriceRange.value = String(Math.min(200000, maxVal));
       }
+      currentPage = 1;
+      document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
       updatePriceLabels();
       fetchProductsFromApi();
-    });
+    };
+    priceGoBtn.addEventListener("click", handlePriceGo);
+    if (minPriceInput) {
+      minPriceInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handlePriceGo();
+        }
+      });
+    }
+    if (maxPriceInput) {
+      maxPriceInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handlePriceGo();
+        }
+      });
+    }
   }
 
   // 5. Price Preset Buttons
@@ -2944,31 +3275,65 @@ function setupAmazonListingFilters() {
     btn.addEventListener("click", () => {
       const min = btn.getAttribute("data-min");
       const max = btn.getAttribute("data-max");
-      if (min !== null) minPriceRange.value = String(min);
-      if (max !== null) maxPriceRange.value = String(max);
-      if (minPriceInput) minPriceInput.value = min || "";
-      if (maxPriceInput) maxPriceInput.value = max || "";
+      const wasActive = btn.classList.contains("active");
+      document.querySelectorAll(".price-preset-btn").forEach((b) => b.classList.remove("active"));
+      currentPage = 1;
+      if (wasActive) {
+        minPriceRange.value = String(minPriceRange.min || 0);
+        maxPriceRange.value = String(maxPriceRange.max || 200000);
+        if (minPriceInput) minPriceInput.value = "";
+        if (maxPriceInput) maxPriceInput.value = "";
+      } else {
+        btn.classList.add("active");
+        if (min !== null) minPriceRange.value = String(min);
+        if (max !== null) maxPriceRange.value = String(max);
+        if (minPriceInput) minPriceInput.value = min || "";
+        if (maxPriceInput) maxPriceInput.value = max || "";
+      }
       updatePriceLabels();
       fetchProductsFromApi();
     });
   });
 
-  // 6. Pay on Delivery & Stock filters
+  // 6. Pay on Delivery, Free Delivery & Stock filters
   const payCod = document.getElementById("payOnDelivery");
   if (payCod) {
-    payCod.addEventListener("change", fetchProductsFromApi);
+    payCod.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+  const freeDelivery = document.getElementById("freeDelivery");
+  if (freeDelivery) {
+    freeDelivery.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+  const nextDay = document.getElementById("nextDayDelivery");
+  if (nextDay) {
+    nextDay.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
   }
   const inStockOnly = document.getElementById("inStockOnly");
   if (inStockOnly) {
-    inStockOnly.addEventListener("change", fetchProductsFromApi);
+    inStockOnly.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
   }
 }
 
+closeQuickViewDrawer();
 setupAmazonListingFilters();
+setupViewToggleAndPagination();
 syncCartCount();
 syncDynamicCategoryUI();
 applyInitialQueryFilters();
 syncDynamicBrandUI();
 updatePriceLabels();
+updateDeptTreeCounts();
 fetchProductsFromApi();
 

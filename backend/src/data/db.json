@@ -39,6 +39,26 @@
       "sessionVersion": 1,
       "authActivity": [
         {
+          "id": "1788840401741-821860",
+          "eventKey": "login",
+          "eventLabel": "OTP sign-in",
+          "createdAt": "2026-09-08T04:06:41.741Z",
+          "ip": "157.33.11.188",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "note": "",
+          "actor": "user"
+        },
+        {
+          "id": "1788806789705-66e10b",
+          "eventKey": "login",
+          "eventLabel": "OTP sign-in",
+          "createdAt": "2026-09-07T18:46:29.704Z",
+          "ip": "157.33.15.122",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "note": "",
+          "actor": "user"
+        },
+        {
           "id": "1785898570123-263efd",
           "eventKey": "login",
           "eventLabel": "OTP sign-in",
@@ -33623,7 +33643,7 @@
   "paymentWebhookEvents": [],
   "authOtpChallenges": [
     {
-      "id": "3ef52c9b-fc45-4778-8c8e-90ba7485a36c",
+      "id": "51322866-4644-471a-95ef-4c0472c1e6d8",
       "purpose": "login",
       "channel": "email",
       "destination": "admin@electromart.com",
@@ -33638,18 +33658,49 @@
         "passwordHash": "",
         "role": "customer"
       },
-      "code": "627979",
-      "createdAt": "2026-08-05T02:55:59.382Z",
-      "lastRequestedAt": "2026-08-05T02:55:59.382Z",
-      "expiresAt": "2026-08-05T03:05:59.468Z",
+      "code": "987790",
+      "createdAt": "2026-09-08T04:06:30.808Z",
+      "lastRequestedAt": "2026-09-08T04:06:30.808Z",
+      "expiresAt": "2026-09-08T04:16:30.821Z",
       "attempts": 0,
       "maxAttempts": 5,
       "status": "used",
       "deliveryProvider": "simulated",
       "deliveryStatus": "sent",
-      "messageId": "8e93de4f-d863-46a1-9195-ee95fd034fc9",
-      "sentAt": "2026-08-05T02:55:59.382Z",
-      "verifiedAt": "2026-08-05T02:56:09.902Z",
+      "messageId": "221694ef-28ed-4d37-9518-74b16b0e4e4d",
+      "sentAt": "2026-09-08T04:06:30.808Z",
+      "verifiedAt": "2026-09-08T04:06:41.534Z",
+      "invalidatedAt": null,
+      "error": ""
+    },
+    {
+      "id": "39b72a7f-98b3-41f8-95e5-f0f586c59e61",
+      "purpose": "login",
+      "channel": "email",
+      "destination": "admin@electromart.com",
+      "destinationMasked": "ad***@electromart.com",
+      "identifier": "admin@electromart.com",
+      "userId": "d2fc1f50-45a2-4b14-a25d-09675b8ddd16",
+      "pendingUser": {
+        "name": "",
+        "email": "",
+        "mobile": "",
+        "address": "",
+        "passwordHash": "",
+        "role": "customer"
+      },
+      "code": "983615",
+      "createdAt": "2026-09-07T18:46:17.696Z",
+      "lastRequestedAt": "2026-09-07T18:46:17.696Z",
+      "expiresAt": "2026-09-07T18:56:17.706Z",
+      "attempts": 0,
+      "maxAttempts": 5,
+      "status": "used",
+      "deliveryProvider": "simulated",
+      "deliveryStatus": "sent",
+      "messageId": "2860c2fb-be40-4430-a1d4-8d505e96e586",
+      "sentAt": "2026-09-07T18:46:17.696Z",
+      "verifiedAt": "2026-09-07T18:46:29.540Z",
       "invalidatedAt": null,
       "error": ""
     }

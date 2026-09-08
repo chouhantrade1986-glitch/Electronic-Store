@@ -4,51 +4,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart Thank You</title>
+  <title>ElectroMart - Order Placed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="terms.css" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
-
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-<body>
+<body class="thank-you-page">
   <div id="headerContainer"></div>
 
-  <main class="terms-main">
-    <section class="hero">
-      <p class="eyebrow">Order Confirmed</p>
-      <h1>Thank You for Your Purchase</h1>
-      <p>Your order has been placed successfully on March 2, 2026.</p>
+  <main class="amz-thankyou-main">
+    <!-- Top Success Confirmation Card -->
+    <section class="amz-thankyou-card">
+      <div class="amz-thankyou-header">
+        <div class="amz-thankyou-check-circle" aria-label="Order Placed Success">✓</div>
+        <div class="amz-thankyou-header-content">
+          <h1 class="amz-thankyou-title" data-i18n="order_placed_thank_you">Order placed, thank you!</h1>
+          <p class="amz-thankyou-sub">
+            <span data-i18n="confirmation_email_sent">Confirmation will be sent to your email:</span>
+            <strong id="thankYouCustomerEmail">customer@electromart.com</strong>
+          </p>
+          <div class="amz-thankyou-meta-bar">
+            <span>Order # <strong id="thankYouOrderId">-</strong></span>
+            <span>|</span>
+            <span>Order Date: <strong id="thankYouOrderDate">-</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guaranteed Delivery Banner -->
+      <div class="amz-thankyou-delivery-banner" id="thankYouDeliveryBanner">
+        <div class="amz-delivery-highlight">
+          <span>🚚</span>
+          <span id="thankYouDeliverySlotPreview">Guaranteed delivery by Tomorrow, 9 PM</span>
+        </div>
+        <p class="amz-delivery-address-text">
+          <span data-i18n="shipping_to">Shipping to:</span>
+          <strong id="thankYouShipAddress">-</strong>
+        </p>
+      </div>
+
+      <!-- Prominent Amazon Action Buttons -->
+      <div class="amz-thankyou-actions">
+        <a id="thankYouInvoiceBtn" class="amz-btn-primary" href="invoice.html">
+          <span>📄</span>
+          <span data-i18n="print_download_invoice">Print / Download GST Invoice</span>
+        </a>
+        <a id="thankYouOrdersBtn" class="amz-btn-secondary" href="orders.html">
+          <span data-i18n="view_or_manage_order">View or manage order</span>
+        </a>
+        <a id="thankYouContinueBtn" class="amz-link-continue" href="index.html" data-i18n="continue_shopping">Continue shopping</a>
+      </div>
     </section>
 
-    <section class="terms-card">
-      <h2>Order Summary</h2>
-      <div class="order-confirmation-grid">
-        <p><span>Order ID</span><strong id="thankYouOrderId">-</strong></p>
-        <p><span>Order Date</span><strong id="thankYouOrderDate">-</strong></p>
-        <p><span>Payment</span><strong id="thankYouPaymentMethod">-</strong></p>
-        <p><span>Grand Total</span><strong id="thankYouOrderTotal">-</strong></p>
-        <p id="thankYouDiscountRow" hidden><span>Discount</span><strong id="thankYouDiscount">-</strong></p>
-        <p id="thankYouCouponRow" hidden><span>Coupon</span><strong id="thankYouCouponCode">-</strong></p>
-        <p id="thankYouDeliverySlotRow" hidden><span>Delivery Slot</span><strong id="thankYouDeliverySlot">-</strong></p>
-        <p id="thankYouReservationRow" hidden><span>Reserved Until</span><strong id="thankYouReservation">-</strong></p>
+    <!-- Details Grid: Items in order (Left) + Order Summary (Right) -->
+    <div class="amz-thankyou-grid">
+      <!-- Items In Order Column -->
+      <section class="amz-thankyou-items-card">
+        <h2 class="amz-card-title" data-i18n="items_in_order">Items in your order</h2>
+        <div id="thankYouItemsContainer" class="amz-thankyou-items-list">
+          <p style="color: #565959; font-size: 0.9rem;">Loading items...</p>
+        </div>
+      </section>
+
+      <!-- Order Summary Column -->
+      <section class="amz-thankyou-summary-card">
+        <h2 class="amz-card-title">Order Summary</h2>
+        <div class="amz-thankyou-summary-rows">
+          <div class="amz-thankyou-summary-row">
+            <span>Payment Method</span>
+            <strong id="thankYouPaymentMethod">-</strong>
+          </div>
+          <div class="amz-thankyou-summary-row" id="thankYouDiscountRow" hidden>
+            <span>Discount</span>
+            <strong id="thankYouDiscount">-</strong>
+          </div>
+          <div class="amz-thankyou-summary-row" id="thankYouCouponRow" hidden>
+            <span>Coupon</span>
+            <strong id="thankYouCouponCode">-</strong>
+          </div>
+          <div class="amz-thankyou-summary-row" id="thankYouDeliverySlotRow" hidden>
+            <span>Delivery Slot</span>
+            <strong id="thankYouDeliverySlot">-</strong>
+          </div>
+          <div class="amz-thankyou-summary-row" id="thankYouReservationRow" hidden>
+            <span>Reserved Until</span>
+            <strong id="thankYouReservation">-</strong>
+          </div>
+          <div class="amz-thankyou-summary-row grand-total">
+            <span>Grand Total</span>
+            <strong id="thankYouOrderTotal">-</strong>
+          </div>
+        </div>
+
+        <div class="amz-thankyou-next-step">
+          <p id="thankYouNextStep" style="margin: 0;">You can track shipment updates from your orders page once processing begins.</p>
+        </div>
+
+        <!-- Backward-compatibility container for legacy tests querying thankYouLinks -->
+        <p id="thankYouLinks" style="margin-top: 14px; font-size: 0.85rem; color: #565959;">
+          <a href="orders.html" style="color: #007185;">View Orders</a> |
+          <a href="index.html" style="color: #007185;">Continue Shopping</a>
+        </p>
+      </section>
+    </div>
+
+    <!-- Recommendations Section -->
+    <section class="amz-thankyou-recs">
+      <h2 class="amz-card-title" data-i18n="recommended_for_you">Recommended based on your purchase</h2>
+      <div id="thankYouRecsGrid" class="amz-thankyou-recs-grid">
+        <!-- Populated from products-data.js -->
       </div>
-      <h2>What happens next?</h2>
-      <p id="thankYouNextStep">You can track shipment updates from your orders page once processing begins.</p>
-      <h2>Need help?</h2>
-      <p>Check our FAQ and policy pages if you have questions about delivery, returns, or refunds.</p>
-      <p id="thankYouLinks">
-        <a href="orders.html">View Orders</a> |
-        <a href="index.html">Continue Shopping</a>
-      </p>
     </section>
   </main>
-  <script src="thank-you.js"></script>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
   <script src="header.js"></script>
+  <script src="thank-you.js"></script>
 </body>
 </html>

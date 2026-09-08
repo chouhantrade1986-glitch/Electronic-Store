@@ -3102,6 +3102,12 @@ tbody td {
   margin-bottom: 24px;
 }
 
+.amz-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .amz-table-toolbar {
   display: flex;
   align-items: center;
@@ -3149,7 +3155,7 @@ tbody td {
   font-weight: 700;
   padding: 12px 16px;
   border-bottom: 1px solid var(--card-border);
-  white-space: nowrap;
+  white-space: nowrap !important;
 }
 
 .amz-seller-table td {
@@ -3157,6 +3163,15 @@ tbody td {
   border-bottom: 1px solid var(--line);
   color: var(--ink);
   vertical-align: middle;
+  white-space: nowrap !important;
+}
+
+.amz-seller-table td.col-items,
+.amz-seller-table td.items-cell {
+  max-width: 260px;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .amz-seller-table tr:hover td {
@@ -3171,6 +3186,7 @@ tbody td {
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: capitalize;
+  white-space: nowrap !important;
 }
 
 .status-pill.delivered {

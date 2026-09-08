@@ -1,0 +1,206 @@
+{
+  "htmlFiles": [
+    {
+      "file": "accessibility-statement.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "account.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "admin-dashboard.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "auth.html",
+      "scriptCount": 6
+    },
+    {
+      "file": "barebone-desktop.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "best-sellers.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "branded-desktop.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "brands.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "cabinet-fan.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cabinet.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cart.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "catalogs.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "checkout.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "compare.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "cpu-fan.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cpu-processor.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "creator-studio.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "desktop-ram-memory.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "desktops.html",
+      "scriptCount": 6
+    },
+    {
+      "file": "faq.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "graphics-card-gpu.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "header.html",
+      "scriptCount": 0
+    },
+    {
+      "file": "index.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "invoice.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "language-settings.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "laptop.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "mega-store.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "motherboard.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "orders.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "pc-builder.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "power-supply-smps.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "printer.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "product-detail.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "product.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "products.html",
+      "scriptCount": 6
+    },
+    {
+      "file": "qa-auth-state.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "qa-checkout-gateway.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-invoice-print.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-orders-resume.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-razorpay-modal.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "refund-policy.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "review.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "shipping-policy.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "terms-and-conditions.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "thank-you.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "todays-deals.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "ups-ups-batteries.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "wishlist.html",
+      "scriptCount": 6
+    }
+  ],
+  "brokenReferences": [],
+  "syntaxErrors": [],
+  "databaseIssues": [],
+  "storageKeyInconsistencies": [],
+  "missingTranslations": [],
+  "scriptOrderingIssues": []
+}

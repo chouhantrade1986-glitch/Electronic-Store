@@ -82,15 +82,15 @@
         </div>
       </div>
       <div class="nav-account-dropdown-wrap">
-        <a href="auth.html" class="account-link nav-action-card" id="navAccountTrigger">
+        <a href="login.html" class="account-link nav-action-card" id="navAccountTrigger">
           <span data-i18n="hello_sign_in">Hello, sign in</span>
           <strong data-i18n="account_lists">Account &amp; Lists ▾</strong>
         </a>
         <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
           <div class="flyout-arrow"></div>
           <div class="flyout-top-signin">
-            <a href="auth.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
-            <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="auth.html" data-i18n="start_here">Start here.</a></p>
+            <a href="login.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
+            <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="register.html" data-i18n="start_here">Start here.</a></p>
           </div>
           <div class="flyout-columns">
             <div class="flyout-col">
@@ -249,8 +249,8 @@
   <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
 
   <!-- Amazon-style Cart Flyout Drawer -->
-  <div id="cartFlyoutOverlay" class="cart-flyout-overlay" hidden></div>
-  <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" hidden>
+  <div id="cartFlyoutOverlay" class="cart-flyout-overlay" style="display: none; pointer-events: none;" hidden></div>
+  <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" style="display: none; pointer-events: none;" hidden>
     <div class="cart-flyout-header">
       <div class="cart-flyout-title-wrap">
         <span class="cart-flyout-check" aria-hidden="true">✓</span>

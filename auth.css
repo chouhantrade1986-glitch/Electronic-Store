@@ -606,3 +606,160 @@ html[lang="bn"] body {
   font-size: 11px;
   color: var(--amazon-muted);
 }
+
+/* ==========================================================================
+   Phase 17: Dedicated Login, Register & Forgot Password Enhancements
+   Permanent Cursor Pointer, Progressive Disclosure, Remember-Me, and Tooltips
+   ========================================================================== */
+
+.amz-auth-step {
+  display: none;
+}
+
+.amz-auth-step.active {
+  display: grid;
+  gap: 12px;
+}
+
+/* Selected Identifier Preview in Step 2 */
+.amz-identifier-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.amz-identifier-preview-text {
+  font-weight: 700;
+  color: #0f1111;
+  word-break: break-all;
+}
+
+.amz-change-link {
+  color: var(--amazon-blue);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer !important;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.amz-change-link:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
+}
+
+/* Password Label Row with Forgot Password Link */
+.amz-password-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.amz-password-label-row label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.amz-password-label-row .auth-link-btn {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* "Keep me signed in" Row */
+.amz-remember-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 14px;
+  cursor: pointer !important;
+}
+
+.amz-remember-row input[type="checkbox"] {
+  cursor: pointer !important;
+  margin-top: 2px;
+  accent-color: #e77600;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.amz-remember-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #0f1111;
+  cursor: pointer !important;
+  user-select: none;
+  line-height: 1.35;
+}
+
+.amz-details-link {
+  color: var(--amazon-blue);
+  cursor: pointer !important;
+  font-size: 12px;
+  text-decoration: none;
+  margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.amz-details-link:hover {
+  color: var(--amazon-blue-hover);
+  text-decoration: underline;
+}
+
+.amz-tooltip-popover {
+  display: none;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid var(--amazon-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #0f1111;
+}
+
+.amz-tooltip-popover.open {
+  display: block;
+}
+
+/* Registration Password Hint */
+.amz-password-hint {
+  font-size: 11.5px;
+  color: var(--amazon-muted);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.amz-password-hint svg {
+  color: var(--amazon-blue);
+  flex-shrink: 0;
+}
+
+/* Permanent Cursor Pointer Rule for Interactive Elements */
+.amz-btn-auth-primary,
+.amz-btn-auth-secondary,
+.amz-toggle-pwd-btn,
+.amz-help-summary,
+.amz-change-link,
+.amz-details-link,
+.auth-link-btn,
+.tab-btn,
+.amz-remember-row,
+.amz-remember-label,
+input[type="checkbox"] {
+  cursor: pointer !important;
+}
+

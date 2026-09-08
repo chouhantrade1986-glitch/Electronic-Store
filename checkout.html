@@ -37,14 +37,33 @@
           <button type="button" class="amz-step-change-btn" id="step1ChangeBtn" hidden data-i18n="change">Change</button>
         </div>
         <div id="step1Body" class="amz-step-body">
-          <label class="amz-address-card selected" id="addrCardDefault">
-            <input type="radio" name="selectedSavedAddr" value="default" checked style="margin-top: 3px;" />
-            <div>
-              <strong id="addrPreviewName">John Doe</strong>
-              <span class="amz-address-badge" data-i18n="default_address">Default address</span>
-              <div id="addrPreviewDetails" style="font-size: 0.9rem; color: #565959; margin-top: 2px;">Flat 402, Royal Palms, Connaught Place, New Delhi 110001</div>
-            </div>
-          </label>
+          <div class="amz-address-cards-group">
+            <label class="amz-address-card selected" id="addrCardDefault">
+              <input type="radio" name="selectedSavedAddr" value="default" checked style="margin-top: 3px;" />
+              <div class="amz-addr-content">
+                <div class="amz-addr-title-row">
+                  <strong id="addrPreviewName">John Doe</strong>
+                  <span class="amz-address-tag amz-tag-home" data-i18n="home_tag">HOME</span>
+                  <span class="amz-address-badge" data-i18n="default_address">Default address</span>
+                </div>
+                <div id="addrPreviewDetails" class="amz-addr-details">Flat 402, Royal Palms, Connaught Place, New Delhi 110001</div>
+                <div class="amz-addr-phone">Phone: <span id="addrPreviewPhone">9876543210</span></div>
+              </div>
+            </label>
+
+            <label class="amz-address-card" id="addrCardWork">
+              <input type="radio" name="selectedSavedAddr" value="work" style="margin-top: 3px;" />
+              <div class="amz-addr-content">
+                <div class="amz-addr-title-row">
+                  <strong>John Doe</strong>
+                  <span class="amz-address-tag amz-tag-work" data-i18n="work_tag">WORK</span>
+                </div>
+                <div class="amz-addr-details">ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2, Gurugram, Haryana 122002</div>
+                <div class="amz-addr-phone">Phone: <span>9876543210</span></div>
+              </div>
+            </label>
+          </div>
+
           <button type="button" id="toggleNewAddressLink" class="amz-step-change-btn" style="display: inline-block; margin-bottom: 0.75rem; font-weight: 600;" data-i18n="add_new_address">+ Add a new address / Edit</button>
           <div id="newAddressForm" class="form-grid" style="margin-bottom: 1rem;">
             <label>Full name<input id="fullName" type="text" placeholder="Enter full name" /></label>
@@ -75,19 +94,31 @@
           <div class="payment-options">
             <label class="payment-option active">
               <input type="radio" name="paymentMethod" value="upi" checked />
-              <span>UPI</span>
+              <div class="payment-option-info">
+                <strong>ElectroMart Pay UPI</strong>
+                <span class="payment-sub">Instant payment via Google Pay, PhonePe, Paytm or any UPI App</span>
+              </div>
             </label>
             <label class="payment-option">
               <input type="radio" name="paymentMethod" value="card" />
-              <span>Credit/Debit Card</span>
+              <div class="payment-option-info">
+                <strong>Credit or Debit Card</strong>
+                <span class="payment-sub">Visa, Mastercard, RuPay, Maestro</span>
+              </div>
             </label>
             <label class="payment-option">
               <input type="radio" name="paymentMethod" value="netbanking" />
-              <span>Net Banking</span>
+              <div class="payment-option-info">
+                <strong>Net Banking</strong>
+                <span class="payment-sub">All Indian scheduled banks supported</span>
+              </div>
             </label>
             <label class="payment-option">
               <input type="radio" name="paymentMethod" value="cod" />
-              <span>Cash on Delivery</span>
+              <div class="payment-option-info">
+                <strong>Cash on Delivery (Pay on Delivery)</strong>
+                <span class="payment-sub">Pay cash or UPI QR at your doorstep</span>
+              </div>
             </label>
           </div>
 
@@ -153,19 +184,21 @@
           </div>
         </div>
         <div id="step3Body" class="amz-step-body" hidden>
-          <h3 data-i18n="delivery_slot" style="font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; color: #0f1111;">Choose a delivery window</h3>
-          <label class="delivery-slot-label">
-            <select id="deliverySlotSelect"></select>
-          </label>
-          <p id="deliverySlotHelp" class="payment-note">Select a delivery slot based on your cart stock and location.</p>
-          <p id="reservationMessage" class="coupon-message"></p>
+          <div class="amz-delivery-slot-container">
+            <h3 data-i18n="delivery_slot" style="font-size: 1.05rem; font-weight: 700; margin: 0 0 8px 0; color: #0f1111;">Choose a delivery window</h3>
+            <label class="delivery-slot-label">
+              <select id="deliverySlotSelect"></select>
+            </label>
+            <p id="deliverySlotHelp" class="payment-note">Select a delivery slot based on your cart stock and location.</p>
+            <p id="reservationMessage" class="coupon-message"></p>
+          </div>
 
           <div style="border-top: 1px solid #e7e7e7; padding-top: 1rem; margin-top: 1rem;">
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: #0f1111;">Items in this order</h4>
             <div id="checkoutItems" class="checkout-items"></div>
           </div>
 
-          <div style="margin-top: 1.5rem; padding: 1.25rem; background: #fcf5ee; border: 1px solid #fbd8b4; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div class="amz-review-bottom-box" style="margin-top: 1.5rem; padding: 1.25rem; background: #fcf5ee; border: 1px solid #fbd8b4; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
               <strong style="color: #0f1111; font-size: 1.1rem; display: block;" data-i18n="review_order_and_pay">Review order and pay</strong>
               <span style="font-size: 0.85rem; color: #565959;">By placing your order, you agree to ElectroMart's conditions of use.</span>
@@ -179,7 +212,10 @@
     <!-- Right Sticky Order Summary Box -->
     <aside class="order-summary amz-checkout-summary-box">
       <button id="placeOrderBtn" type="button" data-i18n="place_order" class="amz-btn-primary">Place your order</button>
-      <p class="secure-line" style="font-size: 0.78rem; color: #565959; margin-bottom: 0.75rem; line-height: 1.3;">By placing your order, you agree to ElectroMart privacy notice and conditions of use.</p>
+      <div class="amz-checkout-secure-strip" style="display: flex; align-items: center; gap: 6px; margin: 8px 0;">
+        <span class="amz-lock-icon" aria-hidden="true">🔒</span>
+        <span class="secure-line" style="font-size: 0.78rem; color: #565959; line-height: 1.3;">100% Secure Purchase. By placing your order, you agree to ElectroMart privacy notice and conditions of use.</span>
+      </div>
       
       <div style="border-top: 1px solid #e7e7e7; padding-top: 0.75rem; margin-top: 0.75rem;">
         <h3 data-i18n="order_summary" style="font-size: 1.15rem; font-weight: 700; margin: 0 0 10px 0; color: #0f1111;">Order Summary</h3>
@@ -198,10 +234,15 @@
         <p><span data-i18n="items">Items:</span> <strong id="summaryItems">0</strong></p>
         <p><span id="checkoutSubtotalLabel" data-i18n="cart_subtotal">Subtotal (Excl. Tax):</span> <strong id="subtotalValue">₹0</strong></p>
         <p><span data-i18n="shipping">Shipping:</span> <strong id="shippingValue">₹0</strong></p>
+        <p id="freeShippingTagRow" class="free-shipping-tag-row" hidden><span class="amz-free-delivery-badge" data-i18n="free_delivery_applied">✓ FREE Delivery Applied</span></p>
         <p><span id="checkoutTaxLabel" data-i18n="tax">Estimated GST (18%):</span> <strong id="taxValue">₹0</strong></p>
+        <div id="gstSplitBreakdown" class="gst-split-breakdown" hidden></div>
         <p class="grand-total"><span data-i18n="order_total">Order total:</span> <strong id="totalValue">₹0</strong></p>
         <p id="gatewaySummaryNote" class="gateway-summary-note" hidden>Razorpay secure checkout will open on the next step.</p>
-        <p class="delivery-note" style="color: #007600; font-weight: 600; font-size: 0.85rem; margin-top: 8px;">✓ Guaranteed Safe &amp; Secure Checkout</p>
+        <div class="amz-trust-guarantee-badge" style="margin-top: 10px; display: flex; align-items: center; gap: 6px;">
+          <span style="color: #007600; font-weight: 700;">✓</span>
+          <span class="delivery-note" style="color: #007600; font-weight: 600; font-size: 0.85rem;" data-i18n="secure_checkout_guarantee">Guaranteed Safe &amp; Secure Checkout</span>
+        </div>
       </div>
     </aside>
   </main>

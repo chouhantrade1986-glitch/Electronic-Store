@@ -42,12 +42,12 @@
           <div class="filter-section">
             <h3 class="filter-section-title" data-i18n="department_title">Department</h3>
             <ul class="amz-dept-tree" id="amzDeptTree">
-              <li class="amz-dept-item"><a class="amz-dept-link active" data-category="all" data-i18n="all_categories">All Categories</a></li>
-              <li class="amz-dept-item"><a class="amz-dept-link" data-category="laptop" data-i18n="laptops">Laptops</a></li>
-              <li class="amz-dept-item"><a class="amz-dept-link" data-category="computer" data-i18n="computers">Computers & Desktops</a></li>
-              <li class="amz-dept-item"><a class="amz-dept-link" data-category="mobile" data-i18n="mobiles">Mobiles & Tablets</a></li>
-              <li class="amz-dept-item"><a class="amz-dept-link" data-category="audio" data-i18n="audio_headphones">Audio & Headphones</a></li>
-              <li class="amz-dept-item"><a class="amz-dept-link" data-category="accessory" data-i18n="accessories">Accessories</a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link active" data-category="all"><span class="amz-dept-name" data-i18n="all_categories">All Categories</span> <span class="amz-dept-count" data-category-count="all"></span></a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="laptop"><span class="amz-dept-name" data-i18n="laptops">Laptops</span> <span class="amz-dept-count" data-category-count="laptop"></span></a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="computer"><span class="amz-dept-name" data-i18n="computers">Computers & Desktops</span> <span class="amz-dept-count" data-category-count="computer"></span></a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="mobile"><span class="amz-dept-name" data-i18n="mobiles">Mobiles & Tablets</span> <span class="amz-dept-count" data-category-count="mobile"></span></a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="audio"><span class="amz-dept-name" data-i18n="audio_headphones">Audio & Headphones</span> <span class="amz-dept-count" data-category-count="audio"></span></a></li>
+              <li class="amz-dept-item"><a class="amz-dept-link" data-category="accessory"><span class="amz-dept-name" data-i18n="accessories">Accessories</span> <span class="amz-dept-count" data-category-count="accessory"></span></a></li>
             </ul>
             <!-- Preserved for backwards compatibility & automated test assertions -->
             <select id="sidebarCategoryFilter" class="filter-select" style="display: none;" aria-hidden="true">
@@ -151,7 +151,47 @@
           <!-- Brand Filter -->
           <div class="filter-section">
             <h3 class="filter-section-title" data-i18n="brands">Brand</h3>
-            <div class="brand-filter-list">
+            <div class="brand-filter-list" id="brandFilterList">
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Apple" class="brand-filter">
+                <span>Apple</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Samsung" class="brand-filter">
+                <span>Samsung</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="ASUS" class="brand-filter">
+                <span>ASUS</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Sony" class="brand-filter">
+                <span>Sony</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Lenovo" class="brand-filter">
+                <span>Lenovo</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="HP" class="brand-filter">
+                <span>HP</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Dell" class="brand-filter">
+                <span>Dell</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="OnePlus" class="brand-filter">
+                <span>OnePlus</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="boAt" class="brand-filter">
+                <span>boAt</span>
+              </label>
+              <label class="brand-checkbox">
+                <input type="checkbox" value="Logitech" class="brand-filter">
+                <span>Logitech</span>
+              </label>
               <label class="brand-checkbox">
                 <input type="checkbox" value="AstraTech" class="brand-filter">
                 <span>AstraTech</span>
@@ -159,18 +199,6 @@
               <label class="brand-checkbox">
                 <input type="checkbox" value="Nimbus" class="brand-filter">
                 <span>Nimbus</span>
-              </label>
-              <label class="brand-checkbox">
-                <input type="checkbox" value="PulseWave" class="brand-filter">
-                <span>PulseWave</span>
-              </label>
-              <label class="brand-checkbox">
-                <input type="checkbox" value="TechPro" class="brand-filter">
-                <span>TechPro</span>
-              </label>
-              <label class="brand-checkbox">
-                <input type="checkbox" value="DigitalMax" class="brand-filter">
-                <span>DigitalMax</span>
               </label>
             </div>
           </div>
@@ -308,8 +336,8 @@
   </div>
 
   <!-- Amazon-Style Quick View Side Drawer -->
-  <div class="quick-view-drawer-overlay" id="qvDrawerOverlay"></div>
-  <div class="quick-view-drawer" id="qvDrawer" role="dialog" aria-modal="true" aria-labelledby="qvProductName">
+  <div class="quick-view-drawer-overlay" id="qvDrawerOverlay" style="display: none; pointer-events: none;"></div>
+  <div class="quick-view-drawer" id="qvDrawer" role="dialog" aria-modal="true" aria-labelledby="qvProductName" style="display: none; pointer-events: none;">
     <div class="drawer-header">
       <h3 class="drawer-title">Quick View</h3>
       <button class="drawer-close" id="qvDrawerClose" type="button" aria-label="Close quick view">&times;</button>

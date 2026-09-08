@@ -92,6 +92,23 @@
     <section id="ordersGrid" class="orders-grid"></section>
   </main>
 
+  <!-- Amazon-style Order Details Modal -->
+  <div id="orderDetailsModal" class="amz-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="modalOrderTitle">
+    <div class="amz-modal-container" role="document">
+      <div class="amz-modal-header">
+        <h3 id="modalOrderTitle" data-i18n="view_order_details_modal">Order Details</h3>
+        <button type="button" class="amz-modal-close-btn" id="closeOrderDetailsBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="amz-modal-body" id="orderDetailsModalContent">
+        <!-- Injected dynamically by orders.js -->
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="secondary-pill-btn" id="dismissOrderDetailsBtn" data-i18n="close_modal">Close</button>
+        <a href="invoice.html" id="modalDownloadInvoiceLink" target="_blank" rel="noopener" class="amz-btn-primary" data-i18n="download_tax_invoice">Download Tax Invoice (PDF)</a>
+      </div>
+    </div>
+  </div>
+
   <script src="translations.js"></script>
   <script src="products-data.js"></script>
   <script src="universal-i18n-bus.js"></script>

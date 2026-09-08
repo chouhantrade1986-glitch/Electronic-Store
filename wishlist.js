@@ -417,8 +417,8 @@
           <a href="product-detail.html?id=${encodeURIComponent(product.id)}" class="view-btn">
             ${t("wishlist_view_details", "View Details")}
           </a>
-          <button class="remove-btn" data-remove-id="${product.id}" type="button">
-            ${t("wishlist_delete_item", "Delete")}
+          <button class="remove-btn" data-remove-id="${product.id}" type="button" aria-label="${t("wishlist_delete_item", "Delete")}">
+            <span aria-hidden="true">&times;</span> ${t("wishlist_delete_item", "Delete")}
           </button>
         </div>
       </article>

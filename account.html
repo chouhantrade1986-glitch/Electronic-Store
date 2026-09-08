@@ -371,31 +371,12 @@
           <h2 data-i18n="card_addresses_title">Your Addresses</h2>
           <p data-i18n="card_addresses_desc">Manage shipping and billing addresses for delivery across India.</p>
         </div>
-        <div class="amazon-addresses-grid">
-          <div class="add-address-card">
+        <div class="amazon-addresses-grid" id="savedAddressesGrid">
+          <div class="add-address-card" id="openAddAddressBtn" role="button" tabindex="0" aria-label="Add new delivery address">
             <span class="plus-icon">+</span>
             <strong>Add Address</strong>
           </div>
-          <div class="item-card address-card default-address">
-            <span class="default-badge">Default: Home</span>
-            <h3>Home</h3>
-            <p>221B Baker Street, New Delhi, 110001, India</p>
-            <p>Phone: +91 98765 43210</p>
-            <div class="address-actions">
-              <a href="javascript:void(0)" class="link-action">Edit</a> |
-              <a href="javascript:void(0)" class="link-action">Remove</a>
-            </div>
-          </div>
-          <div class="item-card address-card">
-            <h3>Office / Workplace</h3>
-            <p>77 Connaught Place, Suite 800, New Delhi, 110001, India</p>
-            <p>Phone: +91 98765 43210</p>
-            <div class="address-actions">
-              <a href="javascript:void(0)" class="link-action">Set as Default</a> |
-              <a href="javascript:void(0)" class="link-action">Edit</a> |
-              <a href="javascript:void(0)" class="link-action">Remove</a>
-            </div>
-          </div>
+          <!-- Dynamic address cards rendered here by account.js -->
         </div>
       </article>
 
@@ -673,6 +654,77 @@
       </article>
     </section>
   </main>
+
+  <!-- Add/Edit Address Modal -->
+  <div id="addressEditModal" class="address-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="addressModalTitle">
+    <div class="address-modal-container" role="document">
+      <div class="address-modal-header">
+        <h3 id="addressModalTitle">Add a new address</h3>
+        <button type="button" class="amz-modal-close-btn" id="closeAddressModalBtn" aria-label="Close address modal">&times;</button>
+      </div>
+      <form id="addressModalForm" onsubmit="event.preventDefault();">
+        <input type="hidden" id="modalAddrId" value="" />
+        <div class="address-form-grid">
+          <label class="full-width">
+            <span>Full name (First and Last name)</span>
+            <input type="text" id="modalAddrFullName" required placeholder="e.g. John Doe" />
+          </label>
+          <label class="full-width">
+            <span>Mobile number</span>
+            <input type="tel" id="modalAddrPhone" required placeholder="10-digit mobile number without prefixes" />
+          </label>
+          <label class="full-width">
+            <span>Flat, House no., Building, Company, Apartment</span>
+            <input type="text" id="modalAddrLine1" required placeholder="e.g. Flat 402, Royal Palms" />
+          </label>
+          <label class="full-width">
+            <span>Area, Street, Sector, Village</span>
+            <input type="text" id="modalAddrLine2" placeholder="e.g. Connaught Place" />
+          </label>
+          <label>
+            <span>Town/City</span>
+            <input type="text" id="modalAddrCity" required placeholder="e.g. New Delhi" />
+          </label>
+          <label>
+            <span>State</span>
+            <select id="modalAddrState" required>
+              <option value="Delhi">Delhi</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Kerala">Kerala</option>
+            </select>
+          </label>
+          <label>
+            <span>6-digit PIN code</span>
+            <input type="text" id="modalAddrPincode" maxlength="6" pattern="[0-9]{6}" required placeholder="6 digits [0-9] PIN code" />
+          </label>
+          <label>
+            <span>Address Type</span>
+            <select id="modalAddrType">
+              <option value="home">Home (7 AM – 9 PM delivery)</option>
+              <option value="work">Office/Commercial (9 AM – 6 PM delivery)</option>
+            </select>
+          </label>
+          <label class="full-width" style="flex-direction:row; align-items:center; gap:8px; font-weight:normal; margin-top:6px; cursor:pointer;">
+            <input type="checkbox" id="modalAddrIsDefault" style="width:18px; height:18px; cursor:pointer;" />
+            <span>Use as my default delivery address</span>
+          </label>
+        </div>
+        <div class="address-form-actions">
+          <button type="button" class="secondary-pill-btn" id="cancelAddressModalBtn">Cancel</button>
+          <button type="submit" class="primary-btn" id="saveAddressModalBtn">Save Address</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="translations.js"></script>
   <script src="products-data.js"></script>

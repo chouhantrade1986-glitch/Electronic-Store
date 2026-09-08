@@ -290,13 +290,34 @@ function normalizeOrder(order) {
       : null,
     reservationUntil: String(order.reservationUntil || "").trim(),
     statusHistory: normalizeStatusHistory(order.statusHistory, order.createdAt, order.status),
-    items: items.map((item) => ({
-      name: item.name || "Item",
-      quantity: Number(item.quantity || 1),
-      price: Number(item.price || 0),
-      lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || 0)),
-      hsnSac: String(item.hsnSac || item.hsnCode || "8471")
-    })),
+    items: items.map((item) => {
+      const catalog = window.EM_CATALOG && Array.isArray(window.EM_CATALOG) ? window.EM_CATALOG : [];
+      const prod = catalog.find((p) => String(p.id) === String(item.productId || item.id));
+      let hsn = String(item.hsnSac || item.hsnCode || (prod ? prod.hsnCode : "")).trim();
+      if (!hsn || hsn === "8471") {
+        const titleLower = String(item.name || (prod ? prod.title : "")).toLowerCase();
+        if (titleLower.includes("battery") || titleLower.includes("power bank")) {
+          hsn = "85076000";
+        } else if (titleLower.includes("tv") || titleLower.includes("monitor") || titleLower.includes("display")) {
+          hsn = "85287200";
+        } else if (titleLower.includes("headphone") || titleLower.includes("earphone") || titleLower.includes("audio")) {
+          hsn = "85183000";
+        } else if (titleLower.includes("phone") || titleLower.includes("mobile")) {
+          hsn = "85171300";
+        } else {
+          hsn = "84713010";
+        }
+      }
+      return {
+        id: item.productId || item.id || (prod ? prod.id : ""),
+        name: item.name || (prod ? prod.title : "Item"),
+        quantity: Number(item.quantity || 1),
+        price: Number(item.price || (prod ? prod.price : 0)),
+        lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || (prod ? prod.price : 0))),
+        hsnSac: hsn,
+        gstRate: typeof item.gstRate === "number" ? item.gstRate : (prod && typeof prod.gstRate === "number" ? prod.gstRate : null)
+      };
+    }),
     subtotal,
     shipping,
     tax,
@@ -539,7 +560,11 @@ function render(order) {
 
   invoiceItems.innerHTML = order.items.map((item, index) => {
     const itemTaxable = Number(item.lineTotal || 0);
-    const itemTax = taxableValue > 0 ? (itemTaxable / taxableValue) * gstAmount : 0;
+    const itemRate = typeof item.gstRate === "number" ? (item.gstRate * 100) : effectiveRate;
+    const itemTax = taxableValue > 0 ? (itemTaxable / taxableValue) * gstAmount : (itemTaxable * itemRate / 100);
+    const cgstRate = sameState ? (itemRate / 2) : 0;
+    const sgstRate = sameState ? (itemRate / 2) : 0;
+    const igstRate = sameState ? 0 : itemRate;
     const cgstAmt = sameState ? itemTax / 2 : 0;
     const sgstAmt = sameState ? itemTax / 2 : 0;
     const igstAmt = sameState ? 0 : itemTax;
@@ -554,11 +579,11 @@ function render(order) {
         <td>${item.quantity}</td>
         <td>${money(item.price)}</td>
         <td>${money(itemTaxable)}</td>
-        <td>${sameState ? (effectiveRate / 2).toFixed(2) : "0.00"}%</td>
+        <td>${cgstRate.toFixed(2)}%</td>
         <td>${money(cgstAmt)}</td>
-        <td>${sameState ? (effectiveRate / 2).toFixed(2) : "0.00"}%</td>
+        <td>${sgstRate.toFixed(2)}%</td>
         <td>${money(sgstAmt)}</td>
-        <td>${sameState ? "0.00" : effectiveRate.toFixed(2)}%</td>
+        <td>${igstRate.toFixed(2)}%</td>
         <td>${money(igstAmt)}</td>
         <td>${money(itemTaxable + itemTax)}</td>
       </tr>

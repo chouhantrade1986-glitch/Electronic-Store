@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Indian GST Slabs & Cart Flyout Drawer Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 17: Amazon-Style Dedicated Auth & Security Suite Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,10 +10,15 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 44 / 44 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 49 / 49 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **समर्पित ऑथ व सुरक्षा टेस्ट** | `node scratch/test-amazon-login-register.js` | ✅ **PASS** | 7 / 7 ब्लॉक उत्तीर्ण (100%) |
+| **फ़्लाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
+| **सर्च व कैटगरी फ़िल्टरिंग टेस्ट** | `node scratch/test-search-and-category-filtering.js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
+| **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **118 / 118 (100% Pass Rate)** |
+| **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **123 / 123 (100% Pass Rate)** |
 
 ---
 
@@ -42,10 +47,11 @@
   - होमपेज 1-क्लिक "Add to Cart" विथ ग्रीन चेकमार्क विजुअल फीडबैक (`✓ Added`)।
 - **चरण 4 (Accordion Checkout Flow - `checkout.html`, `checkout.js`):**
   - 3-स्टेप इंटरएक्टिव अकॉर्डियन: (1) Delivery Address, (2) Payment Method, (3) Review Items & Delivery Window।
-  - सेव्ड एड्रेस रेडियो कार्ड, "+ Add a new address / Edit" टॉगल, और हेडर में लाइव समरी टेक्स्ट।
-  - अकॉर्डियन चेंज बटन्स (`#step1ChangeBtn`, `#step2ChangeBtn`) और स्मूथ ऑटो-स्क्रोलिंग।
-  - राइट स्टिकी ऑर्डर समरी बॉक्स विथ कूपन इनपुट और "Place your order" अमेज़न येलो बटन।
-  - प्रामाणिक अमेज़न इंडिया डिस्ट्रैक्शन-फ्री चेकआउट हेडर (`#checkoutHeaderBar`) विथ सेंटर्ड टाइटल, डायनामिक कार्ट आइटम काउंट लिंक (`#checkoutHeaderItemCount`), 100% सिक्योर लॉक बैज (`.amz-checkout-header-secure`), और मिनिमलिस्ट फुटर (`.amz-checkout-footer`)।
+  - मल्टी-एड्रेस कार्ड्स (Home व Work टैग्स के साथ), 1-क्लिक रेडियो चयन, "+ Add a new address / Edit" टॉगल, और 2-लाइन लाइव समरी टेक्स्ट।
+  - पेमेंट मेथड कार्ड्स: ElectroMart Pay UPI, क्रेडिट/डेबिट कार्ड, नेट बैंकिंग और COD विथ ऑटो-कोलाप्स।
+  - अकॉर्डियन चेंज बटन्स (`#step1ChangeBtn`, `#step2ChangeBtn`), स्मूथ ऑटो-स्क्रोलिंग और एम्प्टी कार्ट प्रोटेक्शन (रीडायरेक्ट टू `cart.html`)।
+  - राइट स्टिकी ऑर्डर समरी बॉक्स विथ कूपन इनपुट, 18%/28% GST ब्रेकडाउन, मुफ़्त शिपिंग टैग, 100% सिक्योर परचेज़ बैज और "Place your order" अमेज़न-स्टाइल एम्बर बटन।
+  - प्रामाणिक ElectroMart डिस्ट्रैक्शन-फ्री चेकआउट हेडर (`#checkoutHeaderBar`) विथ सेंटर्ड टाइटल, डायनामिक कार्ट आइटम काउंट लिंक (`#checkoutHeaderItemCount`), 100% सिक्योर लॉक बैज (`.amz-checkout-header-secure`), और मिनिमलिस्ट फुटर (`.amz-checkout-footer`)।
 - **चरण 5 (Your Orders & Tracking Hub - `orders.html`, `orders.js`):**
   - अमेज़न 4-टैब नेविगेशन बार (`#orderTabs`): "Orders", "Buy Again", "Not Yet Shipped", "Cancelled Orders"।
   - समय अवधि फ़िल्टर (`#timeFilter`) और रीयल-टाइम ऑर्डर काउंट।
@@ -107,6 +113,56 @@
   - **सख्त ब्रांड व कानूनी सुरक्षा:** विज़िबल ब्रांड केवल **ElectroMart Seller Central** (`इलेक्ट्रोमार्ट सेलर सेंट्रल`), 0 दृश्य "Amazon" टेक्स्ट।
   - **11 भारतीय भाषाओं में i18n अनुवाद:** सभी 22 सेलर सेंट्रल कीवर्ड्स का 11 भाषाओं में पूर्ण अनुवाद।
   - **स्वचालित टेस्ट सूट:** `scratch/test-amazon-seller-central.js` (100% पास)।
+- **चरण 13 (Order Confirmation & Printable GST Tax Invoice - `thank-you.html`, `thank-you.js`, `invoice.html`, `invoice.js`, `invoice.css`):**
+  - **ऑर्डर सक्सेस स्क्रीन (`thank-you.html`):** बड़ा हरा चेकमार्क (`.amz-thankyou-check-circle`), "Order placed, thank you!" हेडिंग, ईमेल पुष्टिकरण सूचना, गारंटीड डिलीवरी स्लॉट प्रीव्यू बैनर, और दो मुख्य अमेज़न-स्टाइल एक्शन बटन्स: "Print / Download GST Invoice" व "View or manage order"।
+  - **ऑर्डर किए गए उत्पाद प्रीव्यू:** इमेज थंबनेल (विथ `onerror` सेफ फॉलबैक), उत्पाद शीर्षक, मात्रा (`Qty: X`), और लाइन कुल। "Recommended based on your purchase" कैरोसेल ग्रिड।
+  - **प्रिंंटेबल GST टैक्स इनवॉइस (`invoice.html`):** आधिकारिक **Tax Invoice / Bill of Supply** लेआउट (ElectroMart Retail Pvt. Ltd. पंजीकृत पता, PAN ও GSTIN: `07ABCDE1234F1Z5`), सटीक 8-अंकीय HSN कोड (`85076000`, `85287200`, `84713010`), और इंट्रा-स्टेट (Delhi) के लिए अलग-अलग **CGST (9% / 14%)** + **SGST (9% / 14%)** कॉलम्स व इंटर-स्टेट के लिए IGST।
+  - **A4 प्रिंट मीडिया क्वेरी (`@media print`):** नेविगेशन बार, बटन्स, हेडर/फुटर स्वतः `display: none !important;` होकर साफ़-सुथरा A4 PDF रेंडर।
+  - **11 भारतीय भाषाओं में i18n अनुवाद व टेस्ट:** `scratch/test-thankyou-and-invoice-pages.js` (100% पास)।
+- **चरण 14 (Orders Management Hub & Account Addresses Sync - `orders.html`, `orders.js`, `account.html`, `account.js`, `amazon-theme.css`, `checkout.js`):**
+  - **"Ship To" पॉपओवर (`.amz-ship-to-wrapper`, `.amz-ship-to-popover`):** प्राप्तकर्ता का नाम, पता और फोन नंबर के साथ प्रामाणिक अमेज़न इंडिया-स्टाइल पॉपओवर विथ पॉइंटर ट्राइंगल। बाहर कहीं भी क्लिक करने (outside click) या `Escape` दबाने पर स्मूथ क्लोज़िंग।
+  - **"View order details" मोडल (`#orderDetailsModal`):** फुल स्क्रीन-फ्रेंडली मोडल जिसमें सभी ऑर्डर किए गए आइटम्स के थंबनेल (विथ `onerror` फॉलबैक), मात्रा, मूल्य, टैक्स ब्रेकडाउन (CGST+SGST vs IGST), शिपिंग डिटेल्स और "Download Invoice" डायरेक्ट लिंक शामिल हैं। बैकड्रॉप क्लिक व `Escape` की पर स्मूथ क्लोज़िंग।
+  - **एम्प्टी स्टेट्स प्रोटेक्शन (`.amz-empty-orders-card`):** जब कोई ऑर्डर न हो या फ़िल्टर में 0 परिणाम आएं, तो अमेज़न-स्टाइल एम्प्टी बॉक्स आइकन, स्पष्ट संदेश, और "Continue Shopping" बटन।
+  - **एड्रेस डेटा की सुसंगतता (Consistency & Real-time Sync):** `account.html` के "Your Addresses" सेक्शन में जोड़े गए, एडिट किए गए या डिफ़ॉल्ट सेट किए गए पते सीधे `localStorage` (`electromart_saved_addresses_v1` और `electromart_profile_v1`) में सिंक होते हैं। यह डेटा `checkout.html` के Step 1 (डिलीवरी पता) के साथ रीयल-टाइम में जुड़ा रहता है।
+  - **एड्रेस एडिट / ऐड मोडल (`#addressEditModal`):** स्वच्छ फॉर्म मोडल विथ फुल नेम, फोन, एड्रेस लाइन 1 व 2, शहर, राज्य, 6-अंकीय पिनकोड, एड्रेस टाइप (Home/Work), और "Make this my default address" चेकबॉक्स।
+  - **100% बैकवर्ड कम्पैटिबिलिटी व ब्रांड सुरक्षा:** सभी 41+ पुराने DOM IDs सुरक्षित, ग्राहक को दिखने वाला ब्रांड 100% **ElectroMart** (0 दृश्य Amazon टेक्स्ट)।
+  - **स्वचालित टेस्ट सूट:** `scratch/test-orders-and-account-popups.js` (100% पास)।
+- **चरण 15 (Search & Category Filtering Engine - `products.html`, `products.js`, `amazon-theme.css`):**
+  - **डिपार्टमेंट / कैटेगरी ट्री (`#amzDeptTree`):** 6-कैटेगरी ट्री लिंक्स विथ डायनामिक काउंट बैजेस (`.amz-dept-count`, `data-category-count`) और एक्टिव स्टेट सिंक्रोनाइज़ेशन।
+  - **कस्टमर रिव्यूज़ फ़िल्टर (`#amzRatingList`):** 4★ & Up, 3★ & Up, 2★ & Up, 1★ & Up विथ गोल्ड स्टार्स (`#ffa41c`) और क्लिक टॉगल सपोर्ट।
+  - **ब्रांड चेकलिस्ट:** 751-प्रोडक्ट कैटलॉग से डायनामिक मल्टी-सेलेक्ट चेकबॉक्सेस विथ प्रमुख ब्रांड प्राथमिकता (Apple, Samsung, ASUS, Sony, Lenovo, HP, Dell, OnePlus, boAt) व केस-इंसेंसिटिव मैचिंग।
+  - **प्राइस रेंज व 'Go' बटन (`#minPriceInput`, `#maxPriceInput`, `#priceGoBtn`):** न्यूमेरिक इनपुट्स विथ ₹ प्रीफिक्स, स्वतः Min/Max स्वैप वैलिडेशन, और एक्टिव टॉगल-सक्षम प्राइस प्रीसेट बटन्स।
+  - **फास्ट-फ़िल्टर चेकबॉक्सेस:** Pay on Delivery (COD) और Free Delivery (₹499+) फास्ट-फ़िल्टर टॉगल चेकबॉक्सेस।
+  - **एक्टिव फ़िल्टर चिप्स (`#activeFiltersContainer`, `#activeFiltersList`):** रिमूवेबल चिप्स विथ '×' क्लोज़ बटन और "Clear all" एक्शन (रीसेट ऑल फ़िल्टर्स, प्रीसेट्स, स्लाइडर्स व `currentPage = 1`)।
+  - **टॉप सॉर्ट बार व रिजल्ट्स हेडर:** डायनामिक स्ट्रिंग (उदा. `1-20 of over 700 results for "laptops"`), फुल सॉर्ट मेन्यू (Featured, Price: Low to High, Price: High to Low, Avg. Customer Review, Newest Arrivals, Best Sellers)।
+  - **ग्रिड / लिस्ट व्यू व पेजिनेशन:** व्यू डेंसिटी स्विच (`.view-btn[data-view="grid"]`, `[data-view="list"]`), पेज साइज कंट्रोल (20, 40, 60 प्रति पेज), और न्यूमेरेकल पेजिनेशन कंट्रोल्स।
+  - **माउस व कर्सर इंटरेक्शन मैंडेट्स (Permanent Lock):** सभी फ़िल्टर रो, लेबल्स, चेकबॉक्स, प्रीसेट्स, चिप्स, स्टार रेटिंग्स, 'Go' बटन, व्यू बटन्स, और पेजिनेशन पर `cursor: pointer !important;`।
+  - **स्वचालित टेस्ट सूट:** `scratch/test-search-and-category-filtering.js` (100% पास)।
+- **चरण 16 (Cart Flyout & Quick View Occlusion Fix + Wishlist & Save-for-Later Flow - `amazon-theme.css`, `header.js`, `products.js`, `cart.js`, `wishlist.js`):**
+  - **कार्ट फ़्लाईआउट व बैकड्रॉप ऑक्लूजन समाधान:** `#cartFlyout` और `#cartFlyoutOverlay` कंटेनर अब डिफ़ॉल्ट रूप से `display: none !important; pointer-events: none !important; opacity: 0;` रहते हैं, जिससे इनएक्टिव स्थिति में कोई भी अदृश्य लेयर यूज़र के क्लिक, स्क्रोल या पेजिनेशन को ब्लॉक नहीं करती। केवल जब यूज़र स्पष्ट रूप से "Add to Cart" या कार्ट आइकन दबाता है तभी `.open` / `.active` क्लास के साथ `display: flex/block !important; pointer-events: auto !important;` सक्रिय होता है।
+  - **क्विक व्यू मोडल व ड्रॉअर ऑक्लूजन समाधान:** `#quickViewModal`, `#qvDrawer`, `#qvDrawerOverlay` अब निष्क्रिय अवस्था में पूर्णतः `display: none !important; pointer-events: none !important;` रहते हैं।
+  - **विशलिस्ट व हार्ट आइकन संगति:** प्रोडक्ट कार्ड्स पर `.wishlist-btn` अब विशलिस्ट टॉगल होने पर भी दिल का आइकन सुरक्षित रखता है (`<span class="heart-icon">${active ? "♥" : "♡"}</span> ${label}`) और `electromart_wishlist_v1` के साथ इंस्टेंट सिंक करता है।
+  - **सेव फॉर लेटर व हेडर सिंक:** कार्ट के प्रत्येक आइटम एक्शन बार में "Save for later" (`data-action="save-for-later"`) आइटम को "Saved for later" शेल्फ़ में भेजता है, कार्ट सबटोटल रीकैलकुलेट करता है, और हेडर के कार्ट काउंट बैज (`#cartCount`) को तुरंत `syncHeaderCartCount()` द्वारा अपडेट करता है।
+  - **विशलिस्ट हब एक्शन:** `wishlist.html` पर सेव किए गए आइटम्स के लिए प्रामाणिक "Move to Cart" और '×' डिलीट एक्शन सुचारू रूप से कार्य करते हैं।
+  - **स्वचालित टेस्ट सूट:** `scratch/test-flyout-occlusion-and-wishlist-flow.js` (100% पास)।
+- **चरण 17 (Amazon India-Style Dedicated Auth & Security Suite - `login.html`, `register.html`, `forgot-password.html`, `auth.css`):**
+  - **समर्पित लॉगिन स्क्रीन (`login.html` & `login.js`):**
+    - 2-स्टेप प्रोग्रेसिव डिस्क्लोज़र: स्टेप 1 (ईमेल/10-अंकीय भारतीय मोबाइल विथ `IN +91` बैज) ➔ बिना पेज रीलोड के स्टेप 2 (पासवर्ड इनपुट व वैकल्पिक फोन OTP विकल्प)।
+    - दर्ज मान का संक्षिप्त प्रीव्यू विथ एक्टिव नीला `Change` लिंक (स्टेप 1 पर लौटने हेतु)।
+    - ऑटो-फ़ोकस प्रबंधन: पेज लोड पर कर्सर स्वतः ईमेल/मोबाइल फ़ील्ड पर, और "Continue" पर क्लिक के बाद तुरंत पासवर्ड फ़ील्ड पर फ़ोकस।
+    - "Keep me signed in" चेकबॉक्स और उसके पूरे टेक्स्ट लेबल (`<label for="...">`) पर स्थायी `cursor: pointer !important;` और "Details" टूलटिप पॉपओवर।
+    - पासवर्ड शो/हाइड (`Show`/`Hide`) आई बटन पर स्मूथ होवर व पॉइंटर कर्सर।
+    - "Need help?" अकॉर्डियन विथ डायरेक्ट लिंक टू `forgot-password.html`।
+    - "New to ElectroMart?" डिवाइडर विथ "Create your ElectroMart account" बटन (`register.html`)।
+  - **समर्पित रजिस्ट्रेशन स्क्रीन (`register.html` & `register.js`):**
+    - Your name, भारतीय 10-अंकीय मोबाइल नंबर (`/^[6-9]\d{9}$/`), ईमेल (वैकल्पिक), पासवर्ड (कम से कम 6 अक्षर), और 6-अंकीय OTP वेरिफिकेशन।
+    - लीगल व सुरक्षा टेक्स्ट मैसेज नोटिस और "Already have an account? Sign in ▾" लिंक।
+  - **समर्पित पासवर्ड सहायता स्क्रीन (`forgot-password.html` & `forgot-password.js`):**
+    - ईमेल/मोबाइल दर्ज कर 1-क्लिक OTP वेरिफिकेशन और नया पासवर्ड रीसेट फ़्लो।
+  - **100% ब्रांड सुरक्षा व पूर्ण बैकवर्ड कम्पैटिबिलिटी:**
+    - सभी 59 HTML फाइल्स व 11 भाषाओं में ग्राहक-सामने 0 दृश्य "Amazon" टेक्स्ट (100% शुद्ध ElectroMart)।
+    - लेगेसी `auth.html` व उसके टेस्ट्स पूर्णतः सुरक्षित।
+  - **स्वचालित टेस्ट सूट:** `scratch/test-amazon-login-register.js` (7 / 7 टेस्ट ब्लॉक्स उत्तीर्ण, 100%)।
 
 ### C. 11 भारतीय भाषाओं का i18n अनुवाद इंजन (Multilingual Engine)
 - **डिक्शनरी (`translations.js`):** हिंदी (`hi`), तमिल (`ta`), तेलुगु (`te`), मराठी (`mr`), बंगाली (`bn`), गुजराती (`gu`), कन्नड़ (`kn`), मलयालम (`ml`), पंजाबी (`pa`), उर्दू (`ur`), अंग्रेजी (`en`)।

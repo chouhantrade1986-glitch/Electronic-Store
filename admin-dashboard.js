@@ -89,15 +89,15 @@
           const status = String(order.status || 'pending').toLowerCase();
           return `
             <tr>
-              <td><strong><a href="admin-orders.html?search=${encodeURIComponent(order.id)}" style="color: var(--link); text-decoration: none;">${order.id}</a></strong></td>
-              <td>${window.EM_ADMIN.formatDate(order.createdAt)}</td>
-              <td>${customerName}</td>
-              <td style="max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${itemsSummary}">${itemsSummary}</td>
-              <td><strong>${window.EM_ADMIN.formatCurrency(order.total)}</strong></td>
-              <td><span style="font-size: 0.8rem;">${order.paymentMethod || 'UPI'}</span></td>
-              <td><span class="status-pill ${status}">${status}</span></td>
-              <td>
-                <a href="admin-orders.html?search=${encodeURIComponent(order.id)}" class="amz-btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">View Order</a>
+              <td style="white-space: nowrap !important;"><strong><a href="admin-orders.html?search=${encodeURIComponent(order.id)}" style="color: var(--link); text-decoration: none; white-space: nowrap !important;">${order.id}</a></strong></td>
+              <td style="white-space: nowrap !important;">${window.EM_ADMIN.formatDate(order.createdAt)}</td>
+              <td style="white-space: nowrap !important;">${customerName}</td>
+              <td class="items-cell" style="max-width: 260px; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis;" title="${itemsSummary}">${itemsSummary}</td>
+              <td style="white-space: nowrap !important;"><strong>${window.EM_ADMIN.formatCurrency(order.total)}</strong></td>
+              <td style="white-space: nowrap !important;"><span style="font-size: 0.8rem; white-space: nowrap !important;">${order.paymentMethod || 'UPI'}</span></td>
+              <td style="white-space: nowrap !important;"><span class="status-pill ${status}" style="white-space: nowrap !important;">${status}</span></td>
+              <td style="white-space: nowrap !important;">
+                <a href="admin-orders.html?search=${encodeURIComponent(order.id)}" class="amz-btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; white-space: nowrap !important;">View Order</a>
               </td>
             </tr>
           `;

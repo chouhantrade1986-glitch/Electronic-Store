@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --ink: #111111;
   --line: #111111;
   --paper: #ffffff;
@@ -320,6 +320,30 @@ th:first-child {
   text-align: center;
 }
 
+.invoice-card.same-state-tax .items-table th:nth-child(11),
+.invoice-card.same-state-tax .items-table td:nth-child(11),
+.invoice-card.same-state-tax .items-table th:nth-child(12),
+.invoice-card.same-state-tax .items-table td:nth-child(12) {
+  display: none;
+}
+
+.invoice-card.inter-state-tax .items-table th:nth-child(7),
+.invoice-card.inter-state-tax .items-table td:nth-child(7),
+.invoice-card.inter-state-tax .items-table th:nth-child(8),
+.invoice-card.inter-state-tax .items-table td:nth-child(8),
+.invoice-card.inter-state-tax .items-table th:nth-child(9),
+.invoice-card.inter-state-tax .items-table td:nth-child(9),
+.invoice-card.inter-state-tax .items-table th:nth-child(10),
+.invoice-card.inter-state-tax .items-table td:nth-child(10) {
+  display: none;
+}
+
+.invoice-card.same-state-tax .tax-row-igst,
+.invoice-card.inter-state-tax .tax-row-cgst,
+.invoice-card.inter-state-tax .tax-row-sgst {
+  display: none;
+}
+
 .summary-grid {
   margin-top: 8px;
   display: grid;
@@ -398,21 +422,28 @@ th:first-child {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 6mm;
+    margin: 8mm;
   }
 
   html,
   body {
-    background: #ffffff;
+    background: #ffffff !important;
+    color: #000000 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
   body {
-    font-size: 9pt;
+    font-size: 8.5pt;
   }
 
-  .no-print {
+  .no-print,
+  .invoice-header,
+  .invoice-actions,
+  .invoice-message,
+  #headerContainer,
+  header,
+  footer {
     display: none !important;
   }
 

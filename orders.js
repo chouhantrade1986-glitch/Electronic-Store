@@ -1490,6 +1490,172 @@ function afterSalesPanel(order) {
   `;
 }
 
+function formatShippingAddressLines(addr) {
+  if (!addr) return "Flat 402, Royal Palms, Connaught Place, New Delhi, Delhi 110001";
+  if (typeof addr === "string") return addr;
+  const parts = [
+    addr.addressLine || addr.address || "",
+    addr.city || "",
+    addr.state || "",
+    addr.pincode || addr.pinCode || ""
+  ].filter(Boolean);
+  return parts.join(", ") || "Connaught Place, New Delhi 110001";
+}
+
+function getShippingPhone(order) {
+  if (order.shippingAddress && typeof order.shippingAddress === "object" && order.shippingAddress.phone) {
+    return order.shippingAddress.phone;
+  }
+  if (order.phone) return order.phone;
+  const session = readSession();
+  return session?.user?.phone || session?.phone || "+91 98765 43210";
+}
+
+function openOrderDetailsModal(orderId) {
+  const modal = document.getElementById("orderDetailsModal");
+  const content = document.getElementById("orderDetailsModalContent");
+  const invoiceLink = document.getElementById("modalDownloadInvoiceLink");
+  if (!modal || !content) return;
+
+  const order = orders.find((o) => String(o.id) === String(orderId));
+  if (!order) return;
+
+  if (invoiceLink) {
+    invoiceLink.href = `invoice.html?orderId=${encodeURIComponent(order.id)}`;
+  }
+
+  const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
+  const fullAddress = formatShippingAddressLines(order.shippingAddress);
+  const phone = getShippingPhone(order);
+
+  const orderItems = Array.isArray(order.items) && order.items.length > 0
+    ? order.items
+    : [{
+        productId: order.productId || "",
+        title: order.product || "Product",
+        image: order.image || "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80",
+        price: order.total || 0,
+        qty: 1
+      }];
+
+  const itemsHtml = orderItems.map((item) => {
+    const pId = item.productId || order.productId || "";
+    const pTitle = item.title || order.product || "ElectroMart Item";
+    const pImg = item.image || order.image || "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80";
+    const pPrice = Number(item.price || order.total || 0);
+    const pQty = Number(item.qty || item.quantity || 1);
+
+    return `
+      <div class="amz-modal-item-row">
+        <img src="${escapeHtml(pImg)}" alt="${escapeHtml(pTitle)}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80';" />
+        <div class="amz-modal-item-info">
+          <h5><a href="product-detail.html?id=${encodeURIComponent(pId)}">${escapeHtml(pTitle)}</a></h5>
+          <p>Quantity: ${pQty} | Price: ${money(pPrice)}</p>
+          <p class="seller-line">Sold by: <strong>ElectroMart Retail Pvt Ltd</strong></p>
+        </div>
+        <div>
+          <button type="button" class="amz-buy-again-inline-btn" data-product-id="${escapeHtml(pId)}" data-product-title="${escapeHtml(pTitle)}">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span data-i18n="buy_it_again">Buy it again</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const total = Number(order.total || 0);
+  const baseSubtotal = total / 1.18;
+  const totalGst = total - baseSubtotal;
+  const isDelhi = String(order.shippingAddress?.state || "Delhi").toLowerCase().includes("delhi");
+
+  content.innerHTML = `
+    <div class="amz-modal-order-summary-bar">
+      <div>
+        <p data-i18n="order_num_label">ORDER #</p>
+        <strong>${escapeHtml(order.idLabel || order.id)}</strong>
+      </div>
+      <div>
+        <p data-i18n="order_placed_label">ORDER PLACED</p>
+        <strong>${escapeHtml(order.date)}</strong>
+      </div>
+      <div>
+        <p data-i18n="total_label">TOTAL</p>
+        <strong>${money(total)}</strong>
+      </div>
+      <div>
+        <p>STATUS</p>
+        <span class="badge ${escapeHtml(order.status)}">${formatStatus(order.status)}</span>
+      </div>
+    </div>
+
+    <div class="amz-modal-grid">
+      <div class="amz-modal-section">
+        <h4 data-i18n="order_items_label">Items in this order</h4>
+        <div class="amz-modal-items-list">${itemsHtml}</div>
+      </div>
+
+      <div class="amz-modal-section">
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="shipping_address_label">Shipping Address</h4>
+          <p><strong>${escapeHtml(recipientName)}</strong></p>
+          <p>${escapeHtml(fullAddress)}</p>
+          <p><span data-i18n="phone_label">Phone:</span> ${escapeHtml(phone)}</p>
+          ${order.deliverySlot?.label ? `<p style="margin-top:6px; color:#067d62;"><strong>Slot:</strong> ${escapeHtml(order.deliverySlot.label)}</p>` : ""}
+        </div>
+
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="payment_method_label">Payment Method</h4>
+          <p>${escapeHtml(formatPaymentMethod(order.paymentMethod))}</p>
+          <p>Status: <span class="badge ${escapeHtml(String(order.paymentStatus || "").toLowerCase() || "completed")}">${formatPaymentStatus(order.paymentStatus)}</span></p>
+        </div>
+
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="order_summary_label">Order Summary</h4>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Items Subtotal:</span>
+            <span>${money(baseSubtotal)}</span>
+          </div>
+          ${isDelhi ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>CGST (9%):</span>
+              <span>${money(totalGst / 2)}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>SGST (9%):</span>
+              <span>${money(totalGst / 2)}</span>
+            </div>
+          ` : `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>IGST (18%):</span>
+              <span>${money(totalGst)}</span>
+            </div>
+          `}
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Shipping:</span>
+            <span>FREE</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px; border-top:1px solid #d5d9d9; padding-top:6px; margin-top:4px;">
+            <span data-i18n="total_label">Grand Total:</span>
+            <span style="color:#b12704;">${money(total)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.removeAttribute("hidden");
+  window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
+}
+
+function closeOrderDetailsModal() {
+  const modal = document.getElementById("orderDetailsModal");
+  if (modal) {
+    modal.setAttribute("hidden", "");
+  }
+}
+
 function orderCard(order) {
   const canResumePayment = isOrderResumeEligible(order);
   const latestAfterSales = getLatestAfterSalesCase(order);
@@ -1544,13 +1710,25 @@ function orderCard(order) {
           </div>
           <div>
             <p data-i18n="ship_to_label">SHIP TO</p>
-            <strong title="${escapeHtml(typeof order.shippingAddress === 'string' ? order.shippingAddress : (order.shippingAddress?.addressLine || 'Address'))}">${escapeHtml(recipientName)} ▾</strong>
+            <div class="amz-ship-to-wrapper">
+              <button type="button" class="amz-ship-to-trigger" aria-expanded="false" aria-haspopup="true">
+                <strong title="${escapeHtml(typeof order.shippingAddress === 'string' ? order.shippingAddress : (order.shippingAddress?.addressLine || 'Address'))}">${escapeHtml(recipientName)} ▾</strong>
+              </button>
+              <div class="amz-ship-to-popover" role="tooltip" hidden>
+                <div class="amz-ship-to-popover-content">
+                  <h4 data-i18n="ship_to_address_details">Shipping Address</h4>
+                  <p><strong>${escapeHtml(recipientName)}</strong></p>
+                  <p>${escapeHtml(formatShippingAddressLines(order.shippingAddress))}</p>
+                  <p class="popover-phone"><span data-i18n="phone_label">Phone:</span> ${escapeHtml(getShippingPhone(order))}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="order-top-right">
           <p><span data-i18n="order_num_label">ORDER #</span> ${order.idLabel}</p>
           <div class="order-top-links">
-            <a href="javascript:void(0);" class="view-order-details-link track-btn" data-id="${order.id}" data-i18n="view_order_details">View order details</a>
+            <a href="javascript:void(0);" class="view-order-details-link" data-id="${order.id}" data-i18n="view_order_details">View order details</a>
             <span>|</span>
             <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" target="_blank" rel="noopener" data-i18n="download_invoice">Invoice ▾</a>
           </div>
@@ -1639,13 +1817,27 @@ function getActiveOrderFilters() {
 
 function renderOrders(list) {
   if (list.length === 0) {
-    ordersGrid.innerHTML = "<div class='empty-message'>No orders matched your search or filter.</div>";
+    ordersGrid.innerHTML = `
+      <div class="amz-empty-orders-card">
+        <div class="amz-empty-orders-icon">
+          <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#e77600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="amz-empty-orders-title" data-i18n="no_orders_found_title">No orders found</h2>
+        <p class="amz-empty-orders-desc" data-i18n="no_orders_found_desc">Looks like you have no orders matching this filter or time period.</p>
+        <a href="index.html" class="amz-empty-continue-btn" data-i18n="continue_shopping">Continue Shopping</a>
+      </div>
+    `;
     ordersMeta.textContent = "Showing 0 orders";
+    window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
     return;
   }
 
   ordersGrid.innerHTML = list.map(orderCard).join("");
   ordersMeta.textContent = `Showing ${list.length} orders`;
+  window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
 }
 
 function filterOrders() {
@@ -1726,8 +1918,7 @@ async function fetchOrders() {
     orders = offlineOrders.map(buildOrderView);
     loadOrderNotifications(session);
     if (orders.length === 0) {
-      ordersMeta.textContent = "Showing 0 orders";
-      ordersGrid.innerHTML = "<div class='empty-message'>No orders available yet.</div>";
+      renderOrders([]);
       return;
     }
     filterOrders();
@@ -1740,8 +1931,7 @@ async function fetchOrders() {
     orders = offlineOrders.map(buildOrderView);
     loadOrderNotifications(session);
     if (orders.length === 0) {
-      ordersMeta.textContent = "Showing 0 orders";
-      ordersGrid.innerHTML = "<div class='empty-message'>Failed to fetch orders from server.</div>";
+      renderOrders([]);
       return;
     }
     filterOrders();
@@ -1874,6 +2064,42 @@ ordersGrid.addEventListener("click", async (event) => {
     return;
   }
 
+  const shipToBtn = event.target.closest(".amz-ship-to-trigger");
+  if (shipToBtn) {
+    event.preventDefault();
+    event.stopPropagation();
+    const wrapper = shipToBtn.closest(".amz-ship-to-wrapper");
+    const popover = wrapper?.querySelector(".amz-ship-to-popover");
+    if (popover) {
+      const isClosed = popover.hasAttribute("hidden");
+      document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+        if (pop !== popover) {
+          pop.setAttribute("hidden", "");
+          const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+          if (tr) tr.setAttribute("aria-expanded", "false");
+        }
+      });
+      if (isClosed) {
+        popover.removeAttribute("hidden");
+        shipToBtn.setAttribute("aria-expanded", "true");
+      } else {
+        popover.setAttribute("hidden", "");
+        shipToBtn.setAttribute("aria-expanded", "false");
+      }
+    }
+    return;
+  }
+
+  const detailsBtn = event.target.closest(".view-order-details-link");
+  if (detailsBtn) {
+    event.preventDefault();
+    const orderId = detailsBtn.getAttribute("data-id");
+    if (orderId) {
+      openOrderDetailsModal(orderId);
+    }
+    return;
+  }
+
   const trackBtn = event.target.closest(".track-btn");
   if (!trackBtn) {
     return;
@@ -1892,6 +2118,35 @@ ordersGrid.addEventListener("click", async (event) => {
   } else {
     panel.setAttribute("hidden", "");
     trackBtn.textContent = "Track package";
+  }
+});
+
+// Outside click & Escape key handlers for Ship To popover and Order Details modal
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".amz-ship-to-wrapper")) {
+    document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+      pop.setAttribute("hidden", "");
+      const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+      if (tr) tr.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  const modal = document.getElementById("orderDetailsModal");
+  if (modal && !modal.hasAttribute("hidden")) {
+    if (event.target === modal || event.target.closest("#closeOrderDetailsBtn") || event.target.closest("#dismissOrderDetailsBtn")) {
+      closeOrderDetailsModal();
+    }
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeOrderDetailsModal();
+    document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+      pop.setAttribute("hidden", "");
+      const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+      if (tr) tr.setAttribute("aria-expanded", "false");
+    });
   }
 });
 

@@ -2486,6 +2486,363 @@
     }
   });
 
+  // Merge checkout accordion translations across all 11 languages
+  const CHECKOUT_ACCORDION_I18N = {
+    en: {
+      home_tag: "HOME",
+      work_tag: "WORK",
+      free_delivery_applied: "FREE Delivery Applied",
+      secure_checkout_guarantee: "Guaranteed Safe & Secure Checkout"
+    },
+    hi: {
+      home_tag: "घर",
+      work_tag: "कार्यालय",
+      free_delivery_applied: "मुफ़्त डिलीवरी लागू",
+      secure_checkout_guarantee: "सुरक्षित एवं संरक्षित चेकआउट की गारंटी"
+    },
+    ta: {
+      home_tag: "வீடு",
+      work_tag: "வேலை",
+      free_delivery_applied: "இலவச டெலிவரி பயன்படுத்தப்பட்டது",
+      secure_checkout_guarantee: "பாதுகாப்பான செக்அவுட் உத்தரவாதம்"
+    },
+    te: {
+      home_tag: "ఇల్లు",
+      work_tag: "కార్యాలయం",
+      free_delivery_applied: "ఉచిత డెలివరీ వర్తించబడింది",
+      secure_checkout_guarantee: "సురక్షితమైన చెక్అవుట్ హామీ"
+    },
+    kn: {
+      home_tag: "ಮನೆ",
+      work_tag: "ಕೆಲಸ",
+      free_delivery_applied: "ಉಚಿತ ಡೆಲಿವರಿ ಅನ್ವಯಿಸಲಾಗಿದೆ",
+      secure_checkout_guarantee: "ಖಾತರಿಯ ಸುರಕ್ಷಿತ ಚೆಕ್‌ಔಟ್"
+    },
+    ml: {
+      home_tag: "വീട്",
+      work_tag: "ജോലി",
+      free_delivery_applied: "സൗജന്യ ഡെലിവറി ബാധകമാക്കി",
+      secure_checkout_guarantee: "സുരക്ഷിതമായ ചെക്ക്ഔട്ട് ഉറപ്പ്"
+    },
+    bn: {
+      home_tag: "বাড়ি",
+      work_tag: "অফিস",
+      free_delivery_applied: "বিনামূল্যে ডেলিভারি প্রযোজ্য",
+      secure_checkout_guarantee: "নিরাপদ ও সুরক্ষিত চেকআউটের নিশ্চয়তা"
+    },
+    mr: {
+      home_tag: "घर",
+      work_tag: "कार्यालय",
+      free_delivery_applied: "मोफत डिलिव्हरी लागू केली",
+      secure_checkout_guarantee: "सुरक्षित आणि खात्रीशीर चेकआउट"
+    },
+    ur: {
+      home_tag: "گھر",
+      work_tag: "دفتر",
+      free_delivery_applied: "مفت ترسیل لاگو ہے",
+      secure_checkout_guarantee: "محفوظ اور مامون چیک آؤٹ کی ضمانت"
+    },
+    pa: {
+      home_tag: "ਘਰ",
+      work_tag: "ਦਫ਼ਤਰ",
+      free_delivery_applied: "ਮੁਫ਼ਤ ਡਿਲੀਵਰੀ ਲਾਗੂ ਕੀਤੀ ਗਈ",
+      secure_checkout_guarantee: "ਸੁਰੱਖਿਅਤ ਅਤੇ ਯਕੀਨੀ ਚੈੱਕਆਉਟ ਦੀ ਗਰੰਟੀ"
+    },
+    gu: {
+      home_tag: "ઘર",
+      work_tag: "ઓફિસ",
+      free_delivery_applied: "મફત ડિલિવરી લાગુ થઈ",
+      secure_checkout_guarantee: "સુરક્ષિત અને ખાતરીપૂર્વક ચેકઆઉટ"
+    }
+  };
+  Object.keys(CHECKOUT_ACCORDION_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], CHECKOUT_ACCORDION_I18N[lang]);
+    }
+  });
+
+  // Merge order confirmation and invoice translations across all 11 languages
+  const THANK_YOU_I18N = {
+    en: {
+      order_placed_thank_you: "Order placed, thank you!",
+      confirmation_email_sent: "Confirmation will be sent to your email:",
+      guaranteed_delivery: "Guaranteed delivery:",
+      view_or_manage_order: "View or manage order",
+      print_download_invoice: "Print / Download GST Invoice",
+      items_in_order: "Items in your order",
+      recommended_for_you: "Recommended based on your purchase",
+      shipping_to: "Shipping to:",
+      continue_shopping: "Continue shopping"
+    },
+    hi: {
+      order_placed_thank_you: "ऑर्डर दिया गया, धन्यवाद!",
+      confirmation_email_sent: "पुष्टिकरण आपके ईमेल पर भेजा जाएगा:",
+      guaranteed_delivery: "गारंटीड डिलीवरी:",
+      view_or_manage_order: "ऑर्डर देखें या प्रबंधित करें",
+      print_download_invoice: "जीएसटी चालान प्रिंट / डाउनलोड करें",
+      items_in_order: "आपके ऑर्डर में उत्पाद",
+      recommended_for_you: "आपकी खरीदारी के आधार पर अनुशंसित",
+      shipping_to: "डिलिवरी पता:",
+      continue_shopping: "खरीदारी जारी रखें"
+    },
+    ta: {
+      order_placed_thank_you: "ஆர்டர் செய்யப்பட்டது, நன்றி!",
+      confirmation_email_sent: "உறுதிப்படுத்தல் உங்கள் மின்னஞ்சலுக்கு அனுப்பப்படும்:",
+      guaranteed_delivery: "உத்தரவாதமான டெலிவரி:",
+      view_or_manage_order: "ஆர்டரைப் பார்க்கவும் அல்லது நிர்வகிக்கவும்",
+      print_download_invoice: "ஜிஎஸ்டி விலைப்பட்டியல் அச்சிடுக / பதிவிறக்குக",
+      items_in_order: "உங்கள் ஆர்டரில் உள்ள பொருட்கள்",
+      recommended_for_you: "உங்கள் வாங்குதலின் அடிப்படையில் பரிந்துரைக்கப்படுகிறது",
+      shipping_to: "டெலிவரி முகவரி:",
+      continue_shopping: "ஷாப்பிங்கைத் தொடரவும்"
+    },
+    te: {
+      order_placed_thank_you: "ఆర్డర్ చేయబడింది, ధన్యవాదాలు!",
+      confirmation_email_sent: "నిర్ధారణ మీ ఇమెయిల్‌కు పంపబడుతుంది:",
+      guaranteed_delivery: "హామీ ఇవ్వబడిన డెలివరీ:",
+      view_or_manage_order: "ఆర్డర్‌ను చూడండి లేదా నిర్వహించండి",
+      print_download_invoice: "GST ఇన్వాయిస్ ప్రింట్ / డౌన్‌లోడ్ చేయండి",
+      items_in_order: "మీ ఆర్డర్‌లోని వస్తువులు",
+      recommended_for_you: "మీ కొనుగోలు ఆధారంగా సిఫార్సు చేయబడింది",
+      shipping_to: "షిప్పింగ్ చిరునామా:",
+      continue_shopping: "షాపింగ్ కొనసాగించండి"
+    },
+    kn: {
+      order_placed_thank_you: "ಆರ್ಡರ್ ಮಾಡಲಾಗಿದೆ, ಧನ್ಯವಾದಗಳು!",
+      confirmation_email_sent: "ದೃಢೀಕರಣವನ್ನು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ:",
+      guaranteed_delivery: "ಖಾತರಿಯ ಡೆಲಿವರಿ:",
+      view_or_manage_order: "ಆರ್ಡರ್ ವೀಕ್ಷಿಸಿ ಅಥವಾ ನಿರ್ವಹಿಸಿ",
+      print_download_invoice: "ಜಿಎಸ್‌ಟಿ ಇನ್‌ವಾಯ್ಸ್ ಮುದ್ರಿಸಿ / ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
+      items_in_order: "ನಿಮ್ಮ ಆರ್ಡರ್‌ನಲ್ಲಿರುವ ವಸ್ತುಗಳು",
+      recommended_for_you: "ನಿಮ್ಮ ಖರೀದಿಯ ಆಧಾರದ ಮೇಲೆ ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ",
+      shipping_to: "ರವಾನಿಸುವ ವಿಳಾಸ:",
+      continue_shopping: "ಶಾಪಿಂಗ್ ಮುಂದುವರಿಸಿ"
+    },
+    ml: {
+      order_placed_thank_you: "ഓർഡർ നൽകി, നന്ദി!",
+      confirmation_email_sent: "സ്ഥിരീകരണം നിങ്ങളുടെ ഇമെയിലിലേക്ക് അയയ്ക്കും:",
+      guaranteed_delivery: "ഉറപ്പായ ഡെലിവറി:",
+      view_or_manage_order: "ഓർഡർ കാണുക അല്ലെങ്കിൽ നിയന്ത്രിക്കുക",
+      print_download_invoice: "ജിഎസ്ടി ഇൻവോയ്സ് പ്രിന്റ് / ഡൗൺലോഡ് ചെയ്യുക",
+      items_in_order: "നിങ്ങളുടെ ഓർഡറിലുള്ള സാധനങ്ങൾ",
+      recommended_for_you: "നിങ്ങളുടെ വാങ്ങലിനെ അടിസ്ഥാനമാക്കി ശുപാർശ ചെയ്യുന്നത്",
+      shipping_to: "ഡെലിവറി വിലാസം:",
+      continue_shopping: "ഷോപ്പിംഗ് തുടരുക"
+    },
+    bn: {
+      order_placed_thank_you: "অর্ডার দেওয়া হয়েছে, ধন্যবাদ!",
+      confirmation_email_sent: "নিশ্চিতকরণ আপনার ইমেলে পাঠানো হবে:",
+      guaranteed_delivery: "গ্যারান্টিযুক্ত ডেলিভারি:",
+      view_or_manage_order: "অর্ডার দেখুন বা পরিচালনা করুন",
+      print_download_invoice: "জিএসটি চালান প্রিন্ট / ডাউনলোড করুন",
+      items_in_order: "আপনার অর্ডারের পণ্যসমূহ",
+      recommended_for_you: "আপনার ক্রয়ের উপর ভিত্তি করে প্রস্তাবিত",
+      shipping_to: "শিপিং ঠিকানা:",
+      continue_shopping: "কেনাকাটা চালিয়ে যান"
+    },
+    mr: {
+      order_placed_thank_you: "ऑर्डर दिली, धन्यवाद!",
+      confirmation_email_sent: "पुष्टीकरण आपल्या ईमेलवर पाठवले जाईल:",
+      guaranteed_delivery: "हमी दिलेली डिलिव्हरी:",
+      view_or_manage_order: "ऑर्डर पहा किंवा व्यवस्थापित करा",
+      print_download_invoice: "जीएसटी चलन मुद्रित करा / डाउनलोड करा",
+      items_in_order: "तुमच्या ऑर्डरमधील वस्तू",
+      recommended_for_you: "तुमच्या खरेदीवर आधारित शिफारस केलेले",
+      shipping_to: "डिलिव्हरी पत्ता:",
+      continue_shopping: "खरेदी सुरू ठेवा"
+    },
+    ur: {
+      order_placed_thank_you: "آرڈر موصول ہوا، شکریہ!",
+      confirmation_email_sent: "تصدیق آپ کے ای میل پر بھیجی جائے گی:",
+      guaranteed_delivery: "یقینی ترسیل:",
+      view_or_manage_order: "آرڈر دیکھیں یا منظم کریں",
+      print_download_invoice: "جی ایس ٹی انوائس پرنٹ / ڈاؤن لوڈ کریں",
+      items_in_order: "آپ کے آرڈر کی اشیاء",
+      recommended_for_you: "آپ کی خریداری پر مبنی تجویز کردہ",
+      shipping_to: "ترسیل کا پتہ:",
+      continue_shopping: "خریداری جاری رکھیں"
+    },
+    pa: {
+      order_placed_thank_you: "ਆਰਡਰ ਹੋ ਗਿਆ, ਧੰਨਵਾਦ!",
+      confirmation_email_sent: "ਪੁਸ਼ਟੀਕਰਨ ਤੁਹਾਡੇ ਈਮੇਲ 'ਤੇ ਭੇਜਿਆ ਜਾਵੇਗਾ:",
+      guaranteed_delivery: "ਯਕੀਨੀ ਡਿਲੀਵਰੀ:",
+      view_or_manage_order: "ਆਰਡਰ ਦੇਖੋ ਜਾਂ ਪ੍ਰਬੰਧਿਤ ਕਰੋ",
+      print_download_invoice: "ਜੀਐਸਟੀ ਇਨਵੌਇਸ ਪ੍ਰਿੰਟ / ਡਾਊਨਲੋਡ ਕਰੋ",
+      items_in_order: "ਤੁਹਾਡੇ ਆਰਡਰ ਵਿੱਚ ਆਈਟਮਾਂ",
+      recommended_for_you: "ਤੁਹਾਡੀ ਖਰੀਦ ਦੇ ਆਧਾਰ 'ਤੇ ਸਿਫਾਰਸ਼ ਕੀਤੀ ਗਈ",
+      shipping_to: "ਸ਼ਿਪਿੰਗ ਪਤਾ:",
+      continue_shopping: "ਖਰੀਦਦਾਰੀ ਜਾਰੀ ਰੱਖੋ"
+    },
+    gu: {
+      order_placed_thank_you: "ઓર્ડર અપાઈ ગયો, આભાર!",
+      confirmation_email_sent: "પુષ્ટિ તમારા ઇમેઇલ પર મોકલવામાં આવશે:",
+      guaranteed_delivery: "ખાતરીપૂર્વક ડિલિવરી:",
+      view_or_manage_order: "ઓર્ડર જુઓ અથવા મેનેજ કરો",
+      print_download_invoice: "જીએસટી ઇનવૉઇસ પ્રિન્ટ / ડાઉનલોડ કરો",
+      items_in_order: "તમારા ઓર્ડરમાં આઇટમ્સ",
+      recommended_for_you: "તમારી ખરીદીના આધારે ભલામણ કરેલ",
+      shipping_to: "ડિલિવરી સરનામું:",
+      continue_shopping: "ખરીદી ચાલુ રાખો"
+    }
+  };
+  Object.keys(THANK_YOU_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], THANK_YOU_I18N[lang]);
+    }
+  });
+
+  // Merge account and order popover/modal translations across all 11 languages
+  const ACCOUNT_ORDERS_POPUP_I18N = {
+    en: {
+      ship_to_address_details: "Shipping Address",
+      phone_label: "Phone:",
+      view_order_details_modal: "Order Details",
+      order_items_label: "Items in this order",
+      shipping_address_label: "Shipping Address",
+      payment_method_label: "Payment Method",
+      order_summary_label: "Order Summary",
+      no_orders_found_title: "No orders found",
+      no_orders_found_desc: "Looks like you have no orders matching this filter.",
+      download_tax_invoice: "Download Tax Invoice (PDF)",
+      close_modal: "Close"
+    },
+    hi: {
+      ship_to_address_details: "डिलीवरी पता",
+      phone_label: "फ़ोन:",
+      view_order_details_modal: "ऑर्डर विवरण",
+      order_items_label: "इस ऑर्डर में उत्पाद",
+      shipping_address_label: "शिपिंग पता",
+      payment_method_label: "भुगतान विधि",
+      order_summary_label: "ऑर्डर सारांश",
+      no_orders_found_title: "कोई ऑर्डर नहीं मिला",
+      no_orders_found_desc: "ऐसा लगता है कि इस फ़िल्टर से मेल खाने वाला कोई ऑर्डर नहीं है।",
+      download_tax_invoice: "टैक्स इनवॉइस डाउनलोड करें (PDF)",
+      close_modal: "बंद करें"
+    },
+    ta: {
+      ship_to_address_details: "டெலிவரி முகவரி",
+      phone_label: "தொலைபேசி:",
+      view_order_details_modal: "ஆர்டர் விவரங்கள்",
+      order_items_label: "இந்த ஆர்டரில் உள்ள பொருட்கள்",
+      shipping_address_label: "ஷிப்பிங் முகவரி",
+      payment_method_label: "பணம் செலுத்தும் முறை",
+      order_summary_label: "ஆர்டர் சுருக்கம்",
+      no_orders_found_title: "ஆர்டர்கள் எதுவும் கிடைக்கவில்லை",
+      no_orders_found_desc: "இந்த வடிப்பானுடன் பொருந்தும் எந்த ஆர்டரும் இல்லை போல் தெரிகிறது.",
+      download_tax_invoice: "வரி விலைப்பட்டியலைப் பதிவிறக்குக (PDF)",
+      close_modal: "மூடு"
+    },
+    te: {
+      ship_to_address_details: "షిప్పింగ్ చిరునామా",
+      phone_label: "ఫోన్:",
+      view_order_details_modal: "ఆర్డర్ వివరాలు",
+      order_items_label: "ఈ ఆర్డర్‌లోని వస్తువులు",
+      shipping_address_label: "షిప్పింగ్ చిరునామా",
+      payment_method_label: "చెల్లింపు పద్ధతి",
+      order_summary_label: "ఆర్డర్ సారాంశం",
+      no_orders_found_title: "ఆర్డర్‌లు ఏవీ కనుగొనబడలేదు",
+      no_orders_found_desc: "ఈ ఫిల్టర్‌తో సరిపోలే ఆర్డర్‌లు ఏవీ లేనట్లు కనిపిస్తోంది.",
+      download_tax_invoice: "పన్ను ఇన్వాయిస్‌ను డౌన్‌లోڈ చేయండి (PDF)",
+      close_modal: "మూసివేయి"
+    },
+    kn: {
+      ship_to_address_details: "ರವಾನಿಸುವ ವಿಳಾಸ",
+      phone_label: "ದೂರವಾಣಿ:",
+      view_order_details_modal: "ಆರ್ಡರ್ ವಿವರಗಳು",
+      order_items_label: "ಈ ಆರ್ಡರ್‌ನಲ್ಲಿರುವ ವಸ್ತುಗಳು",
+      shipping_address_label: "ರವಾನೆ ವಿಳಾಸ",
+      payment_method_label: "ಪಾವತಿ ವಿಧಾನ",
+      order_summary_label: "ಆರ್ಡರ್ ಸಾರಾಂಶ",
+      no_orders_found_title: "ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+      no_orders_found_desc: "ಈ ಫಿಲ್ಟರ್‌ಗೆ ಹೊಂದಿಕೆಯಾಗುವ ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ ಎಂದು ತೋರುತ್ತಿದೆ.",
+      download_tax_invoice: "ತೆರಿಗೆ ಇನ್‌ವಾಯ್ಸ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ (PDF)",
+      close_modal: "ಮುಚ್ಚಿ"
+    },
+    ml: {
+      ship_to_address_details: "ഡെലിവറി വിലാസം",
+      phone_label: "ഫോൺ:",
+      view_order_details_modal: "ഓർഡർ വിവരങ്ങൾ",
+      order_items_label: "ഈ ഓർഡറിലുള്ള സാധനങ്ങൾ",
+      shipping_address_label: "ഷിപ്പിംഗ് വിലാസം",
+      payment_method_label: "പേയ്‌മെന്റ് രീതി",
+      order_summary_label: "ഓർഡർ സംഗ്രഹം",
+      no_orders_found_title: "ഓർഡറുകളൊന്നും കണ്ടെത്തിയില്ല",
+      no_orders_found_desc: "ഈ ഫിൽട്ടറുമായി പൊരുത്തപ്പെടുന്ന ഓർഡറുകളൊന്നും ഉള്ളതായി തോന്നുന്നില്ല.",
+      download_tax_invoice: "നികുതി ഇൻവോയ്സ് ഡൗൺലോഡ് ചെയ്യുക (PDF)",
+      close_modal: "അടയ്ക്കുക"
+    },
+    bn: {
+      ship_to_address_details: "শিপিং ঠিকানা",
+      phone_label: "ফোন:",
+      view_order_details_modal: "অর্ডার বিবরণ",
+      order_items_label: "এই অর্ডারের পণ্যসমূহ",
+      shipping_address_label: "শিপিং ঠিকানা",
+      payment_method_label: "মূল্য পরিশোধের মাধ্যম",
+      order_summary_label: "অর্ডার সারাংশ",
+      no_orders_found_title: "কোনো অর্ডার পাওয়া যায়নি",
+      no_orders_found_desc: "মনে হচ্ছে এই ফিল্টারের সাথে মিলে এমন কোনো অর্ডার নেই।",
+      download_tax_invoice: "ট্যাক্স চালান ডাউনলোড করুন (PDF)",
+      close_modal: "বন্ধ করুন"
+    },
+    mr: {
+      ship_to_address_details: "डिलिव्हरी पत्ता",
+      phone_label: "फोन:",
+      view_order_details_modal: "ऑर्डर तपशील",
+      order_items_label: "या ऑर्डरमधील वस्तू",
+      shipping_address_label: "शिपिंग पत्ता",
+      payment_method_label: "पेमेंट पद्धत",
+      order_summary_label: "ऑर्डर सारांश",
+      no_orders_found_title: "कोणतीही ऑर्डर आढळली नाही",
+      no_orders_found_desc: "या फिल्टरशी जुळणारी कोणतीही ऑर्डर दिसत नाही.",
+      download_tax_invoice: "कर बीजक डाउनलोड करा (PDF)",
+      close_modal: "बंद करा"
+    },
+    ur: {
+      ship_to_address_details: "ترسیل کا پتہ",
+      phone_label: "فون:",
+      view_order_details_modal: "آرڈر کی تفصیلات",
+      order_items_label: "اس آرڈر میں اشیاء",
+      shipping_address_label: "ترسیل کا پتہ",
+      payment_method_label: "طریقہ ادائیگی",
+      order_summary_label: "آرڈر کا خلاصہ",
+      no_orders_found_title: "کوئی آرڈر نہیں ملا",
+      no_orders_found_desc: "ایسا لگتا ہے کہ اس فلٹر سے مماثل کوئی آرڈر نہیں ہے۔",
+      download_tax_invoice: "ٹیکس انوائس ڈاؤن لوڈ کریں (PDF)",
+      close_modal: "بند کریں"
+    },
+    pa: {
+      ship_to_address_details: "ਸ਼ਿਪਿੰਗ ਪਤਾ",
+      phone_label: "ਫ਼ੋਨ:",
+      view_order_details_modal: "ਆਰਡਰ ਦੇ ਵੇਰਵੇ",
+      order_items_label: "ਇਸ ਆਰਡਰ ਵਿੱਚ ਆਈਟਮਾਂ",
+      shipping_address_label: "ਸ਼ਿਪਿੰਗ ਪਤਾ",
+      payment_method_label: "ਭੁਗਤਾਨ ਵਿਧੀ",
+      order_summary_label: "ਆਰਡਰ ਸੰਖੇਪ",
+      no_orders_found_title: "ਕੋਈ ਆਰਡਰ ਨਹੀਂ ਮਿਲਿਆ",
+      no_orders_found_desc: "ਲੱਗਦਾ ਹੈ ਕਿ ਇਸ ਫਿਲਟਰ ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਕੋਈ ਆਰਡਰ ਨਹੀਂ ਹੈ।",
+      download_tax_invoice: "ਟੈਕਸ ਇਨਵੌਇਸ ਡਾਊਨਲੋਡ ਕਰੋ (PDF)",
+      close_modal: "ਬੰਦ ਕਰੋ"
+    },
+    gu: {
+      ship_to_address_details: "ડિલિવરી સરનામું",
+      phone_label: "ફોન:",
+      view_order_details_modal: "ઓર્ડર વિગતો",
+      order_items_label: "આ ઓર્ડરમાં વસ્તુઓ",
+      shipping_address_label: "શિપિંગ સરનામું",
+      payment_method_label: "ચુકવણી પદ્ધતિ",
+      order_summary_label: "ઓર્ડર સારાંશ",
+      no_orders_found_title: "કોઈ ઓર્ડર મળ્યા નથી",
+      no_orders_found_desc: "એવું લાગે છે કે આ ફિલ્ટર સાથે મેળ ખાતો કોઈ ઓર્ડર નથી.",
+      download_tax_invoice: "ટેક્સ ઇનવૉઇસ ડાઉનલોડ કરો (PDF)",
+      close_modal: "બંધ કરો"
+    }
+  };
+  Object.keys(ACCOUNT_ORDERS_POPUP_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], ACCOUNT_ORDERS_POPUP_I18N[lang]);
+    }
+  });
+
   
   // Merge internal pages translations across all 11 languages
   const INTERNAL_I18N = {
@@ -7750,6 +8107,281 @@
       Object.assign(translations[lang], AMAZON_AUTH_PAGE_I18N[lang]);
     }
   });
+
+
+  const AMAZON_LOGIN_REGISTER_I18N = {
+  "en": {
+    "keep_me_signed_in": "Keep me signed in.",
+    "keep_me_signed_in_details": "Details",
+    "keep_me_signed_in_tooltip": "Choosing 'Keep me signed in' reduces the number of times you're asked to Sign-In on this device. To keep your account secure, use this option only on your personal devices.",
+    "login_continue": "Continue",
+    "change_identifier": "Change",
+    "login_heading": "Sign in",
+    "login_identifier_label": "Email or mobile phone number",
+    "login_password_label": "Password",
+    "forgot_password_link": "Forgot Password",
+    "login_get_otp_btn": "Get an OTP on your phone",
+    "register_heading": "Create Account",
+    "your_name_label": "Your name",
+    "mobile_number_label": "Mobile number",
+    "email_optional_label": "Email (optional)",
+    "passwords_must_be_at_least_6_chars": "Passwords must be at least 6 characters.",
+    "verify_mobile_number_btn": "Verify mobile number",
+    "create_account_btn": "Create your ElectroMart account",
+    "forgot_heading": "Password assistance",
+    "forgot_subheading": "Enter the email address or mobile phone number associated with your ElectroMart account.",
+    "back_to_signin_link": "Back to sign in",
+    "password_assistance_instruction": "We'll send you an OTP to verify your identity.",
+    "password_assistance_reset_btn": "Reset Password and Sign In"
+  },
+  "hi": {
+    "keep_me_signed_in": "मुझे साइन इन रखें।",
+    "keep_me_signed_in_details": "विवरण",
+    "keep_me_signed_in_tooltip": "'मुझे साइन इन रखें' चुनने से इस डिवाइस पर बार-बार साइन-इन करने की आवश्यकता नहीं होगी। अपने खाते को सुरक्षित रखने के लिए इसका उपयोग केवल अपने व्यक्तिगत डिवाइस पर करें।",
+    "login_continue": "जारी रखें",
+    "change_identifier": "बदलें",
+    "login_heading": "साइन इन करें",
+    "login_identifier_label": "ईमेल या मोबाइल फोन नंबर",
+    "login_password_label": "पासवर्ड",
+    "forgot_password_link": "पासवर्ड भूल गए",
+    "login_get_otp_btn": "अपने फोन पर ओटीपी प्राप्त करें",
+    "register_heading": "खाता बनाएं",
+    "your_name_label": "आपका नाम",
+    "mobile_number_label": "मोबाइल नंबर",
+    "email_optional_label": "ईमेल (वैकल्पिक)",
+    "passwords_must_be_at_least_6_chars": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।",
+    "verify_mobile_number_btn": "मोबाइल नंबर सत्यापित करें",
+    "create_account_btn": "अपना इलेक्ट्रोमार्ट खाता बनाएं",
+    "forgot_heading": "पासवर्ड सहायता",
+    "forgot_subheading": "अपने इलेक्ट्रोमार्ट खाते से जुड़ा ईमेल पता या मोबाइल फोन नंबर दर्ज करें।",
+    "back_to_signin_link": "साइन इन पर वापस जाएं",
+    "password_assistance_instruction": "आपकी पहचान सत्यापित करने के लिए हम आपको एक ओटीपी भेजेंगे।",
+    "password_assistance_reset_btn": "पासवर्ड रीसेट करें और साइन इन करें"
+  },
+  "ta": {
+    "keep_me_signed_in": "என்னை உள்நுழைந்திருக்க வைக்கவும்.",
+    "keep_me_signed_in_details": "விவரங்கள்",
+    "keep_me_signed_in_tooltip": "'என்னை உள்நுழைந்திருக்க வைக்கவும்' என்பதைத் தேர்ந்தெடுப்பது, இந்த சாதனத்தில் மீண்டும் மீண்டும் உள்நுழைய வேண்டிய அவசியத்தைக் குறைக்கிறது.",
+    "login_continue": "தொடரவும்",
+    "change_identifier": "மாற்றவும்",
+    "login_heading": "உள்நுழைக",
+    "login_identifier_label": "மின்னஞ்சல் அல்லது மொபைல் எண்",
+    "login_password_label": "கடவுச்சொல்",
+    "forgot_password_link": "கடவுச்சொல் மறந்துவிட்டதா",
+    "login_get_otp_btn": "உங்கள் தொலைபேசியில் OTP-ஐப் பெறுங்கள்",
+    "register_heading": "கணக்கை உருவாக்கவும்",
+    "your_name_label": "உங்கள் பெயர்",
+    "mobile_number_label": "மொபைல் எண்",
+    "email_optional_label": "மின்னஞ்சல் (விருப்பத்தேர்வு)",
+    "passwords_must_be_at_least_6_chars": "கடவுச்சொற்கள் குறைந்தது 6 எழுத்துக்களாக இருக்க வேண்டும்.",
+    "verify_mobile_number_btn": "மொபைல் எண்ணைச் சரிபார்க்கவும்",
+    "create_account_btn": "உங்கள் எலக்ட்ரோமார்ட் கணக்கை உருவாக்கவும்",
+    "forgot_heading": "கடவுச்சொல் உதவி",
+    "forgot_subheading": "உங்கள் எலக்ட்ரோமார்ட் கணக்குடன் தொடர்புடைய மின்னஞ்சல் முகவரி அல்லது மொபைல் எண்ணை உள்ளிடவும்.",
+    "back_to_signin_link": "உள்நுழைவுக்குத் திரும்பு",
+    "password_assistance_instruction": "உங்கள் அடையாளத்தைச் சரிபார்க்க நாங்கள் உங்களுக்கு OTP அனுப்புவோம்.",
+    "password_assistance_reset_btn": "கடவுச்சொல்லை மீட்டமைத்து உள்நுழைக"
+  },
+  "te": {
+    "keep_me_signed_in": "నన్ను సైన్ ఇన్ చేసి ఉంచండి.",
+    "keep_me_signed_in_details": "వివరాలు",
+    "keep_me_signed_in_tooltip": "'నన్ను సైన్ ఇన్ చేసి ఉంచండి' ఎంచుకోవడం వల్ల ఈ పరికరంలో పదేపదే సైన్ ఇన్ చేయాల్సిన అవసరం ఉండదు.",
+    "login_continue": "కొనసాగించండి",
+    "change_identifier": "మార్చండి",
+    "login_heading": "సైన్ ఇన్ చేయండి",
+    "login_identifier_label": "ఇమెయిల్ లేదా మొబైల్ ఫోన్ నంబర్",
+    "login_password_label": "పాస్‌వర్డ్",
+    "forgot_password_link": "పాస్‌వర్డ్ మర్చిపోయారా",
+    "login_get_otp_btn": "మీ ఫోన్‌లో OTP పొందండి",
+    "register_heading": "ఖాతాను సృష్టించండి",
+    "your_name_label": "మీ పేరు",
+    "mobile_number_label": "మొబైల్ నంబర్",
+    "email_optional_label": "ఇమెయిల్ (ఐచ్ఛికం)",
+    "passwords_must_be_at_least_6_chars": "పాస్‌వర్డ్‌లు కనీసం 6 అక్షరాలు ఉండాలి.",
+    "verify_mobile_number_btn": "మొబైల్ నంబర్‌ను ధృవీకరించండి",
+    "create_account_btn": "మీ ఎలక్ట్రోమార్ట్ ఖాతాను సృష్టించండి",
+    "forgot_heading": "పాస్‌వర్డ్ సహాయం",
+    "forgot_subheading": "మీ ఎలక్ట్రోమార్ట్ ఖాతాతో అనుబంధించబడిన ఇమెయిల్ లేదా మొబైల్ నంబర్‌ను నమోదు చేయండి.",
+    "back_to_signin_link": "సైన్ ఇన్ పేజీకి తిరిగి వెళ్లండి",
+    "password_assistance_instruction": "మీ గుర్తింపును ధృవీకరించడానికి మేము మీకు OTP పంపుతాము.",
+    "password_assistance_reset_btn": "పాస్‌వర్డ్‌ను రీసెట్ చేసి సైన్ ఇన్ చేయండి"
+  },
+  "kn": {
+    "keep_me_signed_in": "ನನ್ನನ್ನು ಸೈನ್ ಇನ್ ಆಗಿ ಇರಿಸಿ.",
+    "keep_me_signed_in_details": "ವಿವರಗಳು",
+    "keep_me_signed_in_tooltip": "'ನನ್ನನ್ನು ಸೈನ್ ಇನ್ ಆಗಿ ಇರಿಸಿ' ಆಯ್ಕೆ ಮಾಡುವುದರಿಂದ ಈ ಸಾಧನದಲ್ಲಿ ಪುನಃ ಪುನಃ ಸೈನ್ ಇನ್ ಮಾಡಬೇಕಾಗಿಲ್ಲ.",
+    "login_continue": "ಮುಂದುವರಿಸಿ",
+    "change_identifier": "ಬದಲಾಯಿಸಿ",
+    "login_heading": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "login_identifier_label": "ಇಮೇಲ್ ಅಥವಾ ಮೊಬೈಲ್ ಫೋನ್ ಸಂಖ್ಯೆ",
+    "login_password_label": "ಪಾಸ್‌ವರ್ಡ್",
+    "forgot_password_link": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರುವಿರಾ",
+    "login_get_otp_btn": "ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ OTP ಪಡೆಯಿರಿ",
+    "register_heading": "ಖಾತೆ ರಚಿಸಿ",
+    "your_name_label": "ನಿಮ್ಮ ಹೆಸರು",
+    "mobile_number_label": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "email_optional_label": "ಇಮೇಲ್ (ಐಚ್ಛಿಕ)",
+    "passwords_must_be_at_least_6_chars": "ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು.",
+    "verify_mobile_number_btn": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+    "create_account_btn": "ನಿಮ್ಮ ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ ಖಾತೆಯನ್ನು ರಚಿಸಿ",
+    "forgot_heading": "ಪಾಸ್‌ವರ್ಡ್ ನೆರವು",
+    "forgot_subheading": "ನಿಮ್ಮ ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ ಖಾತೆಗೆ ಸಂಬಂಧಿಸಿದ ಇಮೇಲ್ ಅಥವಾ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
+    "back_to_signin_link": "ಸೈನ್ ಇನ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+    "password_assistance_instruction": "ನಿಮ್ಮ ಗುರುತನ್ನು ಪರಿಶೀಲಿಸಲು ನಾವು ನಿಮಗೆ OTP ಕಳುಹಿಸುತ್ತೇವೆ.",
+    "password_assistance_reset_btn": "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ ಮತ್ತು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+  },
+  "ml": {
+    "keep_me_signed_in": "എന്നെ സൈൻ ഇൻ ചെയ്ത് നിലനിർത്തുക.",
+    "keep_me_signed_in_details": "വിശദാംശങ്ങൾ",
+    "keep_me_signed_in_tooltip": "'എന്നെ സൈൻ ഇൻ ചെയ്ത് നിലനിർത്തുക' തിരഞ്ഞെടുക്കുന്നത് ഈ ഉപകരണത്തിൽ വീണ്ടും വീണ്ടും സൈൻ ഇൻ ചെയ്യേണ്ട ആവശ്യകത കുറയ്ക്കുന്നു.",
+    "login_continue": "തുടരുക",
+    "change_identifier": "മാറ്റുക",
+    "login_heading": "സൈൻ ഇൻ ചെയ്യുക",
+    "login_identifier_label": "ഇമെയിൽ അല്ലെങ്കിൽ മൊബൈൽ ഫോൺ നമ്പർ",
+    "login_password_label": "പാസ്‌വേഡ്",
+    "forgot_password_link": "പാസ്‌വേഡ് മറന്നോ",
+    "login_get_otp_btn": "നിങ്ങളുടെ ഫോണിൽ OTP നേടുക",
+    "register_heading": "അക്കൗണ്ട് സൃഷ്ടിക്കുക",
+    "your_name_label": "നിങ്ങളുടെ പേര്",
+    "mobile_number_label": "മൊബൈൽ നമ്പർ",
+    "email_optional_label": "ഇമെയിൽ (ഓപ്ഷണൽ)",
+    "passwords_must_be_at_least_6_chars": "പാസ്‌വേഡുകൾ കുറഞ്ഞത് 6 പ്രതീകങ്ങളായിരിക്കണം.",
+    "verify_mobile_number_btn": "മൊബൈൽ നമ്പർ സ്ഥിരീകരിക്കുക",
+    "create_account_btn": "നിങ്ങളുടെ ഇലക്ട്രോമാർട്ട് അക്കൗണ്ട് സൃഷ്ടിക്കുക",
+    "forgot_heading": "പാസ്‌വേഡ് സഹായം",
+    "forgot_subheading": "നിങ്ങളുടെ ഇലക്ട്രോമാർട്ട് അക്കൗണ്ടുമായി ബന്ധിപ്പിച്ചിരിക്കുന്ന ഇമെയിൽ അല്ലെങ്കിൽ മൊബൈൽ നമ്പർ നൽകുക.",
+    "back_to_signin_link": "സൈൻ ഇന്നിലേക്ക് മടങ്ങുക",
+    "password_assistance_instruction": "നിങ്ങളുടെ ഐഡന്റിറ്റി പരിശോധിക്കാൻ ഞങ്ങൾ നിങ്ങൾക്ക് ഒരു OTP അയയ്‌ക്കും.",
+    "password_assistance_reset_btn": "പാസ്‌വേഡ് പുനഃസജ്ജമാക്കി സൈൻ ഇൻ ചെയ്യുക"
+  },
+  "bn": {
+    "keep_me_signed_in": "আমাকে সাইন ইন করে রাখুন।",
+    "keep_me_signed_in_details": "বিবরণ",
+    "keep_me_signed_in_tooltip": "'আমাকে সাইন ইন করে রাখুন' বেছে নিলে এই ডিভাইসে বারবার সাইন ইন করতে হবে না।",
+    "login_continue": "চালিয়ে যান",
+    "change_identifier": "পরিবর্তন করুন",
+    "login_heading": "সাইন ইন করুন",
+    "login_identifier_label": "ইমেল বা মোবাইল ফোন নম্বর",
+    "login_password_label": "পাসওয়ার্ড",
+    "forgot_password_link": "পাসওয়ার্ড ভুলে গেছেন",
+    "login_get_otp_btn": "আপনার ফোনে ওটিপি পান",
+    "register_heading": "অ্যাকাউন্ট তৈরি করুন",
+    "your_name_label": "আপনার নাম",
+    "mobile_number_label": "মোবাইল নম্বর",
+    "email_optional_label": "ইমেল (ঐচ্ছিক)",
+    "passwords_must_be_at_least_6_chars": "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।",
+    "verify_mobile_number_btn": "মোবাইল নম্বর যাচাই করুন",
+    "create_account_btn": "আপনার ইলেক্ট্রোমার্ট অ্যাকাউন্ট তৈরি করুন",
+    "forgot_heading": "পাসওয়ার্ড সহায়তা",
+    "forgot_subheading": "আপনার ইলেক্ট্রোমার্ট অ্যাকাউন্টের সাথে যুক্ত ইমেল বা মোবাইল নম্বর লিখুন।",
+    "back_to_signin_link": "সাইন ইন-এ ফিরে যান",
+    "password_assistance_instruction": "আপনার পরিচয় যাচাই করতে আমরা আপনাকে একটি ওটিপি পাঠাব।",
+    "password_assistance_reset_btn": "পাসওয়ার্ড রিসেট করুন এবং সাইন ইন করুন"
+  },
+  "mr": {
+    "keep_me_signed_in": "मला साइन इन ठेवा.",
+    "keep_me_signed_in_details": "तपशील",
+    "keep_me_signed_in_tooltip": "'मला साइन इन ठेवा' निवडल्यास या डिव्हाइसवर पुन्हा पुन्हा साइन इन करावे लागणार नाही.",
+    "login_continue": "पुढे सुरू ठेवा",
+    "change_identifier": "बदला",
+    "login_heading": "साइन इन करा",
+    "login_identifier_label": "ईमेल किंवा मोबाइल फोन नंबर",
+    "login_password_label": "पासवर्ड",
+    "forgot_password_link": "पासवर्ड विसरलात",
+    "login_get_otp_btn": "तुमच्या फोनवर OTP मिळवा",
+    "register_heading": "खाते तयार करा",
+    "your_name_label": "तुमचे नाव",
+    "mobile_number_label": "मोबाइल नंबर",
+    "email_optional_label": "ईमेल (पर्यायी)",
+    "passwords_must_be_at_least_6_chars": "पासवर्ड किमान 6 अक्षरांचा असावा.",
+    "verify_mobile_number_btn": "मोबाइल नंबर सत्यापित करा",
+    "create_account_btn": "तुमचे इलेक्ट्रोमार्ट खाते तयार करा",
+    "forgot_heading": "पासवर्ड सहाय्यता",
+    "forgot_subheading": "तुमच्या इलेक्ट्रोमार्ट खात्याशी संबंधित ईमेल किंवा मोबाइल नंबर प्रविष्ट करा.",
+    "back_to_signin_link": "साइन इन वर परत जा",
+    "password_assistance_instruction": "तुमची ओळख पडताळण्यासाठी आम्ही तुम्हाला OTP पाठवू.",
+    "password_assistance_reset_btn": "पासवर्ड रीसेट करा आणि साइन इन करा"
+  },
+  "ur": {
+    "keep_me_signed_in": "مجھے سائن ان رکھیں۔",
+    "keep_me_signed_in_details": "تفصیلات",
+    "keep_me_signed_in_tooltip": "'مجھے سائن ان رکھیں' منتخب کرنے سے اس ڈیوائس پر بار بار سائن ان کرنے کی ضرورت نہیں ہوگی۔",
+    "login_continue": "جاری رکھیں",
+    "change_identifier": "تبدیل کریں",
+    "login_heading": "سائن ان کریں",
+    "login_identifier_label": "ای میل یا موبائل فون نمبر",
+    "login_password_label": "پاس ورڈ",
+    "forgot_password_link": "پاس ورڈ بھول گئے",
+    "login_get_otp_btn": "اپنے فون پر او ٹی پی حاصل کریں",
+    "register_heading": "اکاؤنٹ بنائیں",
+    "your_name_label": "آپ کا نام",
+    "mobile_number_label": "موبائل نمبر",
+    "email_optional_label": "ای میل (اختیاری)",
+    "passwords_must_be_at_least_6_chars": "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے۔",
+    "verify_mobile_number_btn": "موبائل نمبر کی تصدیق کریں",
+    "create_account_btn": "اپنا الیکٹرو مارٹ اکاؤنٹ بنائیں",
+    "forgot_heading": "پاس ورڈ کی مدد",
+    "forgot_subheading": "اپنے الیکٹرو مارٹ اکاؤنٹ سے وابستہ ای میل یا موبائل نمبر درج کریں۔",
+    "back_to_signin_link": "سائن ان پر واپس جائیں",
+    "password_assistance_instruction": "ہم آپ کی شناخت کی تصدیق کے لیے آپ کو ایک او ٹی پی بھیجیں گے۔",
+    "password_assistance_reset_btn": "پاس ورڈ دوبارہ ترتیب دیں اور سائن ان کریں"
+  },
+  "pa": {
+    "keep_me_signed_in": "ਮੈਨੂੰ ਸਾਈਨ ਇਨ ਰੱਖੋ।",
+    "keep_me_signed_in_details": "ਵੇਰਵੇ",
+    "keep_me_signed_in_tooltip": "'ਮੈਨੂੰ ਸਾਈਨ ਇਨ ਰੱਖੋ' ਚੁਣਨ ਨਾਲ ਇਸ ਡਿਵਾਈਸ 'ਤੇ ਵਾਰ-ਵਾਰ ਸਾਈਨ ਇਨ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਪਵੇਗੀ।",
+    "login_continue": "ਜਾਰੀ ਰੱਖੋ",
+    "change_identifier": "ਬਦਲੋ",
+    "login_heading": "ਸਾਈਨ ਇਨ ਕਰੋ",
+    "login_identifier_label": "ਈਮੇਲ ਜਾਂ ਮੋਬਾਈਲ ਫ਼ੋਨ ਨੰਬਰ",
+    "login_password_label": "ਪਾਸਵਰਡ",
+    "forgot_password_link": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ",
+    "login_get_otp_btn": "ਆਪਣੇ ਫ਼ੋਨ 'ਤੇ OTP ਪ੍ਰਾਪਤ ਕਰੋ",
+    "register_heading": "ਖਾਤਾ ਬਣਾਓ",
+    "your_name_label": "ਤੁਹਾਡਾ ਨਾਮ",
+    "mobile_number_label": "ਮੋਬਾਈਲ ਨੰਬਰ",
+    "email_optional_label": "ਈਮੇਲ (ਵਿਕਲਪਿਕ)",
+    "passwords_must_be_at_least_6_chars": "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।",
+    "verify_mobile_number_btn": "ਮੋਬਾਈਲ ਨੰਬਰ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "create_account_btn": "ਆਪਣਾ ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਖਾਤਾ ਬਣਾਓ",
+    "forgot_heading": "ਪਾਸਵਰਡ ਸਹਾਇਤਾ",
+    "forgot_subheading": "ਆਪਣੇ ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਖਾਤੇ ਨਾਲ ਸੰਬੰਧਿਤ ਈਮੇਲ ਜਾਂ ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ।",
+    "back_to_signin_link": "ਸਾਈਨ ਇਨ 'ਤੇ ਵਾਪਸ ਜਾਓ",
+    "password_assistance_instruction": "ਤੁਹਾਡੀ ਪਛਾਣ ਦੀ ਪੁਸ਼ਟੀ ਕਰਨ ਲਈ ਅਸੀਂ ਤੁਹਾਨੂੰ ਇੱਕ OTP ਭੇਜਾਂਗੇ।",
+    "password_assistance_reset_btn": "ਪਾਸਵਰਡ ਰੀਸੈਟ ਕਰੋ ਅਤੇ ਸਾਈਨ ਇਨ ਕਰੋ"
+  },
+  "gu": {
+    "keep_me_signed_in": "મને સાઇન ઇન રાખો.",
+    "keep_me_signed_in_details": "વિગતો",
+    "keep_me_signed_in_tooltip": "'મને સાઇન ઇન રાખો' પસંદ કરવાથી આ ઉપકરણ પર વારંવાર સાઇન ઇન કરવાની જરૂર રહેશે નહીં.",
+    "login_continue": "ચાલુ રાખો",
+    "change_identifier": "બદલો",
+    "login_heading": "સાઇન ઇન કરો",
+    "login_identifier_label": "ઇમેઇલ અથવા મોબાઇલ ફોન નંબર",
+    "login_password_label": "પાસવર્ડ",
+    "forgot_password_link": "પાસવર્ડ ભૂલી ગયા",
+    "login_get_otp_btn": "તમારા ફોન પર OTP મેળવો",
+    "register_heading": "એકાઉન્ટ બનાવો",
+    "your_name_label": "તમારું નામ",
+    "mobile_number_label": "મોબાઇલ નંબર",
+    "email_optional_label": "ઇમેઇલ (વૈકલ્પિક)",
+    "passwords_must_be_at_least_6_chars": "પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરોનો હોવો જોઈએ.",
+    "verify_mobile_number_btn": "મોબાઇલ નંબર ચકાસો",
+    "create_account_btn": "તમારું ઇલેક્ટ્રોમાર્ટ એકાઉન્ટ બનાવો",
+    "forgot_heading": "પાસવર્ડ સહાય",
+    "forgot_subheading": "તમારા ઇલેક્ટ્રોમાર્ટ એકાઉન્ટ સાથે સંકળાયેલ ઇમેઇલ અથવા મોબાઇલ નંબર દાખલ કરો.",
+    "back_to_signin_link": "સાઇન ઇન પર પાછા જાઓ",
+    "password_assistance_instruction": "તમારી ઓળખ ચકાસવા માટે અમે તમને OTP મોકલીશું.",
+    "password_assistance_reset_btn": "પાસવર્ડ રીસેટ કરો અને સાઇન ઇન કરો"
+  }
+};
+
+  Object.keys(AMAZON_LOGIN_REGISTER_I18N).forEach((lang) => {
+    if (translations[lang]) {
+      Object.assign(translations[lang], AMAZON_LOGIN_REGISTER_I18N[lang]);
+    }
+  });
+
 
 
   const AMAZON_LOCATION_MODAL_I18N = {

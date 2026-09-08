@@ -132,15 +132,15 @@
             </div>
           </div>
           <div class="nav-account-dropdown-wrap">
-            <a href="auth.html" class="account-link nav-action-card" id="navAccountTrigger">
+            <a href="login.html" class="account-link nav-action-card" id="navAccountTrigger">
               <span data-i18n="hello_sign_in">Hello, sign in</span>
               <strong data-i18n="account_lists">Account &amp; Lists ▾</strong>
             </a>
             <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
               <div class="flyout-arrow"></div>
               <div class="flyout-top-signin">
-                <a href="auth.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
-                <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="auth.html" data-i18n="start_here">Start here.</a></p>
+                <a href="login.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
+                <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="register.html" data-i18n="start_here">Start here.</a></p>
               </div>
               <div class="flyout-columns">
                 <div class="flyout-col">
@@ -299,8 +299,8 @@
       <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
 
       <!-- Amazon-style Cart Flyout Drawer -->
-      <div id="cartFlyoutOverlay" class="cart-flyout-overlay" hidden></div>
-      <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" hidden>
+      <div id="cartFlyoutOverlay" class="cart-flyout-overlay" style="display: none; pointer-events: none;" hidden></div>
+      <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" style="display: none; pointer-events: none;" hidden>
         <div class="cart-flyout-header">
           <div class="cart-flyout-title-wrap">
             <span class="cart-flyout-check" aria-hidden="true">✓</span>
@@ -1107,6 +1107,8 @@
       overlay = document.createElement("div");
       overlay.id = "cartFlyoutOverlay";
       overlay.className = "cart-flyout-overlay";
+      overlay.style.display = "none";
+      overlay.style.pointerEvents = "none";
       overlay.setAttribute("hidden", "");
       document.body.appendChild(overlay);
     }
@@ -1116,6 +1118,8 @@
       flyout.id = "cartFlyout";
       flyout.className = "cart-flyout-drawer";
       flyout.setAttribute("aria-label", "Shopping Cart Flyout");
+      flyout.style.display = "none";
+      flyout.style.pointerEvents = "none";
       flyout.setAttribute("hidden", "");
       flyout.innerHTML = `
         <div class="cart-flyout-header">
@@ -1295,6 +1299,10 @@
 
     overlay.removeAttribute("hidden");
     flyout.removeAttribute("hidden");
+    overlay.style.display = "block";
+    overlay.style.pointerEvents = "auto";
+    flyout.style.display = "flex";
+    flyout.style.pointerEvents = "auto";
     document.body.classList.add("cart-flyout-open");
 
     void flyout.offsetWidth;
@@ -1319,12 +1327,18 @@
 
     flyout.classList.remove("open");
     if (overlay) overlay.classList.remove("open");
+    flyout.style.pointerEvents = "none";
+    if (overlay) overlay.style.pointerEvents = "none";
     document.body.classList.remove("cart-flyout-open");
 
     setTimeout(() => {
       if (!flyout.classList.contains("open")) {
         flyout.setAttribute("hidden", "");
-        if (overlay) overlay.setAttribute("hidden", "");
+        flyout.style.display = "none";
+        if (overlay) {
+          overlay.setAttribute("hidden", "");
+          overlay.style.display = "none";
+        }
       }
     }, 300);
   }

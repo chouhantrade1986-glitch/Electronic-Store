@@ -65,7 +65,8 @@
       { selector: 'a[href*="account.html"]', key: 'your_account' },
       { selector: 'a[href*="orders.html"]', key: 'returns_orders' },
       { selector: 'a[href*="faq.html"]', key: 'customer_service_help' },
-      { selector: 'a[href*="auth.html"]:not(#sidebarGreeting a)', key: 'drawer_sign_in' }
+      { selector: 'a[href*="auth.html"]:not(#sidebarGreeting a)', key: 'drawer_sign_in' },
+      { selector: 'a[href*="login.html"]:not(#sidebarGreeting a)', key: 'drawer_sign_in' }
     ];
 
     linkMap.forEach(({ selector, key }) => {
