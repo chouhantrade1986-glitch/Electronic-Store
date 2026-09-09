@@ -474,12 +474,21 @@ function renderServices(product, isInStock) {
   servicesBlock.hidden = false;
 }
 
+let activeReviewStarFilter = null;
+
 function renderReviewSummary(product) {
   if (!reviewsBlock || !reviewHeadline || !reviewBars) {
     return;
   }
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
+
+  const writeReviewBtn = document.querySelector(".amazon-btn-write-review");
+  if (writeReviewBtn) {
+    writeReviewBtn.onclick = () => {
+      window.location.href = `review.html?productId=${encodeURIComponent(product.id)}`;
+    };
+  }
 
   const rating = Math.max(0, Math.min(5, Number(product.rating || 0)));
   const totalReviews = Math.max(8, Math.round(42 + (rating * 37)));
@@ -495,7 +504,7 @@ function renderReviewSummary(product) {
   ];
   const starWord = t.tbl_rating || "स्टार";
   reviewBars.innerHTML = distribution.map((item) => `
-    <div class="review-bar">
+    <div class="review-bar" data-star-filter="${item.stars}" title="Filter by ${item.stars} star reviews">
       <span>${item.stars} ${starWord}</span>
       <div class="review-track"><div class="review-fill" style="width:${item.value}%"></div></div>
       <span>${item.value}%</span>
@@ -507,39 +516,113 @@ function renderReviewSummary(product) {
     translateBtn.textContent = t.translate_reviews_btn || "Translate all reviews";
   }
 
-  const reviewsList = document.getElementById("customerReviewsList");
-  if (reviewsList) {
-    const reviews = [
-      {
-        author: "Rahul S.",
-        verified: t.verified_purchase || "Verified Purchase",
-        stars: "★★★★★",
-        title: t.val_top_review_title || "Excellent quality and fast delivery",
-        date: "Reviewed in India on 15 August 2026",
-        body: t.val_sample_review || "Authentic product with genuine warranty. Fully satisfied with ElectroMart service.",
-        helpfulCount: 34
-      },
-      {
-        author: "Priya Sharma",
-        verified: t.verified_purchase || "Verified Purchase",
-        stars: "★★★★★",
-        title: currentLang === "hi" ? "बेहतरीन प्रदर्शन और असली वारंटी" : "Top notch performance and genuine warranty",
-        date: "Reviewed in India on 28 July 2026",
-        body: currentLang === "hi" ? "पैकिंग बहुत अच्छी थी और डिलीवरी तय समय से पहले मिल गई। उत्पाद 100% ओरिजिनल है।" : "Packaging was secure and delivery was faster than expected. 100% original product.",
-        helpfulCount: 19
-      },
-      {
-        author: "Vikram Malhotra",
-        verified: t.verified_purchase || "Verified Purchase",
-        stars: "★★★★☆",
-        title: currentLang === "hi" ? "पैसा वसूल सौदा" : "Value for money purchase",
-        date: "Reviewed in India on 10 July 2026",
-        body: currentLang === "hi" ? "दिए गए मूल्य पर यह सबसे अच्छा विकल्प है। कोई शिकायत नहीं।" : "Best choice at this price segment. Build quality and reliability are outstanding.",
-        helpfulCount: 8
+  // Load custom reviews from localStorage for this product
+  let customReviews = [];
+  try {
+    const raw = localStorage.getItem("electromart_reviews_v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        customReviews = parsed.filter(r => String(r.productId) === String(product.id));
       }
-    ];
+    }
+  } catch (e) {}
 
-    reviewsList.innerHTML = reviews.map((rev, idx) => `
+  const defaultReviews = [
+    {
+      author: "Rahul S.",
+      verified: t.verified_purchase || "Verified Purchase",
+      stars: "★★★★★",
+      ratingNum: 5,
+      title: t.val_top_review_title || "Excellent quality and fast delivery",
+      date: "Reviewed in India on 15 August 2026",
+      body: t.val_sample_review || "Authentic product with genuine warranty. Fully satisfied with ElectroMart service.",
+      helpfulCount: 34,
+      images: []
+    },
+    {
+      author: "Priya Sharma",
+      verified: t.verified_purchase || "Verified Purchase",
+      stars: "★★★★★",
+      ratingNum: 5,
+      title: currentLang === "hi" ? "बेहतरीन प्रदर्शन और असली वारंटी" : "Top notch performance and genuine warranty",
+      date: "Reviewed in India on 28 July 2026",
+      body: currentLang === "hi" ? "पैकिंग बहुत अच्छी थी और डिलीवरी तय समय से पहले मिल गई। उत्पाद 100% ओरिजिनल है।" : "Packaging was secure and delivery was faster than expected. 100% original product.",
+      helpfulCount: 19,
+      images: []
+    },
+    {
+      author: "Vikram Malhotra",
+      verified: t.verified_purchase || "Verified Purchase",
+      stars: "★★★★☆",
+      ratingNum: 4,
+      title: currentLang === "hi" ? "पैसा वसूल सौदा" : "Value for money purchase",
+      date: "Reviewed in India on 10 July 2026",
+      body: currentLang === "hi" ? "दिए गए मूल्य पर यह सबसे अच्छा विकल्प है। कोई शिकायत नहीं।" : "Best choice at this price segment. Build quality and reliability are outstanding.",
+      helpfulCount: 8,
+      images: []
+    }
+  ];
+
+  // Convert custom reviews to display format
+  const mappedCustom = customReviews.map(r => {
+    const rNum = Number(r.rating) || 5;
+    return {
+      author: r.reviewerName || "ElectroMart Customer",
+      verified: t.verified_purchase || "Verified Purchase",
+      stars: "★".repeat(rNum) + "☆".repeat(5 - rNum),
+      ratingNum: rNum,
+      title: r.headline || "Verified Customer Review",
+      date: r.date ? `Reviewed in India on ${r.date}` : "Reviewed in India on August 2026",
+      body: r.text || "",
+      helpfulCount: Number(r.helpfulCount || 0),
+      images: Array.isArray(r.images) ? r.images : []
+    };
+  });
+
+  const allReviews = [...mappedCustom, ...defaultReviews];
+
+  // Render Customer Media Gallery
+  const customerGallery = document.getElementById("customerMediaGallery");
+  const customerGalleryTrack = document.getElementById("customerGalleryTrack");
+  const allImages = allReviews.flatMap(r => r.images || []);
+  if (customerGallery && customerGalleryTrack) {
+    if (allImages.length > 0) {
+      customerGallery.hidden = false;
+      customerGalleryTrack.innerHTML = allImages.map(img => `
+        <img class="customer-gallery-thumb" src="${img}" alt="Customer review photo" />
+      `).join("");
+    } else {
+      customerGallery.hidden = true;
+    }
+  }
+
+  // Filter Bar logic
+  const filterActiveBar = document.getElementById("reviewFilterActiveBar");
+  const filterStatusText = document.getElementById("reviewFilterStatusText");
+  const clearFilterBtn = document.getElementById("clearReviewFilterBtn");
+
+  function renderFilteredReviews() {
+    const reviewsList = document.getElementById("customerReviewsList");
+    if (!reviewsList) return;
+
+    let displayReviews = allReviews;
+    if (activeReviewStarFilter !== null) {
+      displayReviews = allReviews.filter(r => r.ratingNum === activeReviewStarFilter);
+      if (filterActiveBar && filterStatusText) {
+        filterActiveBar.hidden = false;
+        filterStatusText.textContent = `${t.filter_by_star_prefix || "Showing"} ${activeReviewStarFilter} ${starWord} (${displayReviews.length})`;
+      }
+    } else {
+      if (filterActiveBar) filterActiveBar.hidden = true;
+    }
+
+    if (displayReviews.length === 0) {
+      reviewsList.innerHTML = `<p style="padding: 20px 0; color: #565959;">No reviews found for this filter.</p>`;
+      return;
+    }
+
+    reviewsList.innerHTML = displayReviews.map((rev, idx) => `
       <article class="amazon-review-item sample-review-item">
         <div class="review-author-row">
           <div class="review-avatar">${rev.author.charAt(0)}</div>
@@ -554,6 +637,11 @@ function renderReviewSummary(product) {
           <span>${rev.verified}</span>
         </div>
         <p class="review-body-text">${escapeHtml(rev.body)}</p>
+        ${Array.isArray(rev.images) && rev.images.length > 0 ? `
+          <div class="customer-review-images" style="display:flex;gap:8px;margin-bottom:10px;">
+            ${rev.images.map(img => `<img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #d5d9d9;" />`).join("")}
+          </div>
+        ` : ""}
         <div class="review-helpful-action">
           <button type="button" class="helpful-pill-btn" id="helpfulBtn_${idx}">
             ${t.helpful_button || "Helpful"} (<span class="helpful-count">${rev.helpfulCount}</span>)
@@ -576,8 +664,31 @@ function renderReviewSummary(product) {
     });
   }
 
+  // Hook star filter clicks on #reviewBars
+  reviewBars.querySelectorAll(".review-bar").forEach(bar => {
+    bar.addEventListener("click", () => {
+      const star = Number(bar.getAttribute("data-star-filter"));
+      if (activeReviewStarFilter === star) {
+        activeReviewStarFilter = null;
+      } else {
+        activeReviewStarFilter = star;
+      }
+      renderFilteredReviews();
+    });
+  });
+
+  if (clearFilterBtn) {
+    clearFilterBtn.onclick = () => {
+      activeReviewStarFilter = null;
+      renderFilteredReviews();
+    };
+  }
+
+  renderFilteredReviews();
   reviewsBlock.hidden = false;
 }
+
+const QA_STORAGE_KEY = "electromart_qa_v1";
 
 function renderQa(product) {
   if (!qaBlock || !qaList) {
@@ -585,26 +696,173 @@ function renderQa(product) {
   }
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
-  const qa = [
+
+  // Load community Q&A from localStorage
+  let communityQuestions = [];
+  try {
+    const raw = localStorage.getItem(QA_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        communityQuestions = parsed.filter(item => String(item.productId) === String(product.id));
+      }
+    }
+  } catch (e) {}
+
+  const defaultQa = [
     {
+      id: "qa_1_" + product.id,
       q: t.qa_q1 || "Does this product include GST invoice?",
-      a: t.qa_a1 || "Yes, GST invoice is available for all eligible orders."
+      a: t.qa_a1 || "Yes, GST invoice is available for all eligible orders.",
+      helpful: 18,
+      unhelpful: 1
     },
     {
+      id: "qa_2_" + product.id,
       q: t.qa_q2 || "Is this suitable for office and home use?",
-      a: t.qa_a2 || `Yes, ${product.name} is suitable for both regular office and home usage.`
+      a: t.qa_a2 || `Yes, ${product.name} is suitable for both regular office and home usage.`,
+      helpful: 12,
+      unhelpful: 0
     },
     {
+      id: "qa_3_" + product.id,
       q: t.qa_q3 || "What is the return policy?",
-      a: t.qa_a3 || "Replacement is available within 7 days if the item is damaged or not working."
+      a: t.qa_a3 || "Replacement is available within 7 days if the item is damaged or not working.",
+      helpful: 25,
+      unhelpful: 2
     }
   ];
-  qaList.innerHTML = qa.map((item) => `
-    <article class="qa-item">
-      <h3><strong>${t.qa_q_prefix || "Q:"}</strong> ${escapeHtml(item.q)}</h3>
-      <p><strong>${t.qa_a_prefix || "A:"}</strong> ${escapeHtml(item.a)}</p>
-    </article>
-  `).join("");
+
+  const allQa = [...communityQuestions, ...defaultQa];
+
+  function renderQaItems(items) {
+    if (items.length === 0) {
+      qaList.innerHTML = `<p style="padding: 16px 0; color: #565959;">${t.qa_no_results || "No matching questions found. Be the first to ask!"}</p>`;
+      return;
+    }
+
+    qaList.innerHTML = items.map((item, idx) => `
+      <article class="qa-item" id="qaItem_${item.id || idx}">
+        <div class="qa-q-row">
+          <span class="qa-q-badge">${t.qa_q_prefix || "Q:"}</span>
+          <span>${escapeHtml(item.q)}</span>
+        </div>
+        <div class="qa-a-row">
+          <span class="qa-a-badge">${t.qa_a_prefix || "A:"}</span>
+          <span>${escapeHtml(item.a)}</span>
+        </div>
+        <div class="qa-vote-row">
+          <span>Do you find this helpful?</span>
+          <button type="button" class="qa-vote-btn qa-vote-up" data-qa-id="${item.id || idx}">
+            ▲ ${t.qa_helpful_vote || "Helpful"} (<span class="vote-up-count">${item.helpful || 0}</span>)
+          </button>
+          <button type="button" class="qa-vote-btn qa-vote-down" data-qa-id="${item.id || idx}">
+            ▼ ${t.qa_unhelpful_vote || "Unhelpful"} (<span class="vote-down-count">${item.unhelpful || 0}</span>)
+          </button>
+        </div>
+      </article>
+    `).join("");
+
+    // Wire voting listeners
+    qaList.querySelectorAll(".qa-vote-up").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (btn._voted) return;
+        btn._voted = true;
+        btn.classList.add("voted");
+        const countSpan = btn.querySelector(".vote-up-count");
+        if (countSpan) countSpan.textContent = String(Number(countSpan.textContent) + 1);
+      });
+    });
+
+    qaList.querySelectorAll(".qa-vote-down").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (btn._voted) return;
+        btn._voted = true;
+        btn.classList.add("voted");
+        const countSpan = btn.querySelector(".vote-down-count");
+        if (countSpan) countSpan.textContent = String(Number(countSpan.textContent) + 1);
+      });
+    });
+  }
+
+  // Live search handler
+  const qaSearchInput = document.getElementById("qaSearchInput");
+  const qaSearchClearBtn = document.getElementById("qaSearchClearBtn");
+  if (qaSearchInput) {
+    qaSearchInput.oninput = () => {
+      const query = qaSearchInput.value.trim().toLowerCase();
+      if (qaSearchClearBtn) qaSearchClearBtn.hidden = !query;
+      if (!query) {
+        renderQaItems(allQa);
+        return;
+      }
+      const filtered = allQa.filter(item => 
+        (item.q && item.q.toLowerCase().includes(query)) || 
+        (item.a && item.a.toLowerCase().includes(query))
+      );
+      renderQaItems(filtered);
+    };
+  }
+
+  if (qaSearchClearBtn) {
+    qaSearchClearBtn.onclick = () => {
+      if (qaSearchInput) qaSearchInput.value = "";
+      qaSearchClearBtn.hidden = true;
+      renderQaItems(allQa);
+    };
+  }
+
+  // Ask Community Toggle & Submit
+  const askCommunityBtn = document.getElementById("askCommunityBtn");
+  const askFormWrap = document.getElementById("askCommunityFormWrap");
+  const askForm = document.getElementById("askCommunityForm");
+  const askInput = document.getElementById("askQuestionInput");
+  const cancelBtn = document.getElementById("cancelQuestionBtn");
+
+  if (askCommunityBtn && askFormWrap) {
+    askCommunityBtn.onclick = () => {
+      askFormWrap.hidden = !askFormWrap.hidden;
+      if (!askFormWrap.hidden && askInput) askInput.focus();
+    };
+  }
+
+  if (cancelBtn && askFormWrap) {
+    cancelBtn.onclick = () => {
+      askFormWrap.hidden = true;
+    };
+  }
+
+  if (askForm) {
+    askForm.onsubmit = (e) => {
+      e.preventDefault();
+      const questionText = askInput ? askInput.value.trim() : "";
+      if (!questionText) return;
+
+      const newQa = {
+        id: "qa_comm_" + Date.now(),
+        productId: String(product.id),
+        q: questionText,
+        a: "Thank you for asking! ElectroMart specialists and community members verify questions regularly. Compatible with standard specifications.",
+        helpful: 1,
+        unhelpful: 0
+      };
+
+      try {
+        const raw = localStorage.getItem(QA_STORAGE_KEY);
+        const stored = raw ? JSON.parse(raw) : [];
+        stored.unshift(newQa);
+        localStorage.setItem(QA_STORAGE_KEY, JSON.stringify(stored));
+      } catch (err) {}
+
+      allQa.unshift(newQa);
+      if (askInput) askInput.value = "";
+      if (askFormWrap) askFormWrap.hidden = true;
+      renderQaItems(allQa);
+      alert(t.qa_submitted_toast || "Your question has been posted to the ElectroMart community!");
+    };
+  }
+
+  renderQaItems(allQa);
   qaBlock.hidden = false;
 }
 

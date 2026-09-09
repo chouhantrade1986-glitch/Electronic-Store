@@ -1764,7 +1764,7 @@ function orderCard(order) {
           <button type="button" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</button>
           ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${order.afterSalesCases.length ? "View Request" : "Return or replace items"}</button>` : ""}
           ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}" data-i18n="cancel_order">Cancel Order</button>` : ""}
-          <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-i18n="write_review">Write a product review</button>
+          <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-product-id="${escapeHtml(firstProductId)}" data-i18n="write_review">Write a product review</button>
           <button type="button" class="secondary-pill-btn seller-feedback-btn" data-id="${order.id}" data-i18n="seller_feedback">Leave seller feedback</button>
           <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" target="_blank" rel="noopener" data-i18n="download_invoice">Download Invoice</a>
         </div>
@@ -2014,7 +2014,9 @@ ordersGrid.addEventListener("click", async (event) => {
 
   const reviewBtn = event.target.closest(".write-review-btn");
   if (reviewBtn) {
-    alert("Thank you for choosing to review this product! The review submission form will open shortly.");
+    const orderId = reviewBtn.getAttribute("data-id") || "";
+    const pId = reviewBtn.getAttribute("data-product-id") || "";
+    window.location.href = `review.html?productId=${encodeURIComponent(pId)}&orderId=${encodeURIComponent(orderId)}`;
     return;
   }
 

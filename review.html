@@ -4,65 +4,179 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart Reviews</title>
+  <title data-i18n="review_page_title">Create Review - ElectroMart</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260315c" />
-  <link rel="stylesheet" href="terms.css" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
-
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="review.css?v=20260909a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
   <div id="headerContainer"></div>
 
-  <main class="terms-main">
-    <section class="hero">
-      <p class="eyebrow">Feedback</p>
-      <h1>Customer Reviews</h1>
-      <p>Share your experience with products you purchased.</p>
+  <main class="review-page-container">
+    <!-- Breadcrumbs -->
+    <nav class="review-breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <span class="separator">&gt;</span>
+      <a href="products.html" data-i18n="breadcrumb_products">Products</a>
+      <span class="separator">&gt;</span>
+      <span id="breadcrumbCurrent" data-i18n="review_breadcrumb_create">Create Review</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="review-page-header">
+      <h1 data-i18n="review_page_title">Create Review</h1>
+      <p data-i18n="review_page_subtitle">Share your honest feedback to help other shoppers on ElectroMart</p>
+    </header>
+
+    <!-- Product Overview Card -->
+    <section class="review-product-card" id="reviewProductCard">
+      <img id="reviewProductImg" class="review-product-img" src="product-placeholder.svg" alt="Product Thumbnail" />
+      <div class="review-product-details">
+        <h2 id="reviewProductTitle" class="review-product-title">Loading product details...</h2>
+        <p id="reviewProductBrand" class="review-product-brand">ElectroMart</p>
+        <div class="review-product-price-row">
+          <span id="reviewProductPrice" class="review-product-price">₹0</span>
+          <span id="reviewProductRating" class="review-product-rating">★★★★☆ (4.5)</span>
+        </div>
+      </div>
     </section>
 
-    <section class="terms-card">
-      <h2>Write a Review</h2>
+    <!-- Success Banner (Hidden by default) -->
+    <div id="reviewSuccessBanner" class="review-success-banner" hidden>
+      <div class="review-success-message">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="#28a745">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        <span data-i18n="review_success_toast">Review submitted successfully! Thank you for helping the community.</span>
+      </div>
+      <a id="backToProductLink" href="products.html" class="review-success-link" data-i18n="back_to_products">Back to product &rarr;</a>
+    </div>
+
+    <!-- Review Form Card -->
+    <section class="review-form-card">
       <form id="reviewForm">
-        <p>
-          <label for="reviewProduct">Product</label><br />
-          <input id="reviewProduct" type="text" placeholder="Product name" required />
-        </p>
-        <p>
-          <label for="reviewRating">Rating</label><br />
-          <select id="reviewRating" required>
-            <option value="">Select rating</option>
-            <option value="5">5 - Excellent</option>
-            <option value="4">4 - Good</option>
-            <option value="3">3 - Average</option>
-            <option value="2">2 - Poor</option>
-            <option value="1">1 - Bad</option>
-          </select>
-        </p>
-        <p>
-          <label for="reviewText">Review</label><br />
-          <textarea id="reviewText" rows="4" placeholder="Tell us about your experience" required></textarea>
-        </p>
-        <button type="submit">Submit Review</button>
+        <!-- Hidden/Compat Inputs -->
+        <input type="hidden" id="reviewProduct" name="product" value="" />
+        <input type="hidden" id="reviewRating" name="rating" value="5" required />
+
+        <!-- 1. Overall Rating -->
+        <div class="review-section">
+          <h3 class="review-section-title" data-i18n="review_overall_rating">Overall rating</h3>
+          <div class="star-rating-widget" id="starRatingWidget">
+            <div class="star-rating-buttons" id="starRatingButtons" role="radiogroup" aria-label="Rating">
+              <button type="button" class="star-rating-btn active" data-rating="1" aria-label="1 star">★</button>
+              <button type="button" class="star-rating-btn active" data-rating="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-rating-btn active" data-rating="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-rating-btn active" data-rating="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-rating-btn active" data-rating="5" aria-label="5 stars">★</button>
+            </div>
+            <span class="star-rating-label" id="starRatingLabel" data-i18n="review_rating_5">Great</span>
+          </div>
+        </div>
+
+        <!-- 2. Headline -->
+        <div class="review-section">
+          <h3 class="review-section-title" data-i18n="review_headline_label">Add a headline</h3>
+          <p class="review-section-desc" data-i18n="review_headline_placeholder">What's most important to know?</p>
+          <div class="review-input-group">
+            <input
+              type="text"
+              id="reviewHeadline"
+              class="review-text-input"
+              placeholder="What's most important to know?"
+              data-i18n="review_headline_placeholder"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- 3. Photo & Video Upload -->
+        <div class="review-section">
+          <h3 class="review-section-title" data-i18n="review_media_label">Add a photo or video</h3>
+          <p class="review-section-desc" data-i18n="review_media_desc">Shoppers find images and videos more helpful than text alone.</p>
+          <div class="review-media-upload-area">
+            <input type="file" id="reviewMediaInput" accept="image/*" multiple hidden />
+            <button type="button" id="reviewUploadBtn" class="review-upload-trigger-btn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="review_upload_btn">Choose Photos</span>
+            </button>
+            <div id="reviewMediaPreviewStrip" class="review-media-preview-strip"></div>
+          </div>
+        </div>
+
+        <!-- 4. Written Review Body -->
+        <div class="review-section">
+          <h3 class="review-section-title" data-i18n="review_body_label">Add a written review</h3>
+          <p class="review-section-desc" data-i18n="review_body_placeholder">What did you like or dislike? What did you use this product for?</p>
+          <div class="review-input-group">
+            <textarea
+              id="reviewText"
+              class="review-textarea"
+              rows="6"
+              placeholder="What did you like or dislike? What did you use this product for?"
+              data-i18n="review_body_placeholder"
+              required
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- 5. Public Reviewer Name & Verified Indicator -->
+        <div class="review-section">
+          <div class="review-input-group">
+            <label for="reviewerName" data-i18n="review_reviewer_name_label">Public name</label>
+            <p class="review-section-desc" data-i18n="review_reviewer_name_desc">This name will be displayed with your public review.</p>
+            <input
+              type="text"
+              id="reviewerName"
+              class="review-text-input"
+              value="ElectroMart Customer"
+              required
+            />
+          </div>
+          <div class="review-verified-row" id="reviewVerifiedBadge">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span data-i18n="verified_purchase">Verified Purchase</span>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="review-form-actions">
+          <button type="submit" id="submitReviewBtn" class="review-submit-btn" data-i18n="review_submit_btn">Submit Review</button>
+          <a href="javascript:history.back();" id="cancelReviewBtn" class="review-cancel-btn" data-i18n="btn_cancel">Cancel</a>
+        </div>
       </form>
     </section>
 
-    <section class="terms-card">
-      <h2>Recent Reviews</h2>
-      <div id="reviewList">
-        <p>No reviews yet. Be the first to add one.</p>
+    <!-- Recent Reviews for this Product -->
+    <section class="recent-reviews-section" id="recentReviewsSection">
+      <div class="recent-reviews-header">
+        <h2 data-i18n="customer_reviews_title">Customer Reviews</h2>
+      </div>
+      <div id="reviewList" class="recent-reviews-list">
+        <!-- Rendered via review.js -->
       </div>
     </section>
   </main>
 
-  <script src="review.js"></script>
-  <script src="shared-search.js?v=20260314g"></script>
-
+  <!-- Script sequence per AGENT_INSTRUCTIONS.md -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
+  <script src="menu-manager.js?v=20260313b"></script>
+  <script src="auth-state.js?v=20260313b"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="review.js?v=20260909a"></script>
 </body>
-  
 </html>

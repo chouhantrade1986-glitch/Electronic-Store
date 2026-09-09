@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 19: Amazon India-Style Product Comparison Hub with 4-Slot Matrix & Differential Highlighting Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 20: Customer Reviews, Ratings & Community Q&A Suite with Star Filtering & Interactive Review Submission Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,12 +10,18 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 51 / 51 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 52 / 52 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **प्रोडक्ट कंपैरिज़न हब टेस्ट** | `node scratch/test-amazon-compare-hub.js` | ✅ **PASS** | 5 / 5 ब्लॉक्स उत्तीर्ण (100%) |
 | **B2B बल्क व GSTIN पोर्टल टेस्ट** | `node scratch/test-b2b-bulk-purchase-portal.js` | ✅ **PASS** | 9 / 9 ब्लॉक उत्तीर्ण (100%) |
 | **समर्पित ऑथ व सुरक्षा टेस्ट** | `node scratch/test-amazon-login-register.js` | ✅ **PASS** | 7 / 7 ब्लॉक उत्तीर्ण (100%) |
-| **फ़्लाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
+| **फ़िलाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **सर्च व कैटगरी फ़िल्टरिंग टेस्ट** | `node scratch/test-search-and-category-filtering.js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
+| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
+| **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
+| **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
+| **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **126 / 126 (100% Pass Rate)** |js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
 | **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
@@ -203,6 +209,16 @@
 - **शेयर तुलना लिंक:** URL क्वेरी पैरामीटर्स (`?ids=1,7,2`) द्वारा सीधे क्लिपबोर्ड पर तुलना लिंक कॉपी करने की सुविधा।
 - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट); 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
 - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में तुलना कीज और `scratch/test-amazon-compare-hub.js` (100% पास)।
+
+### H. Customer Reviews, Ratings & Community Q&A Suite (Phase 20 Completed)
+- **समर्पित रिव्यू सबमिशन हब (`review.html`, `review.css`, `review.js`):** पुराने 69-लाइन प्लेसहोल्डर का संपूर्ण आधुनिकीकरण; प्रामाणिक Amazon India-स्टाइल "Create Review" हब। चयनित उत्पाद का ओवरव्यू कार्ड (थंबनेल, ब्रांड, मूल्य, वर्तमान रेटिंग), 5-स्टार इंटरएक्टिव रेटिंग विजेट (होवर इफेक्ट, सक्रिय स्टार्स, और "Poor" से "Great" लेबल), हेडलाइन इनपुट, लिखित समीक्षा टेक्स्टएरिया, और सार्वजनिक समीक्षक नाम।
+- **मल्टी-इमेज अपलोड व प्रीव्यू स्ट्रिप:** क्लाइंट-साइड `FileReader` द्वारा फोटो अपलोड, 76px × 76px थंबनेल प्रीव्यू ग्रिड, और व्यक्तिगत '×' डिलीट बटन।
+- **वेरिफ़ाइड परचेज़ बैज व लोकल स्टोरेज:** `electromart_reviews_v1` में नए रिव्यूज़ का तत्काल सुरक्षित संग्रह, "Verified Purchase" ग्रीन चेकमार्क बैज, भारतीय कैलेंडर दिनांक फॉर्मेटिंग, और सफल सबमिशन के बाद ग्रीन कंफर्मेशन बैनर (`#reviewSuccessBanner`)।
+- **PDP कम्युनिटी Q&A सुइट (`product-detail.html`, `product-detail.js`):** "Have a question? Search answers" लाइव सर्च बार (`#qaSearchInput`) विथ रियल-टाइम कीवर्ड व प्रश्न फ़िल्टरिंग, "Ask the Community" कोलाप्सिबल फॉर्म विथ `electromart_qa_v1` परसिस्टेंस, और हेल्पफुल (`▲`) व अनहेल्पफुल (`▼`) वोटिंग बटन्स।
+- **PDP कस्टमर रिव्यूज़ फ़िल्टरिंग व इमेज गैलरी:** 5-स्टार हिस्टोग्राम बार्स (`.review-bar[data-star-filter]`) पर 1-क्लिक से समीक्षाओं को 5★, 4★, 3★, 2★, 1★ में फ़िल्टर करने की सुविधा, "Clear star filter" एक्टिव बार (`#reviewFilterActiveBar`), और वास्तविक ग्राहकों द्वारा अपलोड की गई तस्वीरों की इमेज स्ट्रिप (`#customerMediaGallery`)।
+- **समीक्षा लिंक्स का पूर्ण एकीकरण:** `product-detail.html` और `orders.html` दोनों के "Write a product review" बटन्स अब सीधे संबंधित उत्पाद आईडी के साथ `review.html?productId=...` पर नेविगेट करते हैं।
+- **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट); 0 दृश्य "Amazon" / "अमेज़न" टेक्स्ट।
+- **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में रिव्यू व Q&A कीज और `scratch/test-amazon-reviews-and-qa.js` (5/5 लेयर्स 100% पास)।
 
 ---
 

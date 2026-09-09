@@ -246,13 +246,69 @@
           </div>
         </div>
         <div class="amazon-review-right">
+          <!-- Customer Images Gallery -->
+          <div id="customerMediaGallery" class="customer-media-gallery" hidden>
+            <h3 class="customer-gallery-title" data-i18n="review_customer_photos">Reviews with customer images</h3>
+            <div id="customerGalleryTrack" class="customer-gallery-track"></div>
+          </div>
+
+          <!-- Star Filter Pill Bar -->
+          <div id="reviewFilterActiveBar" class="review-filter-active-bar" hidden>
+            <span id="reviewFilterStatusText">Showing 5-star reviews</span>
+            <button type="button" id="clearReviewFilterBtn" class="clear-review-filter-btn" data-i18n="review_clear_filter">Clear star filter</button>
+          </div>
+
           <div id="customerReviewsList" class="customer-reviews-list"></div>
         </div>
       </div>
     </section>
 
-    <section id="qaBlock" class="detail-card" hidden>
-      <h2 data-i18n="questions_answers">Questions & Answers</h2>
+    <section id="qaBlock" class="detail-card amazon-qa-card" hidden>
+      <div class="qa-header-row">
+        <h2 data-i18n="questions_answers">Questions & Answers</h2>
+        <button type="button" id="askCommunityBtn" class="amazon-secondary-btn ask-community-btn" data-i18n="qa_ask_community_btn">Ask the Community</button>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="qa-search-container">
+        <div class="qa-search-box">
+          <svg class="qa-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#565959" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="qaSearchInput"
+            class="qa-search-input"
+            placeholder="Have a question? Search answers, keywords..."
+            data-i18n="qa_search_placeholder"
+            aria-label="Search questions and answers"
+          />
+          <button type="button" id="qaSearchClearBtn" class="qa-search-clear" hidden aria-label="Clear search">&times;</button>
+        </div>
+      </div>
+
+      <!-- Collapsible Ask Community Form -->
+      <div id="askCommunityFormWrap" class="ask-community-form-wrap" hidden>
+        <form id="askCommunityForm" class="ask-community-form">
+          <h3 data-i18n="qa_ask_title">Ask the ElectroMart Community</h3>
+          <p data-i18n="qa_ask_desc">Get real answers from verified buyers and electronics specialists.</p>
+          <textarea
+            id="askQuestionInput"
+            class="ask-question-textarea"
+            rows="3"
+            placeholder="Type your question here (e.g., Does this support fast charging?)..."
+            data-i18n="qa_question_placeholder"
+            required
+          ></textarea>
+          <div class="ask-form-actions">
+            <button type="submit" id="submitQuestionBtn" class="amazon-btn-primary submit-question-btn" data-i18n="qa_submit_btn">Post Question</button>
+            <button type="button" id="cancelQuestionBtn" class="amazon-secondary-btn cancel-question-btn" data-i18n="btn_cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Q&A List -->
       <div id="qaList" class="qa-list"></div>
     </section>
 
