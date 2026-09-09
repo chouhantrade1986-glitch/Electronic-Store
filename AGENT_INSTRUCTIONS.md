@@ -61,18 +61,18 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (52 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (53 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 52 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 50वां सूट B2B बल्क पोर्टल, 51वां सूट प्रोडक्ट कंपैरिज़न हब, और 52वां सूट कस्टमर रिव्यूज़ व कम्युनिटी Q&A सुइट है।)*
+*(सभी 53 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 50वां सूट B2B बल्क पोर्टल, 51वां सूट प्रोडक्ट कंपैरिज़न हब, 52वां सूट कस्टमर रिव्यूज़ व कम्युनिटी Q&A सुइट, और 53वां सूट ElectroMart Pay व UPI हब है।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 74 टेस्ट PASS होने चाहिए। कुल 126 / 126 टेस्ट उत्तीर्ण।)*
+*(सभी 74 टेस्ट PASS होने चाहिए। कुल 127 / 127 टेस्ट उत्तीर्ण।)*
 
 ---
 
@@ -113,7 +113,7 @@ git commit -m "feat(scope): your descriptive commit message"
 
 ## 6. पूर्ण हो चुके चरण और आगामी रोडमैप (Handover Roadmap)
 
-### A. पूर्ण हो चुके चरण (Phases 1-19 Completed):
+### A. पूर्ण हो चुके चरण (Phases 1-21 Completed):
 - **चरण 1:** Shopping Cart Upgrade (`cart.html`, `cart.js`)
 - **चरण 2:** Products Listing & Faceting (`products.html`, `products.js`)
 - **चरण 3:** Homepage & Quad Overlap Cards (`index.html`, `homepage-products.js`)
@@ -133,9 +133,11 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 17:** Amazon India-Style Dedicated Auth & Security Suite (`login.html`, `register.html`, `forgot-password.html`): 2-स्टेप प्रोग्रेसिव लॉगिन, +91 मोबाइल, शो/हाइड पासवर्ड।
 - **चरण 18:** ElectroMart Business B2B Bulk Purchase Portal (`business.html`, `business.js`, `business.css`): 15-अंकीय GSTIN सत्यापन, बल्क डिस्काउंट टियर्स (5%, 10%, 15%), RFQ पोर्टल।
 - **चरण 19:** Amazon India-Style Product Comparison Hub (`compare.html`, `compare.css`, `compare.js`): 4-स्लॉट तुलना मैट्रिक्स, डायनामिक "Highlight Differences" टॉगल, 751-कैटलॉग त्वरित उत्पाद चयन मोडल, 1-क्लिक कार्ट एडिशन, 11-भाषा अनुवाद व स्वचालित टेस्ट सूट (`scratch/test-amazon-compare-hub.js`)।
+- **चरण 20:** Customer Reviews, Ratings & Community Q&A Suite (`review.html`, `product-detail.html`, `product-detail.js`, `review.js`, `review.css`): 5-स्टार इंटरएक्टिव रेटिंग, फोटो अपलोड्स, कम्युनिटी Q&A लाइव सर्च, हिस्टोग्राम स्टार फ़िल्टरिंग, और टेस्ट सूट (`scratch/test-amazon-reviews-and-qa.js`)।
+- **चरण 21:** ElectroMart Pay & UPI Hub (`electromart-pay.html`, `electromart-pay.css`, `electromart-pay.js`, `checkout.html`, `checkout.js`): लाइव वॉलेट बैलेंस, 1-क्लिक ऑटो-रीलोड, त्वरित ऐड-मनी प्रीसेट्स, वर्चुअल UPI ID (`user@electromart`), Bharat QR स्कैनर सिम्युलेटर मोडल, पेंडिंग कलेक्ट रिक्वेस्ट्स अप्रूवल, कैशबैक स्क्रैच कार्ड विजेट, सर्च/फ़िल्टर-सक्षम पासबुक, चेकआउट में लाइव बैलेंस बैज, अपर्याप्त बैलेंस लाल चेतावनी व शॉर्टफॉल गणना, 1-क्लिक इंस्टेंट पेमेंट और 5% कैशबैक रिवार्ड।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 20 (ElectroMart Pay & UPI Hub):** समर्पित वॉलेट बैलेंस, UPI QR सिमुलेटर, ऑटो-रिचार्ज, और कैशबैक ट्रैकिंग पोर्टल (`electromart-pay.html`)।
+- **चरण 22 (Lightning Deals Live Drops & Deal Countdown Hub):** आगामी लाइटनिंग डील्स कैलेंडर, "Join Waitlist", "Remind Me" पुश अलर्ट्स, और लाइव स्टॉक क्लेम बार।
 
 

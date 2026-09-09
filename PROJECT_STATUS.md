@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 20: Customer Reviews, Ratings & Community Q&A Suite with Star Filtering & Interactive Review Submission Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 21: ElectroMart Pay & UPI Hub with Real-Time Checkout Sync, Virtual UPI & Scratch Rewards Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 52 / 52 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 53 / 53 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **ElectroMart Pay व UPI हब टेस्ट** | `node scratch/test-amazon-pay-hub.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **प्रोडक्ट कंपैरिज़न हब टेस्ट** | `node scratch/test-amazon-compare-hub.js` | ✅ **PASS** | 5 / 5 ब्लॉक्स उत्तीर्ण (100%) |
 | **B2B बल्क व GSTIN पोर्टल टेस्ट** | `node scratch/test-b2b-bulk-purchase-portal.js` | ✅ **PASS** | 9 / 9 ब्लॉक उत्तीर्ण (100%) |
@@ -21,12 +22,7 @@
 | **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
 | **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **126 / 126 (100% Pass Rate)** |js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
-| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
-| **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
-| **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **125 / 125 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **127 / 127 (100% Pass Rate)** |
 
 ---
 
@@ -219,6 +215,22 @@
 - **समीक्षा लिंक्स का पूर्ण एकीकरण:** `product-detail.html` और `orders.html` दोनों के "Write a product review" बटन्स अब सीधे संबंधित उत्पाद आईडी के साथ `review.html?productId=...` पर नेविगेट करते हैं।
 - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट); 0 दृश्य "Amazon" / "अमेज़न" टेक्स्ट।
 - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में रिव्यू व Q&A कीज और `scratch/test-amazon-reviews-and-qa.js` (5/5 लेयर्स 100% पास)।
+
+### I. ElectroMart Pay & UPI Hub (Phase 21 Completed)
+- **समर्पित वॉलेट व UPI हब (`electromart-pay.html`, `electromart-pay.css`, `electromart-pay.js`):** Amazon Pay India शैली में निर्मित संपूर्ण डिजिटल भुगतान हब।
+  - **हीरो बैलेंस कार्ड (`#payBalanceCard`):** लाइव वॉलेट बैलेंस (`#heroBalanceAmount`), "Full KYC Verified ✓" बैज, और 1-क्लिक ऑटो-रीलोड टॉगल स्विच (`#autoReloadToggle`) जो बैलेंस ₹200 से नीचे जाने पर स्वतः ₹1,000 टॉप-अप को नियंत्रित करता है।
+  - **त्वरित ऐड-मनी प्रीसेट्स:** 1-क्लिक राशि बटन (+₹500, +₹1,000, +₹2,000, +₹5,000), कस्टम राशि इनपुट (`#customAmountInput`, ₹100 से ₹50,000), तथा फास्ट पेमेंट मेथड सेलेक्टर।
+  - **वर्चुअल UPI सिम्युलेटर:** वर्चुअल VPA (`user@electromart`, `#virtualVpaDisplay`) विथ 1-क्लिक कॉपी बटन (`#copyVpaBtn`), और Bharat QR कोड स्कैनर सिम्युलेटर मोडल (`#qrScannerModal`) विथ एनिमेटेड लेज़र व्यूफाइंडर बीम व मर्चेंट प्रीसेट्स (Cafe Coffee Day, Apollo Pharmacy, Reliance Fresh)।
+  - **पेंडिंग UPI कलेक्ट रिक्वेस्ट्स सिम्युलेटर:** लाइव कलेक्ट रिक्वेस्ट्स सूची (`#pendingCollectList`) विथ रियल-टाइम Approve व Decline बटन्स, पर्याप्त बैलेंस सत्यापन और तुरंत डिडक्शन।
+  - **कैशबैक रिवार्ड्स व स्क्रैच कार्ड विजेट:** कुल अर्जित कैशबैक डिस्प्ले (`#statCashbackNum`), इंटरएक्टिव सरप्राइज स्क्रैच कार्ड (`#scratchCardWidget`), और ₹50.00 का इंस्टेंट वॉलेट क्रेडिट।
+  - **पासबुक व ट्रांजैक्शन हिस्ट्री:** विस्तृत ऑडिट ट्रेल विथ फ़िल्टर टैब्स (All, Added Money, Orders Paid, Cashback), रियल-टाइम मर्चेंट/रेफरेंस सर्च बार (`#statementSearchInput`), और 1-क्लिक "Download Statement" (`#downloadStatementBtn`)।
+- **चेकआउट रीयल-टाइम इंटीग्रेशन (`checkout.html`, `checkout.js`):**
+  - स्टेप 2 में ElectroMart Pay Balance विकल्प (`#payWalletOption`, `value="wallet"`) विथ लाइव बैलेंस बैज (`#checkoutWalletBalanceBadge`)।
+  - **अपरियाप्त बैलेंस हैंडलिंग (Insufficient Balance Warning):** यदि कार्ट टोटल वॉलेट बैलेंस से अधिक हो, तो लाल चेतावनी बॉक्स (`#payInsufficientWarning`) में सटीक अंतर राशि (`Shortfall: ₹...`) प्रदर्शित होती है तथा UPI/Cards जैसे वैकल्पिक भुगतान का सुझाव दिखता है।
+  - **1-क्लिक इंसटेंट पेमेंट:** पर्याप्त बैलेंस होने पर बिना OTP या गेटवे रीडायरेक्ट के तुरंत 1-क्लिक पेमेंट, `electromart_pay_balance_v1` से राशि डिडक्शन, `electromart_pay_txns_v1` में डेबिट रिकॉर्ड, और 5% कैशबैक रिवार्ड का स्वतः क्रेडिट।
+- **क्रॉस-पेज स्टेट सिंक्रोनाइज़ेशन:** `storage` और `electromart_pay_balance_updated` इवेंट्स द्वारा `electromart-pay.html`, `checkout.html`, और `account.html` के बीच बिना पेज रिफ्रेश किए लाइव बैलेंस सिंक।
+- **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Pay (`electromart.in` / इलेक्ट्रोमार्ट पे); 0 ग्राहक-सामने "Amazon" / "अमेज़न" टेक्स्ट।
+- **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में 36+ पे हब कीज और `scratch/test-amazon-pay-hub.js` (5/5 लेयर्स 100% पास)।
 
 ---
 

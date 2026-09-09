@@ -25,6 +25,66 @@ const cityNameEl = document.getElementById("cityName");
 const stateNameEl = document.getElementById("stateName");
 const paymentOptions = Array.from(document.querySelectorAll(".payment-option"));
 const paymentMethodEls = Array.from(document.querySelectorAll("input[name='paymentMethod']"));
+const walletDetails = document.getElementById("walletDetails");
+const checkoutWalletBalanceBadge = document.getElementById("checkoutWalletBalanceBadge");
+const checkoutWalletDetailBalance = document.getElementById("checkoutWalletDetailBalance");
+const payInsufficientWarning = document.getElementById("payInsufficientWarning");
+const payInsufficientMsg = document.getElementById("payInsufficientMsg");
+const paymentMethodWallet = document.getElementById("paymentMethodWallet");
+
+const PAY_BALANCE_KEY = "electromart_pay_balance_v1";
+const PAY_TXNS_KEY = "electromart_pay_txns_v1";
+
+function getWalletBalance() {
+  const stored = localStorage.getItem(PAY_BALANCE_KEY);
+  if (stored !== null && !isNaN(parseFloat(stored))) {
+    return parseFloat(stored);
+  }
+  return 2450.00;
+}
+
+function saveWalletBalance(amount) {
+  localStorage.setItem(PAY_BALANCE_KEY, String(amount));
+  window.dispatchEvent(new Event("electromart_pay_balance_updated"));
+}
+
+function appendWalletTransaction(txn) {
+  try {
+    const raw = localStorage.getItem(PAY_TXNS_KEY);
+    const txns = raw ? JSON.parse(raw) : [];
+    txns.unshift(txn);
+    localStorage.setItem(PAY_TXNS_KEY, JSON.stringify(txns));
+  } catch (e) {}
+}
+
+function syncWalletBalanceState() {
+  const bal = getWalletBalance();
+  const formattedBal = `₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  if (checkoutWalletBalanceBadge) {
+    checkoutWalletBalanceBadge.textContent = formattedBal;
+  }
+  if (checkoutWalletDetailBalance) {
+    checkoutWalletDetailBalance.textContent = formattedBal;
+  }
+
+  const rows = getCartRows();
+  const pricing = getPricingBreakdown(rows);
+  const cartTotal = Number(pricing.total || 0);
+
+  if (payInsufficientWarning) {
+    if (cartTotal > bal) {
+      const shortfall = cartTotal - bal;
+      payInsufficientWarning.hidden = false;
+      if (payInsufficientMsg) {
+        payInsufficientMsg.textContent = `Insufficient balance (Shortfall: ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}). Please select an alternative payment method (e.g. UPI or Cards) or add money to your balance.`;
+      }
+    } else {
+      payInsufficientWarning.hidden = true;
+    }
+  }
+}
+
 const upiDetails = document.getElementById("upiDetails");
 const cardDetails = document.getElementById("cardDetails");
 const netbankingDetails = document.getElementById("netbankingDetails");
@@ -371,6 +431,7 @@ function refreshCheckoutState() {
   const rows = getCartRows();
   renderCheckoutItems(rows);
   renderSummary(rows);
+  syncWalletBalanceState();
   return rows;
 }
 
@@ -388,19 +449,19 @@ function setApiStatus(status, message) {
 }
 
 function isGatewayBackedCheckout(method = getSelectedPaymentMethod()) {
-  return apiAvailable && paymentGatewayProvider === "razorpay" && method !== "cod";
+  return apiAvailable && paymentGatewayProvider === "razorpay" && method !== "cod" && method !== "wallet";
 }
 
 function updatePaymentCallToAction() {
   const method = getSelectedPaymentMethod();
   const offlineDemoEnabled = !apiAvailable && isOfflineDemoEnabled();
-  const onlineCheckout = apiAvailable && method !== "cod";
+  const onlineCheckout = (apiAvailable && method !== "cod" && method !== "wallet") || method === "wallet";
   const gatewayActive = isGatewayBackedCheckout(method);
   if (gatewayBanner) {
-    gatewayBanner.hidden = !onlineCheckout;
+    gatewayBanner.hidden = !onlineCheckout || method === "wallet";
   }
   if (gatewaySummaryNote) {
-    gatewaySummaryNote.hidden = !onlineCheckout;
+    gatewaySummaryNote.hidden = !onlineCheckout || method === "wallet";
     gatewaySummaryNote.textContent = gatewayActive
       ? "Razorpay secure checkout will open on the next step."
       : "A secure payment step will open after order review.";
@@ -420,15 +481,17 @@ function updatePaymentCallToAction() {
       : "Choose an online payment method to continue with secure payment.";
   }
   if (placeOrderBtn) {
-    placeOrderBtn.classList.toggle("gateway-active", onlineCheckout);
-    placeOrderBtn.disabled = !apiAvailable && !offlineDemoEnabled;
-    placeOrderBtn.textContent = gatewayActive
-      ? "Continue to Razorpay"
-      : onlineCheckout
-        ? "Continue to Secure Payment"
-        : offlineDemoEnabled
-          ? "Place local demo order"
-          : "Backend required";
+    placeOrderBtn.classList.toggle("gateway-active", onlineCheckout && method !== "wallet");
+    placeOrderBtn.disabled = !apiAvailable && !offlineDemoEnabled && method !== "wallet";
+    placeOrderBtn.textContent = method === "wallet"
+      ? "1-Click Pay with ElectroMart Balance"
+      : gatewayActive
+        ? "Continue to Razorpay"
+        : onlineCheckout
+          ? "Continue to Secure Payment"
+          : offlineDemoEnabled
+            ? "Place local demo order"
+            : "Backend required";
   }
 }
 
@@ -963,6 +1026,9 @@ function showPaymentDetails(method) {
   cardDetails.hidden = method !== "card";
   netbankingDetails.hidden = method !== "netbanking";
   codDetails.hidden = method !== "cod";
+  if (walletDetails) {
+    walletDetails.hidden = method !== "wallet";
+  }
 
   paymentOptions.forEach((option) => {
     const input = option.querySelector("input[name='paymentMethod']");
@@ -971,11 +1037,19 @@ function showPaymentDetails(method) {
     }
     option.classList.toggle("active", input.value === method);
   });
+  syncWalletBalanceState();
   updatePaymentCallToAction();
 }
 
 function isPaymentValid() {
   const method = getSelectedPaymentMethod();
+
+  if (method === "wallet") {
+    const pricing = getPricingBreakdown(getCartRows());
+    const cartTotal = Number(pricing.total || 0);
+    const bal = getWalletBalance();
+    return bal >= cartTotal;
+  }
 
   if (method === "upi") {
     return /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(String(upiIdEl.value).trim());
@@ -1229,11 +1303,49 @@ function createOfflineOrder(rows, paymentMethod, shippingAddress) {
   });
   saveOfflineOrders(orders);
   appendOfflineOrderNotification(orderId, createdAt, "ordered", "Order placed");
+
+  if (paymentMethod === "wallet") {
+    const curBal = getWalletBalance();
+    const nextBal = Math.max(0, curBal - total);
+    saveWalletBalance(nextBal);
+
+    appendWalletTransaction({
+      id: "txn_" + Date.now(),
+      date: "Just now",
+      description: `Paid for Order #${orderId}`,
+      type: "orders",
+      category: "debit",
+      amount: total,
+      status: "Successful"
+    });
+
+    const cashbackAmt = Math.round(total * 0.05 * 100) / 100;
+    if (cashbackAmt > 0) {
+      saveWalletBalance(nextBal + cashbackAmt);
+      appendWalletTransaction({
+        id: "txn_cb_" + Date.now(),
+        date: "Just now",
+        description: `5% Cashback on Order #${orderId}`,
+        type: "cashback",
+        category: "credit",
+        amount: cashbackAmt,
+        status: "Successful"
+      });
+    }
+  }
+
   return orderId;
 }
 
 function getPaymentConfirmationDetails() {
   const method = getSelectedPaymentMethod();
+  if (method === "wallet") {
+    return {
+      method: "wallet",
+      walletId: "user@electromart",
+      source: "ElectroMart Pay Balance"
+    };
+  }
   if (method === "upi") {
     return {
       method,
@@ -1548,7 +1660,10 @@ function updatePaymentSummary() {
   if (!paymentSummaryText) return;
 
   const method = getSelectedPaymentMethod();
-  if (method === "upi") {
+  if (method === "wallet") {
+    const bal = getWalletBalance();
+    paymentSummaryText.textContent = `ElectroMart Pay Balance (Available: ₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+  } else if (method === "upi") {
     const upiVal = upiIdEl ? upiIdEl.value.trim() : "";
     paymentSummaryText.textContent = upiVal ? `ElectroMart Pay UPI: ${upiVal}` : "ElectroMart Pay UPI (Instant via UPI App)";
   } else if (method === "card") {
@@ -1722,7 +1837,21 @@ function setupAccordionFlow() {
 
   if (usePaymentBtn) {
     usePaymentBtn.addEventListener("click", () => {
-      if (!isPaymentValid()) {
+      const method = getSelectedPaymentMethod();
+      if (method === "wallet") {
+        const pricing = getPricingBreakdown(getCartRows());
+        const cartTotal = Number(pricing.total || 0);
+        const bal = getWalletBalance();
+        if (cartTotal > bal) {
+          const shortfall = cartTotal - bal;
+          showCheckoutToast({
+            title: "Insufficient ElectroMart Pay Balance",
+            message: `Shortfall of ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}. Please select another payment method (e.g. UPI or Cards) or add money.`,
+            tone: "warning"
+          });
+          return;
+        }
+      } else if (!isPaymentValid()) {
         showCheckoutToast({
           title: "Payment details required",
           message: "Please complete valid payment details for the selected method.",
@@ -1864,6 +1993,18 @@ if (removeCouponBtn) {
 if (deliverySlotSelect) {
   deliverySlotSelect.addEventListener("change", handleDeliverySlotChange);
 }
+
+window.addEventListener("storage", (e) => {
+  if (e.key === PAY_BALANCE_KEY) {
+    syncWalletBalanceState();
+    updatePaymentSummary();
+  }
+});
+
+window.addEventListener("electromart_pay_balance_updated", () => {
+  syncWalletBalanceState();
+  updatePaymentSummary();
+});
 
 placeOrderBtn.addEventListener("click", handlePlaceOrder);
 

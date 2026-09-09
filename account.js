@@ -1850,6 +1850,7 @@ function getPayBalance() {
 
 function savePayBalance(amount) {
   localStorage.setItem(PAY_BALANCE_KEY, String(amount));
+  window.dispatchEvent(new Event("electromart_pay_balance_updated"));
 }
 
 function updatePayBalanceDisplay() {
@@ -1862,6 +1863,15 @@ function updatePayBalanceDisplay() {
 
 function setupPayBalanceHandlers() {
   updatePayBalanceDisplay();
+
+  window.addEventListener("storage", (e) => {
+    if (e.key === PAY_BALANCE_KEY) {
+      updatePayBalanceDisplay();
+    }
+  });
+  window.addEventListener("electromart_pay_balance_updated", () => {
+    updatePayBalanceDisplay();
+  });
 
   const quickAddBtns = document.querySelectorAll(".quick-add-btn");
   const customInput = document.getElementById("customAddAmountInput");
@@ -1892,6 +1902,21 @@ function setupPayBalanceHandlers() {
       savePayBalance(newBal);
       updatePayBalanceDisplay();
       customInput.value = "";
+
+      try {
+        const raw = localStorage.getItem("electromart_pay_txns_v1");
+        const txns = raw ? JSON.parse(raw) : [];
+        txns.unshift({
+          id: "txn_" + Date.now(),
+          date: "Just now",
+          description: "Added Money via UPI",
+          type: "added",
+          category: "credit",
+          amount: val,
+          status: "Successful"
+        });
+        localStorage.setItem("electromart_pay_txns_v1", JSON.stringify(txns));
+      } catch (e) {}
 
       if (tableBody) {
         const tr = document.createElement("tr");

@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
 
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="electromart-pay.css?v=20260909a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body class="checkout-page">
@@ -92,6 +93,17 @@
         </div>
         <div id="step2Body" class="amz-step-body" hidden>
           <div class="payment-options">
+            <label class="payment-option" id="payWalletOption">
+              <input type="radio" name="paymentMethod" value="wallet" id="paymentMethodWallet" />
+              <div class="payment-option-info">
+                <strong><span data-i18n="electromart_pay_balance">ElectroMart Pay Balance</span> <span class="badge credit" id="checkoutWalletBalanceBadge">₹2,450.00</span></strong>
+                <span class="payment-sub" data-i18n="pay_sub_wallet">Instant 1-Click payment from your pre-loaded wallet</span>
+                <div id="payInsufficientWarning" class="pay-insufficient-warning" hidden>
+                  <span class="pay-insufficient-text"><i class="fas fa-exclamation-triangle"></i> <span id="payInsufficientMsg">Insufficient balance. Please select an alternative payment method (e.g. UPI or Cards) or add money.</span></span>
+                  <a href="electromart-pay.html" target="_blank" class="pay-topup-link" data-i18n="add_money_link">Add Money to Balance ›</a>
+                </div>
+              </div>
+            </label>
             <label class="payment-option active">
               <input type="radio" name="paymentMethod" value="upi" checked />
               <div class="payment-option-info">
@@ -120,6 +132,15 @@
                 <span class="payment-sub">Pay cash or UPI QR at your doorstep</span>
               </div>
             </label>
+          </div>
+
+          <div id="walletDetails" class="payment-detail" hidden>
+            <div class="wallet-checkout-note">
+              <p data-i18n="pay_checkout_wallet_info">Your ElectroMart Pay balance will be debited instantly on 1-Click place order. No OTP or bank redirect required.</p>
+              <div class="wallet-balance-row">
+                <span data-i18n="current_balance">Current Balance</span>: <strong id="checkoutWalletDetailBalance">₹2,450.00</strong>
+              </div>
+            </div>
           </div>
 
           <div id="upiDetails" class="payment-detail">
