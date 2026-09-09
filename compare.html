@@ -4,64 +4,194 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compare Products - ElectroMart</title>
-  <meta name="description" content="Compare products side-by-side. View specifications, prices, ratings and features." />
+  <meta name="description" content="Compare products side-by-side on ElectroMart. View detailed technical specifications, pricing, customer ratings, and warranty assurances." />
   <link rel="stylesheet" href="styles.css?v=20260315c" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260604a" />
-  <link rel="stylesheet" href="compare.css?v=20260604a" />
+  <link rel="stylesheet" href="compare.css?v=20260909a" />
 </head>
-<body>
+<body class="amz-compare-body">
   <div id="headerContainer"></div>
 
   <!-- Breadcrumb Navigation -->
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav amz-breadcrumb" aria-label="Breadcrumb">
     <div class="breadcrumb-container">
-      <a href="index.html">Home</a>
+      <a href="index.html" data-i18n="nav_home">Home</a>
       <span class="breadcrumb-separator">›</span>
-      <a href="products.html">Products</a>
+      <a href="products.html" data-i18n="nav_products">Products</a>
       <span class="breadcrumb-separator">›</span>
-      <span class="breadcrumb-current">Compare</span>
+      <span class="breadcrumb-current" data-i18n="compare_title">Compare Products</span>
     </div>
   </nav>
 
-  <main class="compare-main">
+  <main class="compare-main" id="compareMain">
     <div class="compare-container">
-      <div class="compare-header">
-        <h1>Compare Products</h1>
-        <p class="compare-subtitle">Side-by-side comparison of selected products</p>
-      </div>
+      
+      <!-- Top Title & Controls Toolbar -->
+      <header class="compare-header" id="compareHeader">
+        <div class="compare-title-block">
+          <h1 data-i18n="compare_title">Compare Products</h1>
+          <p class="compare-subtitle" data-i18n="compare_subtitle">Side-by-side technical and feature comparison of selected electronics</p>
+        </div>
 
-      <!-- Empty State -->
-      <div id="emptyCompareState" class="empty-compare-state" style="display: none;">
-        <div class="empty-icon">⚖️</div>
-        <h2>No Products to Compare</h2>
-        <p>Select up to 4 products from the products page to compare them side-by-side.</p>
-        <a href="products.html" class="btn-primary">Browse Products</a>
-      </div>
+        <div class="compare-toolbar" id="compareToolbar">
+          <!-- Highlight Differences Toggle Switch -->
+          <div class="amz-compare-switch-wrap" id="diffSwitchWrap">
+            <label class="amz-switch-label" for="highlightDiffToggle" title="Toggle differential highlighting">
+              <input type="checkbox" id="highlightDiffToggle" class="amz-toggle-checkbox" />
+              <span class="amz-toggle-slider" aria-hidden="true"></span>
+              <span class="amz-toggle-text" data-i18n="compare_highlight_diff">Highlight Differences</span>
+            </label>
+          </div>
 
-      <!-- Comparison Table -->
-      <div id="comparisonTable" class="comparison-table-wrapper">
-        <table class="comparison-table" id="comparisonTableElement">
-          <thead>
-            <tr class="product-header-row">
-              <th class="feature-column">Features</th>
-              <!-- Product columns will be inserted here -->
-            </tr>
-          </thead>
-          <tbody id="comparisonBody">
-            <!-- Comparison rows will be inserted here -->
-          </tbody>
-        </table>
-      </div>
+          <!-- Action Buttons -->
+          <div class="compare-quick-actions" id="compareQuickActions">
+            <button id="shareCompareBtn" class="amz-btn-compare-secondary" type="button" title="Share comparison">
+              <svg class="compare-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              <span data-i18n="compare_share">Share</span>
+            </button>
+            <button id="clearAllCompareBtn" class="amz-btn-compare-secondary" type="button" title="Clear all comparison items">
+              <svg class="compare-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span data-i18n="compare_clear_all">Clear All</span>
+            </button>
+            <button id="openAddProductModalBtn" class="amz-btn-compare-primary" type="button">
+              <span>+</span>
+              <span data-i18n="compare_add_slot">Add Product</span>
+            </button>
+          </div>
+        </div>
+      </header>
 
-      <!-- Action Buttons -->
-      <div class="compare-actions" id="compareActions" style="display: none;">
-        <button id="clearAllCompare" class="btn-secondary">Clear All</button>
-        <a href="products.html" class="btn-secondary">Add More Products</a>
-      </div>
+      <!-- Empty State with Popular Presets -->
+      <section id="emptyCompareState" class="empty-compare-state" style="display: none;">
+        <div class="empty-compare-icon-wrap" aria-hidden="true">
+          <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+            <line x1="2" y1="20" x2="22" y2="20"></line>
+          </svg>
+        </div>
+        <h2 data-i18n="compare_empty_title">No Products to Compare Yet</h2>
+        <p data-i18n="compare_empty_desc">Choose up to 4 products to compare their detailed specifications, pricing, and ratings side by side.</p>
+        <div class="empty-compare-cta">
+          <a href="products.html" class="amz-btn-pill-amber" data-i18n="compare_browse_btn">Browse All Products</a>
+        </div>
+
+        <!-- Popular Category Comparison Starters -->
+        <div class="compare-presets-container" id="comparePresetsContainer">
+          <h3 class="compare-presets-heading" data-i18n="compare_popular_presets">Or Compare Popular Categories</h3>
+          <div class="compare-preset-cards-grid">
+            <button type="button" class="compare-preset-card" data-preset="laptops">
+              <span class="preset-icon">💻</span>
+              <strong data-i18n="compare_preset_laptops">Compare Top Laptops</strong>
+              <small>AstraBook Pro 14 vs Vector Gaming</small>
+            </button>
+            <button type="button" class="compare-preset-card" data-preset="audio">
+              <span class="preset-icon">🎧</span>
+              <strong data-i18n="compare_preset_audio">Compare Premium Audio</strong>
+              <small>Pulse ANC vs Studio Headphones</small>
+            </button>
+            <button type="button" class="compare-preset-card" data-preset="mobiles">
+              <span class="preset-icon">📱</span>
+              <strong data-i18n="compare_preset_mobiles">Compare Smartphones</strong>
+              <small>Nimbus Phone X vs Smart Trackers</small>
+            </button>
+            <button type="button" class="compare-preset-card" data-preset="components">
+              <span class="preset-icon">⚡</span>
+              <strong data-i18n="compare_preset_components">Compare PC Components</strong>
+              <small>Laptop Batteries & Accessories</small>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Active 4-Slot Comparison Matrix Table Container -->
+      <section id="comparisonTableWrapper" class="comparison-table-wrapper" style="display: block;">
+        <div class="comparison-scroll-viewport">
+          <table class="comparison-table" id="comparisonTableElement">
+            <thead id="comparisonTableHead">
+              <tr class="product-header-row" id="productHeaderRow">
+                <th class="feature-column sticky-feature-header">
+                  <div class="feature-header-content">
+                    <span class="feature-header-title" data-i18n="spec_category">Features</span>
+                    <span class="feature-header-count" id="comparedItemsCountBadge">0 / 4 Items</span>
+                  </div>
+                </th>
+                <!-- Up to 4 product card slots injected dynamically -->
+              </tr>
+            </thead>
+            <tbody id="comparisonBody">
+              <!-- Categorized spec rows injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
     </div>
   </main>
 
+  <!-- Add Product Search & Select Modal -->
+  <div id="addProductModal" class="amz-compare-modal-backdrop" style="display: none;" aria-hidden="true" role="dialog" aria-labelledby="compareModalTitle">
+    <div class="amz-compare-modal-card">
+      <div class="amz-compare-modal-header">
+        <h3 id="compareModalTitle" data-i18n="compare_modal_title">Select a Product to Compare</h3>
+        <button type="button" class="amz-modal-close-btn" id="closeAddProductModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="amz-compare-modal-search-wrap">
+        <div class="modal-search-input-box">
+          <svg class="modal-search-lens" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="compareModalSearchInput" placeholder="Search 751 products by name, brand, or category..." data-i18n-placeholder="compare_modal_search_placeholder" autocomplete="off" />
+          <button type="button" id="clearModalSearchBtn" class="clear-modal-search-btn" style="display: none;">&times;</button>
+        </div>
+
+        <!-- Quick Category Filter Pills inside Modal -->
+        <div class="modal-cat-pills" id="modalCatPills">
+          <button type="button" class="modal-cat-pill active" data-cat="all">All</button>
+          <button type="button" class="modal-cat-pill" data-cat="laptop">Laptops</button>
+          <button type="button" class="modal-cat-pill" data-cat="mobile">Mobiles</button>
+          <button type="button" class="modal-cat-pill" data-cat="audio">Audio</button>
+          <button type="button" class="modal-cat-pill" data-cat="computer">Computers</button>
+          <button type="button" class="modal-cat-pill" data-cat="accessory">Accessories</button>
+        </div>
+      </div>
+
+      <div class="amz-compare-modal-body">
+        <div id="modalProductsResultsList" class="modal-products-grid">
+          <!-- Populated dynamically from 751 products -->
+        </div>
+        <div id="modalEmptyResults" class="modal-empty-results" style="display: none;">
+          <p>No matching electronics found. Try another keyword or category.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mandatory Script Loading Sequence per AGENT_INSTRUCTIONS.md -->
+  <!-- 1. Multilingual Dictionary -->
+  <script src="translations.js"></script>
+  <!-- 2. 751 Products Catalog Engine -->
+  <script src="products-data.js"></script>
+  <!-- 3. Real-time Translation Bus -->
+  <script src="universal-i18n-bus.js"></script>
+  <!-- 4. Global Header & Shared Infrastructure -->
   <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <!-- 5. Page-Specific Comparison Hub Script -->
   <script src="compare.js"></script>
 </body>
 </html>

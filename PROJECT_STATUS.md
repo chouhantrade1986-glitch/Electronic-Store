@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 18: ElectroMart Business B2B Bulk Purchase, GSTIN Verification & RFQ Portal Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 19: Amazon India-Style Product Comparison Hub with 4-Slot Matrix & Differential Highlighting Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 50 / 50 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 51 / 51 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **प्रोडक्ट कंपैरिज़न हब टेस्ट** | `node scratch/test-amazon-compare-hub.js` | ✅ **PASS** | 5 / 5 ब्लॉक्स उत्तीर्ण (100%) |
 | **B2B बल्क व GSTIN पोर्टल टेस्ट** | `node scratch/test-b2b-bulk-purchase-portal.js` | ✅ **PASS** | 9 / 9 ब्लॉक उत्तीर्ण (100%) |
 | **समर्पित ऑथ व सुरक्षा टेस्ट** | `node scratch/test-amazon-login-register.js` | ✅ **PASS** | 7 / 7 ब्लॉक उत्तीर्ण (100%) |
 | **फ़्लाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
@@ -19,7 +20,7 @@
 | **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
 | **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **124 / 124 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **125 / 125 (100% Pass Rate)** |
 
 ---
 
@@ -192,6 +193,16 @@
 - **माउस व कर्सर इंटरेक्शन (स्थायी नियम):** GSTIN इनपुट, ऑर्गनाइज़ेशन टाइप पिल्स, स्पिनर कंट्रोल्स, टियर कार्ड्स, और RFQ सबमिट बटन पर स्पष्ट `cursor: pointer !important;` और एक्टिव होवर स्टेट्स। साथ ही, बंद होने पर मोडल में `display: none !important; pointer-events: none !important;` द्वारा ज़ीरो-ऑक्लूजन (बिना किसी अनचाहे ओवरले के स्मूथ क्लिक्स)।
 - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Business (`electromart.in/business` / इलेक्ट्रोमार्ट बिज़नेस); 0 ग्राहक-सामने अमेज़न संदर्भ।
 - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में B2B कीज और `scratch/test-b2b-bulk-purchase-portal.js` (9/9 ब्लॉक 100% पास)।
+
+### G. Amazon India-Style Product Comparison Hub (Phase 19 Completed)
+- **समर्पित 4-स्लॉट तुलना मैट्रिक्स (`compare.html`, `compare.css`, `compare.js`):** प्रामाणिक Amazon India-स्टाइल साइड-बाय-साइड तुलना तालिका, स्टिकी प्रोडक्ट हेडर कार्ड्स, और 4 से कम उत्पाद होने पर "+ Add a product to compare" स्लॉट कार्ड।
+- **डायनामिक "Highlight Differences" टॉगल:** अंतर वाले स्पेसिफिकेशन पंक्तियों (Differential Spec Rows) का रीयल-टाइम डिटेक्शन और टॉगल सक्रिय होने पर कोमल एम्बर बैकग्राउंड (`#fff8e7`) व लेफ्ट ऑरेंज एक्सेंट बॉर्डर (`#ff9900`) के साथ विज़ुअल हाइलाइटिंग।
+- **3-लाइन प्रामाणिक प्राइसिंग स्टैक व 1-क्लिक कार्ट:** प्रत्येक प्रोडक्ट कार्ड पर लाल डिस्काउंट प्रतिशत (`-XX%`), बड़ा बोल्ड ₹ मूल्य, M.R.P. स्ट्राइकथ्रू, फ्री डिलीवरी टैग, और 1-क्लिक "Add to Cart" (विथ `✓ Added` फीडबैक व हेडर `#cartCount` सिंक) तथा "Buy Now" डायरेक्ट चेकआउट।
+- **क्विक प्रोडक्ट सेलेक्टर मोडल (`#addProductModal`):** 751 उत्पादों के कैटलॉग से लाइव इंस्टेंट सर्च, श्रेणी फ़िल्टर पिल्स (Laptops, Mobiles, Audio, Computers, Accessories), और 1-क्लिक "+ Add to Compare"।
+- **लोकप्रिय तुलना प्रीसेट्स (Starter Presets):** खाली स्थिति में 1-क्लिक तुलना लोड करने के लिए 4 प्री-कॉन्फिगर्ड कार्ड्स (Top Laptops, Premium Audio, Smartphones, PC Components)।
+- **शेयर तुलना लिंक:** URL क्वेरी पैरामीटर्स (`?ids=1,7,2`) द्वारा सीधे क्लिपबोर्ड पर तुलना लिंक कॉपी करने की सुविधा।
+- **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट); 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
+- **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में तुलना कीज और `scratch/test-amazon-compare-hub.js` (100% पास)।
 
 ---
 
