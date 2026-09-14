@@ -782,18 +782,31 @@ function getReservationState(rows) {
   };
 }
 
+function isPrimeActive() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Boolean(parsed && parsed.active);
+  } catch {
+    return false;
+  }
+}
+
 function buildDeliverySlots(rows) {
   const reservation = getReservationState(rows);
+  const primeActive = isPrimeActive();
   const now = new Date();
   const slots = [];
   for (let dayOffset = 1; dayOffset <= 3; dayOffset += 1) {
     const date = new Date(now);
     date.setDate(date.getDate() + dayOffset);
     const dateLabel = date.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+    const primeTag = primeActive && dayOffset === 1 ? " (Prime Free Express)" : "";
     slots.push({
       id: `${dayOffset}-morning`,
-      label: `${dateLabel} · 8 AM - 12 PM`,
-      eta: dayOffset === 1 ? "Earliest available" : "Standard delivery"
+      label: `${dateLabel} · 8 AM - 12 PM${primeTag}`,
+      eta: dayOffset === 1 ? (primeActive ? "Prime Express Delivery · Free" : "Earliest available") : "Standard delivery"
     });
     slots.push({
       id: `${dayOffset}-afternoon`,
@@ -865,7 +878,8 @@ function renderCheckoutItems(rows) {
 function getPricingBreakdown(rows) {
   const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
   const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price, 0);
-  const shipping = itemCount > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
+  const primeActive = isPrimeActive();
+  const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
@@ -1994,17 +2008,26 @@ if (deliverySlotSelect) {
   deliverySlotSelect.addEventListener("change", handleDeliverySlotChange);
 }
 
-window.addEventListener("storage", (e) => {
-  if (e.key === PAY_BALANCE_KEY) {
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === PAY_BALANCE_KEY) {
+      syncWalletBalanceState();
+      updatePaymentSummary();
+    }
+    if (e.key === "electromart_prime_status_v1") {
+      renderSummary(currentCheckoutRows);
+    }
+  });
+
+  window.addEventListener("electromart_pay_balance_updated", () => {
     syncWalletBalanceState();
     updatePaymentSummary();
-  }
-});
+  });
 
-window.addEventListener("electromart_pay_balance_updated", () => {
-  syncWalletBalanceState();
-  updatePaymentSummary();
-});
+  window.addEventListener("electromart_prime_updated", () => {
+    renderSummary(currentCheckoutRows);
+  });
+}
 
 placeOrderBtn.addEventListener("click", handlePlaceOrder);
 

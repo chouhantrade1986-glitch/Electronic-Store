@@ -292,6 +292,38 @@
   - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Logistics / ElectroMart; 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
   - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में 35+ ट्रैकिंग कीज और `scratch/test-amazon-delivery-tracking.js` (6/6 लेयर्स 100% पास)।
 
+### L. Prime Membership Hub & Rewards Ecosystem (Phase 24 Completed)
+- **समर्पित प्राइम हब (`prime.html`, `prime.js`, `prime.css`):**
+  - **नॉन-सदस्य हीरो सेक्शन (`#primeHeroNonMember`):**
+    - प्राइम लोगो क्राउन बैज (`👑 ELECTROMART PRIME`), सम्मोहक हेडलाइन व सबटाइटल।
+    - 1-क्लिक "Start Your 30-Day Free Trial" बटन (`#startTrialHeroBtn`) और "See All Plans" बटन (`#explorePlansHeroBtn`)।
+  - **सक्रिय सदस्य बैनर (`#primeHeroMember`):**
+    - सदस्य टियर हेडलाइन (`#memberTierHeadline`), नवीनीकरण तिथि (`#primeRenewalDateStr`), "Change Plan" बटन (`#openChangePlanModalBtn`), और "Cancel / Pause" बटन (`#openCancelModalBtn`)।
+  - **प्राइम बचत कैलकुलेटर व रिवार्ड्स विजेट (`#primeSavingsCard`):**
+    - कुल संचयी बचत पिल (`#primeTotalSavings`, उदा. ₹2,450)।
+    - 3 विस्तृत मेट्रिक कार्ड्स: डिलीवरी शुल्क बचत (`#primeDeliverySavings`), 5% पे कैशबैक (`#primeCashbackSavings`), और एक्सक्लूसिव डील्स छूट (`#primeDealsSavings`)।
+  - **3-स्तरीय सदस्यता प्लान ग्रिड (`#primePlansSection`):**
+    - **मंथली प्लान (`#planMonthlyCard`):** ₹299/माह, लचीला मासिक बिलिंग, कभी भी रद्द करने योग्य।
+    - **वार्षिक प्लान (`#planAnnualCard`, फ़ीचर्ड):** ₹1,499/वर्ष, सुनहरे "BEST VALUE - SAVE 58%" रिबन के साथ, प्रभावी ₹125/माह।
+    - **प्राइम लाइट प्लान (`#planLiteCard`):** ₹799/वर्ष, प्रभावी ₹67/माह, बुनियादी फ़ास्ट डिलीवरी और प्राइम वीडियो।
+  - **6 प्रमुख प्राइम लाभ ग्रिड (`#primeBenefitsSection`):**
+    - मुफ़्त 1-दिवसीय / सेम-डे डिलीवरी (`#benefitFastDelivery`)।
+    - लाइटनिंग डील्स पर 30 मिनट अर्ली एक्सेस (`#benefitEarlyAccess`)।
+    - इलेक्ट्रोमार्ट पे 5% असीमित कैशबैक (`#benefitCashback`)।
+    - प्राइम वीडियो 4K HDR एंटरटेनमेंट (`#benefitPrimeVideo`)।
+    - विज्ञापन-मुक्त 100M+ गाने प्राइम म्यूजिक (`#benefitPrimeMusic`)।
+    - प्राइम गेमिंग मुफ़्त गेम्स व लूट ड्रॉप्स (`#benefitPrimeGaming`)।
+  - **प्लान चेंज व कैंसल / पॉज़ मोडल्स (`#primeChangePlanModal`, `#primeCancelModal`):**
+    - स्मूथ पॉप एनिमेशन (`@keyframes amzModalPop`), कीबोर्ड `Escape` की और बैकड्रॉप क्लिक से त्वरित सुरक्षित समापन।
+    - 30 दिनों के लिए पॉज़ या पूर्ण कैंसिलेशन विथ री-जॉइन समर्थन।
+  - **क्रॉस-पेज ग्लोबल स्टेट व स्टोरवाइड सिंक:**
+    - `header.js`: प्राइम एक्टिव होते ही अकाउंट ट्रिगर के पास प्राइम क्राउन बैज (`👑 Prime`) का स्वतः प्रदर्शन; क्विक लिंक्स, अकाउंट फ्लाईआउट व साइडबार में प्राइम हब लिंक।
+    - `cart.js`: प्राइम मेंबर्स के लिए ₹499 न्यूनतम सीमा के बिना मुफ़्त डिलीवरी और फ़्री डिलीवरी बार में प्राइम क्वालिफिकेशन।
+    - `checkout.js`: मुफ़्त एक्सप्रेस डिलीवरी स्लॉट वेवर।
+    - `account.html` / `account.js`: प्राइम पैनल में सदस्यता स्थिति का रीयल-टाइम सिंक और प्राइम हब का सीधा नेविगेशन बटन।
+  - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Prime / ElectroMart; 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
+  - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में पूर्ण डिक्शनरी और `scratch/test-amazon-prime-hub.js` (6/6 लेयर्स 100% पास, कुल 56/56 टेस्ट सूट्स 100% उत्तीर्ण)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)

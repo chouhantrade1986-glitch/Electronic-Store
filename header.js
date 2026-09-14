@@ -50,6 +50,24 @@
     return (dict && dict[key]) ? dict[key] : (fallbackText || key);
   }
 
+  const PRIME_STORAGE_KEY = "electromart_prime_status_v1";
+
+  function syncHeaderPrimeBadge() {
+    try {
+      const badge = document.getElementById('headerPrimeCrownBadge');
+      if (!badge) return;
+      const raw = localStorage.getItem(PRIME_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (parsed && parsed.active) {
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    } catch (e) {
+      console.warn('syncHeaderPrimeBadge error:', e);
+    }
+  }
+
   function injectHeader() {
     const container = document.getElementById('headerContainer');
     if (!container) return;
@@ -134,7 +152,7 @@
           <div class="nav-account-dropdown-wrap">
             <a href="login.html" class="account-link nav-action-card" id="navAccountTrigger">
               <span data-i18n="hello_sign_in">Hello, sign in</span>
-              <strong data-i18n="account_lists">Account &amp; Lists ▾</strong>
+              <strong style="display: flex; align-items: center; gap: 4px;"><span data-i18n="account_lists">Account &amp; Lists ▾</span><span id="headerPrimeCrownBadge" class="nav-prime-crown-badge" style="display: none; color: #ffd814; font-size: 11px; font-weight: 800; background: rgba(0, 168, 225, 0.25); border: 1px solid #00a8e1; border-radius: 4px; padding: 1px 4px; line-height: 1.2;">👑 Prime</span></strong>
             </a>
             <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
               <div class="flyout-arrow"></div>
@@ -154,6 +172,7 @@
                 <div class="flyout-col">
                   <h3 data-i18n="footer.yourAccount">Your Account</h3>
                   <a href="account.html" data-i18n="footer.yourAccount">Your Account</a>
+                  <a href="prime.html" data-i18n="prime_hub_title">Your Prime Membership</a>
                   <a href="orders.html" data-i18n="nav.orders">Your Orders</a>
                   <a href="wishlist.html" data-i18n="footer.wishlist">Your Wish List</a>
                   <a href="todays-deals.html" data-i18n="nav.yourRecommendations">Your Recommendations</a>
@@ -189,6 +208,7 @@
         </button>
         <div class="category-quick-links">
           <a href="todays-deals.html" class="category-quick-link" data-i18n="todays_deals">Today's Deals</a>
+          <a href="prime.html" class="category-quick-link nav-prime-link" data-i18n="prime_nav_link" style="color: #00a8e1; font-weight: 700;">👑 Prime</a>
           <a href="best-sellers.html" class="category-quick-link" data-i18n="best_sellers">Best Sellers</a>
           <a href="products.html" class="category-quick-link" data-i18n="all_products">All Products</a>
           <a href="products.html?search=mobile" class="category-quick-link" data-i18n="mobiles">Mobiles</a>
@@ -270,6 +290,7 @@
 
             <!-- Programs & Features -->
             <div class="dept-section-title" data-i18n="menu_programs">Programs &amp; Features</div>
+            <a class="dept-menu-item" href="prime.html" data-i18n="prime_hub_title">👑 ElectroMart Prime Hub</a>
             <a class="dept-menu-item" href="electromart-pay.html" data-i18n="electromart_pay_hub">ElectroMart Pay &amp; UPI Hub</a>
             <a class="dept-menu-item" href="pc-builder.html" data-i18n="pc_builder_custom">PC Builder (Custom Rig)</a>
             <a class="dept-menu-item" href="creator-studio.html" data-i18n="creator_studio">Creator Studio</a>
@@ -356,6 +377,7 @@
     `;
     
     syncCartCount();
+    syncHeaderPrimeBadge();
     applySavedLanguage();
 
     // All Departments Sidebar Logic
@@ -1404,6 +1426,13 @@
     if (e.key === CART_STORAGE_KEY) {
       syncCartCount();
     }
+    if (e.key === PRIME_STORAGE_KEY) {
+      syncHeaderPrimeBadge();
+    }
+  });
+
+  window.addEventListener('electromart_prime_updated', () => {
+    syncHeaderPrimeBadge();
   });
 
   // Amazon-style auto-hide sticky header

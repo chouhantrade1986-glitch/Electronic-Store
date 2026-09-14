@@ -1484,6 +1484,33 @@ function setActivePanel(panelName) {
   if (main && typeof main.scrollIntoView === "function" && panelName !== "overview") {
     main.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  if (panelName === "prime") {
+    syncAccountPrimePanel();
+  }
+}
+
+function syncAccountPrimePanel() {
+  try {
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const status = raw ? JSON.parse(raw) : null;
+    const statusInfo = document.querySelector("#panel-prime .prime-status-info");
+    if (!statusInfo) return;
+
+    if (status && status.active) {
+      statusInfo.innerHTML = `
+        <h3>${status.tierName || "Active Prime Member"}</h3>
+        <p>Your membership renews on <strong>${status.renewalDate || "next year"}</strong>. Enjoy unlimited shopping and entertainment privileges.</p>
+      `;
+    } else {
+      statusInfo.innerHTML = `
+        <h3>Not an Active Member</h3>
+        <p>Join ElectroMart Prime to unlock unlimited Free One-Day &amp; Same-Day delivery, 5% cashback, and exclusive lightning deal access.</p>
+      `;
+    }
+  } catch (e) {
+    console.warn("syncAccountPrimePanel error:", e);
+  }
 }
 
 function applyProfile(profile) {
@@ -2338,7 +2365,20 @@ syncNotificationFilterControls();
 setupPayBalanceHandlers();
 setupContactHandlers();
 setupAddressesManagement();
+syncAccountPrimePanel();
 setActivePanel("overview");
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === "electromart_prime_status_v1") {
+      syncAccountPrimePanel();
+    }
+  });
+
+  window.addEventListener("electromart_prime_updated", () => {
+    syncAccountPrimePanel();
+  });
+}
 
 function requireAuthSession() {
   const session = readSession();

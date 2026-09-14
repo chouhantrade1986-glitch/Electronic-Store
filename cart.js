@@ -354,11 +354,23 @@ function evaluateCoupon(code, subtotal, shipping) {
   };
 }
 
+function isPrimeActive() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Boolean(parsed && parsed.active);
+  } catch {
+    return false;
+  }
+}
+
 function getPricingBreakdown(rows) {
   const selectedRows = rows.filter((row) => row.selected !== false);
   const itemCount = selectedRows.reduce((sum, row) => sum + row.quantity, 0);
   const subtotal = selectedRows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-  const shipping = itemCount > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
+  const primeActive = isPrimeActive();
+  const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
@@ -607,9 +619,14 @@ function renderCart() {
     if (rows.length === 0) {
       freeDeliveryBar.hidden = true;
       if (summaryFdQualifier) summaryFdQualifier.hidden = true;
-    } else if (subtotal >= FD_THRESHOLD) {
+    } else if (isPrimeActive() || subtotal >= FD_THRESHOLD) {
       freeDeliveryBar.hidden = false;
-      if (fdQualifiedMsg) fdQualifiedMsg.hidden = false;
+      if (fdQualifiedMsg) {
+        fdQualifiedMsg.hidden = false;
+        if (isPrimeActive()) {
+          fdQualifiedMsg.innerHTML = '<span class="fd-tick" aria-hidden="true">✓</span> <span><strong>Prime Delivery:</strong> Your order qualifies for <strong>FREE Fast Delivery</strong></span>';
+        }
+      }
       if (fdUnqualifiedMsg) fdUnqualifiedMsg.hidden = true;
       if (summaryFdQualifier) summaryFdQualifier.hidden = false;
     } else {
@@ -907,7 +924,7 @@ if (applyCouponBtn) {
     const code = normalizeCouponCode(couponInput?.value || "");
     const rows = getCartRows().filter((r) => r.selected !== false);
     const subtotal = rows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-    const shipping = rows.length > 0 ? (subtotal >= 499 ? 0 : 19) : 0;
+    const shipping = rows.length > 0 ? (isPrimeActive() || subtotal >= 499 ? 0 : 19) : 0;
     const coupon = evaluateCoupon(code, subtotal, shipping);
     if (!coupon.code) {
       clearCouponState();
@@ -927,6 +944,19 @@ if (applyCouponBtn) {
 if (removeCouponBtn) {
   removeCouponBtn.addEventListener("click", () => {
     clearCouponState();
+    renderCart();
+  });
+}
+
+// Re-render cart when Prime status changes in any tab or custom event
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === "electromart_prime_status_v1") {
+      renderCart();
+    }
+  });
+
+  window.addEventListener("electromart_prime_updated", () => {
     renderCart();
   });
 }
