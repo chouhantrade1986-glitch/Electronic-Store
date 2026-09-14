@@ -1761,7 +1761,7 @@ function orderCard(order) {
         </div>
         <div class="order-actions">
           ${canResumePayment ? `<button type="button" class="primary resume-payment-btn" data-id="${order.id}">Resume Payment</button>` : ""}
-          <button type="button" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</button>
+          <a href="tracking.html?orderId=${encodeURIComponent(order.id)}" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</a>
           ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${order.afterSalesCases.length ? "View Request" : "Return or replace items"}</button>` : ""}
           ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}" data-i18n="cancel_order">Cancel Order</button>` : ""}
           <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-product-id="${escapeHtml(firstProductId)}" data-i18n="write_review">Write a product review</button>
@@ -2104,6 +2104,9 @@ ordersGrid.addEventListener("click", async (event) => {
 
   const trackBtn = event.target.closest(".track-btn");
   if (!trackBtn) {
+    return;
+  }
+  if (trackBtn.tagName && trackBtn.tagName.toLowerCase() === "a") {
     return;
   }
 

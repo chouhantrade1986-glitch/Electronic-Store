@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>ElectroMart - Delivery Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="tracking.css?v=20260412a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="tracking-page">
+  <div id="headerContainer"></div>
+
+  <main class="amz-tracking-main">
+    <!-- Breadcrumbs Navigation -->
+    <nav class="amz-tracking-breadcrumbs" aria-label="Breadcrumb">
+      <a href="account.html" data-i18n="your_account">Your Account</a>
+      <span class="separator">&rsaquo;</span>
+      <a href="orders.html" data-i18n="your_orders">Your Orders</a>
+      <span class="separator">&rsaquo;</span>
+      <span id="breadcrumbOrderId">Order Details</span>
+      <span class="separator">&rsaquo;</span>
+      <span data-i18n="tracking_breadcrumb">Tracking</span>
+    </nav>
+
+    <!-- Empty State (When no order found or loaded) -->
+    <section class="amz-tracking-empty-card" id="trackingEmptyState" style="display: none;">
+      <div class="amz-tracking-empty-icon">📦</div>
+      <h2 class="amz-tracking-empty-title" data-i18n="no_active_tracking">No tracking information found</h2>
+      <p class="amz-tracking-empty-desc" data-i18n="no_tracking_desc">Please select an order from Your Orders to track its delivery.</p>
+      <a href="orders.html" class="amz-tracking-btn-primary" style="display: inline-block; max-width: 240px;" data-i18n="back_to_orders">Back to Your Orders</a>
+    </section>
+
+    <!-- Main Tracking Container -->
+    <div id="trackingContainer" class="amz-tracking-grid">
+      <!-- Left / Main Column: Status, Stepper, Items, Activity Timeline -->
+      <div class="amz-tracking-left-col">
+        <!-- 1. Header & Live Milestone Stepper Card -->
+        <article class="amz-tracking-card amz-tracking-header-card">
+          <h1 class="amz-tracking-eta-headline" id="trackingEtaHeadline">Arriving Tomorrow by 9 PM</h1>
+          <p class="amz-tracking-status-subhead" id="trackingSubhead">On the way, on time</p>
+
+          <div class="amz-tracking-carrier-bar" id="trackingCarrierBar">
+            <span><span data-i18n="carrier_label">Shipped with</span>: <strong id="trackingCarrierName">ElectroMart Logistics</strong></span>
+            <span>|</span>
+            <span><span data-i18n="tracking_awb_label">Tracking ID</span>: <strong id="trackingAwbNumber">EM-DEL-89472914</strong></span>
+            <button type="button" class="amz-awb-copy-btn" id="copyAwbBtn" data-i18n="copy_tracking_id">Copy</button>
+          </div>
+
+          <!-- 4-Stage Milestone Stepper -->
+          <div class="amz-stepper-container">
+            <div class="amz-tracking-stepper" id="trackingMilestoneStepper">
+              <div class="amz-stepper-track-bg"></div>
+              <div class="amz-stepper-track-fill" id="trackingProgressFill" style="width: 8%;"></div>
+
+              <!-- Step 1: Ordered -->
+              <div class="amz-stepper-step completed" id="stepOrdered">
+                <div class="amz-stepper-dot">✓</div>
+                <span class="amz-stepper-label" data-i18n="milestone_ordered">Ordered</span>
+                <span class="amz-stepper-date" id="dateOrdered">-</span>
+              </div>
+
+              <!-- Step 2: Shipped -->
+              <div class="amz-stepper-step" id="stepShipped">
+                <div class="amz-stepper-dot"></div>
+                <span class="amz-stepper-label" data-i18n="milestone_shipped">Shipped</span>
+                <span class="amz-stepper-date" id="dateShipped">-</span>
+              </div>
+
+              <!-- Step 3: Out for delivery -->
+              <div class="amz-stepper-step" id="stepOutForDelivery">
+                <div class="amz-stepper-dot"></div>
+                <span class="amz-stepper-label" data-i18n="milestone_out_for_delivery">Out for delivery</span>
+                <span class="amz-stepper-date" id="dateOutForDelivery">-</span>
+              </div>
+
+              <!-- Step 4: Delivered -->
+              <div class="amz-stepper-step" id="stepDelivered">
+                <div class="amz-stepper-dot"></div>
+                <span class="amz-stepper-label" data-i18n="milestone_delivered">Delivered</span>
+                <span class="amz-stepper-date" id="dateDelivered">-</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. Items in this Shipment Card -->
+        <article class="amz-tracking-card amz-tracking-items-card">
+          <h2 class="amz-tracking-section-title" data-i18n="items_in_shipment">Items in this shipment</h2>
+          <div id="trackingItemsContainer" class="amz-tracking-items-list">
+            <!-- Dynamically populated by tracking.js -->
+          </div>
+        </article>
+
+        <!-- 3. Expandable Tracking Activity Timeline Card -->
+        <article class="amz-tracking-card amz-tracking-activity-card">
+          <div class="amz-activity-header" id="activityHeader">
+            <h2 class="amz-tracking-section-title" style="margin-bottom: 0;" data-i18n="tracking_history_title">Tracking Activity</h2>
+            <button type="button" class="amz-activity-toggle-btn" id="toggleActivityBtn" aria-expanded="false" data-i18n="see_all_updates">See all updates ▾</button>
+          </div>
+          <div id="activityTimelineContent" style="display: none;">
+            <ol class="amz-timeline-list" id="trackingTimelineList">
+              <!-- Dynamically populated by tracking.js -->
+            </ol>
+          </div>
+        </article>
+      </div>
+
+      <!-- Right Column: Shipping Details, Instructions & Actions -->
+      <aside class="amz-tracking-right-col">
+        <!-- Delivery Details & Instructions Card -->
+        <div class="amz-tracking-side-card">
+          <h3 class="amz-tracking-side-title" data-i18n="shipping_address_label">Shipping Address</h3>
+          <div class="amz-tracking-address-text" id="trackingAddressBox">
+            <!-- Recipient name & address -->
+          </div>
+
+          <h3 class="amz-tracking-side-title" data-i18n="delivery_instructions_label">Delivery Instructions</h3>
+          <div class="amz-tracking-instructions-preview" id="instructionsPreviewBox">
+            <span id="instructionsPreviewText" data-i18n="no_instructions_set">No special instructions added</span>
+          </div>
+          <button type="button" class="amz-tracking-btn-secondary" id="openInstructionsModalBtn" data-i18n="update_instructions">Update instructions</button>
+        </div>
+
+        <!-- Order Navigation & Actions Card -->
+        <div class="amz-tracking-side-card">
+          <h3 class="amz-tracking-side-title" data-i18n="quick_actions">Quick Actions</h3>
+          <a href="invoice.html" id="trackingInvoiceBtn" class="amz-tracking-btn-primary" target="_blank" rel="noopener" data-i18n="view_print_invoice">View or print invoice</a>
+          <button type="button" id="trackingCancelBtn" class="amz-tracking-btn-danger" data-i18n="cancel_items">Cancel items</button>
+          <a href="orders.html" class="amz-tracking-link-back" data-i18n="back_to_orders">&lsaquo; Back to Your Orders</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Delivery Instructions Modal -->
+  <div class="amz-tracking-modal" id="deliveryInstructionsModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalInstructionsTitle">
+    <div class="amz-tracking-modal-dialog">
+      <div class="amz-tracking-modal-head">
+        <h2 class="amz-tracking-modal-title" id="modalInstructionsTitle" data-i18n="instructions_modal_title">Delivery Instructions</h2>
+        <button type="button" class="amz-tracking-modal-close" id="closeInstructionsModalBtn" aria-label="Close">&times;</button>
+      </div>
+      <form id="deliveryInstructionsForm">
+        <div class="amz-instructions-options">
+          <label class="amz-instruction-check">
+            <input type="checkbox" name="pref" value="leave_with_neighbor" />
+            <span>Leave with neighbor or flat nearby</span>
+          </label>
+          <label class="amz-instruction-check">
+            <input type="checkbox" name="pref" value="leave_at_security" />
+            <span>Leave at security gate / reception</span>
+          </label>
+          <label class="amz-instruction-check">
+            <input type="checkbox" name="pref" value="call_before_arrival" />
+            <span>Call phone before arriving</span>
+          </label>
+          <label class="amz-instruction-check">
+            <input type="checkbox" name="pref" value="do_not_ring_bell" />
+            <span>Do not ring doorbell (baby sleeping / pets)</span>
+          </label>
+        </div>
+        <label for="instructionsCustomNote" style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Additional notes:</label>
+        <textarea id="instructionsCustomNote" class="amz-instruction-textarea" placeholder="E.g. Leave package inside the front porch..."></textarea>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="amz-tracking-btn-secondary" id="cancelInstructionsModalBtn" style="margin-bottom: 0; width: auto;" data-i18n="close_btn">Close</button>
+          <button type="submit" class="amz-tracking-btn-primary" style="margin-bottom: 0; width: auto;" data-i18n="save_instructions">Save instructions</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cancel Order Modal -->
+  <div class="amz-tracking-modal" id="cancelOrderModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalCancelTitle">
+    <div class="amz-tracking-modal-dialog">
+      <div class="amz-tracking-modal-head">
+        <h2 class="amz-tracking-modal-title" id="modalCancelTitle" data-i18n="cancel_modal_title">Request Order Cancellation</h2>
+        <button type="button" class="amz-tracking-modal-close" id="closeCancelModalBtn" aria-label="Close">&times;</button>
+      </div>
+      <p style="font-size: 14px; line-height: 1.5; color: #333333; margin: 0 0 16px;" data-i18n="cancel_modal_desc">
+        Are you sure you want to cancel this shipment? If already dispatched, you can decline delivery upon arrival.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button type="button" class="amz-tracking-btn-secondary" id="dismissCancelModalBtn" style="margin-bottom: 0; width: auto;" data-i18n="close_btn">Close</button>
+        <button type="button" class="amz-tracking-btn-danger" id="confirmCancelOrderBtn" style="margin-bottom: 0; width: auto;" data-i18n="confirm_cancel">Yes, Cancel Shipment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification -->
+  <div id="trackingToastContainer" class="amz-tracking-toast-container" aria-live="polite"></div>
+
+  <!-- Core Scripts in Strict Dependency Order -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="tracking.js?v=20260412a"></script>
+</body>
+</html>

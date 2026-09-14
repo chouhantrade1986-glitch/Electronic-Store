@@ -27,6 +27,7 @@ const thankYouCustomerEmail = document.getElementById("thankYouCustomerEmail");
 const thankYouDeliverySlotPreview = document.getElementById("thankYouDeliverySlotPreview");
 const thankYouShipAddress = document.getElementById("thankYouShipAddress");
 const thankYouInvoiceBtn = document.getElementById("thankYouInvoiceBtn");
+const thankYouTrackBtn = document.getElementById("thankYouTrackBtn");
 const thankYouOrdersBtn = document.getElementById("thankYouOrdersBtn");
 const thankYouItemsContainer = document.getElementById("thankYouItemsContainer");
 const thankYouRecsGrid = document.getElementById("thankYouRecsGrid");
@@ -181,6 +182,9 @@ function renderOrder(order) {
     if (thankYouInvoiceBtn) {
       thankYouInvoiceBtn.href = `invoice.html?orderId=${encodeURIComponent(fallbackId)}`;
     }
+    if (thankYouTrackBtn) {
+      thankYouTrackBtn.href = `tracking.html?orderId=${encodeURIComponent(fallbackId)}`;
+    }
     if (thankYouCustomerEmail) {
       thankYouCustomerEmail.textContent = session?.email || "customer@electromart.com";
     }
@@ -250,6 +254,9 @@ function renderOrder(order) {
 
   if (thankYouInvoiceBtn) {
     thankYouInvoiceBtn.href = `invoice.html?orderId=${encodeURIComponent(order.id)}`;
+  }
+  if (thankYouTrackBtn) {
+    thankYouTrackBtn.href = `tracking.html?orderId=${encodeURIComponent(order.id)}`;
   }
   if (thankYouOrdersBtn) {
     thankYouOrdersBtn.href = "orders.html";
