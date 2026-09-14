@@ -349,6 +349,25 @@
   - **100% ब्रांड व लीगल सुरक्षा:** केवल **ElectroMart Returns Center** / **ElectroMart Logistics**; 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
   - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में पूर्ण डिक्शनरी और `scratch/test-amazon-returns-center.js` (6/6 लेयर्स 100% पास, कुल 57/57 टेस्ट सूट्स 100% उत्तीर्ण)।
 
+### N. Customer Service & Help Center Hub (Phase 26 Completed)
+- **समर्पित 24x7 ग्राहक सेवा केंद्र (`help.html`, `help.js`, `help.css`, `contact-us.html`):**
+  - **शीर्ष एक्टिव ऑर्डर क्विक-हेल्प कार्ड (`#activeOrderHelpSection`):**
+    - `electromart_offline_orders_v1` से नवीनतम ऑर्डर की लाइव जानकारी (छवि, डिलीवरी स्थिति, ऑर्डर संख्या)।
+    - 4 त्वरित 1-क्लिक एक्शन बटन्स: *Track Package* (`tracking.html`), *Return or Replace* (`returns.html`), *Download Invoice* (`invoice.html`), *Report an Issue* (सपोर्ट टिकट मोडल)।
+    - **स्वच्छ फॉलबैक:** कोई सक्रिय ऑर्डर न होने पर बिना लेआउट तोड़े "No recent orders found" स्थिति और "Start Shopping" बटन (`#activeOrderEmptyState`)।
+  - **स्मार्ट हेल्प सर्च लाइब्रेरी (`#helpSearchSection`):**
+    - "Search our help library..." सर्च इनपुट विथ क्लियर बटन, लाइव कीवर्ड हाइलाइटिंग (`<mark class="help-highlight">`), त्वरित सर्च चिप्स, और 18+ एफएक्यू प्रश्नों का रीयल-टाइम फ़िल्टरिंग।
+  - **6-कोर हेल्प कैटेगरीज ग्रिड (`#helpCategoriesSection`):**
+    - *Your Orders*, *Returns & Refunds*, *Payment & Wallet*, *Prime Membership*, *Account Settings*, *Safe Shopping & Security*।
+    - कार्ड क्लिक पर समाधान सूची और डायरेक्ट एक्शन लिंक्स के साथ मोडल पॉपअप (`#categoryDetailModal`)।
+  - **24x7 सपोर्ट चैनल्स विंग (`#supportChannelsSection`):**
+    - 💬 **Chat with ElectroMart Assistant (`#channelChatCard`, `#helpChatWidget`):** त्वरित बॉट प्रश्न चिप्स, लाइव एजेंट ट्रांसफर सिमुलेटर ("Agent Priya connected"), और `electromart_chat_history_v1` स्टोरेज।
+    - 📞 **Instant Call Me Back within 2 mins (`#channelCallbackCard`, `#callbackModal`):** 10-अंकीय भारतीय मोबाइल नंबर वैलिडेशन (`^[6-9]\d{9}$`), 120-सेकंड लाइव काउंटडाउन टाइमर (`#callbackCountdownTimer`), अद्वितीय रेफरेंस आईडी (`EM-CALL-XXXXX`), और मेमोरी लीक प्रिवेंशन (`clearInterval`)।
+    - ✉️ **Submit an Inquiry Ticket (`#channelTicketCard`, `#ticketModal`):** ऑर्डर संदर्भ के साथ फॉर्म इनपुट, अद्वितीय टिकट आईडी (`EM-TKT-XXXXX`), `electromart_support_tickets_v1` लेज़र, और पुष्टिकरण टोस्ट।
+  - **मोडल डिस्मिसल:** कीबोर्ड `Escape` की और बैकड्रॉप क्लिक पर सभी मोडल्स व चैट विजेट का सुरक्षित समापन।
+  - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Customer Service / ElectroMart Support; 0 ग्राहक-सामने "Amazon" संदर्भ।
+  - **11 भारतीय क्षेत्रीय भाषाएं एवं पूर्ण टेस्ट कवरेज:** `translations.js` में `ELECTROMART_HELP_I18N` डिक्शनरी कवरेज এবং `scratch/test-amazon-help-center.js` (6/6 लेयर्स 100% पास, कुल 58/58 टेस्ट सूट्स 100% उत्तीर्ण)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)

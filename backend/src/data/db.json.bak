@@ -33653,6 +33653,37 @@
   "paymentWebhookEvents": [],
   "authOtpChallenges": [
     {
+      "id": "094359b7-72fa-45c1-b7d4-d6a843231446",
+      "purpose": "login",
+      "channel": "email",
+      "destination": "admin@electromart.com",
+      "destinationMasked": "ad***@electromart.com",
+      "identifier": "admin@electromart.com",
+      "userId": "d2fc1f50-45a2-4b14-a25d-09675b8ddd16",
+      "pendingUser": {
+        "name": "",
+        "email": "",
+        "mobile": "",
+        "address": "",
+        "passwordHash": "",
+        "role": "customer"
+      },
+      "code": "268466",
+      "createdAt": "2026-09-14T14:32:48.793Z",
+      "lastRequestedAt": "2026-09-14T14:32:48.793Z",
+      "expiresAt": "2026-09-14T14:42:48.815Z",
+      "attempts": 0,
+      "maxAttempts": 5,
+      "status": "pending",
+      "deliveryProvider": "simulated",
+      "deliveryStatus": "sent",
+      "messageId": "849a25b6-2481-4bc5-bd09-c1843ddea520",
+      "sentAt": "2026-09-14T14:32:48.793Z",
+      "verifiedAt": null,
+      "invalidatedAt": null,
+      "error": ""
+    },
+    {
       "id": "d0ae963c-f9d8-474e-9109-c855f7de16db",
       "purpose": "login",
       "channel": "email",
