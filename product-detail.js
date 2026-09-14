@@ -317,6 +317,80 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;");
 }
 
+const EM_LIGHTNING_DEALS_MAP = {
+  "1": { id: 1, name: "AstraBook Pro 14", status: "live", stockClaimed: 45, stockTotal: 100 },
+  "2": { id: 2, name: "Nimbus Phone X", status: "live", stockClaimed: 88, stockTotal: 100 },
+  "3": { id: 3, name: "Pulse ANC Headphones", status: "live", stockClaimed: 62, stockTotal: 100 },
+  "5": { id: 5, name: "Orbit Mechanical Keyboard", status: "live", stockClaimed: 78, stockTotal: 100 },
+  "7": { id: 7, name: "Vector Gaming Laptop", status: "live", stockClaimed: 35, stockTotal: 100 },
+  "8": { id: 8, name: "Echo Smart Speaker", status: "waitlist", stockClaimed: 50, stockTotal: 50 },
+  "4": { id: 4, name: "Apex 4K Ultra Monitor", status: "upcoming", dropSlot: "1h" },
+  "6": { id: 6, name: "Nova Wireless Pro Gaming Mouse", status: "upcoming", dropSlot: "3h" },
+  "9": { id: 9, name: "HyperDrive 1TB NVMe Gen4 SSD", status: "upcoming", dropSlot: "tomorrow" }
+};
+
+function getPdpLightningDeal(product) {
+  if (!product) return null;
+  if (typeof window !== "undefined" && typeof window.getLightningDealForProduct === "function") {
+    const deal = window.getLightningDealForProduct(product.id);
+    if (deal) return deal;
+  }
+  const key = String(product.id || "").trim();
+  if (EM_LIGHTNING_DEALS_MAP[key]) {
+    return EM_LIGHTNING_DEALS_MAP[key];
+  }
+  return null;
+}
+
+function formatPdpCountdown(ms) {
+  if (ms <= 0) return "Expired";
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function startPdpLightningTimer(deal, t) {
+  if (typeof window === "undefined") return;
+  if (window._emPdpTimerInterval) {
+    clearInterval(window._emPdpTimerInterval);
+    window._emPdpTimerInterval = null;
+  }
+  const timerEl = document.getElementById("pdpLightningTimer");
+  if (!timerEl) return;
+
+  const isUpcoming = deal.status === "upcoming";
+  const targetTime = isUpcoming
+    ? (deal.startTime || (Date.now() + 2 * 60 * 60 * 1000))
+    : (deal._expiry || (Date.now() + 6 * 60 * 60 * 1000));
+
+  const update = () => {
+    const remaining = targetTime - Date.now();
+    if (remaining <= 0) {
+      timerEl.textContent = (t && t.deal_expired) ? t.deal_expired : "Expired";
+      if (window._emPdpTimerInterval) {
+        clearInterval(window._emPdpTimerInterval);
+        window._emPdpTimerInterval = null;
+      }
+    } else {
+      timerEl.textContent = formatPdpCountdown(remaining);
+    }
+  };
+
+  update();
+  window._emPdpTimerInterval = setInterval(update, 1000);
+}
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("pagehide", () => {
+    if (window._emPdpTimerInterval) {
+      clearInterval(window._emPdpTimerInterval);
+      window._emPdpTimerInterval = null;
+    }
+  });
+}
+
 function renderAmazonPrice(product, priceVal, listPriceVal, discountVal, trans) {
   if (!product) return;
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
@@ -383,6 +457,68 @@ function renderAmazonPrice(product, priceVal, listPriceVal, discountVal, trans) 
   const taxInclusive = document.querySelector(".tax-inclusive");
   if (taxInclusive) {
     taxInclusive.textContent = t.inclusive_all_taxes || "सभी टैक्स सहित";
+  }
+
+  // 5. Phase 22: PDP Lightning Deal Box Sync
+  const pdpBox = document.getElementById("pdpLightningDealBox");
+  if (pdpBox) {
+    const deal = getPdpLightningDeal(product);
+    if (deal) {
+      pdpBox.style.display = "block";
+      const timerLabel = document.getElementById("pdpLightningTimerLabel");
+      if (timerLabel) {
+        timerLabel.textContent = deal.status === "upcoming" ? (t.drop_starts_in || "Drop starts in:") : (t.ends_in || "Ends in:");
+      }
+
+      let progress = 0;
+      if (deal.stockTotal && deal.stockClaimed != null) {
+        progress = Math.min(100, Math.round((Number(deal.stockClaimed) / Number(deal.stockTotal)) * 100));
+      } else {
+        progress = 45;
+      }
+
+      const progressFill = document.getElementById("pdpLightningProgressFill");
+      const progressText = document.getElementById("pdpLightningProgressText");
+      const urgencyEl = document.getElementById("pdpLightningUrgency");
+
+      if (progressFill) {
+        progressFill.style.width = `${progress}%`;
+        if (progressFill.classList) {
+          progressFill.classList.remove("urgent", "full");
+          if (progress >= 100) {
+            progressFill.classList.add("full");
+          } else if (progress >= 75) {
+            progressFill.classList.add("urgent");
+          }
+        }
+      }
+
+      if (progressText) {
+        if (progress >= 100) {
+          progressText.textContent = t.waitlist_available || "100% Claimed - Waitlist Available";
+        } else {
+          progressText.textContent = `${progress}% ${t.claimed || "claimed"}`;
+        }
+      }
+
+      if (urgencyEl) {
+        if (progress >= 75 && progress < 100) {
+          urgencyEl.innerHTML = `🔥 <strong>${t.claimed_hurry || "Hurry, deal ends soon!"}</strong>`;
+          urgencyEl.style.display = "block";
+        } else {
+          urgencyEl.innerHTML = "";
+          urgencyEl.style.display = "none";
+        }
+      }
+
+      startPdpLightningTimer(deal, t);
+    } else {
+      pdpBox.style.display = "none";
+      if (window._emPdpTimerInterval) {
+        clearInterval(window._emPdpTimerInterval);
+        window._emPdpTimerInterval = null;
+      }
+    }
   }
 }
 window.renderAmazonPrice = renderAmazonPrice;

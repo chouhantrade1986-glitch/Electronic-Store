@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 21: ElectroMart Pay & UPI Hub with Real-Time Checkout Sync, Virtual UPI & Scratch Rewards Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 22: ElectroMart Lightning Deals Live Drops & Deal Countdown Hub Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 53 / 53 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 54 / 54 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **लाइटनिंग डील्स व लाइव ड्रॉप्स हब टेस्ट** | `node scratch/test-amazon-lightning-deals.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **ElectroMart Pay व UPI हब टेस्ट** | `node scratch/test-amazon-pay-hub.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **प्रोडक्ट कंपैरिज़न हब टेस्ट** | `node scratch/test-amazon-compare-hub.js` | ✅ **PASS** | 5 / 5 ब्लॉक्स उत्तीर्ण (100%) |
@@ -22,7 +23,7 @@
 | **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
 | **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
 | **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **127 / 127 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **128 / 128 (100% Pass Rate)** |
 
 ---
 
@@ -231,6 +232,35 @@
 - **क्रॉस-पेज स्टेट सिंक्रोनाइज़ेशन:** `storage` और `electromart_pay_balance_updated` इवेंट्स द्वारा `electromart-pay.html`, `checkout.html`, और `account.html` के बीच बिना पेज रिफ्रेश किए लाइव बैलेंस सिंक।
 - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Pay (`electromart.in` / इलेक्ट्रोमार्ट पे); 0 ग्राहक-सामने "Amazon" / "अमेज़न" टेक्स्ट।
 - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में 36+ पे हब कीज और `scratch/test-amazon-pay-hub.js` (5/5 लेयर्स 100% पास)।
+
+### J. ElectroMart Lightning Deals Live Drops & Deal Countdown Hub (Phase 22 Completed)
+- **समर्पित डील स्टेटस सब-टैब्स (`#dealStatusTabs` in `todays-deals.html`, `todays-deals.js`):**
+  - **Live Now (`data-status="live"`):** सक्रिय लाइटनिंग डील्स विथ रीयल-टाइम लाइव पल्स डॉट (`.live-dot`, `.amz-pulse-dot`) और लाइव काउंट बैज (`#liveDealsCount`)।
+  - **Upcoming Drops (`data-status="upcoming"`):** भविष्य में आने वाली डील्स विथ टीज़र टाइमर (`Drop starts in: ...`) और आगामी काउंट बैज (`#upcomingDealsCount`)।
+  - **Waitlist Available (`data-status="waitlist"`):** 100% क्लेम हो चुकी डील्स जहां वेटलिस्ट कतार उपलब्ध है विथ काउंट बैज (`#waitlistDealsCount`)।
+- **लाइटनिंग ड्रॉप्स शेड्यूल टाइमलाइन (`#lightningDropsSchedule`, `#dropsSchedulePills`):**
+  - "Upcoming Drops" टैब सक्रिय होने पर टाइमलाइन स्लॉट बार का स्वतः प्रदर्शन।
+  - टाइमलाइन स्लॉट पिल्स: "All Drops", "Next 1 Hour" (`1h`), "Next 3 Hours" (`3h`), "Tomorrow's Drops" (`tomorrow`) विथ इंस्टेंट ग्रिड रि-फ़िल्टरिंग।
+- **स्टॉक क्लेम प्रोग्रेस मीटर व अर्जेंसी इंडिकेटर्स:**
+  - क्लेम्ड प्रतिशत (`stockClaimed / stockTotal * 100`) का सटीक विज़ुअल प्रोग्रेस बार।
+  - जब क्लेम ≥ 75% और < 100% हो: अर्जेंट ऑरेंज-टू-रेड ग्रेडिएंट बार और "🔥 Hurry, deal ends soon!" / "🔥 जल्दी करें, डील जल्द समाप्त होगी!" वार्निंग।
+  - जब क्लेम 100% हो: फुल ग्रे बार और "100% Claimed - Waitlist Available" / "100% दावा किया गया - वेटलिस्ट उपलब्ध" लेबल।
+- **मेमोरी-लीक फ्री रीयल-टाइम काउंटडाउन टाइमर:**
+  - `setInterval` लूप जो हर सेकंड डील्स और स्पॉटलाइट बैनर दोनों के टाइमर्स को बिना लैग के अपडेट करता है।
+  - `window.addEventListener("pagehide")` पर इंटरवल का स्वचालित स्वच्छ क्लीयरेंस (`clearInterval`)।
+- **वेटलिस्ट प्रबंधन प्रणाली (`electromart_deal_waitlists_v1`):**
+  - 100% क्लेम्ड डील्स पर "Join Waitlist" बटन; क्लिक पर कतार में स्थान आवंटन (उदा. `#1 in line`, `#2 in line`)।
+  - वेटलिस्ट में शामिल होने पर "✓ In Waitlist (#X in line)" स्टेटस और "Leave Waitlist" त्वरित लिंक।
+  - फ़्लोटिंग टोस्ट नोटिफिकेशन (`#dealToastContainer`, `.amz-deal-toast`) द्वारा तुरंत यूज़र फ़ीडबैक।
+- **आगामी ड्रॉप्स अनुस्मारक अलर्ट सिस्टम (`electromart_deal_alerts_v1`):**
+  - अपकमिंग ड्रॉप्स पर "🔔 Remind Me" बटन; क्लिक पर "✓ Reminder Set" में टॉगल और पुनः क्लिक पर रद्द।
+  - अलर्ट सक्रिय होने पर टोस्ट संदेश: "Reminder set! We'll alert you 10 minutes before the drop goes live."
+- **PDP (Product Detail Page) सिंक (`product-detail.html`, `product-detail.js`):**
+  - उत्पाद विवरण पृष्ठ पर `#pdpLightningDealBox` का रीयल-टाइम प्रदर्शन जब उत्पाद पर लाइटनिंग डील सक्रिय हो।
+  - पीडीपी पर भी समान क्लेम प्रोग्रेस बार, टाइमर काउंटडाउन (`#pdpLightningTimer`), और अर्जेंसी टेक्स्ट।
+  - गैर-डील उत्पादों के लिए बॉक्स स्वतः छुपा रहता है (`display: none`)।
+- **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट); 0 ग्राहक-सामने "Amazon" / "अमेज़न" संदर्भ।
+- **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में 16+ लाइटनिंग डील्स कीज और `scratch/test-amazon-lightning-deals.js` (6/6 लेयर्स 100% पास)।
 
 ---
 

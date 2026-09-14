@@ -9778,3 +9778,352 @@ body.cart-flyout-open {
   font-weight: 600 !important;
 }
 
+/* ==========================================================================
+   Phase 22: ElectroMart Lightning Deals Live Drops & Deal Countdown Hub
+   ========================================================================== */
+
+/* Deal Status Sub-Tabs */
+.amz-deal-status-tabs {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 14px 0 16px !important;
+  border-bottom: 2px solid #e7e7e7 !important;
+  padding-bottom: 2px !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.amz-deal-status-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #565959 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  margin-bottom: -2px !important;
+}
+
+.amz-deal-status-tab:hover {
+  color: #0f1111 !important;
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+.amz-deal-status-tab.active {
+  color: #0f1111 !important;
+  font-weight: 700 !important;
+  border-bottom: 3px solid #e77600 !important;
+  background: #f7fafa !important;
+  border-radius: 6px 6px 0 0 !important;
+}
+
+.status-indicator {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+
+.live-dot,
+.amz-pulse-dot {
+  background: #cc0c39 !important;
+  box-shadow: 0 0 0 2px rgba(204, 12, 57, 0.2) !important;
+  animation: amzLivePulse 1.8s infinite !important;
+}
+
+.upcoming-dot {
+  background: #007185 !important;
+}
+
+.waitlist-dot {
+  background: #e77600 !important;
+}
+
+@keyframes amzLivePulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(204, 12, 57, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(204, 12, 57, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(204, 12, 57, 0); }
+}
+
+.amz-tab-count {
+  font-size: 12px !important;
+  color: #565959 !important;
+  font-weight: 500 !important;
+}
+
+/* Drops Schedule Bar */
+.amz-drops-schedule {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 14px !important;
+  background: #fdf8f2 !important;
+  border: 1px solid #fbd8b5 !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.drops-schedule-label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #c45500 !important;
+  white-space: nowrap !important;
+}
+
+.amz-drop-pill {
+  border: 1px solid #d5d9d9 !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 5px 14px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #0f1111 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+}
+
+.amz-drop-pill:hover {
+  background: #f7f8f8 !important;
+  border-color: #a2a6a6 !important;
+}
+
+.amz-drop-pill.active {
+  background: #ffd814 !important;
+  border-color: #fcd200 !important;
+  font-weight: 700 !important;
+}
+
+/* Deal Card Lightning Elements */
+.deal-badge.badge-lightning {
+  background: #cc0c39 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.deal-badge.badge-upcoming {
+  background: #007185 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.deal-badge.badge-waitlist {
+  background: #565959 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Claim Progress Bar */
+.deal-progress-row {
+  margin: 6px 0 !important;
+}
+
+.deal-progress-bar-bg {
+  width: 100% !important;
+  background: #e7e7e7 !important;
+  border-radius: 4px !important;
+  height: 8px !important;
+  overflow: hidden !important;
+  margin-bottom: 4px !important;
+}
+
+.deal-progress-bar {
+  height: 100% !important;
+  background: linear-gradient(90deg, #ffd814 0%, #ffa41c 100%) !important;
+  border-radius: 4px !important;
+  transition: width 0.4s ease !important;
+}
+
+.deal-progress-bar.urgent {
+  background: linear-gradient(90deg, #ffa41c 0%, #cc0c39 100%) !important;
+}
+
+.deal-progress-bar.full {
+  background: #565959 !important;
+}
+
+.deal-progress-label {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #565959 !important;
+}
+
+.deal-urgency-note {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #cc0c39 !important;
+  margin-top: 2px !important;
+  display: block !important;
+}
+
+/* Buttons: Remind Me & Join Waitlist */
+.amz-btn-remind {
+  background: #ffffff !important;
+  border: 1px solid #007185 !important;
+  color: #007185 !important;
+  border-radius: 8px !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.amz-btn-remind:hover {
+  background: #f0f8ff !important;
+  border-color: #005a6a !important;
+}
+
+.amz-btn-remind.reminded {
+  background: #007185 !important;
+  color: #ffffff !important;
+  border-color: #007185 !important;
+}
+
+.amz-btn-waitlist {
+  background: #ffa41c !important;
+  border: 1px solid #ff8f00 !important;
+  color: #0f1111 !important;
+  border-radius: 8px !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.amz-btn-waitlist:hover {
+  background: #fa8900 !important;
+}
+
+.amz-btn-waitlist.in-waitlist {
+  background: #067d62 !important;
+  border-color: #056650 !important;
+  color: #ffffff !important;
+}
+
+.waitlist-leave-link {
+  font-size: 11px !important;
+  color: #007185 !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+  margin-left: 6px !important;
+}
+
+/* Toast Container */
+.deal-toast-container {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+}
+
+.amz-deal-toast {
+  background: #131921 !important;
+  color: #ffffff !important;
+  padding: 12px 18px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-left: 4px solid #ffd814 !important;
+  pointer-events: auto !important;
+  animation: amzToastSlideIn 0.3s ease !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+@keyframes amzToastSlideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* PDP Lightning Deal Box */
+.pdp-lightning-deal-box {
+  background: #fef8f2 !important;
+  border: 1px solid #fbd8b5 !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  margin: 12px 0 !important;
+  max-width: 480px !important;
+}
+
+.pdp-lightning-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #cc0c39 !important;
+}
+
+.pdp-lightning-icon {
+  font-size: 16px !important;
+}
+
+.pdp-lightning-timer {
+  color: #cc0c39 !important;
+  font-weight: 800 !important;
+  font-family: monospace !important;
+  font-size: 14px !important;
+}
+
+.pdp-lightning-progress-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-top: 6px !important;
+}
+
+.pdp-lightning-progress-bar {
+  flex: 1 !important;
+  height: 8px !important;
+  background: #e7e7e7 !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+.pdp-lightning-progress-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg, #ffa41c, #cc0c39) !important;
+  border-radius: 4px !important;
+  transition: width 0.4s ease !important;
+}
+
+.pdp-lightning-progress-text {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #0f1111 !important;
+  white-space: nowrap !important;
+}
+
+.pdp-lightning-urgency {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #cc0c39 !important;
+  margin-top: 4px !important;
+}
+
+

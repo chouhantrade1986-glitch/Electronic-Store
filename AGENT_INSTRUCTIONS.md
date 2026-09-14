@@ -61,18 +61,18 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (53 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (54 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 53 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 50वां सूट B2B बल्क पोर्टल, 51वां सूट प्रोडक्ट कंपैरिज़न हब, 52वां सूट कस्टमर रिव्यूज़ व कम्युनिटी Q&A सुइट, और 53वां सूट ElectroMart Pay व UPI हब है।)*
+*(सभी 54 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 50वां सूट B2B बल्क पोर्टल, 51वां सूट प्रोडक्ट कंपैरिज़न हब, 52वां सूट कस्टमर रिव्यूज़ व कम्युनिटी Q&A सुइट, 53वां सूट ElectroMart Pay व UPI हब, और 54वां सूट लाइटनिंग डील्स लाइव ड्रॉप्स व काउंटडाउन हब है।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 74 टेस्ट PASS होने चाहिए। कुल 127 / 127 टेस्ट उत्तीर्ण।)*
+*(सभी 74 टेस्ट PASS होने चाहिए। कुल 128 / 128 टेस्ट उत्तीर्ण।)*
 
 ---
 
@@ -113,7 +113,7 @@ git commit -m "feat(scope): your descriptive commit message"
 
 ## 6. पूर्ण हो चुके चरण और आगामी रोडमैप (Handover Roadmap)
 
-### A. पूर्ण हो चुके चरण (Phases 1-21 Completed):
+### A. पूर्ण हो चुके चरण (Phases 1-22 Completed):
 - **चरण 1:** Shopping Cart Upgrade (`cart.html`, `cart.js`)
 - **चरण 2:** Products Listing & Faceting (`products.html`, `products.js`)
 - **चरण 3:** Homepage & Quad Overlap Cards (`index.html`, `homepage-products.js`)
@@ -135,9 +135,10 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 19:** Amazon India-Style Product Comparison Hub (`compare.html`, `compare.css`, `compare.js`): 4-स्लॉट तुलना मैट्रिक्स, डायनामिक "Highlight Differences" टॉगल, 751-कैटलॉग त्वरित उत्पाद चयन मोडल, 1-क्लिक कार्ट एडिशन, 11-भाषा अनुवाद व स्वचालित टेस्ट सूट (`scratch/test-amazon-compare-hub.js`)।
 - **चरण 20:** Customer Reviews, Ratings & Community Q&A Suite (`review.html`, `product-detail.html`, `product-detail.js`, `review.js`, `review.css`): 5-स्टार इंटरएक्टिव रेटिंग, फोटो अपलोड्स, कम्युनिटी Q&A लाइव सर्च, हिस्टोग्राम स्टार फ़िल्टरिंग, और टेस्ट सूट (`scratch/test-amazon-reviews-and-qa.js`)।
 - **चरण 21:** ElectroMart Pay & UPI Hub (`electromart-pay.html`, `electromart-pay.css`, `electromart-pay.js`, `checkout.html`, `checkout.js`): लाइव वॉलेट बैलेंस, 1-क्लिक ऑटो-रीलोड, त्वरित ऐड-मनी प्रीसेट्स, वर्चुअल UPI ID (`user@electromart`), Bharat QR स्कैनर सिम्युलेटर मोडल, पेंडिंग कलेक्ट रिक्वेस्ट्स अप्रूवल, कैशबैक स्क्रैच कार्ड विजेट, सर्च/फ़िल्टर-सक्षम पासबुक, चेकआउट में लाइव बैलेंस बैज, अपर्याप्त बैलेंस लाल चेतावनी व शॉर्टफॉल गणना, 1-क्लिक इंस्टेंट पेमेंट और 5% कैशबैक रिवार्ड।
+- **चरण 22:** Lightning Deals Live Drops & Deal Countdown Hub (`todays-deals.html`, `todays-deals.js`, `product-detail.html`, `product-detail.js`, `amazon-theme.css`): लाइव डील स्टेटस सब-टैब्स (`#dealStatusTabs`: Live Now, Upcoming Drops, Waitlist Available), लाइटनिंग ड्रॉप्स शेड्यूल टाइमलाइन स्लॉट बार (`#lightningDropsSchedule`, `#dropsSchedulePills`: 1h, 3h, tomorrow, all), रियल-टाइम क्लेम्ड प्रतिशत मीटर (≥75% अर्जेंट फ्लेम वार्निंग, 100% फुल/वेटलिस्ट), मेमोरी-लीक फ्री काउंटडाउन टाइमर, वेटलिस्ट प्रबंधन प्रणाली (`electromart_deal_waitlists_v1`, queue position tracking, join/leave, floating toast notifications), अपकमिंग ड्रॉप्स अनुस्मारक अलर्ट सिस्टम (`electromart_deal_alerts_v1`, 1-क्लिक Remind Me toggle), पीडीपी सिंक (`#pdpLightningDealBox`), 11-भाषा अनुवाद व स्वचालित टेस्ट सूट (`scratch/test-amazon-lightning-deals.js`)।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 22 (Lightning Deals Live Drops & Deal Countdown Hub):** आगामी लाइटनिंग डील्स कैलेंडर, "Join Waitlist", "Remind Me" पुश अलर्ट्स, और लाइव स्टॉक क्लेम बार।
+- **चरण 23 (ElectroMart Prime Membership Hub & Rewards Ecosystem):** प्राइम बेनिफिट्स लैंडिंग हब (प्राइम डिलीवरी, प्राइम वीडियो/म्यूजिक टाई-इन, एक्सक्लूसिव डील्स), 30-दिन फ्री ट्रायल व एनुअल सब्सक्रिप्शन फ़्लो, प्राइम मेंबरशिप बैज सिंक (हेडर, पीडीपी, चेकआउट फ्री एक्सप्रेस डिलीवरी टॉगल)।
 
 

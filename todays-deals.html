@@ -116,10 +116,43 @@
           <button type="button" class="amz-deal-type-pill" data-type="halfprice" data-deal-type="fifty_plus" data-i18n="half_price_deals">50% Off or More</button>
         </div>
 
+        <!-- Phase 22: Deal Status Sub-Tabs (Live Now, Upcoming Drops, Waitlist Available) -->
+        <div class="amz-deal-status-tabs" id="dealStatusTabs" role="tablist" aria-label="Deal status navigation">
+          <button type="button" class="amz-deal-status-tab active" data-status="live" role="tab" aria-selected="true">
+            <span class="status-indicator live-dot"></span>
+            <span data-i18n="live_now">Live Now</span>
+            <span class="amz-tab-count" id="liveDealsCount">(6)</span>
+          </button>
+          <button type="button" class="amz-deal-status-tab" data-status="upcoming" role="tab" aria-selected="false">
+            <span class="status-indicator upcoming-dot"></span>
+            <span data-i18n="upcoming_drops">Upcoming Drops</span>
+            <span class="amz-tab-count" id="upcomingDealsCount">(3)</span>
+          </button>
+          <button type="button" class="amz-deal-status-tab" data-status="waitlist" role="tab" aria-selected="false">
+            <span class="status-indicator waitlist-dot"></span>
+            <span data-i18n="waitlist_deals">Waitlist Available</span>
+            <span class="amz-tab-count" id="waitlistDealsCount">(1)</span>
+          </button>
+        </div>
+
+        <!-- Lightning Drops Schedule Timeline -->
+        <div class="amz-drops-schedule" id="lightningDropsSchedule" style="display: none;">
+          <span class="drops-schedule-label" data-i18n="drops_schedule_title">⏰ Drop Time:</span>
+          <div class="drops-schedule-pills" id="dropsSchedulePills" style="display: inline-flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="amz-drop-pill active" data-slot="all" data-i18n="all_drops">All Drops</button>
+            <button type="button" class="amz-drop-pill" data-slot="1h" data-i18n="next_1_hour">Next 1 Hour</button>
+            <button type="button" class="amz-drop-pill" data-slot="3h" data-i18n="next_3_hours">Next 3 Hours</button>
+            <button type="button" class="amz-drop-pill" data-slot="tomorrow" data-i18n="tomorrows_drops">Tomorrow's Drops</button>
+          </div>
+        </div>
+
         <!-- Featured Deal Spotlight Banner -->
         <div id="dealsSpotlightBanner"></div>
 
         <div id="dealsGrid" class="deals-grid"></div>
+
+        <!-- Floating Feedback Toast Notification -->
+        <div id="dealToastContainer" class="deal-toast-container" aria-live="polite"></div>
       </section>
     </section>
   </main>

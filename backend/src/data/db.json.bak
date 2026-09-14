@@ -39,6 +39,16 @@
       "sessionVersion": 1,
       "authActivity": [
         {
+          "id": "1788919835315-637acc",
+          "eventKey": "login",
+          "eventLabel": "OTP sign-in",
+          "createdAt": "2026-09-09T02:10:35.315Z",
+          "ip": "::ffff:127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "note": "",
+          "actor": "user"
+        },
+        {
           "id": "1788840401741-821860",
           "eventKey": "login",
           "eventLabel": "OTP sign-in",
@@ -33664,12 +33674,12 @@
       "expiresAt": "2026-09-09T02:20:24.516Z",
       "attempts": 0,
       "maxAttempts": 5,
-      "status": "pending",
+      "status": "used",
       "deliveryProvider": "simulated",
       "deliveryStatus": "sent",
       "messageId": "46d4e033-4673-496a-b96e-cbca13717e17",
       "sentAt": "2026-09-09T02:10:24.515Z",
-      "verifiedAt": null,
+      "verifiedAt": "2026-09-09T02:10:35.092Z",
       "invalidatedAt": null,
       "error": ""
     },

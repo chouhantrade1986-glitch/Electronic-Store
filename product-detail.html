@@ -61,6 +61,22 @@
           </div>
         </div>
 
+        <!-- Phase 22: Lightning Deal Countdown & Claim Progress Bar -->
+        <div class="pdp-lightning-deal-box" id="pdpLightningDealBox" style="display: none;">
+          <div class="pdp-lightning-header">
+            <span class="pdp-lightning-icon">⚡</span>
+            <span class="pdp-lightning-timer-label" id="pdpLightningTimerLabel" data-i18n="ends_in">Ends in:</span>
+            <span class="pdp-lightning-timer" id="pdpLightningTimer">--h --m --s</span>
+          </div>
+          <div class="pdp-lightning-progress-wrap" id="pdpLightningProgressWrap">
+            <div class="pdp-lightning-progress-bar">
+              <div class="pdp-lightning-progress-fill" id="pdpLightningProgressFill" style="width: 0%;"></div>
+            </div>
+            <span class="pdp-lightning-progress-text" id="pdpLightningProgressText">0% claimed</span>
+          </div>
+          <div class="pdp-lightning-urgency" id="pdpLightningUrgency"></div>
+        </div>
+
         <p id="productPrice" class="price" style="display: none;"></p>
         <p id="productListPrice" class="list-price" style="display: none;"></p>
         <p id="productDealMeta" class="deal-meta" style="display: none;"></p>
