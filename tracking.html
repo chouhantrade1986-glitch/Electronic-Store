@@ -42,10 +42,13 @@
     <div id="trackingContainer" class="amz-tracking-grid">
       <!-- Left / Main Column: Status, Stepper, Items, Activity Timeline -->
       <div class="amz-tracking-left-col">
-        <!-- 1. Header & Live Milestone Stepper Card -->
         <article class="amz-tracking-card amz-tracking-header-card">
           <h1 class="amz-tracking-eta-headline" id="trackingEtaHeadline">Arriving Tomorrow by 9 PM</h1>
           <p class="amz-tracking-status-subhead" id="trackingSubhead">On the way, on time</p>
+          <div id="trackingReturnBanner" class="amz-tracking-carrier-bar" style="display: none; background: #e6f4ea; border-color: #ceead6; color: #137333; margin-bottom: 12px;">
+            <span><strong data-i18n="return_initiated_badge">Return Initiated</strong>: Doorstep pickup scheduled with ElectroMart Logistics.</span>
+            <a href="returns.html" id="trackingReturnBannerLink" style="color: #007185; font-weight: 600; text-decoration: underline; margin-left: 8px;">View Return Slip &rsaquo;</a>
+          </div>
 
           <div class="amz-tracking-carrier-bar" id="trackingCarrierBar">
             <span><span data-i18n="carrier_label">Shipped with</span>: <strong id="trackingCarrierName">ElectroMart Logistics</strong></span>
@@ -133,6 +136,7 @@
         <div class="amz-tracking-side-card">
           <h3 class="amz-tracking-side-title" data-i18n="quick_actions">Quick Actions</h3>
           <a href="invoice.html" id="trackingInvoiceBtn" class="amz-tracking-btn-primary" target="_blank" rel="noopener" data-i18n="view_print_invoice">View or print invoice</a>
+          <a href="returns.html" id="trackingReturnBtn" class="amz-tracking-btn-secondary" style="margin-bottom: 10px; display: block; text-align: center; text-decoration: none;" data-i18n="return_or_replace">Return or replace items</a>
           <button type="button" id="trackingCancelBtn" class="amz-tracking-btn-danger" data-i18n="cancel_items">Cancel items</button>
           <a href="orders.html" class="amz-tracking-link-back" data-i18n="back_to_orders">&lsaquo; Back to Your Orders</a>
         </div>

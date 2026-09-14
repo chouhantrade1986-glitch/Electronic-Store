@@ -549,6 +549,33 @@
       }
     }
 
+    // 9. Return Center sync & banner
+    const returnBannerEl = document.getElementById('trackingReturnBanner');
+    const returnBannerLink = document.getElementById('trackingReturnBannerLink');
+    const returnBtn = document.getElementById('trackingReturnBtn');
+    const isReturnInitiated = Boolean(
+      order.returnInitiated ||
+      String(order.status || '').toLowerCase() === 'return_initiated' ||
+      String(order.status || '').toLowerCase() === 'pickup_scheduled' ||
+      (Array.isArray(order.afterSalesCases) && order.afterSalesCases.some(c => (c.type === 'return' || c.type === 'exchange') && !c.final))
+    );
+
+    if (returnBtn) {
+      returnBtn.href = `returns.html?orderId=${encodeURIComponent(order.id)}`;
+      returnBtn.textContent = isReturnInitiated ? getI18nText('view_return_slip', 'View Return Slip') : getI18nText('return_or_replace', 'Return or replace items');
+    }
+
+    if (returnBannerEl) {
+      if (isReturnInitiated) {
+        returnBannerEl.style.display = 'flex';
+        if (returnBannerLink) {
+          returnBannerLink.href = `returns.html?orderId=${encodeURIComponent(order.id)}`;
+        }
+      } else {
+        returnBannerEl.style.display = 'none';
+      }
+    }
+
     // Refresh translations
     window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
   }

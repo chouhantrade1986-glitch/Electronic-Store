@@ -1178,6 +1178,8 @@ function buildOrderView(order) {
     discount: Number(order.discount || 0),
     couponCode: String(order.couponCode || "").trim(),
     status: order.status || "processing",
+    returnInitiated: Boolean(order.returnInitiated || String(order.status || "").toLowerCase() === "return_initiated" || String(order.status || "").toLowerCase() === "pickup_scheduled"),
+    returnId: order.returnId || null,
     paymentStatus: order.paymentStatus || "pending",
     deliverySlot: order.deliverySlot && typeof order.deliverySlot === "object"
       ? {
@@ -1686,12 +1688,24 @@ function orderCard(order) {
 
   const isDelivered = String(order.status || "").toLowerCase() === "delivered";
   const isCancelled = String(order.status || "").toLowerCase() === "cancelled";
+  const isReturnInitiated = Boolean(
+    order.returnInitiated ||
+    String(order.status || "").toLowerCase() === "return_initiated" ||
+    String(order.status || "").toLowerCase() === "pickup_scheduled" ||
+    (Array.isArray(order.afterSalesCases) && order.afterSalesCases.some(c => (c.type === "return" || c.type === "exchange") && !c.final))
+  );
+
+  const returnBadge = isReturnInitiated
+    ? `<span class="badge return-initiated" style="background:#e6f4ea; color:#137333; border:1px solid #ceead6; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:6px;" data-i18n="return_initiated_badge">Return Initiated</span>`
+    : "";
   
-  const deliveryHeadline = isDelivered
-    ? `<h2 class="order-delivery-headline delivered">Delivered ${order.tracking?.eta ? `${order.tracking.eta}` : order.date}</h2><p class="order-delivery-subtext">Package was handed directly to resident.</p>`
-    : (isCancelled
-      ? `<h2 class="order-delivery-headline">Order Cancelled</h2><p class="order-delivery-subtext">This order was cancelled and will not ship.</p>`
-      : `<h2 class="order-delivery-headline">Expected Delivery: ${order.tracking?.eta || "Arriving soon"}</h2><p class="order-delivery-subtext">${statusLine(order.status)}</p>`);
+  const deliveryHeadline = isReturnInitiated
+    ? `<h2 class="order-delivery-headline" style="color:#067d62;">Return Initiated &bull; Pickup Scheduled</h2><p class="order-delivery-subtext">ElectroMart Logistics doorstep pickup is scheduled.</p>`
+    : (isDelivered
+      ? `<h2 class="order-delivery-headline delivered">Delivered ${order.tracking?.eta ? `${order.tracking.eta}` : order.date}</h2><p class="order-delivery-subtext">Package was handed directly to resident.</p>`
+      : (isCancelled
+        ? `<h2 class="order-delivery-headline">Order Cancelled</h2><p class="order-delivery-subtext">This order was cancelled and will not ship.</p>`
+        : `<h2 class="order-delivery-headline">Expected Delivery: ${order.tracking?.eta || "Arriving soon"}</h2><p class="order-delivery-subtext">${statusLine(order.status)}</p>`));
 
   const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
   const firstProductId = order.productId || (Array.isArray(order.items) && order.items[0]?.productId) || "";
@@ -1757,12 +1771,12 @@ function orderCard(order) {
           ${paymentMeta}
           ${paymentHint}
           ${afterSalesSummary}
-          <p class="status-line">${statusLine(order.status)} <span class="badge ${order.status}">${formatStatus(order.status)}</span></p>
+          <p class="status-line">${statusLine(order.status)} <span class="badge ${order.status}">${formatStatus(order.status)}</span>${returnBadge}</p>
         </div>
         <div class="order-actions">
           ${canResumePayment ? `<button type="button" class="primary resume-payment-btn" data-id="${order.id}">Resume Payment</button>` : ""}
           <a href="tracking.html?orderId=${encodeURIComponent(order.id)}" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</a>
-          ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${order.afterSalesCases.length ? "View Request" : "Return or replace items"}</button>` : ""}
+          <a href="returns.html?orderId=${encodeURIComponent(order.id)}" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${isReturnInitiated ? "Return / Replacement Details" : (order.afterSalesCases && order.afterSalesCases.length ? "View Request" : "Return or replace items")}</a>
           ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}" data-i18n="cancel_order">Cancel Order</button>` : ""}
           <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-product-id="${escapeHtml(firstProductId)}" data-i18n="write_review">Write a product review</button>
           <button type="button" class="secondary-pill-btn seller-feedback-btn" data-id="${order.id}" data-i18n="seller_feedback">Leave seller feedback</button>
@@ -2048,6 +2062,9 @@ ordersGrid.addEventListener("click", async (event) => {
 
   const afterSalesBtn = event.target.closest(".after-sales-btn");
   if (afterSalesBtn) {
+    if (afterSalesBtn.tagName === "A" && afterSalesBtn.getAttribute("href")) {
+      return;
+    }
     const orderId = String(afterSalesBtn.getAttribute("data-id") || "").trim();
     const panel = document.getElementById(`after-sales-${orderId}`);
     if (!panel) {
