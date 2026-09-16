@@ -391,10 +391,22 @@ function getPricingBreakdown(rows) {
     gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
   });
 
+  let totalExchangeDiscount = 0;
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+  selectedRows.forEach((row) => {
+    const ex = exCart[String(row.id)];
+    if (ex && ex.finalValue) {
+      totalExchangeDiscount += Number(ex.finalValue);
+    }
+  });
+
   const roundedTax = Math.round(totalGst * 100) / 100;
   const roundedSubtotal = Math.round(subtotal * 100) / 100;
   const roundedDiscount = Math.round(coupon.amount * 100) / 100;
-  const total = Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount) * 100) / 100;
+  const total = Math.max(0, Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount - totalExchangeDiscount) * 100) / 100);
 
   const rates = Object.keys(gstBreakdownByRate);
   let gstLabelSuffix = "18%";
@@ -412,6 +424,7 @@ function getPricingBreakdown(rows) {
     tax: roundedTax,
     total,
     coupon,
+    exchangeDiscount: totalExchangeDiscount,
     gstBreakdownByRate,
     gstLabelSuffix
   };
@@ -472,6 +485,16 @@ function cartItemCard(row, currentLang) {
           <span class="b2b-tier-badge" style="background:#007600;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">✓ ${row.b2bDiscountTier}</span>
           <span class="b2b-itc-badge" style="color:#007600;font-size:12px;font-weight:600;">✓ GST ITC Eligible</span>
         </div>` : ''}
+        ${(() => {
+          let c = {};
+          try { c = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}"); } catch (e) {}
+          const ex = c[String(row.id)];
+          return (ex && ex.finalValue) ? `
+          <div class="cart-exchange-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;">
+            <span>🔄 <strong>Exchange Applied:</strong> ${ex.modelName || "Device"} (-${money(ex.finalValue)})</span>
+            <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
+          </div>` : '';
+        })()}
         <label class="cart-item-gift">
           <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
         </label>
@@ -659,6 +682,13 @@ function renderCart() {
     discountRow.hidden = !showDiscount;
     discountValue.textContent = `-${money(coupon.amount || 0)}`;
   }
+  const exRow = document.getElementById("exchangeDiscountRow");
+  const exVal = document.getElementById("exchangeDiscountValue");
+  if (exRow && exVal) {
+    const showEx = Number(breakdown.exchangeDiscount || 0) > 0;
+    exRow.hidden = !showEx;
+    exVal.textContent = `-${money(breakdown.exchangeDiscount || 0)}`;
+  }
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
   }
@@ -764,6 +794,14 @@ function removeItem(productId) {
   delete unselectedMap[key];
   saveUnselectedMap(unselectedMap);
 
+  try {
+    const exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+    if (exCart[key]) {
+      delete exCart[key];
+      localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
+    }
+  } catch (e) {}
+
   renderCart();
 }
 
@@ -833,6 +871,13 @@ document.addEventListener("click", (event) => {
     updateQuantity(productId, -1);
   } else if (action === "remove") {
     removeItem(productId);
+  } else if (action === "remove-exchange") {
+    try {
+      const exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+      delete exCart[productId];
+      localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
+    } catch (e) {}
+    renderCart();
   } else if (action === "save-for-later") {
     saveForLater(productId);
   } else if (action === "move-to-cart") {
@@ -908,6 +953,9 @@ clearCartBtn.addEventListener("click", () => {
   saveCartMap({});
   saveUnselectedMap({});
   clearCouponState();
+  try {
+    localStorage.removeItem("electromart_exchange_cart_v1");
+  } catch (e) {}
   renderCart();
 });
 

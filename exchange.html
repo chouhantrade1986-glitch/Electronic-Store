@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>Device Trade-In & Instant Exchange - ElectroMart</title>
+  <meta name="description" content="Upgrade to the latest smartphones, laptops, and tablets with instant doorstep exchange discount up to ₹25,000 on ElectroMart." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="exchange.css?v=20260413a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="exchange-page-body">
+  <div id="headerContainer"></div>
+
+  <main class="exchange-main-container">
+    <!-- Breadcrumbs Navigation -->
+    <nav class="amz-breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="breadcrumb_home">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <a href="products.html" data-i18n="breadcrumb_products">Products</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current" data-i18n="exchange_nav_title">Device Trade-In & Exchange</span>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="exchange-hero-banner" id="exchangeHero">
+      <div class="exchange-hero-content">
+        <div class="exchange-hero-badge">
+          <span class="pulse-dot"></span>
+          <span data-i18n="exchange_nav_title">Device Trade-In & Exchange</span>
+        </div>
+        <h1 class="exchange-hero-title" data-i18n="exchange_hero_title">
+          Upgrade to the Latest Tech with Instant Device Exchange
+        </h1>
+        <p class="exchange-hero-subtitle" data-i18n="exchange_hero_subtitle">
+          Get up to ₹25,000 off. Instant doorstep valuation, 100% secure data wipe guarantee, and hassle-free pickup.
+        </p>
+
+        <!-- Stats Bar -->
+        <div class="exchange-stats-grid">
+          <div class="exchange-stat-card" id="heroExchangeMaxVal">
+            <span class="stat-value">₹25,000</span>
+            <span class="stat-label" data-i18n="exchange_stat_max_value">Max Exchange Value</span>
+          </div>
+          <div class="exchange-stat-card" id="heroExchangeStatVerified">
+            <span class="stat-value" data-i18n="exchange_stat_verification_val">10 Minutes</span>
+            <span class="stat-label" data-i18n="exchange_stat_verification_time">Doorstep Verification</span>
+          </div>
+          <div class="exchange-stat-card">
+            <span class="stat-value" data-i18n="exchange_stat_devices_val">1.2 Lakh+</span>
+            <span class="stat-label" data-i18n="exchange_stat_devices_exchanged">Devices Exchanged</span>
+          </div>
+          <div class="exchange-stat-card" id="heroExchangeStatDataWipe">
+            <span class="stat-value" data-i18n="exchange_stat_data_val">100% Certified</span>
+            <span class="stat-label" data-i18n="exchange_stat_data_security">Data Privacy & Reset</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Valuation Calculator Section -->
+    <section class="exchange-calc-section" id="exchangeCalculator">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="exchange_calc_title">Calculate Your Device's Instant Exchange Value</h2>
+        <p class="section-subtitle" data-i18n="exchange_calc_subtitle">Select your device brand, model and condition for an accurate doorstep quote</p>
+      </div>
+
+      <div class="exchange-calc-card">
+        <!-- Step 1: Category Selection -->
+        <div class="calc-step-block">
+          <h3 class="step-heading">
+            <span class="step-num">1</span>
+            <span data-i18n="exchange_step1_cat">1. Select Category</span>
+          </h3>
+          <div class="calc-category-pills" id="calcCategoryPills">
+            <button type="button" class="calc-cat-pill active" data-category="smartphones" id="catBtnSmartphones">
+              <span class="cat-icon">📱</span>
+              <span data-i18n="exchange_cat_smartphones">Smartphones</span>
+            </button>
+            <button type="button" class="calc-cat-pill" data-category="laptops" id="catBtnLaptops">
+              <span class="cat-icon">💻</span>
+              <span data-i18n="exchange_cat_laptops">Laptops</span>
+            </button>
+            <button type="button" class="calc-cat-pill" data-category="tablets" id="catBtnTablets">
+              <span class="cat-icon">📟</span>
+              <span data-i18n="exchange_cat_tablets">Tablets</span>
+            </button>
+            <button type="button" class="calc-cat-pill" data-category="smartwatches" id="catBtnSmartwatches">
+              <span class="cat-icon">⌚</span>
+              <span data-i18n="exchange_cat_smartwatches">Smartwatches</span>
+            </button>
+            <button type="button" class="calc-cat-pill" data-category="audio" id="catBtnAudio">
+              <span class="cat-icon">🎧</span>
+              <span data-i18n="exchange_cat_audio">Headphones & Audio</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Brand & Model Selection -->
+        <div class="calc-step-block">
+          <h3 class="step-heading">
+            <span class="step-num">2</span>
+            <span data-i18n="exchange_step2_model">2. Select Brand & Model</span>
+          </h3>
+
+          <div class="calc-brand-chips" id="calcBrandChips">
+            <!-- Dynamically populated chips -->
+          </div>
+
+          <div class="calc-model-selection-row">
+            <div class="calc-field-group">
+              <label for="exchangeBrandSelect" data-i18n="exchange_select_brand">Select Brand</label>
+              <select id="exchangeBrandSelect" class="calc-select">
+                <option value="">-- Choose Brand --</option>
+              </select>
+            </div>
+            <div class="calc-field-group">
+              <label for="exchangeModelSelect" data-i18n="exchange_select_model">Select Model</label>
+              <select id="exchangeModelSelect" class="calc-select" disabled>
+                <option value="">-- Select Model --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-search-row">
+            <input type="text" id="exchangeModelSearch" class="calc-search-input" placeholder="Search device model (e.g. iPhone 13, Galaxy S22)..." data-i18n-placeholder="exchange_search_model_placeholder" />
+            <div id="exchangeSearchResults" class="calc-search-dropdown" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- Step 3: Diagnostic Condition Assessment -->
+        <div class="calc-step-block" id="calcConditionStep">
+          <h3 class="step-heading">
+            <span class="step-num">3</span>
+            <span data-i18n="exchange_step3_condition">3. Check Device Condition</span>
+          </h3>
+
+          <!-- Q1: Power on test -->
+          <div class="diagnostic-group">
+            <p class="diag-question" data-i18n="exchange_q_power">Does the device power on and hold charge without charger?</p>
+            <div class="diag-options-row">
+              <label class="diag-radio-card">
+                <input type="radio" name="diagPower" value="yes" checked id="condPowerYes" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">⚡</span>
+                  <div>
+                    <strong data-i18n="exchange_q_power_yes">Yes, boots and operates normally</strong>
+                  </div>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagPower" value="no" id="condPowerNo" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">⚠️</span>
+                  <div>
+                    <strong data-i18n="exchange_q_power_no">No, won't turn on or battery dead</strong>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q2: Screen condition -->
+          <div class="diagnostic-group">
+            <p class="diag-question" data-i18n="exchange_q_screen">What is the condition of the screen?</p>
+            <div class="diag-options-grid">
+              <label class="diag-radio-card">
+                <input type="radio" name="diagScreen" value="flawless" checked id="condScreenFlawless" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">✨</span>
+                  <strong data-i18n="exchange_q_screen_flawless">Flawless / Like New (no scratches)</strong>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagScreen" value="minor" id="condScreenMinor" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">🔍</span>
+                  <strong data-i18n="exchange_q_screen_minor">Minor Scratches (visible under light)</strong>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagScreen" value="heavy" id="condScreenHeavy" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">〰️</span>
+                  <strong data-i18n="exchange_q_screen_heavy">Heavy Scratches / Deep Marks</strong>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagScreen" value="cracked" id="condScreenCracked" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">💥</span>
+                  <strong data-i18n="exchange_q_screen_cracked">Cracked Glass / Display Lines / Dead Touch</strong>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3: Body condition -->
+          <div class="diagnostic-group">
+            <p class="diag-question" data-i18n="exchange_q_body">What is the physical condition of the body / casing?</p>
+            <div class="diag-options-grid">
+              <label class="diag-radio-card">
+                <input type="radio" name="diagBody" value="flawless" checked id="condBodyFlawless" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">🛡️</span>
+                  <strong data-i18n="exchange_q_body_flawless">No Dents or Scratches (Pristine)</strong>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagBody" value="minor" id="condBodyMinor" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">🏷️</span>
+                  <strong data-i18n="exchange_q_body_minor">Minor Dents or Light Wear (Normal use)</strong>
+                </div>
+              </label>
+              <label class="diag-radio-card">
+                <input type="radio" name="diagBody" value="heavy" id="condBodyHeavy" />
+                <div class="diag-card-content">
+                  <span class="diag-icon">🔨</span>
+                  <strong data-i18n="exchange_q_body_heavy">Heavy Dents / Bent Frame / Broken Casing</strong>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Instant Valuation Quote Result Card -->
+        <div class="calc-step-block calc-quote-container" id="exchangeQuoteSection">
+          <h3 class="step-heading">
+            <span class="step-num">4</span>
+            <span data-i18n="exchange_step4_quote">4. Instant Valuation Quote</span>
+          </h3>
+
+          <div class="quote-result-card" id="exchangeQuoteCard">
+            <div class="quote-header">
+              <div class="quote-device-info">
+                <span class="quote-device-category" id="quoteDeviceCategory">Smartphones</span>
+                <h4 class="quote-device-name" id="quoteDeviceName">Apple iPhone 13 (128 GB)</h4>
+              </div>
+              <div class="quote-status-badge">
+                <span class="verified-icon">✓</span> Verified Valuation
+              </div>
+            </div>
+
+            <div class="quote-amount-display">
+              <span class="quote-currency">₹</span>
+              <span class="quote-number" id="quoteFinalValue">14,500</span>
+              <span class="quote-badge-discount" id="quoteDiscountBadge">Instant Discount</span>
+            </div>
+
+            <div class="quote-breakdown-table">
+              <div class="quote-breakdown-row">
+                <span data-i18n="exchange_base_value">Base Model Value:</span>
+                <strong id="quoteBaseValue">₹13,500</strong>
+              </div>
+              <div class="quote-breakdown-row" id="quoteAdjustmentRow">
+                <span data-i18n="exchange_condition_adjustment">Condition Adjustment:</span>
+                <strong id="quoteAdjustmentValue" class="quote-minus">-₹0</strong>
+              </div>
+              <div class="quote-breakdown-row">
+                <span data-i18n="exchange_tradein_bonus">ElectroMart Exchange Bonus:</span>
+                <strong id="quoteBonusValue" class="quote-bonus">+₹1,000</strong>
+              </div>
+              <div class="quote-breakdown-row quote-total-row">
+                <span data-i18n="exchange_total_quote">Total Exchange Savings:</span>
+                <strong id="quoteTotalSavings" class="quote-total">₹14,500</strong>
+              </div>
+            </div>
+
+            <div class="quote-code-strip">
+              <span>Trade-In Voucher Code: <strong id="quoteVoucherCode">EM-EX-948210</strong></span>
+              <button type="button" class="btn-copy-quote" id="btnCopyQuoteCode" data-i18n="exchange_copy_quote_btn">Copy Code</button>
+            </div>
+
+            <p class="quote-validity-notice" data-i18n="exchange_quote_validity">
+              Quote valid for 7 days upon doorstep inspection
+            </p>
+
+            <div class="quote-actions-row">
+              <a href="products.html?exchange=active" class="btn-apply-quote" id="btnApplyQuoteToOrder" data-i18n="exchange_apply_to_order_btn">
+                Apply to New Device ›
+              </a>
+              <button type="button" class="btn-reset-calc" id="btnResetCalculator">
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How Doorstep Device Exchange Works -->
+    <section class="exchange-how-section" id="howExchangeWorks">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="exchange_how_title">How Doorstep Device Exchange Works</h2>
+        <p class="section-subtitle" data-i18n="exchange_how_subtitle">Seamless 4-step upgrade process right at your home</p>
+      </div>
+
+      <div class="how-steps-grid">
+        <div class="how-step-card">
+          <div class="how-step-badge">Step 1</div>
+          <div class="how-step-icon">💻</div>
+          <h3 class="how-step-title" data-i18n="exchange_step1_title">1. Instant Online Valuation</h3>
+          <p class="how-step-desc" data-i18n="exchange_step1_desc">
+            Choose your old device and answer 3 quick questions to get guaranteed valuation.
+          </p>
+        </div>
+
+        <div class="how-step-card">
+          <div class="how-step-badge">Step 2</div>
+          <div class="how-step-icon">🛒</div>
+          <h3 class="how-step-title" data-i18n="exchange_step2_title">2. Place Order with Exchange Discount</h3>
+          <p class="how-step-desc" data-i18n="exchange_step2_desc">
+            Exchange discount is instantly deducted from your cart total. Pay only the difference.
+          </p>
+        </div>
+
+        <div class="how-step-card">
+          <div class="how-step-badge">Step 3</div>
+          <div class="how-step-icon">🚚</div>
+          <h3 class="how-step-title" data-i18n="exchange_step3_title">3. Doorstep Diagnostic Check</h3>
+          <p class="how-step-desc" data-i18n="exchange_step3_desc">
+            Our delivery associate runs a quick 5-minute diagnostic test to verify device condition.
+          </p>
+        </div>
+
+        <div class="how-step-card">
+          <div class="how-step-badge">Step 4</div>
+          <div class="how-step-icon">🎁</div>
+          <h3 class="how-step-title" data-i18n="exchange_step4_title">4. Handover & Upgrade</h3>
+          <p class="how-step-desc" data-i18n="exchange_step4_desc">
+            Hand over your old device and receive your brand new product on the spot.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Doorstep Handover Checklist -->
+    <section class="exchange-checklist-section" id="exchangeChecklist">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="exchange_checklist_title">Doorstep Handover Checklist</h2>
+        <p class="section-subtitle" data-i18n="exchange_checklist_subtitle">Keep these ready before the delivery associate arrives</p>
+      </div>
+
+      <div class="checklist-grid">
+        <div class="checklist-item-card">
+          <div class="checklist-check-circle">✓</div>
+          <div class="checklist-item-text">
+            <h4>Data Backup</h4>
+            <p data-i18n="exchange_check_1">Backup all personal photos, files and chats to cloud or drive.</p>
+          </div>
+        </div>
+
+        <div class="checklist-item-card">
+          <div class="checklist-check-circle">✓</div>
+          <div class="checklist-item-text">
+            <h4>Account Sign Out</h4>
+            <p data-i18n="exchange_check_2">Sign out of Google Account, Apple ID / iCloud, and remove screen lock.</p>
+          </div>
+        </div>
+
+        <div class="checklist-item-card">
+          <div class="checklist-check-circle">✓</div>
+          <div class="checklist-item-text">
+            <h4>Factory Reset</h4>
+            <p data-i18n="exchange_check_3">Perform a Factory Data Reset to erase personal information.</p>
+          </div>
+        </div>
+
+        <div class="checklist-item-card">
+          <div class="checklist-check-circle">✓</div>
+          <div class="checklist-item-text">
+            <h4>50%+ Battery</h4>
+            <p data-i18n="exchange_check_4">Charge the device to at least 50% battery for doorstep diagnostic test.</p>
+          </div>
+        </div>
+
+        <div class="checklist-item-card">
+          <div class="checklist-check-circle">✓</div>
+          <div class="checklist-item-text">
+            <h4>ID & Accessories</h4>
+            <p data-i18n="exchange_check_5">Keep Government ID proof and original accessories ready (if bonus selected).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eligible Upgrade Categories -->
+    <section class="exchange-categories-section">
+      <div class="section-header-center">
+        <h2 class="section-title">Popular Upgrade Categories</h2>
+        <p class="section-subtitle">Use your exchange discount across these top product segments</p>
+      </div>
+
+      <div class="upgrade-categories-grid" id="upgradeCategoriesGrid">
+        <a href="products.html?category=Laptops" class="upgrade-category-card">
+          <span class="cat-icon-large">💻</span>
+          <h3>Laptops</h3>
+          <p>MacBooks, Thin & Light, Gaming Laptops</p>
+          <span class="category-link-text">Browse Laptops &rsaquo;</span>
+        </a>
+
+        <a href="products.html?category=Mobiles" class="upgrade-category-card">
+          <span class="cat-icon-large">📱</span>
+          <h3>Smartphones</h3>
+          <p>5G Flagships, Pro Cameras, High Battery</p>
+          <span class="category-link-text">Browse Smartphones &rsaquo;</span>
+        </a>
+
+        <a href="products.html?category=Tablets" class="upgrade-category-card">
+          <span class="cat-icon-large">📟</span>
+          <h3>Tablets & iPads</h3>
+          <p>iPad Pro, Galaxy Tab, Stylus Supported</p>
+          <span class="category-link-text">Browse Tablets &rsaquo;</span>
+        </a>
+
+        <a href="products.html?category=Audio" class="upgrade-category-card">
+          <span class="cat-icon-large">🎧</span>
+          <h3>Headphones & Audio</h3>
+          <p>Active Noise Cancelling, Studio Sound</p>
+          <span class="category-link-text">Browse Audio &rsaquo;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="exchange-faq-section">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="exchange_faq_title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="exchange-faq-accordion" id="exchangeFaqAccordion">
+        <details class="faq-item" open>
+          <summary class="faq-question" data-i18n="exchange_faq_q1">When will my old device be picked up?</summary>
+          <div class="faq-answer">
+            <p data-i18n="exchange_faq_a1">Your old device is picked up at the exact same time your new product is delivered at your doorstep.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question" data-i18n="exchange_faq_q2">What if my old device fails the doorstep inspection?</summary>
+          <div class="faq-answer">
+            <p data-i18n="exchange_faq_a2">If the device condition does not match the assessment, you can pay the exchange discount difference via UPI/card or cancel the exchange without penalty.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question" data-i18n="exchange_faq_q3">Do I need to provide the original box and charger?</summary>
+          <div class="faq-answer">
+            <p data-i18n="exchange_faq_a3">Original box and charger are optional, but including them may earn you an extra ElectroMart Exchange Bonus of up to ₹500.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question" data-i18n="exchange_faq_q4">Is my personal data safe during trade-in?</summary>
+          <div class="faq-answer">
+            <p data-i18n="exchange_faq_a4">Yes, all exchanged devices undergo a certified multi-pass military-grade data wipe before refurbishment or responsible recycling.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <div id="footerContainer"></div>
+
+  <!-- Toast Notification Stack -->
+  <div id="exchangeToastStack" class="exchange-toast-stack" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="translations.js?v=20260413a"></script>
+  <script src="header.js?v=20260413a"></script>
+  <script src="exchange.js?v=20260413a"></script>
+</body>
+</html>

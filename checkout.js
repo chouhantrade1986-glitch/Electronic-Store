@@ -862,16 +862,39 @@ function renderCheckoutItems(rows) {
     return;
   }
 
-  checkoutItemsEl.innerHTML = rows.map((row) => `
-    <article class="checkout-item">
-      <img src="${row.image}" alt="${row.name}" loading="lazy" />
-      <div>
-        <h3>${row.name}</h3>
-        <p>Qty: ${row.quantity}</p>
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+
+  const hasAnyExchange = rows.some((r) => exCart[String(r.id)] && exCart[String(r.id)].finalValue);
+
+  const doorstepNoticeHtml = hasAnyExchange ? `
+    <div class="checkout-exchange-doorstep-notice" style="background:#fff8e7;border:1px solid #e77600;border-radius:6px;padding:8px 12px;margin:0 0 12px 0;font-size:12px;color:#0f1111;">
+      🚚 <strong>Doorstep Device Exchange:</strong> Keep your old device powered on (50%+ battery) with iCloud/Google accounts removed and data backed up for instant verification at the time of delivery.
+    </div>
+  ` : "";
+
+  checkoutItemsEl.innerHTML = doorstepNoticeHtml + rows.map((row) => {
+    const ex = exCart[String(row.id)];
+    const exchangeHtml = (ex && ex.finalValue) ? `
+      <div class="checkout-exchange-pill" style="display:inline-block;background:#e7f4f5;border:1px solid #007185;padding:2px 8px;border-radius:4px;font-size:12px;color:#007185;margin-top:4px;">
+        🔄 <strong>Exchange:</strong> ${ex.modelName || "Device"} (IMEI/SN: ${ex.imei || "Verified"}) · <strong style="color:#007600;">-${money(ex.finalValue)}</strong>
       </div>
-      <strong class="item-line-total">${money(row.quantity * row.price)}</strong>
-    </article>
-  `).join("");
+    ` : "";
+
+    return `
+      <article class="checkout-item">
+        <img src="${row.image}" alt="${row.name}" loading="lazy" />
+        <div>
+          <h3>${row.name}</h3>
+          <p>Qty: ${row.quantity}</p>
+          ${exchangeHtml}
+        </div>
+        <strong class="item-line-total">${money(row.quantity * row.price)}</strong>
+      </article>
+    `;
+  }).join("");
   placeOrderBtn.disabled = false;
 }
 
@@ -900,10 +923,22 @@ function getPricingBreakdown(rows) {
     gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
   });
 
+  let totalExchangeDiscount = 0;
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+  rows.forEach((row) => {
+    const ex = exCart[String(row.id)];
+    if (ex && ex.finalValue) {
+      totalExchangeDiscount += Number(ex.finalValue);
+    }
+  });
+
   const roundedTax = Math.round(totalGst * 100) / 100;
   const roundedSubtotal = Math.round(subtotal * 100) / 100;
   const roundedDiscount = Math.round(coupon.amount * 100) / 100;
-  const total = Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount) * 100) / 100;
+  const total = Math.max(0, Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount - totalExchangeDiscount) * 100) / 100);
 
   const rates = Object.keys(gstBreakdownByRate);
   let gstLabelSuffix = "18%";
@@ -921,6 +956,7 @@ function getPricingBreakdown(rows) {
     tax: roundedTax,
     total,
     coupon,
+    exchangeDiscount: totalExchangeDiscount,
     gstBreakdownByRate,
     gstLabelSuffix
   };
@@ -965,6 +1001,13 @@ function renderSummary(rows) {
     const showDiscount = Number(coupon.amount || 0) > 0;
     discountRow.hidden = !showDiscount;
     discountValue.textContent = `-${money(coupon.amount || 0)}`;
+  }
+  const checkoutExRow = document.getElementById("checkoutExchangeDiscountRow");
+  const checkoutExVal = document.getElementById("checkoutExchangeDiscountValue");
+  if (checkoutExRow && checkoutExVal) {
+    const showEx = Number(breakdown.exchangeDiscount || 0) > 0;
+    checkoutExRow.hidden = !showEx;
+    checkoutExVal.textContent = `-${money(breakdown.exchangeDiscount || 0)}`;
   }
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
@@ -1313,8 +1356,33 @@ function createOfflineOrder(rows, paymentMethod, shippingAddress) {
     tax,
     total,
     discount: Number(coupon.amount || 0),
-    couponCode: coupon.code || ""
+    couponCode: coupon.code || "",
+    exchangeDiscount: Number(getPricingBreakdown(rows).exchangeDiscount || 0),
+    exchangeDetails: (() => {
+      let exCart = {};
+      try { exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}"); } catch (e) {}
+      const details = [];
+      rows.forEach((r) => {
+        const ex = exCart[String(r.id)];
+        if (ex && ex.finalValue) {
+          details.push({
+            targetProductId: String(r.id),
+            targetProductName: r.name,
+            exchangeDeviceName: ex.modelName,
+            category: ex.category,
+            brand: ex.brand,
+            imei: ex.imei,
+            discountAmount: Number(ex.finalValue),
+            status: "pending_pickup"
+          });
+        }
+      });
+      return details.length > 0 ? details : null;
+    })()
   });
+  try {
+    localStorage.removeItem("electromart_exchange_cart_v1");
+  } catch (e) {}
   saveOfflineOrders(orders);
   appendOfflineOrderNotification(orderId, createdAt, "ordered", "Order placed");
 
@@ -1516,6 +1584,9 @@ async function handlePlaceOrder() {
     pendingGatewayOrderContext = null;
     saveCartMap({});
     clearCouponState();
+    try {
+      localStorage.removeItem("electromart_exchange_cart_v1");
+    } catch (e) {}
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(order.id)}`;
   } catch (error) {
     const missingProductIds = extractMissingProductIdsFromError(error);

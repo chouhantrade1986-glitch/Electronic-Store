@@ -510,6 +510,23 @@
       }).join('');
     }
 
+    // Phase 30: Doorstep Device Exchange Card
+    const exchangeBanner = document.getElementById('trackingExchangeBanner');
+    const exchangeDeviceNameEl = document.getElementById('trackingExchangeDeviceName');
+    const hasExchange = Array.isArray(order.exchangeDetails) && order.exchangeDetails.length > 0;
+
+    if (exchangeBanner) {
+      if (hasExchange) {
+        exchangeBanner.style.display = 'block';
+        if (exchangeDeviceNameEl) {
+          const names = order.exchangeDetails.map(ex => `${ex.exchangeDeviceName || "Trade-In Device"} (IMEI/SN: ${ex.imei || "Verified"})`).join(', ');
+          exchangeDeviceNameEl.textContent = names;
+        }
+      } else {
+        exchangeBanner.style.display = 'none';
+      }
+    }
+
     // 5. Expandable Activity Timeline
     const timelineListEl = document.getElementById('trackingTimelineList');
     if (timelineListEl) {

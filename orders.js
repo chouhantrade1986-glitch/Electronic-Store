@@ -1684,6 +1684,11 @@ function orderCard(order) {
   const paymentHint = canResumePayment
     ? `<p class="payment-hint">This order is waiting for payment capture. Resume checkout to complete it.</p>`
     : "";
+  const exchangeMeta = (Array.isArray(order.exchangeDetails) && order.exchangeDetails.length > 0)
+    ? `<p class="order-exchange-meta" style="background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;display:inline-block;">
+        🔄 <strong>Includes Device Exchange:</strong> ${order.exchangeDetails.map(ex => `${escapeHtml(ex.exchangeDeviceName || "Trade-In Device")} (-${money(ex.discountAmount)})`).join(", ")}
+      </p>`
+    : "";
   const canCancelOrder = isOrderCancelEligible(order);
 
   const isDelivered = String(order.status || "").toLowerCase() === "delivered";
@@ -1759,6 +1764,7 @@ function orderCard(order) {
           </h3>
           <p class="seller-line">Sold by: <strong>ElectroMart Retail Pvt Ltd</strong> | Return eligible within 7 days</p>
           <p class="order-item-price">${money(order.total)}</p>
+          ${exchangeMeta}
           <button type="button" class="amz-buy-again-inline-btn" data-product-id="${escapeHtml(firstProductId)}" data-product-title="${escapeHtml(order.product)}">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>

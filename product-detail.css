@@ -1274,3 +1274,442 @@ a {
   border-color: #005a6a;
   color: #005a6a;
 }
+
+/* =============================================================================
+   Phase 30: PDP Instant Exchange Offer Selector & Valuation Modal Styles
+   ============================================================================= */
+.pdp-exchange-selector-card {
+  margin: 14px 0;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.exchange-radio-option {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e7e7e7;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.exchange-radio-option:last-child {
+  border-bottom: none;
+}
+
+.exchange-radio-option:hover {
+  background-color: #fcfdfd;
+}
+
+.exchange-radio-option.selected {
+  background-color: #f7fafa;
+  border-left: 3px solid #007185;
+}
+
+.exchange-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.exchange-radio-label input[type="radio"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #007185;
+}
+
+.exchange-radio-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  font-size: 13px;
+  color: #0f1111;
+}
+
+.exchange-radio-price {
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.exchange-badge-pill {
+  background: #e7f4f5;
+  color: #007185;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.pdp-exchange-details-panel {
+  padding: 12px 14px 10px 26px;
+  border-top: 1px dashed #d5d9d9;
+  background: #ffffff;
+}
+
+.pdp-exchange-pincode-box {
+  margin-bottom: 12px;
+}
+
+.pdp-pincode-input-group {
+  display: flex;
+  gap: 6px;
+}
+
+.pdp-exchange-pincode-input {
+  flex: 1;
+  border: 1px solid #d5d9d9;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+}
+
+.pdp-exchange-pincode-input:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 0 2px rgba(231, 118, 0, 0.2);
+}
+
+.btn-check-pincode {
+  background: #f0f2f2;
+  border: 1px solid #d5d9d9;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-check-pincode:hover {
+  background: #e3e6e6;
+}
+
+.pdp-pincode-feedback {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.pdp-pincode-feedback.eligible {
+  color: #067d62;
+}
+
+.pdp-pincode-feedback.ineligible {
+  color: #cc0c39;
+}
+
+.btn-pdp-choose-exchange {
+  width: 100%;
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+}
+
+.btn-pdp-choose-exchange:hover {
+  background: #f7ca00;
+}
+
+.pdp-applied-exchange-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.applied-exchange-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.applied-icon {
+  font-size: 16px;
+}
+
+.applied-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.applied-title {
+  font-size: 11px;
+  color: #166534;
+  font-weight: 600;
+}
+
+.applied-info strong {
+  font-size: 13px;
+  color: #0f1111;
+}
+
+.applied-savings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed #bbf7d0;
+  padding-top: 6px;
+}
+
+.applied-savings-badge {
+  font-size: 14px;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.applied-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #888888;
+}
+
+.applied-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #007185;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.applied-link-btn:hover {
+  text-decoration: underline;
+  color: #c45500;
+}
+
+.applied-link-btn.applied-remove {
+  color: #cc0c39;
+}
+
+/* Valuation Modal Dialog */
+.exchange-modal-dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
+  max-width: 540px;
+  width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+}
+
+.exchange-modal-dialog::backdrop {
+  background: rgba(15, 17, 17, 0.65);
+  backdrop-filter: blur(2px);
+}
+
+.modal-dialog-content {
+  background: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f7f9fa;
+  border-bottom: 1px solid #d5d9d9;
+}
+
+.modal-dialog-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #565959;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-dialog-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.modal-wizard-step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-step-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.modal-category-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-cat-pill {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-cat-pill.active {
+  background: #007185;
+  color: #ffffff;
+  border-color: #007185;
+}
+
+.modal-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.modal-select {
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.modal-diag-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f8fafb;
+  border: 1px solid #e7ecee;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.modal-q-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.modal-radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.modal-quote-summary-card {
+  background: #e7f4f5;
+  border: 1px solid #bce1e5;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.modal-quote-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.modal-quote-highlight {
+  font-size: 20px;
+  color: #007185;
+  font-weight: 800;
+}
+
+.modal-imei-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-imei-input {
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.imei-hint-text {
+  font-size: 11px;
+  color: #565959;
+}
+
+.modal-imei-error {
+  color: #cc0c39;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modal-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  background: #f7f9fa;
+  border-top: 1px solid #d5d9d9;
+}
+
+.btn-modal-cancel {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-modal-apply {
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-modal-apply:hover {
+  background: #f7ca00;
+}
+

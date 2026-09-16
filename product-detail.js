@@ -2583,6 +2583,352 @@ function renderFrequentlyBoughtTogether(product, t) {
   }
 }
 
+// ==========================================
+// Phase 30: ElectroMart PDP Instant Exchange Flow
+// ==========================================
+const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
+
+const PDP_EXCHANGE_CATALOG = {
+  smartphones: {
+    brands: ["Apple", "Samsung", "OnePlus", "Xiaomi"],
+    models: [
+      { brand: "Apple", name: "Apple iPhone 14 Pro Max (128 GB)", baseValue: 24000 },
+      { brand: "Apple", name: "Apple iPhone 14 Pro (128 GB)", baseValue: 21000 },
+      { brand: "Apple", name: "Apple iPhone 13 (128 GB)", baseValue: 14000 },
+      { brand: "Apple", name: "Apple iPhone 12 (64 GB)", baseValue: 10500 },
+      { brand: "Apple", name: "Apple iPhone 11 (64 GB)", baseValue: 7500 },
+      { brand: "Samsung", name: "Samsung Galaxy S23 Ultra 5G", baseValue: 22000 },
+      { brand: "Samsung", name: "Samsung Galaxy S22 5G", baseValue: 13500 },
+      { brand: "Samsung", name: "Samsung Galaxy Note 20", baseValue: 9000 },
+      { brand: "Samsung", name: "Samsung Galaxy A54 5G", baseValue: 6500 },
+      { brand: "OnePlus", name: "OnePlus 11 5G (16GB RAM)", baseValue: 15000 },
+      { brand: "OnePlus", name: "OnePlus 10 Pro 5G", baseValue: 11000 },
+      { brand: "OnePlus", name: "OnePlus Nord CE 3 5G", baseValue: 5500 },
+      { brand: "Xiaomi", name: "Xiaomi 13 Pro 5G", baseValue: 14000 },
+      { brand: "Xiaomi", name: "Redmi Note 12 Pro 5G", baseValue: 5000 }
+    ]
+  },
+  laptops: {
+    brands: ["Apple", "Dell", "HP", "Lenovo", "Asus"],
+    models: [
+      { brand: "Apple", name: "Apple MacBook Pro 14 M2 Pro", baseValue: 24500 },
+      { brand: "Apple", name: "Apple MacBook Air 13 M1", baseValue: 18000 },
+      { brand: "Dell", name: "Dell XPS 15 OLED Core i7", baseValue: 19000 },
+      { brand: "Dell", name: "Dell Inspiron 15 Core i5", baseValue: 9500 },
+      { brand: "HP", name: "HP Spectre x360 2-in-1 Touch", baseValue: 18500 },
+      { brand: "HP", name: "HP Pavilion 15 Gaming Core i5", baseValue: 8500 },
+      { brand: "Lenovo", name: "Lenovo ThinkPad X1 Carbon Gen 9", baseValue: 19500 },
+      { brand: "Lenovo", name: "Lenovo IdeaPad Slim 3 Core i3", baseValue: 7500 },
+      { brand: "Asus", name: "Asus ROG Zephyrus G14 Ryzen 7", baseValue: 17000 }
+    ]
+  },
+  tablets: {
+    brands: ["Apple", "Samsung"],
+    models: [
+      { brand: "Apple", name: "Apple iPad Pro 11-inch M1 (128 GB)", baseValue: 16000 },
+      { brand: "Apple", name: "Apple iPad Air 5th Gen (64 GB)", baseValue: 12500 },
+      { brand: "Apple", name: "Apple iPad 10th Gen (64 GB)", baseValue: 8000 },
+      { brand: "Samsung", name: "Samsung Galaxy Tab S8 11-inch", baseValue: 13000 },
+      { brand: "Samsung", name: "Samsung Galaxy Tab A8 10.5", baseValue: 4500 }
+    ]
+  },
+  smartwatches: {
+    brands: ["Apple", "Samsung"],
+    models: [
+      { brand: "Apple", name: "Apple Watch Series 8 GPS 45mm", baseValue: 9000 },
+      { brand: "Apple", name: "Apple Watch SE GPS 44mm", baseValue: 5000 },
+      { brand: "Samsung", name: "Samsung Galaxy Watch 5 Pro", baseValue: 7500 }
+    ]
+  },
+  audio: {
+    brands: ["Sony", "Bose", "Apple"],
+    models: [
+      { brand: "Sony", name: "Sony WH-1000XM5 Wireless ANC", baseValue: 11000 },
+      { brand: "Bose", name: "Bose QuietComfort 45 Headphones", baseValue: 9500 },
+      { brand: "Apple", name: "Apple AirPods Pro (2nd Gen)", baseValue: 7500 }
+    ]
+  }
+};
+
+function openExchangeModal(product, currentPrice) {
+  const modal = document.getElementById("exchangeValuationModal");
+  if (!modal) return;
+  const catSelect = document.getElementById("modalCategorySelect");
+  const brandSelect = document.getElementById("modalBrandSelect");
+  const modelSelect = document.getElementById("modalModelSelect");
+  const screenSelect = document.getElementById("modalDiagScreen");
+  const bodySelect = document.getElementById("modalDiagBody");
+  const quoteValEl = document.getElementById("modalQuoteVal");
+  const imeiInput = document.getElementById("modalExchangeImei");
+  const imeiError = document.getElementById("modalImeiError");
+  const cancelBtn = document.getElementById("btnCancelExchangeModal");
+  const applyBtn = document.getElementById("btnApplyExchangeModal");
+  const closeBtn = document.getElementById("modalCloseBtn");
+
+  const catalog = window.ELECTROMART_EXCHANGE_CATALOG || PDP_EXCHANGE_CATALOG;
+
+  function populateBrands() {
+    const cat = catSelect ? catSelect.value : "smartphones";
+    const data = catalog[cat] || catalog.smartphones;
+    if (brandSelect) {
+      brandSelect.innerHTML = data.brands.map(b => `<option value="${b}">${b}</option>`).join("");
+      populateModels();
+    }
+  }
+
+  function populateModels() {
+    const cat = catSelect ? catSelect.value : "smartphones";
+    const brand = brandSelect ? brandSelect.value : "";
+    const data = catalog[cat] || catalog.smartphones;
+    const models = data.models.filter(m => !brand || m.brand === brand);
+    if (modelSelect) {
+      modelSelect.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join("");
+      updateQuote();
+    }
+  }
+
+  function updateQuote() {
+    const cat = catSelect ? catSelect.value : "smartphones";
+    const data = catalog[cat] || catalog.smartphones;
+    const modelName = modelSelect ? modelSelect.value : "";
+    const model = data.models.find(m => m.name === modelName) || data.models[0];
+    const base = model ? model.baseValue : 10000;
+    const powerRadio = document.querySelector('input[name="modalDiagPower"]:checked');
+    const powerOn = powerRadio ? powerRadio.value === "yes" : true;
+    let val = base;
+    if (!powerOn) {
+      val = Math.round(base * 0.2);
+    } else {
+      const s = screenSelect ? screenSelect.value : "flawless";
+      const b = bodySelect ? bodySelect.value : "flawless";
+      const sDed = s === "minor" ? 1000 : s === "heavy" ? 2500 : s === "cracked" ? 5000 : 0;
+      const bDed = b === "minor" ? 500 : b === "heavy" ? 1500 : 0;
+      val = Math.max(500, base - sDed - bDed);
+    }
+    const finalVal = Math.min(25000, val + 1000); // 1000 ElectroMart trade-in bonus
+    if (quoteValEl) {
+      quoteValEl.textContent = "₹" + finalVal.toLocaleString("en-IN");
+    }
+    return { model: model || { name: modelName || "Device" }, finalVal, category: cat, brand: brandSelect ? brandSelect.value : "" };
+  }
+
+  if (catSelect && !catSelect._bound) {
+    catSelect._bound = true;
+    catSelect.addEventListener("change", populateBrands);
+  }
+  if (brandSelect && !brandSelect._bound) {
+    brandSelect._bound = true;
+    brandSelect.addEventListener("change", populateModels);
+  }
+  if (modelSelect && !modelSelect._bound) {
+    modelSelect._bound = true;
+    modelSelect.addEventListener("change", updateQuote);
+  }
+  if (screenSelect && !screenSelect._bound) {
+    screenSelect._bound = true;
+    screenSelect.addEventListener("change", updateQuote);
+  }
+  if (bodySelect && !bodySelect._bound) {
+    bodySelect._bound = true;
+    bodySelect.addEventListener("change", updateQuote);
+  }
+  document.querySelectorAll('input[name="modalDiagPower"]').forEach(r => {
+    if (!r._bound) {
+      r._bound = true;
+      r.addEventListener("change", updateQuote);
+    }
+  });
+
+  populateBrands();
+  if (imeiInput) imeiInput.value = "";
+  if (imeiError) imeiError.style.display = "none";
+
+  function closeModal() {
+    if (typeof modal.close === "function") {
+      modal.close();
+    } else {
+      modal.removeAttribute("open");
+      modal.style.display = "none";
+    }
+  }
+
+  if (cancelBtn) cancelBtn.onclick = closeModal;
+  if (closeBtn) closeBtn.onclick = closeModal;
+
+  if (applyBtn) {
+    applyBtn.onclick = () => {
+      const q = updateQuote();
+      const imei = String(imeiInput ? imeiInput.value : "").trim();
+      const isPhone = q.category === "smartphones";
+      const isValid = isPhone ? /^\d{15}$/.test(imei) : /^[A-Za-z0-9]{6,18}$/.test(imei);
+      if (!isValid) {
+        if (imeiError) imeiError.style.display = "block";
+        return;
+      }
+      if (imeiError) imeiError.style.display = "none";
+
+      try {
+        const exCart = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+        exCart[String(product.id)] = {
+          targetProductId: String(product.id),
+          category: q.category,
+          brand: q.brand,
+          modelName: q.model.name,
+          finalValue: q.finalVal,
+          imei: imei,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(exCart));
+      } catch (e) {}
+
+      closeModal();
+      renderPdpExchangeWidget(product, currentPrice);
+    };
+  }
+
+  if (typeof modal.showModal === "function") {
+    modal.showModal();
+  } else {
+    modal.setAttribute("open", "");
+    modal.style.display = "block";
+  }
+}
+
+function renderPdpExchangeWidget(product, currentPrice) {
+  if (!product) return;
+  const card = document.getElementById("pdpExchangeSelectorCard");
+  if (!card) return;
+
+  const noExchangeRadio = document.getElementById("pdpOptNoExchange");
+  const withExchangeRadio = document.getElementById("pdpOptWithExchange");
+  const priceNoExchangeEl = document.getElementById("pdpPriceWithoutExchange");
+  const upToBadge = document.getElementById("pdpExchangeUpToBadge");
+  const detailsPanel = document.getElementById("pdpExchangeDetailsPanel");
+  const unselectedState = document.getElementById("pdpExchangeUnselectedState");
+  const selectedCard = document.getElementById("pdpExchangeSelectedCard");
+  const appliedNameEl = document.getElementById("pdpAppliedDeviceName");
+  const appliedSavingsEl = document.getElementById("pdpAppliedSavingsVal");
+  const btnOpenModal = document.getElementById("btnOpenExchangeModal");
+  const btnChange = document.getElementById("btnChangeExchangeDevice");
+  const btnRemove = document.getElementById("btnRemoveExchangeDevice");
+  const pincodeInput = document.getElementById("pdpExchangePincode");
+  const btnCheckPincode = document.getElementById("btnCheckExchangePincode");
+  const pincodeMsg = document.getElementById("pdpExchangePincodeMsg");
+  const buyBoxPriceEl = document.getElementById("buyBoxPrice");
+
+  if (priceNoExchangeEl) priceNoExchangeEl.textContent = money(currentPrice);
+  const maxDiscount = Math.min(25000, Math.max(2000, Math.round(currentPrice * 0.45)));
+  if (upToBadge) upToBadge.textContent = "Up to ₹" + maxDiscount.toLocaleString("en-IN") + " off";
+
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+  } catch (e) {}
+  const currentEx = exCart[String(product.id)];
+
+  function applyDiscountedPrice(exchangeVal) {
+    if (!buyBoxPriceEl) return;
+    const effectivePrice = Math.max(0, currentPrice - exchangeVal);
+    buyBoxPriceEl.innerHTML = `<span style="text-decoration: line-through; color: #565959; font-size: 0.82em; margin-right: 6px;">${money(currentPrice)}</span><span style="color: #067d62; font-weight: 700;">${money(effectivePrice)}</span>`;
+  }
+
+  function restoreNormalPrice() {
+    if (!buyBoxPriceEl) return;
+    buyBoxPriceEl.textContent = money(currentPrice);
+  }
+
+  if (currentEx && currentEx.finalValue) {
+    if (withExchangeRadio) withExchangeRadio.checked = true;
+    if (noExchangeRadio) noExchangeRadio.checked = false;
+    if (detailsPanel) detailsPanel.style.display = "block";
+    if (unselectedState) unselectedState.style.display = "none";
+    if (selectedCard) selectedCard.style.display = "block";
+    if (appliedNameEl) appliedNameEl.textContent = currentEx.modelName || "Exchange Device";
+    if (appliedSavingsEl) appliedSavingsEl.textContent = "-₹" + Number(currentEx.finalValue).toLocaleString("en-IN");
+    applyDiscountedPrice(Number(currentEx.finalValue));
+  } else {
+    if (noExchangeRadio) noExchangeRadio.checked = true;
+    if (withExchangeRadio) withExchangeRadio.checked = false;
+    if (detailsPanel) detailsPanel.style.display = "none";
+    if (unselectedState) unselectedState.style.display = "block";
+    if (selectedCard) selectedCard.style.display = "none";
+    restoreNormalPrice();
+  }
+
+  if (noExchangeRadio && !noExchangeRadio._bound) {
+    noExchangeRadio._bound = true;
+    noExchangeRadio.addEventListener("change", () => {
+      if (noExchangeRadio.checked) {
+        if (detailsPanel) detailsPanel.style.display = "none";
+        try {
+          const c = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+          delete c[String(product.id)];
+          localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(c));
+        } catch (e) {}
+        if (unselectedState) unselectedState.style.display = "block";
+        if (selectedCard) selectedCard.style.display = "none";
+        restoreNormalPrice();
+      }
+    });
+  }
+
+  if (withExchangeRadio && !withExchangeRadio._bound) {
+    withExchangeRadio._bound = true;
+    withExchangeRadio.addEventListener("change", () => {
+      if (withExchangeRadio.checked) {
+        if (detailsPanel) detailsPanel.style.display = "block";
+        let c = {};
+        try { c = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}"); } catch (e) {}
+        if (c[String(product.id)]) {
+          applyDiscountedPrice(Number(c[String(product.id)].finalValue));
+        } else {
+          openExchangeModal(product, currentPrice);
+        }
+      }
+    });
+  }
+
+  if (btnCheckPincode && !btnCheckPincode._bound) {
+    btnCheckPincode._bound = true;
+    btnCheckPincode.addEventListener("click", () => {
+      const pin = String(pincodeInput ? pincodeInput.value : "").trim();
+      if (/^\d{6}$/.test(pin)) {
+        if (pincodeMsg) {
+          pincodeMsg.innerHTML = `<span style="color: #067d62; font-size: 0.85rem; font-weight: 600;">✓ Exchange service available at ${pin}</span>`;
+        }
+      } else {
+        if (pincodeMsg) {
+          pincodeMsg.innerHTML = `<span style="color: #c40000; font-size: 0.85rem;">⚠️ Please enter a valid 6-digit pincode</span>`;
+        }
+      }
+    });
+  }
+
+  if (btnOpenModal) {
+    btnOpenModal.onclick = () => openExchangeModal(product, currentPrice);
+  }
+  if (btnChange) {
+    btnChange.onclick = () => openExchangeModal(product, currentPrice);
+  }
+  if (btnRemove) {
+    btnRemove.onclick = () => {
+      try {
+        const c = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+        delete c[String(product.id)];
+        localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(c));
+      } catch (e) {}
+      if (noExchangeRadio) noExchangeRadio.checked = true;
+      if (withExchangeRadio) withExchangeRadio.checked = false;
+      if (detailsPanel) detailsPanel.style.display = "none";
+      if (unselectedState) unselectedState.style.display = "block";
+      if (selectedCard) selectedCard.style.display = "none";
+      restoreNormalPrice();
+    };
+  }
+}
+
+window.renderPdpExchangeWidget = renderPdpExchangeWidget;
+window.openExchangeModal = openExchangeModal;
 
 let activeRenderedProduct = null;
 function renderProductHeader(product) {
@@ -2819,6 +3165,7 @@ function renderStarCharacters(rating) {
   renderServices(product, isInStock);
   renderReviewSummary(product);
   renderQa(product);
+  renderPdpExchangeWidget(product, price);
 
   renderRecentlyViewedDetailSection();
 
@@ -3052,6 +3399,16 @@ addToCartBtn.addEventListener("click", () => {
   const qty = Number(qtySelect ? qtySelect.value : 1);
   const addQty = Number.isFinite(qty) && qty > 0 ? qty : 1;
   if (productId) {
+    const radioWithout = document.getElementById("pdpOptNoExchange");
+    if (radioWithout && radioWithout.checked) {
+      try {
+        const exCart = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+        if (exCart[productId]) {
+          delete exCart[productId];
+          localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(exCart));
+        }
+      } catch (e) {}
+    }
     addProductToCart(productId, addQty);
 
     const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
@@ -3085,6 +3442,16 @@ if (buyNowBtn) {
     const qty = Number(qtySelect ? qtySelect.value : 1);
     const addQty = Number.isFinite(qty) && qty > 0 ? qty : 1;
     if (productId) {
+      const radioWithout = document.getElementById("pdpOptNoExchange");
+      if (radioWithout && radioWithout.checked) {
+        try {
+          const exCart = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
+          if (exCart[productId]) {
+            delete exCart[productId];
+            localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(exCart));
+          }
+        } catch (e) {}
+      }
       addProductToCart(productId, addQty);
     }
   });

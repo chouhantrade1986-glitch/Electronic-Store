@@ -101,6 +101,66 @@
         <p id="buyBoxSavings" class="buy-savings"></p>
         <p id="taxInfo" class="tax-info" data-i18n="inclusive_all_taxes">Inclusive of all taxes</p>
 
+        <!-- Phase 30: PDP Instant Exchange Offer Selector -->
+        <div class="pdp-exchange-selector-card" id="pdpExchangeSelectorCard">
+          <div class="exchange-radio-option" id="pdpOptionWithoutExchange">
+            <label class="exchange-radio-label">
+              <input type="radio" name="pdpExchangeChoice" value="without" checked id="pdpOptNoExchange" />
+              <span class="exchange-radio-text">
+                <strong data-i18n="pdp_without_exchange">Without Exchange</strong>
+                <span class="exchange-radio-price" id="pdpPriceWithoutExchange">₹1,39,930</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="exchange-radio-option" id="pdpOptionWithExchange">
+            <label class="exchange-radio-label">
+              <input type="radio" name="pdpExchangeChoice" value="with" id="pdpOptWithExchange" />
+              <span class="exchange-radio-text">
+                <strong data-i18n="pdp_with_exchange">With Exchange</strong>
+                <span class="exchange-badge-pill" id="pdpExchangeUpToBadge">Up to ₹18,000 off</span>
+              </span>
+            </label>
+
+            <!-- Collapsible Exchange Details -->
+            <div class="pdp-exchange-details-panel" id="pdpExchangeDetailsPanel" style="display: none;">
+              <div class="pdp-exchange-pincode-box">
+                <div class="pdp-pincode-input-group">
+                  <input type="text" id="pdpExchangePincode" class="pdp-exchange-pincode-input" placeholder="Enter Pincode" maxlength="6" data-i18n-placeholder="pdp_exchange_pincode_placeholder" />
+                  <button type="button" id="btnCheckExchangePincode" class="btn-check-pincode" data-i18n="pdp_exchange_pincode_check">Check</button>
+                </div>
+                <div id="pdpExchangePincodeMsg" class="pdp-pincode-feedback"></div>
+              </div>
+
+              <!-- Unselected State Button -->
+              <div id="pdpExchangeUnselectedState">
+                <button type="button" id="btnOpenExchangeModal" class="btn-pdp-choose-exchange" data-i18n="pdp_choose_exchange_btn">
+                  Choose device to exchange ›
+                </button>
+              </div>
+
+              <!-- Selected State Card -->
+              <div id="pdpExchangeSelectedCard" class="pdp-applied-exchange-card" style="display: none;">
+                <div class="applied-exchange-header">
+                  <span class="applied-icon">🔄</span>
+                  <div class="applied-info">
+                    <span class="applied-title" data-i18n="pdp_exchange_applied">Exchange Applied:</span>
+                    <strong id="pdpAppliedDeviceName">Apple iPhone 12 (64 GB)</strong>
+                  </div>
+                </div>
+                <div class="applied-savings-row">
+                  <span class="applied-savings-badge" id="pdpAppliedSavingsVal">-₹8,500</span>
+                  <div class="applied-actions">
+                    <button type="button" id="btnChangeExchangeDevice" class="applied-link-btn" data-i18n="pdp_exchange_change">Change</button>
+                    <span>|</span>
+                    <button type="button" id="btnRemoveExchangeDevice" class="applied-link-btn applied-remove" data-i18n="pdp_exchange_remove">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Amazon Style Delivery Section -->
         <div class="buybox-delivery-section">
           <div class="delivery-badge-row">
@@ -463,6 +523,96 @@
       </div>
     </div>
   </div>
+
+  <!-- Phase 30: In-Page Exchange Valuation Modal Dialog -->
+  <dialog id="exchangeValuationModal" class="exchange-modal-dialog">
+    <div class="modal-dialog-content">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title" data-i18n="modal_exchange_title">Exchange Your Old Device</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseExchangeModal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <!-- 4 Steps inside modal -->
+        <div class="modal-wizard-step" id="modalStep1">
+          <label class="modal-step-label" data-i18n="exchange_step1_cat" for="modalCategorySelect">1. Select Category</label>
+          <select id="modalCategorySelect" class="modal-select">
+            <option value="smartphones">📱 Smartphones</option>
+            <option value="laptops">💻 Laptops</option>
+            <option value="tablets">📟 Tablets</option>
+            <option value="smartwatches">⌚ Smartwatches</option>
+            <option value="audio">🎧 Headphones &amp; Audio</option>
+          </select>
+          <div class="modal-category-pills" id="modalCategoryPills" style="margin-top: 8px;">
+            <button type="button" class="modal-cat-pill active" data-cat="smartphones">📱 Smartphones</button>
+            <button type="button" class="modal-cat-pill" data-cat="laptops">💻 Laptops</button>
+            <button type="button" class="modal-cat-pill" data-cat="tablets">📟 Tablets</button>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep2">
+          <label class="modal-step-label" data-i18n="exchange_step2_model">2. Select Brand & Model</label>
+          <div class="modal-select-grid">
+            <select id="modalBrandSelect" class="modal-select"></select>
+            <select id="modalModelSelect" class="modal-select"></select>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep3">
+          <label class="modal-step-label" data-i18n="exchange_step3_condition">3. Check Device Condition</label>
+          <div class="modal-diag-questions">
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_power">Does device turn on?</span>
+              <div class="modal-radio-group">
+                <label><input type="radio" name="modalDiagPower" value="yes" checked /> Yes</label>
+                <label><input type="radio" name="modalDiagPower" value="no" /> No</label>
+              </div>
+            </div>
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_screen">Screen condition:</span>
+              <select id="modalDiagScreen" class="modal-select">
+                <option value="flawless">Flawless (No scratches)</option>
+                <option value="minor">Minor Scratches</option>
+                <option value="heavy">Heavy Scratches</option>
+                <option value="cracked">Cracked / Lines on Screen</option>
+              </select>
+            </div>
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_body">Body condition:</span>
+              <select id="modalDiagBody" class="modal-select">
+                <option value="flawless">Flawless / Like New</option>
+                <option value="minor">Minor Dents / Normal wear</option>
+                <option value="heavy">Heavy Dents / Broken Casing</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep4">
+          <div class="modal-quote-summary-card">
+            <div class="modal-quote-row">
+              <span>Estimated Exchange Value:</span>
+              <strong class="modal-quote-highlight" id="modalQuoteVal">₹8,500</strong>
+            </div>
+          </div>
+
+          <div class="modal-imei-group">
+            <label for="modalExchangeImei" data-i18n="modal_exchange_imei_label">Enter Device IMEI or Serial Number:</label>
+            <input type="text" id="modalExchangeImei" class="modal-imei-input" placeholder="15-digit IMEI (dial *#06# to check)" data-i18n-placeholder="modal_exchange_imei_placeholder" maxlength="18" />
+            <span class="imei-hint-text">Dial *#06# on phone keypad to view your 15-digit IMEI.</span>
+            <div id="modalImeiError" class="modal-imei-error" style="display: none;" data-i18n="modal_exchange_imei_invalid">
+              Please enter a valid 15-digit IMEI or alphanumeric serial number.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn-modal-cancel" id="btnCancelExchangeModal" data-i18n="modal_exchange_cancel_btn">Cancel</button>
+        <button type="button" class="btn-modal-apply" id="btnApplyExchangeModal" data-i18n="modal_exchange_apply_btn">Apply Exchange Discount</button>
+      </div>
+    </div>
+  </dialog>
 
   <script src="translations.js"></script>
   <script src="products-data.js"></script>
