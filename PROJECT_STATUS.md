@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 28: ElectroMart Verified Customer Reviews Video & Photo Gallery Hub Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 29: ElectroMart 3D Showroom & Virtual Workspace Studio Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 60 / 60 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 61 / 61 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **3D शोरूम व वर्चुअल वर्कस्पेस टेस्ट** | `node scratch/test-amazon-3d-showroom.js` | ✅ **PASS** | 7 / 7 लेयर्स उत्तीर्ण (100%) |
 | **कस्टमर मीडिया व वीडियो गैलरी टेस्ट** | `node scratch/test-amazon-customer-media.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **मल्टी-लिस्ट व गिफ्ट रजिस्ट्री टेस्ट** | `node scratch/test-amazon-multi-list-registry.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **24x7 कस्टमर सर्विस व हेल्प सेंटर टेस्ट** | `node scratch/test-amazon-help-center.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
@@ -22,7 +23,7 @@
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **134 / 134 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **135 / 135 (100% Pass Rate)** |
 
 ---
 
@@ -428,6 +429,30 @@
     - `sitemap.xml`: `customer-media.html` की नई प्रविष्टि।
   - **11 भारतीय भाषाएं एवं 100% ब्रांड सुरक्षा:** `translations.js` में 48+ नई मीडिया कीज और 0 विज़िबल Amazon संदर्भ।
   - **टेस्ट मेट्रिक्स:** `scratch/test-amazon-customer-media.js` (6/6 लेयर्स उत्तीर्ण, कुल 60/60 टेस्ट सूट्स 100% पास)।
+- **चरण 29 (ElectroMart 3D Showroom & Virtual Workspace Studio — `showroom.html` / `workspace-builder.html`):**
+  - **इंटरएक्टिव 360° टर्नटेबल शोरूम (`showroom.html`, `showroom.js`, `showroom.css`):**
+    - स्मूथ 360° इनर्शियल ड्रैग/टच रोटेशन (`requestAnimationFrame` संचालित) विथ लाइव एंगल बैज (`0°` से `359°`)।
+    - 4 इंटरेक्टिव हार्डवेयर हॉटस्पॉट्स (Retina Display, Thunderbolt/HDMI Ports, Bionic Cooling, Mechanical Keyboard) विथ 3D ऑर्बिट कोऑर्डिनेट्स और डिटेल पॉपओवर्स (`#hotspotPopover`)।
+    - फ़्लोटिंग कंट्रोल्स बार: ऑटो-रोटेट टॉगल (`#toggleAutoRotateBtn`), व्यू रीसेट (`#resetViewBtn`), ज़ूम इन/आउट (`#zoomInBtn`, `#zoomOutBtn`), और AR सिमुलेटर बटन (`#openRoomSimulatorBtn`)।
+    - 4-फिनिश कलर स्विचर (`#showroomColorBar`): Space Gray, Arctic Silver, Midnight Black, Cyber Edition।
+    - साइड बायबॉक्स पैनल (`#showroomBuybox`): 5 फ्लैगशिप प्रोडक्ट्स सेलेक्टर, प्राइस स्टैक, प्राइम बैज, और 1-क्लिक "Add to Cart"।
+    - एआर / रूम स्केल सिमुलेटर मोडल (`#roomSimulatorModal`): 4 रूम बैकड्रॉप्स (Minimalist Studio, Gaming Den, Creator Loft, Living Room), 4 लाइटिंग मोड्स (Daylight, Studio, RGB, Warm), और लाइव स्केल स्लाइडर।
+  - **वर्चुअल वर्कस्पेस / डेस्क सेटअप स्टूडियो (`workspace-builder.html`, `workspace-builder.js`, `workspace-builder.css`):**
+    - 6-स्लॉट मॉड्यूलर सेटअप ग्रिड: Desk Surface, Computing Core, Display / Monitor, Input Devices, Audio & Acoustics, Ergonomics & Power।
+    - 4 क्विक प्रीसेट्स: Minimalist Developer, Ultimate Battlestation, Executive Video Creator, Ergonomic Home Office।
+    - लाइव 2.5D डेस्क कैनवास (`#workspaceVisualCanvas`): 3D वॉलनट/बैम्बू/कार्बन एज, डेस्क मैट और लेयर्ड सिंक हार्डवेयर।
+    - स्लॉट कंपोनेंट पिकर मोडल (`#slotPickerModal`): विस्तृत कैटलॉग ऑप्शन्स और 1-क्लिक चयन।
+    - इंटेलिजेंट हार्डवेयर कम्पैटिबिलिटी इंजन (`#compatibilityStatusCard`): पोर्ट्स मैचिंग (Thunderbolt/USB-C vs DisplayPort/HDMI) व पावर हेडरोम चेकर विथ एडॉप्टर सुझाव।
+    - बंडल समरी कार्ड (`#workspaceSummaryCard`): कुल M.R.P., 10% इंस्टेंट बंडल छूट, 18% GST इनवॉइस ब्रेकडाउन, और नेट देय राशि।
+    - 1-क्लिक "Add Complete Setup to Cart" (`#addWorkspaceToCartBtn`): सभी 6 आइटम्स 10% बंडल छूट के साथ `electromart_cart_v1` में दर्ज और हेडर कार्ट बैज अपडेट।
+    - शेयर सेटअप कॉन्फ़िगरेशन (`#shareWorkspaceBtn`): URL क्वेरी पैरामीटर्स एनकोडिंग विथ क्लिपबोर्ड कॉपी।
+  - **PDP व ग्लोबल नेविगेशन सिंक:**
+    - `product-detail.html`: फ़्लोटिंग "360° Interactive Showroom" बटन (`#btnPdp360Showroom`) और "Configure in Virtual Workspace Studio ›" सीटीए (`#linkPdpWorkspaceBuilder`)।
+    - `header.html`: "3D Interactive Showroom" और "Virtual Workspace Studio" लिंक्स इन ड्रॉर व अकाउंट फ्लाईआउट।
+    - `account.html`: समर्पित "3D Interactive Showroom" क्विक टाइल (`#tileShowroom`)।
+    - `sitemap.xml`: `showroom.html` और `workspace-builder.html` की प्रविष्टियां।
+  - **11 भारतीय भाषाएं एवं 100% ब्रांड सुरक्षा:** `translations.js` में 50+ नई कीज़ और 0 विज़िबल Amazon संदर्भ।
+  - **टेस्ट मेट्रिक्स:** `scratch/test-amazon-3d-showroom.js` (7/7 लेयर्स उत्तीर्ण, कुल 61/61 टेस्ट सूट्स 100% पास, कुल 135/135 टेस्ट्स उत्तीर्ण)।
 
 ---
 

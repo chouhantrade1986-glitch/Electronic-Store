@@ -1223,5 +1223,54 @@ a {
   gap: 2px;
 }
 
+/* Phase 29: 360 Showroom & Workspace Studio CTAs */
+.btn-pdp-360-showroom {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(15, 17, 17, 0.88);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 8;
+  transition: all 0.2s ease;
+}
 
+.btn-pdp-360-showroom:hover {
+  background: #007185;
+  border-color: #007185;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
 
+.buybox-workspace-entry {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.link-pdp-workspace-builder {
+  display: block;
+  background: #f7fafa;
+  border: 1.5px solid #007185;
+  color: #007185;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.link-pdp-workspace-builder:hover {
+  background: #e7f4f5;
+  border-color: #005a6a;
+  color: #005a6a;
+}

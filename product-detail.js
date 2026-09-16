@@ -2882,6 +2882,17 @@ function renderStarCharacters(rating) {
   syncWishlistButton(product.id);
   syncCompareButton(product.id);
   void hydrateRelatedProducts(product);
+
+  // Phase 29: 360 Showroom & Virtual Workspace Studio Link Sync
+  const btn360 = document.getElementById("btnPdp360Showroom");
+  if (btn360) {
+    btn360.href = `showroom.html?productId=${encodeURIComponent(product.id)}`;
+  }
+  const linkWorkspace = document.getElementById("linkPdpWorkspaceBuilder");
+  if (linkWorkspace) {
+    linkWorkspace.href = `workspace-builder.html?computeId=${encodeURIComponent(product.id)}`;
+  }
+
   localizeBatterySpecs();
 }
 

@@ -26,6 +26,10 @@
         <div class="product-image-stage" id="productImageStage">
           <img id="productImage" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
           <div id="imageZoomLens" class="image-zoom-lens" aria-hidden="true"></div>
+          <!-- Phase 29: 360 Showroom CTA Button -->
+          <a href="showroom.html" id="btnPdp360Showroom" class="btn-pdp-360-showroom" data-i18n="pdp_btn_360_showroom">
+            <span class="pdp-360-icon">🔄</span> 360° Interactive Showroom
+          </a>
         </div>
         <video id="productVideo" controls playsinline hidden></video>
         <div id="imageZoomPane" class="image-zoom-pane" aria-hidden="true"></div>
@@ -137,6 +141,13 @@
         <div class="buybox-buttons">
           <button id="addToCartBtn" type="button" class="amazon-btn-cart" data-i18n="add_to_cart">Add to Cart</button>
           <a href="checkout.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
+        </div>
+
+        <!-- Phase 29: Virtual Workspace Studio CTA Link -->
+        <div class="buybox-workspace-entry" id="buyboxWorkspaceEntry">
+          <a href="workspace-builder.html" id="linkPdpWorkspaceBuilder" class="link-pdp-workspace-builder" data-i18n="pdp_link_workspace_builder">
+            🖥️ Configure in Virtual Workspace Studio ›
+          </a>
         </div>
 
         <!-- Fulfilled / Seller Info Table -->

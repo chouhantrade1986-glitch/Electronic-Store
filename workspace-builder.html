@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title data-i18n="workspace_title">ElectroMart Virtual Workspace &amp; Desk Setup Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="workspace-builder.css?v=20260916a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="workspace-builder-page">
+  <!-- Universal Header -->
+  <div id="headerContainer"></div>
+
+  <main class="workspace-main">
+    <!-- Breadcrumb Navigation -->
+    <nav class="amz-breadcrumb" id="workspaceBreadcrumb" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="showroom_breadcrumb_home">Home</a> &rsaquo;
+      <a href="showroom.html" data-i18n="showroom_breadcrumb_3d">3D Showroom</a> &rsaquo;
+      <span id="currentBreadcrumbPage" data-i18n="workspace_title">Virtual Workspace Studio</span>
+    </nav>
+
+    <!-- Workspace Studio Hero Header -->
+    <header class="workspace-hero-header">
+      <div class="hero-header-text">
+        <span class="workspace-badge" id="workspaceHeroBadge" data-i18n="workspace_badge">🖥️ Modular Setup Studio</span>
+        <h1 class="workspace-title" id="workspaceTitle" data-i18n="workspace_title">ElectroMart Virtual Workspace &amp; Desk Studio</h1>
+        <p class="workspace-subtitle" id="workspaceSubtitle" data-i18n="workspace_subtitle">
+          Design your dream productivity setup, verify hardware port &amp; power compatibility in real time, and save 10% on complete bundles.
+        </p>
+      </div>
+
+      <!-- Quick Preset Buttons -->
+      <div class="workspace-presets-strip">
+        <span class="presets-label" data-i18n="workspace_preset_label">Quick Setup Presets:</span>
+        <div class="preset-pills-row">
+          <button type="button" class="btn-preset-pill active" id="presetCoder" data-preset="coder" data-i18n="workspace_preset_coder">
+            Minimalist Developer
+          </button>
+          <button type="button" class="btn-preset-pill" id="presetGaming" data-preset="gaming" data-i18n="workspace_preset_gaming">
+            Ultimate Battlestation
+          </button>
+          <button type="button" class="btn-preset-pill" id="presetCreator" data-preset="creator" data-i18n="workspace_preset_creator">
+            Executive Video Creator
+          </button>
+          <button type="button" class="btn-preset-pill" id="presetOffice" data-preset="office" data-i18n="workspace_preset_office">
+            Ergonomic Home Office
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2-Column Builder Studio Layout -->
+    <div class="workspace-builder-layout">
+      <!-- Left / Center Column: 2.5D Visual Desk Canvas -->
+      <section class="workspace-canvas-section" id="workspaceCanvasSection" aria-label="Workspace Desk Canvas">
+        <div class="visual-canvas-card">
+          <div class="canvas-header-bar">
+            <div class="canvas-title-row">
+              <span class="canvas-icon">🎨</span>
+              <h2 class="canvas-title" id="canvasTitle" data-i18n="workspace_canvas_title">Live 2.5D Desk Setup Canvas</h2>
+            </div>
+            <span class="canvas-hint" id="canvasHint" data-i18n="workspace_canvas_hint">
+              Click any gear slot on the right to customize components in your setup
+            </span>
+          </div>
+
+          <!-- 2.5D Visual Desk Representation -->
+          <div class="workspace-visual-canvas" id="workspaceVisualCanvas" role="img" aria-label="Visual Workspace Representation">
+            <!-- Wall Ambient Background -->
+            <div class="canvas-wall-background" id="canvasWallBg">
+              <div class="ambient-glow-mesh" id="ambientGlowMesh"></div>
+            </div>
+
+            <!-- Visual Desk Surface -->
+            <div class="canvas-desk-surface" id="canvasDeskSurface">
+              <!-- Desk Mat -->
+              <div class="canvas-desk-mat" id="canvasDeskMat">
+                <!-- Slot 3: Display / Monitor Layer -->
+                <div class="canvas-gear-slot slot-monitor" id="canvasSlotMonitor" title="Display">
+                  <div class="gear-img-frame">
+                    <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Selected Monitor" id="imgCanvasMonitor" />
+                  </div>
+                  <span class="canvas-tag-label" id="labelCanvasMonitor">UltraFine 4K 27″</span>
+                </div>
+
+                <!-- Slot 2: Computing Engine (Laptop or Tower) -->
+                <div class="canvas-gear-slot slot-compute" id="canvasSlotCompute" title="Computing Core">
+                  <div class="gear-img-frame">
+                    <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Selected Computer" id="imgCanvasCompute" />
+                  </div>
+                  <span class="canvas-tag-label" id="labelCanvasCompute">AstraBook Pro 14</span>
+                </div>
+
+                <!-- Slot 4: Input Devices (Keyboard & Mouse) -->
+                <div class="canvas-gear-slot slot-input" id="canvasSlotInput" title="Input Devices">
+                  <div class="gear-img-frame">
+                    <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Selected Keyboard & Mouse" id="imgCanvasInput" />
+                  </div>
+                  <span class="canvas-tag-label" id="labelCanvasInput">Vector RGB Keyboard</span>
+                </div>
+
+                <!-- Slot 5: Audio & Acoustics -->
+                <div class="canvas-gear-slot slot-audio" id="canvasSlotAudio" title="Audio">
+                  <div class="gear-img-frame">
+                    <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Selected Audio Gear" id="imgCanvasAudio" />
+                  </div>
+                  <span class="canvas-tag-label" id="labelCanvasAudio">Pulse ANC Studio</span>
+                </div>
+
+                <!-- Slot 6: Power & Dock -->
+                <div class="canvas-gear-slot slot-power" id="canvasSlotPower" title="Power & Dock">
+                  <div class="gear-img-frame">
+                    <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Selected Power Dock" id="imgCanvasPower" />
+                  </div>
+                  <span class="canvas-tag-label" id="labelCanvasPower">100W GaN Dock</span>
+                </div>
+              </div>
+
+              <!-- Desk Wood Front Bevel -->
+              <div class="canvas-desk-wood-edge" id="canvasDeskEdge">
+                <span class="desk-name-tag" id="labelCanvasDesk">Walnut Motorized Sit-Stand 140cm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas Footer Action Links -->
+          <div class="canvas-footer-actions">
+            <a href="showroom.html?productId=1" class="canvas-showroom-link" id="linkTo3dShowroom">
+              🔄 Inspect Selected Computer in 360° Showroom ›
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: 6 Modular Slot Cards, Compatibility Engine & Checkout Tower -->
+      <aside class="workspace-config-sidebar" id="workspaceConfigSidebar" aria-label="Workspace Slot Configuration">
+        <!-- 6 Modular Component Slots -->
+        <div class="slots-container" id="slotsContainer">
+          <!-- Slot 1: Desk Surface -->
+          <div class="slot-card" id="slotDeskCard" data-slot="desk">
+            <div class="slot-card-left">
+              <span class="slot-number">1</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_desk_title">Desk Surface</span>
+                <h3 class="slot-item-title" id="slotDeskTitle">Walnut Motorized Sit-Stand Desk 140cm</h3>
+                <span class="slot-item-price" id="slotDeskPrice">₹24,999</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangeDesk" data-slot="desk" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+
+          <!-- Slot 2: Computing Core -->
+          <div class="slot-card" id="slotComputeCard" data-slot="compute">
+            <div class="slot-card-left">
+              <span class="slot-number">2</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_compute_title">Computing Core</span>
+                <h3 class="slot-item-title" id="slotComputeTitle">AstraBook Pro 14 Laptop (Core i5, 16GB, 512GB)</h3>
+                <span class="slot-item-price" id="slotComputePrice">₹79,920</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangeCompute" data-slot="compute" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+
+          <!-- Slot 3: Display / Monitor -->
+          <div class="slot-card" id="slotMonitorCard" data-slot="monitor">
+            <div class="slot-card-left">
+              <span class="slot-number">3</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_monitor_title">Display / Monitor</span>
+                <h3 class="slot-item-title" id="slotMonitorTitle">UltraFine 4K HDR USB-C 27″ Monitor</h3>
+                <span class="slot-item-price" id="slotMonitorPrice">₹34,999</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangeMonitor" data-slot="monitor" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+
+          <!-- Slot 4: Input Devices -->
+          <div class="slot-card" id="slotInputCard" data-slot="input">
+            <div class="slot-card-left">
+              <span class="slot-number">4</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_input_title">Input Devices</span>
+                <h3 class="slot-item-title" id="slotInputTitle">Vector RGB Mechanical Gaming Keyboard</h3>
+                <span class="slot-item-price" id="slotInputPrice">₹6,999</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangeInput" data-slot="input" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+
+          <!-- Slot 5: Audio & Acoustics -->
+          <div class="slot-card" id="slotAudioCard" data-slot="audio">
+            <div class="slot-card-left">
+              <span class="slot-number">5</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_audio_title">Audio &amp; Acoustics</span>
+                <h3 class="slot-item-title" id="slotAudioTitle">Pulse ANC Wireless Studio Headphones</h3>
+                <span class="slot-item-price" id="slotAudioPrice">₹14,999</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangeAudio" data-slot="audio" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+
+          <!-- Slot 6: Ergonomics & Power -->
+          <div class="slot-card" id="slotPowerCard" data-slot="power">
+            <div class="slot-card-left">
+              <span class="slot-number">6</span>
+              <div class="slot-meta">
+                <span class="slot-label" data-i18n="slot_power_title">Ergonomics &amp; Power</span>
+                <h3 class="slot-item-title" id="slotPowerTitle">100W GaN Desktop Charging Hub</h3>
+                <span class="slot-item-price" id="slotPowerPrice">₹5,999</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-slot" id="btnChangePower" data-slot="power" data-i18n="slot_change_btn">
+              Change
+            </button>
+          </div>
+        </div>
+
+        <!-- Hardware Compatibility Engine Status Card -->
+        <div class="compatibility-card" id="compatibilityStatusCard">
+          <div class="compat-header">
+            <span class="compat-icon" id="compatIcon">✓</span>
+            <div>
+              <span class="compat-label" data-i18n="compat_title">Hardware Compatibility Engine</span>
+              <h4 class="compat-status-title" id="compatStatusTitle" data-i18n="compat_all_ok">100% Compatible Setup</h4>
+            </div>
+          </div>
+          <p class="compat-status-desc" id="compatStatusDesc" data-i18n="compat_all_ok_desc">
+            All video signals (Thunderbolt 4 / HDMI 2.1) and power headroom (100W GaN PD) are fully matched.
+          </p>
+          <div class="compat-suggestion-box" id="compatSuggestionBox" style="display: none;">
+            <button type="button" class="btn-add-adapter" id="compatAdapterSuggestBtn" data-i18n="compat_adapter_suggest">
+              + Add Recommended 40Gbps USB-C Cable (₹1,499)
+            </button>
+          </div>
+        </div>
+
+        <!-- Bundle Pricing & Checkout Summary Card -->
+        <div class="workspace-summary-card" id="workspaceSummaryCard">
+          <h3 class="summary-card-title" data-i18n="bundle_summary_title">Workspace Bundle Summary</h3>
+
+          <div class="summary-line-item">
+            <span class="line-label" data-i18n="bundle_mrp_label">Total Items M.R.P.:</span>
+            <span class="line-value mrp-strike" id="bundleTotalMrp">₹1,67,916</span>
+          </div>
+
+          <div class="summary-line-item discount-line">
+            <span class="line-label" data-i18n="bundle_discount_badge">Bundle Savings (10% Off):</span>
+            <span class="line-value discount-green" id="bundleSavingsAmount">-₹16,792</span>
+          </div>
+
+          <div class="summary-line-item gst-line">
+            <span class="line-label" data-i18n="bundle_gst_label">Includes 18% GST (Tax Invoice):</span>
+            <span class="line-value" id="bundleGstAmount">₹23,052</span>
+          </div>
+
+          <div class="summary-total-row">
+            <span class="total-label" data-i18n="bundle_total_label">Net Bundle Payable:</span>
+            <span class="total-amount" id="bundlePayableAmount">₹1,51,124</span>
+          </div>
+
+          <!-- Checkout & Action Buttons -->
+          <div class="summary-actions-column">
+            <button type="button" class="btn-bundle-checkout" id="addWorkspaceToCartBtn" data-i18n="bundle_add_all_cart">
+              🛒 Add Complete Setup to Cart
+            </button>
+            <div class="secondary-actions-row">
+              <button type="button" class="btn-summary-share" id="shareWorkspaceBtn" data-i18n="bundle_share_btn">
+                🔗 Share Setup
+              </button>
+              <button type="button" class="btn-summary-reset" id="resetWorkspaceBtn" data-i18n="bundle_reset_btn">
+                ↺ Reset Preset
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Component Slot Picker Modal -->
+  <dialog class="slot-picker-modal" id="slotPickerModal" aria-labelledby="pickerModalTitle">
+    <div class="picker-modal-container">
+      <div class="picker-modal-header">
+        <div>
+          <span class="picker-slot-category" id="pickerSlotCategory">SLOT SELECTION</span>
+          <h3 class="picker-modal-title" id="pickerModalTitle">Choose Component for Setup</h3>
+        </div>
+        <button type="button" class="btn-close-modal" id="closeSlotPickerBtn" aria-label="Close component picker">&times;</button>
+      </div>
+
+      <div class="picker-modal-body">
+        <div class="picker-grid" id="pickerGrid">
+          <!-- Dynamically populated component options -->
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Universal Toast Feedback -->
+  <div id="amzToast" class="amz-toast" role="status" aria-live="polite"></div>
+
+  <!-- Mandatory Script Loading Sequence -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="workspace-builder.js"></script>
+</body>
+</html>
