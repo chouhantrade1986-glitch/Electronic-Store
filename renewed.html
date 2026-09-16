@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>Certified Renewed Store — ElectroMart</title>
+  <meta name="description" content="Shop ElectroMart Certified Renewed electronics with 47-point diagnostic check, 6 months warranty, and up to 45% savings." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="renewed.css?v=20260414a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="renewed-page-body">
+  <div id="headerContainer"></div>
+
+  <main class="renewed-main-container">
+    <!-- Breadcrumbs Navigation -->
+    <nav class="amz-breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="breadcrumb_home">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <a href="products.html" data-i18n="breadcrumb_products">Products</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current" data-i18n="renewed_nav_title">Certified Renewed Store</span>
+    </nav>
+
+    <!-- Hero Banner -->
+    <header class="renewed-hero-banner" id="renewedHero">
+      <div class="renewed-hero-content">
+        <div class="renewed-hero-badge">
+          <span class="eco-leaf-icon">♻️</span>
+          <span data-i18n="renewed_nav_title">Certified Renewed Store</span>
+        </div>
+        <h1 class="renewed-hero-title" data-i18n="renewed_hero_title">
+          ElectroMart Certified Renewed Store — As Good As New
+        </h1>
+        <p class="renewed-hero-subtitle" data-i18n="renewed_hero_subtitle">
+          Thoroughly tested, certified refurbished electronics backed by 6 months ElectroMart warranty and up to 45% savings.
+        </p>
+
+        <!-- Trust Stats Bar -->
+        <div class="renewed-stats-grid" id="renewedTrustStats">
+          <div class="renewed-stat-card" id="heroRenewedCheck">
+            <span class="stat-value" data-i18n="renewed_stat_inspected_val">100% Certified</span>
+            <span class="stat-label" data-i18n="renewed_stat_inspected">47-Point Diagnostic Check</span>
+          </div>
+          <div class="renewed-stat-card" id="heroRenewedWarranty">
+            <span class="stat-value" data-i18n="renewed_stat_warranty_val">6 Months</span>
+            <span class="stat-label" data-i18n="renewed_stat_warranty">Comprehensive Warranty</span>
+          </div>
+          <div class="renewed-stat-card" id="heroRenewedReplacement">
+            <span class="stat-value" data-i18n="renewed_stat_replacement_val">7 Days</span>
+            <span class="stat-label" data-i18n="renewed_stat_replacement">Hassle-Free Replacement</span>
+          </div>
+          <div class="renewed-stat-card" id="heroRenewedSavings">
+            <span class="stat-value" data-i18n="renewed_stat_savings_val">Up to 45%</span>
+            <span class="stat-label" data-i18n="renewed_stat_savings">Average Price Savings</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Eco-Impact & Sustainability Visualizer -->
+    <section class="renewed-eco-section" id="renewedEcoSection">
+      <div class="section-header-center">
+        <div class="eco-pill-tag">🌱 Sustainability Milestone</div>
+        <h2 class="section-title" data-i18n="renewed_eco_title">Smarter for the Planet: Live Environmental Impact</h2>
+        <p class="section-subtitle" data-i18n="renewed_eco_subtitle">
+          Every certified renewed device prevents toxic e-waste and curtails harmful manufacturing carbon emissions.
+        </p>
+      </div>
+
+      <div class="eco-metrics-grid">
+        <div class="eco-metric-box">
+          <span class="eco-box-icon">♻️</span>
+          <span class="eco-number" id="ecoStatEwasteVal">42,850+ kg</span>
+          <span class="eco-label" data-i18n="renewed_eco_ewaste_label">E-Waste Diverted from Landfills</span>
+        </div>
+        <div class="eco-metric-box">
+          <span class="eco-box-icon">📉</span>
+          <span class="eco-number" id="ecoStatCarbonVal">185+ Tonnes</span>
+          <span class="eco-label" data-i18n="renewed_eco_carbon_label">CO2 Emissions Prevented</span>
+        </div>
+        <div class="eco-metric-box">
+          <span class="eco-box-icon">🌲</span>
+          <span class="eco-number" id="ecoStatTreesVal">12,400+</span>
+          <span class="eco-label" data-i18n="renewed_eco_trees_label">Trees Planted Equivalent</span>
+        </div>
+      </div>
+
+      <!-- Personal Eco-Calculator -->
+      <div class="eco-calculator-card" id="ecoCalculator">
+        <h3 class="eco-calc-title" data-i18n="renewed_eco_calc_title">Your Personal Eco-Impact Calculator</h3>
+        <p class="eco-calc-prompt" data-i18n="renewed_eco_calc_prompt">
+          Select a device to see how much e-waste and carbon you save:
+        </p>
+
+        <div class="eco-device-pills" id="ecoDevicePills">
+          <button type="button" class="eco-pill active" data-type="phone" id="btnEcoPhone">📱 Smartphone</button>
+          <button type="button" class="eco-pill" data-type="laptop" id="btnEcoLaptop">💻 Laptop</button>
+          <button type="button" class="eco-pill" data-type="tablet" id="btnEcoTablet">📟 Tablet</button>
+          <button type="button" class="eco-pill" data-type="audio" id="btnEcoAudio">🎧 Audio / Watch</button>
+        </div>
+
+        <div class="eco-calc-result" id="ecoCalcResult">
+          <div class="calc-result-item">
+            <span class="calc-item-icon">🗑️</span>
+            <div>
+              <strong id="calcEwasteSaved">0.18 kg</strong>
+              <span>E-waste kept out of landfills</span>
+            </div>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-item-icon">☁️</span>
+            <div>
+              <strong id="calcCarbonSaved">65 kg CO₂</strong>
+              <span>Manufacturing emissions avoided</span>
+            </div>
+          </div>
+          <div class="calc-result-item">
+            <span class="calc-item-icon">🌳</span>
+            <div>
+              <strong id="calcTreesEquiv">3 Trees</strong>
+              <span>Equivalent annual carbon offset</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Tier Grading Standard Showcase -->
+    <section class="renewed-grading-section" id="renewedGradingSection">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="renewed_tier_title">Transparent 3-Tier Grading Standard</h2>
+        <p class="section-subtitle" data-i18n="renewed_tier_subtitle">
+          Every device is meticulously graded by certified ElectroMart engineers
+        </p>
+      </div>
+
+      <div class="grading-cards-grid">
+        <!-- Grade A: Premium / Excellent -->
+        <div class="grading-card grade-a" id="tierCardGradeA">
+          <div class="grade-badge-ribbon" data-i18n="renewed_grade_a_badge">Like New Condition</div>
+          <h3 class="grade-title" data-i18n="renewed_grade_a_title">Grade A — Premium / Excellent</h3>
+          <p class="grade-desc" data-i18n="renewed_grade_a_desc">
+            Near-mint condition with zero visible scratches from 30cm. Guaranteed 90%+ battery capacity.
+          </p>
+          <ul class="grade-spec-list">
+            <li><span class="check-icon">✓</span> <strong>Cosmetics:</strong> Flawless casing, no scuffs</li>
+            <li><span class="check-icon">✓</span> <strong>Display:</strong> 100% scratch-free, zero dead pixels</li>
+            <li><span class="check-icon">✓</span> <strong>Battery Health:</strong> 90% to 100% capacity</li>
+            <li><span class="check-icon">✓</span> <strong>Accessories:</strong> Brand original or certified premium</li>
+            <li><span class="check-icon">✓</span> <strong>Warranty:</strong> 6 Months ElectroMart Warranty</li>
+          </ul>
+        </div>
+
+        <!-- Grade B: Very Good -->
+        <div class="grading-card grade-b" id="tierCardGradeB">
+          <div class="grade-badge-ribbon" data-i18n="renewed_grade_b_badge">Minor Cosmetic Wear</div>
+          <h3 class="grade-title" data-i18n="renewed_grade_b_title">Grade B — Very Good</h3>
+          <p class="grade-desc" data-i18n="renewed_grade_b_desc">
+            Flawless screen with light cosmetic micro-scratches on outer shell. Guaranteed 85%+ battery capacity.
+          </p>
+          <ul class="grade-spec-list">
+            <li><span class="check-icon">✓</span> <strong>Cosmetics:</strong> Light micro-scratches on back/frame</li>
+            <li><span class="check-icon">✓</span> <strong>Display:</strong> Immaculate screen when powered on</li>
+            <li><span class="check-icon">✓</span> <strong>Battery Health:</strong> 85% to 90% capacity</li>
+            <li><span class="check-icon">✓</span> <strong>Accessories:</strong> Certified charging adapter &amp; cable</li>
+            <li><span class="check-icon">✓</span> <strong>Warranty:</strong> 6 Months ElectroMart Warranty</li>
+          </ul>
+        </div>
+
+        <!-- Grade C: Good / Value Edition -->
+        <div class="grading-card grade-c" id="tierCardGradeC">
+          <div class="grade-badge-ribbon" data-i18n="renewed_grade_c_badge">Best Price Value</div>
+          <h3 class="grade-title" data-i18n="renewed_grade_c_title">Grade C — Good (Value Edition)</h3>
+          <p class="grade-desc" data-i18n="renewed_grade_c_desc">
+            Minor dents or scuffs on casing, perfectly working display and hardware. Guaranteed 80%+ battery capacity.
+          </p>
+          <ul class="grade-spec-list">
+            <li><span class="check-icon">✓</span> <strong>Cosmetics:</strong> Visible normal wear / minor edge dents</li>
+            <li><span class="check-icon">✓</span> <strong>Display:</strong> Fully functional touch &amp; illumination</li>
+            <li><span class="check-icon">✓</span> <strong>Battery Health:</strong> 80% to 85% capacity</li>
+            <li><span class="check-icon">✓</span> <strong>Accessories:</strong> Certified charging kit included</li>
+            <li><span class="check-icon">✓</span> <strong>Warranty:</strong> 6 Months ElectroMart Warranty (Deep Savings)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 47-Point Quality Check Process -->
+    <section class="renewed-quality-section" id="renewedQualityCheckSection">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="renewed_checklist_title">Our 47-Point Quality Check Process</h2>
+        <p class="section-subtitle" data-i18n="renewed_checklist_subtitle">
+          No device is listed without passing every single hardware and diagnostic test
+        </p>
+      </div>
+
+      <div class="quality-clusters-grid" id="qualityClustersGrid">
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">⚙️</div>
+          <h4 data-i18n="renewed_cluster_1">Core Board &amp; CPU Benchmarking</h4>
+          <p>Thermal throttling, RAM read/write stress, GPU render stability, motherboard voltage test.</p>
+        </div>
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">🖥️</div>
+          <h4 data-i18n="renewed_cluster_2">Multi-Touch Display &amp; Pixel Test</h4>
+          <p>Full-screen red/green/blue dead pixel scan, touch grid response, TrueTone &amp; 120Hz refresh test.</p>
+        </div>
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">🔋</div>
+          <h4 data-i18n="renewed_cluster_3">Battery Capacity &amp; Thermal Health</h4>
+          <p>Cycle count verification, authentic charging speed curve, temperature sensor monitoring.</p>
+        </div>
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">📸</div>
+          <h4 data-i18n="renewed_cluster_4">Cameras, Face ID &amp; Biometrics</h4>
+          <p>OIS optical stabilization, ultrawide/telephoto sensors, Face ID infrared emitter, fingerprint scanner.</p>
+        </div>
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">📡</div>
+          <h4 data-i18n="renewed_cluster_5">Wireless, 5G, Wi-Fi &amp; Bluetooth</h4>
+          <p>5G band throughput, Wi-Fi 6E latency check, Bluetooth 5.3 peripheral sync, GPS coordinate lock.</p>
+        </div>
+        <div class="quality-cluster-card">
+          <div class="cluster-icon">🔌</div>
+          <h4 data-i18n="renewed_cluster_6">Ports, Audio, Mics &amp; Buttons</h4>
+          <p>USB-C/Lightning pin continuity, stereo speaker frequency test, noise-cancelling mics, haptics.</p>
+        </div>
+      </div>
+
+      <div class="quality-seal-bar">
+        <div class="seal-icon">🛡️</div>
+        <div>
+          <strong>Certified Quality Guarantee:</strong> All units undergo high-grade sanitization, certified firmware wipe, and ESD-safe inspection packaging.
+        </div>
+      </div>
+    </section>
+
+    <!-- Certified Renewed Catalog -->
+    <section class="renewed-catalog-section" id="renewedCatalogSection">
+      <div class="catalog-header-wrap">
+        <div>
+          <h2 class="section-title" data-i18n="renewed_catalog_title">Explore Certified Renewed Devices</h2>
+          <p class="section-subtitle">Backed by 6-Month Comprehensive Warranty &amp; 7-Day Hassle-Free Replacement</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="renewed-filter-controls">
+          <!-- Category Pills -->
+          <div class="renewed-filter-group" id="renewedCategoryPills">
+            <button type="button" class="renewed-filter-btn active" data-category="all" data-i18n="renewed_filter_all">All Categories</button>
+            <button type="button" class="renewed-filter-btn" data-category="smartphones" data-i18n="renewed_filter_smartphones">Smartphones</button>
+            <button type="button" class="renewed-filter-btn" data-category="laptops" data-i18n="renewed_filter_laptops">Laptops</button>
+            <button type="button" class="renewed-filter-btn" data-category="tablets" data-i18n="renewed_filter_tablets">Tablets</button>
+            <button type="button" class="renewed-filter-btn" data-category="audio" data-i18n="renewed_filter_audio">Audio &amp; Watches</button>
+          </div>
+
+          <!-- Grade Filter Chips -->
+          <div class="renewed-grade-chips" id="renewedGradeFilterChips">
+            <button type="button" class="grade-chip active" data-grade="all" data-i18n="renewed_filter_grade_all">All Grades</button>
+            <button type="button" class="grade-chip" data-grade="A" data-i18n="renewed_filter_grade_a">Grade A (Excellent)</button>
+            <button type="button" class="grade-chip" data-grade="B" data-i18n="renewed_filter_grade_b">Grade B (Very Good)</button>
+            <button type="button" class="grade-chip" data-grade="C" data-i18n="renewed_filter_grade_c">Grade C (Good)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Renewed Products Grid -->
+      <div class="renewed-products-grid" id="renewedProductsGrid">
+        <!-- Dynamically rendered by renewed.js -->
+      </div>
+    </section>
+
+    <!-- 6-Month Comprehensive Warranty Promise -->
+    <section class="renewed-warranty-section" id="renewedWarrantyBanner">
+      <div class="warranty-card-inner">
+        <div class="warranty-badge-badge">
+          <span class="warranty-icon">🛡️</span>
+        </div>
+        <div class="warranty-text-content">
+          <h2 class="warranty-title">The ElectroMart Renewed 6-Month Warranty Promise</h2>
+          <p class="warranty-desc">
+            We stand completely behind every refurbished product. If your renewed device experiences any hardware defect within 6 months of delivery, our technicians will repair it with genuine parts or replace it free of cost right at your doorstep.
+          </p>
+          <div class="warranty-features-row">
+            <div class="w-feature"><span>✓</span> Free Doorstep Pickup &amp; Return</div>
+            <div class="w-feature"><span>✓</span> 7-Day Hassle-Free Full Refund / Replacement</div>
+            <div class="w-feature"><span>✓</span> 100% Genuine Spare Parts Guarantee</div>
+            <div class="w-feature"><span>✓</span> Dedicated Priority Renewed Care Helpline</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="renewed-faq-section" id="renewedFaqSection">
+      <div class="section-header-center">
+        <h2 class="section-title" data-i18n="renewed_faq_title">Frequently Asked Questions About Renewed</h2>
+      </div>
+
+      <div class="renewed-faq-accordion" id="renewedFaqAccordion">
+        <details class="faq-item" open>
+          <summary class="faq-question">What is an ElectroMart Certified Renewed product?</summary>
+          <div class="faq-answer">
+            <p>An ElectroMart Certified Renewed product is a pre-owned, open-box, or returned product that has been professionally inspected, cleaned, tested, and certified by our expert engineers to work and look like new. Each renewed product comes backed by a 6-month ElectroMart warranty.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What are the differences between Grade A, Grade B, and Grade C?</summary>
+          <div class="faq-answer">
+            <p><strong>Grade A:</strong> Near-mint condition, no visible scratches from 30cm, 90%+ battery health. <strong>Grade B:</strong> Flawless display with minor cosmetic scratches on body, 85%+ battery health. <strong>Grade C:</strong> Visible cosmetic signs of use/light dents, 100% functional screen, 80%+ battery health with the deepest price discounts.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What warranty coverage do I receive with my renewed product?</summary>
+          <div class="faq-answer">
+            <p>Every renewed product includes our 6-Month ElectroMart Comprehensive Warranty covering all internal hardware and component malfunctions. Additionally, you are covered by our 7-Day Hassle-Free Replacement Guarantee if you change your mind.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What accessories are included in the box?</summary>
+          <div class="faq-answer">
+            <p>All renewed products ship with compatible certified fast chargers, charging cables, and secure ElectroMart brown box or original packaging. All accessories have passed rigorous electrical safety tests.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">Is the data from previous owners completely wiped?</summary>
+          <div class="faq-answer">
+            <p>Yes. Every certified renewed unit undergoes a mandatory multi-pass cryptographic data wiping procedure adhering to international DoD/NIST privacy standards before entering the 47-point diagnostic check.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">Can I exchange my old phone when purchasing a Renewed device?</summary>
+          <div class="faq-answer">
+            <p>Yes! ElectroMart Device Trade-In &amp; Exchange works seamlessly with Certified Renewed purchases. You can apply your exchange discount and save even more.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js?v=20260313b"></script>
+  <script src="auth-state.js?v=20260313b"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="renewed.js?v=20260414a"></script>
+</body>
+</html>

@@ -3,6 +3,12 @@ const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
 
+function resolveRenewedTaxProfile(product) {
+  const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
+  const isDisplay = /(^|\s)(tv|television|monitor|display)(\s|$)/.test(searchable);
+  return isDisplay ? { hsnCode: "85287200", gstRate: 0.28 } : { hsnCode: "84713010", gstRate: 0.18 };
+}
+
 const catalog = [
   { id: 1, name: "AstraBook Pro 14", price: 999, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
   { id: 2, name: "Nimbus Phone X", price: 749, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
@@ -189,6 +195,30 @@ function getCatalogProduct(productId) {
         return mapped;
       }
     }
+
+    if (Array.isArray(window.ELECTROMART_RENEWED_CATALOG)) {
+      const rp = window.ELECTROMART_RENEWED_CATALOG.find((item) => String(item.id) === key);
+      if (rp) {
+        const renewedTaxProfile = resolveRenewedTaxProfile(rp);
+        const mapped = {
+          id: String(rp.id),
+          name: rp.name.includes("Certified Renewed") ? rp.name : `[Certified Renewed - Grade ${rp.renewedGrade || 'A'}] ${rp.name}`,
+          price: Number(rp.renewedPrice || 0),
+          image: rp.image || fallbackCatalogImage,
+          stock: 10,
+          isRenewed: true,
+          renewedGrade: rp.renewedGrade || "A",
+          gradeLabel: rp.gradeLabel || `Grade ${rp.renewedGrade || 'A'} (Excellent)`,
+          batteryHealth: rp.batteryHealth || 90,
+          warrantyDuration: "6 Months",
+          hsnCode: renewedTaxProfile.hsnCode,
+          gstRate: renewedTaxProfile.gstRate
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
   }
 
   return catalog.find((item) => String(item.id) === key) || null;
@@ -276,6 +306,12 @@ function getCartRows() {
         segment: product.segment || (itemB2b ? "b2b" : "b2c"),
         b2bDiscountTier: product.b2bDiscountTier || (itemB2b ? itemB2b.tier : null),
         itcEligible: product.itcEligible || (itemB2b ? true : false),
+        isRenewed: Boolean(product.isRenewed),
+        renewedGrade: product.renewedGrade || null,
+        warrantyDuration: product.warrantyDuration || (product.isRenewed ? "6 Months" : null),
+        protectionPlan: typeof window !== "undefined" && typeof window.getSelectedProtection === "function" && typeof window.buildProtectionLine === "function"
+          ? window.buildProtectionLine(product, window.getSelectedProtection(product.id))
+          : null,
         selected: !unselectedMap[String(id)]
       };
     })
@@ -368,7 +404,7 @@ function isPrimeActive() {
 function getPricingBreakdown(rows) {
   const selectedRows = rows.filter((row) => row.selected !== false);
   const itemCount = selectedRows.reduce((sum, row) => sum + row.quantity, 0);
-  const subtotal = selectedRows.reduce((sum, row) => sum + row.price * row.quantity, 0);
+  const subtotal = selectedRows.reduce((sum, row) => sum + row.price * row.quantity + (row.protectionPlan ? row.protectionPlan.price * row.quantity : 0), 0);
   const primeActive = isPrimeActive();
   const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
@@ -381,14 +417,15 @@ function getPricingBreakdown(rows) {
   const gstBreakdownByRate = {};
 
   selectedRows.forEach((item) => {
-    const itemSubtotal = item.price * item.quantity;
-    const discountedItemSubtotal = itemSubtotal * discountRatio;
-    const rate = typeof item.gstRate === "number" ? item.gstRate : 0.18;
-    const itemGst = discountedItemSubtotal * rate;
-    totalGst += itemGst;
-
-    const rateKey = String(Math.round(rate * 100));
-    gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    [item, item.protectionPlan].filter(Boolean).forEach((line) => {
+      const itemSubtotal = line.price * item.quantity;
+      const discountedItemSubtotal = itemSubtotal * discountRatio;
+      const rate = typeof line.gstRate === "number" ? line.gstRate : 0.18;
+      const itemGst = discountedItemSubtotal * rate;
+      totalGst += itemGst;
+      const rateKey = String(Math.round(rate * 100));
+      gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    });
   });
 
   let totalExchangeDiscount = 0;
@@ -495,6 +532,15 @@ function cartItemCard(row, currentLang) {
             <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
           </div>` : '';
         })()}
+        ${row.isRenewed ? `
+        <div class="cart-renewed-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e8f7ee;border:1px solid #067d62;padding:4px 8px;border-radius:4px;font-size:12px;color:#067d62;margin:4px 0;font-weight:600;">
+          <span>♻️ <strong>Certified Renewed:</strong> Grade ${row.renewedGrade || 'A'} • 6 Months Warranty</span>
+        </div>` : ''}
+        ${row.protectionPlan ? `
+        <div class="cart-protection-badge" style="display:flex;align-items:center;gap:6px;background:#eef8f7;border:1px solid #8bc9c5;padding:5px 8px;border-radius:4px;font-size:12px;color:#00635f;margin:4px 0;font-weight:600;">
+          <span>🛡️ <strong>${row.protectionPlan.name}</strong> · ${money(row.protectionPlan.price)} + 18% GST</span>
+          <button type="button" data-action="remove-protection" data-id="${row.id}" style="margin-left:auto;border:0;background:none;color:#b42318;cursor:pointer;">Remove</button>
+        </div>` : ''}
         <label class="cart-item-gift">
           <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
         </label>
@@ -877,6 +923,9 @@ document.addEventListener("click", (event) => {
       delete exCart[productId];
       localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
     } catch (e) {}
+    renderCart();
+  } else if (action === "remove-protection") {
+    if (typeof window.setSelectedProtection === "function") window.setSelectedProtection(productId, null);
     renderCart();
   } else if (action === "save-for-later") {
     saveForLater(productId);

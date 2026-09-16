@@ -290,7 +290,7 @@ function normalizeOrder(order) {
       : null,
     reservationUntil: String(order.reservationUntil || "").trim(),
     statusHistory: normalizeStatusHistory(order.statusHistory, order.createdAt, order.status),
-    items: items.map((item) => {
+    items: items.flatMap((item) => {
       const catalog = window.EM_CATALOG && Array.isArray(window.EM_CATALOG) ? window.EM_CATALOG : [];
       const prod = catalog.find((p) => String(p.id) === String(item.productId || item.id));
       let hsn = String(item.hsnSac || item.hsnCode || (prod ? prod.hsnCode : "")).trim();
@@ -308,15 +308,38 @@ function normalizeOrder(order) {
           hsn = "84713010";
         }
       }
-      return {
+      const isRenewedItem = Boolean(item.isRenewed || (prod && prod.isRenewed));
+      const grade = item.renewedGrade || (prod && prod.renewedGrade) || "A";
+      let displayName = item.name || (prod ? prod.title : "Item");
+      if (isRenewedItem && !displayName.includes("Certified Renewed")) {
+        displayName = `[Certified Renewed - Grade ${grade}] ${displayName} (6M Warranty)`;
+      }
+      const normalizedItem = {
         id: item.productId || item.id || (prod ? prod.id : ""),
-        name: item.name || (prod ? prod.title : "Item"),
+        name: displayName,
         quantity: Number(item.quantity || 1),
         price: Number(item.price || (prod ? prod.price : 0)),
         lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || (prod ? prod.price : 0))),
         hsnSac: hsn,
-        gstRate: typeof item.gstRate === "number" ? item.gstRate : (prod && typeof prod.gstRate === "number" ? prod.gstRate : null)
+        gstRate: typeof item.gstRate === "number" ? item.gstRate : (prod && typeof prod.gstRate === "number" ? prod.gstRate : null),
+        isRenewed: isRenewedItem,
+        renewedGrade: grade
       };
+      if (!item.protectionPlan) {
+        return [normalizedItem];
+      }
+      const protection = item.protectionPlan;
+      return [normalizedItem, {
+        id: `protection:${protection.id || "plan"}:${normalizedItem.id}`,
+        name: `ElectroMart Protect - ${protection.shortName || protection.name || "Device Protection Plan"}`,
+        quantity: normalizedItem.quantity,
+        price: Number(protection.price || 0),
+        lineTotal: Number(protection.price || 0) * normalizedItem.quantity,
+        hsnSac: String(protection.sacCode || "998714"),
+        gstRate: 0.18,
+        isProtectionPlan: true,
+        protectionPlan: protection
+      }];
     }),
     subtotal,
     shipping,

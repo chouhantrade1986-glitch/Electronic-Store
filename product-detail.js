@@ -2930,6 +2930,149 @@ function renderPdpExchangeWidget(product, currentPrice) {
 window.renderPdpExchangeWidget = renderPdpExchangeWidget;
 window.openExchangeModal = openExchangeModal;
 
+// ==========================================
+// Phase 31: Certified Renewed Alternative & Hero State
+// ==========================================
+function renderPdpRenewedAlternative(product, currentPrice) {
+  if (!product) return;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
+
+  const params = new URLSearchParams(window.location.search);
+  const isRenewedView = params.get("renewed") === "true" || Boolean(product.isRenewed) || String(product.id || "").startsWith("renewed_");
+
+  const heroBadge = document.getElementById("pdpRenewedHeroBadge");
+  const altBox = document.getElementById("pdpRenewedAlternativeBox");
+
+  if (isRenewedView) {
+    // 1. Certified Renewed Product View Mode
+    if (heroBadge) {
+      heroBadge.style.display = "flex";
+      const heroGrade = document.getElementById("pdpRenewedHeroGrade");
+      if (heroGrade) {
+        const gradeLetter = product.renewedGrade || "A";
+        const gradeDesc = gradeLetter === "A" ? "Grade A (Pristine)" : gradeLetter === "B" ? "Grade B (Very Good)" : "Grade C (Good)";
+        heroGrade.textContent = product.gradeLabel || gradeDesc;
+      }
+    }
+
+    // Ensure title prefix contains [Certified Renewed]
+    const titleEl = document.getElementById("productName") || document.getElementById("productTitle");
+    if (titleEl && !titleEl.textContent.includes("[Certified Renewed]")) {
+      titleEl.textContent = `[Certified Renewed] ${titleEl.textContent.replace(/^\[Certified Renewed\]\s*/, "")}`;
+      document.title = `${titleEl.textContent} - ElectroMart`;
+    }
+
+    // Update warranty text in services/trust block
+    const serviceWarranty = document.getElementById("serviceWarrantyText");
+    if (serviceWarranty) {
+      serviceWarranty.textContent = t.renewed_warranty_badge || "6-Month ElectroMart Warranty Included";
+    }
+
+    // Hide alternative box since this IS the renewed item
+    if (altBox) {
+      altBox.style.display = "none";
+    }
+    return;
+  }
+
+  // 2. Normal Brand-New Product View Mode
+  if (heroBadge) {
+    heroBadge.style.display = "none";
+  }
+
+  if (!altBox) return;
+
+  // Look for matching renewed item in catalog
+  const catalog = window.ELECTROMART_RENEWED_CATALOG || [];
+  let match = null;
+
+  if (Array.isArray(catalog) && catalog.length > 0) {
+    // Exact baseProductId match
+    match = catalog.find((item) => String(item.baseProductId || "").trim() === String(product.id || "").trim());
+
+  }
+
+  if (match) {
+    altBox.style.display = "block";
+    const gradeEl = document.getElementById("pdpRenewedAltGrade");
+    const priceEl = document.getElementById("pdpRenewedAltPrice");
+    const savingsEl = document.getElementById("pdpRenewedAltSavings");
+    const viewBtn = document.getElementById("btnViewRenewedAlternative");
+
+    if (gradeEl) {
+      gradeEl.textContent = match.gradeLabel || `Grade ${match.renewedGrade || 'A'} (${match.batteryHealth || 90}%+ Battery)`;
+    }
+    if (priceEl) {
+      priceEl.textContent = `₹${Number(match.renewedPrice || 0).toLocaleString("en-IN")}`;
+    }
+    if (savingsEl) {
+      const basePrice = Number(currentPrice || product.price || 0);
+      const renPrice = Number(match.renewedPrice || 0);
+      const savingsPct = match.savingsPercent || (basePrice > renPrice ? Math.round(((basePrice - renPrice) / basePrice) * 100) : 35);
+      savingsEl.textContent = `${t.renewed_savings_callout || "Save"} ${savingsPct}%`;
+    }
+    if (viewBtn) {
+      viewBtn.href = `product-detail.html?id=${encodeURIComponent(product.id)}&renewed=true`;
+      viewBtn.onclick = (e) => {
+        e.preventDefault();
+        // Morph product record to renewed variant
+        product.isRenewed = true;
+        product.renewedGrade = match.renewedGrade || "A";
+        product.gradeLabel = match.gradeLabel;
+        product.batteryHealth = match.batteryHealth;
+        product.price = match.renewedPrice;
+        product.listPrice = match.originalMrp || product.listPrice;
+        product.warrantyDuration = "6 Months";
+        renderProduct(product);
+        window.history.pushState({}, "", `product-detail.html?id=${encodeURIComponent(product.id)}&renewed=true`);
+      };
+    }
+  } else {
+    altBox.style.display = "none";
+  }
+}
+window.renderPdpRenewedAlternative = renderPdpRenewedAlternative;
+
+function renderProtectionAddon(product) {
+  const widget = document.getElementById("protectionPlanWidget");
+  if (!widget || typeof window.isProtectionEligible !== "function") return;
+  if (!window.isProtectionEligible(product)) {
+    widget.hidden = true;
+    widget.innerHTML = "";
+    return;
+  }
+
+  const plans = Array.isArray(window.ELECTROMART_PROTECTION_PLANS) ? window.ELECTROMART_PROTECTION_PLANS : [];
+  const selected = typeof window.getSelectedProtection === "function" ? window.getSelectedProtection(product.id) : null;
+  widget.hidden = false;
+  widget.innerHTML = `
+    <h3 id="protectionPlanTitle">ElectroMart Protect / ElectroMart Care</h3>
+    <p class="protection-plan-help">Add eligible one-year device protection. Plan charges are shown separately with 18% GST.</p>
+    <label class="protection-option"><input type="radio" name="protectionPlan" value="none" ${selected ? "" : "checked"} /> No protection</label>
+    ${plans.map((plan) => `
+      <label class="protection-option"><input type="radio" name="protectionPlan" value="${plan.id}" ${selected && selected.id === plan.id ? "checked" : ""} />
+        <span><strong>${plan.shortName}</strong><small> +${money(plan.price)} + 18% GST</small></span>
+      </label>
+    `).join("")}
+  `;
+  widget.querySelectorAll("input[name='protectionPlan']").forEach((input) => {
+    input.addEventListener("change", () => {
+      if (input.value === "none") {
+        window.setSelectedProtection(product.id, null);
+      } else {
+        window.setSelectedProtection(product.id, input.value);
+      }
+    });
+  });
+  window.addEventListener("protection:updated", () => {
+    if (window.currentLoadedProduct && String(window.currentLoadedProduct.id) === String(product.id)) {
+      renderProtectionAddon(window.currentLoadedProduct);
+    }
+  }, { once: true });
+}
+window.renderProtectionAddon = renderProtectionAddon;
+
 let activeRenderedProduct = null;
 function renderProductHeader(product) {
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
@@ -3166,6 +3309,8 @@ function renderStarCharacters(rating) {
   renderReviewSummary(product);
   renderQa(product);
   renderPdpExchangeWidget(product, price);
+  renderPdpRenewedAlternative(product, price);
+  renderProtectionAddon(product);
 
   renderRecentlyViewedDetailSection();
 
@@ -3333,9 +3478,40 @@ window.localizeBatterySpecs = localizeBatterySpecs;
 async function loadProductSafely(productId) {
   let product = null;
   const rawId = String(productId || "").trim();
+  const renewedParams = new URLSearchParams(window.location.search);
+  const wantsRenewed = renewedParams.get("renewed") === "true";
+
+  if (wantsRenewed && rawId && Array.isArray(window.ELECTROMART_RENEWED_CATALOG)) {
+    const renewedItem = window.ELECTROMART_RENEWED_CATALOG.find((item) =>
+      String(item.id) === rawId || String(item.baseProductId || "") === rawId
+    );
+    if (renewedItem) {
+      const taxProfile = typeof window.resolveRenewedTaxProfile === "function"
+        ? window.resolveRenewedTaxProfile(renewedItem)
+        : { hsnCode: "84713010", gstRate: 0.18 };
+      product = mapApiProduct({
+        id: renewedItem.id,
+        name: `[Certified Renewed - Grade ${renewedItem.renewedGrade || "A"}] ${renewedItem.name}`,
+        brand: renewedItem.brand,
+        category: renewedItem.category,
+        price: renewedItem.renewedPrice,
+        listPrice: renewedItem.originalMrp,
+        image: renewedItem.image,
+        rating: renewedItem.rating,
+        stock: 10
+      });
+      product.isRenewed = true;
+      product.renewedGrade = renewedItem.renewedGrade || "A";
+      product.gradeLabel = renewedItem.gradeLabel || `Grade ${product.renewedGrade}`;
+      product.batteryHealth = renewedItem.batteryHealth || 90;
+      product.warrantyDuration = "6 Months";
+      product.hsnCode = taxProfile.hsnCode;
+      product.gstRate = taxProfile.gstRate;
+    }
+  }
 
   // 1. Direct match in local catalog map / list (EM_CATALOG)
-  if (rawId) {
+  if (!product && rawId) {
     const emMap = window.EM_CATALOG_MAP || {};
     const emList = window.EM_CATALOG || [];
     const directMatch = emMap[rawId] || emList.find((p) => String(p.id) === rawId);
@@ -3409,6 +3585,26 @@ addToCartBtn.addEventListener("click", () => {
         }
       } catch (e) {}
     }
+    const currentProd = window.currentLoadedProduct || (typeof activeRenderedProduct !== "undefined" ? activeRenderedProduct : null);
+    if (currentProd && currentProd.isRenewed) {
+      try {
+        const catMap = loadCatalogMap();
+        catMap[productId] = {
+          ...catMap[productId],
+          id: productId,
+          name: currentProd.name.includes("Certified Renewed") ? currentProd.name : `[Certified Renewed - Grade ${currentProd.renewedGrade || 'A'}] ${currentProd.name}`,
+          price: Number(currentProd.price || 0),
+          image: currentProd.image || (Array.isArray(currentProd.images) && currentProd.images[0]) || "",
+          isRenewed: true,
+          renewedGrade: currentProd.renewedGrade || "A",
+          gradeLabel: currentProd.gradeLabel || `Grade ${currentProd.renewedGrade || 'A'} (Excellent)`,
+          batteryHealth: currentProd.batteryHealth || 90,
+          warrantyDuration: "6 Months",
+          gstRate: 0.18
+        };
+        saveCatalogMap(catMap);
+      } catch (e) {}
+    }
     addProductToCart(productId, addQty);
 
     const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
@@ -3421,7 +3617,6 @@ addToCartBtn.addEventListener("click", () => {
       addToCartBtn.textContent = origText;
     }, 1500);
 
-    const currentProd = window.currentLoadedProduct || (typeof activeRenderedProduct !== "undefined" ? activeRenderedProduct : null);
     const flyoutPayload = currentProd ? { ...currentProd, qty: addQty } : { id: productId, qty: addQty };
     if (typeof window.openCartFlyout === "function") {
       window.openCartFlyout(flyoutPayload);

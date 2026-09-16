@@ -8,6 +8,12 @@ const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
 
+function resolveRenewedTaxProfile(product) {
+  const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
+  const isDisplay = /(^|\s)(tv|television|monitor|display)(\s|$)/.test(searchable);
+  return isDisplay ? { hsnCode: "85287200", gstRate: 0.28 } : { hsnCode: "84713010", gstRate: 0.18 };
+}
+
 const checkoutItemsEl = document.getElementById("checkoutItems");
 const summaryItemsEl = document.getElementById("summaryItems");
 const subtotalEl = document.getElementById("subtotalValue");
@@ -744,7 +750,27 @@ function getCartRows() {
       if (Number(qty) <= 0) {
         return null;
       }
-      const product = productMap.get(String(id)) || cachedCatalog[String(id)] || null;
+      let product = productMap.get(String(id)) || cachedCatalog[String(id)] || null;
+      if (!product && typeof window !== "undefined" && Array.isArray(window.ELECTROMART_RENEWED_CATALOG)) {
+        const rp = window.ELECTROMART_RENEWED_CATALOG.find((item) => String(item.id) === String(id));
+        if (rp) {
+          const renewedTaxProfile = resolveRenewedTaxProfile(rp);
+          product = {
+            id: String(rp.id),
+            name: rp.name.includes("Certified Renewed") ? rp.name : `[Certified Renewed - Grade ${rp.renewedGrade || 'A'}] ${rp.name}`,
+            price: Number(rp.renewedPrice || 0),
+            image: rp.image || fallbackImage(),
+            stock: 10,
+            isRenewed: true,
+            renewedGrade: rp.renewedGrade || "A",
+            gradeLabel: rp.gradeLabel,
+            batteryHealth: rp.batteryHealth,
+            warrantyDuration: "6 Months",
+            hsnCode: renewedTaxProfile.hsnCode,
+            gstRate: renewedTaxProfile.gstRate
+          };
+        }
+      }
       if (!product) {
         return {
           id: String(id),
@@ -763,7 +789,13 @@ function getCartRows() {
         quantity: Number(qty),
         category: product.category || "",
         hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
-        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18
+        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
+        isRenewed: Boolean(product.isRenewed),
+        renewedGrade: product.renewedGrade || null,
+        warrantyDuration: product.warrantyDuration || (product.isRenewed ? "6 Months" : null),
+        protectionPlan: typeof window !== "undefined" && typeof window.getSelectedProtection === "function" && typeof window.buildProtectionLine === "function"
+          ? window.buildProtectionLine(product, window.getSelectedProtection(product.id))
+          : null
       };
     })
     .filter(Boolean);
@@ -882,6 +914,16 @@ function renderCheckoutItems(rows) {
         🔄 <strong>Exchange:</strong> ${ex.modelName || "Device"} (IMEI/SN: ${ex.imei || "Verified"}) · <strong style="color:#007600;">-${money(ex.finalValue)}</strong>
       </div>
     ` : "";
+    const renewedHtml = row.isRenewed ? `
+      <div class="checkout-renewed-pill" style="display:inline-block;background:#e8f7ee;border:1px solid #067d62;padding:2px 8px;border-radius:4px;font-size:12px;color:#067d62;margin-top:4px;font-weight:600;">
+        ♻️ <strong>Certified Renewed:</strong> Grade ${row.renewedGrade || 'A'} · 6 Months Warranty
+      </div>
+    ` : "";
+    const protectionHtml = row.protectionPlan ? `
+      <div class="checkout-protection-pill" style="display:inline-block;background:#eef8f7;border:1px solid #8bc9c5;padding:2px 8px;border-radius:4px;font-size:12px;color:#00635f;margin-top:4px;font-weight:600;">
+        🛡️ <strong>${row.protectionPlan.name}</strong> · ${money(row.protectionPlan.price)} + 18% GST
+      </div>
+    ` : "";
 
     return `
       <article class="checkout-item">
@@ -890,6 +932,8 @@ function renderCheckoutItems(rows) {
           <h3>${row.name}</h3>
           <p>Qty: ${row.quantity}</p>
           ${exchangeHtml}
+          ${renewedHtml}
+          ${protectionHtml}
         </div>
         <strong class="item-line-total">${money(row.quantity * row.price)}</strong>
       </article>
@@ -900,7 +944,7 @@ function renderCheckoutItems(rows) {
 
 function getPricingBreakdown(rows) {
   const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
-  const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price, 0);
+  const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price + (row.protectionPlan ? row.quantity * row.protectionPlan.price : 0), 0);
   const primeActive = isPrimeActive();
   const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
@@ -913,14 +957,15 @@ function getPricingBreakdown(rows) {
   const gstBreakdownByRate = {};
 
   rows.forEach((item) => {
-    const itemSubtotal = item.price * item.quantity;
-    const discountedItemSubtotal = itemSubtotal * discountRatio;
-    const rate = typeof item.gstRate === "number" ? item.gstRate : 0.18;
-    const itemGst = discountedItemSubtotal * rate;
-    totalGst += itemGst;
-
-    const rateKey = String(Math.round(rate * 100));
-    gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    [item, item.protectionPlan].filter(Boolean).forEach((line) => {
+      const itemSubtotal = line.price * item.quantity;
+      const discountedItemSubtotal = itemSubtotal * discountRatio;
+      const rate = typeof line.gstRate === "number" ? line.gstRate : 0.18;
+      const itemGst = discountedItemSubtotal * rate;
+      totalGst += itemGst;
+      const rateKey = String(Math.round(rate * 100));
+      gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    });
   });
 
   let totalExchangeDiscount = 0;
@@ -1349,7 +1394,11 @@ function createOfflineOrder(rows, paymentMethod, shippingAddress) {
       name: row.name,
       price: Number(row.price || 0),
       quantity: Number(row.quantity || 1),
-      lineTotal: Number(row.quantity || 1) * Number(row.price || 0)
+      lineTotal: Number(row.quantity || 1) * Number(row.price || 0),
+      isRenewed: Boolean(row.isRenewed),
+      renewedGrade: row.renewedGrade || null,
+      warrantyDuration: row.warrantyDuration || (row.isRenewed ? "6 Months" : null)
+      , protectionPlan: row.protectionPlan || null
     })),
     subtotal,
     shipping,

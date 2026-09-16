@@ -41,6 +41,12 @@
         <p id="productRating" class="rating"></p>
         <p class="seller-line" id="productBrandRow"><a id="brandStoreLink" href="brands.html"></a></p>
         <div class="product-badge-social-row" id="productBadgeSocialRow">
+          <div id="pdpRenewedHeroBadge" class="pdp-renewed-hero-badge" style="display: none;">
+            <span class="badge-icon">♻️</span>
+            <strong>ElectroMart Certified Renewed</strong>
+            <span class="badge-grade" id="pdpRenewedHeroGrade">Grade A (Excellent)</span>
+            <span class="badge-warranty">🛡️ 6 Months Warranty</span>
+          </div>
           <span class="amazons-choice-badge" id="amazonsChoiceBadge">
             <span class="ac-badge-pill"><span class="ac-text">ElectroMart's <span class="ac-accent">Choice</span></span></span>
           </span>
@@ -161,6 +167,27 @@
           </div>
         </div>
 
+        <!-- Phase 31: Certified Renewed Alternative Callout Box -->
+        <div class="pdp-renewed-callout" id="pdpRenewedAlternativeBox" style="display: none;">
+          <div class="pdp-renewed-callout-header">
+            <span class="renewed-leaf-icon">♻️</span>
+            <span class="renewed-callout-tag" data-i18n="renewed_pdp_alt_title">Consider a certified renewed model</span>
+          </div>
+          <div class="pdp-renewed-callout-body">
+            <div class="pdp-renewed-price-info">
+              <span class="renewed-grade-tag" id="pdpRenewedAltGrade">Grade A (Excellent)</span>
+              <span class="renewed-alt-price" id="pdpRenewedAltPrice">₹79,999</span>
+              <span class="renewed-alt-savings" id="pdpRenewedAltSavings">Save 38%</span>
+            </div>
+            <p class="pdp-renewed-warranty-text" data-i18n="renewed_pdp_alt_desc">
+              Available in excellent condition with 6-month ElectroMart warranty &amp; 47-point diagnostic test.
+            </p>
+            <a href="#" class="btn-pdp-view-renewed" id="btnViewRenewedAlternative" data-i18n="renewed_pdp_alt_btn">
+              View Renewed Option ›
+            </a>
+          </div>
+        </div>
+
         <!-- Amazon Style Delivery Section -->
         <div class="buybox-delivery-section">
           <div class="delivery-badge-row">
@@ -196,6 +223,9 @@
             <option value="5">5</option>
           </select>
         </div>
+
+        <!-- Phase 32: ElectroMart Protect / ElectroMart Care add-ons -->
+        <section id="protectionPlanWidget" class="pdp-protection-widget" hidden aria-labelledby="protectionPlanTitle"></section>
 
         <!-- Amazon Primary Buttons -->
         <div class="buybox-buttons">
@@ -622,6 +652,8 @@
   <script src="auth-state.js?v=20260313b"></script>
   <script src="shared-search.js?v=20260314g"></script>
   <script src="customer-media.js?v=20260412a"></script>
+  <script src="renewed.js"></script>
+  <script src="warranty.js"></script>
   <script src="product-detail.js?v=20260315b"></script>
 </body>
 </html>

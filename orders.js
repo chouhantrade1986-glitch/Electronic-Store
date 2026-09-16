@@ -1714,6 +1714,7 @@ function orderCard(order) {
 
   const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
   const firstProductId = order.productId || (Array.isArray(order.items) && order.items[0]?.productId) || "";
+  const hasProtectionPlan = Array.isArray(order.items) && order.items.some((item) => item && item.protectionPlan);
 
   return `
     <article class="order-card" data-order-id="${order.id}">
@@ -1787,6 +1788,7 @@ function orderCard(order) {
           <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-product-id="${escapeHtml(firstProductId)}" data-i18n="write_review">Write a product review</button>
           <button type="button" class="secondary-pill-btn seller-feedback-btn" data-id="${order.id}" data-i18n="seller_feedback">Leave seller feedback</button>
           <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" target="_blank" rel="noopener" data-i18n="download_invoice">Download Invoice</a>
+          ${hasProtectionPlan ? `<a href="warranty.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" data-i18n="warranty_certificate">Download Warranty Certificate</a><a href="warranty.html?orderId=${encodeURIComponent(order.id)}#claimWizardForm" class="secondary-pill-btn" data-i18n="claim_protection">Claim Protection</a>` : ""}
         </div>
       </div>
       ${trackingPanel(order)}
