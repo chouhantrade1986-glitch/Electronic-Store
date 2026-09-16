@@ -27,8 +27,9 @@
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/account.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/auth.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/cart.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/wishlist.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/wishlist.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/registry.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/customer-media.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/checkout.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/orders.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://06037w7q-5500.inc1.devtunnels.ms/review.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>

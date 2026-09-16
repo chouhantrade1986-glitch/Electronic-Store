@@ -721,10 +721,58 @@ function renderReviewSummary(product) {
   // Render Customer Media Gallery
   const customerGallery = document.getElementById("customerMediaGallery");
   const customerGalleryTrack = document.getElementById("customerGalleryTrack");
+  const seeAllMediaLink = document.getElementById("seeAllCustomerMediaLink");
+
+  // Fetch verified customer photos and videos for this product
+  let productMedia = [];
+  if (typeof window.loadCustomerMedia === "function") {
+    const allStored = window.loadCustomerMedia();
+    if (Array.isArray(allStored) && product) {
+      productMedia = allStored.filter(m => String(m.productId) === String(product.id));
+    }
+  }
+
   const allImages = allReviews.flatMap(r => r.images || []);
+
   if (customerGallery && customerGalleryTrack) {
-    if (allImages.length > 0) {
+    if (productMedia.length > 0) {
       customerGallery.hidden = false;
+      if (seeAllMediaLink && product) {
+        seeAllMediaLink.href = `customer-media.html?productId=${encodeURIComponent(product.id)}`;
+        const seeAllText = (t && t.media_pdp_see_all) || "See all customer photos & videos ›";
+        seeAllMediaLink.textContent = `${seeAllText} (${productMedia.length})`;
+      }
+
+      customerGalleryTrack.innerHTML = productMedia.map((m, idx) => `
+        <div class="customer-gallery-thumb-wrapper" data-media-id="${m.id}" data-media-index="${idx}" role="button" tabindex="0" aria-label="${m.type === 'video' ? 'Customer video' : 'Customer photo'}">
+          <img class="customer-gallery-thumb" src="${m.thumbnailUrl || m.mediaUrl}" alt="${m.headline || 'Customer review media'}" onerror="this.src='product-placeholder.svg'" />
+          ${m.type === 'video' ? `<span class="customer-gallery-video-tag">▶ ${m.duration || 'Video'}</span>` : ''}
+        </div>
+      `).join("");
+
+      customerGalleryTrack.querySelectorAll(".customer-gallery-thumb-wrapper").forEach((wrap, idx) => {
+        wrap.addEventListener("click", () => {
+          if (typeof window.setActiveCustomerMedia === "function") {
+            window.setActiveCustomerMedia(productMedia);
+          }
+          if (typeof window.openLightbox === "function") {
+            window.openLightbox(idx);
+          } else {
+            window.location.href = `customer-media.html?productId=${encodeURIComponent(product.id)}&mediaId=${encodeURIComponent(wrap.dataset.mediaId)}`;
+          }
+        });
+        wrap.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            wrap.click();
+          }
+        });
+      });
+    } else if (allImages.length > 0) {
+      customerGallery.hidden = false;
+      if (seeAllMediaLink && product) {
+        seeAllMediaLink.href = `customer-media.html?productId=${encodeURIComponent(product.id)}`;
+      }
       customerGalleryTrack.innerHTML = allImages.map(img => `
         <img class="customer-gallery-thumb" src="${img}" alt="Customer review photo" />
       `).join("");

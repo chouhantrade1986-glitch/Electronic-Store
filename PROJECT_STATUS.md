@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 23: Delivery Tracking Visualizer Completed)  
+**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 28: ElectroMart Verified Customer Reviews Video & Photo Gallery Hub Completed)  
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,21 +10,19 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 55 / 55 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 60 / 60 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **कस्टमर मीडिया व वीडियो गैलरी टेस्ट** | `node scratch/test-amazon-customer-media.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
+| **मल्टी-लिस्ट व गिफ्ट रजिस्ट्री टेस्ट** | `node scratch/test-amazon-multi-list-registry.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
+| **24x7 कस्टमर सर्विस व हेल्प सेंटर टेस्ट** | `node scratch/test-amazon-help-center.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
+| **रिटर्न्स व रिप्लेसमेंट्स सेंटर टेस्ट** | `node scratch/test-amazon-returns-center.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
+| **प्राइम मेंबरशिप व रिवॉर्ड्स टेस्ट** | `node scratch/test-amazon-prime-hub.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **डिलीवरी ट्रैकिंग विज़ुअलाइज़र टेस्ट** | `node scratch/test-amazon-delivery-tracking.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **लाइटनिंग डील्स व लाइव ड्रॉप्स हब टेस्ट** | `node scratch/test-amazon-lightning-deals.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **ElectroMart Pay व UPI हब टेस्ट** | `node scratch/test-amazon-pay-hub.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
-| **प्रोडक्ट कंपैरिज़न हब टेस्ट** | `node scratch/test-amazon-compare-hub.js` | ✅ **PASS** | 5 / 5 ब्लॉक्स उत्तीर्ण (100%) |
-| **B2B बल्क व GSTIN पोर्टल टेस्ट** | `node scratch/test-b2b-bulk-purchase-portal.js` | ✅ **PASS** | 9 / 9 ब्लॉक उत्तीर्ण (100%) |
-| **समर्पित ऑथ व सुरक्षा टेस्ट** | `node scratch/test-amazon-login-register.js` | ✅ **PASS** | 7 / 7 ब्लॉक उत्तीर्ण (100%) |
-| **फ़िलाईआउट ऑक्लूजन व विशलिस्ट फ़्लो** | `node scratch/test-flyout-occlusion-and-wishlist-flow.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
-| **सर्च व कैटगरी फ़िल्टरिंग टेस्ट** | `node scratch/test-search-and-category-filtering.js` | ✅ **PASS** | 9 / 9 चरण उत्तीर्ण (100%) |
+| **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **ऑर्डर्स हब व एड्रेस सिंक टेस्ट** | `node scratch/test-orders-and-account-popups.js` | ✅ **PASS** | 5 / 5 परिदृश्य उत्तीर्ण (100%) |
-| **भारतीय GST अनुपालन टेस्ट** | `node scratch/test-indian-gst-compliance.js` | ✅ **PASS** | 6 / 6 परिदृश्य उत्तीर्ण (0 पैसे का अंतर) |
-| **ऑर्डर कन्फर्मेशन व इनवॉइस टेस्ट** | `node scratch/test-thankyou-and-invoice-pages.js` | ✅ **PASS** | 6 / 6 चरण उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **135 / 135 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **134 / 134 (100% Pass Rate)** |
 
 ---
 
@@ -398,6 +396,38 @@
     - `electromart_wishlist_v1` स्ट्रिंग ऐरे के साथ 100% बैकवर्ड कम्पैटिबिलिटी व स्टेट सिंक।
   - **100% ब्रांड व लीगल सुरक्षा:** 100% ElectroMart Wishlist / Registry; 0 ग्राहक-सामने "Amazon" संदर्भ।
   - **11 भारतीय क्षेत्रीय भाषाएं एवं पूर्ण टेस्ट कवरेज:** `translations.js` में `ELECTROMART_REGISTRY_I18N` डिक्शनरी कवरेज (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu) और `scratch/test-amazon-multi-list-registry.js` (5/5 लेयर्स 100% पास, कुल 59/59 टेस्ट सूट्स 100% उत्तीर्ण)।
+- **चरण 28 (Verified Customer Reviews Video & Photo Gallery Hub - `customer-media.html` / PDP Media Strip):**
+  - **समर्पित ग्राहक मीडिया गैलरी हब (`customer-media.html`):**
+    - हीरो स्टेटिस्टिक्स स्ट्रिप: कुल अपलोड्स (`#statTotalUploads`), हाई-रेज़ तस्वीरें (`#statPhotosCount`), अनबॉक्सिंग वीडियोज़ (`#statVideosCount`), और सत्यापित खरीदार प्रतिशत (`#statVerifiedRatio`)।
+    - मीडिया टाइप फ़िल्टरिंग पिल्स (All Media, Photos Only, Videos Only) विथ रियल-टाइम स्टेट एक्टिवेशन।
+    - रियल-टाइम प्रोडक्ट व कीवर्ड सर्च बॉक्स (`#mediaSearchInput`) विथ क्लियर बटन।
+    - 6-कैटेगरी फ़िल्टर पिल्स (All, Laptops, Mobiles, Audio, Gaming & PC, Printers, Accessories)।
+    - 3-वे सॉर्टिंग ड्रॉपडाउन (`#mediaSortSelect`): Most Recent, Most Helpful, Highest Rated।
+    - एक्टिव फ़िल्टर इंडिकेटर बार (`#activeFilterBar`) विथ 1-क्लिक "Clear all filters" रीसेट।
+  - **रेस्पॉन्सिव मेसनरी ग्रिड व कार्ड्स (`#customerMediaGrid`):**
+    - 4:3 आस्पेक्ट रेशियो मीडिया फ्रेम्स, ज़ूम-ऑन-होवर, और वीडियो प्ले ओवरले बटन।
+    - वीडियो ड्यूरेशन पिल्स (`▶ 0:48`, `▶ 0:36`, `▶ 0:52`) और ग्राहक फोटो टैग्स।
+    - समीक्षा विवरण: ग्राहक का नाम, शहर/राज्य, तारीख, सत्यापित खरीद बैज, 5★ रेटिंग, हेडलाइन और संक्षिप्त टेक्स्ट।
+  - **फुल-स्क्रीन 2-कॉलम लाइटबॉक्स मोडल (`#mediaLightboxModal`):**
+    - बायां कॉलम: फुल-व्यू इमेज/वीडियो प्लेयर विथ नेविगेशन पैडल्स (`#prevMediaBtn`, `#nextMediaBtn`) और बॉटम थंबनेल स्क्रबर स्ट्रिप (`#lightboxThumbStrip`)।
+    - दायां कॉलम: समीक्षक प्रोफाइल, सत्यापित खरीद बैज, पूर्ण समीक्षा, 1-क्लिक हेल्पफुल वोटिंग (`#lightboxHelpfulBtn`), और प्रोडक्ट बायबॉक्स कार्ड (`#lightboxProductCard`)।
+    - बायबॉक्स में 1-क्लिक "Add to Cart" (`#lightboxAddToCartBtn`) जो `electromart_cart_v1` को अपडेट करता है, हेडर कार्ट बैज सिंक करता है और टोस्ट फीडबैक दिखाता है।
+  - **ऑडियो व वीडियो मेमोरी हाइजीन:**
+    - मोडल क्लोज़, आइटम नेविगेशन और `beforeunload`/`unload` पर `stopActiveVideoPlayback` कॉल: `existingVideo.pause()`, `existingVideo.removeAttribute('src')`, और `existingVideo.load()` से बैकग्राउंड ऑडियो या मेमोरी लीक की शून्य संभावना।
+    - फुल कीबोर्ड सपोर्ट: `Escape` से लाइटबॉक्स बंद, `ArrowLeft` से पिछला मीडिया, `ArrowRight` से अगला मीडिया।
+  - **ग्राहक मीडिया अपलोड मोडल (`#uploadMediaModal`):**
+    - ड्रैग-एंड-ड्रॉप ज़ोन (`#fileDropzone`), फ़ाइल ब्राउज़र, उत्पाद चयन ड्रॉपडाउन, स्टार रेटिंग, हेडलाइन और विस्तृत समीक्षा।
+    - लाइव फ़ाइल थंबनेल प्रीव्यूज़ विथ रिमूव बटन और सबमिशन के बाद `electromart_customer_media_v1` में तत्काल प्रविष्टि।
+  - **PDP इंटीग्रेशन (`product-detail.html`, `product-detail.js`, `product-detail.css`):**
+    - `#customerMediaGallery` में "See all customer photos & videos ›" लिंक (`#seeAllCustomerMediaLink`) जो उत्पाद आईडी के अनुसार `customer-media.html?productId=...` पर डीप-लिंक करता है।
+    - कस्टमर मीडिया थंबनेल स्ट्रिप विथ वीडियो ड्यूरेशन बैज और क्लिक पर सीधे लाइटबॉक्स मोडल लॉन्च।
+    - पुराने इमेज ऐरे के साथ 100% बैकवर्ड कम्पैटिबिलिटी।
+  - **ग्लोबल नेविगेशन व साइटमैप:**
+    - `header.html`: "Customer Photos & Videos" लिंक इन "Your Lists" फ्लाईआउट और हैमबर्गर ड्रॉर प्रोग्राम्स।
+    - `account.html`: समर्पित "Customer Photos & Videos" क्विक टाइल (`#tileCustomerMedia`)।
+    - `sitemap.xml`: `customer-media.html` की नई प्रविष्टि।
+  - **11 भारतीय भाषाएं एवं 100% ब्रांड सुरक्षा:** `translations.js` में 48+ नई मीडिया कीज और 0 विज़िबल Amazon संदर्भ।
+  - **टेस्ट मेट्रिक्स:** `scratch/test-amazon-customer-media.js` (6/6 लेयर्स उत्तीर्ण, कुल 60/60 टेस्ट सूट्स 100% पास)।
 
 ---
 

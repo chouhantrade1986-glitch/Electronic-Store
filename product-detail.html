@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="product-detail.css?v=20260305c" />
+  <link rel="stylesheet" href="customer-media.css?v=20260412a" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
@@ -264,7 +265,10 @@
         <div class="amazon-review-right">
           <!-- Customer Images Gallery -->
           <div id="customerMediaGallery" class="customer-media-gallery" hidden>
-            <h3 class="customer-gallery-title" data-i18n="review_customer_photos">Reviews with customer images</h3>
+            <div class="customer-gallery-header-row">
+              <h3 class="customer-gallery-title" data-i18n="review_customer_photos">Reviews with customer images</h3>
+              <a href="customer-media.html" id="seeAllCustomerMediaLink" class="see-all-customer-media-link" data-i18n="media_pdp_see_all">See all customer photos &amp; videos ›</a>
+            </div>
             <div id="customerGalleryTrack" class="customer-gallery-track"></div>
           </div>
 
@@ -356,6 +360,67 @@
     </section>
   </main>
 
+  <!-- Full-Screen 2-Column Lightbox Modal Dialog for Customer Media -->
+  <dialog id="mediaLightboxModal" class="amz-lightbox-modal" aria-labelledby="lightboxHeadline">
+    <div class="lightbox-content-box">
+      <button type="button" id="closeLightboxBtn" class="btn-lightbox-close" aria-label="Close dialog">&times;</button>
+      <div class="lightbox-columns">
+        <div class="lightbox-media-column">
+          <div class="lightbox-viewport-container" id="lightboxViewport">
+            <div id="lightboxMediaHolder" class="lightbox-media-holder"></div>
+            <button type="button" id="prevMediaBtn" class="lightbox-nav-paddle prev" aria-label="Previous media">&#10094;</button>
+            <button type="button" id="nextMediaBtn" class="lightbox-nav-paddle next" aria-label="Next media">&#10095;</button>
+          </div>
+          <div class="lightbox-scrubber-strip" id="lightboxThumbStrip" role="region" aria-label="Media Thumbnails"></div>
+        </div>
+        <div class="lightbox-details-column">
+          <div class="lightbox-reviewer-row">
+            <div class="reviewer-avatar" id="lightboxReviewerAvatar">E</div>
+            <div class="reviewer-meta">
+              <strong class="reviewer-name" id="lightboxReviewerName">ElectroMart Customer</strong>
+              <div class="verified-badge-row" id="lightboxVerifiedBadge">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#c45500" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span data-i18n="lightbox_verified_purchase">Verified Purchase</span>
+              </div>
+            </div>
+          </div>
+          <div class="lightbox-rating-date-row">
+            <span class="lightbox-stars" id="lightboxStars">★★★★★</span>
+            <span class="lightbox-date" id="lightboxDate">Reviewed in India</span>
+          </div>
+          <h3 class="lightbox-headline" id="lightboxHeadline">Verified customer review</h3>
+          <p class="lightbox-body" id="lightboxReviewBody">Loading customer review feedback...</p>
+          <div class="lightbox-helpful-row">
+            <button type="button" id="lightboxHelpfulBtn" class="btn-lightbox-helpful">
+              <span class="thumb-icon" aria-hidden="true">👍</span>
+              <span data-i18n="lightbox_helpful_btn">Helpful</span>
+              (<span id="lightboxHelpfulCount">0</span>)
+            </button>
+            <span class="report-link">Report</span>
+          </div>
+          <div class="lightbox-product-card" id="lightboxProductCard">
+            <div class="card-head">
+              <img src="product-placeholder.svg" alt="Product thumbnail" class="card-prod-thumb" id="lightboxProdThumb" />
+              <div class="card-prod-info">
+                <a href="product-detail.html" class="card-prod-title" id="lightboxProdTitle">Product Title</a>
+                <div class="card-prod-rating" id="lightboxProdRating">★★★★☆ (4.5)</div>
+              </div>
+            </div>
+            <div class="card-price-stack">
+              <span class="card-current-price" id="lightboxProdPrice">₹0</span>
+              <span class="card-mrp-price" id="lightboxProdMrp">₹0</span>
+              <span class="card-discount-badge" id="lightboxProdDiscount">-0%</span>
+            </div>
+            <button type="button" id="lightboxAddToCartBtn" class="btn-lightbox-add-cart" data-i18n="lightbox_add_to_cart">Add to Cart</button>
+            <a href="customer-media.html" id="lightboxViewProductLink" class="lightbox-view-pdp-link" data-i18n="media_pdp_see_all">See all customer photos &amp; videos ›</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <div id="fullscreenViewer" class="fullscreen-viewer" hidden>
     <div class="fullscreen-modal">
       <button id="fullscreenCloseBtn" type="button" class="fullscreen-close" aria-label="Close viewer">&times;</button>
@@ -395,6 +460,7 @@
   <script src="menu-manager.js?v=20260313b"></script>
   <script src="auth-state.js?v=20260313b"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="customer-media.js?v=20260412a"></script>
   <script src="product-detail.js?v=20260315b"></script>
 </body>
 </html>
