@@ -65,6 +65,18 @@
       </div>
     </header>
 
+    <!-- ElectroMart Celebrations & Gift Registry Promotion Banner -->
+    <div class="amz-wishlist-registry-banner" id="wishlistRegistryBanner">
+      <div class="banner-left">
+        <span class="banner-gift-icon" aria-hidden="true">🎁</span>
+        <div>
+          <strong>ElectroMart Celebrations & Gift Registry</strong>
+          <p>Planning for a wedding, birthday, housewarming, or dream tech setup? Create a dedicated registry with countdowns and goal tracking.</p>
+        </div>
+      </div>
+      <a href="registry.html" class="amz-btn-registry-banner" id="exploreRegistryBannerLink" data-i18n="wishlist_registry_banner">Explore Gift Registry &rsaquo;</a>
+    </div>
+
     <!-- 2-Column Responsive Layout -->
     <div class="amz-wishlist-layout">
       <!-- Left Sidebar: Your Lists -->
@@ -161,6 +173,39 @@
         <button type="button" id="copyShareLinkBtn" class="amz-btn-copy-link">Copy Link</button>
       </div>
       <div id="copySuccessMsg" class="amz-copy-success" style="display:none;" data-i18n="wishlist_link_copied">Wishlist link copied to clipboard!</div>
+    </div>
+  </dialog>
+
+  <!-- Edit Item Priority & Notes Modal Dialog -->
+  <dialog id="editItemMetaModal" class="amz-modal" aria-labelledby="editItemMetaModalTitle">
+    <div class="amz-modal-content">
+      <div class="amz-modal-header">
+        <h3 id="editItemMetaModalTitle" data-i18n="wishlist_btn_edit_notes">Add comments, priority & quantity</h3>
+        <button type="button" class="amz-modal-close" id="closeEditMetaModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="editItemMetaForm" onsubmit="event.preventDefault();">
+        <input type="hidden" id="editMetaProductId" value="" />
+        <div class="amz-form-group">
+          <label for="editMetaPrioritySelect" data-i18n="wishlist_priority_label">Priority</label>
+          <select id="editMetaPrioritySelect">
+            <option value="high" data-i18n="wishlist_priority_high">High</option>
+            <option value="medium" selected data-i18n="wishlist_priority_medium">Medium</option>
+            <option value="low" data-i18n="wishlist_priority_low">Low</option>
+          </select>
+        </div>
+        <div class="amz-form-group">
+          <label for="editMetaNotesInput" data-i18n="wishlist_notes_label">Notes / Comments</label>
+          <textarea id="editMetaNotesInput" rows="3" placeholder="Add personal notes (e.g. wait for festive discount, color preference)..." data-i18n-placeholder="wishlist_notes_placeholder" style="width:100%; box-sizing:border-box; padding:8px; border:1px solid #888c8c; border-radius:4px; font-size:13px; resize:vertical;"></textarea>
+        </div>
+        <div class="amz-form-group">
+          <label for="editMetaQuantityInput">Quantity Wanted</label>
+          <input type="number" id="editMetaQuantityInput" min="1" max="99" value="1" style="width:100px; padding:6px 10px; border:1px solid #888c8c; border-radius:4px;" />
+        </div>
+        <div class="amz-modal-actions">
+          <button type="button" class="amz-btn-modal-cancel" id="cancelEditMetaBtn" data-i18n="wishlist_cancel">Cancel</button>
+          <button type="submit" class="amz-btn-modal-submit" id="saveEditMetaBtn" data-i18n="wishlist_btn_save_notes">Save Changes</button>
+        </div>
+      </form>
     </div>
   </dialog>
 

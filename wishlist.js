@@ -134,6 +134,34 @@
     }
   }
 
+  function getItemProductId(item) {
+    if (typeof item === "object" && item !== null) {
+      return String(item.productId || item.id || "").trim();
+    }
+    return String(item || "").trim();
+  }
+
+  function normalizeItem(raw) {
+    if (typeof raw === "object" && raw !== null) {
+      return {
+        productId: String(raw.productId || raw.id || "").trim(),
+        priority: raw.priority || "medium",
+        notes: raw.notes || "",
+        wanted: Number(raw.wanted || raw.quantityWanted || 1),
+        purchased: Number(raw.purchased || raw.quantityPurchased || 0),
+        addedDate: raw.addedDate || "Recently"
+      };
+    }
+    return {
+      productId: String(raw || "").trim(),
+      priority: "medium",
+      notes: "",
+      wanted: 1,
+      purchased: 0,
+      addedDate: "Recently"
+    };
+  }
+
   // Storage Helpers: Multi-Lists
   function loadLists() {
     try {
@@ -148,7 +176,7 @@
             name: "Shopping List",
             isDefault: true,
             isPrivate: true,
-            items: primaryWishlistIds
+            items: primaryWishlistIds.map(id => ({ productId: id, priority: "medium", notes: "", wanted: 1, purchased: 0 }))
           },
           {
             id: "saved_later",
@@ -163,11 +191,16 @@
         // Ensure default list is synchronized with primary electromart_wishlist_v1
         const defaultList = parsed.find((l) => l.isDefault || l.id === "default");
         if (defaultList) {
-          // If primary wishlist has changed externally (e.g. QA tests)
+          const defaultIds = (defaultList.items || []).map(getItemProductId);
           const primarySet = new Set(primaryWishlistIds);
-          const defaultSet = new Set(defaultList.items || []);
-          if (primaryWishlistIds.length !== (defaultList.items || []).length || !primaryWishlistIds.every(id => defaultSet.has(id))) {
-            defaultList.items = primaryWishlistIds;
+          const defaultSet = new Set(defaultIds);
+          if (primaryWishlistIds.length !== defaultIds.length || !primaryWishlistIds.every(id => defaultSet.has(id))) {
+            const metaMap = new Map();
+            (defaultList.items || []).forEach(it => {
+              const meta = normalizeItem(it);
+              metaMap.set(meta.productId, meta);
+            });
+            defaultList.items = primaryWishlistIds.map(id => metaMap.get(id) || { productId: id, priority: "medium", notes: "", wanted: 1, purchased: 0 });
             saveLists(parsed);
           }
         }
@@ -180,7 +213,7 @@
           name: "Shopping List",
           isDefault: true,
           isPrivate: true,
-          items: loadWishlistIds()
+          items: loadWishlistIds().map(id => ({ productId: id, priority: "medium", notes: "", wanted: 1, purchased: 0 }))
         }
       ];
     }
@@ -192,7 +225,8 @@
       // Always sync default list to primary storage key for cross-page compatibility
       const defaultList = lists.find((l) => l.isDefault || l.id === "default");
       if (defaultList) {
-        saveWishlistIds(defaultList.items || []);
+        const ids = (defaultList.items || []).map(getItemProductId).filter(Boolean);
+        saveWishlistIds(ids);
       }
     } catch {
       /* ignore */
@@ -250,7 +284,9 @@
   }
 
   function resolveWishlistProducts(itemIds) {
-    return itemIds.map((id) => {
+    return (itemIds || []).map((raw) => {
+      const meta = normalizeItem(raw);
+      const id = meta.productId;
       const product = getProductById(id);
       if (!product) {
         return {
@@ -265,7 +301,8 @@
           reviews: 120,
           inStock: true,
           image: FALLBACK_IMAGE_URL,
-          addedDate: "Recently"
+          addedDate: meta.addedDate || "Recently",
+          meta: meta
         };
       }
 
@@ -288,7 +325,8 @@
         reviews: Number(product.reviews || product.reviewCount || 350),
         inStock: product.inStock !== false && product.stock !== 0,
         image: product.image || (Array.isArray(product.images) && product.images[0]) || FALLBACK_IMAGE_URL,
-        addedDate: product.addedDate || "Recently"
+        addedDate: meta.addedDate || product.addedDate || "Recently",
+        meta: meta
       };
     });
   }
@@ -366,9 +404,15 @@
 
   // Render Single Wishlist Card
   function wishlistCard(product) {
+    const meta = product.meta || { priority: "medium", notes: "", wanted: 1 };
     const hasPriceDrop = product.discount >= 10;
     const priceDroppedTemplate = t("wishlist_price_dropped", "Price dropped {x}% since added");
     const priceDropText = priceDroppedTemplate.replace("{x}", product.discount);
+
+    const allLists = loadLists();
+    const otherLists = allLists.filter((l) => l.id !== activeListId);
+
+    const priorityLabel = meta.priority === "high" ? t("wishlist_priority_high", "High") : meta.priority === "low" ? t("wishlist_priority_low", "Low") : t("wishlist_priority_medium", "Medium");
 
     return `
       <article class="wishlist-card" data-product-id="${product.id}">
@@ -407,7 +451,26 @@
             ${product.inStock ? t("wishlist_in_stock", "In Stock") : t("wishlist_low_stock", "Only 2 left in stock").replace("{x}", "2")}
           </div>
 
+          <div style="margin-top: 4px;">
+            <span class="wishlist-priority-pill ${meta.priority}">${t("wishlist_priority_label", "Priority:")} ${priorityLabel}</span>
+          </div>
+
+          ${meta.notes ? `<div class="wishlist-item-notes-box">"${meta.notes}"</div>` : ""}
+
           <p class="wishlist-date-added">${t("wishlist_saved_for_later", "Saved for later")}</p>
+
+          <button type="button" class="btn-edit-item-meta" data-meta-id="${product.id}">${t("wishlist_btn_edit_notes", "Add comments, priority & quantity")}</button>
+
+          ${
+            otherLists.length > 0
+              ? `<div class="wishlist-move-to-list-wrap">
+                   <select class="wishlist-move-to-list-select" data-move-list-id="${product.id}" aria-label="${t("wishlist_move_to_list", "Move to another list...")}">
+                     <option value="" disabled selected>${t("wishlist_move_to_list", "Move to another list...")}</option>
+                     ${otherLists.map((ol) => `<option value="${ol.id}">${ol.name}</option>`).join("")}
+                   </select>
+                 </div>`
+              : ""
+          }
         </div>
 
         <div class="wishlist-buttons">
@@ -621,7 +684,7 @@
     });
   }
 
-  // Event Delegation: Move to Cart and Delete
+  // Event Delegation: Move to Cart, Delete, and Edit Meta
   document.addEventListener("click", (event) => {
     // 1. Delete / Remove Item
     const removeBtn = event.target.closest("[data-remove-id]");
@@ -632,7 +695,7 @@
       const lists = loadLists();
       const target = lists.find((l) => l.id === activeListId);
       if (target) {
-        target.items = (target.items || []).filter((id) => id !== productId);
+        target.items = (target.items || []).filter((it) => getItemProductId(it) !== productId);
         saveLists(lists);
       }
 
@@ -664,13 +727,112 @@
         const lists = loadLists();
         const target = lists.find((l) => l.id === activeListId);
         if (target) {
-          target.items = (target.items || []).filter((id) => id !== productId);
+          target.items = (target.items || []).filter((it) => getItemProductId(it) !== productId);
           saveLists(lists);
         }
         renderWishlist();
       }, 1200);
+      return;
+    }
+
+    // 3. Edit Item Priority & Notes Modal
+    const metaBtn = event.target.closest("[data-meta-id]");
+    if (metaBtn) {
+      const productId = String(metaBtn.getAttribute("data-meta-id") || "").trim();
+      const editModal = document.getElementById("editItemMetaModal");
+      const list = getActiveList();
+      const item = (list.items || []).find((it) => getItemProductId(it) === productId);
+      const meta = normalizeItem(item || productId);
+
+      const idInput = document.getElementById("editMetaProductId");
+      const prioSelect = document.getElementById("editMetaPrioritySelect");
+      const notesInput = document.getElementById("editMetaNotesInput");
+      const qtyInput = document.getElementById("editMetaQuantityInput");
+
+      if (idInput) idInput.value = productId;
+      if (prioSelect) prioSelect.value = meta.priority || "medium";
+      if (notesInput) notesInput.value = meta.notes || "";
+      if (qtyInput) qtyInput.value = meta.wanted || 1;
+
+      if (editModal) {
+        if (typeof editModal.showModal === "function") editModal.showModal();
+        else editModal.setAttribute("open", "");
+      }
+      return;
     }
   });
+
+  // Handle Move to Another List (Dropdown Selection)
+  document.addEventListener("change", (e) => {
+    const select = e.target.closest("[data-move-list-id]");
+    if (select) {
+      const productId = String(select.getAttribute("data-move-list-id") || "").trim();
+      const targetListId = select.value;
+      if (!productId || !targetListId) return;
+
+      const lists = loadLists();
+      const currentList = lists.find((l) => l.id === activeListId);
+      const targetList = lists.find((l) => l.id === targetListId);
+      if (currentList && targetList) {
+        const itemIdx = currentList.items.findIndex((it) => getItemProductId(it) === productId);
+        if (itemIdx !== -1) {
+          const [movedItem] = currentList.items.splice(itemIdx, 1);
+          targetList.items.push(movedItem);
+          saveLists(lists);
+          renderWishlist();
+          showToast(t("wishlist_moved_success", "Item moved to another list successfully!"));
+        }
+      }
+    }
+  });
+
+  // Edit Meta Modal Handlers
+  const editItemMetaModal = document.getElementById("editItemMetaModal");
+  const closeEditMetaModalBtn = document.getElementById("closeEditMetaModalBtn");
+  const cancelEditMetaBtn = document.getElementById("cancelEditMetaBtn");
+  const editItemMetaForm = document.getElementById("editItemMetaForm");
+
+  function closeEditModal() {
+    if (!editItemMetaModal) return;
+    if (typeof editItemMetaModal.close === "function") editItemMetaModal.close();
+    else editItemMetaModal.removeAttribute("open");
+  }
+
+  if (closeEditMetaModalBtn) closeEditMetaModalBtn.addEventListener("click", closeEditModal);
+  if (cancelEditMetaBtn) cancelEditMetaBtn.addEventListener("click", closeEditModal);
+
+  if (editItemMetaForm) {
+    editItemMetaForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const productId = document.getElementById("editMetaProductId")?.value || "";
+      if (!productId) return;
+
+      const prio = document.getElementById("editMetaPrioritySelect")?.value || "medium";
+      const notes = (document.getElementById("editMetaNotesInput")?.value || "").trim();
+      const qty = Number(document.getElementById("editMetaQuantityInput")?.value || 1);
+
+      const lists = loadLists();
+      const list = lists.find((l) => l.id === activeListId);
+      if (list) {
+        const itemIdx = (list.items || []).findIndex((it) => getItemProductId(it) === productId);
+        const existingMeta = itemIdx !== -1 ? normalizeItem(list.items[itemIdx]) : { productId, purchased: 0, addedDate: "Recently" };
+        existingMeta.priority = prio;
+        existingMeta.notes = notes;
+        existingMeta.wanted = qty;
+
+        if (itemIdx !== -1) {
+          list.items[itemIdx] = existingMeta;
+        } else {
+          list.items.push(existingMeta);
+        }
+
+        saveLists(lists);
+        closeEditModal();
+        renderWishlist();
+        showToast("Updated item details and priority.");
+      }
+    });
+  }
 
   // Re-render on language change
   window.addEventListener("storage", (e) => {

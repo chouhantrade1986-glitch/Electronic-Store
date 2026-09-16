@@ -368,6 +368,37 @@
   - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Customer Service / ElectroMart Support; 0 ग्राहक-सामने "Amazon" संदर्भ।
   - **11 भारतीय क्षेत्रीय भाषाएं एवं पूर्ण टेस्ट कवरेज:** `translations.js` में `ELECTROMART_HELP_I18N` डिक्शनरी कवरेज এবং `scratch/test-amazon-help-center.js` (6/6 लेयर्स 100% पास, कुल 58/58 टेस्ट सूट्स 100% उत्तीर्ण)।
 
+### O. ElectroMart Wishlist & Multi-List Registry Hub (Phase 27 Completed)
+- **समर्पित उत्सव व उपहार रजिस्ट्री हब (`registry.html`, `registry.js`, `registry.css`, `wishlist.html`, `wishlist.js`, `wishlist.css`):**
+  - **3 प्रमुख सेलिब्रेशन श्रेणियां (`#registryCategoriesSection`):**
+    - *Birthday & Milestone Registry* (🎂), *Wedding & Housewarming Registry* (💍), *Tech Workspace & Student Setup* (💻)।
+    - श्रेणी कार्ड से 1-क्लिक प्री-फ़िल्ड क्रिएट रजिस्ट्री मोडल ट्रिगर।
+  - **सक्रिय रजिस्ट्री डैशबोर्ड (`#activeRegistrySection`):**
+    - शीर्ष रजिस्ट्री स्विचर बार (`#registrySelectDropdown`) विथ `EM-REG-101`, `EM-REG-102` आदि के बीच तत्काल स्विचिंग व URL पैरामीटर सिंक (`?regId=...`)।
+    - होस्ट नाम, आयोजन तिथि, डिलीवरी शहर, और प्राइवेसी बैज (`Public`, `Shareable`, `Private`)।
+  - **रीयल-टाइम काउंटडाउन टाइमर (`#registryCountdownTimer`):**
+    - लक्षित उत्सव दिवस तक दिन, घंटे, मिनट, सेकंड की सटीक गणना।
+    - पेज नेविगेशन / अनलोड पर `clearInterval` कॉल करके स्थायी मेमोरी लीक प्रिवेंशन (`window.addEventListener('beforeunload')` & `'unload'`)।
+  - **लक्ष्य पूर्ति व प्रगति ट्रैकर (`#registryProgressCard`):**
+    - रीयल-टाइम प्रोग्रेस बार (`#registryProgressFill`) और प्रतिशत बैज (`#statFulfillmentPercent`)।
+    - 3-कॉलम स्टैट स्ट्रिप: कुल उत्पाद (`#statTotalItems`), पूर्ण हुए उपहार (`#statFulfilledItems`), शेष उपहार (`#statRemainingItems`)।
+  - **1-क्लिक शेयरिंग व सोशल इंटीग्रेशन (`#registryShareCard`):**
+    - ऑटो-जनरेटेड यूनीक शेयर लिंक इनपुट विथ 1-क्लिक "Copy Link" बटन व क्लिपबोर्ड फीडबैक।
+    - प्रामाणिक "Share on WhatsApp" सिमुलेटर विथ एनकोडेड मैसेज टेक्स्ट।
+  - **इन-पेज गिफ्टिंग इंजन (`giftItem`):**
+    - गेस्ट यूज़र्स के लिए "Gift This Item" एक्शन (`.btn-gift-item`) जो आइटम को उत्सव गिफ्ट टैग के साथ तुरंत `electromart_cart_v1` में जोड़ता है, रजिस्ट्री में उपहार प्राप्त मात्रा बढ़ाता है और प्रोग्रेस बार को रीयल-टाइम में अपडेट करता है।
+    - पूर्ण रूप से गिफ्टेड आइटम्स पर डिसेबल्ड "✓ Gifted / Fulfilled" बैज।
+  - **751-प्रोडक्ट कैटलॉग पिकर मोडल (`#catalogPickerModal`):**
+    - लाइव सर्च इनपुट (`#catalogSearchInput`), 6 कैटेगरी पिल्स (All, Laptops, Mobiles, Audio, Printers, Accessories), और 1-क्लिक "+ Add to Registry" एक्शन।
+  - **विशलिस्ट मल्टी-लिस्ट विस्तार (`wishlist.html` / `wishlist.js`):**
+    - शीर्ष पर रजिस्ट्री प्रोमोशन बैनर (`#wishlistRegistryBanner`) विथ डायरेक्ट लिंक टू `registry.html`।
+    - प्रत्येक विशलिस्ट कार्ड पर प्रायोरिटी पिल्स (`.wishlist-priority-pill.high`, `medium`, `low`) और व्यक्तिगत नोट्स बॉक्स (`.wishlist-item-notes-box`)।
+    - "Move to another list..." डायनामिक सेलेक्ट ड्रॉपडाउन।
+    - "Add comments, priority & quantity" मोडल (`#editItemMetaModal`)।
+    - `electromart_wishlist_v1` स्ट्रिंग ऐरे के साथ 100% बैकवर्ड कम्पैटिबिलिटी व स्टेट सिंक।
+  - **100% ब्रांड व लीगल सुरक्षा:** 100% ElectroMart Wishlist / Registry; 0 ग्राहक-सामने "Amazon" संदर्भ।
+  - **11 भारतीय क्षेत्रीय भाषाएं एवं पूर्ण टेस्ट कवरेज:** `translations.js` में `ELECTROMART_REGISTRY_I18N` डिक्शनरी कवरेज (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu) और `scratch/test-amazon-multi-list-registry.js` (5/5 लेयर्स 100% पास, कुल 59/59 टेस्ट सूट्स 100% उत्तीर्ण)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)

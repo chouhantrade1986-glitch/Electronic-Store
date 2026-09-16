@@ -164,6 +164,7 @@
                 <div class="flyout-col">
                   <h3 data-i18n="nav.yourLists">Your Lists</h3>
                   <a href="wishlist.html" data-i18n="nav.createWishlist">Create a Wish List</a>
+                  <a href="registry.html" data-i18n="registry_hero_title">Gift Registry &amp; Celebrations</a>
                   <a href="wishlist.html" data-i18n="nav.wishAnyWebsite">Wish from Any Website</a>
                   <a href="wishlist.html" data-i18n="nav.yourSavedItems">Your Saved Items</a>
                   <a href="products.html" data-i18n="nav.discoverStyle">Discover Your Style</a>
