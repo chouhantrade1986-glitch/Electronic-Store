@@ -30,6 +30,7 @@
     'computing',
     'gaming'
   ];
+  var SORT_VALUES = ['featured', 'funded', 'discount', 'backers'];
   var APPLICATION_STATUS_VALUES = [
     'idea',
     'prototype',
@@ -45,6 +46,7 @@
     activeCategory: 'all',
     visibleLimit: PAGE_SIZE,
     searchQuery: '',
+    sortBy: 'featured',
     initialized: false
   };
 
@@ -209,7 +211,8 @@
 
   function safeImage(value) {
     var image = cleanText(value, 500);
-    if (!image || /^(?:javascript|vbscript|data):/i.test(image)) return 'product-placeholder.svg';
+    if (!image) return '';
+    if (/^(?:javascript|vbscript|data):/i.test(image)) return 'product-placeholder.svg';
     return image;
   }
 
@@ -220,13 +223,27 @@
       .toLowerCase();
   }
 
+  function renderProductVisual(product, extraClass, imageClass) {
+    var visual = cleanText(product && product.visual, 24).toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'solar';
+    var image = safeImage(product && product.image);
+    var hasRealImage = image && image !== 'product-placeholder.svg' && !/placeholder/i.test(image);
+    if (hasRealImage) {
+      return '<img class="' + escapeHtml(imageClass || 'product-image') + '" src="' + escapeHtml(image) + '" alt="' + escapeHtml(product.name) + '" loading="lazy">';
+    }
+    return '<div class="product-art product-art--' + escapeHtml(visual) + (extraClass ? ' ' + escapeHtml(extraClass) : '') + '" role="img" aria-label="' + escapeHtml(product.name) + '">' +
+      '<span class="art-grid" aria-hidden="true"></span>' +
+      '<span class="art-orbit" aria-hidden="true"></span>' +
+      '<span class="art-core" aria-hidden="true"></span>' +
+    '</div>';
+  }
+
   function createSampleProducts() {
     return [
       {
         id: 'launchpad-solarsmart-charger',
         name: 'SolarSmart Charger',
         description: 'Portable solar charger with a built-in power bank for outdoor adventures.',
-        image: 'product-placeholder.svg',
+        image: '',
         price: 2999,
         originalPrice: 3999,
         discount: 25,
@@ -234,13 +251,14 @@
         currentFunding: 375000,
         backers: 124,
         category: 'electronics',
-        earlyBird: true
+        earlyBird: true,
+        visual: 'solar'
       },
       {
         id: 'launchpad-ecotrack-fitness-band',
         name: 'EcoTrack Fitness Band',
         description: 'Biodegradable fitness tracker with heart-rate monitoring and sleep analysis.',
-        image: 'product-placeholder.svg',
+        image: '',
         price: 4999,
         originalPrice: 6499,
         discount: 23,
@@ -248,13 +266,14 @@
         currentFunding: 525000,
         backers: 89,
         category: 'wearables',
-        earlyBird: true
+        earlyBird: true,
+        visual: 'eco'
       },
       {
         id: 'launchpad-smarthome-hub-mini',
         name: 'SmartHome Hub Mini',
         description: 'Compact voice-controlled home automation hub supporting the Matter protocol.',
-        image: 'product-placeholder.svg',
+        image: '',
         price: 3499,
         originalPrice: 4499,
         discount: 22,
@@ -262,13 +281,14 @@
         currentFunding: 280000,
         backers: 67,
         category: 'home-automation',
-        earlyBird: true
+        earlyBird: true,
+        visual: 'hub'
       },
       {
         id: 'launchpad-aurabuds-mini',
         name: 'AuraBuds Mini',
         description: 'Lightweight spatial-audio earbuds tuned by an emerging Indian audio studio.',
-        image: 'product-placeholder.svg',
+        image: '',
         price: 2799,
         originalPrice: 3499,
         discount: 20,
@@ -276,7 +296,8 @@
         currentFunding: 246000,
         backers: 143,
         category: 'audio',
-        earlyBird: true
+        earlyBird: true,
+        visual: 'audio'
       }
     ];
   }
@@ -311,7 +332,8 @@
       currentFunding: Math.max(0, numberOr(rawProduct.currentFunding !== undefined ? rawProduct.currentFunding : base.currentFunding, 0)),
       backers: Math.max(0, Math.floor(numberOr(rawProduct.backers !== undefined ? rawProduct.backers : base.backers, 0))),
       category: category,
-      earlyBird: rawProduct.earlyBird !== undefined ? Boolean(rawProduct.earlyBird) : Boolean(base.earlyBird)
+      earlyBird: rawProduct.earlyBird !== undefined ? Boolean(rawProduct.earlyBird) : Boolean(base.earlyBird),
+      visual: cleanText(rawProduct.visual || base.visual || category, 24).toLowerCase().replace(/[^a-z0-9-]/g, '-')
     };
   }
 
@@ -453,7 +475,7 @@
 
     container.innerHTML = '<div class="spotlight-product">' +
       '<div class="spotlight-media">' +
-        '<img src="' + escapeHtml(safeImage(product.image)) + '" alt="' + escapeHtml(product.name) + '" class="spotlight-image">' +
+        renderProductVisual(product, 'spotlight-art', 'spotlight-image') +
         '<span class="early-bird-badge" data-i18n="launchpad_early_bird">Early bird</span>' +
       '</div>' +
       '<div class="spotlight-info">' +
@@ -479,11 +501,21 @@
 
   function getFilteredProducts() {
     var queryText = state.searchQuery.trim().toLowerCase();
-    return products.filter(function (product) {
+    var filtered = products.filter(function (product) {
       var categoryMatch = state.activeCategory === 'all' || product.category === state.activeCategory;
       var queryMatch = !queryText || signal(product).indexOf(queryText) !== -1;
       return categoryMatch && queryMatch;
     });
+    if (state.sortBy === 'funded') {
+      return filtered.sort(function (a, b) { return numberOr(b.currentFunding, 0) - numberOr(a.currentFunding, 0); });
+    }
+    if (state.sortBy === 'discount') {
+      return filtered.sort(function (a, b) { return numberOr(b.discount, 0) - numberOr(a.discount, 0); });
+    }
+    if (state.sortBy === 'backers') {
+      return filtered.sort(function (a, b) { return numberOr(b.backers, 0) - numberOr(a.backers, 0); });
+    }
+    return filtered;
   }
 
   function renderProductCard(product, index) {
@@ -491,7 +523,7 @@
     var categoryLabel = text('launchpad_category_' + product.category.replace(/-/g, '_'), product.category);
     return '<article class="product-card fade-in" style="--launchpad-delay:' + Math.min(index * 60, 360) + 'ms" data-launchpad-category="' + escapeHtml(product.category) + '">' +
       '<div class="product-image-wrap">' +
-        '<img src="' + escapeHtml(safeImage(product.image)) + '" alt="' + escapeHtml(product.name) + '" class="product-image" loading="lazy">' +
+        renderProductVisual(product, 'product-card-art', 'product-image') +
         (product.earlyBird ? '<span class="early-bird-badge" data-i18n="launchpad_early_bird">Early bird</span>' : '') +
       '</div>' +
       '<div class="product-info">' +
@@ -552,7 +584,7 @@
     var fundedPercent = byId('fundedPercent');
     var heroFundingPercent = byId('heroFundingPercent');
     var backersCount = byId('backersCount');
-    if (fundedPercent) fundedPercent.textContent = progress + '%';
+    if (fundedPercent) fundedPercent.textContent = money(totals.current);
     if (heroFundingPercent) heroFundingPercent.textContent = progress + '%';
     if (backersCount) backersCount.textContent = formatNumber(totals.backers);
 
@@ -627,7 +659,9 @@
     }
 
     var message = text('launchpad_reserved', '{name} is reserved for early access. No payment is collected in this demo.').replace('{name}', product.name);
-    setFeedback(message, 'success');
+    var detailsModal = byId('launchpadDetailsModal');
+    var detailsIsOpen = detailsModal && (detailsModal.open || (typeof detailsModal.hasAttribute === 'function' && detailsModal.hasAttribute('open')));
+    setFeedback(message, 'success', detailsIsOpen ? 'launchpadDetailsStatus' : undefined);
     dispatch('electromart:launchpadReserved', {
       productId: product.id,
       productName: product.name,
@@ -648,16 +682,28 @@
       setFeedback(text('launchpad_product_unavailable', 'This startup product is not available right now.'), 'error');
       return null;
     }
-    var title = byId('launchpadDetailsTitle');
+    var visual = byId('launchpadDetailsVisual');
+    var name = byId('launchpadDetailsName');
     var description = byId('launchpadDetailsDescription');
     var price = byId('launchpadDetailsPrice');
     var funding = byId('launchpadDetailsFunding');
+    var backers = byId('launchpadDetailsBackers');
+    var progressPercent = byId('launchpadDetailsProgressPercent');
+    var progressBar = byId('launchpadDetailsProgressBar');
+    var preorder = byId('launchpadDetailsPreorderBtn');
     var category = byId('launchpadDetailsCategory');
-    if (title) title.textContent = product.name;
+    var progress = calculateFundingProgress(product.currentFunding, product.fundingGoal);
+    if (visual) visual.innerHTML = renderProductVisual(product, 'details-art', 'details-image');
+    if (name) name.textContent = product.name;
     if (description) description.textContent = product.description;
     if (price) price.textContent = money(product.price) + ' · M.R.P.: ' + money(product.originalPrice);
-    if (funding) funding.textContent = fundingLabel(product) + ' · ' + calculateFundingProgress(product.currentFunding, product.fundingGoal) + '%';
+    if (funding) funding.textContent = fundingLabel(product);
+    if (backers) backers.textContent = formatNumber(product.backers) + ' ' + text('launchpad_backers', 'backers');
+    if (progressPercent) progressPercent.textContent = progress + '%';
+    setProgressElement(progressBar, progress);
+    if (preorder && typeof preorder.setAttribute === 'function') preorder.setAttribute('data-launchpad-preorder', String(product.id));
     if (category) category.textContent = text('launchpad_category_' + product.category.replace(/-/g, '_'), product.category);
+    translateDynamicContent();
     openDialog('launchpadDetailsModal');
     return product;
   }
@@ -896,6 +942,22 @@
       });
     }
 
+    var searchInput = byId('launchpadSearchInput');
+    if (searchInput && typeof searchInput.addEventListener === 'function' && !searchInput._launchpadBound) {
+      searchInput._launchpadBound = true;
+      searchInput.addEventListener('input', function (event) {
+        setSearchQuery(event && event.target ? event.target.value : '');
+      });
+    }
+
+    var sortSelect = byId('launchpadSortSelect');
+    if (sortSelect && typeof sortSelect.addEventListener === 'function' && !sortSelect._launchpadBound) {
+      sortSelect._launchpadBound = true;
+      sortSelect.addEventListener('change', function (event) {
+        setSort(event && event.target ? event.target.value : 'featured');
+      });
+    }
+
     if (doc && typeof doc.addEventListener === 'function') {
       doc.addEventListener('click', handleClick);
       doc.addEventListener('keydown', function (event) {
@@ -978,6 +1040,17 @@
   function setSearchQuery(value) {
     state.searchQuery = cleanText(value, 120);
     state.visibleLimit = PAGE_SIZE;
+    var searchInput = byId('launchpadSearchInput');
+    if (searchInput && typeof searchInput.value === 'string' && searchInput.value !== state.searchQuery) searchInput.value = state.searchQuery;
+    renderProducts();
+  }
+
+  function setSort(value) {
+    var nextSort = String(value || 'featured').toLowerCase();
+    state.sortBy = isAllowed(nextSort, SORT_VALUES) ? nextSort : 'featured';
+    state.visibleLimit = PAGE_SIZE;
+    var sortSelect = byId('launchpadSortSelect');
+    if (sortSelect) sortSelect.value = state.sortBy;
     renderProducts();
   }
 
@@ -1014,6 +1087,7 @@
   namespace.updateFundingProgress = updateFundingProgress;
   namespace.setCategory = setCategory;
   namespace.setSearchQuery = setSearchQuery;
+  namespace.setSort = setSort;
   namespace.setFeaturedStartup = setFeaturedStartup;
   namespace.getApplications = getApplications;
   namespace.getProducts = getProducts;

@@ -18548,6 +18548,7 @@ const ELECTROMART_LAUNCHPAD_BASE_I18N = {
   launchpad_early_bird: "Early bird",
   launchpad_funded_percent: "Funded",
   launchpad_funded_percent_label: "Funded",
+  launchpad_raised_label: "Raised",
   launchpad_backers_count: "Backers",
   launchpad_backers_count_label: "Backers",
   launchpad_backers: "backers",
@@ -18563,6 +18564,13 @@ const ELECTROMART_LAUNCHPAD_BASE_I18N = {
   launchpad_category_computing: "Computing",
   launchpad_category_gaming: "Gaming",
   launchpad_products_title: "Innovative startup products",
+  launchpad_search_label: "Search startups",
+  launchpad_search_placeholder: "Search by product, category, or use",
+  launchpad_sort_label: "Sort by",
+  launchpad_sort_featured: "Featured",
+  launchpad_sort_funded: "Most funded",
+  launchpad_sort_discount: "Biggest discount",
+  launchpad_sort_backers: "Most backed",
   launchpad_funding_progress: "Funding progress",
   launchpad_funded_of_goal: "{current} of {goal} funded",
   launchpad_load_more: "Load more products",
@@ -19058,17 +19066,133 @@ const ELECTROMART_LAUNCHPAD_OVERRIDES = {
   }
 };
 
+const ELECTROMART_LAUNCHPAD_DISCOVERY_OVERRIDES = {
+  hi: {
+    launchpad_raised_label: "जुटा हुआ",
+    launchpad_search_label: "स्टार्टअप खोजें",
+    launchpad_search_placeholder: "उत्पाद, श्रेणी या उपयोग से खोजें",
+    launchpad_sort_label: "क्रमबद्ध करें",
+    launchpad_sort_featured: "विशेष",
+    launchpad_sort_funded: "सबसे अधिक फंडेड",
+    launchpad_sort_discount: "सबसे बड़ी छूट",
+    launchpad_sort_backers: "सबसे अधिक बैकर्स"
+  },
+  ta: {
+    launchpad_raised_label: "நிதி சேகரிப்பு",
+    launchpad_search_label: "ஸ்டார்ட்அப்களைத் தேடு",
+    launchpad_search_placeholder: "தயாரிப்பு, வகை அல்லது பயன்பாட்டின்படி தேடுங்கள்",
+    launchpad_sort_label: "வரிசைப்படுத்து",
+    launchpad_sort_featured: "சிறப்பு",
+    launchpad_sort_funded: "அதிக நிதி பெற்றவை",
+    launchpad_sort_discount: "பெரிய தள்ளுபடி",
+    launchpad_sort_backers: "அதிக ஆதரவாளர்கள்"
+  },
+  te: {
+    launchpad_raised_label: "సేకరించిన ఫండింగ్",
+    launchpad_search_label: "స్టార్టప్‌లను వెతకండి",
+    launchpad_search_placeholder: "ఉత్పత్తి, కేటగిరీ లేదా వినియోగం ద్వారా వెతకండి",
+    launchpad_sort_label: "క్రమబద్ధీకరించు",
+    launchpad_sort_featured: "ప్రత్యేకం",
+    launchpad_sort_funded: "అత్యధిక నిధులు",
+    launchpad_sort_discount: "పెద్ద రియాయితే",
+    launchpad_sort_backers: "అత్యధిక మద్దతుదారులు"
+  },
+  kn: {
+    launchpad_raised_label: "ಸಂಗ್ರಹಿಸಿದ ಹಣಕಾಸು",
+    launchpad_search_label: "ಸ್ಟಾರ್ಟಪ್‌ಗಳನ್ನು ಹುಡುಕಿ",
+    launchpad_search_placeholder: "ಉತ್ಪನ್ನ, ವರ್ಗ ಅಥವಾ ಬಳಕೆಯಿಂದ ಹುಡುಕಿ",
+    launchpad_sort_label: "ಕ್ರಮಮಾಡಿ",
+    launchpad_sort_featured: "ವಿಶೇಷ",
+    launchpad_sort_funded: "ಹೆಚ್ಚು ನಿಧಿ",
+    launchpad_sort_discount: "ದೊಡ್ಡ ರಿಯಾಯಿತೆ",
+    launchpad_sort_backers: "ಹೆಚ್ಚು ಬೆಂಬಲಿಸುವವರು"
+  },
+  ml: {
+    launchpad_raised_label: "സമാഹിച്ച ഫണ്ടിംഗ്",
+    launchpad_search_label: "സ്റ്റാർട്ടപ്പുകൾ തിരയുക",
+    launchpad_search_placeholder: "ഉൽപ്പന്നം, വിഭാഗം അല്ലെങ്കിൽ ഉപയോഗം എന്നിവയോട് തിരയുക",
+    launchpad_sort_label: "ക്രമീകരിക്കുക",
+    launchpad_sort_featured: "പ്രത്യേകം",
+    launchpad_sort_funded: "ഏറ്റവും കൂടുതൽ ഫണ്ടിംഗ്",
+    launchpad_sort_discount: "വലിയ ഡിസ്കൗണ്ട്",
+    launchpad_sort_backers: "ഏറ്റവും കൂടുതൽ പിന്തുണക്കാർ"
+  },
+  bn: {
+    launchpad_raised_label: "সংগৃহীত অর্থায়ন",
+    launchpad_search_label: "স্টার্টআপ খুঁজুন",
+    launchpad_search_placeholder: "পণ্য, বিভাগ বা ব্যবহার দিয়ে খুঁজুন",
+    launchpad_sort_label: "সাজান",
+    launchpad_sort_featured: "ফিচার্ড",
+    launchpad_sort_funded: "সর্বাধিক অর্থায়ন",
+    launchpad_sort_discount: "সবচেয়ে বড় ছাড়",
+    launchpad_sort_backers: "সর্বাধিক সমর্থক"
+  },
+  mr: {
+    launchpad_raised_label: "जमा केलेले निधी",
+    launchpad_search_label: "स्टार्टअप शोधा",
+    launchpad_search_placeholder: "उत्पादन, श्रेणी किंवा वापरानुसार शोधा",
+    launchpad_sort_label: "क्रमवारी",
+    launchpad_sort_featured: "वैशिष्ट्य",
+    launchpad_sort_funded: "सर्वाधिक निधी",
+    launchpad_sort_discount: "सर्वात्मक सवलत",
+    launchpad_sort_backers: "सर्वाधिक पाठिंग"
+  },
+  ur: {
+    launchpad_raised_label: "جمع شدہ فنڈنگ",
+    launchpad_search_label: "اسٹارٹ اپ تلاش کریں",
+    launchpad_search_placeholder: "پروڈکٹ، زمرے یا استعمال سے تلاش کریں",
+    launchpad_sort_label: "ترتیب دیں",
+    launchpad_sort_featured: "نمایاں",
+    launchpad_sort_funded: "سب سے زیادہ فنڈ شدہ",
+    launchpad_sort_discount: "سب سے بڑی رعایت",
+    launchpad_sort_backers: "سب سے زیادہ معاونین"
+  },
+  pa: {
+    launchpad_raised_label: "ਇਕੱਠੀ ਫੰਡਿੰਗ",
+    launchpad_search_label: "ਸਟਾਰਟਅੱਪ ਲੱਭੋ",
+    launchpad_search_placeholder: "ਉਤਪਾਦ, ਸ਼੍ਰੇਣੀ ਜਾਂ ਵਰਤੋਂ ਅਨੁਸਾਰ ਲੱਭੋ",
+    launchpad_sort_label: "ਕ੍ਰਮਬੱਧ ਕਰੋ",
+    launchpad_sort_featured: "ਖ਼ਾਸ",
+    launchpad_sort_funded: "ਸਭ ਤੋਂ ਵੱਧ ਫੰਡਡ",
+    launchpad_sort_discount: "ਸਭ ਤੋਂ ਵੱਡਾ ਛੂਟ",
+    launchpad_sort_backers: "ਸਭ ਤੋਂ ਵੱਧ ਸਹਿਯੋਗੀ"
+  },
+  gu: {
+    launchpad_raised_label: "સંગ્રહ કરેલ ફંડિંગ",
+    launchpad_search_label: "સ્ટાર્ટઅપ શોધો",
+    launchpad_search_placeholder: "ઉત્પાદન, શ્રેણી અથવા વપરાશ દ્વારા શોધો",
+    launchpad_sort_label: "ક્રમમાં ગોઠવો",
+    launchpad_sort_featured: "વિશેષ",
+    launchpad_sort_funded: "સૌથી વધુ ફંડિંગ",
+    launchpad_sort_discount: "સૌથી મોટી ડિસ્કાઉન્ટ",
+    launchpad_sort_backers: "સૌથી વધુ સમર્થકો"
+  }
+};
+
+const ELECTROMART_LAUNCHPAD_CATEGORY_OVERRIDES = {
+  hi: { launchpad_category_computing: "कंप्यूटिंग", launchpad_category_gaming: "गेमिंग" },
+  ta: { launchpad_category_computing: "கணினி", launchpad_category_gaming: "கேம்ஸ்" },
+  te: { launchpad_category_computing: "కంప్యూటింగ్", launchpad_category_gaming: "గేమింగ్" },
+  kn: { launchpad_category_computing: "ಕಂಪ್ಯೂಟಿಂಗ್", launchpad_category_gaming: "ಗೇಮಿಂಗ್" },
+  ml: { launchpad_category_computing: "കമ്പ്യൂട്ടിംഗ്", launchpad_category_gaming: "ഗെയിംഗ്" },
+  bn: { launchpad_category_computing: "কম্পিউটিং", launchpad_category_gaming: "গেমিং" },
+  mr: { launchpad_category_computing: "संगणक", launchpad_category_gaming: "गेमिंग" },
+  ur: { launchpad_category_computing: "کمپیوٹنگ", launchpad_category_gaming: "گیمنگ" },
+  pa: { launchpad_category_computing: "ਕੰਪਿਊਟਿੰਗ", launchpad_category_gaming: "ਗੇਮਿੰਗ" },
+  gu: { launchpad_category_computing: "કમ્પ્યુટિંગ", launchpad_category_gaming: "ગેમિંગ" }
+};
+
 if (typeof window !== "undefined") {
   if (window.EM_TRANSLATIONS) {
     Object.keys(window.EM_TRANSLATIONS).forEach((language) => {
       window.EM_TRANSLATIONS[language] = window.EM_TRANSLATIONS[language] || {};
-      Object.assign(window.EM_TRANSLATIONS[language], ELECTROMART_LAUNCHPAD_BASE_I18N, ELECTROMART_LAUNCHPAD_OVERRIDES[language] || {});
+      Object.assign(window.EM_TRANSLATIONS[language], ELECTROMART_LAUNCHPAD_BASE_I18N, ELECTROMART_LAUNCHPAD_OVERRIDES[language] || {}, ELECTROMART_LAUNCHPAD_DISCOVERY_OVERRIDES[language] || {}, ELECTROMART_LAUNCHPAD_CATEGORY_OVERRIDES[language] || {});
     });
   }
   if (window.TRANSLATIONS) {
     Object.keys(window.TRANSLATIONS).forEach((language) => {
       window.TRANSLATIONS[language] = window.TRANSLATIONS[language] || {};
-      Object.assign(window.TRANSLATIONS[language], ELECTROMART_LAUNCHPAD_BASE_I18N, ELECTROMART_LAUNCHPAD_OVERRIDES[language] || {});
+      Object.assign(window.TRANSLATIONS[language], ELECTROMART_LAUNCHPAD_BASE_I18N, ELECTROMART_LAUNCHPAD_OVERRIDES[language] || {}, ELECTROMART_LAUNCHPAD_DISCOVERY_OVERRIDES[language] || {}, ELECTROMART_LAUNCHPAD_CATEGORY_OVERRIDES[language] || {});
     });
   }
 }

@@ -65,7 +65,12 @@ const requiredIds = [
   'productCategory',
   'dpiitNumber',
   'applyStatus',
+  'launchpadSearchInput',
+  'launchpadSortSelect',
   'launchpadDetailsModal',
+  'launchpadDetailsVisual',
+  'launchpadDetailsProgressBar',
+  'launchpadDetailsPreorderBtn',
   'applicationIdDisplay'
 ];
 
@@ -78,12 +83,22 @@ assert(html.includes('shared-search.css'), 'launchpad.html must load shared sear
   assert(new RegExp(`name=["']${name}["']`).test(html), `Application control #${name} must have a name attribute`);
 });
 assert(/id=["']submitApplyBtn["'][^>]*form=["']startupApplyForm["']/.test(html), 'Submit button must target #startupApplyForm');
-console.log('✓ Required DOM IDs and form contracts verified.');
+assert(html.includes('data-launchpad-preorder="launchpad-solarsmart-charger"'), 'Static spotlight pre-order control must be wired before hydration');
+assert(html.includes('data-category="computing"') && html.includes('data-category="gaming"'), 'Filter pills must cover computing and gaming');
+assert(html.includes('data-i18n-placeholder="launchpad_search_placeholder"'), 'Search control must be localized');
+assert(html.includes('id="launchpadSortSelect"'), 'Sort control must be exposed');
+assert(html.includes('launchpad_raised_label'), 'Hero funding stat must be distinct from the progress percentage');
+assert(html.includes('id="launchpadDetailsVisual"') && html.includes('id="launchpadDetailsProgressBar"') && html.includes('id="launchpadDetailsPreorderBtn"'), 'Details dialog must expose visual, progress, and pre-order surfaces');
+console.log('✓ Required DOM IDs, form, search/sort, category, and dialog contracts verified.');
 
 // 5. CSS Styling Check
 assert(css.includes('--launchpad-orange') || css.includes('#FF6F00') || css.includes('#ff6f00'), 'launchpad.css must style orange accents');
 assert(css.includes('backdrop-filter') || css.includes('rgba'), 'launchpad.css must include glassmorphism style rules');
-console.log('✓ CSS & glassmorphism theme verified.');
+assert(css.includes('#C2410C') && css.includes('#9A3412'), 'Launchpad CTA and eyebrow colors must use accessible dark-orange contrast tokens');
+assert(css.includes('color: #ffffff !important'), 'Launchpad CTA must keep white high-contrast text over the shared theme');
+assert(css.includes('product-art--solar') && css.includes('product-art--eco') && css.includes('product-art--hub') && css.includes('product-art--audio'), 'Each startup tile must have a distinct CSS-art treatment');
+assert(css.includes('launchpad-discovery-bar') && css.includes('details-visual'), 'Search/discovery and details surfaces must be styled');
+console.log('✓ CSS, contrast, distinct visual tiles, and responsive surfaces verified.');
 
 // 6. Logic checks in launchpad.js
 assert(js.includes('electromart_startup_applications_v1'), 'launchpad.js must persist startup applications');
@@ -113,7 +128,13 @@ const progress = launchpadNamespace.calculateFundingProgress(750000, 1000000);
 assert.strictEqual(progress, 75, '750,000 of 1,000,000 must equal 75%');
 assert.strictEqual(launchpadNamespace.calculateFundingProgress(1500000, 1000000), 100, 'Overfunded campaigns must cap at 100%');
 assert.strictEqual(launchpadNamespace.calculateFundingProgress(-10, 0), 0, 'Invalid funding values must return 0');
-console.log('✓ Funding calculation engine verified.');
+assert.strictEqual(typeof launchpadNamespace.setSearchQuery, 'function', 'Launchpad namespace must expose search');
+assert.strictEqual(typeof launchpadNamespace.setSort, 'function', 'Launchpad namespace must expose sorting');
+launchpadNamespace.setSearchQuery('solar');
+launchpadNamespace.setSort('funded');
+const visualKeys = launchpadNamespace.getProducts().map((product) => product.visual);
+assert.strictEqual(new Set(visualKeys).size, visualKeys.length, 'Each sample product must have a distinct visual key');
+console.log('✓ Funding calculation and search/sort engine verified.');
 
 // 7. PDP Integration Check
 assert(pdpHtml.includes('pdpLaunchpadCallout'), 'product-detail.html must contain pdpLaunchpadCallout');
@@ -162,6 +183,14 @@ const expectedI18nKeys = [
   'launchpad_demo_note',
   'launchpad_pdp_callout',
   'launchpad_pdp_cta',
+  'launchpad_raised_label',
+  'launchpad_search_label',
+  'launchpad_search_placeholder',
+  'launchpad_sort_label',
+  'launchpad_sort_featured',
+  'launchpad_sort_funded',
+  'launchpad_sort_discount',
+  'launchpad_sort_backers',
   'nav_launchpad'
 ];
 

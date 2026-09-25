@@ -40,8 +40,8 @@
         <p data-i18n="launchpad_hub_subtitle">Emerging Indian startup innovation hub</p>
         <div class="launchpad-stats" aria-live="polite">
           <div class="stat-item">
-            <span class="stat-value" id="fundedPercent">0%</span>
-            <span class="stat-label" data-i18n="launchpad_funded_percent_label">Funded</span>
+            <span class="stat-value" id="fundedPercent">₹0</span>
+            <span class="stat-label" data-i18n="launchpad_raised_label">Raised</span>
           </div>
           <div class="stat-item">
             <span class="stat-value" id="backersCount">0</span>
@@ -67,19 +67,24 @@
       <div class="spotlight-container">
         <div class="spotlight-product">
           <div class="spotlight-media">
-            <img src="product-placeholder.svg" alt="Startup product" class="spotlight-image">
+            <div class="product-art product-art--solar spotlight-art" role="img" aria-label="SolarSmart Charger">
+              <span class="art-grid" aria-hidden="true"></span>
+              <span class="art-orbit" aria-hidden="true"></span>
+              <span class="art-core" aria-hidden="true"></span>
+            </div>
             <span class="early-bird-badge" data-i18n="launchpad_early_bird">Early bird</span>
           </div>
           <div class="spotlight-info">
             <p class="launchpad-eyebrow" data-i18n="launchpad_featured_eyebrow">Featured startup</p>
-            <h3 class="spotlight-title">Innovative Startup Product</h3>
-            <p class="spotlight-description">A new way to solve everyday technology needs.</p>
+            <h3 class="spotlight-title">SolarSmart Charger</h3>
+            <p class="spotlight-description">Portable solar charger with a built-in power bank for outdoor adventures.</p>
             <div class="spotlight-price">
-              <span class="discount-percent">-20%</span>
-              <span class="price">₹4,799</span>
-              <span class="mrp">M.R.P.: ₹5,999</span>
+              <span class="discount-percent">-25%</span>
+              <span class="price">₹2,999</span>
+              <span class="mrp">M.R.P.: ₹3,999</span>
             </div>
-            <button type="button" class="btn-secondary" data-i18n="launchpad_preorder_btn" id="spotlightPreorderBtn2">Pre-Order Now</button>
+            <p class="tax-inclusive-note" data-i18n="launchpad_taxes_included">Inclusive of all taxes</p>
+            <button type="button" class="btn-secondary" data-i18n="launchpad_preorder_btn" id="spotlightPreorderBtn2" data-launchpad-preorder="launchpad-solarsmart-charger">Pre-Order Now</button>
           </div>
         </div>
       </div>
@@ -93,6 +98,26 @@
         <button type="button" class="filter-btn" data-category="wearables" data-i18n="launchpad_category_wearables" aria-pressed="false">Wearables</button>
         <button type="button" class="filter-btn" data-category="home-automation" data-i18n="launchpad_category_home_automation" aria-pressed="false">Home automation</button>
         <button type="button" class="filter-btn" data-category="audio" data-i18n="launchpad_category_audio" aria-pressed="false">Audio</button>
+        <button type="button" class="filter-btn" data-category="computing" data-i18n="launchpad_category_computing" aria-pressed="false">Computing</button>
+        <button type="button" class="filter-btn" data-category="gaming" data-i18n="launchpad_category_gaming" aria-pressed="false">Gaming</button>
+      </div>
+    </section>
+
+    <section class="launchpad-discovery-section" aria-label="Search and sort startup products">
+      <div class="launchpad-discovery-bar">
+        <label class="launchpad-search-field" for="launchpadSearchInput">
+          <span data-i18n="launchpad_search_label">Search startups</span>
+          <input id="launchpadSearchInput" type="search" autocomplete="off" data-i18n-placeholder="launchpad_search_placeholder" placeholder="Search by product, category, or use" />
+        </label>
+        <label class="launchpad-sort-field" for="launchpadSortSelect">
+          <span data-i18n="launchpad_sort_label">Sort by</span>
+          <select id="launchpadSortSelect">
+            <option value="featured" data-i18n="launchpad_sort_featured">Featured</option>
+            <option value="funded" data-i18n="launchpad_sort_funded">Most funded</option>
+            <option value="discount" data-i18n="launchpad_sort_discount">Biggest discount</option>
+            <option value="backers" data-i18n="launchpad_sort_backers">Most backed</option>
+          </select>
+        </label>
       </div>
     </section>
 
@@ -194,12 +219,24 @@
         <button type="button" class="modal-close" id="closeDetailsModalBtn" aria-label="Close product details" data-i18n-title="launchpad_close">&times;</button>
       </div>
       <div class="modal-body">
-        <p id="launchpadDetailsCategory" class="product-category-label"></p>
-        <h4 id="launchpadDetailsDescription"></h4>
-        <p id="launchpadDetailsPrice" class="details-price"></p>
-        <p id="launchpadDetailsFunding" class="details-funding"></p>
-        <p class="tax-inclusive-note" data-i18n="launchpad_taxes_included">Inclusive of all taxes</p>
-        <p class="launchpad-demo-note" data-i18n="launchpad_demo_note">Early-bird reservations are saved on this device; no payment is collected in this demo.</p>
+        <div class="launchpad-details-layout">
+          <div id="launchpadDetailsVisual" class="details-visual" aria-live="polite"></div>
+          <div class="details-copy">
+            <p id="launchpadDetailsCategory" class="product-category-label"></p>
+            <h4 id="launchpadDetailsName" class="details-name"></h4>
+            <p id="launchpadDetailsDescription" class="details-description"></p>
+            <p id="launchpadDetailsPrice" class="details-price"></p>
+            <div class="launchpad-progress details-progress">
+              <div class="progress-label"><span data-i18n="launchpad_funding_progress">Funding progress</span><strong id="launchpadDetailsProgressPercent">0%</strong></div>
+              <div id="launchpadDetailsProgressBar" class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+              <div class="progress-meta"><span id="launchpadDetailsFunding"></span><span id="launchpadDetailsBackers"></span></div>
+            </div>
+            <p class="tax-inclusive-note" data-i18n="launchpad_taxes_included">Inclusive of all taxes</p>
+            <p class="launchpad-demo-note" data-i18n="launchpad_demo_note">Early-bird reservations are saved on this device; no payment is collected in this demo.</p>
+            <p id="launchpadDetailsStatus" class="launchpad-status" role="status" aria-live="polite" hidden></p>
+            <button type="button" class="btn-primary details-preorder-btn" id="launchpadDetailsPreorderBtn" data-i18n="launchpad_preorder_btn" data-launchpad-preorder="launchpad-solarsmart-charger">Pre-Order Now</button>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-primary" id="closeDetailsModalBtn2" data-i18n="launchpad_close">Close</button>
