@@ -1,0 +1,1312 @@
+/* ElectroMart Gaming & eSports Arena Styles (Phase 39) */
+/* Dark cyber-neon arena surface layered on the shared ElectroMart storefront theme. */
+
+/* ==========================================================================
+   1. Arena tokens
+   ========================================================================== */
+:root {
+  /* Neon identity (contract token + accessible solid variants) */
+  --gaming-neon: #A855F7;
+  --gaming-neon-strong: #7E22CE;
+  --gaming-neon-deep: #4C1D95;
+  --gaming-neon-soft: rgba(168, 85, 247, 0.16);
+  --gaming-cyan: #22D3EE;
+  --gaming-magenta: #F0ABFC;
+  --gaming-cart: #ffd814;
+
+  /* Ink / surface */
+  --gaming-ink: #05060f;
+  --gaming-ink-2: #0b0f1f;
+  --gaming-ink-3: #121a31;
+  --gaming-glass: rgba(148, 163, 184, 0.08);
+  --gaming-glass-strong: rgba(148, 163, 184, 0.14);
+  --gaming-border: rgba(168, 85, 247, 0.30);
+  --gaming-border-soft: rgba(148, 163, 184, 0.20);
+
+  /* Text */
+  --gaming-text: #F4F1FF;
+  --gaming-text-dim: #AAB2CC;
+  --gaming-success: #34D399;
+  --gaming-error: #FB7185;
+
+  /* Type */
+  --gaming-font-display: "Chakra Petch", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", "Barlow", sans-serif;
+  --gaming-font-numeric: "Orbitron", "Chakra Petch", "Barlow", sans-serif;
+  --gaming-font-body: "Barlow", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", sans-serif;
+
+  /* Motion */
+  --gaming-glow: 0 0 0 1px rgba(168, 85, 247, 0.35), 0 18px 46px rgba(76, 29, 149, 0.45);
+  --gaming-lift: 0 22px 44px rgba(2, 4, 12, 0.55);
+}
+
+/* ==========================================================================
+   2. Page shell — override the light storefront canvas for this arena only
+   ========================================================================== */
+body.gaming-body {
+  background-color: var(--gaming-ink) !important;
+  background-image:
+    radial-gradient(1100px 620px at 12% -8%, rgba(168, 85, 247, 0.28), transparent 62%),
+    radial-gradient(900px 540px at 92% 4%, rgba(34, 211, 238, 0.16), transparent 60%),
+    linear-gradient(180deg, #05060f 0%, #080b18 46%, #05060f 100%);
+  background-attachment: fixed;
+  color: var(--gaming-text) !important;
+  font-family: var(--gaming-font-body) !important;
+  overflow-x: hidden;
+}
+
+.gaming-body a { color: inherit; }
+
+.gaming-page {
+  position: relative;
+  display: block;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(14px, 3vw, 32px) clamp(56px, 7vw, 96px);
+  color: var(--gaming-text);
+  font-family: var(--gaming-font-body);
+}
+
+.gaming-shell { width: 100%; }
+
+.gaming-page h1,
+.gaming-page h2,
+.gaming-page h3,
+.gaming-page figcaption,
+.gaming-page legend,
+.gaming-page dt,
+.gaming-page .gaming-eyebrow {
+  font-family: var(--gaming-font-display) !important;
+  color: var(--gaming-text) !important;
+  letter-spacing: 0.01em;
+}
+
+/* ==========================================================================
+   3. Hero
+   ========================================================================== */
+.gaming-hero {
+  position: relative;
+  margin: 0 calc(-1 * clamp(14px, 3vw, 32px)) clamp(38px, 5vw, 64px);
+  padding: clamp(40px, 6vw, 82px) 0 clamp(52px, 7vw, 96px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--gaming-border-soft);
+  isolation: isolate;
+}
+
+.gaming-hero__mesh {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    repeating-linear-gradient(90deg, rgba(168, 85, 247, 0.10) 0 1px, transparent 1px 92px),
+    repeating-linear-gradient(0deg, rgba(34, 211, 238, 0.07) 0 1px, transparent 1px 92px);
+  mask-image: radial-gradient(120% 90% at 50% 12%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 12%, #000 20%, transparent 78%);
+}
+
+.gaming-hero__floor {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -46%;
+  height: 78%;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, rgba(168, 85, 247, 0.30) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 211, 238, 0.26) 1px, transparent 1px);
+  background-size: 74px 46px;
+  transform: perspective(520px) rotateX(64deg);
+  transform-origin: bottom center;
+  opacity: 0.55;
+  mask-image: linear-gradient(to top, #000 4%, transparent 72%);
+  -webkit-mask-image: linear-gradient(to top, #000 4%, transparent 72%);
+}
+
+.gaming-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+.gaming-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 6px 14px;
+  border: 1px solid var(--gaming-border);
+  border-radius: 999px;
+  background: var(--gaming-glass);
+  color: var(--gaming-magenta);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.gaming-eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gaming-neon), var(--gaming-cyan));
+}
+
+.gaming-hero h1 {
+  margin: 0 0 16px;
+  font-size: clamp(2.1rem, 5.4vw, 4rem);
+  line-height: 1.04;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: linear-gradient(104deg, #ffffff 8%, var(--gaming-magenta) 46%, var(--gaming-cyan) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 26px rgba(168, 85, 247, 0.35));
+}
+
+.gaming-hero__lede {
+  max-width: 58ch;
+  margin: 0 0 26px;
+  color: var(--gaming-text-dim);
+  font-size: clamp(0.98rem, 1.35vw, 1.1rem);
+  line-height: 1.7;
+}
+
+.gaming-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.gaming-stat-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.10), rgba(148, 163, 184, 0.03));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+.gaming-stat dt {
+  margin: 0 0 4px;
+  color: var(--gaming-text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gaming-stat dd {
+  margin: 0;
+  font-family: var(--gaming-font-numeric);
+  font-size: clamp(1rem, 1.9vw, 1.35rem);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Telemetry gauge */
+.gaming-telemetry {
+  padding: 22px;
+  border: 1px solid var(--gaming-border);
+  border-radius: 22px;
+  background: linear-gradient(165deg, rgba(168, 85, 247, 0.16), rgba(11, 15, 31, 0.82) 58%);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: var(--gaming-glow);
+}
+
+.gaming-telemetry__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.gaming-telemetry__head h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gaming-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border: 1px solid rgba(52, 211, 153, 0.40);
+  border-radius: 999px;
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--gaming-success);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gaming-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gaming-success);
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.65);
+  animation: gaming-pulse 2.1s ease-out infinite;
+}
+
+@keyframes gaming-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.60); }
+  70% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+/* One gauge component, shared by the hero telemetry ring and the configurator
+   readout: one conic gradient, one 180-degree start angle, one 0-240 scale, and
+   a flex-column centre so the value and unit never collide. */
+.gaming-gauge {
+  --gaming-arc-angle: 0deg;
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg,
+    var(--gaming-neon) 0deg,
+    var(--gaming-cyan) var(--gaming-arc-angle),
+    rgba(148, 163, 184, 0.30) var(--gaming-arc-angle) 360deg);
+  box-shadow: 0 0 46px rgba(168, 85, 247, 0.34);
+  transition: background 0.35s ease;
+}
+
+.gaming-gauge::after {
+  content: "";
+  position: absolute;
+  inset: 5.5%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, #141a30, #05060f 78%);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.gaming-gauge__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.gaming-gauge__value {
+  margin: 0;
+  font-family: var(--gaming-font-numeric);
+  font-size: clamp(1.9rem, 4.4vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.gaming-gauge__unit {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  color: var(--gaming-cyan);
+}
+
+.gaming-gauge--hero { width: min(224px, 66vw); margin: 0 auto 10px; }
+.gaming-gauge--rig { width: min(184px, 58vw); margin: 0 auto; }
+
+.gaming-gauge__scale {
+  margin: 0 auto 18px;
+  color: var(--gaming-text-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.gaming-telemetry__note {
+  margin: 0 0 16px;
+  color: var(--gaming-text-dim);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.gaming-telemetry__readout {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 14px;
+  list-style: none;
+  border: 1px dashed var(--gaming-border-soft);
+  border-radius: 14px;
+  background: rgba(5, 6, 15, 0.55);
+}
+
+.gaming-telemetry__readout li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.gaming-telemetry__readout span { color: var(--gaming-text-dim); }
+.gaming-telemetry__readout strong { color: #ffffff; font-weight: 700; text-align: right; }
+
+/* ==========================================================================
+   4. Buttons
+   ========================================================================== */
+.btn-gaming {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-family: var(--gaming-font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.btn-gaming--neon {
+  background: linear-gradient(120deg, var(--gaming-neon-strong), var(--gaming-neon-deep));
+  border-color: var(--gaming-neon);
+  color: #ffffff;
+  box-shadow: 0 10px 26px rgba(124, 58, 237, 0.42);
+}
+
+.btn-gaming--neon:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(120deg, var(--gaming-neon), var(--gaming-neon-strong));
+  box-shadow: 0 16px 34px rgba(168, 85, 247, 0.52);
+}
+
+.btn-gaming--ghost {
+  background: rgba(148, 163, 184, 0.10);
+  border-color: var(--gaming-border);
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-gaming--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--gaming-cyan);
+  background: rgba(34, 211, 238, 0.14);
+}
+
+.btn-gaming--cart {
+  width: 100%;
+  background: var(--gaming-cart);
+  border-color: #fcd200;
+  color: #0f1111;
+  box-shadow: 0 10px 26px rgba(255, 216, 20, 0.22);
+}
+
+.btn-gaming--cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(255, 216, 20, 0.32);
+}
+
+.btn-gaming:active { transform: translateY(0); }
+
+.btn-gaming:disabled,
+.btn-gaming[disabled],
+.btn-gaming[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.35);
+}
+
+.btn-gaming:focus-visible {
+  outline: 3px solid var(--gaming-cyan) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 5px rgba(34, 211, 238, 0.22) !important;
+}
+
+/* ==========================================================================
+   5. Section frames
+   ========================================================================== */
+.gaming-section {
+  position: relative;
+  margin-bottom: clamp(34px, 5vw, 58px);
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(18, 26, 49, 0.72), rgba(5, 6, 15, 0.86));
+  backdrop-filter: blur(16px) saturate(135%);
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  box-shadow: 0 26px 60px rgba(2, 4, 12, 0.45);
+  animation: gaming-rise 0.55s ease both;
+}
+
+.gaming-section__head { margin-bottom: 24px; max-width: 78ch; }
+.gaming-section__head--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: none;
+}
+
+.gaming-section h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.4rem, 2.9vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.gaming-section__lede {
+  margin: 0;
+  color: var(--gaming-text-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.gaming-section__meta {
+  margin: 0;
+  color: var(--gaming-cyan);
+  font-family: var(--gaming-font-numeric);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes gaming-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   6. Rig configurator console
+   ========================================================================== */
+.gaming-console__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(18px, 2.4vw, 28px);
+  align-items: stretch;
+}
+
+.gaming-console__panel {
+  display: grid;
+  gap: 16px;
+  align-content: space-between;
+  padding: clamp(16px, 2vw, 22px);
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 18px;
+  background: rgba(5, 6, 15, 0.62);
+}
+
+.gaming-field { display: grid; gap: 7px; min-width: 0; }
+
+.gaming-field > label,
+.gaming-field legend {
+  padding: 0;
+  color: var(--gaming-text-dim);
+  font-family: var(--gaming-font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gaming-select,
+.gaming-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 10px;
+  background-color: var(--gaming-ink-2) !important;
+  color: var(--gaming-text) !important;
+  font-family: var(--gaming-font-body) !important;
+  font-size: 0.94rem;
+  line-height: 1.4;
+  appearance: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.gaming-select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--gaming-cyan) 50%),
+    linear-gradient(135deg, var(--gaming-cyan) 50%, transparent 50%);
+  background-position: calc(100% - 19px) 21px, calc(100% - 13px) 21px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 38px;
+}
+
+.gaming-select option { background-color: var(--gaming-ink-2); color: var(--gaming-text); }
+
+.gaming-select:hover,
+.gaming-input:hover { border-color: var(--gaming-border); }
+
+/* Focus visibility (WCAG 2.2 SC 1.4.11).
+   The shared storefront theme ships a global `outline: 2px solid #e77600 !important`
+   for every anchor/button/input/select, so each arena focus ring must also be
+   !important to win. Cyan on the dark arena measures ~10.5:1, comfortably over
+   the 3:1 floor; the soft violet glow is decoration only and never carries the
+   indicator. */
+.gaming-select:focus-visible,
+.gaming-input:focus-visible {
+  outline: 2px solid var(--gaming-cyan) !important;
+  outline-offset: 2px !important;
+  border-color: var(--gaming-cyan) !important;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.28);
+}
+
+/* Resolution segmented control */
+.gaming-field--wide { border: 0; margin: 0; padding: 0; }
+
+.gaming-segmented {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gaming-segment { position: relative; display: block; cursor: pointer; }
+.gaming-segment input { position: absolute; opacity: 0; pointer-events: none; }
+
+.gaming-segment span {
+  display: block;
+  padding: 11px 8px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.07);
+  color: var(--gaming-text-dim);
+  /* Display face, not the numeric face: Orbitron is an all-caps geometric
+     face whose lowercase "p" reads as a rho, so "1080p" became "1080ρ". */
+  font-family: var(--gaming-font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.18s ease;
+}
+
+.gaming-segment:hover span { border-color: var(--gaming-border); color: #ffffff; }
+
+.gaming-segment input:checked + span {
+  border-color: var(--gaming-neon);
+  background: linear-gradient(120deg, rgba(168, 85, 247, 0.30), rgba(34, 211, 238, 0.16));
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.45), 0 8px 20px rgba(76, 29, 149, 0.42);
+}
+
+.gaming-segment input:focus-visible + span {
+  outline: 3px solid var(--gaming-cyan) !important;
+  outline-offset: 2px !important;
+}
+
+.gaming-console__cta { justify-self: start; min-width: 190px; }
+
+/* Tier ladder: doubles as the configurator's fill at desktop and as the
+   legend that makes the 0-240 gauge arc interpretable. */
+.gaming-tier-ladder {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.08), rgba(5, 6, 15, 0.5));
+}
+
+.gaming-tier-ladder__title {
+  margin: 0;
+  color: var(--gaming-text-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gaming-tier-ladder__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gaming-tier-ladder__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-left: 3px solid rgba(148, 163, 184, 0.32);
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.05);
+  color: var(--gaming-text-dim);
+  font-size: 0.82rem;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.gaming-tier-ladder__name { font-weight: 600; }
+
+.gaming-tier-ladder__range {
+  font-family: var(--gaming-font-numeric);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.gaming-tier-ladder__row.is-active {
+  border-color: var(--gaming-border);
+  border-left-color: var(--gaming-neon);
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.24), rgba(34, 211, 238, 0.08));
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.gaming-tier-ladder__row.is-active .gaming-tier-ladder__range { color: var(--gaming-cyan); }
+.gaming-tier-ladder__row.is-idle { opacity: 0.6; }
+
+/* Readout column */
+.gaming-console__panel--readout { gap: 20px; }
+
+.gaming-fps {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 18px 16px;
+  border: 1px solid var(--gaming-border);
+  border-radius: 18px;
+  background:
+    radial-gradient(420px 200px at 50% 0%, rgba(168, 85, 247, 0.22), transparent 70%),
+    rgba(5, 6, 15, 0.70);
+  text-align: center;
+}
+
+/* The value, unit and inner disc now live in the shared .gaming-gauge
+   component above, so the old ring/value/unit blocks are gone. */
+
+.gaming-fps__caption { display: grid; gap: 6px; }
+
+.gaming-fps__label {
+  color: var(--gaming-text-dim);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gaming-tier {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--gaming-neon);
+  border-radius: 999px;
+  background: rgba(168, 85, 247, 0.16);
+  color: #ffffff;
+  font-family: var(--gaming-font-display);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.gaming-fps__hint {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--gaming-text-dim);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* Rig summary */
+.gaming-rig-summary {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px dashed var(--gaming-border);
+  border-radius: 18px;
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.gaming-rig-summary h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gaming-rig-summary__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gaming-rig-summary__list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  font-size: 0.86rem;
+}
+
+.gaming-rig-summary__list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.gaming-rig-summary__list .gaming-part-name { color: var(--gaming-text); }
+.gaming-rig-summary__list .gaming-part-price { font-family: var(--gaming-font-numeric); font-weight: 700; color: var(--gaming-cyan); white-space: nowrap; }
+.gaming-rig-summary__list .gaming-part-empty { color: var(--gaming-text-dim); font-style: italic; }
+
+.gaming-rig-summary__totals { display: grid; gap: 4px; }
+
+.gaming-total,
+.gaming-mrp,
+.gaming-savings {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--gaming-text-dim);
+}
+
+.gaming-total strong {
+  font-family: var(--gaming-font-numeric);
+  font-size: 1.32rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.gaming-savings span:last-child { color: var(--gaming-success); font-weight: 700; }
+.gaming-tax-note { margin: 2px 0 0; font-size: 0.74rem; color: var(--gaming-text-dim); }
+
+/* Status messaging */
+.gaming-status {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--gaming-border-soft);
+  border-left: 3px solid var(--gaming-cyan);
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.10);
+  color: var(--gaming-text);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.gaming-status.is-success { border-left-color: var(--gaming-success); background: rgba(52, 211, 153, 0.12); }
+.gaming-status.is-error { border-left-color: var(--gaming-error); background: rgba(251, 113, 133, 0.12); }
+
+/* ==========================================================================
+   7. Arena gear grid
+   ========================================================================== */
+.gaming-gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.gaming-gear-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.10), rgba(5, 6, 15, 0.70));
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  animation: gaming-rise 0.5s ease both;
+}
+
+.gaming-gear-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gaming-neon);
+  box-shadow: 0 20px 40px rgba(76, 29, 149, 0.42);
+}
+
+.gaming-gear-card__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 132px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 22%, rgba(168, 85, 247, 0.28), rgba(5, 6, 15, 0.9) 68%);
+  overflow: hidden;
+}
+
+.gaming-gear-card__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(251, 113, 133, 0.18);
+  border: 1px solid rgba(251, 113, 133, 0.5);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.gaming-gear-card__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gaming-gear-card h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 6px;
+  font-family: var(--gaming-font-body) !important;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #ffffff !important;
+}
+
+.gaming-gear-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 10px;
+  color: var(--gaming-text-dim);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+/* Bottom-anchored so the price row lines up across a 4-up grid row. */
+.gaming-gear-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 10px;
+}
+.gaming-gear-card__price strong { font-family: var(--gaming-font-numeric); font-size: 1.06rem; font-weight: 800; color: #ffffff; }
+.gaming-gear-card__price s { color: var(--gaming-text-dim); font-size: 0.8rem; }
+.gaming-gear-card__price em { color: var(--gaming-success); font-size: 0.76rem; font-style: normal; font-weight: 700; }
+.gaming-gear-card__tax { margin: 4px 0 0; font-size: 0.72rem; color: var(--gaming-text-dim); }
+.gaming-gear-card .btn-gaming { width: 100%; }
+
+/* CSS-art loadout visuals (no external imagery) */
+.gaming-art { position: relative; width: 92px; height: 76px; }
+.gaming-art span { position: absolute; display: block; }
+
+.gaming-art--gpu .art-body {
+  inset: 14px 6px 8px 6px;
+  border: 1px solid rgba(168, 85, 247, 0.75);
+  border-radius: 8px;
+  background: linear-gradient(140deg, rgba(168, 85, 247, 0.42), rgba(34, 211, 238, 0.18));
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.5);
+}
+.gaming-art--gpu .art-fan {
+  width: 40px; height: 40px; left: 12px; top: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(34, 211, 238, 0.85) 0 60deg, transparent 60deg 120deg, rgba(34, 211, 238, 0.85) 120deg 180deg, transparent 180deg 240deg, rgba(34, 211, 238, 0.85) 240deg 300deg, transparent 300deg);
+  animation: gaming-spin 5.5s linear infinite;
+}
+.gaming-art--gpu .art-fan--two { left: 48px; top: 22px; }
+.gaming-art--gpu .art-pcie { left: 6px; top: 60px; width: 44px; height: 6px; background: linear-gradient(90deg, #ffd814, rgba(255, 216, 20, 0.2)); border-radius: 2px; }
+
+.gaming-art--headset .art-band {
+  inset: 6px 14px auto 14px;
+  height: 34px;
+  border: 3px solid rgba(34, 211, 238, 0.8);
+  border-bottom: 0;
+  border-radius: 34px 34px 0 0;
+}
+.gaming-art--headset .art-cup {
+  width: 24px; height: 34px; top: 32px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, rgba(168, 85, 247, 0.75), rgba(76, 29, 149, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.55);
+}
+.gaming-art--headset .art-cup--left { left: 12px; }
+.gaming-art--headset .art-cup--right { right: 12px; }
+.gaming-art--headset .art-mic { left: 34px; top: 60px; width: 30px; height: 6px; border-radius: 3px; background: rgba(148, 163, 184, 0.75); transform: rotate(16deg); }
+
+.gaming-art--keyboard .art-deck {
+  inset: 18px 4px 12px 4px;
+  border: 1px solid rgba(34, 211, 238, 0.7);
+  border-radius: 6px;
+  background: linear-gradient(160deg, rgba(11, 15, 31, 0.95), rgba(168, 85, 247, 0.25));
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+}
+.gaming-art--keyboard .art-keyrow {
+  left: 10px; right: 10px; height: 6px;
+  background-image: repeating-linear-gradient(90deg, rgba(168, 85, 247, 0.9) 0 8px, transparent 8px 12px);
+}
+.gaming-art--keyboard .art-keyrow--one { top: 24px; }
+.gaming-art--keyboard .art-keyrow--two { top: 36px; }
+.gaming-art--keyboard .art-keyrow--three { top: 48px; }
+.gaming-art--keyboard .art-rgb { left: 6px; right: 6px; bottom: 16px; height: 3px; background: linear-gradient(90deg, #A855F7, #22D3EE, #F0ABFC); border-radius: 2px; }
+
+.gaming-art--mouse .art-shell {
+  inset: 10px 24px 6px 24px;
+  border: 1px solid rgba(240, 171, 252, 0.8);
+  border-radius: 40px 40px 26px 26px;
+  background: linear-gradient(160deg, rgba(168, 85, 247, 0.5), rgba(11, 15, 31, 0.95));
+  box-shadow: 0 0 20px rgba(240, 171, 252, 0.35);
+}
+.gaming-art--mouse .art-wheel {
+  left: 44px; top: 22px; width: 5px; height: 14px;
+  border-radius: 3px;
+  background: #ffd814;
+  box-shadow: 0 0 10px rgba(255, 216, 20, 0.8);
+}
+.gaming-art--mouse .art-glow { left: 18px; right: 18px; bottom: 2px; height: 4px; background: linear-gradient(90deg, transparent, #22D3EE, transparent); }
+
+.gaming-art--monitor .art-screen {
+  inset: 8px 6px 22px 6px;
+  border: 1px solid rgba(34, 211, 238, 0.75);
+  border-radius: 6px;
+  background: linear-gradient(150deg, rgba(34, 211, 238, 0.30), rgba(76, 29, 149, 0.55));
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.4);
+}
+.gaming-art--monitor .art-hud {
+  left: 16px; top: 20px; width: 44px; height: 5px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 0 rgba(255, 255, 255, 0.5), 0 20px 0 rgba(255, 255, 255, 0.28);
+}
+.gaming-art--monitor .art-stand { left: 40px; bottom: 6px; width: 14px; height: 16px; background: rgba(148, 163, 184, 0.85); border-radius: 2px; }
+.gaming-art--monitor .art-base { left: 24px; bottom: 2px; width: 46px; height: 5px; border-radius: 3px; background: rgba(148, 163, 184, 0.9); }
+
+.gaming-art--chair .art-back {
+  inset: 4px 26px auto 26px;
+  height: 40px;
+  border: 1px solid rgba(168, 85, 247, 0.8);
+  border-radius: 14px 14px 6px 6px;
+  background: linear-gradient(160deg, rgba(168, 85, 247, 0.5), rgba(11, 15, 31, 0.9));
+}
+.gaming-art--chair .art-seat { left: 16px; right: 16px; top: 46px; height: 14px; border-radius: 6px; background: linear-gradient(90deg, rgba(34, 211, 238, 0.5), rgba(168, 85, 247, 0.6)); }
+.gaming-art--chair .art-base { left: 40px; top: 60px; width: 6px; height: 14px; background: rgba(148, 163, 184, 0.9); }
+.gaming-art--chair .art-foot { left: 26px; top: 70px; width: 42px; height: 5px; border-radius: 3px; background: rgba(148, 163, 184, 0.9); }
+
+@keyframes gaming-spin { to { transform: rotate(360deg); } }
+
+/* Loading / empty states */
+.gaming-gear-skeleton { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.gaming-gear-skeleton[hidden] { display: none; }
+
+.gaming-skeleton-card {
+  height: 264px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 18px;
+  background: linear-gradient(100deg, rgba(148, 163, 184, 0.06) 30%, rgba(168, 85, 247, 0.20) 50%, rgba(148, 163, 184, 0.06) 70%);
+  background-size: 220% 100%;
+  animation: gaming-shimmer 1.5s linear infinite;
+}
+
+@keyframes gaming-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -20% 0; }
+}
+
+.gaming-empty {
+  margin: 0;
+  padding: 26px;
+  border: 1px dashed var(--gaming-border);
+  border-radius: 16px;
+  background: rgba(5, 6, 15, 0.6);
+  color: var(--gaming-text-dim);
+  text-align: center;
+}
+
+/* ==========================================================================
+   8. Tournament & sponsorship
+   ========================================================================== */
+.gaming-tournament__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.42fr);
+  gap: clamp(16px, 2.4vw, 26px);
+  align-items: stretch;
+}
+
+.gaming-prizepool {
+  display: grid;
+  gap: 12px;
+  align-content: space-between;
+  padding: 20px;
+  border: 1px solid var(--gaming-border);
+  border-radius: 18px;
+  background: linear-gradient(165deg, rgba(168, 85, 247, 0.22), rgba(5, 6, 15, 0.85) 62%);
+  box-shadow: var(--gaming-glow);
+}
+
+.gaming-prizepool__label {
+  margin: 0;
+  color: var(--gaming-text-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gaming-prizepool__value {
+  margin: 0;
+  font-family: var(--gaming-font-numeric);
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.gaming-prizepool__slots {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 10px;
+  background: rgba(5, 6, 15, 0.6);
+  font-size: 0.82rem;
+  color: var(--gaming-text-dim);
+}
+
+.gaming-prizepool__slots strong { font-family: var(--gaming-font-numeric); font-size: 1.1rem; color: #ffffff; }
+
+.gaming-prizepool__list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.gaming-prizepool__list li { display: flex; justify-content: space-between; gap: 10px; font-size: 0.82rem; color: var(--gaming-text-dim); }
+.gaming-prizepool__list li strong { color: #ffffff; font-weight: 700; }
+
+.gaming-cup-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: gaming-cup;
+}
+
+.gaming-cup {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 16px;
+  background: linear-gradient(100deg, rgba(148, 163, 184, 0.09), rgba(5, 6, 15, 0.62));
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.gaming-cup:hover { border-color: var(--gaming-cyan); transform: translateX(4px); }
+
+.gaming-cup__index {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gaming-border);
+  border-radius: 12px;
+  background: rgba(168, 85, 247, 0.16);
+  color: #ffffff;
+  font-family: var(--gaming-font-numeric);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.gaming-cup__body { min-width: 0; }
+.gaming-cup__body h3 { margin: 0 0 3px; font-family: var(--gaming-font-display) !important; font-size: 0.98rem; font-weight: 700; color: #ffffff !important; }
+.gaming-cup__meta { margin: 0; font-size: 0.78rem; color: var(--gaming-text-dim); }
+
+.gaming-cup__side { display: grid; justify-items: end; gap: 4px; }
+.gaming-cup__prize { font-family: var(--gaming-font-numeric); font-size: 0.92rem; font-weight: 700; color: var(--gaming-cyan); white-space: nowrap; }
+
+.gaming-cup__status {
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--gaming-border);
+  background: rgba(168, 85, 247, 0.14);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gaming-cup__status.is-live { border-color: rgba(52, 211, 153, 0.5); background: rgba(52, 211, 153, 0.16); }
+.gaming-cup__status.is-registration { border-color: rgba(255, 216, 20, 0.5); background: rgba(255, 216, 20, 0.14); }
+
+.gaming-sponsor-cta {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+  padding: 20px clamp(18px, 2.4vw, 26px);
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 18px;
+  background: linear-gradient(120deg, rgba(34, 211, 238, 0.12), rgba(5, 6, 15, 0.7));
+}
+
+.gaming-sponsor-cta__copy { display: grid; gap: 8px; justify-items: start; }
+.gaming-sponsor-cta__copy p { margin: 0; max-width: 62ch; }
+
+.gaming-sponsor-cta__action {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
+.gaming-sponsor-cta h3 { margin: 0; font-size: 1.06rem; font-weight: 700; }
+.gaming-sponsor-cta p { margin: 0; color: var(--gaming-text-dim); font-size: 0.9rem; line-height: 1.65; }
+
+.gaming-sponsor-cta__counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px dashed var(--gaming-border-soft);
+  border-radius: 999px;
+  font-size: 0.76rem;
+}
+
+.gaming-sponsor-cta__counter strong { font-family: var(--gaming-font-numeric); color: #ffffff; }
+
+/* ==========================================================================
+   9. Sponsorship modal
+   ========================================================================== */
+.gaming-modal {
+  width: min(620px, 94vw);
+  padding: 0;
+  border: 1px solid var(--gaming-border);
+  border-radius: 20px;
+  background: linear-gradient(170deg, #131a31, #05060f 68%);
+  color: var(--gaming-text);
+  box-shadow: 0 40px 90px rgba(2, 4, 12, 0.7);
+}
+
+.gaming-modal::backdrop {
+  background: rgba(3, 4, 12, 0.78);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.gaming-modal__form { display: grid; gap: 0; }
+
+.gaming-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid var(--gaming-border-soft);
+}
+
+/* The <dialog> is a direct child of <body>, outside .gaming-page, so the arena
+   heading treatment has to be re-declared for the dialog or it falls back to
+   the storefront display face in sentence case. */
+.gaming-modal h2,
+.gaming-modal h3,
+.gaming-modal legend,
+.gaming-modal .gaming-field > label {
+  font-family: var(--gaming-font-display) !important;
+  color: var(--gaming-text) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.gaming-modal__head h2 { margin: 0 0 6px; font-size: 1.14rem; font-weight: 700; line-height: 1.25; }
+.gaming-modal__head p { margin: 0; color: var(--gaming-text-dim); font-size: 0.82rem; line-height: 1.6; }
+
+.gaming-modal__close {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--gaming-border-soft);
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.10);
+  color: #ffffff;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.gaming-modal__close:hover { background: rgba(251, 113, 133, 0.18); border-color: var(--gaming-error); }
+
+.gaming-modal__close:focus-visible {
+  outline: 3px solid var(--gaming-cyan) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.22) !important;
+}
+
+.gaming-modal__body { display: grid; gap: 14px; padding: 18px 22px; }
+.gaming-modal__foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 16px 22px 20px; border-top: 1px solid var(--gaming-border-soft); }
+
+/* ==========================================================================
+   10. Responsive
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .gaming-hero__inner { grid-template-columns: minmax(0, 1fr); }
+  .gaming-console__grid { grid-template-columns: minmax(0, 1fr); }
+  .gaming-console__panel { align-content: start; }
+  .gaming-tournament__layout { grid-template-columns: minmax(0, 1fr); }
+  .gaming-prizepool { align-content: start; }
+  .gaming-sponsor-cta { grid-column: auto; grid-template-columns: minmax(0, 1fr); }
+  .gaming-sponsor-cta__action { justify-items: start; justify-self: stretch; }
+}
+
+@media (max-width: 720px) {
+  .gaming-stat-rail { grid-template-columns: minmax(0, 1fr); }
+  .gaming-segmented { grid-template-columns: minmax(0, 1fr); }
+  .gaming-cup { grid-template-columns: 36px minmax(0, 1fr); }
+  .gaming-cup__side { grid-column: 2; justify-items: start; }
+  .gaming-hero__actions .btn-gaming { width: 100%; }
+  .gaming-console__cta { width: 100%; }
+  .gaming-modal__foot .btn-gaming { flex: 1 1 160px; }
+}
+
+/* ==========================================================================
+   11. Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .gaming-page *,
+  .gaming-page *::before,
+  .gaming-page *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gaming-live-dot { animation: none; }
+  .gaming-art--gpu .art-fan { animation: none; }
+  .gaming-section,
+  .gaming-gear-card,
+  .gaming-gear-skeleton { animation: none; }
+}

@@ -2710,6 +2710,49 @@ window.isLaunchpadEligible = isLaunchpadEligible;
 window.renderPdpLaunchpadCallout = renderPdpLaunchpadCallout;
 
 // ==========================================
+// Phase 39: ElectroMart Gaming Arena Callout
+// ==========================================
+function isGamingArenaEligible(product) {
+  if (!product || typeof product !== "object") return false;
+  if (product.gamingCertified === true) return true;
+
+  // Deterministic eligibility: the same product always earns (or never earns)
+  // the arena callout. Explicit certification metadata wins, then catalog
+  // signals, then a category plus price threshold.
+  const gamingSignal = [product.category, product.tags, product.keywords, product.name, product.description]
+    .flat(Infinity)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  if (/gaming|game|rgb|mechanical\s+keyboard|gaming\s+mouse|graphics\s+card|\bgpu\b|headset|controller|joystick|esports|e-sports|tournament|240\s?hz|165\s?hz|144\s?hz/.test(gamingSignal)) {
+    return true;
+  }
+
+  const price = Number(product.price || 0);
+  const category = String(product.category || "").toLowerCase();
+  return /(computer|components|gaming|accessor)/.test(category) && price >= 3000;
+}
+
+function renderPdpGamingArenaCallout(product) {
+  const callout = document.getElementById("pdpGamingArenaCallout");
+  if (!callout || !product) return;
+
+  const isEligible = isGamingArenaEligible(product);
+  callout.hidden = !isEligible;
+
+  if (isEligible) {
+    const productId = encodeURIComponent(String(product.id || ""));
+    const arenaLink = document.getElementById("pdpGamingArenaHubLink");
+    if (arenaLink) {
+      arenaLink.href = `gaming.html?productId=${productId}`;
+    }
+  }
+}
+
+window.isGamingArenaEligible = isGamingArenaEligible;
+window.renderPdpGamingArenaCallout = renderPdpGamingArenaCallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -3441,6 +3484,7 @@ function renderStarCharacters(rating) {
   renderProtectionAddon(product);
   renderPdpGlobalStoreCallout(product);
   renderPdpLaunchpadCallout(product);
+  renderPdpGamingArenaCallout(product);
 
   renderRecentlyViewedDetailSection();
 

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!-- ElectroMart Gaming & eSports Arena (Phase 39) -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Gaming Arena - Custom Gaming Rigs, FPS Estimator &amp; eSports Sponsorship</title>
+  <meta name="description" content="Build a certified Indian gaming rig on the ElectroMart Gaming Arena. Configure CPU, GPU, RAM and storage, get a deterministic frame-rate estimate, and sponsor an ElectroMart eSports tournament." />
+  <meta name="keywords" content="gaming rig, esports, custom gaming PC, GPU, frame rate, FPS estimator, tournament sponsorship, ElectroMart gaming arena" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/gaming.html" />
+  <meta property="og:title" content="ElectroMart Gaming Arena - Custom Rigs &amp; eSports Sponsorship" />
+  <meta property="og:description" content="Configure a certified gaming rig, estimate real frame rates, and sponsor the ElectroMart eSports circuit." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/gaming.html" />
+  <meta property="twitter:title" content="ElectroMart Gaming Arena - Custom Rigs &amp; eSports Sponsorship" />
+  <meta property="twitter:description" content="Configure a certified gaming rig, estimate real frame rates, and sponsor the ElectroMart eSports circuit." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Chakra+Petch:wght@600;700&family=Orbitron:wght@700;800;900&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260926a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260926a" />
+  <link rel="stylesheet" href="gaming.css?v=20260926a" />
+</head>
+<body class="gaming-body">
+  <div id="headerContainer"></div>
+
+  <main class="gaming-page">
+    <!-- ============ HERO ============ -->
+    <section id="gamingHero" class="gaming-hero" aria-labelledby="gamingHeroTitle">
+      <span class="gaming-hero__mesh" aria-hidden="true"></span>
+      <span class="gaming-hero__floor" aria-hidden="true"></span>
+
+      <div class="gaming-shell gaming-hero__inner">
+        <div class="gaming-hero__copy">
+          <p class="gaming-eyebrow" data-i18n="gaming_hero_eyebrow">ElectroMart Gaming Arena</p>
+          <h1 id="gamingHeroTitle" data-i18n="gaming_hub_title">Gaming &amp; eSports Arena</h1>
+          <p class="gaming-hero__lede" data-i18n="gaming_hub_subtitle">Build a certified Indian gaming rig, read a deterministic frame-rate estimate, and sponsor the ElectroMart eSports circuit.</p>
+
+          <div class="gaming-hero__actions">
+            <a href="#rigConfigurator" class="btn-gaming btn-gaming--neon" data-i18n="gaming_hero_cta_configure">Configure my rig</a>
+            <button type="button" class="btn-gaming btn-gaming--ghost" data-gaming-open-sponsor data-i18n="gaming_hero_cta_tournament">Sponsor a tournament</button>
+          </div>
+
+          <dl class="gaming-stat-rail" aria-live="polite">
+            <div class="gaming-stat">
+              <dt data-i18n="gaming_stat_rigs_label">Rigs certified</dt>
+              <dd id="heroRigCount">0</dd>
+            </div>
+            <div class="gaming-stat">
+              <dt data-i18n="gaming_stat_prize_label">Season prize pool</dt>
+              <dd id="heroPrizePool">₹0</dd>
+            </div>
+            <div class="gaming-stat">
+              <dt data-i18n="gaming_stat_creators_label">Creators onboarded</dt>
+              <dd id="heroCreatorCount">0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="gaming-telemetry" aria-labelledby="gamingTelemetryTitle">
+          <div class="gaming-telemetry__head">
+            <h2 id="gamingTelemetryTitle" data-i18n="gaming_telemetry_title">Arena telemetry</h2>
+            <span class="gaming-live-pill"><span class="gaming-live-dot" aria-hidden="true"></span>Live</span>
+          </div>
+
+          <div class="gaming-gauge gaming-gauge--hero" id="telemetryGauge" role="img" aria-label="Configured rig frame rate gauge">
+            <span class="gaming-gauge__inner">
+              <strong class="gaming-gauge__value" id="telemetryFps">--</strong>
+              <small class="gaming-gauge__unit" data-i18n="gaming_fps_unit">FPS</small>
+            </span>
+          </div>
+          <p class="gaming-gauge__scale" id="telemetryScale">0 &ndash; 240 <span data-i18n="gaming_fps_unit">FPS</span></p>
+
+          <p class="gaming-telemetry__note" data-i18n="gaming_telemetry_note">The estimate recalculates on every configuration change and stays identical for the same parts.</p>
+
+          <ul class="gaming-telemetry__readout">
+            <li><span data-i18n="gaming_cpu_label">Processor (CPU)</span><strong id="telemetryCpu">—</strong></li>
+            <li><span data-i18n="gaming_gpu_label">Graphics card (GPU)</span><strong id="telemetryGpu">—</strong></li>
+            <li><span data-i18n="gaming_ram_label">Memory (RAM)</span><strong id="telemetryRam">—</strong></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ RIG CONFIGURATOR ============ -->
+    <section id="rigConfigurator" class="gaming-section gaming-console" aria-labelledby="rigConfiguratorTitle">
+      <header class="gaming-section__head">
+        <p class="gaming-eyebrow" data-i18n="gaming_console_eyebrow">Rig lab</p>
+        <h2 id="rigConfiguratorTitle" data-i18n="gaming_rig_configurator_title">Custom Rig Configurator</h2>
+        <p class="gaming-section__lede" data-i18n="gaming_rig_configurator_subtitle">Pick every part of your build. The ElectroMart frame-rate engine returns a fixed, repeatable estimate for the exact same configuration.</p>
+      </header>
+
+      <div class="gaming-console__grid">
+        <form class="gaming-console__panel" id="rigConfigForm" autocomplete="off">
+          <div class="gaming-field">
+            <label for="cpuSelect" data-i18n="gaming_cpu_label">Processor (CPU)</label>
+            <select id="cpuSelect" name="cpuSelect" class="gaming-select">
+              <option value="" data-i18n="gaming_cpu_placeholder">Select a processor</option>
+            </select>
+          </div>
+
+          <div class="gaming-field">
+            <label for="gpuSelect" data-i18n="gaming_gpu_label">Graphics card (GPU)</label>
+            <select id="gpuSelect" name="gpuSelect" class="gaming-select">
+              <option value="" data-i18n="gaming_gpu_placeholder">Select a graphics card</option>
+            </select>
+          </div>
+
+          <div class="gaming-field">
+            <label for="ramSelect" data-i18n="gaming_ram_label">Memory (RAM)</label>
+            <select id="ramSelect" name="ramSelect" class="gaming-select">
+              <option value="" data-i18n="gaming_ram_placeholder">Select memory</option>
+            </select>
+          </div>
+
+          <div class="gaming-field">
+            <label for="storageSelect" data-i18n="gaming_storage_label">Storage</label>
+            <select id="storageSelect" name="storageSelect" class="gaming-select">
+              <option value="" data-i18n="gaming_storage_placeholder">Select storage</option>
+            </select>
+          </div>
+
+          <fieldset class="gaming-field gaming-field--wide" id="resolutionSelect" data-i18n-title="gaming_resolution_label">
+            <legend data-i18n="gaming_resolution_label">Target resolution</legend>
+            <div class="gaming-segmented" role="group">
+              <label class="gaming-segment">
+                <input type="radio" name="resolution" value="1080p" checked />
+                <span>1080p</span>
+              </label>
+              <label class="gaming-segment">
+                <input type="radio" name="resolution" value="1440p" />
+                <span>1440p</span>
+              </label>
+              <label class="gaming-segment">
+                <input type="radio" name="resolution" value="4k" />
+                <span>4K</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <button type="button" id="estimateFpsBtn" class="btn-gaming btn-gaming--neon gaming-console__cta" data-i18n="gaming_estimate_fps_btn">Estimate FPS</button>
+
+          <div class="gaming-tier-ladder" id="gamingTierLadder" aria-labelledby="gamingTierLadderTitle">
+            <h3 class="gaming-tier-ladder__title" id="gamingTierLadderTitle" data-i18n="gaming_tier_label">Competitive tier</h3>
+            <ol class="gaming-tier-ladder__list">
+              <li class="gaming-tier-ladder__row" data-tier-key="gaming_tier_elite">
+                <span class="gaming-tier-ladder__name" data-i18n="gaming_tier_elite">Elite esports</span>
+                <span class="gaming-tier-ladder__range">165+</span>
+              </li>
+              <li class="gaming-tier-ladder__row" data-tier-key="gaming_tier_competitive">
+                <span class="gaming-tier-ladder__name" data-i18n="gaming_tier_competitive">Competitive</span>
+                <span class="gaming-tier-ladder__range">110&ndash;164</span>
+              </li>
+              <li class="gaming-tier-ladder__row" data-tier-key="gaming_tier_entry">
+                <span class="gaming-tier-ladder__name" data-i18n="gaming_tier_entry">Entry esports</span>
+                <span class="gaming-tier-ladder__range">60&ndash;109</span>
+              </li>
+              <li class="gaming-tier-ladder__row" data-tier-key="gaming_tier_starter">
+                <span class="gaming-tier-ladder__name" data-i18n="gaming_tier_starter">Starter build</span>
+                <span class="gaming-tier-ladder__range">1&ndash;59</span>
+              </li>
+            </ol>
+          </div>
+        </form>
+
+        <div class="gaming-console__panel gaming-console__panel--readout">
+          <figure class="gaming-fps" id="fpsEstimate" role="status" aria-live="polite">
+            <div class="gaming-gauge gaming-gauge--rig" id="fpsGauge">
+              <span class="gaming-gauge__inner">
+                <strong class="gaming-gauge__value" id="fpsValue">--</strong>
+                <small class="gaming-gauge__unit" data-i18n="gaming_fps_unit">FPS</small>
+              </span>
+            </div>
+            <p class="gaming-gauge__scale" id="fpsScale">0 &ndash; 240 <span data-i18n="gaming_fps_unit">FPS</span></p>
+            <figcaption class="gaming-fps__caption">
+              <span class="gaming-fps__label" data-i18n="gaming_fps_estimate_label">Estimated performance</span>
+              <span class="gaming-tier" id="fpsTier" data-i18n="gaming_tier_label">Competitive tier</span>
+            </figcaption>
+            <p class="gaming-fps__hint" id="fpsHint" data-i18n="gaming_estimate_placeholder">Select every part, then estimate your frame rate.</p>
+          </figure>
+
+          <aside class="gaming-rig-summary" id="rigSummary" aria-labelledby="rigSummaryTitle" aria-live="polite">
+            <h3 id="rigSummaryTitle" data-i18n="gaming_rig_summary_title">Rig summary</h3>
+            <ul class="gaming-rig-summary__list" id="rigSummaryList"></ul>
+            <div class="gaming-rig-summary__totals">
+              <p class="gaming-total">
+                <span data-i18n="gaming_rig_total_label">Rig total</span>
+                <strong id="rigTotalPrice">₹0</strong>
+              </p>
+              <p class="gaming-mrp">
+                <span data-i18n="gaming_rig_mrp_label">M.R.P.</span>
+                <span id="rigMrpPrice">₹0</span>
+              </p>
+              <p class="gaming-savings">
+                <span data-i18n="gaming_rig_savings_label">Arena savings</span>
+                <span id="rigSavings">-0%</span>
+              </p>
+              <p class="gaming-tax-note" data-i18n="gaming_taxes_included">Inclusive of all taxes</p>
+            </div>
+            <button type="button" id="addRigToCartBtn" class="btn-gaming btn-gaming--cart gaming-rig-summary__cta" data-i18n="gaming_add_rig_to_cart">Add full rig to cart</button>
+            <p id="gamingRigStatus" class="gaming-status" role="status" aria-live="polite" hidden></p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARENA GEAR ============ -->
+    <section class="gaming-section gaming-gear" aria-labelledby="gamingGearTitle">
+      <header class="gaming-section__head gaming-section__head--row">
+        <div>
+          <p class="gaming-eyebrow" data-i18n="gaming_gear_eyebrow">Loadout</p>
+          <h2 id="gamingGearTitle" data-i18n="gaming_gear_title">Arena essentials</h2>
+          <p class="gaming-section__lede" data-i18n="gaming_gear_subtitle">Peripherals and upgrades certified for the ElectroMart Gaming Arena.</p>
+        </div>
+        <p class="gaming-section__meta" id="gamingGearCount" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="gaming-gear-grid" id="gamingProductGrid" aria-busy="false"></div>
+
+      <div class="gaming-gear-skeleton" id="gamingGearSkeleton" aria-hidden="true">
+        <div class="gaming-skeleton-card"></div>
+        <div class="gaming-skeleton-card"></div>
+        <div class="gaming-skeleton-card"></div>
+      </div>
+
+      <p class="gaming-empty" id="gamingGearEmpty" data-i18n="gaming_gear_empty" hidden>No arena gear is available right now. Please check back soon.</p>
+    </section>
+
+    <!-- ============ TOURNAMENTS & SPONSORSHIP ============ -->
+    <section id="tournamentSection" class="gaming-section gaming-tournament" aria-labelledby="gamingTournamentTitle">
+      <header class="gaming-section__head">
+        <p class="gaming-eyebrow" data-i18n="gaming_tournament_eyebrow">eSports circuit</p>
+        <h2 id="gamingTournamentTitle" data-i18n="gaming_tournament_title">Tournaments &amp; creator sponsorship</h2>
+        <p class="gaming-section__lede" data-i18n="gaming_tournament_subtitle">Sponsor an ElectroMart eSports cup or bring your creator community into the arena.</p>
+      </header>
+
+      <div class="gaming-tournament__layout">
+        <div class="gaming-prizepool">
+          <p class="gaming-prizepool__label" data-i18n="gaming_tournament_prize_pool">Season prize pool</p>
+          <p class="gaming-prizepool__value" id="tournamentPrizePool">₹0</p>
+          <p class="gaming-prizepool__slots">
+            <span data-i18n="gaming_tournament_slots">Open slots</span>
+            <strong id="tournamentOpenSlots">0</strong>
+          </p>
+          <ul class="gaming-prizepool__list" id="tournamentPrizeBreakdown"></ul>
+        </div>
+
+        <ol class="gaming-cup-list" id="gamingCupList"></ol>
+
+        <div class="gaming-sponsor-cta">
+          <div class="gaming-sponsor-cta__copy">
+            <h3 data-i18n="gaming_sponsor_apply_cta">Apply for sponsorship</h3>
+            <p data-i18n="gaming_sponsor_note">Custom brackets, creator streams, and on-ground arena booths for Indian esports communities.</p>
+          </div>
+          <div class="gaming-sponsor-cta__action">
+            <p class="gaming-sponsor-cta__counter">
+              <span data-i18n="gaming_sponsor_applications_label">Applications saved on this device</span>
+              <strong id="gamingSponsorCount">0</strong>
+            </p>
+            <button type="button" id="openSponsorModalBtn" class="btn-gaming btn-gaming--neon" data-i18n="gaming_sponsor_apply_cta">Apply for sponsorship</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ SPONSORSHIP MODAL ============ -->
+  <dialog id="sponsorApplyModal" class="gaming-modal" aria-labelledby="sponsorApplyModalTitle">
+    <form id="sponsorApplyForm" class="gaming-modal__form">
+      <div class="gaming-modal__head">
+        <div>
+          <h2 id="sponsorApplyModalTitle" data-i18n="gaming_sponsor_modal_title">Tournament &amp; creator sponsorship application</h2>
+          <p data-i18n="gaming_sponsor_modal_subtitle">Tell us about your brand or creator channel. Applications stay on this device in this preview.</p>
+        </div>
+        <button type="button" class="gaming-modal__close" id="closeSponsorModalBtn" aria-label="Close sponsorship application" data-i18n-title="gaming_sponsor_close">&times;</button>
+      </div>
+
+      <div class="gaming-modal__body">
+        <div class="gaming-field">
+          <label for="sponsorName" data-i18n="gaming_sponsor_name_label">Sponsor or brand name</label>
+          <input type="text" id="sponsorName" name="sponsorName" class="gaming-input" required minlength="2" maxlength="120" autocomplete="organization" data-i18n-placeholder="gaming_sponsor_name_placeholder" placeholder="Enter your brand name" />
+        </div>
+
+        <div class="gaming-field">
+          <label for="sponsorEmail" data-i18n="gaming_sponsor_email_label">Contact email</label>
+          <input type="email" id="sponsorEmail" name="sponsorEmail" class="gaming-input" required maxlength="254" autocomplete="email" data-i18n-placeholder="gaming_sponsor_email_placeholder" placeholder="Enter your email address" />
+        </div>
+
+        <div class="gaming-field">
+          <label for="creatorHandle" data-i18n="gaming_creator_handle_label">Creator handle</label>
+          <input type="text" id="creatorHandle" name="creatorHandle" class="gaming-input" required maxlength="31" pattern="@?[A-Za-z0-9._]{3,30}" data-i18n-placeholder="gaming_creator_handle_placeholder" placeholder="Creator handle, for example @arena" />
+        </div>
+
+        <div class="gaming-field">
+          <label for="sponsorGame" data-i18n="gaming_sponsor_game_label">Preferred game title</label>
+          <select id="sponsorGame" name="sponsorGame" class="gaming-select" required>
+            <option value="" disabled selected data-i18n="gaming_sponsor_game_placeholder">Select a game title</option>
+            <option value="battle-royale" data-i18n="gaming_game_battleroyale">Battle Royale Championship</option>
+            <option value="tactical-fps" data-i18n="gaming_game_tacticalfps">Tactical FPS Open</option>
+            <option value="cricket" data-i18n="gaming_game_cricket">Cricket Premier Cup</option>
+            <option value="racing" data-i18n="gaming_game_racing">Racing Sim Series</option>
+            <option value="fighting" data-i18n="gaming_game_fighting">Fighting Game Arena</option>
+            <option value="sports" data-i18n="gaming_game_sports">Sports Simulation League</option>
+          </select>
+        </div>
+
+        <p id="sponsorStatus" class="gaming-status" role="status" aria-live="polite" tabindex="-1" hidden></p>
+      </div>
+
+      <div class="gaming-modal__foot">
+        <button type="button" class="btn-gaming btn-gaming--ghost" id="cancelSponsorBtn" data-i18n="gaming_sponsor_cancel">Cancel</button>
+        <button type="submit" class="btn-gaming btn-gaming--neon" id="sponsorSubmitBtn" form="sponsorApplyForm" data-i18n="gaming_sponsor_submit_btn">Submit sponsorship application</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Shared i18n, catalog, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="gaming.js?v=20260926a"></script>
+</body>
+</html>
