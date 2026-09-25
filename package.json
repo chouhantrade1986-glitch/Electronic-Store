@@ -28,6 +28,7 @@
     "playwright": "1.58.2"
   },
   "dependencies": {
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "express-rate-limit": "^6.7.0"
   }
 }

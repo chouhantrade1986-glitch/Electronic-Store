@@ -255,6 +255,9 @@ const buyBoxSavings = document.getElementById("buyBoxSavings");
 const deliveryText = document.getElementById("deliveryText");
 const availabilityText = document.getElementById("availabilityText");
 const qtySelect = document.getElementById("qtySelect");
+const pdpLiveStreamCallout = document.getElementById("pdpLiveStreamCallout");
+const pdpLiveStreamStatus = document.getElementById("pdpLiveStreamStatus");
+const pdpWatchLiveBtn = document.getElementById("pdpWatchLiveBtn");
 const backInStockPanel = document.getElementById("backInStockPanel");
 const backInStockForm = document.getElementById("backInStockForm");
 const backInStockEmailInput = document.getElementById("backInStockEmailInput");
@@ -2519,8 +2522,17 @@ function localizeSpec(spec, t) {
 function renderFrequentlyBoughtTogether(product, t) {
   const container = document.getElementById("frequentlyBoughtContainer");
   if (!container) return;
-  const candidates = allProducts.filter(p => p.id !== product.id && p.category === product.category);
-  const bundleItem = candidates.length > 0 ? candidates[0] : (allProducts.find(p => p.id !== product.id) || null);
+
+  const bundleRecommendations = typeof window.getBundleRecommendations === "function"
+    ? window.getBundleRecommendations(product.id, { limit: 2, stockAware: true })
+    : [];
+
+  const productLookup = new Map(allProducts.map((item) => [String(item.id), item]));
+  const normalizedCandidates = bundleRecommendations.length
+    ? bundleRecommendations.map((item) => productLookup.get(String(item.id)) || item)
+    : allProducts.filter((p) => String(p.id) !== String(product.id) && p.category === product.category);
+
+  const bundleItem = normalizedCandidates.length > 0 ? normalizedCandidates[0] : (allProducts.find((p) => String(p.id) !== String(product.id)) || null);
   if (!bundleItem) {
     container.hidden = true;
     return;
@@ -2582,6 +2594,120 @@ function renderFrequentlyBoughtTogether(product, t) {
     };
   }
 }
+
+function renderPdpLiveStreamCallout(product) {
+  if (!pdpLiveStreamCallout || !product) {
+    return;
+  }
+  const streamCategories = ["laptop", "computer", "audio", "accessory", "mobile"];
+  const category = String(product.category || "").toLowerCase();
+  const isEligible = streamCategories.includes(category) || Boolean(product.featured);
+  pdpLiveStreamCallout.hidden = !isEligible;
+  if (!isEligible) {
+    return;
+  }
+  const productId = encodeURIComponent(String(product.id || ""));
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const translations = window.EM_TRANSLATIONS || {};
+  const liveText = translations[currentLang] || translations.en || {};
+  if (pdpLiveStreamStatus) {
+    pdpLiveStreamStatus.textContent = liveText.live_stream_now || "Live stream happening now";
+  }
+  if (pdpWatchLiveBtn) {
+    pdpWatchLiveBtn.href = `live-shopping.html?productId=${productId}`;
+    pdpWatchLiveBtn.textContent = liveText.live_view_hub || "Watch live";
+  }
+}
+
+function isSmartHomeEligible(product) {
+  const signal = [product?.name, product?.title, product?.category, product?.keywords, product?.description].flat(Infinity).join(" ").toLowerCase();
+  return /\b(smart|iot|wi[- ]?fi|matter|homekit|alexa|google home|camera|bulb|plug|speaker|thermostat|security|doorbell|smart tv)\b/i.test(signal);
+}
+
+function renderPdpSmartHomeCompatibility(product) {
+  const widget = document.getElementById("pdpSmartHomeCompatibility");
+  const button = document.getElementById("pdpSmartHomeCompatibilityBtn");
+  const modal = document.getElementById("smartHomeSetupModal") || document.getElementById("pdpSmartHomeCompatibilityModal");
+  const select = document.getElementById("smartHomeEcosystemSelect") || document.getElementById("pdpSmartHomeEcosystemSelect");
+  const result = document.getElementById("smartHomeCompatibilityResult") || document.getElementById("pdpSmartHomeCompatibilityResult");
+  const hubLink = document.getElementById("pdpSmartHomeHubLink");
+  if (!widget || !button || !product) return;
+  const eligible = isSmartHomeEligible(product);
+  widget.hidden = !eligible;
+  if (!eligible) return;
+  if (hubLink) hubLink.href = `smarthome.html?productId=${encodeURIComponent(String(product.id || ""))}`;
+  const renderResult = () => {
+    if (!select || !result) return;
+    const ecosystem = String(select.value || "google").toLowerCase();
+    const compatibility = typeof window.calculateSmartHomeCompatibility === "function"
+      ? window.calculateSmartHomeCompatibility([product], ecosystem)
+      : { compatibleAll: /smart|iot|wi[- ]?fi|matter/i.test(`${product.name} ${product.category}`) };
+    const lang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+    const t = (window.EM_TRANSLATIONS && (window.EM_TRANSLATIONS[lang] || window.EM_TRANSLATIONS.en)) || {};
+    const ecosystemLabel = t[`smarthome_ecosystem_${ecosystem}`] || ecosystem;
+    result.textContent = compatibility.compatibleAll
+      ? `${t.smarthome_compatibility_compatible || "Compatible with"} ${ecosystemLabel}.`
+      : `${t.smarthome_compatibility_incompatible || "This device needs a different ecosystem"}: ${ecosystemLabel}.`;
+  };
+  if (!button._smartHomeBound) {
+    button._smartHomeBound = true;
+    button.addEventListener("click", () => {
+      if (modal && typeof modal.showModal === "function") modal.showModal();
+      else if (modal) modal.hidden = false;
+      renderResult();
+    });
+  }
+  if (select && !select._smartHomeBound) {
+    select._smartHomeBound = true;
+    select.addEventListener("change", renderResult);
+  }
+  renderResult();
+}
+window.isSmartHomeEligible = isSmartHomeEligible;
+window.renderPdpSmartHomeCompatibility = renderPdpSmartHomeCompatibility;
+
+function renderPdpGlobalStoreCallout(product) {
+  const callout = document.getElementById("pdpGlobalStoreCallout");
+  if (!callout || !product) return;
+  const isImportEligible = Number(product.price || 0) >= 5000 || /import|global|apple|sony|asus|bavaria|tokyo/i.test(`${product.brand} ${product.name} ${product.description || ""}`);
+  callout.hidden = !isImportEligible;
+}
+window.renderPdpGlobalStoreCallout = renderPdpGlobalStoreCallout;
+
+// ==========================================
+// Phase 38: ElectroMart Launchpad Hub Callout
+// ==========================================
+function isLaunchpadEligible(product) {
+  if (!product || typeof product !== "object") return false;
+  if (product.launchpadEligible === true) return true;
+  const launchpadSignal = [product.category, product.tags, product.keywords, product.name, product.description]
+    .flat(Infinity)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return /launchpad|startup|innovation|early[- ]?bird|pre[- ]?order/.test(launchpadSignal);
+}
+
+function renderPdpLaunchpadCallout(product) {
+  const callout = document.getElementById("pdpLaunchpadCallout");
+  if (!callout || !product) return;
+
+  // Keep the callout deterministic so a product never gains or loses the
+  // Launchpad prompt on every render. Explicit launchpad metadata wins.
+  const isEligible = isLaunchpadEligible(product);
+  callout.hidden = !isEligible;
+
+  if (isEligible) {
+    const productId = encodeURIComponent(String(product.id || ""));
+    const launchpadLink = document.getElementById("pdpLaunchpadHubLink");
+    if (launchpadLink) {
+      launchpadLink.href = `launchpad.html?productId=${productId}`;
+    }
+  }
+}
+
+window.isLaunchpadEligible = isLaunchpadEligible;
+window.renderPdpLaunchpadCallout = renderPdpLaunchpadCallout;
 
 // ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
@@ -3305,12 +3431,16 @@ function renderStarCharacters(rating) {
   const productCategoryFamily = getProductCategoryFamily(product);
   renderOffers(price, listPrice, productCategoryFamily);
   renderFrequentlyBoughtTogether(product, t);
+  renderPdpLiveStreamCallout(product);
+  renderPdpSmartHomeCompatibility(product);
   renderServices(product, isInStock);
   renderReviewSummary(product);
   renderQa(product);
   renderPdpExchangeWidget(product, price);
   renderPdpRenewedAlternative(product, price);
   renderProtectionAddon(product);
+  renderPdpGlobalStoreCallout(product);
+  renderPdpLaunchpadCallout(product);
 
   renderRecentlyViewedDetailSection();
 

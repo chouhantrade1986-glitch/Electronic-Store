@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Live Shopping</title>
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="live-shopping.css?v=20260917a" />
+</head>
+<body>
+  <div id="headerContainer"></div>
+  <main id="liveShoppingHub" class="live-shopping-page">
+    <header class="live-hub-hero">
+      <div>
+        <p class="live-eyebrow" data-i18n="live_stream_now">Live now</p>
+        <h1 data-i18n="live_shopping_title">ElectroMart Live Shopping</h1>
+        <p id="liveStreamTitle">Creator desk setup: camera, audio and workflow demo</p>
+      </div>
+      <a class="live-hub-link" href="index.html" data-i18n="back_to_products">Back to shopping</a>
+    </header>
+
+    <section class="live-stream-layout" aria-label="ElectroMart live stream">
+      <article class="live-player-panel">
+        <div class="live-player-shell" id="liveStreamPlayer">
+          <video id="liveVideo" controls playsinline poster="product-placeholder.svg"></video>
+          <div class="live-player-fallback">
+            <span class="live-pulse" aria-hidden="true"></span>
+            <strong data-i18n="live_watch_demo">Watch live product demo</strong>
+            <span>ElectroMart Stream</span>
+          </div>
+          <div class="live-status-pill" id="liveStreamStatus" data-i18n="live_stream_now">Live now</div>
+        </div>
+        <div class="live-player-meta">
+          <div><strong id="liveHostName">Riya from ElectroMart</strong><span id="liveViewerCount">2.4K watching</span></div>
+          <span class="live-host-badge" data-i18n="live_host_badge">Host</span>
+        </div>
+        <div class="live-flash-deal" id="liveFlashDeal">
+          <div><span class="deal-kicker" data-i18n="live_flash_deal_title">Stream-exclusive flash deal</span><strong id="liveDealText">Save ₹1,000 on selected creator gear</strong></div>
+          <div class="live-deal-timer" id="liveDealTimer">14:59</div>
+          <div class="live-coupon"><span data-i18n="live_coupon_label">Coupon</span><code id="liveCouponCode">LIVE1000</code><button type="button" id="copyLiveCouponBtn" aria-label="Copy coupon">Copy</button></div>
+        </div>
+      </article>
+
+      <aside class="live-chat-panel" aria-label="Live chat">
+        <div class="live-panel-heading"><h2 data-i18n="live_chat_title">Live chat & Q&A</h2><span>Live</span></div>
+        <div id="liveStreamChat" class="live-chat-log" aria-live="polite"></div>
+        <form id="liveChatForm" class="live-chat-form">
+          <label class="sr-only" for="liveQuestionInput" data-i18n="live_question_placeholder">Ask a question</label>
+          <input id="liveQuestionInput" maxlength="240" required data-i18n-placeholder="live_question_placeholder" placeholder="Ask a question" />
+          <button type="submit" data-i18n="live_send_question">Send</button>
+        </form>
+      </aside>
+    </section>
+
+    <section class="live-shelf-panel">
+      <div class="live-panel-heading"><div><p class="live-eyebrow" data-i18n="live_product_shelf_title">Products featured in this stream</p><h2>Shop while you watch</h2></div><button type="button" id="liveAddAllBtn" data-i18n="live_add_all_to_cart">Add all to cart</button></div>
+      <div id="liveProductShelf" class="live-product-shelf"></div>
+    </section>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="android-compat.js?v=20260410a"></script>
+  <script src="live-shopping.js?v=20260917a"></script>
+</body>
+</html>

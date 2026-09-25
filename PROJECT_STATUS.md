@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** सितंबर 2026 (Phase 30: ElectroMart Device Trade-In & Exchange Hub Completed)  
+**अंतिम अद्यतन (Last Updated):** 25 सितंबर 2026 (Phase 37 ElectroMart Global Store & Cross-Border Delivery Hub Completed)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,13 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 62 / 62 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 70 / 70 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **ग्लोबल स्टोर व क्रॉस-बॉर्डर डिलीवरी टेस्ट** | `node scratch/test-amazon-global-hub.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
+| **स्मार्ट होम व IoT हब टेस्ट** | `node scratch/test-amazon-smarthome-hub.js` | ✅ **PASS** | 10 / 10 लेयर्स उत्तीर्ण (100%) |
+| **लाइव शॉपिंग व स्ट्रीम हब टेस्ट** | `node scratch/test-amazon-live-shopping.js` | ✅ **PASS** | 8 / 8 लेयर्स उत्तीर्ण (100%) |
+| **एफबीटी बंडल इंजन टेस्ट** | `node scratch/test-amazon-bundle-engine.js` | ✅ **PASS** | 8 / 8 लेयर्स उत्तीर्ण (100%) |
+| **ई-वेस्ट व रीसाइक्लिंग हब टेस्ट** | `node scratch/test-amazon-ewaste-hub.js` | ✅ **PASS** | 7 / 7 लेयर्स उत्तीर्ण (100%) |
+| **प्राइवेसी व गवर्नेंस टेस्ट** | `node scratch/test-privacy-compliance.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **डिवाइस ट्रेड-इन व एक्सचेंज हब टेस्ट** | `node scratch/test-amazon-device-exchange.js` | ✅ **PASS** | 7 / 7 लेयर्स (20/20 टेस्ट्स) उत्तीर्ण (100%) |
 | **3D शोरूम व वर्चुअल वर्कस्पेस टेस्ट** | `node scratch/test-amazon-3d-showroom.js` | ✅ **PASS** | 7 / 7 लेयर्स उत्तीर्ण (100%) |
 | **कस्टमर मीडिया व वीडियो गैलरी टेस्ट** | `node scratch/test-amazon-customer-media.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
@@ -24,7 +30,7 @@
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **136 / 136 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **144 / 144 (100% Pass Rate)** |
 
 ---
 
@@ -481,6 +487,19 @@
   - **11 भारतीय भाषाएं एवं 100% ब्रांड सुरक्षा:** `translations.js` में 65+ नई एक्सचेंज कीज़ (`ELECTROMART_EXCHANGE_I18N`) और 0 विज़िबल Amazon संदर्भ।
   - **टेस्ट मेट्रिक्स:** `scratch/test-amazon-device-exchange.js` (7/7 लेयर्स, 20/20 टेस्ट्स 100% उत्तीर्ण, कुल 62/62 टेस्ट सूट्स 100% पास, कुल 136/136 टेस्ट्स उत्तीर्ण)।
 
+### S. ElectroMart Global Store & Cross-Border Delivery Hub (Phase 37 Completed)
+- **समर्पित क्रॉस-बॉर्डर हब (`global.html`, `global.css`, `global.js`):**
+  - अमेज़न ग्लोबल स्टोर इंडिया शैली में निर्मित इंटरनेशनल इलेक्ट्रॉनिक्स हब विथ `--primary-blue: #0F62FE;` और फ्रॉस्टेड ग्लास-मॉर्फिज्म कार्ड्स।
+  - **कैनोनिकल स्क्रिप्ट क्रम:** `translations.js` ➔ `products-data.js` ➔ `universal-i18n-bus.js` ➔ `header.js` ➔ `menu-manager.js` ➔ `auth-state.js` ➔ `shared-search.js` ➔ `global.js`।
+  - **आयात शुल्क व टैक्स कैलकुलेटर (`calculateDutyBreakdown`):** बेस प्राइस (₹), भारतीय सीमा शुल्क (5% Statutory Base Customs Duty), अंतरराष्ट्रीय फ्रेट (Standard ₹499 बनाम Express ₹1,299) तथा CIF+Duty पर 18% IGST की पारदर्शी गणना विथ 100% DDP (Delivered Duty Paid) गारंटी।
+  - **भारतीय कस्टम्स KYC सत्यापन पोर्टल:** पासपोर्ट (`^[A-Z][0-9]{7}$`), आधार (`^[2-9][0-9]{11}$`) व ड्राइविंग लाइसेंस का क्लाइंट-साइड सत्यापन, संवेदनशील डेटा मास्किंग (उदा. `P*****34`, `XXXX-XXXX-1234`), और `electromart_global_kyc_v1` में सुरक्षित स्टोरेज।
+  - **इंटरनेशनल शोकेस गैलरी:** अमेरिका, जापान और जर्मनी से आयातित विशेष डेवलपर लैपटॉप्स, हाई-रेजोल्यूशन ऑडियो डैक और मैकेनिकल कीबोर्ड्स।
+- **पीडीपी बायबॉक्स एकीकरण (`product-detail.html`, `product-detail.css`, `product-detail.js`):**
+  - आयात-योग्य व प्रीमियम हार्डवेयर पर "🌐 ElectroMart Global Delivery: Import Duty Included" ट्रांसपेरेंट कार्ड और `global.html` डायरेक्ट नेविगेशन।
+- **11 भारतीय भाषाओं में i18n अनुवाद:** `translations.js` में `ELECTROMART_GLOBAL_I18N` डिक्शनरी (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **100% ब्रांड व कानूनी सुरक्षा:** 0 दृश्य Amazon संदर्भ; शुद्ध ElectroMart ब्रांडिंग।
+- **स्वचालित परीक्षण:** `scratch/test-amazon-global-hub.js` (100% PASS), 70/70 फ्रंटएंड सूट्स PASS, 74/74 बैकएंड यूनिट टेस्ट्स PASS (कुल 144/144 पास स्कोर)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
@@ -498,7 +517,16 @@
 
 ---
 
-## 4. सर्वर पोर्ट्स और रन कमांड्स (Server Ports & Run Commands)
+## 4. Governance और Phase 35 checkpoint
+
+- **Phase 35 Live Shopping Hub:** `live-shopping.html`, `live-shopping.css`, `live-shopping.js` और PDP live callout implementation मुख्य repository में मौजूद हैं।
+- **Phase 35 focused test:** `scratch/test-amazon-live-shopping.js` पास।
+- **Privacy & Data Rights Hub:** `privacy.html` में consent preferences, local export, deletion request recording, retention notes और grievance contact disclosure जोड़े गए हैं। यह legal certification नहीं है; production launch से पहले qualified Indian legal counsel review आवश्यक है।
+- **Cart script order:** `cart.html` अब `header.js` को `menu-manager.js`, `auth-state.js` और `shared-search.js` से पहले लोड करता है।
+- **Governance focused test:** `scratch/test-privacy-compliance.js` पास।
+- **Worktree policy:** `Electronic-Store.worktrees/local-my-project-launch` को active Git worktree होने के कारण हटाया नहीं गया; मुख्य implementation केवल `Electronic-Store` में रखी गई है।
+
+## 5. सर्वर पोर्ट्स और रन कमांड्स (Server Ports & Run Commands)
 
 - **बैकएंड API:** Port `4000` (`npm start` in `backend/`) -> `http://localhost:4000/api/health`
 - **फ्रंटएंड:** Port `5500` (`node qa-static-server.js` or Live Server) -> `http://localhost:5500/index.html`

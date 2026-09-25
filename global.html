@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Global Store — International Direct Delivery</title>
+  <link rel="stylesheet" href="amazon-theme.css" />
+  <link rel="stylesheet" href="global.css" />
+</head>
+<body class="global-store-body">
+  <!-- ElectroMart Global Navigation Header Anchor -->
+  <header id="mainHeader"></header>
+
+  <main class="global-container">
+    <!-- Hero Section -->
+    <section class="global-hero">
+      <div class="global-hero-content">
+        <h1 data-i18n="global_hub_title">🌐 ElectroMart Global Store</h1>
+        <p data-i18n="global_hub_subtitle">
+          Direct Imports from US, Japan & Europe with 100% Pre-calculated Duty and Doorstep Delivery.
+        </p>
+      </div>
+      <div class="global-hero-badge" data-i18n="global_ddp_guarantee">
+        🛡️ 100% DDP Guarantee: No unexpected customs fees at delivery
+      </div>
+    </section>
+
+    <!-- Two-column Tools Grid: Duty Calculator & KYC Verification -->
+    <div class="global-grid">
+      <!-- 1. Import Duty & Tax Calculator -->
+      <section class="duty-calculator card" aria-labelledby="dutyTitle">
+        <h2 id="dutyTitle" class="card-title" data-i18n="global_duty_title">
+          🧮 Import Duty & Tax Calculator
+        </h2>
+        <p class="card-subtitle">
+          Calculate upfront Indian Customs (5%), IGST (18%) and door-to-door freight charges for cross-border electronics.
+        </p>
+        
+        <div class="form-group">
+          <label for="base-price" data-i18n="global_base_price_label">Base Product Price (₹)</label>
+          <input type="number" id="base-price" placeholder="e.g. 15000" min="0" step="1" />
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="global_shipping_mode_label">Shipping Speed & Carrier</label>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input type="radio" name="shipping-mode" value="standard" checked />
+              <span data-i18n="global_shipping_standard">Standard Delivery (₹499 — 7 to 10 Days)</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="shipping-mode" value="express" />
+              <span data-i18n="global_shipping_express">Express Courier (₹1,299 — 3 to 5 Days)</span>
+            </label>
+          </div>
+        </div>
+
+        <button id="calc-btn" type="button" class="btn-primary" data-i18n="global_calculate_btn">
+          Calculate Total Landed Cost
+        </button>
+
+        <div id="result" class="result hidden" aria-live="polite">
+          <div class="result-row">
+            <span data-i18n="global_duty_result_label">Customs Duty (5%):</span>
+            <span id="duty-amount" class="bold">₹0</span>
+          </div>
+          <div class="result-row">
+            <span data-i18n="global_freight_result_label">International Freight:</span>
+            <span id="freight-amount" class="bold">₹499</span>
+          </div>
+          <div class="result-row">
+            <span data-i18n="global_igst_result_label">IGST (18% on CIF + Duty):</span>
+            <span id="igst-amount" class="bold">₹0</span>
+          </div>
+          <div class="result-row total-row">
+            <span data-i18n="global_total_result_label">Total Landed Price (DDP):</span>
+            <span id="total-amount" class="bold">₹0</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Mandatory Indian Customs KYC Verification -->
+      <section class="kyc-form card" aria-labelledby="kycTitle">
+        <h2 id="kycTitle" class="card-title" data-i18n="global_kyc_title">
+          🛂 Indian Customs KYC Verification
+        </h2>
+        <p class="card-subtitle" data-i18n="global_kyc_subtitle">
+          Mandatory as per Indian Customs regulations for imported electronics. Your documents are securely encrypted.
+        </p>
+
+        <form id="kyc-form">
+          <div class="form-group">
+            <label for="kyc-type" data-i18n="global_kyc_type_label">Identity Document Type</label>
+            <select id="kyc-type">
+              <option value="passport" data-i18n="global_kyc_passport">Passport (Indian or International)</option>
+              <option value="aadhaar" data-i18n="global_kyc_aadhaar">Aadhaar Card (12 Digits)</option>
+              <option value="dl" data-i18n="global_kyc_dl">Driving License</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="kyc-number" data-i18n="global_kyc_number_label">Document Number</label>
+            <input type="text" id="kyc-number" placeholder="Enter document number" required autocomplete="off" />
+          </div>
+
+          <button type="submit" class="btn-primary" data-i18n="global_submit_btn">
+            Verify & Save KYC
+          </button>
+        </form>
+
+        <p id="kyc-status" class="status hidden" role="status" aria-live="polite" data-i18n="global_kyc_verified">
+          ✓ Customs KYC Verified & Saved
+        </p>
+      </section>
+    </div>
+
+    <!-- International Products Showcase -->
+    <section class="global-showcase">
+      <div class="showcase-header">
+        <h2>Featured Global Store Imports</h2>
+        <p>Direct authentic models from US, Japan and Europe with complete Indian voltage compatibility</p>
+      </div>
+
+      <div class="showcase-grid">
+        <article class="showcase-card">
+          <span class="showcase-badge">Direct Import • US</span>
+          <img src="images/laptop.jpg" alt="Developer Workstation" class="showcase-img" onerror="this.src='https://placehold.co/300x200?text=Global+Product'" />
+          <h3 class="showcase-title">UltraBook Developer Edition 16" (US QWERTY Layout)</h3>
+          <div class="showcase-duty-tag">✓ All Customs Duty & Taxes Included</div>
+          <div class="showcase-price">₹1,49,990</div>
+          <a href="product-detail.html?id=product_be2e5711-a7a4-7928-8af5-1d84716db98a" class="showcase-btn">View Product Details</a>
+        </article>
+
+        <article class="showcase-card">
+          <span class="showcase-badge">Direct Import • Japan</span>
+          <img src="images/headphones.jpg" alt="Audiophile DAC" class="showcase-img" onerror="this.src='https://placehold.co/300x200?text=Audio+Import'" />
+          <h3 class="showcase-title">Tokyo Sound Studio High-Resolution DAC & Headphone Amp</h3>
+          <div class="showcase-duty-tag">✓ All Customs Duty & Taxes Included</div>
+          <div class="showcase-price">₹32,499</div>
+          <a href="products.html?category=audio" class="showcase-btn">Explore Category</a>
+        </article>
+
+        <article class="showcase-card">
+          <span class="showcase-badge">Direct Import • Germany</span>
+          <img src="images/keyboard.jpg" alt="Mechanical Keyboard" class="showcase-img" onerror="this.src='https://placehold.co/300x200?text=Imported+Keys'" />
+          <h3 class="showcase-title">Bavaria Precision Hot-Swappable CNC Keyboard</h3>
+          <div class="showcase-duty-tag">✓ All Customs Duty & Taxes Included</div>
+          <div class="showcase-price">₹18,990</div>
+          <a href="products.html?category=accessory" class="showcase-btn">Explore Category</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Canonical Script Loading Order -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="global.js"></script>
+</body>
+</html>

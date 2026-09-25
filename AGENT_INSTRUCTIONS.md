@@ -2,8 +2,8 @@
 
 > [!IMPORTANT]
 > **सभी AI एजेंट्स (VS Code, Claude, Copilot, Antigravity) के लिए अनिवार्य नियम:**
-> 1. ElectroMart एक पूर्ण ई-कॉमर्स प्लेटफ़ॉर्म है जो **Amazon India UI/UX लेआउट** और **11 भारतीय भाषाओं (i18n)** पर आधारित है।
-> 2. **सख्त ब्रांड व कानूनी सुरक्षा नियम (Strict Legal & Brand Safety Rule):** लेआउट और स्टाइलिंग Amazon जैसी होगी, परंतु वेबसाइट (`electromart.in`) पर **"Amazon" या "अमेज़न"** नाम का उल्लेख किसी भी विज़िबल टेक्स्ट, बैज, डिक्शनरी या विवरण में **पूर्णतः वर्जित (Strictly Prohibited)** है। वेबसाइट का नाम केवल और केवल **ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट)** है।
+> 1. ElectroMart एक पूर्ण ई-कॉमर्स प्लेटफ़ॉर्म है जो परिचित भारतीय marketplace UX patterns और **11 भारतीय भाषाओं (i18n)** पर आधारित है।
+> 2. **सख्त ब्रांड व कानूनी सुरक्षा नियम (Strict Legal & Brand Safety Rule):** वेबसाइट (`electromart.in`) के किसी भी customer-facing text, badge, dictionary value, alt/title/placeholder/aria label, tooltip, generated label या नए documentation content में किसी third-party marketplace का नाम नहीं आना चाहिए। वेबसाइट का नाम केवल **ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट)** है।
 > 3. किसी भी नए फीचर को जोड़ने या बग फिक्स करने से पहले इस दस्तावेज़ को पूरा पढ़ें ताकि पिछला कोई भी काम प्रभावित न हो।
 
 ---
@@ -61,7 +61,7 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (62 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (67 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
@@ -72,18 +72,17 @@ node scratch/run_all_tests.js
 cd backend
 npm run test:unit
 ```
-*(सभी 74 टेस्ट PASS होने चाहिए। कुल 136 / 136 टेस्ट उत्तीर्ण।)*
+*(सभी 74 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 141 / 141 टेस्ट उत्तीर्ण है।)*
 
 ---
 
-## 4. अमेज़न इंडिया डिज़ाइन नियम (Amazon India Theme Principles)
+## 4. ElectroMart marketplace UX design rules
 > [!CAUTION]
 > **ब्रांडिंग एवं ट्रेडमार्क सुरक्षा का सख्त नियम (Strict Brand Compliance Rule):**
-> - लेआउट, UI/UX, कलर पैलेट और कार्यप्रणाली **Amazon India स्टाइल** की तरह होगी, लेकिन वेबसाइट पर **"Amazon" या "अमेज़न"** नाम का उल्लेख किसी भी दृश्य (User-Visible) टेक्स्ट, बटन, बैज, डिक्शनरी या विवरण में **कदापि नहीं होना चाहिए**।
-> - वेबसाइट का नाम केवल और केवल **ElectroMart / electromart.in / इलेक्ट्रोमार्ट** है।
-> - उदाहरण: "Amazon's Choice" के स्थान पर हमेशा **"ElectroMart's Choice" (इलेक्ट्रोमार्ट चॉइस)** होगा।
-> - "Amazon style filters" के स्थान पर हमेशा **"ElectroMart Filters" (इलेक्ट्रोमार्ट फ़िल्टर)** होगा।
-> - किसी भी नए कोड, कंपोनेंट या अनुवाद में Amazon ब्रांड नाम का प्रयोग वर्जित है।
+> - Layout, UX, pricing hierarchy और interaction patterns existing ElectroMart conventions के अनुरूप रहें।
+> - Website, translations और नए documentation में केवल **ElectroMart / electromart.in / इलेक्ट्रोमार्ट** branding रखें।
+> - किसी third-party marketplace का नाम नए code, component, translation, customer copy या legal-facing content में न जोड़ें।
+> - Existing legacy test filenames, compatibility keys और historical internal records को केवल backward compatibility के लिए रखें; वे customer-facing output में कभी render नहीं होने चाहिए।
 
 1. **कीमत ब्लॉक (Price Block):**
    - बड़ा लाल डिस्काउंट प्रतिशत (उदा. `-18%`, रंग: `#cc0c39`, फ़ॉन्ट: 28px)।
@@ -144,10 +143,63 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 28:** ElectroMart Verified Customer Reviews Video & Photo Gallery Hub (`customer-media.html`, `customer-media.js`, `customer-media.css`, `product-detail.html`, `product-detail.js`, `product-detail.css`): अमेज़न इंडिया स्तर का सत्यापित ग्राहक वीडियो व फोटो गैलरी हब। हीरो बैनर विथ लाइव स्टैट्स (कुल अपलोड्स, हाई-रेज़ तस्वीरें, अनबॉक्सिंग वीडियोज़, सत्यापित खरीदार प्रतिशत), मीडिया टाइप पिकर (All, Photos Only, Videos Only), लाइव सर्च व 6 कैटेगरी पिल्स, 3-वे सॉर्ट (Most Recent, Most Helpful, Highest Rated), रेस्पॉन्सिव मेसनरी कार्ड्स विथ वीडियो प्ले ओवरले व सटीक ड्यूरेशन बैजेस (`▶ 0:48`), 2-कॉलम फुल-स्क्रीन लाइटबॉक्स मोडल विथ कीबोर्ड नेविगेशन (`ArrowLeft`, `ArrowRight`, `Escape`) व थंबनेल स्क्रबर स्ट्रिप, ऑडियो/वीडियो मेमोरी हाइजीन (`stopActiveVideoPlayback` विथ पॉज़, `removeAttribute('src')`, और `load()`), 1-क्लिक हेल्पफुल वोटिंग (`electromart_helpful_votes_v1`), इन-मोडल 1-क्लिक कार्ट एड (`electromart_cart_v1`) विथ लाइव हेडर बैज सिंक, कस्टमर अपलोड मोडल विथ ड्रैग-एंड-ड्रॉप ज़ोन व लाइव प्रीव्यूज़, PDP डीप-लिंकिंग (`#customerMediaGallery` स्ट्रिप, वीडियो ड्यूरेशन बैज, क्लिक-टू-लाइटबॉक्स, और `customer-media.html?productId=...` फ़िल्टर लिंक), हेडर, अकाउंट व साइटमैप इंटीग्रेशन, 11 भारतीय भाषाओं में 48+ कीज़, और 60/60 टेस्ट सूट्स 100% उत्तीर्ण।
 - **चरण 29:** ElectroMart 3D Showroom & Virtual Workspace Studio (`showroom.html`, `showroom.js`, `showroom.css`, `workspace-builder.html`, `workspace-builder.js`, `workspace-builder.css`, `product-detail.html`, `product-detail.js`, `product-detail.css`): अमेज़न इंडिया स्तर का 360° इंटरैक्टिव टर्नटेबल व्यूअर विथ इनर्शियल ड्रैग/टच रोटेशन (`requestAnimationFrame`), लाइव एंगल डिस्प्ले (`0°..359°`), 4 इंटरेक्टिव हार्डवेयर हॉटस्पॉट एनोटेशन्स विथ ऑर्बिट कोऑर्डिनेट्स व पॉपओवर, 4 फिनिश कलर्स स्विचर, एआर/रूम स्केल सिम्युलेटर मोडल (4 बैकड्रॉप्स, 4 लाइटिंग मोड्स, डायमेंशन मेजरमेंट टेप, स्केल स्लाइडर), 6-स्लॉट मॉड्यूलर वर्चुअल वर्कस्पेस स्टूडियो विथ 2.5D डेस्क कैनवास, 4 क्विक प्रीसेट्स, पोर्ट्स व पावर वॉटेज हेडरुम कम्पैटिबिलिटी इंजन, 10% बंडल डिस्काउंट व 18% जीएसटी ब्रेकडाउन, 1-क्लिक कम्प्लीट सेटअप कार्ट सिंक, शेयरेबल URL स्टेट, PDP डीप-लिंक फ्लो, 11 भाषाएं और 61/61 टेस्ट सूट्स 100% उत्तीर्ण।
 - **चरण 30:** ElectroMart Device Trade-In & Exchange Hub (`exchange.html`, `exchange.js`, `exchange.css`, `product-detail.html`, `product-detail.js`, `product-detail.css`, `cart.html`, `cart.js`, `checkout.html`, `checkout.js`, `orders.js`, `tracking.html`, `tracking.js`): अमेज़न इंडिया स्तर का डिवाइस ट्रेड-इन व एक्सचेंज हब। 4-चरणीय डायनामिक वैल्यूएशन कैलकुलेटर (5 कैटेगरीज़: स्मार्टफ़ोन, लैपटॉप, टैबलेट, स्मार्टवॉच, ऑडियो), 30+ प्रीमियम मॉडल्स कैटलॉग, 3-पॉइंट कंडीशन असेसमेंट, अप-टू ₹25,000 डिस्काउंट + ₹1,000 इलेक्ट्रोमार्ट ट्रेड-इन बोनस, ट्रेड-इन वाउचर कोड (`EM-EX-XXXXXX`), डोरस्टेप हैंडओवर चेकलिस्ट व FAQ, PDP बायबॉक्स रेडियो टॉगल ("Without Exchange" vs "With Exchange"), 6-डिजिट पिनकोड वैलिडेटर, इन-पेज वैल्यूएशन मोडल विथ 15-डिजिट IMEI / 6-18 कैरेक्टर सीरियल नंबर वैलिडेशन, रियल-टाइम इफेक्टिव प्राइस रिफ्लेक्शन, कार्ट व चेकआउट ऑर्डर समरी में एक्सचेंज डिस्काउंट डिडक्शन, डिलीवरी बॉय हैंडओवर नोटिस, ऑर्डर ऑब्जेक्ट में `exchangeDetails` रिकॉर्डिंग, ऑर्डर्स हिस्ट्री बैज, लाइव डिलीवरी ट्रैकिंग हैंडओवर चेकलिस्ट बैनर, 11 भाषाएं और 62/62 टेस्ट सूट्स 100% उत्तीर्ण।
+- **चरण 31:** ElectroMart Certified Renewed Electronics Hub (`renewed.html`, `renewed.js`, `renewed.css`, `product-detail.html`, `product-detail.js`, `product-detail.css`, `cart.js`, `checkout.js`, `invoice.js`): अमेज़न रिन्यूड स्तर का सर्टिफाइड रीफर्बिश्ड स्टोर। 24 प्रीमियम एसकेयू (ग्रेड ए 90%+, ग्रेड बी 85%+, ग्रेड सी 80%+ बैटरी हेल्थ), 47-पॉइंट डायग्नोस्टिक क्वालिटी चेक, पर्सनल इको-इम्पैक्ट कैलकुलेटर (ई-वेस्ट, कार्बन, ट्रीज़), पीडीपी अल्टरनेटिव बॉक्स, इनवॉइस व कार्ट 6-महीने वारंटी इंटीग्रेशन, 11 भाषाएं और 63/63 टेस्ट सूट्स 100% उत्तीर्ण।
+- **चरण 32:** ElectroMart Protect & Care Warranty Hub (`warranty.html`, `warranty.css`, `warranty.js`, `product-detail.html`, `product-detail.js`, `cart.js`, `checkout.js`, `invoice.js`, `orders.js`): डिवाइस प्रोटेक्शन प्लान (ElectroMart Protect व ElectroMart Care), कैशलेस रिपेयर, 3-चरणीय क्लेम विज़ार्ड (`EM-CLM-XXXXX`), पीडीपी ऐड-ऑन, सैक 998714 व 18% जीएसटी इनवॉइस, 11 भाषाएं और 64/64 टेस्ट सूट्स 100% उत्तीर्ण।
+- **चरण 33:** ElectroMart Electronics Recycling & E-Waste Pickup Hub (`ewaste.html`, `ewaste.js`, `ewaste.css`): ई-कचरा प्रबंधन, फ्री डोरस्टेप पिकअप शेड्यूलिंग, ग्रीन रिवॉर्ड पॉइंट्स व कूपन क्रेडिट, और रीसाइक्लिंग सर्टिफिकेट जनरेटर।
+- **चरण 34:** Frequently Bought Together (FBT) & Smart Bundle Engine (`bundle-engine.js`, `product-detail.html`, `product-detail.js`): ऑटो-पेयरिंग स्मार्ट बंडल इंजन, स्टॉक-अवेयर फॉलबैक्स, बंडल डिस्काउंट डिडक्शन।
+- **चरण 35:** ElectroMart Live Shopping & Stream Hub (`live-shopping.html`, `live-shopping.js`, `live-shopping.css`): इंटरएक्टिव वीडियो प्लेयर, होस्ट व वेरिफाइड बायर चैट, फ्लैश डील्स और पीडीपी कॉलआउट।
+- **चरण 36:** Smart Home & IoT Appliance Ecosystem Hub (`smarthome.html`, `smarthome.js`, `smarthome.css`): रूम व इकोसिस्टम विज़ुअलाइज़र, कम्पैटिबिलिटी चेकर, रूटीन प्रीव्यूज़, और 1-क्लिक कार्ट एडिशन।
+- **चरण 37:** ElectroMart Global Store & Cross-Border Delivery Hub (`global.html`, `global.css`, `global.js`, `product-detail.html`, `product-detail.js`): 5% सीमा शुल्क व 18% IGST कैलकुलेटर, स्टैंडर्ड (₹499) व एक्सप्रेस (₹1,299) फ्रेट, पासपोर्ट/आधार/DL KYC सत्यापन पोर्टल विथ मास्किंग, 100% DDP गारंटी, पीडीपी बायबॉक्स एकीकरण, 11 भाषाएं और 70/70 टेस्ट सूट्स 100% उत्तीर्ण।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 31 (ElectroMart Certified Renewed Electronics Hub - `renewed.html`):** अमेज़न रिन्यूड शैली का सर्टिफाइड रीफर्बिश्ड स्टोर (ग्रेड्स: उत्कृष्ट, बहुत अच्छा, अच्छा, 6-महीने इलेक्ट्रोमार्ट वारंटी सील, और ई-कचरा बचत काउंटर)।
-- **चरण 32 (ElectroMart Electronics Insurance, Extended Warranty & Damage Protection Hub - `warranty.html`):** अमेज़न इंडिया स्तर का डिवाइस प्रोटेक्शन प्लान (स्क्रीन डैमेज, लिक्विड स्पिल, एक्सटेंडेड वॉरंटी, कैशलेस क्लेम्स, PDP ऐड-ऑन चेकबॉक्स और इनवॉइस क्लेम स्लिप)।
+- **चरण 38 (ElectroMart Launchpad & Innovative Tech Hub):** उभरते भारतीय हार्डवेयर स्टार्टअप्स और इनोवेटिव गैजेट्स के लिए समर्पित शोकेस, अर्ली-बर्ड प्री-ऑर्डर्स, और बैकर्स डिस्काउंट पोर्टल।
 
+---
 
+## Universal Agent Rules & Execution Guidelines Framework
+
+### 1. Workspace and directory integrity
+- The single source of truth is `C:\Users\Admin\Documents\GitHub\Electronic-Store`.
+- All agents and tools must work inside this project directory only.
+- Do not create parallel project folders, copied worktrees, or duplicate project directories.
+- Do not create duplicate source files such as `product-detail-v2.html`, `copy_cart.js`, or `test_new.js`; edit the owning project files directly.
+
+### 2. Code stability and overwrite protection
+- Read the relevant local code path and its nearby tests before deleting, replacing, or substantially rewriting working logic.
+- Preserve existing behavior, public DOM contracts, storage schemas, and backward compatibility unless the approved feature explicitly requires a change.
+- Preserve the required script order: `translations.js` -> `products-data.js` -> `universal-i18n-bus.js` -> `header.js` -> `menu-manager.js` -> `auth-state.js` -> `shared-search.js` -> page-specific JavaScript.
+- Keep all script tags inside the document body and load page-specific scripts only after shared dependencies.
+- Put new globals under the approved `window.ElectroMart` namespace or keep them inside a local scope; avoid unrelated global variables and function collisions.
+
+### 2A. Single website and canonical launch policy
+- The only canonical application root is `C:\Users\Admin\Documents\GitHub\Electronic-Store`.
+- The only canonical launch command is `npm start`, which runs `launch-electromart.js`.
+- `launch-electromart.js` is the single owner of local service startup: frontend `http://127.0.0.1:5500/index.html` and backend API `http://127.0.0.1:4000/api`.
+- Existing `.bat`, `.ps1`, QA, smoke, and release scripts are wrappers or verification tools; they must not be treated as separate website entry points.
+- Do not create any new launcher, server, `index` copy, alternate frontend root, duplicate project folder, or parallel static-server configuration without explicit approval.
+- Before starting services, check whether ports `5500` or `4000` are already occupied; reuse the canonical service or stop only the process created by the current task.
+- A Git worktree is not a second deployable website. Agents must not edit `Electronic-Store.worktrees` for the main project task and must not register another worktree or branch as a substitute for the canonical root.
+
+### 3. Data, tax, and brand safety
+- Use existing approved localStorage keys and schemas. New keys require a clear feature-specific need and the `electromart_*_v1` convention.
+- Do not alter GST/HSN product calculations or warranty/service tax rules without explicit scope and focused tests.
+- Customer-visible UI, translations, badges, tooltips, generated labels, legal-facing content, and new documentation must use ElectroMart branding only and must not expose third-party marketplace names.
+- Before completing work, run `scratch/test-brand-safety-and-legal-compliance.js`; any customer-visible third-party marketplace reference is a release blocker.
+
+### 4. Multilingual i18n
+- Keep all 11 supported language dictionaries centralized in `translations.js`: `en`, `hi`, `ta`, `te`, `kn`, `ml`, `bn`, `mr`, `ur`, `pa`, and `gu`.
+- Do not create separate translation files for feature labels.
+- Preserve the dual-write language storage convention for `electromart_lang_v1` and `electromart_lang`.
+
+### 5. TDD and quality gates
+- Before changing code, run the existing frontend and backend pre-flight suites when the environment permits.
+- For every new feature, create and run a focused failing test before implementation.
+- After implementation, run the focused test first, then `node scratch/run_all_tests.js`, then `cd backend; npm run test:unit`.
+- Work is not complete until the focused suite and both regression suites pass, or a blocker is explicitly documented.
+
+### Mandatory agent directive
+
+> सभी AI एजेंट ध्यान दें: प्रत्येक कार्रवाई मुख्य प्रोजेक्ट डायरेक्टरी `C:\Users\Admin\Documents\GitHub\Electronic-Store` में ही करें। नई duplicate files या project copies न बनाएं, पुराने working code और script order को सुरक्षित रखें, और काम समाप्त करने से पहले focused तथा full regression tests चलाकर परिणाम दर्ज करें।
+>
+> वेबसाइट launch करने के लिए केवल `npm start` और `launch-electromart.js` का उपयोग करें। नया launcher, alternate frontend root, duplicate `index.html`, parallel server या दूसरा project folder बनाना निषिद्ध है।

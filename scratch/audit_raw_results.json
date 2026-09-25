@@ -6,10 +6,38 @@
     },
     {
       "file": "account.html",
-      "scriptCount": 9
+      "scriptCount": 10
+    },
+    {
+      "file": "admin-after-sales.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin-analytics.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-audit.html",
+      "scriptCount": 3
     },
     {
       "file": "admin-dashboard.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-listing.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-orders.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-settings.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin-users.html",
       "scriptCount": 3
     },
     {
@@ -18,7 +46,7 @@
     },
     {
       "file": "auth.html",
-      "scriptCount": 6
+      "scriptCount": 7
     },
     {
       "file": "barebone-desktop.html",
@@ -37,6 +65,10 @@
       "scriptCount": 4
     },
     {
+      "file": "business.html",
+      "scriptCount": 9
+    },
+    {
       "file": "cabinet-fan.html",
       "scriptCount": 5
     },
@@ -46,7 +78,7 @@
     },
     {
       "file": "cart.html",
-      "scriptCount": 9
+      "scriptCount": 10
     },
     {
       "file": "catalogs.html",
@@ -54,11 +86,15 @@
     },
     {
       "file": "checkout.html",
-      "scriptCount": 9
+      "scriptCount": 10
     },
     {
       "file": "compare.html",
-      "scriptCount": 2
+      "scriptCount": 8
+    },
+    {
+      "file": "contact-us.html",
+      "scriptCount": 0
     },
     {
       "file": "cpu-fan.html",
@@ -73,16 +109,36 @@
       "scriptCount": 5
     },
     {
+      "file": "customer-media.html",
+      "scriptCount": 9
+    },
+    {
       "file": "desktop-ram-memory.html",
       "scriptCount": 5
     },
     {
       "file": "desktops.html",
-      "scriptCount": 6
+      "scriptCount": 9
+    },
+    {
+      "file": "electromart-pay.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "ewaste.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "exchange.html",
+      "scriptCount": 9
     },
     {
       "file": "faq.html",
       "scriptCount": 3
+    },
+    {
+      "file": "forgot-password.html",
+      "scriptCount": 4
     },
     {
       "file": "graphics-card-gpu.html",
@@ -93,12 +149,16 @@
       "scriptCount": 0
     },
     {
+      "file": "help.html",
+      "scriptCount": 8
+    },
+    {
       "file": "index.html",
       "scriptCount": 10
     },
     {
       "file": "invoice.html",
-      "scriptCount": 3
+      "scriptCount": 5
     },
     {
       "file": "language-settings.html",
@@ -107,6 +167,14 @@
     {
       "file": "laptop.html",
       "scriptCount": 10
+    },
+    {
+      "file": "live-shopping.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "login.html",
+      "scriptCount": 4
     },
     {
       "file": "mega-store.html",
@@ -118,7 +186,7 @@
     },
     {
       "file": "orders.html",
-      "scriptCount": 10
+      "scriptCount": 11
     },
     {
       "file": "pc-builder.html",
@@ -129,12 +197,20 @@
       "scriptCount": 5
     },
     {
+      "file": "prime.html",
+      "scriptCount": 9
+    },
+    {
       "file": "printer.html",
       "scriptCount": 9
     },
     {
+      "file": "privacy.html",
+      "scriptCount": 7
+    },
+    {
       "file": "product-detail.html",
-      "scriptCount": 9
+      "scriptCount": 13
     },
     {
       "file": "product.html",
@@ -169,12 +245,36 @@
       "scriptCount": 3
     },
     {
-      "file": "review.html",
+      "file": "register.html",
       "scriptCount": 4
+    },
+    {
+      "file": "registry.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "renewed.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "returns.html",
+      "scriptCount": 8
+    },
+    {
+      "file": "review.html",
+      "scriptCount": 9
     },
     {
       "file": "shipping-policy.html",
       "scriptCount": 3
+    },
+    {
+      "file": "showroom.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "smarthome.html",
+      "scriptCount": 9
     },
     {
       "file": "terms-and-conditions.html",
@@ -182,10 +282,14 @@
     },
     {
       "file": "thank-you.html",
-      "scriptCount": 4
+      "scriptCount": 7
     },
     {
       "file": "todays-deals.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "tracking.html",
       "scriptCount": 9
     },
     {
@@ -193,11 +297,44 @@
       "scriptCount": 5
     },
     {
+      "file": "warranty.html",
+      "scriptCount": 8
+    },
+    {
       "file": "wishlist.html",
-      "scriptCount": 6
+      "scriptCount": 9
+    },
+    {
+      "file": "workspace-builder.html",
+      "scriptCount": 9
     }
   ],
-  "brokenReferences": [],
+  "brokenReferences": [
+    {
+      "file": "help.html",
+      "type": "css",
+      "href": "index.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\index.css"
+    },
+    {
+      "file": "help.html",
+      "type": "css",
+      "href": "header.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\header.css"
+    },
+    {
+      "file": "returns.html",
+      "type": "css",
+      "href": "index.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\index.css"
+    },
+    {
+      "file": "returns.html",
+      "type": "css",
+      "href": "header.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\header.css"
+    }
+  ],
   "syntaxErrors": [],
   "databaseIssues": [],
   "storageKeyInconsistencies": [],

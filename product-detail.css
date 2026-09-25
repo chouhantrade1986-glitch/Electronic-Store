@@ -80,6 +80,88 @@ a {
   font-weight: 700;
 }
 
+.pdp-smart-home-compatibility {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid #a7d8d3;
+  border-left: 4px solid #087f8c;
+  border-radius: 6px;
+  background: #effaf8;
+}
+
+.pdp-smart-home-compatibility-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.pdp-smart-home-compatibility-copy span,
+.pdp-smart-home-compatibility a {
+  color: #52636b;
+  font-size: 12px;
+}
+
+.pdp-smart-home-compatibility-btn {
+  justify-self: start;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid #087f8c;
+  border-radius: 18px;
+  background: #fff;
+  color: #075d66;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pdp-smart-home-compatibility-btn:hover,
+.pdp-smart-home-compatibility-btn:focus-visible {
+  background: #087f8c;
+  color: #fff;
+}
+
+.smart-home-modal {
+  width: min(430px, calc(100vw - 30px));
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 20px 70px rgba(15, 17, 17, .35);
+}
+
+.smart-home-modal::backdrop {
+  background: rgba(15, 17, 17, .55);
+}
+
+.smart-home-modal-card {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.smart-home-modal-close {
+  justify-self: end;
+  border: 0;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.smart-home-modal-card select {
+  min-height: 40px;
+  padding: 7px 10px;
+  border: 1px solid #aab7b8;
+  border-radius: 5px;
+  font: inherit;
+}
+
+.smart-home-compatibility-result {
+  min-height: 52px;
+  padding: 12px;
+  background: #effaf8;
+  color: #24585b;
+}
+
 .header-links {
   display: flex;
   gap: 14px;
@@ -585,6 +667,26 @@ a {
   border: 1px solid #d1d5db;
   background: #ffffff;
 }
+
+.pdp-live-stream-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 11px 12px;
+  border: 1px solid #e7b8c2;
+  border-left: 4px solid #cc0c39;
+  border-radius: 6px;
+  background: #fff7f8;
+}
+
+.pdp-live-stream-callout[hidden] { display: none !important; }
+.pdp-live-stream-copy { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.pdp-live-stream-copy div { display: grid; gap: 3px; }
+.pdp-live-stream-copy span:last-child { color: #565959; font-size: 12px; }
+.pdp-live-dot { width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; background: #cc0c39; box-shadow: 0 0 0 5px rgba(204,12,57,.12); }
+#pdpWatchLiveBtn { border-radius: 999px; padding: 8px 12px; background: #ffd814; color: #111; font-size: 12px; font-weight: 800; text-decoration: none; white-space: nowrap; }
 
 #wishlistBtn.active {
   border-color: #ffd200;
@@ -1871,4 +1973,110 @@ a {
   color: #ffffff;
 }
 
+/* Phase 37: ElectroMart Global Store Callout */
+.pdp-global-store-callout {
+  margin: 14px 0;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+  border: 1px solid #cbe4ff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pdp-global-store-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-global-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.pdp-global-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pdp-global-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #002d9c;
+}
+
+.pdp-global-subtext {
+  font-size: 12px;
+  color: #565959;
+}
+
+.pdp-global-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F62FE;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.pdp-global-link:hover {
+  text-decoration: underline;
+}
+
+/* Phase 38: ElectroMart Launchpad PDP callout */
+.pdp-launchpad-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #f3c7a4;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fff8f0 0%, #fff1df 100%);
+}
+
+.pdp-launchpad-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-launchpad-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-launchpad-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pdp-launchpad-text strong {
+  color: #8a3d00;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-launchpad-subtext {
+  color: #5f4a36;
+  font-size: 12px;
+}
+
+.pdp-launchpad-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-launchpad-link:hover,
+.pdp-launchpad-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-launchpad-callout[hidden] {
+  display: none !important;
+}
 

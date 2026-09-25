@@ -39,6 +39,16 @@
       "sessionVersion": 1,
       "authActivity": [
         {
+          "id": "1789577986615-3abf37",
+          "eventKey": "login",
+          "eventLabel": "OTP sign-in",
+          "createdAt": "2026-09-16T16:59:46.615Z",
+          "ip": "::ffff:127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "note": "",
+          "actor": "user"
+        },
+        {
           "id": "1789556280822-af0e7d",
           "eventKey": "login",
           "eventLabel": "OTP sign-in",
@@ -33672,6 +33682,37 @@
   },
   "paymentWebhookEvents": [],
   "authOtpChallenges": [
+    {
+      "id": "ffe5de65-65d0-402a-af80-6eab4532228b",
+      "purpose": "login",
+      "channel": "email",
+      "destination": "admin@electromart.com",
+      "destinationMasked": "ad***@electromart.com",
+      "identifier": "admin@electromart.com",
+      "userId": "d2fc1f50-45a2-4b14-a25d-09675b8ddd16",
+      "pendingUser": {
+        "name": "",
+        "email": "",
+        "mobile": "",
+        "address": "",
+        "passwordHash": "",
+        "role": "customer"
+      },
+      "code": "915756",
+      "createdAt": "2026-09-16T16:59:31.988Z",
+      "lastRequestedAt": "2026-09-16T16:59:31.988Z",
+      "expiresAt": "2026-09-16T17:09:32.006Z",
+      "attempts": 0,
+      "maxAttempts": 5,
+      "status": "used",
+      "deliveryProvider": "simulated",
+      "deliveryStatus": "sent",
+      "messageId": "3c149014-213a-406e-993e-9a0635732afa",
+      "sentAt": "2026-09-16T16:59:31.988Z",
+      "verifiedAt": "2026-09-16T16:59:46.449Z",
+      "invalidatedAt": null,
+      "error": ""
+    },
     {
       "id": "08833aa1-fc54-4520-9fd9-5e13939b732c",
       "purpose": "login",

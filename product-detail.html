@@ -227,11 +227,71 @@
         <!-- Phase 32: ElectroMart Protect / ElectroMart Care add-ons -->
         <section id="protectionPlanWidget" class="pdp-protection-widget" hidden aria-labelledby="protectionPlanTitle"></section>
 
+        <section id="pdpSmartHomeCompatibility" class="pdp-smart-home-compatibility" hidden aria-live="polite">
+          <div class="pdp-smart-home-compatibility-copy">
+            <strong data-i18n="smarthome_compatibility_title">Check your ecosystem</strong>
+            <span data-i18n="smarthome_compatibility_pdp_desc">See whether this device fits your connected home.</span>
+          </div>
+          <button type="button" id="pdpSmartHomeCompatibilityBtn" class="pdp-smart-home-compatibility-btn" data-i18n="smarthome_compatibility_pdp_cta">Check Smart Home Compatibility</button>
+          <a id="pdpSmartHomeHubLink" href="smarthome.html" data-i18n="smarthome_open_hub">Explore ElectroMart Smart Home</a>
+        </section>
+
+        <dialog id="pdpSmartHomeCompatibilityModal" class="smart-home-modal" aria-labelledby="pdpSmartHomeCompatibilityTitle">
+          <form method="dialog" class="smart-home-modal-card">
+            <button value="cancel" class="smart-home-modal-close" aria-label="Close">&times;</button>
+            <h2 id="pdpSmartHomeCompatibilityTitle" data-i18n="smarthome_compatibility_title">Check your ecosystem</h2>
+            <label for="pdpSmartHomeEcosystemSelect" data-i18n="smarthome_ecosystem_filter">Works with</label>
+            <select id="pdpSmartHomeEcosystemSelect">
+              <option value="alexa">Alexa</option>
+              <option value="google">Google Home</option>
+              <option value="matter">Matter</option>
+              <option value="homekit">Apple HomeKit</option>
+            </select>
+            <div id="pdpSmartHomeCompatibilityResult" class="smart-home-compatibility-result" role="status" aria-live="polite"></div>
+            <button type="button" id="pdpSmartHomeCompatibilityCheckBtn" class="pdp-smart-home-compatibility-btn" data-i18n="smarthome_compatibility_check">Check compatibility</button>
+          </form>
+        </dialog>
+
         <!-- Amazon Primary Buttons -->
         <div class="buybox-buttons">
           <button id="addToCartBtn" type="button" class="amazon-btn-cart" data-i18n="add_to_cart">Add to Cart</button>
           <a href="checkout.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
         </div>
+
+        <section id="pdpLiveStreamCallout" class="pdp-live-stream-callout" hidden aria-live="polite">
+          <div class="pdp-live-stream-copy">
+            <span class="pdp-live-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="pdpLiveStreamStatus" data-i18n="live_stream_now">Live stream happening now</strong>
+              <span data-i18n="live_watch_demo">Watch live product demo</span>
+            </div>
+          </div>
+          <a id="pdpWatchLiveBtn" href="live-shopping.html" data-i18n="live_view_hub">Watch live</a>
+        </section>
+
+        <!-- Phase 37: ElectroMart Global Store & Cross-Border Delivery Card -->
+        <section id="pdpGlobalStoreCallout" class="pdp-global-store-callout" hidden aria-live="polite">
+          <div class="pdp-global-store-badge">
+            <span class="pdp-global-icon">🌐</span>
+            <div class="pdp-global-text">
+              <strong data-i18n="global_pdp_callout">ElectroMart Global Delivery: Import Duty Included</strong>
+              <span class="pdp-global-subtext">100% DDP Delivery • No unexpected fees</span>
+            </div>
+          </div>
+          <a id="pdpGlobalHubLink" href="global.html" class="pdp-global-link" data-i18n="global_hub_title">Learn about Global Store ›</a>
+        </section>
+
+        <!-- Phase 38: ElectroMart Launchpad Hub Callout -->
+        <section id="pdpLaunchpadCallout" class="pdp-launchpad-callout" hidden aria-live="polite">
+          <div class="pdp-launchpad-badge">
+            <span class="pdp-launchpad-icon">🚀</span>
+            <div class="pdp-launchpad-text">
+              <strong data-i18n="launchpad_pdp_callout">ElectroMart Launchpad: Emerging Indian Startup Innovation</strong>
+              <span class="pdp-launchpad-subtext" data-i18n="launchpad_pdp_subtext">Discover innovative products from Indian startups</span>
+            </div>
+          </div>
+          <a id="pdpLaunchpadHubLink" href="launchpad.html" class="pdp-launchpad-link" data-i18n="launchpad_pdp_cta">Visit Launchpad Hub ›</a>
+        </section>
 
         <!-- Phase 29: Virtual Workspace Studio CTA Link -->
         <div class="buybox-workspace-entry" id="buyboxWorkspaceEntry">
@@ -646,6 +706,7 @@
 
   <script src="translations.js"></script>
   <script src="products-data.js"></script>
+  <script src="bundle-engine.js"></script>
   <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js?v=20260313b"></script>

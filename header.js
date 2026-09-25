@@ -169,6 +169,7 @@
                   <a href="wishlist.html" data-i18n="nav.yourSavedItems">Your Saved Items</a>
                   <a href="products.html" data-i18n="nav.discoverStyle">Discover Your Style</a>
                   <a href="mega-store.html" data-i18n="nav.exploreShowroom">Explore Showroom</a>
+                   <a href="launchpad.html" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
                 </div>
                 <div class="flyout-col">
                   <h3 data-i18n="footer.yourAccount">Your Account</h3>
@@ -216,6 +217,7 @@
           <a href="laptop.html" class="category-quick-link" data-i18n="laptops">Laptops</a>
           <a href="pc-builder.html" class="category-quick-link" data-i18n="pc_builder">PC Builder</a>
           <a href="creator-studio.html" class="category-quick-link" data-i18n="creator_studio">Creator Studio</a>
+          <a href="launchpad.html" class="category-quick-link" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
           <a href="help.html" class="category-quick-link" data-i18n="customer_service">Customer Service</a>
         </div>
         <div class="category-nav-promo">
