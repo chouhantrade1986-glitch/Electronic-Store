@@ -19,7 +19,7 @@
   - किसी भी एक्सेसरी या प्रोडक्ट की कीमत को मनमाने ढंग से पैसे (paise) या 100 से गुणा/भाग न करें।
 
 ### B. अनुवाद इंजन (Multilingual 11-Language i18n Engine)
-- **डिक्शनरी:** `translations.js` (हिंदी `hi`, तमिल `ta`, तेलुगु `te`, मराठी `mr`, बंगाली `bn`, गुजराती `gu`, कन्नड़ `kn`, मलयालम `ml`, पंजाबी `pa`, उड़िया `or`, अंग्रेजी `en`)।
+- **डिक्शनरी:** `translations.js` (हिंदी `hi`, तमिल `ta`, तेलुगु `te`, मराठी `mr`, बंगाली `bn`, गुजराती `gu`, कन्नड़ `kn`, मलयालम `ml`, पंजाबी `pa`, उर्दू `ur`, अंग्रेजी `en`)।
 - **ट्रांसलेशन बस:** `universal-i18n-bus.js` (DOM म्यूटेशन ऑब्जर्वर जो डायनामिक एलिमेंट्स का भी रियल-टाइम अनुवाद करता है)।
 - **लोकल स्टोरेज कीज (Storage Keys):** भाषा को हमेशा दोनों कीज में एक साथ अपडेट करें:
   ```javascript
@@ -61,18 +61,18 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (67 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (71 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 62 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल, 50वां सूट B2B बल्क पोर्टल, 51वां सूट प्रोडक्ट कंपैरिज़न हब, 52वां सूट कस्टमर रिव्यूज़ व कम्युनिटी Q&A सुइट, 53वां सूट ElectroMart Pay व UPI हब, 54वां सूट लाइटनिंग डील्स लाइव ड्रॉप्स व काउंटडाउन हब, 55वां सूट डिलीवरी ट्रैकिंग विजुअलाइज़र, 56वां सूट प्राइम मेंबरशिप हब, 57वां सूट रिटर्न्स व रिप्लेसमेंट्स सेंटर, 58वां सूट हेल्प सेंटर हब, 59वां सूट विशलिस्ट व गिफ्ट रजिस्ट्री सुइट, 60वां सूट कस्टमर मीडिया गैलरी हब, 61वां सूट 3D शोरूम व वर्चुअल वर्कस्पेस स्टूडियो, और 62वां सूट डिवाइस ट्रेड-इन व एक्सचेंज हब है।)*
+*(सभी 71 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 38 ElectroMart Launchpad Hub और सभी regression/guardrail सूट्स शामिल हैं।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 74 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 141 / 141 टेस्ट उत्तीर्ण है।)*
+*(सभी 74 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 145 / 145 टेस्ट उत्तीर्ण है।)*
 
 ---
 
@@ -149,11 +149,12 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 34:** Frequently Bought Together (FBT) & Smart Bundle Engine (`bundle-engine.js`, `product-detail.html`, `product-detail.js`): ऑटो-पेयरिंग स्मार्ट बंडल इंजन, स्टॉक-अवेयर फॉलबैक्स, बंडल डिस्काउंट डिडक्शन।
 - **चरण 35:** ElectroMart Live Shopping & Stream Hub (`live-shopping.html`, `live-shopping.js`, `live-shopping.css`): इंटरएक्टिव वीडियो प्लेयर, होस्ट व वेरिफाइड बायर चैट, फ्लैश डील्स और पीडीपी कॉलआउट।
 - **चरण 36:** Smart Home & IoT Appliance Ecosystem Hub (`smarthome.html`, `smarthome.js`, `smarthome.css`): रूम व इकोसिस्टम विज़ुअलाइज़र, कम्पैटिबिलिटी चेकर, रूटीन प्रीव्यूज़, और 1-क्लिक कार्ट एडिशन।
-- **चरण 37:** ElectroMart Global Store & Cross-Border Delivery Hub (`global.html`, `global.css`, `global.js`, `product-detail.html`, `product-detail.js`): 5% सीमा शुल्क व 18% IGST कैलकुलेटर, स्टैंडर्ड (₹499) व एक्सप्रेस (₹1,299) फ्रेट, पासपोर्ट/आधार/DL KYC सत्यापन पोर्टल विथ मास्किंग, 100% DDP गारंटी, पीडीपी बायबॉक्स एकीकरण, 11 भाषाएं और 70/70 टेस्ट सूट्स 100% उत्तीर्ण।
+- **चरण 37:** ElectroMart Global Store & Cross-Border Delivery Hub (`global.html`, `global.css`, `global.js`, `product-detail.html`, `product-detail.js`): 5% सीमा शुल्क व 18% IGST कैलकुलेटर, स्टैंडर्ड (₹499) व एक्सप्रेस (₹1,299) फ्रेट, पासपोर्ट/आधार/DL KYC सत्यापन पोर्टल विथ मास्किंग, 100% DDP गारंटी, पीडीपी बायबॉक्स एकीकरण, 11 भाषाएं और 71/71 टेस्ट सूट्स 100% उत्तीर्ण।
+- **चरण 38:** ElectroMart Launchpad & Innovative Tech Hub (`launchpad.html`, `launchpad.css`, `launchpad.js`, `product-detail.html`, `product-detail.js`, `product-detail.css`, `header.html`, `header.js`, `sitemap.xml`): उभरते भारतीय हार्डवेयर स्टार्टअप्स के लिए शोकेस, नामांकित ऑफर IDs, INR pricing/MRP/early-bird reservation flow, funding progress, category filters, product details modal, सुरक्षित application persistence, 11 भाषाएं और deterministic PDP callout; 71/71 frontend suites तथा 74/74 backend unit tests PASS।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 38 (ElectroMart Launchpad & Innovative Tech Hub):** उभरते भारतीय हार्डवेयर स्टार्टअप्स और इनोवेटिव गैजेट्स के लिए समर्पित शोकेस, अर्ली-बर्ड प्री-ऑर्डर्स, और बैकर्स डिस्काउंट पोर्टल।
+- **अगला चरण:** अगले roadmap feature का स्कोप उपयोगकर्ता द्वारा निर्देशित किए जाने पर तय किया जाएगा; Phase 38 के बाद नया duplicate launcher या project folder नहीं बनाया जाएगा।
 
 ---
 
