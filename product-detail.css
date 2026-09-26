@@ -2135,3 +2135,97 @@ a {
   display: none !important;
 }
 
+/* Phase 40: ElectroMart Campus Store PDP callout */
+.pdp-student-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2f4ff 0%, #fff8e8 100%);
+}
+
+.pdp-student-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-student-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-student-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-student-text strong {
+  color: #3730a3;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-student-subtext {
+  color: #433c58;
+  font-size: 12px;
+}
+
+/* Deterministic student pricing line: shown only when a locally verified
+   student profile exists on this device, and never as a server-side promise. */
+.pdp-student-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 12px;
+  color: #433c58;
+}
+
+.pdp-student-price strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #b01535;
+}
+
+.pdp-student-price s {
+  color: #6b7280;
+}
+
+.pdp-student-price em {
+  color: #047857;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.pdp-student-price-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.pdp-student-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-student-link:hover,
+.pdp-student-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-student-callout[hidden] {
+  display: none !important;
+}
+

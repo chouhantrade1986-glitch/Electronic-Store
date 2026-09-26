@@ -2753,6 +2753,126 @@ window.isGamingArenaEligible = isGamingArenaEligible;
 window.renderPdpGamingArenaCallout = renderPdpGamingArenaCallout;
 
 // ==========================================
+// Phase 40: ElectroMart Campus Store Callout
+// ==========================================
+// The campus store writes one small profile object under this key. The PDP
+// only ever reads it, and it only applies a discount when the stored profile
+// already says the local eligibility preview passed. No network, no randomness,
+// and the same product plus the same profile always returns the same rupee price.
+const PDP_EDU_PROFILE_KEY = "electromart_edu_student_profile_v1";
+
+const PDP_EDU_CATEGORY_MAP = [
+  { pattern: /text\s?book|course\s?book|stationery|notebook|copy|book/i, category: "textbook" },
+  { pattern: /note|revision|guide|compendium|workbook/i, category: "notes" },
+  { pattern: /lab|component|sensor|module|kit|meter|board/i, category: "lab-kit" },
+  { pattern: /laptop|desktop|phone|tablet|monitor|camera|printer|audio|headphone|watch|router|storage|ssd|ram|gpu|cpu/i, category: "electronics" },
+  { pattern: /bag|backpack|cable|adapter|stand|mouse|keyboard|holder|cover|strap|pen|light|organis/i, category: "accessories" }
+];
+
+function readEduStudentProfile() {
+  try {
+    const raw = localStorage.getItem(PDP_EDU_PROFILE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || parsed.verified !== true) return null;
+    const cgpa = Number(parsed.cgpa);
+    return {
+      verified: true,
+      checkedLocally: true,
+      cgpa: Number.isFinite(cgpa) ? Math.min(100, Math.max(0, Math.round(cgpa))) : 75
+    };
+  } catch (error) {
+    // A blocked or corrupted store simply means "no local eligibility yet".
+    return null;
+  }
+}
+
+function resolveEduCategory(product) {
+  const signal = [product.category, product.tags, product.keywords, product.name, product.title, product.description]
+    .flat(Infinity)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  for (const rule of PDP_EDU_CATEGORY_MAP) {
+    if (rule.pattern.test(signal)) return rule.category;
+  }
+  return "electronics";
+}
+
+// Same ladder the campus store publishes: academic score only ever raises the
+// percentage, and the category caps it. Kept in step by construction.
+const PDP_EDU_DISCOUNT_LADDER = [
+  { min: 90, percent: 20 },
+  { min: 75, percent: 15 },
+  { min: 60, percent: 10 },
+  { min: 45, percent: 6 },
+  { min: 0, percent: 0 }
+];
+
+const PDP_EDU_CATEGORY_RULES = {
+  textbook: { scale: 1, cap: 20 },
+  notes: { scale: 1, cap: 20 },
+  "lab-kit": { scale: 0.8, cap: 16 },
+  electronics: { scale: 1, cap: 5 },
+  accessories: { scale: 0.6, cap: 4 }
+};
+
+function calculatePdpStudentDiscount(verified, cgpa, category) {
+  if (verified !== true) return 0;
+  const score = Number.isFinite(Number(cgpa)) ? Number(cgpa) : 75;
+  const band = PDP_EDU_DISCOUNT_LADDER.find((step) => score >= step.min) || PDP_EDU_DISCOUNT_LADDER[PDP_EDU_DISCOUNT_LADDER.length - 1];
+  if (band.percent <= 0) return 0;
+  const rule = PDP_EDU_CATEGORY_RULES[category] || PDP_EDU_CATEGORY_RULES.electronics;
+  return Math.max(0, Math.min(rule.cap, Math.round(band.percent * rule.scale)));
+}
+
+function renderPdpStudentDiscountCallout(product) {
+  const callout = document.getElementById("pdpStudentDiscountCallout");
+  if (!callout || !product) return;
+
+  // The campus store is relevant to every product, so the callout always shows;
+  // the deterministic price line only appears once local eligibility exists.
+  callout.hidden = false;
+
+  const productId = encodeURIComponent(String(product.id || ""));
+  const storeLink = document.getElementById("pdpCampusStoreHubLink");
+  if (storeLink) {
+    storeLink.href = productId ? `edu-store.html?productId=${productId}` : "edu-store.html";
+  }
+
+  const priceRow = document.getElementById("pdpStudentPriceRow");
+  if (!priceRow) return;
+
+  const profile = readEduStudentProfile();
+  if (!profile) {
+    priceRow.hidden = true;
+    return;
+  }
+
+  const basePrice = Math.max(0, Math.round(Number(product.price || 0)));
+  const listPrice = Math.max(basePrice, Math.round(Number(product.listPrice || product.mrp || product.price || 0)));
+  const category = resolveEduCategory(product);
+  const discount = calculatePdpStudentDiscount(true, profile.cgpa, category);
+  if (discount <= 0 || basePrice <= 0) {
+    priceRow.hidden = true;
+    return;
+  }
+
+  const studentPrice = Math.round((basePrice * (100 - discount)) / 100);
+  const priceEl = document.getElementById("pdpStudentPrice");
+  const mrpEl = document.getElementById("pdpStudentMrp");
+  const percentEl = document.getElementById("pdpStudentDiscountPercent");
+  if (priceEl) priceEl.textContent = `₹${studentPrice.toLocaleString("en-IN")}`;
+  if (mrpEl) mrpEl.textContent = `M.R.P.: ₹${basePrice.toLocaleString("en-IN")}`;
+  if (percentEl) percentEl.textContent = `-${discount}%`;
+  priceRow.hidden = false;
+}
+
+window.readEduStudentProfile = readEduStudentProfile;
+window.calculatePdpStudentDiscount = calculatePdpStudentDiscount;
+window.renderPdpStudentDiscountCallout = renderPdpStudentDiscountCallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -3485,6 +3605,7 @@ function renderStarCharacters(rating) {
   renderPdpGlobalStoreCallout(product);
   renderPdpLaunchpadCallout(product);
   renderPdpGamingArenaCallout(product);
+  renderPdpStudentDiscountCallout(product);
 
   renderRecentlyViewedDetailSection();
 

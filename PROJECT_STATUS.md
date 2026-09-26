@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 26 सितंबर 2026 (Phase 39 ElectroMart Gaming & eSports Arena Completed)
+**अंतिम अद्यतन (Last Updated):** 26 सितंबर 2026 (Phase 40 ElectroMart Student & Educator Campus Store Completed)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 72 / 72 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 73 / 73 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **कैम्पस स्टोर टेस्ट** | `node scratch/test-amazon-edu-store.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
 | **गेमिंग व ई-स्पोर्ट्स एरेना टेस्ट** | `node scratch/test-amazon-gaming-arena.js` | ✅ **PASS** | 8 / 8 स्तर उत्तीर्ण (100%) |
 | **लॉन्चपैड व इनोवेटिव टेक हब टेस्ट** | `node scratch/test-amazon-launchpad-hub.js` | ✅ **PASS** | 7 / 7 स्तर उत्तीर्ण (100%) |
 | **ग्लोबल स्टोर व क्रॉस-बॉर्डर डिलीवरी टेस्ट** | `node scratch/test-amazon-global-hub.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
@@ -32,7 +33,7 @@
 | **कस्टमर रिव्यूज़ व कम्युनिटी Q&A टेस्ट** | `node scratch/test-amazon-reviews-and-qa.js` | ✅ **PASS** | 5 / 5 लेयर्स उत्तीर्ण (100%) |
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 74 / 74 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **146 / 146 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **147 / 147 (100% Pass Rate)** |
 
 ---
 
@@ -519,12 +520,26 @@
 - **पीडीपी एकीकरण:** `product-detail.html` / `product-detail.js` / `product-detail.css` में deterministic Gaming Arena callout (metadata → signal → category/price आधारित, कोई randomness नहीं)।
 - **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_GAMING_I18N` base dictionary + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
-- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-gaming-arena.js` PASS (8/8), 72/72 frontend suites PASS, 74/74 backend unit tests PASS (146/146 total)।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-gaming-arena.js` PASS (8/8), 73/73 frontend suites PASS, 74/74 backend unit tests PASS (147/147 total)।
+
+### V. ElectroMart Student & Educator Campus Store (Phase 40 Completed)
+- **समर्पित कैम्पस स्टोर (`edu-store.html`, `edu-store.css`, `edu-store.js`):** midnight lecture-hall aesthetic (`--edu-accent: #4F46E5`) layered on the shared storefront, with indigo/amber/parchment palette, Bricolage Grotesque/Sora/Noto typography और CSS-art study visuals।
+- **छात्र सत्यापन:** deterministic local eligibility check (student ID format + academic `.ac.in` domain), returns `verified` + `checkedLocally: true` + reason string; `electromart_edu_student_profile_v1` में प्रोफ़ाइल सिंक; UI में `edu_local_only_note` honesty disclaimer (कोई university contact/approval claim नहीं)।
+- **सेमेस्टर कोर्स मटीरियल ग्रिड:** 3-line pricing (discount %, bold price, M.R.P. strikethrough, "Inclusive of all taxes") के साथ course material cards; सेमेस्टर सेलेक्टर और प्रोफ़ाइल के साथ persisted।
+- **छूट अनुमानक (Discount Estimator):** live CGPA range + category select driving `calculateStudentDiscount` / `calculateStudentPrice` — deterministic ladder (0 / 15 / 10 / 5%), monotonic across CGPA 45→90, INR rupee rounding (₹1,200→₹1,020 @ −15%, ₹1,499→₹1,274), single scale constant `DIAL_REFERENCE_PERCENT = 20`।
+- **फैकल्टी कोर्स लिस्ट:** validated form (course code pattern, name, class size) building deterministic lists via `buildFacultyList`, previewing copies + total INR, one-click add-to-cart via `edu-faculty-*` ids in `electromart_cart_v1` + `electromart_catalog_v1`, bounded local persistence `electromart_edu_faculty_lists_v1`।
+- **पीडीपी इंटीग्रेशन:** deterministic student discount callout (metadata → signal → category/price, कोई randomness नहीं) with same honesty fine-print।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_EDU_I18N` base (165 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-edu-store.js` PASS (9/9), 73/73 frontend suites PASS, 74/74 backend unit tests PASS (147/147 total)।
 
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
+- `<Phase-40-commit-sha>`: feat(phase-40): add ElectroMart Student & Educator Campus Store with student verification, discount estimator, faculty course lists and 11-language support
+- `b6fac9c`: feat(phase-39): add ElectroMart Gaming and eSports Arena with rig configurator, deterministic FPS estimator, sponsorship portal and 11-language support
+- `9e04517`: test(phase-40): add failing student and educator campus store contract
 - `dd7fdfa`: feat(phase-38): checkpoint ElectroMart Launchpad hub
 - `df30664`: docs(handover): record complete phase 1-7 progress, brand safety lock, and roadmap for future agents
 - `fcf12c1`: feat(brand-safety): enforce pure ElectroMart branding across Amazon-style UI with permanent guardrail test
