@@ -3,7 +3,7 @@
 **अंतिम अद्यतन (Last Updated):** सितंबर 2026  
 **शाखा (Branch):** `main`  
 **वेबसाइट:** `electromart.in`  
-**वर्तमान टेस्ट स्कोर:** **112 / 112 Tests Passing (100%)** — 38 Frontend Suites + 74 Backend Unit Tests
+**वर्तमान टेस्ट स्कोर:** **147 / 147 Tests Passing (100%)** — 73 Frontend Suites + 74 Backend Unit Tests
 
 ---
 
@@ -23,12 +23,12 @@
 
 किसी भी कार्य को शुरू करने से पहले और समाप्त करने के बाद ये कमांड्स चलाना अनिवार्य है:
 
-### A. फ्रंटएंड एवं अनुवाद टेस्ट (38 Test Suites):
+### A. फ्रंटएंड एवं अनुवाद टेस्ट (73 Test Suites):
 ```bash
 cd c:\Users\Admin\Documents\GitHub\Electronic-Store
 node scratch/run_all_tests.js
 ```
-*परिणाम: 38 / 38 PASS होने चाहिए। इसमें 35वां सूट `test-brand-safety-and-legal-compliance.js` है जो सभी 49 HTML पेजों और 11 भाषाओं में Amazon नाम की जांच करता है, 37वां सूट `test-amazon-auth.js` और 38वां सूट `test-amazon-location-modal.js` है।*
+*परिणाम: 73 / 73 PASS होने चाहिए। इसमें गार्डरेल सूट `test-brand-safety-and-legal-compliance.js` शामिल है जो सभी 81 HTML पेजों और 11 भाषाओं में third-party marketplace नाम की जांच करता है, साथ ही `test-amazon-auth.js` और `test-amazon-location-modal.js` जैसे सभी regression सूट्स।*
 
 ### B. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
 ```bash
@@ -96,7 +96,7 @@ npm run test:unit
 ---
 
 ## 🔒 5. Git चेकपॉइंट नियम (Commit Protocol)
-काम पूरा होने और सभी 112 टेस्ट पास होने पर इस प्रारूप में कमिट करें:
+काम पूरा होने और सभी 147 टेस्ट पास होने पर इस प्रारूप में कमिट करें:
 ```bash
 git add .
 git commit -m "feat(phase-X): descriptive summary of completed work"
