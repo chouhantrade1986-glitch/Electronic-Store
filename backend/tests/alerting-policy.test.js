@@ -4,7 +4,10 @@ const assert = require("node:assert/strict");
 const {
   evaluateAlertRules,
   resolveAlertPolicyConfig,
-  resolveRunbookUrl
+  resolveRunbookUrl,
+  resolveAlertWebhookTargets,
+  buildIncidentAlertPayload,
+  registerIncidentHooks
 } = require("../src/lib/alertingPolicy");
 
 test("resolveAlertPolicyConfig applies defaults and env overrides", () => {
@@ -108,4 +111,48 @@ test("resolveRunbookUrl appends anchor correctly", () => {
     runbookBaseUrl: "https://example.com/runbook"
   }, "latency-high");
   assert.equal(url, "https://example.com/runbook#latency-high");
+});
+
+test("resolveAlertWebhookTargets honors explicit alert webhook config", () => {
+  const targets = resolveAlertWebhookTargets({
+    ALERT_WEBHOOK_URL: "https://hooks.example.com/alerts",
+    ALERT_DISCORD_WEBHOOK_URL: "https://discord.example.com/webhook",
+    ALERT_EMAIL_TO: "ops@example.com"
+  });
+
+  assert.deepEqual(targets, [
+    "https://hooks.example.com/alerts",
+    "https://discord.example.com/webhook"
+  ]);
+});
+
+test("buildIncidentAlertPayload includes service, error, and runbook context", () => {
+  const payload = buildIncidentAlertPayload({
+    error: new Error("db unavailable"),
+    service: "electromart-backend",
+    runbookBaseUrl: "https://example.com/ops/runbook",
+    context: { trigger: "startup" }
+  });
+
+  assert.equal(payload.service, "electromart-backend");
+  assert.equal(payload.severity, "critical");
+  assert.ok(payload.message.includes("db unavailable"));
+  assert.match(payload.runbookUrl, /runbook/i);
+  assert.equal(payload.context.trigger, "startup");
+});
+
+test("registerIncidentHooks installs process listeners without throwing", () => {
+  const listeners = [];
+  const fakeProcess = {
+    on: (event, handler) => {
+      listeners.push({ event, handler });
+    }
+  };
+
+  assert.doesNotThrow(() => registerIncidentHooks({
+    processObject: fakeProcess,
+    env: {}
+  }));
+
+  assert.deepEqual(listeners.map((item) => item.event).sort(), ["uncaughtException", "unhandledRejection"]);
 });
