@@ -157,5 +157,8 @@ assert(checkoutJs.includes('setupAccordionFlow();'), "checkout.js calls setupAcc
 assert(checkoutJs.includes('stepPlaceOrderBtn'), "checkout.js wires stepPlaceOrderBtn");
 assert(checkoutJs.includes('useAddressBtn'), "checkout.js wires useAddressBtn");
 assert(checkoutJs.includes('usePaymentBtn'), "checkout.js wires usePaymentBtn");
+assert(checkoutJs.includes('expectedSubtotal:'), "checkout.js sends the subtotal checked by the order API");
+assert(checkoutJs.includes('idempotencyKey: checkoutIdempotencyKey'), "checkout.js sends a shared order idempotency key");
+assert(checkoutJs.includes('e.key === CART_STORAGE_KEY || e.key === null'), "checkout.js refreshes after cross-tab cart changes");
 
 console.log("ALL CHECKS PASSED: Amazon India 4-Step Accordion Flow verified successfully!");

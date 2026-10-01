@@ -616,17 +616,91 @@ a {
 }
 
 @media (max-width: 760px) {
-  .cart-item {
-    grid-template-columns: 1fr;
+  .cart-page .cart-item {
+    grid-template-columns: 44px 76px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding: 14px 0 !important;
   }
 
-  .cart-item img {
-    height: 220px;
+  .cart-page .cart-item-check-wrap {
+    min-height: 44px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-top: 0 !important;
   }
 
-  .item-total,
-  .price-col-head {
-    text-align: left;
+  .cart-page .cart-item-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .cart-page .cart-item .item-thumb {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .cart-page .cart-item-details {
+    grid-column: 3 !important;
+    min-width: 0 !important;
+  }
+
+  .cart-page .cart-item .item-total {
+    grid-column: 3 !important;
+    justify-self: end !important;
+    text-align: right !important;
+  }
+
+  .cart-page .amz-item-actions-row {
+    grid-column: 1 / -1 !important;
+    gap: 4px 8px !important;
+    align-items: center !important;
+  }
+
+  .cart-page .amz-action-divider {
+    display: none !important;
+  }
+
+  .cart-page .amz-action-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    padding: 10px 4px !important;
+    line-height: 1.3 !important;
+  }
+
+  .cart-page .amz-qty-select-wrap {
+    min-height: 44px !important;
+  }
+
+  .cart-page .amz-qty-select {
+    min-height: 38px !important;
+  }
+
+  .cart-page :focus-visible {
+    outline: 3px solid #005fcc !important;
+    outline-offset: 2px !important;
+  }
+
+  .cart-page .cart-summary button {
+    min-height: 44px !important;
+  }
+
+  .cart-page .price-col-head {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .cart-page .cart-item {
+    grid-template-columns: 40px 64px minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .cart-page .cart-item .item-thumb {
+    width: 64px !important;
+    height: 64px !important;
   }
 }
 

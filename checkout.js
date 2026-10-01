@@ -7,6 +7,36 @@ const API_BASE_OVERRIDE_KEY = "electromart_api_base_url";
 const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
+const CHECKOUT_IDEMPOTENCY_STORAGE_KEY = "electromart_checkout_idempotency_v1";
+
+function createCheckoutIdempotencyKey() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+  return `checkout-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function resolveCheckoutIdempotencyKey() {
+  try {
+    const stored = localStorage.getItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY);
+    if (stored) {
+      return stored;
+    }
+    const generated = createCheckoutIdempotencyKey();
+    localStorage.setItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY, generated);
+    return generated;
+  } catch (error) {
+    return createCheckoutIdempotencyKey();
+  }
+}
+
+const checkoutIdempotencyKey = resolveCheckoutIdempotencyKey();
+
+function clearCheckoutIdempotencyKey() {
+  try {
+    localStorage.removeItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY);
+  } catch (error) {}
+}
 
 function resolveRenewedTaxProfile(product) {
   const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
@@ -1557,12 +1587,15 @@ async function handlePlaceOrder() {
     const offlineOrderId = createOfflineOrder(rows, paymentMethod, shippingAddress);
     saveCartMap({});
     clearCouponState();
+    clearCheckoutIdempotencyKey();
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(offlineOrderId)}`;
     return;
   }
 
   const orderPayload = {
     items: rows.map((row) => ({ productId: String(row.id), quantity: row.quantity })),
+    expectedSubtotal: Number(rows.reduce((sum, row) => sum + Number(row.price || 0) * Number(row.quantity || 0), 0).toFixed(2)),
+    idempotencyKey: checkoutIdempotencyKey,
     shippingAddress,
     paymentMethod,
     couponCode: pricing.coupon.code || undefined,
@@ -1587,6 +1620,7 @@ async function handlePlaceOrder() {
           const paidOrderId = order?.id || pendingGatewayOrderContext.orderId;
           saveCartMap({});
           clearCouponState();
+          clearCheckoutIdempotencyKey();
           pendingGatewayOrderContext = null;
           window.location.href = `thank-you.html?orderId=${encodeURIComponent(paidOrderId || "")}`;
           return;
@@ -1633,6 +1667,7 @@ async function handlePlaceOrder() {
     pendingGatewayOrderContext = null;
     saveCartMap({});
     clearCouponState();
+    clearCheckoutIdempotencyKey();
     try {
       localStorage.removeItem("electromart_exchange_cart_v1");
     } catch (e) {}
@@ -2130,6 +2165,9 @@ if (deliverySlotSelect) {
 
 if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
   window.addEventListener("storage", (e) => {
+    if (e.key === CART_STORAGE_KEY || e.key === null) {
+      refreshCheckoutState();
+    }
     if (e.key === PAY_BALANCE_KEY) {
       syncWalletBalanceState();
       updatePaymentSummary();

@@ -490,9 +490,23 @@ function loadDeliverySlotState() {
   }
 }
 
+function escapeAttributeText(value) {
+  return String(value || "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
+}
+
 function cartItemCard(row, currentLang) {
   const isSelected = row.selected !== false;
   const title = window.getLocalizedTitle ? window.getLocalizedTitle(row, currentLang) : row.name;
+  const safeTitle = escapeAttributeText(title);
+  const translations = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+  const quantityLabel = String(translations.qty_label || "Quantity").replace(/[:：]\s*$/, "");
+  const removeLabel = translations.delete || "Remove";
 
   // Qty options up to max(10, row.quantity)
   const maxOptions = Math.max(10, row.quantity);
@@ -504,7 +518,7 @@ function cartItemCard(row, currentLang) {
   return `
     <article class="cart-item" data-id="${row.id}">
       <div class="cart-item-check-wrap">
-        <input type="checkbox" class="cart-item-checkbox" data-action="toggle-select" data-id="${row.id}" ${isSelected ? 'checked' : ''} aria-label="Select item" />
+        <input type="checkbox" class="cart-item-checkbox" data-action="toggle-select" data-id="${row.id}" ${isSelected ? 'checked' : ''} aria-label="${safeTitle ? `${translations.select_cart_item || "Select item"}: ${safeTitle}` : translations.select_cart_item || "Select item"}" />
       </div>
       <a class="item-thumb" href="product-detail.html?id=${encodeURIComponent(row.id)}">
         <img src="${row.image}" alt="${row.name}" loading="lazy" />
@@ -529,7 +543,7 @@ function cartItemCard(row, currentLang) {
           return (ex && ex.finalValue) ? `
           <div class="cart-exchange-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;">
             <span>🔄 <strong>Exchange Applied:</strong> ${ex.modelName || "Device"} (-${money(ex.finalValue)})</span>
-            <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
+            <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" aria-label="${removeLabel}: exchange for ${safeTitle}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
           </div>` : '';
         })()}
         ${row.isRenewed ? `
@@ -539,7 +553,7 @@ function cartItemCard(row, currentLang) {
         ${row.protectionPlan ? `
         <div class="cart-protection-badge" style="display:flex;align-items:center;gap:6px;background:#eef8f7;border:1px solid #8bc9c5;padding:5px 8px;border-radius:4px;font-size:12px;color:#00635f;margin:4px 0;font-weight:600;">
           <span>🛡️ <strong>${row.protectionPlan.name}</strong> · ${money(row.protectionPlan.price)} + 18% GST</span>
-          <button type="button" data-action="remove-protection" data-id="${row.id}" style="margin-left:auto;border:0;background:none;color:#b42318;cursor:pointer;">Remove</button>
+          <button type="button" data-action="remove-protection" data-id="${row.id}" aria-label="${removeLabel}: ${escapeAttributeText(row.protectionPlan.name)} for ${safeTitle}" style="margin-left:auto;border:0;background:none;color:#b42318;cursor:pointer;">Remove</button>
         </div>` : ''}
         <label class="cart-item-gift">
           <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
@@ -548,18 +562,18 @@ function cartItemCard(row, currentLang) {
         <div class="amz-item-actions-row">
           <div class="amz-qty-select-wrap">
             <span style="font-size:12px;color:#565959;margin-right:4px;" data-i18n="qty_label">Qty:</span>
-            <select class="amz-qty-select" data-action="change-qty" data-id="${row.id}">
+            <select class="amz-qty-select" data-action="change-qty" data-id="${row.id}" aria-label="${escapeAttributeText(quantityLabel)}: ${safeTitle}">
               ${qtyOptions.join("")}
             </select>
           </div>
-          <span class="amz-action-divider">|</span>
-          <button class="amz-action-link" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete">Delete</button>
-          <span class="amz-action-divider">|</span>
-          <button class="amz-action-link" data-action="save-for-later" data-id="${row.id}" type="button" data-i18n="save_for_later">Save for later</button>
-          <span class="amz-action-divider">|</span>
-          <button class="amz-action-link" data-action="see-more" data-id="${row.id}" type="button" data-i18n="see_more_like_this">See more like this</button>
-          <span class="amz-action-divider">|</span>
-          <button class="amz-action-link" data-action="share" data-id="${row.id}" type="button">Share</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete" aria-label="${escapeAttributeText(`${translations.delete || "Delete"}: ${title}`)}">Delete</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="save-for-later" data-id="${row.id}" type="button" data-i18n="save_for_later" aria-label="${escapeAttributeText(`${translations.save_for_later || "Save for later"}: ${title}`)}">Save for later</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="see-more" data-id="${row.id}" type="button" data-i18n="see_more_like_this" aria-label="${escapeAttributeText(`${translations.see_more_like_this || "See more like this"}: ${title}`)}">See more like this</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="share" data-id="${row.id}" type="button" aria-label="${escapeAttributeText(`Share: ${title}`)}">Share</button>
         </div>
       </div>
       <strong class="item-total">${money(row.quantity * row.price)}</strong>
@@ -1048,7 +1062,7 @@ if (removeCouponBtn) {
 // Re-render cart when Prime status changes in any tab or custom event
 if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
   window.addEventListener("storage", (e) => {
-    if (e.key === "electromart_prime_status_v1") {
+    if (e.key === CART_STORAGE_KEY || e.key === null || e.key === "electromart_prime_status_v1") {
       renderCart();
     }
   });

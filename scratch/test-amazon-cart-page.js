@@ -66,6 +66,9 @@ assert(amzCss.includes('.amz-free-delivery-bar'), "amazon-theme.css has .amz-fre
 assert(amzCss.includes('.amz-saved-for-later'), "amazon-theme.css has .amz-saved-for-later");
 assert(amzCss.includes('#checkoutBtn'), "amazon-theme.css has #checkoutBtn pill styling");
 assert(amzCss.includes('.amz-qty-select-wrap'), "amazon-theme.css has .amz-qty-select-wrap");
+const cartCss = fs.readFileSync(path.join(projectDir, 'cart.css'), 'utf8');
+assert(cartCss.includes('.cart-page .cart-item'), "cart.css scopes responsive item layout to the cart page");
+assert(cartCss.includes('min-height: 44px'), "cart.css provides mobile-sized cart control targets");
 console.log("  ✓ PASS: amazon-theme.css includes complete Amazon Cart styling rules");
 
 // 3. Verify translations across all 11 languages
@@ -94,7 +97,8 @@ const cartKeys = [
   'saved_for_later_title',
   'move_to_cart',
   'this_is_a_gift',
-  'emi_available'
+  'emi_available',
+  'select_cart_item'
 ];
 
 languages.forEach(lang => {
@@ -140,8 +144,14 @@ const mockCartDoc = {
   addEventListener: () => {}
 };
 
+const cartEventHandlers = {};
 const cartSandbox = {
-  window: { location: { href: '', origin: 'http://localhost:5500', pathname: '/cart.html' } },
+  window: {
+    location: { href: '', origin: 'http://localhost:5500', pathname: '/cart.html' },
+    addEventListener(eventName, handler) {
+      cartEventHandlers[eventName] = handler;
+    }
+  },
   document: mockCartDoc,
   localStorage: mockLocalStorage,
   Intl: Intl,
@@ -169,6 +179,7 @@ const fnCart = new Function(
     loadCartMap,
     loadUnselectedMap,
     saveCartMap,
+    cartItemCard,
     renderCart
   };`
 );
@@ -176,6 +187,18 @@ const fnCart = new Function(
 const cartModule = fnCart(
   cartSandbox.window, cartSandbox.document, cartSandbox.localStorage, Intl, encodeURIComponent, setTimeout, Date, Math, Number, String, JSON, Object, Array, console
 );
+
+const accessibleCartCard = cartModule.cartItemCard({
+  id: '1',
+  name: 'AstraBook Pro 14',
+  price: 999,
+  image: 'laptop.jpg',
+  quantity: 1
+}, 'en');
+assert(accessibleCartCard.includes('aria-label="Select item: AstraBook Pro 14"'), "Cart selection checkbox identifies its product");
+assert(accessibleCartCard.includes('aria-label="Quantity: AstraBook Pro 14"'), "Quantity selector identifies its product");
+assert(accessibleCartCard.includes('aria-label="Delete: AstraBook Pro 14"'), "Delete action identifies its product");
+assert(accessibleCartCard.includes('aria-hidden="true">|</span>'), "Visual action dividers are hidden from screen readers");
 
 // Test pricing breakdown under ₹499 (shipping = 19)
 const sampleRowsBelow499 = [
@@ -215,6 +238,14 @@ cartModule.moveToCart('101');
 assert.strictEqual(cartModule.loadSavedMap()['101'], undefined, "Item removed from savedMap");
 assert.strictEqual(cartModule.loadCartMap()['101'], 2, "Item moved back to cartMap with quantity 2");
 console.log("  ✓ PASS: Save for Later and Move to Cart storage lifecycle verified");
+
+mockLocalStorage.store['electromart_cart_v1'] = JSON.stringify({ '1': 4 });
+cartEventHandlers.storage({ key: 'electromart_cart_v1' });
+assert.strictEqual(domEls.cartCount.textContent, '4', "Cross-tab cart changes refresh the header badge");
+assert.strictEqual(domEls.cartMeta.textContent, '4 items', "Cross-tab cart changes refresh the item count");
+assert.strictEqual(domEls.summaryItems.textContent, 'Subtotal (4 items):', "Cross-tab cart changes refresh the subtotal label");
+assert(domEls.cartItems.innerHTML.includes('AstraBook Pro 14'), "Cross-tab cart changes refresh rendered items");
+console.log("  ✓ PASS: Cross-tab cart storage changes re-render the cart");
 
 console.log("==================================================");
 console.log("ALL AMAZON INDIA SHOPPING CART TESTS PASSED! (100%)");
