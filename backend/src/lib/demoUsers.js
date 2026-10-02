@@ -3,7 +3,7 @@ const { randomUUID } = require("crypto");
 const { normalizePhone } = require("./phoneVerification");
 const { normalizeNotificationPreferences } = require("./notificationPreferences");
 const { normalizePhoneVerificationState } = require("./phoneVerification");
-const { isProductionRuntime } = require("./runtimeMode");
+const { isRestrictedRuntime } = require("./runtimeMode");
 
 const SEEDED_DEMO_USER_BLOCK_MESSAGE = "This seeded demo account is disabled. Set ALLOW_SEEDED_DEMO_USERS=true and rerun the demo-user migration to re-enable it.";
 
@@ -60,7 +60,7 @@ function isSeededDemoUserBlocked(user, options = {}) {
   if (user.demoAccessDisabled === true) {
     return true;
   }
-  return isProductionRuntime(env);
+  return isRestrictedRuntime(env);
 }
 
 function normalizeSeededDemoMetadata(user = {}) {

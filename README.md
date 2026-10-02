@@ -265,7 +265,7 @@ Frontend QA server default URL: `http://127.0.0.1:5500`
 ## Demo Users
 
 Local demo users are seeded only when `ALLOW_SEEDED_DEMO_USERS=true`. Do not treat seeded credentials as production access.
-When `APP_RUNTIME_ENV=production`, seeded demo users are forced disabled and startup fails if `ALLOW_SEEDED_DEMO_USERS=true`.
+When `APP_RUNTIME_ENV` is `staging` or `production`, seeded demo users are never created and cannot sign in. In `production`, startup also fails if `ALLOW_SEEDED_DEMO_USERS=true`.
 
 Before disabling or purging seeded demo users, create at least one real admin account:
 

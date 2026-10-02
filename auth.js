@@ -284,7 +284,7 @@ function applyAuthModeUi() {
     setActiveView("signin");
   }
 
-  if (signinIdentifier && !signinIdentifier.value) {
+  if (signinIdentifier && !signinIdentifier.value && isOfflineDemoEnabled()) {
     signinIdentifier.value = OFFLINE_ADMIN_EMAIL;
   }
 

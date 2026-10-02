@@ -1,6 +1,6 @@
 const { hasRealAdminAccount } = require("./adminAccounts");
 const { applySeededDemoUserAccessPolicy } = require("./demoUsers");
-const { isProductionRuntime, resolveRuntimeProfile } = require("./runtimeMode");
+const { isProductionRuntime, isRestrictedRuntime, resolveRuntimeProfile } = require("./runtimeMode");
 
 const DISALLOWED_ADMIN_BOOTSTRAP_SECRETS = new Set([
   "",
@@ -21,7 +21,7 @@ function hasValidAdminBootstrapSecret(env = process.env) {
 
 function applyAdminProvisioningPolicy(db, env = process.env) {
   const runtimeProfile = resolveRuntimeProfile(env);
-  if (!isProductionRuntime(env)) {
+  if (!isRestrictedRuntime(env)) {
     return {
       runtimeProfile,
       seededDemoUsersForcedDisabled: false,
