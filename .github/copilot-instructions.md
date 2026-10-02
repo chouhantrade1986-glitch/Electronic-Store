@@ -39,6 +39,6 @@
 - Keep smoke and release workflows green before merge.
 
 ## Commit and PR Style
-- Prefer small focused commits with prefixes like fix(...), ci(...), chore(...), docs(...).
+- Follow CONTRIBUTING.md for commit and PR format (`<type>(<scope>): <summary>`).
 - Include concise validation evidence in PR descriptions.
 - Never commit secrets or environment tokens.
