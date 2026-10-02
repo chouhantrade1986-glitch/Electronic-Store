@@ -8,25 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
   <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="checkout.css" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="top-nav top-nav--split">
-      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
-        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
-        <span class="brand-sub">checkout</span>
-      </a>
-      <div class="header-links">
-        <a href="cart.html">Back to Cart</a>
-        <a href="products.html">Continue shopping</a>
-      </div>
-    </nav>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="checkout-main">
     <section class="checkout-flow">
@@ -155,10 +146,10 @@
     </aside>
   </main>
 
-  <script src="checkout.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="checkout.js"></script>
 </body>
 </html>
-
-

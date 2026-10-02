@@ -1,13 +1,13 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-04-11T16:00:12Z",
+    "generatedAt":  "2026-04-15T02:30:28Z",
     "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
                   {
                       "name":  "qa-auth-browser.png",
-                      "bytes":  9518,
-                      "sha256":  "1253F8923A22145091C7B302F9691712E15FCD140DCFC40F8A52603DCCD48F6A"
+                      "bytes":  9525,
+                      "sha256":  "62BB34AD72377B8BF38711D02C8C914B78665977FE955229981E14B26F3DE943"
                   },
                   {
                       "name":  "qa-account-browser.png",

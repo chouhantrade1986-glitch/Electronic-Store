@@ -476,21 +476,17 @@ async function refreshLaptops() {
   filterLaptops();
 }
 
-searchInput.addEventListener("input", filterLaptops);
-if (searchForm) {
-  searchForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    filterLaptops();
-  });
-}
-segmentFilter.addEventListener("change", filterLaptops);
+searchInput?.addEventListener("input", filterLaptops);
+
+segmentFilter?.addEventListener("change", filterLaptops);
 brandFilterList?.addEventListener("change", (event) => {
   if (event.target.closest(".brand-filter")) {
     filterLaptops();
   }
 });
-purposeFilter.addEventListener("change", filterLaptops);
-sortFilter.addEventListener("change", filterLaptops);
+purposeFilter?.addEventListener("change", filterLaptops);
+sortFilter?.addEventListener("change", filterLaptops);
+
 
 document.addEventListener("click", (event) => {
   if (deptTrigger && event.target === deptTrigger) {
@@ -543,3 +539,4 @@ filterChipController = window.ElectroMartListingFilterChips?.init({
   getResultSummary: () => String(resultMeta?.textContent || "").trim()
 });
 refreshLaptops();
+

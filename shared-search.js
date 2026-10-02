@@ -502,6 +502,7 @@
       const nestedForm = header.querySelector("form.search-shell, form.search-form");
       if (nestedForm) {
         forms.add(nestedForm);
+        header.classList.add("shared-search-ready");
       } else {
         const injected = injectSearchIntoContainer(header);
         if (injected) {
@@ -514,6 +515,7 @@
       const nestedForm = nav.querySelector("form.search-shell, form.search-form");
       if (nestedForm) {
         forms.add(nestedForm);
+        nav.classList.add("shared-search-ready");
       } else {
         const injected = injectSearchIntoContainer(nav);
         if (injected) {

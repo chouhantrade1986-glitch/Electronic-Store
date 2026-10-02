@@ -1,12 +1,9 @@
 (function initElectroMartMenuManager() {
   const MENU_STORAGE_KEY = "electromart_menu_v1";
   const DEFAULT_WEBSITE_MENU = [
-    { label: "Terms", href: "terms-and-conditions.html" },
-    { label: "Shipping", href: "shipping-policy.html" },
-    { label: "Refund", href: "refund-policy.html" },
-    { label: "Accessibility", href: "accessibility-statement.html" },
-    { label: "FAQ", href: "faq.html" },
-    { label: "Review", href: "review.html" }
+    { label: "All Products", href: "products.html", visible: true },
+    { label: "Today's Deals", href: "todays-deals.html", visible: true },
+    { label: "Best Sellers", href: "best-sellers.html", visible: true }
   ];
 
   function loadMenuItems() {

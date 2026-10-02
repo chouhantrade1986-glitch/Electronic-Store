@@ -1,4 +1,4 @@
-﻿const CART_STORAGE_KEY = "electromart_cart_v1";
+const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const API_BASE_URL = (() => {
   const { protocol, hostname, port } = window.location;
@@ -119,11 +119,17 @@ function mapCatalogDesktop(item) {
   if (!item || !item.id) {
     return null;
   }
-  const category = normalizeDesktopCategory(item.category);
+
+  const rawCategory = normalizeDesktopCategory(item.category);
   const status = String(item.status || "active").toLowerCase();
-  if (category !== "computer" || status !== "active") {
+  if (rawCategory !== "computer" || status !== "active") {
     return null;
   }
+
+  // Only show RAM/Storage specs when backend actually provides them.
+  // This prevents “ghost specs” (mouse/cabinet inheriting default desktop RAM/SSD).
+  const hasRealRam = item.ram != null && String(item.ram).trim() !== "";
+  const hasRealStorage = item.storage != null && String(item.storage).trim() !== "";
 
   return {
     id: String(item.id),
@@ -132,8 +138,8 @@ function mapCatalogDesktop(item) {
     segment: String(item.segment || "b2c").toLowerCase(),
     processor: String(item.processor || inferDesktopProcessor(item)).toLowerCase(),
     purpose: String(item.purpose || inferDesktopPurpose(item)).toLowerCase(),
-    ram: item.ram || "16GB",
-    storage: item.storage || "512GB SSD",
+    ram: hasRealRam ? String(item.ram) : "",
+    storage: hasRealStorage ? String(item.storage) : "",
     listPrice: Number(item.listPrice || item.price || 0),
     moq: Number(item.moq || 0),
     featured: Boolean(item.featured),
@@ -164,14 +170,25 @@ async function fetchDesktopsFromApi() {
   try {
     const response = await fetch(`${API_BASE_URL}/products?category=computer&status=active&segment=all`);
     if (!response.ok) {
+      console.warn(`API returned status ${response.status}. Using fallback data.`);
+      apiDesktopProducts = [];
       return;
     }
     const payload = await response.json().catch(() => ({}));
     apiDesktopProducts = Array.isArray(payload.products) ? payload.products : [];
+    console.log(`Loaded ${apiDesktopProducts.length} products from API`);
   } catch (error) {
+    console.error('Failed to fetch products from API:', error?.message || error);
     apiDesktopProducts = [];
   }
 }
+
+function getSafeMergedDesktops() {
+  // If API fails (e.g., backend DB locked), always show fallback items.
+  const list = getMergedDesktops();
+  return Array.isArray(list) && list.length ? list : fallbackDesktops;
+}
+
 
 function loadCartMap() {
   try {
@@ -192,9 +209,14 @@ function saveCartMap(cartMap) {
 }
 
 function syncCartCount() {
+  if (!cartCount) {
+    // Some pages may not have cartCount element (header injection differs).
+    return;
+  }
   const total = Object.values(loadCartMap()).reduce((sum, qty) => sum + Number(qty || 0), 0);
   cartCount.textContent = String(total);
 }
+
 
 function escapeHtml(value) {
   return String(value || "")
@@ -273,7 +295,8 @@ function titleCase(value) {
 }
 
 function money(value) {
-  return inrFormatter.format(Number(value || 0));
+  const n = Math.floor(Number(value || 0));
+  return inrFormatter.format(n);
 }
 
 function brandStoreUrl(value) {
@@ -282,30 +305,58 @@ function brandStoreUrl(value) {
 
 function desktopCard(item) {
   const detailUrl = `product-detail.html?id=${item.id}`;
-  const bulk = item.segment === "b2b" && item.moq ? `<p class="bulk-meta">Minimum order quantity: ${item.moq}</p>` : "";
+  
+  // Determine badge based on product attributes
+  let badge = '';
+  if (item.featured) {
+    badge = '<span class="badge badge-hot">Hot</span>';
+  } else if (item.segment === "b2b") {
+    badge = '<span class="badge badge-new">B2B</span>';
+  }
+  
+  // Calculate discount if listPrice exists
+  let discountHtml = '';
+  if (item.listPrice && item.listPrice > item.price) {
+    const discountPercent = Math.round(((item.listPrice - item.price) / item.listPrice) * 100);
+    discountHtml = `
+      <span class="discount-badge">${discountPercent}% OFF</span>
+      <span class="mrp">M.R.P.: ${money(item.listPrice)}</span>
+    `;
+  }
+  
+  const bulk = item.segment === "b2b" && item.moq ? `<p class="bulk-meta">Min. order: ${item.moq} units</p>` : "";
 
   return `
     <article class="product-card">
-      <a href="${detailUrl}" class="thumb-link" aria-label="Open ${item.name}">
+      ${badge}
+      <button class="wishlist-heart" data-wishlist-id="${item.id}" data-product-name="${item.name}" aria-label="Add ${item.name} to wishlist"></button>
+      <a href="${detailUrl}" class="thumb-link" aria-label="View ${item.name} details">
         <img src="${item.image}" alt="${item.name}" loading="lazy" />
       </a>
       <div class="content">
-        <h3><a href="${detailUrl}" class="title-link">${item.name}</a></h3>
+        <h3><a href="${detailUrl}" class="title-link product-title">${item.name}</a></h3>
         <div class="spec-row">
-          <a class="spec-chip spec-chip-link" href="${brandStoreUrl(item.brand)}">${item.brand}</a>
-          <span class="spec-chip">${titleCase(item.processor)} CPU</span>
+          <a class="spec-chip spec-chip-link" href="${brandStoreUrl(item.brand)}" aria-label="Browse ${item.brand} products">${item.brand}</a>
+          <span class="spec-chip">${titleCase(item.processor)}</span>
           <span class="spec-chip">${titleCase(item.purpose)}</span>
-          <span class="spec-chip">${item.ram}</span>
-          <span class="spec-chip">${item.storage}</span>
+          ${item.ram ? `<span class="spec-chip">${item.ram}</span>` : ``}
+          ${item.storage ? `<span class="spec-chip">${item.storage}</span>` : ``}
         </div>
         <div class="meta">
-          <span class="price">${money(item.price)}</span>
-          <span class="rating">${Number(item.rating).toFixed(1)} Star</span>
+          <div class="price-section">
+            ${discountHtml ? discountHtml : ""}
+            <span class="current-price">${money(item.price)}</span>
+          </div>
+          <div class="rating-section">
+            ${Number(item.rating) > 0
+              ? `<span class="rating" aria-label="Rating: ${Number(item.rating).toFixed(1)} out of 5 stars">${Number(item.rating).toFixed(1)}</span>`
+              : `<span class="rating-empty" aria-label="Not yet reviewed">☆☆☆☆☆</span>`}
+          </div>
         </div>
         ${bulk}
         <div class="card-actions">
-          <a href="${detailUrl}" class="view-link">View Details</a>
-          <button class="add-btn" data-id="${item.id}" type="button">Add to Cart</button>
+          <a href="${detailUrl}" class="view-link" aria-label="View details for ${item.name}">View Details</a>
+<button class="desktop-add-btn" data-id="${item.id}" type="button" aria-label="Add ${item.name} to cart">Add to Cart</button>
         </div>
       </div>
     </article>
@@ -313,13 +364,21 @@ function desktopCard(item) {
 }
 
 function render(list) {
+  // Avoid misleading "Showing 0 products" during initial paint.
+  const fallbackSize = Array.isArray(fallbackDesktops) ? fallbackDesktops.length : 0;
+  if (!list.length && fallbackSize > 0 && apiDesktopProducts.length === 0) {
+    resultMeta.textContent = `Showing ${fallbackSize} products`;
+    desktopGrid.innerHTML = list.map(desktopCard).join("") || "";
+    return;
+  }
   resultMeta.textContent = `Showing ${list.length} products`;
   if (!list.length) {
-    desktopGrid.innerHTML = "<div class='empty'>No exact computer matches found. Try clearing one filter or broadening the search.</div>";
+    desktopGrid.innerHTML = "<div class='empty'>No computer matches found. Clear filters to see all desktops.</div>";
     return;
   }
   desktopGrid.innerHTML = list.map(desktopCard).join("");
 }
+
 
 function getSortLabel(value) {
   const labels = {
@@ -445,7 +504,22 @@ function filterDesktops() {
   const purpose = String(purposeFilter.value || "all");
   const sortValue = String(sortFilter.value || "relevance");
 
+  // Debug: helps identify why desktops filter returns 0 while products page works.
+  try {
+    console.log("[desktops.js] filterDesktops inputs:", {
+      mergedCount: Array.isArray(source) ? source.length : 0,
+      query,
+      segment,
+      processor,
+      purpose,
+      selectedBrandsCount: Array.isArray(selectedBrands) ? selectedBrands.length : 0,
+      selectedBrands: Array.isArray(selectedBrands) ? selectedBrands.slice(0, 5) : [],
+      sortValue
+    });
+  } catch (e) {}
+
   const filtered = source.filter((item) => {
+
     const text = `${item.name} ${item.brand || ""} ${item.processor} ${item.purpose} ${item.ram} ${item.storage}`.toLowerCase();
     const queryMatch = !query || text.includes(query);
     const segmentMatch = segment === "all" || item.segment === segment;
@@ -459,7 +533,30 @@ function filterDesktops() {
   filterChipController?.update();
 }
 
-searchInput.addEventListener("input", filterDesktops);
+searchInput.addEventListener("input", () => {
+  // Simple autosuggest using local merged list (no API dependency)
+  const suggestionsEl = document.getElementById("searchSuggestions");
+  if (suggestionsEl) {
+    const query = String(searchInput.value || "").trim().toLowerCase();
+    if (!query) {
+      suggestionsEl.hidden = true;
+      suggestionsEl.innerHTML = "";
+    } else {
+      const source = getMergedDesktops();
+      const top = source
+        .filter((item) => String(item.name || "").toLowerCase().includes(query) || String(item.brand || "").toLowerCase().includes(query))
+        .slice(0, 6)
+        .map((item) => ({ id: item.id, label: item.name }));
+
+      suggestionsEl.hidden = false;
+      suggestionsEl.innerHTML = top.length
+        ? top.map((s) => `<button type="button" class="suggestion-item" data-suggestion-id="${s.id}">${escapeHtml(s.label)}</button>`).join("")
+        : `<div class="suggestion-empty">No suggestions</div>`;
+    }
+  }
+
+  filterDesktops();
+});
 segmentFilter.addEventListener("change", filterDesktops);
 brandFilterList?.addEventListener("change", (event) => {
   if (event.target.closest(".brand-filter")) {
@@ -470,7 +567,18 @@ processorFilter.addEventListener("change", filterDesktops);
 purposeFilter.addEventListener("change", filterDesktops);
 sortFilter.addEventListener("change", filterDesktops);
 
+
 document.addEventListener("click", (event) => {
+  const suggestionBtn = event.target?.closest?.(".suggestion-item");
+  if (suggestionBtn) {
+    const id = String(suggestionBtn.getAttribute("data-suggestion-id") || "").trim();
+    if (id) {
+      // Navigate to matching product; keeps UX similar to Amazon search results.
+      window.location.href = `product-detail.html?id=${encodeURIComponent(id)}`;
+    }
+    return;
+  }
+
   if (deptTrigger && event.target === deptTrigger) {
     const next = !deptMenu.classList.contains("open");
     deptMenu.classList.toggle("open", next);
@@ -485,17 +593,33 @@ document.addEventListener("click", (event) => {
     }
   }
 
-  if (!event.target.classList.contains("add-btn")) {
+const addBtn = event.target?.closest?.(".desktop-add-btn");
+  if (!addBtn) {
     return;
   }
-  const id = String(event.target.getAttribute("data-id") || "").trim();
+  const id = String(addBtn.getAttribute("data-id") || "").trim();
   if (id) {
     addToCart(id);
+    // Ensure UI cart badge updates even if header DOM differs.
+    try {
+      syncCartCount();
+    } catch (e) {}
   }
 });
 
 async function initDesktopPage() {
   syncCartCount();
+
+  // Populate brand list immediately from merged fallback (and any cached items)
+  // to avoid "Loading brands...".
+  try {
+    const initialSource = getMergedDesktops();
+    syncDynamicBrandUI(initialSource);
+  } catch (e) {
+    // ignore; UI will recover on filterDesktops()
+  }
+
+
   filterChipController = window.ElectroMartListingFilterChips?.init({
     mountAfter: ".result-note",
     getFilters: getActiveListingFilters,
@@ -524,8 +648,13 @@ async function initDesktopPage() {
     onChange: filterDesktops,
     getResultSummary: () => String(resultMeta?.textContent || "").trim()
   });
+
   await fetchDesktopsFromApi();
+  // Always render with fallback + whatever API returns.
+  // (If backend DB is locked, fetchDesktopsFromApi() sets apiDesktopProducts = [] and fallback still renders.)
   filterDesktops();
 }
 
+
 initDesktopPage();
+

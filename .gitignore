@@ -18,6 +18,11 @@ lt.log
 qa-static.log
 frontend-start.log
 frontend-start.err.log
+frontend-dev.log
+frontend-dev.err
+debug.log
+*.log
+*.err
 .opencode/
 
 # Generated QA artifacts

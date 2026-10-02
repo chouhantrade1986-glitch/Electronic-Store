@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Products - ElectroMart</title>
+  <meta name="description" content="Compare products side-by-side. View specifications, prices, ratings and features." />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260604a" />
+  <link rel="stylesheet" href="compare.css?v=20260604a" />
+</head>
+<body>
+  <div id="headerContainer"></div>
+
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="breadcrumb-container">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-separator">›</span>
+      <a href="products.html">Products</a>
+      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-current">Compare</span>
+    </div>
+  </nav>
+
+  <main class="compare-main">
+    <div class="compare-container">
+      <div class="compare-header">
+        <h1>Compare Products</h1>
+        <p class="compare-subtitle">Side-by-side comparison of selected products</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyCompareState" class="empty-compare-state" style="display: none;">
+        <div class="empty-icon">⚖️</div>
+        <h2>No Products to Compare</h2>
+        <p>Select up to 4 products from the products page to compare them side-by-side.</p>
+        <a href="products.html" class="btn-primary">Browse Products</a>
+      </div>
+
+      <!-- Comparison Table -->
+      <div id="comparisonTable" class="comparison-table-wrapper">
+        <table class="comparison-table" id="comparisonTableElement">
+          <thead>
+            <tr class="product-header-row">
+              <th class="feature-column">Features</th>
+              <!-- Product columns will be inserted here -->
+            </tr>
+          </thead>
+          <tbody id="comparisonBody">
+            <!-- Comparison rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="compare-actions" id="compareActions" style="display: none;">
+        <button id="clearAllCompare" class="btn-secondary">Clear All</button>
+        <a href="products.html" class="btn-secondary">Add More Products</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="header.js"></script>
+  <script src="compare.js"></script>
+</body>
+</html>

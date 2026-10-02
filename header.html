@@ -1,0 +1,56 @@
+<header class="site-header" id="siteHeader">
+  <nav class="top-nav">
+    <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+      <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+      <span class="brand-sub">.in</span>
+    </a>
+    <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
+      <span>Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
+    </button>
+    <div class="search-stack">
+      <form id="searchForm" class="search-form" role="search">
+        <select id="categoryFilter" aria-label="Filter category">
+          <option value="all">All Catalogue</option>
+          <option value="computer">Computers</option>
+          <option value="laptop">Laptops</option>
+          <option value="printer">Printers</option>
+          <option value="mobile">Mobiles</option>
+          <option value="audio">Audio</option>
+          <option value="accessory">Accessories</option>
+        </select>
+        <div class="search-input-wrap">
+          <input id="searchInput" type="search" placeholder="Search electronics" aria-label="Search products" autocomplete="off" />
+        </div>
+        <button type="submit">Search</button>
+      </form>
+      <div class="search-trust-strip" aria-label="Search benefits">
+        <span>Top Deals live</span>
+        <span>Fast delivery</span>
+        <span>GST invoicing available</span>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <a href="auth.html" class="account-link nav-action-card">
+        <span>Hello, sign in</span>
+        <strong>Account</strong>
+      </a>
+      <a href="orders.html" class="orders-link nav-action-card">
+        <span>Orders</span>
+        <strong>Orders</strong>
+      </a>
+      <a href="wishlist.html" class="orders-link nav-action-card">
+        <span>Wishlist</span>
+        <strong>Wishlist</strong>
+      </a>
+      <a href="cart.html" class="cart-link"><span>Cart</span> <span id="cartCount">0</span></a>
+    </div>
+  </nav>
+  <nav class="category-nav home-main-nav" aria-label="Main navigation">
+    <button id="deptTrigger" class="dept-trigger amazon-hamburger" type="button" aria-expanded="false" aria-controls="deptSidebar">
+      <span class="hamburger-icon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <span class="hamburger-label">All</span>
+    </button>
+  </nav>
+</header>

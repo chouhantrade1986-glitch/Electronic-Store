@@ -7,9 +7,30 @@ const DISALLOWED_JWT_SECRETS = new Set([
   "changeme"
 ]);
 
+const PLACEHOLDER_SECRET_TOKENS = [
+  "changeme",
+  "example",
+  "paste_",
+  "placeholder",
+  "replace-me",
+  "replace-with-strong-secret",
+  "your_",
+  "your-"
+];
+
+function looksLikePlaceholderSecret(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (!normalized) {
+    return true;
+  }
+  return PLACEHOLDER_SECRET_TOKENS.some((token) => normalized.includes(token));
+}
+
 function resolveJwtSecret(env = process.env) {
   const secret = String(env.JWT_SECRET || "").trim();
-  if (DISALLOWED_JWT_SECRETS.has(secret)) {
+  console.log("[DEBUG] JWT_SECRET value:", secret);
+  console.log("[DEBUG] looksLikePlaceholderSecret:", looksLikePlaceholderSecret(secret));
+  if (DISALLOWED_JWT_SECRETS.has(secret) || looksLikePlaceholderSecret(secret)) {
     const error = new Error("JWT_SECRET is required and must not use a default placeholder value.");
     error.code = "JWT_SECRET_REQUIRED";
     throw error;

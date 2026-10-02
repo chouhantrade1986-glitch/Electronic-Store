@@ -8,51 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260424a" />
   <link rel="stylesheet" href="todays-deals.css?v=20260315a" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314a" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="page-header">
-    <nav class="top-nav">
-      <a href="index.html" class="brand">electro<span>mart</span><small>today's deals</small></a>
-      <form class="search-shell" role="search">
-        <input id="searchInput" type="search" placeholder="Search deals by product or category" aria-label="Search deals" />
-      </form>
-      <div class="top-links">
-        <a href="products.html">Products</a>
-        <a href="desktops.html">Computers</a>
-        <a href="laptop.html">Laptops</a>
-        <a href="printer.html">Printers</a>
-        <a href="auth.html">Account</a>
-        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-
-    <nav class="sub-nav" aria-label="Deals navigation">
-      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
-      <a href="todays-deals.html" class="active">Today's Deals</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="products.html">All Products</a>
-      <a href="desktops.html">Computers</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="printer.html">Printers</a>
-      <a href="terms-and-conditions.html">Terms</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-    <section id="deptMenu" class="dept-menu" aria-label="Deal categories">
-      <a href="todays-deals.html?category=laptop">Laptop Deals</a>
-      <a href="todays-deals.html?category=mobile">Mobile Deals</a>
-      <a href="todays-deals.html?category=audio">Audio Deals</a>
-      <a href="todays-deals.html?category=accessory">Accessory Deals</a>
-    </section>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="deals-main">
     <section class="hero">
@@ -79,6 +44,29 @@
             <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
               <p class="brand-filter-empty">Loading brands...</p>
             </div>
+          </div>
+          <div class="filter-block">
+            <h3>Price Range</h3>
+            <select id="priceRangeFilter" aria-label="Filter by price range">
+              <option value="all">All</option>
+              <option value="0-499">Under ₹500</option>
+              <option value="500-999">₹500 - ₹999</option>
+              <option value="1000-1999">₹1000 - ₹1999</option>
+              <option value="2000-4999">₹2000 - ₹4999</option>
+              <option value="5000-9999">₹5000 - ₹9999</option>
+              <option value="10000-999999">₹10000 & Above</option>
+            </select>
+          </div>
+          <div class="filter-block">
+            <h3>Discount</h3>
+            <select id="discountFilter" aria-label="Filter by discount">
+              <option value="all">All</option>
+              <option value="10">10% or more</option>
+              <option value="20">20% or more</option>
+              <option value="30">30% or more</option>
+              <option value="40">40% or more</option>
+              <option value="50">50% or more</option>
+            </select>
           </div>
           <select id="categoryFilter" aria-label="Filter category">
             <option value="all">All Categories</option>
@@ -116,6 +104,7 @@
   <script src="todays-deals.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="header.js"></script>
 </body>
 </html>
 

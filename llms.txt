@@ -1,0 +1,37 @@
+# ElectroMart
+
+> ElectroMart is an electronics e-commerce store offering laptops, desktops, printers, PC components (CPU, GPU, RAM, motherboard, power supply, cabinet), peripherals, and more with fast delivery across India, GST invoicing, and B2B bulk sourcing.
+
+## Key Pages
+
+- [Home](https://06037w7q-5500.inc1.devtunnels.ms/): Storefront with featured deals, top-rated and recommended products.
+- [All Products](https://06037w7q-5500.inc1.devtunnels.ms/products.html): Browse the full electronics catalog with filters.
+- [Laptops](https://06037w7q-5500.inc1.devtunnels.ms/laptop.html): Work, gaming, and creator-ready laptops.
+- [Computers / Desktops](https://06037w7q-5500.inc1.devtunnels.ms/desktops.html): Performance desktop builds.
+- [Printers](https://06037w7q-5500.inc1.devtunnels.ms/printer.html): Home and office printers.
+- [PC Builder](https://06037w7q-5500.inc1.devtunnels.ms/pc-builder.html): Custom PC configuration tool.
+- [Today's Deals](https://06037w7q-5500.inc1.devtunnels.ms/todays-deals.html): Limited-time discounts and offers.
+- [Best Sellers](https://06037w7q-5500.inc1.devtunnels.ms/best-sellers.html): Most-purchased products now.
+- [Brands](https://06037w7q-5500.inc1.devtunnels.ms/brands.html): Shop by brand.
+- [Creator Studio](https://06037w7q-5500.inc1.devtunnels.ms/creator-studio.html): Creator-focused setups and gear.
+- [Mega Store](https://06037w7q-5500.inc1.devtunnels.ms/mega-store.html): Extended store catalog.
+
+## PC Components
+
+- [CPU (Processor)](https://06037w7q-5500.inc1.devtunnels.ms/cpu-processor.html)
+- [CPU Cooler / Fan](https://06037w7q-5500.inc1.devtunnels.ms/cpu-fan.html)
+- [Desktop RAM / Memory](https://06037w7q-5500.inc1.devtunnels.ms/desktop-ram-memory.html)
+- [Graphics Card (GPU)](https://06037w7q-5500.inc1.devtunnels.ms/graphics-card-gpu.html)
+- [Motherboard](https://06037w7q-5500.inc1.devtunnels.ms/motherboard.html)
+- [Power Supply (SMPS)](https://06037w7q-5500.inc1.devtunnels.ms/power-supply-smps.html)
+- [Cabinet](https://06037w7q-5500.inc1.devtunnels.ms/cabinet.html)
+- [Cabinet Fan](https://06037w7q-5500.inc1.devtunnels.ms/cabinet-fan.html)
+- [UPS & Batteries](https://06037w7q-5500.inc1.devtunnels.ms/ups-ups-batteries.html)
+
+## Support
+
+- [FAQ](https://06037w7q-5500.inc1.devtunnels.ms/faq.html)
+- [Shipping Policy](https://06037w7q-5500.inc1.devtunnels.ms/shipping-policy.html)
+- [Refund Policy](https://06037w7q-5500.inc1.devtunnels.ms/refund-policy.html)
+- [Terms & Conditions](https://06037w7q-5500.inc1.devtunnels.ms/terms-and-conditions.html)
+- [Accessibility Statement](https://06037w7q-5500.inc1.devtunnels.ms/accessibility-statement.html)

@@ -10,54 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="printer.css?v=20260315d" />
   <link rel="stylesheet" href="listing-filter-chips.css?v=20260314c" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <header class="page-header">
-    <nav class="top-nav">
-      <a href="index.html" class="brand">electro<span>mart</span><small>printers</small></a>
-      <form class="search-shell" role="search">
-        <input id="searchInput" type="search" placeholder="Search printers by brand, type, use case" aria-label="Search printers" />
-      </form>
-      <div class="top-links">
-        <a href="products.html">Products</a>
-        <a href="desktops.html">Computers</a>
-        <a href="laptop.html">Laptops</a>
-        <a href="printer.html" class="active-link">Printers</a>
-        <a href="auth.html">Account</a>
-        <a href="cart.html" class="cart-link">Cart <span id="cartCount">0</span></a>
-      </div>
-    </nav>
-
-    <nav class="sub-nav" aria-label="Printer navigation">
-      <button id="deptTrigger" class="dept-trigger" type="button" aria-expanded="false" aria-controls="deptMenu">All Departments</button>
-      <a href="printer.html" class="active">Printers</a>
-      <a href="desktops.html">Computers</a>
-      <a href="laptop.html">Laptops</a>
-      <a href="products.html">All Products</a>
-      <a href="todays-deals.html">Deals</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="terms-and-conditions.html">Terms</a>
-      <a href="shipping-policy.html">Shipping</a>
-      <a href="refund-policy.html">Refund</a>
-      <a href="accessibility-statement.html">Accessibility</a>
-      <a href="faq.html">FAQ</a>
-      <a href="review.html">Review</a>
-    </nav>
-    <section id="deptMenu" class="dept-menu" aria-label="Printer departments">
-      <a href="printer.html">Inkjet Printers</a>
-      <a href="printer.html">Laser Printers</a>
-      <a href="printer.html">All-in-One Printers</a>
-      <a href="printer.html">Photo Printers</a>
-      <a href="printer.html">Label Printers</a>
-      <a href="printer.html">Printer Ink</a>
-      <a href="printer.html">Printer Toner</a>
-      <a href="printer.html">Scanner Units</a>
-      <a href="printer.html">Thermal Printers</a>
-    </section>
-  </header>
+  <div id="headerContainer"></div>
 
   <main class="printer-main">
     <section class="hero">
@@ -143,6 +102,7 @@
   <script src="printer.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="header.js"></script>
 </body>
 </html>
 

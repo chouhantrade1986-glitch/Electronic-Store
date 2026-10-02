@@ -1615,9 +1615,17 @@ async function saveProfile(event) {
         });
         applyNotificationPreferences(currentNotificationPreferences);
       }
-      alert("Profile saved locally.");
+      showAccountToast({
+        title: "Success",
+        message: "Profile saved locally.",
+        tone: "success"
+      });
     } catch (error) {
-      alert("Unable to save profile in this browser.");
+      showAccountToast({
+        title: "Request failed",
+        message: "Unable to save profile in this browser.",
+        tone: "error"
+      });
     }
     return;
   }
@@ -1647,9 +1655,17 @@ async function saveProfile(event) {
       applyNotificationPreferences(data.user.notificationPreferences || currentNotificationPreferences);
       applyPhoneVerificationState(data.user.phoneVerification || defaultPhoneVerificationState());
     }
-    alert(data.message || "Profile saved successfully.");
+    showAccountToast({
+      title: "Success",
+      message: data.message || "Profile saved successfully.",
+      tone: "success"
+    });
   } catch (error) {
-    alert(error.message || "Unable to save profile.");
+    showAccountToast({
+      title: "Request failed",
+      message: error.message || "Unable to save profile.",
+      tone: "error"
+    });
   }
 }
 

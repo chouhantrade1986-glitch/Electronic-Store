@@ -47,6 +47,7 @@ const {
 } = require("../lib/phoneVerification");
 const { logInfo } = require("../lib/logger");
 
+const piiEncryption = require("../middleware/piiEncryption");
 const router = express.Router();
 const PASSWORD_AUTH_FALLBACK_ENABLED = String(process.env.ALLOW_PASSWORD_AUTH_FALLBACK || "").trim().toLowerCase() === "true";
 const AUTH_IP_WINDOW_MS = 15 * 60 * 1000;
@@ -241,7 +242,7 @@ function recordAuthEvent(req, user, eventKey, eventLabel, note = "", actor = "us
   });
 }
 
-router.post("/admin/bootstrap", adminBootstrapLimiter, (req, res) => {
+router.post("/admin/bootstrap", piiEncryption, adminBootstrapLimiter, (req, res) => {
   if (!hasValidAdminBootstrapSecret(process.env)) {
     return res.status(503).json({
       message: "ADMIN_BOOTSTRAP_SECRET is not configured securely on the backend."
@@ -291,7 +292,7 @@ router.post("/admin/bootstrap", adminBootstrapLimiter, (req, res) => {
   });
 });
 
-router.post("/otp/request", authOtpRequestLimiter, async (req, res) => {
+router.post("/otp/request", piiEncryption, authOtpRequestLimiter, async (req, res) => {
   const { purpose, channel } = req.body || {};
   const normalizedPurpose = String(purpose || "").trim().toLowerCase() === "register" ? "register" : "login";
   const normalizedChannel = normalizeAuthOtpChannel(channel);
@@ -395,7 +396,7 @@ router.post("/otp/request", authOtpRequestLimiter, async (req, res) => {
   return res.json(otpResponse);
 });
 
-router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
+router.post("/otp/verify", piiEncryption, authOtpVerifyLimiter, (req, res) => {
   const { purpose, challengeId, code, emailOrMobile, password } = req.body || {};
   const normalizedPurpose = String(purpose || "").trim().toLowerCase() === "register" ? "register" : "login";
   const db = readDb();
@@ -492,7 +493,7 @@ router.post("/otp/verify", authOtpVerifyLimiter, (req, res) => {
   });
 });
 
-router.post("/password-reset/request", passwordResetRequestLimiter, async (req, res) => {
+router.post("/password-reset/request", piiEncryption, passwordResetRequestLimiter, async (req, res) => {
   const { channel, emailOrMobile } = req.body || {};
   const normalizedChannel = normalizeAuthOtpChannel(channel);
   const identifier = normalizeLoginIdentifier(emailOrMobile, normalizedChannel);
@@ -537,7 +538,7 @@ router.post("/password-reset/request", passwordResetRequestLimiter, async (req, 
   return res.json(buildOtpResponse(result, normalizedChannel));
 });
 
-router.post("/password-reset/confirm", passwordResetConfirmLimiter, (req, res) => {
+router.post("/password-reset/confirm", piiEncryption, passwordResetConfirmLimiter, async (req, res) => {
   const { channel, emailOrMobile, challengeId, code, newPassword } = req.body || {};
   const normalizedChannel = normalizeAuthOtpChannel(channel);
   const identifier = normalizeLoginIdentifier(emailOrMobile, normalizedChannel);
@@ -549,43 +550,48 @@ router.post("/password-reset/confirm", passwordResetConfirmLimiter, (req, res) =
     return res.status(400).json({ message: "Enter a new password with at least 6 characters." });
   }
 
-  const db = readDb();
-  const result = verifyAuthOtpChallenge(db, {
-    purpose: "reset-password",
-    challengeId,
-    code
-  });
+  try {
+    const db = await readDb();
+    const result = verifyAuthOtpChallenge(db, {
+      purpose: "reset-password",
+      challengeId,
+      code
+    });
 
-  if (!result.ok) {
-    writeDb(db);
-    return res.status(result.status || 400).json({ message: result.message });
-  }
+    if (!result.ok) {
+      await writeDb(db);
+      return res.status(result.status || 400).json({ message: result.message });
+    }
 
-  const user = findUserByIdentifier(db, identifier);
-  if (!user) {
-    writeDb(db);
-    return res.status(404).json({ message: "Account not found. Request a new OTP." });
-  }
-  if (isSeededDemoUserBlocked(user)) {
-    writeDb(db);
-    return rejectBlockedSeededDemoUser(res);
-  }
-  if (user.id !== result.challenge.userId) {
-    writeDb(db);
-    return res.status(401).json({ message: "This reset OTP does not match the selected account." });
-  }
+    const user = findUserByIdentifier(db, identifier);
+    if (!user) {
+      await writeDb(db);
+      return res.status(404).json({ message: "Account not found. Request a new OTP." });
+    }
+    if (isSeededDemoUserBlocked(user)) {
+      await writeDb(db);
+      return rejectBlockedSeededDemoUser(res);
+    }
+    if (user.id !== result.challenge.userId) {
+      await writeDb(db);
+      return res.status(401).json({ message: "This reset OTP does not match the selected account." });
+    }
 
-  user.passwordHash = bcrypt.hashSync(String(newPassword), 10);
-  user.sessionVersion = normalizeSessionVersion((user.sessionVersion || 1) + 1);
-  recordAuthEvent(req, user, "password_reset", "Password reset", "Password updated via OTP.", "user");
-  writeDb(db);
-  return res.json({
-    message: "Password reset successful. Sign in with your new password.",
-    destinationMasked: normalizedChannel === "sms" ? user.mobile : user.email
-  });
+    user.passwordHash = bcrypt.hashSync(String(newPassword), 10);
+    user.sessionVersion = normalizeSessionVersion((user.sessionVersion || 1) + 1);
+    recordAuthEvent(req, user, "password_reset", "Password reset", "Password updated via OTP.", "user");
+    await writeDb(db);
+    return res.json({
+      message: "Password reset successful. Sign in with your new password.",
+      destinationMasked: normalizedChannel === "sms" ? user.mobile : user.email
+    });
+  } catch (error) {
+    console.error("Error confirming password reset:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-router.post("/register", (req, res) => {
+router.post("/register", piiEncryption, async (req, res) => {
   if (!PASSWORD_AUTH_FALLBACK_ENABLED) {
     return rejectLegacyPasswordAuth(res);
   }
@@ -596,71 +602,81 @@ router.post("/register", (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const db = readDb();
-  const exists = db.users.some(
-    (user) => user.email.toLowerCase() === String(email).toLowerCase() || user.mobile === String(mobile)
-  );
+  try {
+    const db = await readDb();
+    const normalizedEmail = normalizeEmail(email);
+    const normalizedMobile = normalizePhone(mobile);
 
-  if (exists) {
-    return res.status(409).json({ message: "User already exists" });
+    const exists = db.users.some(
+      (user) => user.email.toLowerCase() === normalizedEmail || normalizePhone(user.mobile) === normalizedMobile
+    );
+    if (exists) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    const user = {
+      id: randomUUID(),
+      name,
+      email: normalizedEmail,
+      mobile: normalizedMobile,
+      passwordHash: bcrypt.hashSync(String(password), 10),
+      role: "customer",
+      address,
+      notificationPreferences: normalizeNotificationPreferences({}),
+      securityPreferences: normalizeSecurityPreferences({}),
+      sessionVersion: normalizeSessionVersion(1),
+      authActivity: [],
+      phoneVerification: normalizePhoneVerificationState({})
+    };
+
+    recordAuthEvent(req, user, "register", "Account created", "Legacy password-only flow.", "user");
+    db.users.push(user);
+    await writeDb(db);
+    const token = signToken(user);
+    return res.status(201).json({
+      token,
+      user: authUserPayload(user)
+    });
+  } catch (error) {
+    console.error("Error during registration:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-
-  const user = {
-    id: randomUUID(),
-    name: String(name),
-    email: String(email).toLowerCase(),
-    mobile: String(mobile),
-    passwordHash: bcrypt.hashSync(String(password), 10),
-    role: "customer",
-    address: String(address),
-    notificationPreferences: normalizeNotificationPreferences({}),
-    securityPreferences: normalizeSecurityPreferences({}),
-    sessionVersion: normalizeSessionVersion(1),
-    authActivity: [],
-    phoneVerification: normalizePhoneVerificationState({})
-  };
-
-  recordAuthEvent(req, user, "register", "Account created", "", "user");
-  db.users.push(user);
-  writeDb(db);
-
-  const token = signToken(user);
-  return res.status(201).json({
-    token,
-    user: authUserPayload(user)
-  });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", piiEncryption, async (req, res) => {
   if (!PASSWORD_AUTH_FALLBACK_ENABLED) {
     return rejectLegacyPasswordAuth(res);
   }
 
   const { emailOrMobile, password } = req.body || {};
+
   if (!emailOrMobile || !password) {
     return res.status(400).json({ message: "Missing credentials" });
   }
 
-  const db = readDb();
-  const user = db.users.find(
-    (item) =>
-      item.email.toLowerCase() === String(emailOrMobile).toLowerCase() ||
-      item.mobile === String(emailOrMobile)
-  );
+  try {
+    const db = await readDb();
+    const user = findUserByIdentifier(db, emailOrMobile);
 
-  if (isSeededDemoUserBlocked(user)) {
-    return rejectBlockedSeededDemoUser(res);
-  }
-  if (!user || !bcrypt.compareSync(String(password), user.passwordHash)) {
-    return res.status(401).json({ message: "Invalid credentials" });
-  }
+    if (isSeededDemoUserBlocked(user)) {
+      return rejectBlockedSeededDemoUser(res);
+    }
 
-  recordAuthEvent(req, user, "login", "Password sign-in", "", "user");
-  const token = signToken(user);
-  return res.json({
-    token,
-    user: authUserPayload(user)
-  });
+    if (!user || !bcrypt.compareSync(String(password), user.passwordHash)) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    recordAuthEvent(req, user, "login", "Password sign-in", "Legacy password-only flow.", "user");
+    await writeDb(db);
+    const token = signToken(user);
+    return res.json({
+      token,
+      user: authUserPayload(user)
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 router.get("/me", requireAuth, (req, res) => {
@@ -686,7 +702,7 @@ router.get("/security", requireAuth, (req, res) => {
   });
 });
 
-router.patch("/security-preferences", requireAuth, (req, res) => {
+router.patch("/security-preferences", requireAuth, piiEncryption, (req, res) => {
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
   if (!user) {
@@ -706,7 +722,7 @@ router.patch("/security-preferences", requireAuth, (req, res) => {
   });
 });
 
-router.post("/change-password", requireAuth, changePasswordLimiter, (req, res) => {
+router.post("/change-password", requireAuth, piiEncryption, changePasswordLimiter, (req, res) => {
   const { currentPassword, newPassword } = req.body || {};
   if (!currentPassword || !newPassword) {
     return res.status(400).json({ message: "Current password and new password are required." });
@@ -741,7 +757,7 @@ router.post("/change-password", requireAuth, changePasswordLimiter, (req, res) =
   });
 });
 
-router.post("/logout-all", requireAuth, logoutAllLimiter, (req, res) => {
+router.post("/logout-all", requireAuth, piiEncryption, logoutAllLimiter, (req, res) => {
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
   if (!user) {
@@ -757,7 +773,7 @@ router.post("/logout-all", requireAuth, logoutAllLimiter, (req, res) => {
   });
 });
 
-router.patch("/notification-preferences", requireAuth, (req, res) => {
+router.patch("/notification-preferences", requireAuth, piiEncryption, (req, res) => {
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
   if (!user) {
@@ -779,7 +795,7 @@ router.patch("/notification-preferences", requireAuth, (req, res) => {
   });
 });
 
-router.patch("/profile", requireAuth, (req, res) => {
+router.patch("/profile", requireAuth, piiEncryption, (req, res) => {
   const { name, email, mobile, address } = req.body || {};
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
@@ -832,7 +848,7 @@ router.patch("/profile", requireAuth, (req, res) => {
   });
 });
 
-router.post("/phone-verification/request", requireAuth, phoneVerificationRequestLimiter, async (req, res) => {
+router.post("/phone-verification/request", requireAuth, piiEncryption, phoneVerificationRequestLimiter, async (req, res) => {
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
   if (!user) {
@@ -865,7 +881,7 @@ router.post("/phone-verification/request", requireAuth, phoneVerificationRequest
   });
 });
 
-router.post("/phone-verification/confirm", requireAuth, phoneVerificationConfirmLimiter, (req, res) => {
+router.post("/phone-verification/confirm", requireAuth, piiEncryption, phoneVerificationConfirmLimiter, (req, res) => {
   const { code } = req.body || {};
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
@@ -891,7 +907,7 @@ router.post("/phone-verification/confirm", requireAuth, phoneVerificationConfirm
   });
 });
 
-router.post("/test-notification", requireAuth, async (req, res) => {
+router.post("/test-notification", requireAuth, piiEncryption, async (req, res) => {
   const db = readDb();
   const user = db.users.find((item) => item.id === req.user.id);
   if (!user) {
