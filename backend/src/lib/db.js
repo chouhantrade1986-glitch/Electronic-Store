@@ -31,7 +31,7 @@ const {
   readSqliteSnapshot,
   writeSqliteSnapshot
 } = require("./sqliteStore");
-const { isProductionRuntime } = require("./runtimeMode");
+const { isRestrictedRuntime } = require("./runtimeMode");
 
 const dbPath = path.join(__dirname, "..", "data", "db.json");
 const dbBackupPath = `${dbPath}.bak`;
@@ -214,7 +214,7 @@ async function withWriteLock(task) {
 }
 
 function shouldSeedDemoUsers() {
-  if (isProductionRuntime(process.env)) {
+  if (isRestrictedRuntime(process.env)) {
     return false;
   }
   const raw = String(process.env.ALLOW_SEEDED_DEMO_USERS || "").trim().toLowerCase();

@@ -1,6 +1,4 @@
-const { resolveRuntimeProfile } = require("./runtimeMode");
-
-const RESTRICTED_PROFILES = new Set(["staging", "production"]);
+const { isRestrictedRuntime } = require("./runtimeMode");
 
 function toOrigin(value) {
   const raw = String(value || "").trim();
@@ -23,7 +21,7 @@ function resolveAllowedOrigins(env = process.env) {
 }
 
 function buildCorsOptions(env = process.env) {
-  if (!RESTRICTED_PROFILES.has(resolveRuntimeProfile(env))) {
+  if (!isRestrictedRuntime(env)) {
     return {};
   }
   return { origin: resolveAllowedOrigins(env) };

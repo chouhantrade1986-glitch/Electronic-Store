@@ -73,3 +73,27 @@ test("production runtime requires a real admin or secure bootstrap secret", () =
   assert.equal(ok.ok, true);
   assert.equal(ok.hasSecureBootstrapSecret, true);
 });
+
+test("staging runtime blocks and force-disables seeded demo users", () => {
+  const db = buildDb([
+    {
+      id: "demo-customer",
+      name: "Demo Customer",
+      email: "customer@electromart.com",
+      mobile: "8888888888",
+      role: "customer",
+      passwordHash: "hash",
+      address: "Jaipur",
+      seededDemoUser: true,
+      seededDemoProfileKey: "customer",
+      demoAccessDisabled: false
+    }
+  ]);
+
+  assert.equal(isSeededDemoUserBlocked(db.users[0], { env: { APP_RUNTIME_ENV: "staging" } }), true);
+  assert.equal(isSeededDemoUserBlocked(db.users[0], { env: { APP_RUNTIME_ENV: "local" } }), false);
+
+  const result = applyAdminProvisioningPolicy(db, { APP_RUNTIME_ENV: "staging" });
+  assert.equal(result.seededDemoUsersForcedDisabled, true);
+  assert.equal(db.users[0].demoAccessDisabled, true);
+});

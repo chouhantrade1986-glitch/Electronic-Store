@@ -25,11 +25,18 @@ function resolveRuntimeProfile(env = process.env) {
   return normalizeProfile(env.NODE_ENV);
 }
 
+const RESTRICTED_PROFILES = new Set(["staging", "production"]);
+
 function isProductionRuntime(env = process.env) {
   return resolveRuntimeProfile(env) === "production";
 }
 
+function isRestrictedRuntime(env = process.env) {
+  return RESTRICTED_PROFILES.has(resolveRuntimeProfile(env));
+}
+
 module.exports = {
   isProductionRuntime,
+  isRestrictedRuntime,
   resolveRuntimeProfile
 };
