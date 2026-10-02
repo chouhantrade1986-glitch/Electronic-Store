@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectroMart Products Complete</title>
+  <link rel="stylesheet" href="styles.css?v=20260315c">
+  <link rel="stylesheet" href="amazon-theme.css">
+  <link rel="icon" href="favicon.ico">
+  <style>
+    .products-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      gap: 1.5rem; 
+      padding: 2rem; 
+      max-width: 1400px; 
+      margin: 0 auto; 
+    }
+    .product-card { 
+      border: 1px solid #ddd; 
+      padding: 1rem; 
+      border-radius: 8px; 
+    }
+    h3 { font-size: 1.1rem; margin: 0.5rem 0; }
+    .price { font-size: 1.2rem; font-weight: bold; color: #b12704; }
+    button { background: #ffd814; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="headerContainer"></div>
+  <div id="productsGrid" class="products-grid">
+    <!-- Products will render here -->
+  </div>
+  <p id="resultMeta" style="text-align: center; font-size: 1.1rem; margin: 2rem; font-weight: 500;">Loading ElectroMart products...</p>
+  
+<script src="header.js"></script>
+<script src="menu-manager.js"></script>
+<script src="auth-state.js"></script>
+<script src="shared-search.js?v=20260314g"></script>
+<script src="script.js"></script>
+<script src="products-complete.js"></script>
+</body>
+</html>
+

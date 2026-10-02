@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectroMart Products</title>
+  <link rel="stylesheet" href="styles.css?v=20260315c">
+  <link rel="stylesheet" href="amazon-theme.css">
+  <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="android-compat.css">
+</head>
+<body>
+  <div id="headerContainer"></div>
+
+  <main class="products-main">
+    <div class="results-layout">
+      <aside class="filters-panel">
+        <h2>Filters</h2>
+        <div class="filter-group">
+          <label>Category</label>
+          <select>
+            <option>All</option>
+            <option>Laptops</option>
+            <option>Mobiles</option>
+          </select>
+        </div>
+      </aside>
+      <section class="products-panel">
+        <div class="panel-head">
+          <h1>Products</h1>
+          <p id="resultMeta">Loading...</p>
+        </div>
+        <div id="productsGrid" class="products-grid">
+          <!-- Products render here -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Simple product renderer
+    const products = [
+      {id:1, name:"AstraBook Pro", price:999, image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300"},
+      {id:2, name:"Nimbus Phone", price:749, image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300"},
+      {id:3, name:"Pulse Headphones", price:179, image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300"},
+    ];
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const meta = document.getElementById('resultMeta');
+      if (grid) {
+        grid.innerHTML = products.map(p => 
+          `<div class="product-card">
+            <img src="${p.image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <div class="price">${p.price}₹</div>
+            <button>Add to cart</button>
+          </div>`
+        ).join('');
+        meta.textContent = `Showing ${products.length} products`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderProducts);
+  </script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+</body>
+</html>
+

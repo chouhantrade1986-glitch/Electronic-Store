@@ -23,33 +23,10 @@ a {
   text-decoration: none;
 }
 
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  background: var(--navy);
-  color: #f8fafc;
-}
-
-.brand {
-  font-size: 1.5rem;
-  font-weight: 800;
-}
-
-.header-links {
-  display: flex;
-  gap: 14px;
-  font-weight: 600;
-  align-items: center;
-}
+/* Legacy page-header and brand styles removed - now using shared header.js component with styles.css */
 
 .terms-main {
-  width: min(980px, 92vw);
+  width: min(1200px, 92vw);
   margin: 24px auto;
 }
 

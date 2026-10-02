@@ -1,0 +1,16 @@
+# TODO
+
+## Local project launch
+
+- [x] Inspect current root launcher scripts and startup flow (`launch-electromart.js`).
+- [x] Inspect frontend static server entrypoints (`qa-static-server.js`).
+- [x] Inspect backend server entrypoints and required env (`backend/src/server.js`).
+- [x] Provide exact commands to run the project locally (Windows).
+- [x] Add a short “how to verify” checklist (health endpoints / smoke).
+
+### Verified local run (this session)
+- Frontend: http://127.0.0.1:5500/index.html
+- Backend:  http://127.0.0.1:4000/api
+- Health endpoint: GET http://127.0.0.1:4000/api/health -> 200 OK (sqlite backend)
+
+

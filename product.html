@@ -3,17 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="refresh" content="0; url=products.html" />
-  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
-  <title>Redirecting to Products</title>
+  <title>Product</title>
   <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
-  <p>Redirecting to <a href="products.html">Products</a>...</p>
+  <p>Redirecting to product details...</p>
   <script>
-    window.location.replace("products.html");
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const id = String(params.get('id') || '').trim();
+      if (!id) {
+        window.location.replace('products.html');
+        return;
+      }
+      window.location.replace('product-detail.html?id=' + encodeURIComponent(id));
+    })();
   </script>
 </body>
 </html>
+
 

@@ -37,6 +37,7 @@ const {
 } = require("../lib/razorpayGateway");
 const { logError, logInfo } = require("../lib/logger");
 
+const piiEncryption = require("../middleware/piiEncryption");
 const router = express.Router();
 const PAYMENT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 
@@ -306,7 +307,7 @@ async function notifyIfPaymentFailed(db, order, result, triggeredBy, triggeredFr
   });
 }
 
-router.post("/webhooks/razorpay", paymentWebhookLimiter, async (req, res) => {
+router.post("/webhooks/razorpay", piiEncryption, paymentWebhookLimiter, async (req, res) => {
   if (!isRazorpayEnabled()) {
     return res.status(503).json({ message: "Razorpay webhooks are not enabled." });
   }
@@ -582,7 +583,7 @@ router.post("/webhooks/razorpay", paymentWebhookLimiter, async (req, res) => {
   }
 });
 
-router.post("/intent", requireAuth, paymentIntentLimiter, async (req, res) => {
+router.post("/intent", requireAuth, piiEncryption, paymentIntentLimiter, async (req, res) => {
   const { orderId, method = "cod" } = req.body || {};
   if (!orderId) {
     return res.status(400).json({ message: "orderId is required" });
@@ -803,7 +804,7 @@ router.post("/intent", requireAuth, paymentIntentLimiter, async (req, res) => {
   }
 });
 
-router.post("/:paymentId/confirm", requireAuth, paymentConfirmLimiter, async (req, res) => {
+router.post("/:paymentId/confirm", requireAuth, piiEncryption, paymentConfirmLimiter, async (req, res) => {
   const db = readDb();
   ensurePaymentCollections(db);
   const payment = isSqliteOrderPaymentQueriesEnabled()
@@ -948,7 +949,7 @@ router.post("/:paymentId/confirm", requireAuth, paymentConfirmLimiter, async (re
   });
 });
 
-router.post("/:paymentId/refund", requireAuth, async (req, res) => {
+router.post("/:paymentId/refund", requireAuth, piiEncryption, async (req, res) => {
   const db = readDb();
   ensurePaymentCollections(db);
   const payment = isSqliteOrderPaymentQueriesEnabled()
@@ -1059,7 +1060,7 @@ router.post("/:paymentId/refund", requireAuth, async (req, res) => {
   }
 });
 
-router.post("/:paymentId/cancel", requireAuth, async (req, res) => {
+router.post("/:paymentId/cancel", requireAuth, piiEncryption, async (req, res) => {
   const db = readDb();
   ensurePaymentCollections(db);
   const payment = isSqliteOrderPaymentQueriesEnabled()

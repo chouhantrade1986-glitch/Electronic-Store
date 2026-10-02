@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="product-placeholder.svg" type="image/svg+xml" />
+  <title>Change Language Settings | ElectroMart.in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315d" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <style>
+    .lang-settings-page {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #0f1111;
+    }
+    .lang-settings-card {
+      background: #ffffff;
+      padding: 10px 0;
+    }
+    .lang-settings-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f1111;
+      margin-bottom: 8px;
+    }
+    .lang-settings-subtitle {
+      font-size: 0.95rem;
+      color: #333333;
+      margin-bottom: 24px;
+    }
+    .lang-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .lang-option-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      user-select: none;
+      padding: 4px 0;
+    }
+    .lang-option-row input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #e77600;
+      cursor: pointer;
+    }
+    .lang-option-label {
+      font-weight: 500;
+      color: #0f1111;
+    }
+    .lang-option-translation {
+      color: #767676;
+      font-size: 0.9rem;
+      margin-left: 4px;
+    }
+    .lang-divider {
+      border: 0;
+      border-top: 1px solid #e7e7e7;
+      margin: 24px 0 28px 0;
+    }
+    .lang-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .lang-cancel-btn {
+      background: #ffffff;
+      border: 1px solid #888888;
+      border-radius: 20px;
+      padding: 8px 24px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #0f1111;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(15, 17, 17, 0.1);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lang-cancel-btn:hover {
+      background: #f7f7f7;
+      border-color: #555555;
+    }
+    .lang-save-btn {
+      background: linear-gradient(180deg, #ffd814 0%, #f7ca00 100%);
+      border: 1px solid #fcd200;
+      border-radius: 20px;
+      padding: 8px 28px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #0f1111;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(15, 17, 17, 0.15);
+    }
+    .lang-save-btn:hover {
+      background: #f7ca00;
+    }
+    .recommendations-banner {
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid #e7e7e7;
+      text-align: center;
+    }
+    .recommendations-banner h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f1111;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="index.html" class="brand logo-block" aria-label="ElectroMart home">
+        <span class="brand-main">electro<span class="brand-accent">mart</span></span>
+        <span class="brand-sub">.in</span>
+      </a>
+      <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal" title="Select your address">
+        <div class="deliver-text-group">
+          <span class="deliver-to-prefix"><span data-i18n="header.deliveringTo">Delivering to</span> <strong id="deliveryLocationText">New Delhi 110001</strong></span>
+          <span class="update-loc-row"><svg class="loc-pin-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <strong class="update-loc-text" data-i18n="header.updateLocation">Update location</strong></span>
+        </div>
+      </button>
+      <div class="search-stack">
+        <form id="searchForm" class="search-form" role="search" data-shared-search="1">
+          <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Browse catalogue">
+            <option id="catAll" value="all" data-i18n="category.all">All</option>
+            <option id="catComputer" value="computer" data-i18n="mega.computers">Computers</option>
+            <option id="catLaptop" value="laptop" data-i18n="mega.laptops">Laptops</option>
+            <option id="catPrinter" value="printer" data-i18n="dept.printers">Printers</option>
+            <option id="catMobile" value="mobile" data-i18n="mega.mobile">Mobiles</option>
+            <option id="catAudio" value="audio" data-i18n="mega.audioVideo">Audio</option>
+            <option id="catAccessory" value="accessory" data-i18n="drawer.accessories">Accessories</option>
+          </select>
+          <div class="search-input-wrap">
+            <input id="searchInput" name="q" type="search" role="combobox" placeholder="Search electronics" aria-label="Search products" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" data-i18n-placeholder="header.searchPlaceholder" autocomplete="off" />
+            <div id="searchSuggestions" class="search-suggestions" hidden></div>
+          </div>
+          
+          <button type="submit" aria-label="Search" title="Search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:auto;"><circle cx="11" cy="11" r="7" stroke="#111111" stroke-width="2.8" fill="none"></circle><path d="M16.5 16.5L21 21" stroke="#111111" stroke-width="2.8" stroke-linecap="round"></path></svg></button>
+        </form>
+        <div class="search-trust-strip" aria-label="Search benefits">
+          <span data-i18n="search.topDeals">Top Deals live</span>
+          <span data-i18n="search.fastDelivery">Fast delivery</span>
+          <span data-i18n="search.gstInvoicing">GST invoicing available</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <div class="lang-wrap">
+          <a href="language-settings.html" class="header-lang-btn nav-action-card" id="navLangTrigger" aria-label="Change Language Settings">
+            <span class="flag-icon" style="font-size: 1rem;">🇮🇳</span>
+            <strong id="currentLangCode" style="font-size: 0.85rem; font-weight: 700; color: #ffffff;">EN</strong>
+            <span class="nav-arrow" style="font-size: 0.7rem; color: #d5d9d9; margin-left: 2px;">▾</span>
+          </a>
+        </div>
+        <div class="nav-account-dropdown-wrap">
+          <a href="auth.html" class="account-link nav-action-card" id="navAccountTrigger">
+            <span data-i18n="nav.helloSignIn">Hello, sign in</span>
+            <strong data-i18n="nav.account">Account &amp; Lists ▾</strong>
+          </a>
+          <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
+            <div class="flyout-arrow"></div>
+            <div class="flyout-top-signin">
+              <a href="auth.html" class="flyout-signin-btn" data-i18n="nav.signIn">Sign in</a>
+              <p class="flyout-new-customer"><span data-i18n="nav.newCustomer">New customer?</span> <a href="auth.html" data-i18n="nav.startHere">Start here.</a></p>
+            </div>
+            <div class="flyout-columns">
+              <div class="flyout-col">
+                <h3 data-i18n="nav.yourLists">Your Lists</h3>
+                <a href="wishlist.html" data-i18n="nav.createWishlist">Create a Wish List</a>
+                <a href="wishlist.html" data-i18n="nav.wishAnyWebsite">Wish from Any Website</a>
+                <a href="wishlist.html" data-i18n="nav.yourSavedItems">Your Saved Items</a>
+                <a href="products.html" data-i18n="nav.discoverStyle">Discover Your Style</a>
+                <a href="mega-store.html" data-i18n="nav.exploreShowroom">Explore Showroom</a>
+              </div>
+              <div class="flyout-col">
+                <h3 data-i18n="footer.yourAccount">Your Account</h3>
+                <a href="account.html" data-i18n="footer.yourAccount">Your Account</a>
+                <a href="orders.html" data-i18n="nav.orders">Your Orders</a>
+                <a href="wishlist.html" data-i18n="footer.wishlist">Your Wish List</a>
+                <a href="todays-deals.html" data-i18n="nav.yourRecommendations">Your Recommendations</a>
+                <a href="pc-builder.html" data-i18n="dept.pcBuilder">PC Builder &amp; Custom PC</a>
+                <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
+                <a href="faq.html" data-i18n="footer.faq">FAQ &amp; Help</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="orders.html" class="orders-link nav-action-card">
+          <span data-i18n="nav.returns">Returns</span>
+          <strong data-i18n="nav.orders">&amp; Orders</strong>
+        </a>
+        <a href="cart.html" class="cart-link nav-action-card cart-amazon-style">
+          <div class="cart-icon-container">
+            <svg class="cart-svg-icon" viewBox="0 0 38 28" width="38" height="28" fill="none">
+              <path d="M7 6h26l-3 10H10L7 6z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="21" r="2.5" fill="currentColor"/>
+              <circle cx="27" cy="21" r="2.5" fill="currentColor"/>
+            </svg>
+            <span id="cartCount" class="cart-badge-count">0</span>
+          </div>
+          <strong data-i18n="nav.cart" class="cart-label-text">Cart</strong>
+        </a>
+      </div>
+    </nav>
+
+    <nav class="category-nav" aria-label="Main categories">
+      <button id="megaTrigger" class="mega-trigger" type="button" aria-expanded="false" aria-controls="megaMenu">☰ <span>All</span></button>
+      <a href="todays-deals.html" data-i18n="category.deals">Today's Deals</a>
+      <a href="best-sellers.html" data-i18n="category.bestSellers">Best Sellers</a>
+      <a href="products.html">Products</a>
+      <a href="pc-builder.html">PC Builder</a>
+      <a href="mega-store.html" data-i18n="category.stores">Stores</a>
+    </nav>
+    <section id="megaMenu" class="mega-menu" aria-label="All Departments Menu">
+      <div class="dept-menu-header">
+        <a href="account.html" aria-label="User Account">
+          <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span style="font-weight:700; font-size:1.15rem; color:#ffffff;" data-i18n="nav.helloSignIn">Hello, sign in</span>
+        </a>
+        <button id="megaMenuClose" class="dept-menu-close-btn" aria-label="Close menu" title="Close">✕</button>
+      </div>
+      <div class="dept-menu-body">
+        <div class="dept-menu-section-title" data-i18n="drawer.trending">Trending</div>
+        <a href="best-sellers.html" class="hmenu-item"><span data-i18n="category.bestSellers">Bestsellers</span></a>
+        <a href="todays-deals.html" class="hmenu-item"><span data-i18n="category.deals">Today's Deals</span></a>
+        <a href="products.html" class="hmenu-item"><span>New Releases</span></a>
+
+        <div class="dept-menu-section-title" data-i18n="drawer.digitalContent">Digital Content and Devices</div>
+        <a href="creator-studio.html" class="hmenu-item"><span>Creator Studio Setups</span><span class="hmenu-icon">›</span></a>
+        <a href="pc-builder.html" class="hmenu-item"><span data-i18n="dept.pcBuilder">PC Builder &amp; Custom Assembly</span><span class="hmenu-icon">›</span></a>
+        <a href="mega-store.html" class="hmenu-item"><span>ElectroMart Showroom Stores</span><span class="hmenu-icon">›</span></a>
+
+        <div class="dept-menu-section-title" data-i18n="drawer.shopByCategory">Shop by Category</div>
+        <a href="laptop.html" class="hmenu-item"><span data-i18n="mega.laptops">Laptops &amp; Notebooks</span><span class="hmenu-icon">›</span></a>
+        <a href="desktops.html" class="hmenu-item"><span data-i18n="mega.desktops">Desktops &amp; Workstations</span><span class="hmenu-icon">›</span></a>
+        <a href="printer.html" class="hmenu-item"><span data-i18n="dept.printers">Printers &amp; Scanners</span><span class="hmenu-icon">›</span></a>
+        <a href="products.html?cat=mobile" class="hmenu-item"><span data-i18n="mega.mobile">Mobiles &amp; Smartphones</span><span class="hmenu-icon">›</span></a>
+        <a href="products.html?cat=audio" class="hmenu-item"><span data-i18n="mega.audioVideo">Audio &amp; Headphones</span><span class="hmenu-icon">›</span></a>
+        <a href="products.html?cat=accessory" class="hmenu-item"><span data-i18n="drawer.accessories">Accessories &amp; Peripherals</span><span class="hmenu-icon">›</span></a>
+
+        <div class="dept-menu-section-title" data-i18n="drawer.helpSettings">Programs &amp; Settings</div>
+        <a href="account.html" class="hmenu-item"><span data-i18n="footer.yourAccount">Your Account</span></a>
+        <a href="language-settings.html" class="hmenu-item"><span data-i18n="lang.changeLanguage">🇮🇳 Change Language</span></a>
+        <a href="faq.html" class="hmenu-item"><span data-i18n="footer.faq">Customer Service &amp; FAQ</span></a>
+        <a href="auth.html" class="hmenu-item"><span data-i18n="nav.signIn">Sign In</span></a>
+      </div>
+    </section>
+  </header>
+
+  <main class="lang-settings-page">
+    <div class="lang-settings-card">
+      <h1 class="lang-settings-title" id="pageTitle">Language Settings</h1>
+      <p class="lang-settings-subtitle" id="pageSubtitle">Select the language you prefer for browsing, shopping and communications.</p>
+
+      <form id="languageForm">
+        <div class="lang-options-list">
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="en" checked />
+            <span class="lang-option-label">English - EN</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="hi" />
+            <span class="lang-option-label">हिन्दी - HI</span>
+            <span class="lang-option-translation">- अनुवाद</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="ta" />
+            <span class="lang-option-label">தமிழ் - TA</span>
+            <span class="lang-option-translation">- மொழிபெயர்ப்பு</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="te" />
+            <span class="lang-option-label">తెలుగు - TE</span>
+            <span class="lang-option-translation">- అనువాదం</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="kn" />
+            <span class="lang-option-label">ಕನ್ನಡ - KN</span>
+            <span class="lang-option-translation">- भाषांतर</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="ml" />
+            <span class="lang-option-label">മലയാളം - ML</span>
+            <span class="lang-option-translation">- വിവര്ത്തനം</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="bn" />
+            <span class="lang-option-label">বাংলা - BN</span>
+            <span class="lang-option-translation">- अनुवाद</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="mr" />
+            <span class="lang-option-label">मराठी - MR</span>
+            <span class="lang-option-translation">- भाषांतर</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="ur" />
+            <span class="lang-option-label">اردو - UR</span>
+            <span class="lang-option-translation">- ترجمہ</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="pa" />
+            <span class="lang-option-label">ਪੰਜਾਬੀ - PA</span>
+            <span class="lang-option-translation">- ਅਨੁਵਾਦ</span>
+          </label>
+
+          <label class="lang-option-row">
+            <input type="radio" name="languagePref" value="gu" />
+            <span class="lang-option-label">ગુજરાતી - GU</span>
+            <span class="lang-option-translation">- અનુવાદ</span>
+          </label>
+        </div>
+
+        <hr class="lang-divider" />
+
+        <div class="lang-actions-row">
+          <a href="index.html" class="lang-cancel-btn" id="cancelBtn">Cancel</a>
+          <button type="submit" aria-label="Search" title="Search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:auto;"><circle cx="11" cy="11" r="7" stroke="#111111" stroke-width="2.8" fill="none"></circle><path d="M16.5 16.5L21 21" stroke="#111111" stroke-width="2.8" stroke-linecap="round"></path></svg></button>
+        </div>
+      </form>
+    </div>
+
+    <div class="recommendations-card" style="margin-top: 50px; padding: 30px 20px; background: #ffffff; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
+      <h3 style="font-size: 1.15rem; font-weight: 700; color: #0f1111; margin-bottom: 12px;">See personalized recommendations</h3>
+      <a href="auth.html" class="rec-signin-btn" style="display: inline-block; width: 230px; background: linear-gradient(180deg, #ffd814 0%, #f7ca00 100%); border: 1px solid #fcd200; border-radius: 20px; padding: 7px 16px; font-size: 0.88rem; font-weight: 700; color: #0f1111; text-decoration: none; box-shadow: 0 1px 2px rgba(15, 17, 17, 0.15); margin-bottom: 8px;">
+        Sign in
+      </a>
+      <div style="font-size: 0.78rem; color: #333333;">
+        New customer? <a href="auth.html" style="color: #007185; text-decoration: none;">Start here.</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Amazon Back to Top & Footer Section matching user screenshot -->
+  <a href="#" class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" style="display: block; width: 100%; background: #37475a; color: #ffffff; text-align: center; padding: 15px 0; font-size: 0.82rem; font-weight: 600; text-decoration: none; margin-top: 40px;">
+    Back to top
+  </a>
+
+  <footer class="amazon-footer" style="background: #232f3e; color: #ffffff; padding: 40px 20px 30px 20px; font-family: 'Inter', sans-serif;">
+    <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; font-size: 0.85rem;">
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 14px;">Get to Know Us</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+          <li><a href="#" style="color: #ddd; text-decoration: none;">About ElectroMart</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Careers</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Press Releases</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">ElectroMart Science</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 14px;">Connect with Us</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Facebook</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Twitter</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Instagram</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 14px;">Make Money with Us</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Sell on ElectroMart</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Sell under ElectroMart Accelerator</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Protect and Build Your Brand</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Become an Affiliate</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 14px;">Let Us Help You</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; line-height: 2;">
+          <li><a href="auth.html" style="color: #ddd; text-decoration: none;">Your Account</a></li>
+          <li><a href="orders.html" style="color: #ddd; text-decoration: none;">Returns Centre</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">100% Purchase Protection</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">ElectroMart App Download</a></li>
+          <li><a href="#" style="color: #ddd; text-decoration: none;">Help</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared-search.js?v=20260314g"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const getActiveLang = () => localStorage.getItem("electromart_lang") || localStorage.getItem("electromart_lang_v1") || "en";
+      const savedLang = getActiveLang();
+
+      const radios = document.querySelectorAll('input[name="languagePref"]');
+      radios.forEach(radio => {
+        if (radio.value === savedLang) {
+          radio.checked = true;
+        }
+        radio.addEventListener('change', () => {
+          const currentBadge = document.getElementById("currentLangCode");
+          if (currentBadge) {
+            currentBadge.textContent = radio.value.toUpperCase();
+          }
+          const headerSelect = document.getElementById("languageSelect");
+          if (headerSelect) {
+            headerSelect.value = radio.value;
+          }
+        });
+      });
+
+      const langCodeBadge = document.getElementById("currentLangCode");
+      if (langCodeBadge) {
+        langCodeBadge.textContent = savedLang.toUpperCase();
+      }
+
+      const headerSelect = document.getElementById("languageSelect");
+      if (headerSelect) {
+        headerSelect.value = savedLang;
+        headerSelect.addEventListener('change', (e) => {
+          const val = e.target.value;
+          const targetRadio = document.querySelector(`input[name="languagePref"][value="${val}"]`);
+          if (targetRadio) {
+            targetRadio.checked = true;
+          }
+        });
+      }
+
+      const form = document.getElementById("languageForm");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const selected = document.querySelector('input[name="languagePref"]:checked');
+        if (selected) {
+          const newLang = selected.value;
+          localStorage.setItem("electromart_lang", newLang);
+          localStorage.setItem("electromart_lang_v1", newLang);
+          document.documentElement.lang = newLang;
+          
+          if (window.ElectroMartI18n && typeof window.ElectroMartI18n.setLanguage === 'function') {
+            window.ElectroMartI18n.setLanguage(newLang);
+          }
+
+          // Visual Feedback Toast
+          const toast = document.createElement("div");
+          toast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#0f1111; color:#ffffff; padding:12px 24px; border-radius:24px; font-weight:700; font-size:0.9rem; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.3); border:1px solid #ffd814;";
+          toast.textContent = `✓ Language updated to: ${newLang.toUpperCase()}`;
+          document.body.appendChild(toast);
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 600);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
