@@ -1,6 +1,7 @@
 ﻿require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const { buildCorsOptions } = require("./lib/corsPolicy");
 const { ensureSeedData, getDbProvider } = require("./lib/db");
 const { assertRuntimeEnvPolicyConfigured } = require("./lib/envPolicy");
 const { logInfo } = require("./lib/logger");
@@ -28,7 +29,7 @@ assertRuntimeEnvPolicyConfigured(process.env);
 ensureSeedData();
 
 app.set("trust proxy", 1);
-app.use(cors());
+app.use(cors(buildCorsOptions(process.env)));
 app.use(attachRequestContext);
 app.use(requestLogger);
 app.use(express.json({
