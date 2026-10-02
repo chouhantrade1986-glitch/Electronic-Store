@@ -112,6 +112,27 @@ const passwordResetRequestLimiter = createMemoryRateLimiter({
   message: "Too many password reset requests. Please wait before trying again."
 });
 
+function passwordLoginIdentifier(req) {
+  const body = req && req.body && typeof req.body === "object" ? req.body : {};
+  const identifier = String(body.emailOrMobile || "").trim().toLowerCase();
+  return `${resolveClientIp(req)}|${identifier || "unknown"}`;
+}
+
+const passwordLoginLimiter = createMemoryRateLimiter({
+  namespace: "auth-password-login",
+  windowMs: AUTH_IP_WINDOW_MS,
+  max: 10,
+  keyGenerator: passwordLoginIdentifier,
+  message: "Too many sign-in attempts. Please wait before trying again."
+});
+
+const passwordRegisterLimiter = createMemoryRateLimiter({
+  namespace: "auth-password-register",
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: "Too many registration attempts. Please try again later."
+});
+
 const passwordResetConfirmLimiter = createMemoryRateLimiter({
   namespace: "password-reset-confirm",
   windowMs: AUTH_IP_WINDOW_MS,
@@ -591,7 +612,7 @@ router.post("/password-reset/confirm", piiEncryption, passwordResetConfirmLimite
   }
 });
 
-router.post("/register", piiEncryption, async (req, res) => {
+router.post("/register", piiEncryption, passwordRegisterLimiter, async (req, res) => {
   if (!PASSWORD_AUTH_FALLBACK_ENABLED) {
     return rejectLegacyPasswordAuth(res);
   }
@@ -643,7 +664,7 @@ router.post("/register", piiEncryption, async (req, res) => {
   }
 });
 
-router.post("/login", piiEncryption, async (req, res) => {
+router.post("/login", piiEncryption, passwordLoginLimiter, async (req, res) => {
   if (!PASSWORD_AUTH_FALLBACK_ENABLED) {
     return rejectLegacyPasswordAuth(res);
   }
