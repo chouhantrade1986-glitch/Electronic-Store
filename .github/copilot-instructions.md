@@ -24,3 +24,20 @@
   - npm run smoke:baseline:verify
 - Backend-only logic changes:
   - npm.cmd --prefix backend run test:unit
+  - npm.cmd --prefix backend run start (or dev) for manual sanity
+- Release guardrail changes:
+  - npm run release:preflight
+  - npm run release:rollback:dry
+
+## CI and Governance Expectations
+- Keep workflow action majors on current baselines:
+  - actions/checkout v6
+  - actions/setup-node v6
+  - actions/upload-artifact v7
+  - actions/cache restore and save v5
+- Keep smoke and release workflows green before merge.
+
+## Commit and PR Style
+- Follow CONTRIBUTING.md for commit and PR format (`<type>(<scope>): <summary>`).
+- Include concise validation evidence in PR descriptions.
+- Never commit secrets or environment tokens.
