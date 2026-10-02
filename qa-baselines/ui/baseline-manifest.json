@@ -1,38 +1,38 @@
 ﻿{
-    "baselineType":  "ui-visual",
-    "generatedAt":  "2026-04-15T02:30:28Z",
-    "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
-    "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
-    "files":  [
-                  {
-                      "name":  "qa-auth-browser.png",
-                      "bytes":  9525,
-                      "sha256":  "62BB34AD72377B8BF38711D02C8C914B78665977FE955229981E14B26F3DE943"
-                  },
-                  {
-                      "name":  "qa-account-browser.png",
-                      "bytes":  13341,
-                      "sha256":  "A8471CE3AC711E6B7663DBD2E966E4CE8882F727E27451D7B31ED75535D2ACA4"
-                  },
-                  {
-                      "name":  "qa-invoice-browser.png",
-                      "bytes":  167568,
-                      "sha256":  "30FF0B2133BA4B2A1CA8D709B60E69E10BDA48B04F404E5C64A21C5E4F9E675F"
-                  },
-                  {
-                      "name":  "qa-checkout-browser.png",
-                      "bytes":  12343,
-                      "sha256":  "215874D83F105A33827A8A054CC4A2B9811CC126D94A7DB8DF37A815AEF844A8"
-                  },
-                  {
-                      "name":  "qa-orders-browser.png",
-                      "bytes":  10766,
-                      "sha256":  "590AF75280B415F1F5CF18A978B1365AF39732AF22C6A83190D801E7779355E3"
-                  },
-                  {
-                      "name":  "qa-wishlist-browser.png",
-                      "bytes":  69850,
-                      "sha256":  "EE18DCE61498F199B369215A77F720F38563D23EFB7311910A83163900C81E2D"
-                  }
-              ]
+    "baselineType": "ui-visual",
+    "generatedAt": "2026-10-02T14:49:10Z",
+    "sourceDir": "Smoke Suite run #525 artifact smoke-workflow_dispatch-reports/ui",
+    "destinationDir": "qa-baselines/ui",
+    "files": [
+        {
+            "name": "qa-auth-browser.png",
+            "bytes": 9779,
+            "sha256": "5E4A57F65E6F65307488C49DFB794EAD127AA00D40E6C53BD05C33DE355B2089"
+        },
+        {
+            "name": "qa-account-browser.png",
+            "bytes": 13702,
+            "sha256": "DFB869552D9F87251F193A6627364A6289FA728DF19B23278A938462E3EB2A18"
+        },
+        {
+            "name": "qa-invoice-browser.png",
+            "bytes": 173376,
+            "sha256": "3B39EA46E10E52538E2FB178AE1FAAED89D4178DE65B6296128C9D1CE6818028"
+        },
+        {
+            "name": "qa-checkout-browser.png",
+            "bytes": 13546,
+            "sha256": "971DBE0A21CE7533A4B440396A886F966FCAF48E400A9C9B2EF39A4509AEC79E"
+        },
+        {
+            "name": "qa-orders-browser.png",
+            "bytes": 11236,
+            "sha256": "AB02563069D1457CD88DEFCB0F5454CBE56AE6340F9E9D2DEBCC93DAD61656A2"
+        },
+        {
+            "name": "qa-wishlist-browser.png",
+            "bytes": 122240,
+            "sha256": "58A01B94E06E6F8956A35412F219E6EFF3BCD3A2547FB61F7E0A1EF13FE7A76A"
+        }
+    ]
 }
