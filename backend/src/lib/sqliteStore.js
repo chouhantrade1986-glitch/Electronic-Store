@@ -386,6 +386,14 @@ function ensureDirectory(filePath) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
+function resolveBusyTimeoutMs() {
+  const parsed = Number.parseInt(process.env.SQLITE_BUSY_TIMEOUT_MS, 10);
+  if (Number.isFinite(parsed) && parsed >= 0) {
+    return Math.min(parsed, 120000);
+  }
+  return 5000;
+}
+
 function getSqliteDb() {
   if (sqliteDb) {
     return sqliteDb;
@@ -395,6 +403,7 @@ function getSqliteDb() {
   sqliteDb = new DatabaseSync(filePath);
   sqliteDb.exec("PRAGMA journal_mode = WAL;");
   sqliteDb.exec("PRAGMA foreign_keys = ON;");
+  sqliteDb.exec(`PRAGMA busy_timeout = ${resolveBusyTimeoutMs()};`);
   ensureSchema(sqliteDb);
   return sqliteDb;
 }
@@ -788,15 +797,23 @@ function writeSqliteSnapshot(snapshot, options = {}) {
   const safeSnapshot = snapshot && typeof snapshot === "object" ? snapshot : {};
   assertNormalizationCoverage(safeSnapshot, options);
   const db = getSqliteDb();
-  db.exec("BEGIN IMMEDIATE TRANSACTION");
+  let began = false;
   try {
+    db.exec("BEGIN IMMEDIATE TRANSACTION");
+    began = true;
     Object.values(MANAGED_TABLES).forEach((config) => {
       writeManagedTable(db, config, resolveManagedValue(safeSnapshot, config));
     });
     writeAppState(db, safeSnapshot);
     db.exec("COMMIT");
   } catch (error) {
-    db.exec("ROLLBACK");
+    if (began) {
+      try {
+        db.exec("ROLLBACK");
+      } catch (_rollbackError) {
+        // noop: best-effort rollback; the original error is more informative
+      }
+    }
     throw error;
   }
 }
