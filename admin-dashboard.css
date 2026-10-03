@@ -1,16 +1,20 @@
-﻿:root {
+:root {
   --ink: #0f1111;
   --subtle: #565959;
-  --line: #d5e2ef;
+  --line: #d5d9d9;
   --panel: #ffffff;
-  --bg: #eef4fb;
-  --nav: #0046be;
-  --nav-2: #003087;
-  --accent: #ffe000;
-  --accent-2: #e6be00;
-  --link: #0046be;
-  --ok: #007600;
-  --warn: #b12704;
+  --bg: #eaeded;
+  --nav: #232f3e;
+  --nav-2: #131921;
+  --accent: #ffd814;
+  --accent-2: #f7ca00;
+  --accent-orange: #ffa41c;
+  --link: #007185;
+  --ok: #067d62;
+  --warn: #c40000;
+  --card-border: #d5d9d9;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 2px 5px rgba(15,17,17,0.15);
 }
 
 * {
@@ -23,9 +27,9 @@ html {
 
 body {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--ink);
-  background: linear-gradient(180deg, #eff6ff 0%, var(--bg) 45%, #e2ecf8 100%);
+  background-color: var(--bg);
   overflow-x: hidden;
 }
 
@@ -2461,4 +2465,908 @@ tbody td {
   }
 }
 
+/* ==========================================================================
+   ElectroMart Seller Central & Store Admin Hub — Phase 12 Design System
+   Authentic Amazon India Seller Central UI/UX
+   ========================================================================== */
 
+/* Universal Seller Central Topbar */
+.amz-seller-topbar {
+  background-color: var(--nav);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.amz-seller-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.amz-seller-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.amz-seller-brand .brand-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.amz-seller-brand .seller-tag {
+  background: var(--accent);
+  color: #0f1111;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amz-seller-marketplace {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.amz-seller-topbar-search {
+  flex: 1;
+  max-width: 520px;
+  margin: 0 24px;
+}
+
+.amz-search-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 0 10px;
+  height: 38px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.amz-search-box:focus-within {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 3px rgba(255, 164, 28, 0.3);
+}
+
+.amz-search-box .search-icon {
+  font-size: 0.95rem;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+.amz-search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.88rem;
+  color: var(--ink);
+  background: transparent;
+}
+
+.amz-seller-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.amz-seller-lang-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+}
+
+.amz-seller-lang-wrap select {
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.amz-seller-lang-wrap select option {
+  background: #232f3e;
+  color: #ffffff;
+}
+
+.amz-seller-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.amz-seller-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.amz-seller-profile {
+  position: relative;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 240px;
+  background: #ffffff;
+  color: var(--ink);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.profile-dropdown[hidden] {
+  display: none !important;
+}
+
+.dropdown-header {
+  padding: 12px 16px;
+  background: #f7fafa;
+  border-bottom: 1px solid var(--line);
+}
+
+.dropdown-header strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.dropdown-header small {
+  display: block;
+  color: var(--subtle);
+  font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #067d62;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.dropdown-links {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.dropdown-links li a {
+  display: block;
+  padding: 8px 16px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.86rem;
+  transition: background 0.15s;
+}
+
+.dropdown-links li a:hover {
+  background: #f2f4f8;
+  color: var(--link);
+}
+
+.dropdown-links hr {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+.danger-link {
+  color: var(--warn) !important;
+  font-weight: 600;
+}
+
+/* Department Navigation Bar */
+.amz-seller-dept-nav {
+  background-color: var(--nav-2);
+  color: #ffffff;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.dept-nav-scroll {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  min-width: max-content;
+}
+
+.dept-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  color: #d5d9d9;
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.dept-nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dept-nav-item.active {
+  color: #ffffff;
+  border-bottom-color: var(--accent);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dept-nav-item .dept-icon {
+  font-size: 1rem;
+}
+
+/* Main Container Layout */
+.amz-seller-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+}
+
+.amz-breadcrumb {
+  font-size: 0.82rem;
+  color: var(--subtle);
+  margin-bottom: 12px;
+}
+
+.amz-breadcrumb a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.amz-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.amz-breadcrumb span {
+  margin: 0 6px;
+}
+
+.amz-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.amz-page-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.amz-page-header p {
+  margin: 4px 0 0;
+  color: var(--subtle);
+  font-size: 0.88rem;
+}
+
+.amz-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* KPI Summary Cards */
+.amz-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.amz-kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.amz-kpi-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.amz-kpi-card.highlight {
+  border-left: 4px solid var(--accent-orange);
+}
+
+.amz-kpi-card.urgent {
+  border-left: 4px solid var(--warn);
+}
+
+.amz-kpi-card.success {
+  border-left: 4px solid var(--ok);
+}
+
+.kpi-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--subtle);
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.kpi-subtext {
+  font-size: 0.78rem;
+  color: var(--subtle);
+}
+
+/* Amazon Seller Buttons */
+.amz-btn-primary {
+  background: var(--accent);
+  border: 1px solid #fcd200;
+  border-radius: 6px;
+  color: #0f1111;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(15, 17, 17, 0.15);
+  transition: background 0.15s;
+}
+
+.amz-btn-primary:hover {
+  background: var(--accent-2);
+}
+
+.amz-btn-action {
+  background: var(--accent-orange);
+  border: 1px solid #ff8f00;
+  border-radius: 6px;
+  color: #0f1111;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(15, 17, 17, 0.15);
+  transition: background 0.15s;
+}
+
+.amz-btn-action:hover {
+  background: #f39818;
+}
+
+.amz-btn-secondary {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.amz-btn-secondary:hover {
+  background: #f7fafa;
+  border-color: #a2a6a6;
+}
+
+.amz-btn-danger {
+  background: #fff1f0;
+  border: 1px solid #ffa39e;
+  border-radius: 6px;
+  color: var(--warn);
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+
+.amz-btn-danger:hover {
+  background: #ffccc7;
+}
+
+/* Department Grid Hub (Dashboard Overview) */
+.amz-dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.amz-dept-card {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.amz-dept-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: #a2a6a6;
+}
+
+.dept-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.dept-card-icon {
+  font-size: 2rem;
+  background: #f7fafa;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.dept-card-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dept-card-desc {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--subtle);
+  line-height: 1.4;
+}
+
+.dept-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--link);
+}
+
+.dept-badge {
+  background: #e7f4f5;
+  color: #007185;
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* Priority Action Queue */
+.amz-action-queue {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.amz-action-queue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.amz-action-queue-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amz-action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.amz-action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fcfdfe;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  gap: 14px;
+}
+
+.amz-action-item.urgent {
+  border-left: 4px solid var(--warn);
+  background: #fffbfb;
+}
+
+.amz-action-item.warning {
+  border-left: 4px solid var(--accent-orange);
+}
+
+.action-info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.action-info span {
+  font-size: 0.8rem;
+  color: var(--subtle);
+}
+
+/* Data Tables */
+.amz-seller-table-wrap {
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.amz-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.amz-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.amz-table-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.amz-table-filters input,
+.amz-table-filters select {
+  padding: 7px 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  background: #ffffff;
+}
+
+.amz-table-filters input:focus,
+.amz-table-filters select:focus {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 2px rgba(255, 164, 28, 0.25);
+}
+
+.amz-seller-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.amz-seller-table th {
+  background: #f7fafa;
+  color: var(--subtle);
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap !important;
+}
+
+.amz-seller-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  vertical-align: middle;
+  white-space: nowrap !important;
+}
+
+.amz-seller-table td.col-items,
+.amz-seller-table td.items-cell {
+  max-width: 260px;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amz-seller-table tr:hover td {
+  background: #fbfcfd;
+}
+
+/* Easy Ship Status Pills */
+.status-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap !important;
+}
+
+.status-pill.delivered {
+  background: #e6f4ea;
+  color: #067d62;
+}
+
+.status-pill.shipped {
+  background: #e7f4f5;
+  color: #007185;
+}
+
+.status-pill.pending {
+  background: #fef0ea;
+  color: #b12704;
+}
+
+.status-pill.cancelled {
+  background: #f2f4f8;
+  color: #565959;
+}
+
+.status-pill.approved {
+  background: #e6f4ea;
+  color: #067d62;
+}
+
+.status-pill.refunded {
+  background: #e7f4f5;
+  color: #007185;
+}
+
+/* Modals */
+.amz-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 17, 17, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+}
+
+.amz-modal-overlay[hidden] {
+  display: none !important;
+}
+
+.amz-modal {
+  background: #ffffff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.amz-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.amz-modal-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--subtle);
+  line-height: 1;
+}
+
+.amz-modal-body {
+  padding: 20px;
+}
+
+.amz-form-group {
+  margin-bottom: 16px;
+}
+
+.amz-form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.amz-form-group input,
+.amz-form-group select,
+.amz-form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.amz-form-group input:focus,
+.amz-form-group select:focus,
+.amz-form-group textarea:focus {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 2px rgba(255, 164, 28, 0.25);
+}
+
+.amz-modal-footer {
+  padding: 14px 20px;
+  background: #f7fafa;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Toast Notifications */
+.amz-seller-toast-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 3000;
+}
+
+.amz-seller-toast {
+  background: #232f3e;
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  animation: slideUp 0.25s ease-out;
+}
+
+.amz-seller-toast.toast-success {
+  border-left: 4px solid #067d62;
+}
+
+.amz-seller-toast.toast-error {
+  border-left: 4px solid var(--warn);
+}
+
+.amz-seller-toast.toast-info {
+  border-left: 4px solid var(--accent);
+}
+
+.amz-seller-toast.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .amz-seller-topbar-search {
+    display: none;
+  }
+  .amz-seller-container {
+    padding: 14px;
+  }
+}

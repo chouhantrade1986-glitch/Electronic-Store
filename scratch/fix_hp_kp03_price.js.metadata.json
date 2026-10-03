@@ -1,0 +1,4 @@
+{
+  "summary": "Script to fix HP KP03 battery price (139930 -> 1399, 171338 -> 1713) across db.json, db.json.bak, products-data.js, and product-detail.js.",
+  "updatedAt": "2026-09-04T14:37:32.356925400Z"
+}

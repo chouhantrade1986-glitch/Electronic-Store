@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="product-detail.css?v=20260305c" />
-  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="customer-media.css?v=20260412a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
@@ -17,12 +18,19 @@
   <div id="headerContainer"></div>
 
   <main class="detail-main">
-    <p class="breadcrumbs"><a href="products.html">Products</a> &gt; <span id="crumbName">Product</span></p>
+    <p id="productBreadcrumb" class="breadcrumbs"><a href="products.html" data-i18n="breadcrumb_products">Products</a> &gt; <span id="crumbName">Product</span></p>
 
     <section id="productDetail" class="product-detail" hidden>
       <div class="product-media">
         <div id="mediaThumbRail" class="thumb-rail"></div>
-        <img id="productImage" src="" alt="" />
+        <div class="product-image-stage" id="productImageStage">
+          <img id="productImage" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+          <div id="imageZoomLens" class="image-zoom-lens" aria-hidden="true"></div>
+          <!-- Phase 29: 360 Showroom CTA Button -->
+          <a href="showroom.html" id="btnPdp360Showroom" class="btn-pdp-360-showroom" data-i18n="pdp_btn_360_showroom">
+            <span class="pdp-360-icon">🔄</span> 360° Interactive Showroom
+          </a>
+        </div>
         <video id="productVideo" controls playsinline hidden></video>
         <div id="imageZoomPane" class="image-zoom-pane" aria-hidden="true"></div>
       </div>
@@ -31,25 +39,313 @@
         <h1 id="productName"></h1>
         <p id="productBrand" class="muted"></p>
         <p id="productRating" class="rating"></p>
-        <p class="seller-line">Visit the <a id="brandStoreLink" href="brands.html">brand store</a></p>
+        <p class="seller-line" id="productBrandRow"><a id="brandStoreLink" href="brands.html"></a></p>
+        <div class="product-badge-social-row" id="productBadgeSocialRow">
+          <div id="pdpRenewedHeroBadge" class="pdp-renewed-hero-badge" style="display: none;">
+            <span class="badge-icon">♻️</span>
+            <strong>ElectroMart Certified Renewed</strong>
+            <span class="badge-grade" id="pdpRenewedHeroGrade">Grade A (Excellent)</span>
+            <span class="badge-warranty">🛡️ 6 Months Warranty</span>
+          </div>
+          <span class="amazons-choice-badge" id="amazonsChoiceBadge">
+            <span class="ac-badge-pill"><span class="ac-text">ElectroMart's <span class="ac-accent">Choice</span></span></span>
+          </span>
+          <span class="social-bought-count" id="socialBoughtCount" data-i18n="bought_in_past_month">1K+ bought in past month</span>
+        </div>
         <hr />
-        <p id="productPrice" class="price"></p>
-        <p id="productListPrice" class="list-price"></p>
-        <p id="productDealMeta" class="deal-meta"></p>
+        <!-- Amazon India Price Block -->
+        <div class="amazon-price-block" id="amazonPriceBlock">
+          <!-- डील बैज -->
+          <span class="deal-badge-pill" id="dealBadgePill" data-i18n="lightning_deal">लाइटनिंग डील</span>
+          
+          <div class="price-row-main">
+            <!-- -20% लाल रंग में -->
+            <span class="discount-percent-val" id="productDiscountPercent">-20%</span>
+            <!-- मुख्य कीमत -->
+            <span class="currency-symbol">₹</span><span class="main-price-val" id="productMainPrice">1,39,930</span><span class="price-fraction" id="productPriceFraction"></span>
+          </div>
+
+          <!-- MRP और टैक्स -->
+          <div class="mrp-tax-row" id="mrpTaxRow">
+            <span class="mrp-label">M.R.P.:</span> <span class="mrp-strikethrough" id="productMrpPrice">₹1,74,643</span>
+            <div class="tax-inclusive" data-i18n="inclusive_all_taxes">सभी टैक्स सहित</div>
+          </div>
+        </div>
+
+        <!-- Phase 22: Lightning Deal Countdown & Claim Progress Bar -->
+        <div class="pdp-lightning-deal-box" id="pdpLightningDealBox" style="display: none;">
+          <div class="pdp-lightning-header">
+            <span class="pdp-lightning-icon">⚡</span>
+            <span class="pdp-lightning-timer-label" id="pdpLightningTimerLabel" data-i18n="ends_in">Ends in:</span>
+            <span class="pdp-lightning-timer" id="pdpLightningTimer">--h --m --s</span>
+          </div>
+          <div class="pdp-lightning-progress-wrap" id="pdpLightningProgressWrap">
+            <div class="pdp-lightning-progress-bar">
+              <div class="pdp-lightning-progress-fill" id="pdpLightningProgressFill" style="width: 0%;"></div>
+            </div>
+            <span class="pdp-lightning-progress-text" id="pdpLightningProgressText">0% claimed</span>
+          </div>
+          <div class="pdp-lightning-urgency" id="pdpLightningUrgency"></div>
+        </div>
+
+        <p id="productPrice" class="price" style="display: none;"></p>
+        <p id="productListPrice" class="list-price" style="display: none;"></p>
+        <p id="productDealMeta" class="deal-meta" style="display: none;"></p>
         <p id="productSegment" class="segment-pill"></p>
-        <p id="productStockMeta" class="stock-meta"></p>
+        <p id="productStockMeta" class="stock-meta" data-alias="productQuickMeta"></p>
         <p id="productKeywordLine" class="keyword-line"></p>
         <p id="productDescription" class="description"></p>
-        <h2>About this item</h2>
-        <ul id="productSpecs" class="spec-list"></ul>
+        <h2 data-i18n="about_item">About this item</h2>
+        <ul id="productSpecs" class="spec-list" data-alias="aboutItemBulletList"></ul>
       </div>
 
-      <aside class="buy-box">
-        <p id="buyBoxPrice" class="buy-price"></p>
+      <aside class="buy-box amazon-buybox" id="amazonBuyBox">
+        <div class="buybox-price-wrap">
+          <span id="buyBoxPrice" class="buy-price"></span>
+        </div>
         <p id="buyBoxMrp" class="buy-mrp"></p>
         <p id="buyBoxSavings" class="buy-savings"></p>
-        <p id="deliveryText" class="delivery-text"></p>
-        <p id="availabilityText" class="availability in-stock"></p>
+        <p id="taxInfo" class="tax-info" data-i18n="inclusive_all_taxes">Inclusive of all taxes</p>
+
+        <!-- Phase 30: PDP Instant Exchange Offer Selector -->
+        <div class="pdp-exchange-selector-card" id="pdpExchangeSelectorCard">
+          <div class="exchange-radio-option" id="pdpOptionWithoutExchange">
+            <label class="exchange-radio-label">
+              <input type="radio" name="pdpExchangeChoice" value="without" checked id="pdpOptNoExchange" />
+              <span class="exchange-radio-text">
+                <strong data-i18n="pdp_without_exchange">Without Exchange</strong>
+                <span class="exchange-radio-price" id="pdpPriceWithoutExchange">₹1,39,930</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="exchange-radio-option" id="pdpOptionWithExchange">
+            <label class="exchange-radio-label">
+              <input type="radio" name="pdpExchangeChoice" value="with" id="pdpOptWithExchange" />
+              <span class="exchange-radio-text">
+                <strong data-i18n="pdp_with_exchange">With Exchange</strong>
+                <span class="exchange-badge-pill" id="pdpExchangeUpToBadge">Up to ₹18,000 off</span>
+              </span>
+            </label>
+
+            <!-- Collapsible Exchange Details -->
+            <div class="pdp-exchange-details-panel" id="pdpExchangeDetailsPanel" style="display: none;">
+              <div class="pdp-exchange-pincode-box">
+                <div class="pdp-pincode-input-group">
+                  <input type="text" id="pdpExchangePincode" class="pdp-exchange-pincode-input" placeholder="Enter Pincode" maxlength="6" data-i18n-placeholder="pdp_exchange_pincode_placeholder" />
+                  <button type="button" id="btnCheckExchangePincode" class="btn-check-pincode" data-i18n="pdp_exchange_pincode_check">Check</button>
+                </div>
+                <div id="pdpExchangePincodeMsg" class="pdp-pincode-feedback"></div>
+              </div>
+
+              <!-- Unselected State Button -->
+              <div id="pdpExchangeUnselectedState">
+                <button type="button" id="btnOpenExchangeModal" class="btn-pdp-choose-exchange" data-i18n="pdp_choose_exchange_btn">
+                  Choose device to exchange ›
+                </button>
+              </div>
+
+              <!-- Selected State Card -->
+              <div id="pdpExchangeSelectedCard" class="pdp-applied-exchange-card" style="display: none;">
+                <div class="applied-exchange-header">
+                  <span class="applied-icon">🔄</span>
+                  <div class="applied-info">
+                    <span class="applied-title" data-i18n="pdp_exchange_applied">Exchange Applied:</span>
+                    <strong id="pdpAppliedDeviceName">Apple iPhone 12 (64 GB)</strong>
+                  </div>
+                </div>
+                <div class="applied-savings-row">
+                  <span class="applied-savings-badge" id="pdpAppliedSavingsVal">-₹8,500</span>
+                  <div class="applied-actions">
+                    <button type="button" id="btnChangeExchangeDevice" class="applied-link-btn" data-i18n="pdp_exchange_change">Change</button>
+                    <span>|</span>
+                    <button type="button" id="btnRemoveExchangeDevice" class="applied-link-btn applied-remove" data-i18n="pdp_exchange_remove">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 31: Certified Renewed Alternative Callout Box -->
+        <div class="pdp-renewed-callout" id="pdpRenewedAlternativeBox" style="display: none;">
+          <div class="pdp-renewed-callout-header">
+            <span class="renewed-leaf-icon">♻️</span>
+            <span class="renewed-callout-tag" data-i18n="renewed_pdp_alt_title">Consider a certified renewed model</span>
+          </div>
+          <div class="pdp-renewed-callout-body">
+            <div class="pdp-renewed-price-info">
+              <span class="renewed-grade-tag" id="pdpRenewedAltGrade">Grade A (Excellent)</span>
+              <span class="renewed-alt-price" id="pdpRenewedAltPrice">₹79,999</span>
+              <span class="renewed-alt-savings" id="pdpRenewedAltSavings">Save 38%</span>
+            </div>
+            <p class="pdp-renewed-warranty-text" data-i18n="renewed_pdp_alt_desc">
+              Available in excellent condition with 6-month ElectroMart warranty &amp; 47-point diagnostic test.
+            </p>
+            <a href="#" class="btn-pdp-view-renewed" id="btnViewRenewedAlternative" data-i18n="renewed_pdp_alt_btn">
+              View Renewed Option ›
+            </a>
+          </div>
+        </div>
+
+        <!-- Amazon Style Delivery Section -->
+        <div class="buybox-delivery-section">
+          <div class="delivery-badge-row">
+            <span class="free-delivery-badge" data-i18n="free_delivery">FREE delivery</span>
+            <span id="deliveryDateHighlight" class="delivery-date-highlight"></span>
+          </div>
+          <p id="deliveryText" class="delivery-text"></p>
+          <div class="buybox-countdown" id="buyboxCountdown">
+            <span data-i18n="order_within">Order within</span> <span class="countdown-timer" id="countdownTimer">4 hrs 18 mins</span>
+          </div>
+          <div class="buybox-location-row" id="buyboxLocationRow">
+            <svg class="buybox-pin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <a href="javascript:void(0)" id="buyboxLocationLink" class="buybox-location-link">
+              <span id="buyboxLocationText">Deliver to New Delhi 110001</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- In Stock Status -->
+        <p id="availabilityText" class="availability in-stock stock-status" data-i18n="in_stock">In stock</p>
+
+        <!-- Quantity Selector -->
+        <div class="buybox-qty-row">
+          <label for="qtySelect" data-i18n="qty_label">Quantity:</label>
+          <select id="qtySelect" class="amazon-qty-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+
+        <!-- Phase 32: ElectroMart Protect / ElectroMart Care add-ons -->
+        <section id="protectionPlanWidget" class="pdp-protection-widget" hidden aria-labelledby="protectionPlanTitle"></section>
+
+        <section id="pdpSmartHomeCompatibility" class="pdp-smart-home-compatibility" hidden aria-live="polite">
+          <div class="pdp-smart-home-compatibility-copy">
+            <strong data-i18n="smarthome_compatibility_title">Check your ecosystem</strong>
+            <span data-i18n="smarthome_compatibility_pdp_desc">See whether this device fits your connected home.</span>
+          </div>
+          <button type="button" id="pdpSmartHomeCompatibilityBtn" class="pdp-smart-home-compatibility-btn" data-i18n="smarthome_compatibility_pdp_cta">Check Smart Home Compatibility</button>
+          <a id="pdpSmartHomeHubLink" href="smarthome.html" data-i18n="smarthome_open_hub">Explore ElectroMart Smart Home</a>
+        </section>
+
+        <dialog id="pdpSmartHomeCompatibilityModal" class="smart-home-modal" aria-labelledby="pdpSmartHomeCompatibilityTitle">
+          <form method="dialog" class="smart-home-modal-card">
+            <button value="cancel" class="smart-home-modal-close" aria-label="Close">&times;</button>
+            <h2 id="pdpSmartHomeCompatibilityTitle" data-i18n="smarthome_compatibility_title">Check your ecosystem</h2>
+            <label for="pdpSmartHomeEcosystemSelect" data-i18n="smarthome_ecosystem_filter">Works with</label>
+            <select id="pdpSmartHomeEcosystemSelect">
+              <option value="alexa">Alexa</option>
+              <option value="google">Google Home</option>
+              <option value="matter">Matter</option>
+              <option value="homekit">Apple HomeKit</option>
+            </select>
+            <div id="pdpSmartHomeCompatibilityResult" class="smart-home-compatibility-result" role="status" aria-live="polite"></div>
+            <button type="button" id="pdpSmartHomeCompatibilityCheckBtn" class="pdp-smart-home-compatibility-btn" data-i18n="smarthome_compatibility_check">Check compatibility</button>
+          </form>
+        </dialog>
+
+        <!-- Amazon Primary Buttons -->
+        <div class="buybox-buttons">
+          <button id="addToCartBtn" type="button" class="amazon-btn-cart" data-i18n="add_to_cart">Add to Cart</button>
+          <a href="checkout.html" class="buy-now-btn amazon-btn-buynow" data-i18n="buy_now">Buy Now</a>
+        </div>
+
+        <section id="pdpLiveStreamCallout" class="pdp-live-stream-callout" hidden aria-live="polite">
+          <div class="pdp-live-stream-copy">
+            <span class="pdp-live-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="pdpLiveStreamStatus" data-i18n="live_stream_now">Live stream happening now</strong>
+              <span data-i18n="live_watch_demo">Watch live product demo</span>
+            </div>
+          </div>
+          <a id="pdpWatchLiveBtn" href="live-shopping.html" data-i18n="live_view_hub">Watch live</a>
+        </section>
+
+        <!-- Phase 37: ElectroMart Global Store & Cross-Border Delivery Card -->
+        <section id="pdpGlobalStoreCallout" class="pdp-global-store-callout" hidden aria-live="polite">
+          <div class="pdp-global-store-badge">
+            <span class="pdp-global-icon">🌐</span>
+            <div class="pdp-global-text">
+              <strong data-i18n="global_pdp_callout">ElectroMart Global Delivery: Import Duty Included</strong>
+              <span class="pdp-global-subtext">100% DDP Delivery • No unexpected fees</span>
+            </div>
+          </div>
+          <a id="pdpGlobalHubLink" href="global.html" class="pdp-global-link" data-i18n="global_hub_title">Learn about Global Store ›</a>
+        </section>
+
+        <!-- Phase 38: ElectroMart Launchpad Hub Callout -->
+        <section id="pdpLaunchpadCallout" class="pdp-launchpad-callout" hidden aria-live="polite">
+          <div class="pdp-launchpad-badge">
+            <span class="pdp-launchpad-icon">🚀</span>
+            <div class="pdp-launchpad-text">
+              <strong data-i18n="launchpad_pdp_callout">ElectroMart Launchpad: Emerging Indian Startup Innovation</strong>
+              <span class="pdp-launchpad-subtext" data-i18n="launchpad_pdp_subtext">Discover innovative products from Indian startups</span>
+            </div>
+          </div>
+          <a id="pdpLaunchpadHubLink" href="launchpad.html" class="pdp-launchpad-link" data-i18n="launchpad_pdp_cta">Visit Launchpad Hub ›</a>
+        </section>
+
+        <!-- Phase 39: ElectroMart Gaming Arena Callout -->
+        <section id="pdpGamingArenaCallout" class="pdp-gaming-callout" hidden aria-live="polite">
+          <div class="pdp-gaming-badge">
+            <span class="pdp-gaming-icon">🎮</span>
+            <div class="pdp-gaming-text">
+              <strong data-i18n="gaming_pdp_badge">ElectroMart Gaming Arena: High-Performance Rig & eSports Certified</strong>
+              <span class="pdp-gaming-subtext" data-i18n="gaming_pdp_subtext">Configure CPU, GPU and memory, then certify your frame rate</span>
+            </div>
+          </div>
+          <a id="pdpGamingArenaHubLink" href="gaming.html" class="pdp-gaming-link" data-i18n="gaming_pdp_cta">Visit Gaming Arena ›</a>
+        </section>
+
+        <!-- Phase 40: ElectroMart Campus Store student discount callout -->
+        <section id="pdpStudentDiscountCallout" class="pdp-student-callout" hidden aria-live="polite">
+          <div class="pdp-student-badge">
+            <span class="pdp-student-icon">🎓</span>
+            <div class="pdp-student-text">
+              <strong data-i18n="edu_pdp_badge">ElectroMart Campus Store: Verified Student Discount & Faculty Course Lists</strong>
+              <span class="pdp-student-subtext" data-i18n="edu_pdp_subtext">Check local eligibility and estimate your student discount</span>
+            </div>
+          </div>
+          <p class="pdp-student-price" id="pdpStudentPriceRow" hidden>
+            <span data-i18n="edu_student_price_label">Student price</span>
+            <strong id="pdpStudentPrice">₹0</strong>
+            <s id="pdpStudentMrp">₹0</s>
+            <em id="pdpStudentDiscountPercent">-0%</em>
+            <span class="pdp-student-price-note" data-i18n="edu_local_only_note">This is a local eligibility preview that runs entirely on this device. ElectroMart does not contact, and is not approved by, any university — nothing here is a server-side or university verification.</span>
+          </p>
+          <a id="pdpCampusStoreHubLink" href="edu-store.html" class="pdp-student-link" data-i18n="edu_pdp_cta">Visit Campus Store ›</a>
+        </section>
+
+        <!-- Phase 29: Virtual Workspace Studio CTA Link -->
+        <div class="buybox-workspace-entry" id="buyboxWorkspaceEntry">
+          <a href="workspace-builder.html" id="linkPdpWorkspaceBuilder" class="link-pdp-workspace-builder" data-i18n="pdp_link_workspace_builder">
+            🖥️ Configure in Virtual Workspace Studio ›
+          </a>
+        </div>
+
+        <!-- Fulfilled / Seller Info Table -->
+        <div id="buyBoxMetaDetails" class="buybox-meta-details"></div>
+
+        <!-- Secure Transaction line -->
+        <div class="buybox-secure-row">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="#007185"><path d="M12 2C9.24 2 7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm3 8H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v3z"/></svg>
+          <span class="secure-line" data-i18n="secure_transaction">Secure transaction</span>
+        </div>
+
+        <!-- Wishlist & Back to Products -->
+        <div class="buybox-secondary-actions">
+          <button id="saveWishlistBtn" type="button" class="secondary-btn wishlist-btn amazon-wishlist-btn" data-i18n="save_to_wishlist">Add to Wish List</button>
+          <a href="products.html" class="secondary-btn" data-i18n="back_to_products" style="margin-top: 6px; display: block; text-align: center; text-decoration: none; font-size: 12px; padding: 6px 10px; border-radius: 8px; border: 1px solid #d5d9d9; background: #ffffff; color: #0f1111;">Back to products</a>
+        </div>
+
         <section id="backInStockPanel" class="back-in-stock-panel" hidden>
           <h3>Get Notified When Back in Stock</h3>
           <p>Enter your details and we will notify you as soon as this product is available.</p>
@@ -61,84 +357,192 @@
           </form>
           <p id="backInStockMessage" class="back-in-stock-message"></p>
         </section>
-        <label for="qtySelect">Qty:</label>
-        <select id="qtySelect">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <button id="addToCartBtn" type="button">Add to Cart</button>
-        <button id="wishlistBtn" type="button" class="secondary-btn">Save to Wishlist</button>
-        <a href="cart.html" class="buy-now-btn">Buy Now</a>
-        <a href="products.html" class="secondary-btn">Back to products</a>
-        <p class="secure-line">Secure transaction</p>
       </aside>
     </section>
 
+    <section id="frequentlyBoughtContainer" class="detail-card frequently-bought-card" hidden></section>
+
     <section id="relatedBlock" class="related-block" hidden>
-      <h2>Related products</h2>
+      <h2 data-i18n="related_products">Related products</h2>
       <div id="relatedGrid" class="related-grid"></div>
     </section>
 
-    <section id="offersBlock" class="detail-card" hidden>
-      <h2>Offers & Benefits</h2>
-      <div id="offersGrid" class="offers-grid"></div>
+    <section id="offersBlock" class="detail-card amazon-offers-card" hidden>
+      <div class="offers-header-row">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="#c45500" class="offer-tag-icon">
+          <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+        </svg>
+        <h2 data-i18n="offers_benefits">Offers & Benefits</h2>
+      </div>
+      <div id="offersGrid" class="offers-grid amazon-offers-carousel"></div>
     </section>
 
-    <section id="servicesBlock" class="detail-card" hidden>
-      <h2>Delivery, Returns & Services</h2>
-      <div class="service-grid">
-        <article class="service-item">
-          <h3>Delivery</h3>
-          <p id="serviceDeliveryText"></p>
+    <section id="servicesBlock" class="detail-card amazon-services-card" hidden>
+      <h2 data-i18n="delivery_returns_services">Delivery, Returns & Services</h2>
+      <div class="service-grid amazon-trust-grid">
+        <article class="service-item trust-badge-item">
+          <div class="trust-badge-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 4v6h6M23 20v-6h-6"/>
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            </svg>
+          </div>
+          <h3 data-i18n="sub_returns">Returns</h3>
+          <p id="serviceReturnText" data-i18n="return_subtext"></p>
         </article>
-        <article class="service-item">
-          <h3>Returns</h3>
-          <p id="serviceReturnText"></p>
+        <article class="service-item trust-badge-item">
+          <div class="trust-badge-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 data-i18n="sub_delivery">Delivery</h3>
+          <p id="serviceDeliveryText" data-i18n="free_delivery_subtext"></p>
         </article>
-        <article class="service-item">
-          <h3>Warranty</h3>
-          <p id="serviceWarrantyText"></p>
+        <article class="service-item trust-badge-item">
+          <div class="trust-badge-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 data-i18n="sub_warranty">Warranty</h3>
+          <p id="serviceWarrantyText" data-i18n="warranty_subtext"></p>
         </article>
-        <article class="service-item">
-          <h3>Seller</h3>
-          <p id="serviceSellerText"></p>
+        <article class="service-item trust-badge-item">
+          <div class="trust-badge-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h3 data-i18n="sub_seller">Seller</h3>
+          <p id="serviceSellerText" data-i18n="seller_subtext"></p>
         </article>
       </div>
     </section>
 
-    <section id="reviewsBlock" class="detail-card" hidden>
-      <h2>Customer Reviews</h2>
-      <div class="review-summary">
-        <p id="reviewHeadline" class="review-headline"></p>
-        <div id="reviewBars" class="review-bars"></div>
+    <section id="reviewsBlock" class="detail-card amazon-reviews-card" hidden>
+      <div class="reviews-header-flex">
+        <h2 data-i18n="customer_reviews_title">Customer Reviews</h2>
+        <button id="translateReviewsBtn" class="translate-reviews-btn amazon-secondary-btn" type="button" data-i18n="translate_reviews_btn">Translate all reviews</button>
+      </div>
+      <div class="amazon-reviews-2col">
+        <div class="review-summary amazon-review-left">
+          <p id="reviewHeadline" class="review-headline"></p>
+          <div id="reviewBars" class="review-bars"></div>
+          <div class="by-feature-box">
+            <h3 class="by-feature-title" data-i18n="by_feature">By feature</h3>
+            <div class="feature-row">
+              <span data-i18n="value_for_money">Value for money</span>
+              <span class="feature-stars">★★★★☆ 4.4</span>
+            </div>
+            <div class="feature-row">
+              <span data-i18n="quality_assurance">Quality</span>
+              <span class="feature-stars">★★★★★ 4.6</span>
+            </div>
+            <div class="feature-row">
+              <span data-i18n="battery_life">Battery life</span>
+              <span class="feature-stars">★★★★☆ 4.3</span>
+            </div>
+          </div>
+          <div class="write-review-section">
+            <h4 style="margin: 16px 0 4px; font-size: 16px; font-weight: 700; color: #0f1111;">Review this product</h4>
+            <p style="margin: 0 0 10px; font-size: 13px; color: #565959;">Share your thoughts with other customers</p>
+            <button type="button" class="amazon-btn-write-review" data-i18n="write_review_btn">Write a product review</button>
+          </div>
+        </div>
+        <div class="amazon-review-right">
+          <!-- Customer Images Gallery -->
+          <div id="customerMediaGallery" class="customer-media-gallery" hidden>
+            <div class="customer-gallery-header-row">
+              <h3 class="customer-gallery-title" data-i18n="review_customer_photos">Reviews with customer images</h3>
+              <a href="customer-media.html" id="seeAllCustomerMediaLink" class="see-all-customer-media-link" data-i18n="media_pdp_see_all">See all customer photos &amp; videos ›</a>
+            </div>
+            <div id="customerGalleryTrack" class="customer-gallery-track"></div>
+          </div>
+
+          <!-- Star Filter Pill Bar -->
+          <div id="reviewFilterActiveBar" class="review-filter-active-bar" hidden>
+            <span id="reviewFilterStatusText">Showing 5-star reviews</span>
+            <button type="button" id="clearReviewFilterBtn" class="clear-review-filter-btn" data-i18n="review_clear_filter">Clear star filter</button>
+          </div>
+
+          <div id="customerReviewsList" class="customer-reviews-list"></div>
+        </div>
       </div>
     </section>
 
-    <section id="qaBlock" class="detail-card" hidden>
-      <h2>Questions & Answers</h2>
+    <section id="qaBlock" class="detail-card amazon-qa-card" hidden>
+      <div class="qa-header-row">
+        <h2 data-i18n="questions_answers">Questions & Answers</h2>
+        <button type="button" id="askCommunityBtn" class="amazon-secondary-btn ask-community-btn" data-i18n="qa_ask_community_btn">Ask the Community</button>
+      </div>
+
+      <!-- Live Search Bar -->
+      <div class="qa-search-container">
+        <div class="qa-search-box">
+          <svg class="qa-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#565959" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="qaSearchInput"
+            class="qa-search-input"
+            placeholder="Have a question? Search answers, keywords..."
+            data-i18n="qa_search_placeholder"
+            aria-label="Search questions and answers"
+          />
+          <button type="button" id="qaSearchClearBtn" class="qa-search-clear" hidden aria-label="Clear search">&times;</button>
+        </div>
+      </div>
+
+      <!-- Collapsible Ask Community Form -->
+      <div id="askCommunityFormWrap" class="ask-community-form-wrap" hidden>
+        <form id="askCommunityForm" class="ask-community-form">
+          <h3 data-i18n="qa_ask_title">Ask the ElectroMart Community</h3>
+          <p data-i18n="qa_ask_desc">Get real answers from verified buyers and electronics specialists.</p>
+          <textarea
+            id="askQuestionInput"
+            class="ask-question-textarea"
+            rows="3"
+            placeholder="Type your question here (e.g., Does this support fast charging?)..."
+            data-i18n="qa_question_placeholder"
+            required
+          ></textarea>
+          <div class="ask-form-actions">
+            <button type="submit" id="submitQuestionBtn" class="amazon-btn-primary submit-question-btn" data-i18n="qa_submit_btn">Post Question</button>
+            <button type="button" id="cancelQuestionBtn" class="amazon-secondary-btn cancel-question-btn" data-i18n="btn_cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Q&A List -->
       <div id="qaList" class="qa-list"></div>
     </section>
 
     <section class="detail-info-table" id="detailInfoTable" hidden>
-      <h2>Product information</h2>
+      <h2 data-i18n="product_information">Product information</h2>
+      <div id="productInfoTable">
       <table>
-        <tr><th>SKU</th><td id="infoSku"></td></tr>
-        <tr><th>Brand</th><td id="infoBrand"></td></tr>
-        <tr><th>Category</th><td id="infoCategory"></td></tr>
-        <tr><th>Segment</th><td id="infoSegment"></td></tr>
-        <tr><th>Price</th><td id="infoPrice"></td></tr>
-        <tr><th>MRP</th><td id="infoListPrice"></td></tr>
-        <tr><th>Stock</th><td id="infoStock"></td></tr>
-        <tr><th>Status</th><td id="infoStatus"></td></tr>
-        <tr><th>Fulfillment</th><td id="infoFulfillment"></td></tr>
-        <tr><th>MOQ</th><td id="infoMoq"></td></tr>
-        <tr><th>Featured</th><td id="infoFeatured"></td></tr>
-        <tr><th>Keywords</th><td id="infoKeywords"></td></tr>
-        <tr><th>Rating</th><td id="infoRating"></td></tr>
+        <tr><th data-i18n="tbl_sku">SKU</th><td id="infoSku"></td></tr>
+        <tr><th data-i18n="tbl_brand">Brand</th><td id="infoBrand"></td></tr>
+        <tr><th data-i18n="tbl_category">Category</th><td id="infoCategory"></td></tr>
+        <tr><th data-i18n="tbl_segment">Segment</th><td id="infoSegment"></td></tr>
+        <tr><th data-i18n="tbl_price">Price</th><td id="infoPrice"></td></tr>
+        <tr><th data-i18n="tbl_mrp">MRP</th><td id="infoListPrice"></td></tr>
+        <tr><th data-i18n="tbl_stock">Stock</th><td id="infoStock"></td></tr>
+        <tr><th data-i18n="tbl_status">Status</th><td id="infoStatus"></td></tr>
+        <tr><th data-i18n="tbl_fulfillment">Fulfillment</th><td id="infoFulfillment"></td></tr>
+        <tr><th data-i18n="tbl_moq">MOQ</th><td id="infoMoq"></td></tr>
+        <tr><th data-i18n="tbl_featured">Featured</th><td id="infoFeatured"></td></tr>
+        <tr><th data-i18n="tbl_keywords">Keywords</th><td id="infoKeywords"></td></tr>
+        <tr><th data-i18n="tbl_rating">Rating</th><td id="infoRating"></td></tr>
       </table>
+      </div>
     </section>
 
     <section id="missingState" class="missing-state" hidden>
@@ -148,7 +552,68 @@
     </section>
   </main>
 
-    <div id="fullscreenViewer" class="fullscreen-viewer" hidden>
+  <!-- Full-Screen 2-Column Lightbox Modal Dialog for Customer Media -->
+  <dialog id="mediaLightboxModal" class="amz-lightbox-modal" aria-labelledby="lightboxHeadline">
+    <div class="lightbox-content-box">
+      <button type="button" id="closeLightboxBtn" class="btn-lightbox-close" aria-label="Close dialog">&times;</button>
+      <div class="lightbox-columns">
+        <div class="lightbox-media-column">
+          <div class="lightbox-viewport-container" id="lightboxViewport">
+            <div id="lightboxMediaHolder" class="lightbox-media-holder"></div>
+            <button type="button" id="prevMediaBtn" class="lightbox-nav-paddle prev" aria-label="Previous media">&#10094;</button>
+            <button type="button" id="nextMediaBtn" class="lightbox-nav-paddle next" aria-label="Next media">&#10095;</button>
+          </div>
+          <div class="lightbox-scrubber-strip" id="lightboxThumbStrip" role="region" aria-label="Media Thumbnails"></div>
+        </div>
+        <div class="lightbox-details-column">
+          <div class="lightbox-reviewer-row">
+            <div class="reviewer-avatar" id="lightboxReviewerAvatar">E</div>
+            <div class="reviewer-meta">
+              <strong class="reviewer-name" id="lightboxReviewerName">ElectroMart Customer</strong>
+              <div class="verified-badge-row" id="lightboxVerifiedBadge">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#c45500" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span data-i18n="lightbox_verified_purchase">Verified Purchase</span>
+              </div>
+            </div>
+          </div>
+          <div class="lightbox-rating-date-row">
+            <span class="lightbox-stars" id="lightboxStars">★★★★★</span>
+            <span class="lightbox-date" id="lightboxDate">Reviewed in India</span>
+          </div>
+          <h3 class="lightbox-headline" id="lightboxHeadline">Verified customer review</h3>
+          <p class="lightbox-body" id="lightboxReviewBody">Loading customer review feedback...</p>
+          <div class="lightbox-helpful-row">
+            <button type="button" id="lightboxHelpfulBtn" class="btn-lightbox-helpful">
+              <span class="thumb-icon" aria-hidden="true">👍</span>
+              <span data-i18n="lightbox_helpful_btn">Helpful</span>
+              (<span id="lightboxHelpfulCount">0</span>)
+            </button>
+            <span class="report-link">Report</span>
+          </div>
+          <div class="lightbox-product-card" id="lightboxProductCard">
+            <div class="card-head">
+              <img src="product-placeholder.svg" alt="Product thumbnail" class="card-prod-thumb" id="lightboxProdThumb" />
+              <div class="card-prod-info">
+                <a href="product-detail.html" class="card-prod-title" id="lightboxProdTitle">Product Title</a>
+                <div class="card-prod-rating" id="lightboxProdRating">★★★★☆ (4.5)</div>
+              </div>
+            </div>
+            <div class="card-price-stack">
+              <span class="card-current-price" id="lightboxProdPrice">₹0</span>
+              <span class="card-mrp-price" id="lightboxProdMrp">₹0</span>
+              <span class="card-discount-badge" id="lightboxProdDiscount">-0%</span>
+            </div>
+            <button type="button" id="lightboxAddToCartBtn" class="btn-lightbox-add-cart" data-i18n="lightbox_add_to_cart">Add to Cart</button>
+            <a href="customer-media.html" id="lightboxViewProductLink" class="lightbox-view-pdp-link" data-i18n="media_pdp_see_all">See all customer photos &amp; videos ›</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="fullscreenViewer" class="fullscreen-viewer" hidden>
     <div class="fullscreen-modal">
       <button id="fullscreenCloseBtn" type="button" class="fullscreen-close" aria-label="Close viewer">&times;</button>
       <div class="fullscreen-toolbar">
@@ -180,15 +645,107 @@
     </div>
   </div>
 
+  <!-- Phase 30: In-Page Exchange Valuation Modal Dialog -->
+  <dialog id="exchangeValuationModal" class="exchange-modal-dialog">
+    <div class="modal-dialog-content">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title" data-i18n="modal_exchange_title">Exchange Your Old Device</h3>
+        <button type="button" class="modal-close-btn" id="btnCloseExchangeModal" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <!-- 4 Steps inside modal -->
+        <div class="modal-wizard-step" id="modalStep1">
+          <label class="modal-step-label" data-i18n="exchange_step1_cat" for="modalCategorySelect">1. Select Category</label>
+          <select id="modalCategorySelect" class="modal-select">
+            <option value="smartphones">📱 Smartphones</option>
+            <option value="laptops">💻 Laptops</option>
+            <option value="tablets">📟 Tablets</option>
+            <option value="smartwatches">⌚ Smartwatches</option>
+            <option value="audio">🎧 Headphones &amp; Audio</option>
+          </select>
+          <div class="modal-category-pills" id="modalCategoryPills" style="margin-top: 8px;">
+            <button type="button" class="modal-cat-pill active" data-cat="smartphones">📱 Smartphones</button>
+            <button type="button" class="modal-cat-pill" data-cat="laptops">💻 Laptops</button>
+            <button type="button" class="modal-cat-pill" data-cat="tablets">📟 Tablets</button>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep2">
+          <label class="modal-step-label" data-i18n="exchange_step2_model">2. Select Brand & Model</label>
+          <div class="modal-select-grid">
+            <select id="modalBrandSelect" class="modal-select"></select>
+            <select id="modalModelSelect" class="modal-select"></select>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep3">
+          <label class="modal-step-label" data-i18n="exchange_step3_condition">3. Check Device Condition</label>
+          <div class="modal-diag-questions">
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_power">Does device turn on?</span>
+              <div class="modal-radio-group">
+                <label><input type="radio" name="modalDiagPower" value="yes" checked /> Yes</label>
+                <label><input type="radio" name="modalDiagPower" value="no" /> No</label>
+              </div>
+            </div>
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_screen">Screen condition:</span>
+              <select id="modalDiagScreen" class="modal-select">
+                <option value="flawless">Flawless (No scratches)</option>
+                <option value="minor">Minor Scratches</option>
+                <option value="heavy">Heavy Scratches</option>
+                <option value="cracked">Cracked / Lines on Screen</option>
+              </select>
+            </div>
+            <div class="modal-q-row">
+              <span data-i18n="exchange_q_body">Body condition:</span>
+              <select id="modalDiagBody" class="modal-select">
+                <option value="flawless">Flawless / Like New</option>
+                <option value="minor">Minor Dents / Normal wear</option>
+                <option value="heavy">Heavy Dents / Broken Casing</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-wizard-step" id="modalStep4">
+          <div class="modal-quote-summary-card">
+            <div class="modal-quote-row">
+              <span>Estimated Exchange Value:</span>
+              <strong class="modal-quote-highlight" id="modalQuoteVal">₹8,500</strong>
+            </div>
+          </div>
+
+          <div class="modal-imei-group">
+            <label for="modalExchangeImei" data-i18n="modal_exchange_imei_label">Enter Device IMEI or Serial Number:</label>
+            <input type="text" id="modalExchangeImei" class="modal-imei-input" placeholder="15-digit IMEI (dial *#06# to check)" data-i18n-placeholder="modal_exchange_imei_placeholder" maxlength="18" />
+            <span class="imei-hint-text">Dial *#06# on phone keypad to view your 15-digit IMEI.</span>
+            <div id="modalImeiError" class="modal-imei-error" style="display: none;" data-i18n="modal_exchange_imei_invalid">
+              Please enter a valid 15-digit IMEI or alphanumeric serial number.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn-modal-cancel" id="btnCancelExchangeModal" data-i18n="modal_exchange_cancel_btn">Cancel</button>
+        <button type="button" class="btn-modal-apply" id="btnApplyExchangeModal" data-i18n="modal_exchange_apply_btn">Apply Exchange Discount</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="bundle-engine.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js?v=20260313b"></script>
   <script src="auth-state.js?v=20260313b"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="customer-media.js?v=20260412a"></script>
+  <script src="renewed.js"></script>
+  <script src="warranty.js"></script>
   <script src="product-detail.js?v=20260315b"></script>
 </body>
 </html>
-
-
-
-
-

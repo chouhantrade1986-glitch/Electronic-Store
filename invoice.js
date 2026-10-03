@@ -269,7 +269,7 @@ function normalizeOrder(order) {
     return sum + Number(item.quantity || 1) * Number(item.price || 0);
   }, 0));
   const shipping = Number(order.shipping || (items.length ? 19 : 0));
-  const tax = Number(order.tax || subtotal * 0.08);
+  const tax = Number(typeof order.tax === "number" ? order.tax : (order.tax || Math.round(subtotal * 0.18 * 100) / 100));
   const couponCode = String(order.couponCode || "").trim().toUpperCase();
   const discount = Number(order.discount || Math.max(0, subtotal + shipping + tax - Number(order.total || subtotal + shipping + tax)));
   const total = Number(order.total || subtotal + shipping + tax - discount);
@@ -283,20 +283,64 @@ function normalizeOrder(order) {
     shippingAddress: String(order.shippingAddress || "N/A"),
     deliverySlot: order.deliverySlot && typeof order.deliverySlot === "object"
       ? {
-        id: String(order.deliverySlot.id || "").trim(),
-        label: String(order.deliverySlot.label || "").trim(),
-        eta: String(order.deliverySlot.eta || "").trim()
-      }
+          slotId: String(order.deliverySlot.slotId || "std-morning"),
+          label: String(order.deliverySlot.label || "Morning"),
+          eta: String(order.deliverySlot.eta || "Tomorrow 7 AM - 11 AM")
+        }
       : null,
     reservationUntil: String(order.reservationUntil || "").trim(),
     statusHistory: normalizeStatusHistory(order.statusHistory, order.createdAt, order.status),
-    items: items.map((item) => ({
-      name: item.name || "Item",
-      quantity: Number(item.quantity || 1),
-      price: Number(item.price || 0),
-      lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || 0)),
-      hsnSac: String(item.hsnSac || "8471")
-    })),
+    items: items.flatMap((item) => {
+      const catalog = window.EM_CATALOG && Array.isArray(window.EM_CATALOG) ? window.EM_CATALOG : [];
+      const prod = catalog.find((p) => String(p.id) === String(item.productId || item.id));
+      let hsn = String(item.hsnSac || item.hsnCode || (prod ? prod.hsnCode : "")).trim();
+      if (!hsn || hsn === "8471") {
+        const titleLower = String(item.name || (prod ? prod.title : "")).toLowerCase();
+        if (titleLower.includes("battery") || titleLower.includes("power bank")) {
+          hsn = "85076000";
+        } else if (titleLower.includes("tv") || titleLower.includes("monitor") || titleLower.includes("display")) {
+          hsn = "85287200";
+        } else if (titleLower.includes("headphone") || titleLower.includes("earphone") || titleLower.includes("audio")) {
+          hsn = "85183000";
+        } else if (titleLower.includes("phone") || titleLower.includes("mobile")) {
+          hsn = "85171300";
+        } else {
+          hsn = "84713010";
+        }
+      }
+      const isRenewedItem = Boolean(item.isRenewed || (prod && prod.isRenewed));
+      const grade = item.renewedGrade || (prod && prod.renewedGrade) || "A";
+      let displayName = item.name || (prod ? prod.title : "Item");
+      if (isRenewedItem && !displayName.includes("Certified Renewed")) {
+        displayName = `[Certified Renewed - Grade ${grade}] ${displayName} (6M Warranty)`;
+      }
+      const normalizedItem = {
+        id: item.productId || item.id || (prod ? prod.id : ""),
+        name: displayName,
+        quantity: Number(item.quantity || 1),
+        price: Number(item.price || (prod ? prod.price : 0)),
+        lineTotal: Number(item.lineTotal || Number(item.quantity || 1) * Number(item.price || (prod ? prod.price : 0))),
+        hsnSac: hsn,
+        gstRate: typeof item.gstRate === "number" ? item.gstRate : (prod && typeof prod.gstRate === "number" ? prod.gstRate : null),
+        isRenewed: isRenewedItem,
+        renewedGrade: grade
+      };
+      if (!item.protectionPlan) {
+        return [normalizedItem];
+      }
+      const protection = item.protectionPlan;
+      return [normalizedItem, {
+        id: `protection:${protection.id || "plan"}:${normalizedItem.id}`,
+        name: `ElectroMart Protect - ${protection.shortName || protection.name || "Device Protection Plan"}`,
+        quantity: normalizedItem.quantity,
+        price: Number(protection.price || 0),
+        lineTotal: Number(protection.price || 0) * normalizedItem.quantity,
+        hsnSac: String(protection.sacCode || "998714"),
+        gstRate: 0.18,
+        isProtectionPlan: true,
+        protectionPlan: protection
+      }];
+    }),
     subtotal,
     shipping,
     tax,
@@ -539,7 +583,11 @@ function render(order) {
 
   invoiceItems.innerHTML = order.items.map((item, index) => {
     const itemTaxable = Number(item.lineTotal || 0);
-    const itemTax = taxableValue > 0 ? (itemTaxable / taxableValue) * gstAmount : 0;
+    const itemRate = typeof item.gstRate === "number" ? (item.gstRate * 100) : effectiveRate;
+    const itemTax = taxableValue > 0 ? (itemTaxable / taxableValue) * gstAmount : (itemTaxable * itemRate / 100);
+    const cgstRate = sameState ? (itemRate / 2) : 0;
+    const sgstRate = sameState ? (itemRate / 2) : 0;
+    const igstRate = sameState ? 0 : itemRate;
     const cgstAmt = sameState ? itemTax / 2 : 0;
     const sgstAmt = sameState ? itemTax / 2 : 0;
     const igstAmt = sameState ? 0 : itemTax;
@@ -554,11 +602,11 @@ function render(order) {
         <td>${item.quantity}</td>
         <td>${money(item.price)}</td>
         <td>${money(itemTaxable)}</td>
-        <td>${sameState ? (effectiveRate / 2).toFixed(2) : "0.00"}%</td>
+        <td>${cgstRate.toFixed(2)}%</td>
         <td>${money(cgstAmt)}</td>
-        <td>${sameState ? (effectiveRate / 2).toFixed(2) : "0.00"}%</td>
+        <td>${sgstRate.toFixed(2)}%</td>
         <td>${money(sgstAmt)}</td>
-        <td>${sameState ? "0.00" : effectiveRate.toFixed(2)}%</td>
+        <td>${igstRate.toFixed(2)}%</td>
         <td>${money(igstAmt)}</td>
         <td>${money(itemTaxable + itemTax)}</td>
       </tr>

@@ -3,6 +3,12 @@ const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
 
+function resolveRenewedTaxProfile(product) {
+  const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
+  const isDisplay = /(^|\s)(tv|television|monitor|display)(\s|$)/.test(searchable);
+  return isDisplay ? { hsnCode: "85287200", gstRate: 0.28 } : { hsnCode: "84713010", gstRate: 0.18 };
+}
+
 const catalog = [
   { id: 1, name: "AstraBook Pro 14", price: 999, image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80" },
   { id: 2, name: "Nimbus Phone X", price: 749, image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" },
@@ -135,6 +141,14 @@ function loadCatalogMap() {
   }
 }
 
+function saveCatalogMap(catalogMap) {
+  try {
+    localStorage.setItem(CATALOG_STORAGE_KEY, JSON.stringify(catalogMap));
+  } catch (error) {
+    return;
+  }
+}
+
 function getCatalogProduct(productId) {
   const key = String(productId || "").trim();
   if (!key) {
@@ -146,11 +160,112 @@ function getCatalogProduct(productId) {
     return cached[key];
   }
 
+  // Check live 751-product catalog from products-data.js
+  if (typeof window !== "undefined") {
+    if (window.EM_CATALOG_MAP) {
+      const p = typeof window.EM_CATALOG_MAP.get === "function" 
+        ? window.EM_CATALOG_MAP.get(key) 
+        : window.EM_CATALOG_MAP[key];
+      if (p) {
+        const mapped = {
+          id: String(p.id),
+          name: p.name || p.title || `Product #${p.id}`,
+          price: Number(p.price || 0),
+          image: (Array.isArray(p.images) && p.images[0]) || p.image || fallbackCatalogImage,
+          stock: p.stock !== undefined ? Number(p.stock) : 10
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
+
+    if (Array.isArray(window.EM_CATALOG)) {
+      const p = window.EM_CATALOG.find((item) => String(item.id) === key);
+      if (p) {
+        const mapped = {
+          id: String(p.id),
+          name: p.name || p.title || `Product #${p.id}`,
+          price: Number(p.price || 0),
+          image: (Array.isArray(p.images) && p.images[0]) || p.image || fallbackCatalogImage,
+          stock: p.stock !== undefined ? Number(p.stock) : 10
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
+
+    if (Array.isArray(window.ELECTROMART_RENEWED_CATALOG)) {
+      const rp = window.ELECTROMART_RENEWED_CATALOG.find((item) => String(item.id) === key);
+      if (rp) {
+        const renewedTaxProfile = resolveRenewedTaxProfile(rp);
+        const mapped = {
+          id: String(rp.id),
+          name: rp.name.includes("Certified Renewed") ? rp.name : `[Certified Renewed - Grade ${rp.renewedGrade || 'A'}] ${rp.name}`,
+          price: Number(rp.renewedPrice || 0),
+          image: rp.image || fallbackCatalogImage,
+          stock: 10,
+          isRenewed: true,
+          renewedGrade: rp.renewedGrade || "A",
+          gradeLabel: rp.gradeLabel || `Grade ${rp.renewedGrade || 'A'} (Excellent)`,
+          batteryHealth: rp.batteryHealth || 90,
+          warrantyDuration: "6 Months",
+          hsnCode: renewedTaxProfile.hsnCode,
+          gstRate: renewedTaxProfile.gstRate
+        };
+        cached[key] = mapped;
+        saveCatalogMap(cached);
+        return mapped;
+      }
+    }
+  }
+
   return catalog.find((item) => String(item.id) === key) || null;
+}
+
+const UNSELECTED_STORAGE_KEY = "electromart_unselected_cart_v1";
+const SAVED_STORAGE_KEY = "electromart_saved_for_later_v1";
+
+function loadUnselectedMap() {
+  try {
+    const raw = localStorage.getItem(UNSELECTED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveUnselectedMap(unselectedMap) {
+  try {
+    localStorage.setItem(UNSELECTED_STORAGE_KEY, JSON.stringify(unselectedMap));
+  } catch (error) {
+    return;
+  }
+}
+
+function loadSavedMap() {
+  try {
+    const raw = localStorage.getItem(SAVED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return typeof parsed === "object" && parsed ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveSavedMap(savedMap) {
+  try {
+    localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(savedMap));
+  } catch (error) {
+    return;
+  }
 }
 
 function getCartRows() {
   const cartMap = loadCartMap();
+  const unselectedMap = loadUnselectedMap();
   return Object.entries(cartMap)
     .map(([id, qty]) => {
       if (Number(qty) <= 0) {
@@ -164,9 +279,19 @@ function getCartRows() {
           name: `Product #${id}`,
           price: 0,
           image: fallbackCatalogImage,
-          quantity: Number(qty)
+          quantity: Number(qty),
+          selected: !unselectedMap[String(id)]
         };
       }
+
+      let b2bMeta = {};
+      try {
+        const rawMeta = localStorage.getItem("electromart_b2b_cart_meta_v1");
+        b2bMeta = rawMeta ? JSON.parse(rawMeta) : {};
+      } catch (e) {
+        b2bMeta = {};
+      }
+      const itemB2b = b2bMeta[String(id)] || (product.segment === "b2b" ? { tier: "Wholesale MOQ Ready", itcEligible: true } : null);
 
       return {
         id: String(product.id),
@@ -174,7 +299,20 @@ function getCartRows() {
         price: Number(product.price || 0),
         image: product.image || fallbackCatalogImage,
         stock: Number(product.stock),
-        quantity: Number(qty)
+        quantity: Number(qty),
+        category: product.category || "",
+        hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
+        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
+        segment: product.segment || (itemB2b ? "b2b" : "b2c"),
+        b2bDiscountTier: product.b2bDiscountTier || (itemB2b ? itemB2b.tier : null),
+        itcEligible: product.itcEligible || (itemB2b ? true : false),
+        isRenewed: Boolean(product.isRenewed),
+        renewedGrade: product.renewedGrade || null,
+        warrantyDuration: product.warrantyDuration || (product.isRenewed ? "6 Months" : null),
+        protectionPlan: typeof window !== "undefined" && typeof window.getSelectedProtection === "function" && typeof window.buildProtectionLine === "function"
+          ? window.buildProtectionLine(product, window.getSelectedProtection(product.id))
+          : null,
+        selected: !unselectedMap[String(id)]
       };
     })
     .filter(Boolean);
@@ -252,17 +390,81 @@ function evaluateCoupon(code, subtotal, shipping) {
   };
 }
 
+function isPrimeActive() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Boolean(parsed && parsed.active);
+  } catch {
+    return false;
+  }
+}
+
 function getPricingBreakdown(rows) {
-  const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
-  const subtotal = rows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-  const shipping = itemCount > 0 ? 19 : 0;
+  const selectedRows = rows.filter((row) => row.selected !== false);
+  const itemCount = selectedRows.reduce((sum, row) => sum + row.quantity, 0);
+  const subtotal = selectedRows.reduce((sum, row) => sum + row.price * row.quantity + (row.protectionPlan ? row.protectionPlan.price * row.quantity : 0), 0);
+  const primeActive = isPrimeActive();
+  const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
-  const taxableSubtotal = Math.max(0, subtotal - (coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0));
-  const tax = taxableSubtotal * 0.08;
-  const total = subtotal + shipping + tax - coupon.amount;
-  return { itemCount, subtotal, shipping, tax, total, coupon };
+  const nonShippingDiscount = coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0;
+  const discountRatio = subtotal > 0 ? Math.max(0, 1 - (nonShippingDiscount / subtotal)) : 1;
+
+  let totalGst = 0;
+  const gstBreakdownByRate = {};
+
+  selectedRows.forEach((item) => {
+    [item, item.protectionPlan].filter(Boolean).forEach((line) => {
+      const itemSubtotal = line.price * item.quantity;
+      const discountedItemSubtotal = itemSubtotal * discountRatio;
+      const rate = typeof line.gstRate === "number" ? line.gstRate : 0.18;
+      const itemGst = discountedItemSubtotal * rate;
+      totalGst += itemGst;
+      const rateKey = String(Math.round(rate * 100));
+      gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    });
+  });
+
+  let totalExchangeDiscount = 0;
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+  selectedRows.forEach((row) => {
+    const ex = exCart[String(row.id)];
+    if (ex && ex.finalValue) {
+      totalExchangeDiscount += Number(ex.finalValue);
+    }
+  });
+
+  const roundedTax = Math.round(totalGst * 100) / 100;
+  const roundedSubtotal = Math.round(subtotal * 100) / 100;
+  const roundedDiscount = Math.round(coupon.amount * 100) / 100;
+  const total = Math.max(0, Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount - totalExchangeDiscount) * 100) / 100);
+
+  const rates = Object.keys(gstBreakdownByRate);
+  let gstLabelSuffix = "18%";
+  if (rates.length === 1) {
+    gstLabelSuffix = `${rates[0]}%`;
+  } else if (rates.length > 1) {
+    const blended = subtotal > 0 ? Math.round((roundedTax / Math.max(1, subtotal - nonShippingDiscount)) * 100) : 18;
+    gstLabelSuffix = `${blended}%`;
+  }
+
+  return {
+    itemCount,
+    subtotal: roundedSubtotal,
+    shipping,
+    tax: roundedTax,
+    total,
+    coupon,
+    exchangeDiscount: totalExchangeDiscount,
+    gstBreakdownByRate,
+    gstLabelSuffix
+  };
 }
 
 function getReservationState(rows) {
@@ -288,21 +490,90 @@ function loadDeliverySlotState() {
   }
 }
 
-function cartItemCard(row) {
+function escapeAttributeText(value) {
+  return String(value || "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
+}
+
+function cartItemCard(row, currentLang) {
+  const isSelected = row.selected !== false;
+  const title = window.getLocalizedTitle ? window.getLocalizedTitle(row, currentLang) : row.name;
+  const safeTitle = escapeAttributeText(title);
+  const translations = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+  const quantityLabel = String(translations.qty_label || "Quantity").replace(/[:：]\s*$/, "");
+  const removeLabel = translations.delete || "Remove";
+
+  // Qty options up to max(10, row.quantity)
+  const maxOptions = Math.max(10, row.quantity);
+  const qtyOptions = [];
+  for (let i = 1; i <= maxOptions; i++) {
+    qtyOptions.push(`<option value="${i}" ${i === row.quantity ? 'selected' : ''}>${i}${i === 10 && maxOptions === 10 ? '+' : ''}</option>`);
+  }
+
   return `
-    <article class="cart-item">
-      <a href="product-detail.html?id=${encodeURIComponent(row.id)}">
+    <article class="cart-item" data-id="${row.id}">
+      <div class="cart-item-check-wrap">
+        <input type="checkbox" class="cart-item-checkbox" data-action="toggle-select" data-id="${row.id}" ${isSelected ? 'checked' : ''} aria-label="${safeTitle ? `${translations.select_cart_item || "Select item"}: ${safeTitle}` : translations.select_cart_item || "Select item"}" />
+      </div>
+      <a class="item-thumb" href="product-detail.html?id=${encodeURIComponent(row.id)}">
         <img src="${row.image}" alt="${row.name}" loading="lazy" />
       </a>
-      <div>
-        <h3 class="item-title"><a href="product-detail.html?id=${encodeURIComponent(row.id)}">${row.name}</a></h3>
-        <p class="item-stock">In Stock</p>
-        <p class="item-price">${money(row.price)} each</p>
-        <div class="qty-controls">
-          <button class="qty-btn" data-action="decrease" data-id="${row.id}" type="button">-</button>
-          <strong>${row.quantity}</strong>
-          <button class="qty-btn" data-action="increase" data-id="${row.id}" type="button">+</button>
-          <button class="remove-btn" data-action="remove" data-id="${row.id}" type="button">Remove</button>
+      <div class="cart-item-details">
+        <h3 class="item-title">
+          <a href="product-detail.html?id=${encodeURIComponent(row.id)}">${title}</a>
+        </h3>
+        <p class="item-stock" data-i18n="in_stock">In Stock</p>
+        <div class="amz-prime-delivery-tag">
+          <strong>Prime</strong> <span>Eligible for FREE Shipping</span>
+        </div>
+        ${row.b2bDiscountTier ? `
+        <div class="b2b-cart-badges" style="display:flex;align-items:center;gap:6px;margin:4px 0;flex-wrap:wrap;">
+          <span class="b2b-tier-badge" style="background:#007600;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;">✓ ${row.b2bDiscountTier}</span>
+          <span class="b2b-itc-badge" style="color:#007600;font-size:12px;font-weight:600;">✓ GST ITC Eligible</span>
+        </div>` : ''}
+        ${(() => {
+          let c = {};
+          try { c = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}"); } catch (e) {}
+          const ex = c[String(row.id)];
+          return (ex && ex.finalValue) ? `
+          <div class="cart-exchange-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;">
+            <span>🔄 <strong>Exchange Applied:</strong> ${ex.modelName || "Device"} (-${money(ex.finalValue)})</span>
+            <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" aria-label="${removeLabel}: exchange for ${safeTitle}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
+          </div>` : '';
+        })()}
+        ${row.isRenewed ? `
+        <div class="cart-renewed-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e8f7ee;border:1px solid #067d62;padding:4px 8px;border-radius:4px;font-size:12px;color:#067d62;margin:4px 0;font-weight:600;">
+          <span>♻️ <strong>Certified Renewed:</strong> Grade ${row.renewedGrade || 'A'} • 6 Months Warranty</span>
+        </div>` : ''}
+        ${row.protectionPlan ? `
+        <div class="cart-protection-badge" style="display:flex;align-items:center;gap:6px;background:#eef8f7;border:1px solid #8bc9c5;padding:5px 8px;border-radius:4px;font-size:12px;color:#00635f;margin:4px 0;font-weight:600;">
+          <span>🛡️ <strong>${row.protectionPlan.name}</strong> · ${money(row.protectionPlan.price)} + 18% GST</span>
+          <button type="button" data-action="remove-protection" data-id="${row.id}" aria-label="${removeLabel}: ${escapeAttributeText(row.protectionPlan.name)} for ${safeTitle}" style="margin-left:auto;border:0;background:none;color:#b42318;cursor:pointer;">Remove</button>
+        </div>` : ''}
+        <label class="cart-item-gift">
+          <input type="checkbox" /> <span data-i18n="this_is_a_gift">This order contains a gift</span>
+        </label>
+        
+        <div class="amz-item-actions-row">
+          <div class="amz-qty-select-wrap">
+            <span style="font-size:12px;color:#565959;margin-right:4px;" data-i18n="qty_label">Qty:</span>
+            <select class="amz-qty-select" data-action="change-qty" data-id="${row.id}" aria-label="${escapeAttributeText(quantityLabel)}: ${safeTitle}">
+              ${qtyOptions.join("")}
+            </select>
+          </div>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="remove" data-id="${row.id}" type="button" data-i18n="delete" aria-label="${escapeAttributeText(`${translations.delete || "Delete"}: ${title}`)}">Delete</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="save-for-later" data-id="${row.id}" type="button" data-i18n="save_for_later" aria-label="${escapeAttributeText(`${translations.save_for_later || "Save for later"}: ${title}`)}">Save for later</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="see-more" data-id="${row.id}" type="button" data-i18n="see_more_like_this" aria-label="${escapeAttributeText(`${translations.see_more_like_this || "See more like this"}: ${title}`)}">See more like this</button>
+          <span class="amz-action-divider" aria-hidden="true">|</span>
+          <button class="amz-action-link" data-action="share" data-id="${row.id}" type="button" aria-label="${escapeAttributeText(`Share: ${title}`)}">Share</button>
         </div>
       </div>
       <strong class="item-total">${money(row.quantity * row.price)}</strong>
@@ -310,21 +581,154 @@ function cartItemCard(row) {
   `;
 }
 
+function renderSavedForLater() {
+  const section = document.getElementById("savedForLaterSection");
+  const list = document.getElementById("savedItemsList");
+  if (!section || !list) return;
+
+  const savedMap = loadSavedMap();
+  const entries = Object.entries(savedMap).filter(([_, qty]) => Number(qty) > 0);
+
+  if (entries.length === 0) {
+    section.hidden = true;
+    list.innerHTML = "";
+    return;
+  }
+
+  section.hidden = false;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+
+  list.innerHTML = entries.map(([id, qty]) => {
+    const product = getCatalogProduct(id);
+    const name = product ? product.name : `Product #${id}`;
+    const price = product ? product.price : 0;
+    const image = product ? product.image : fallbackCatalogImage;
+    const title = window.getLocalizedTitle ? window.getLocalizedTitle({ id, name }, currentLang) : name;
+
+    return `
+      <div class="amz-saved-card" data-id="${id}">
+        <div class="amz-saved-thumb">
+          <a href="product-detail.html?id=${encodeURIComponent(id)}">
+            <img src="${image}" alt="${name}" loading="lazy" />
+          </a>
+        </div>
+        <a class="amz-saved-title" href="product-detail.html?id=${encodeURIComponent(id)}">${title}</a>
+        <div class="amz-saved-price">${money(price)}</div>
+        <button class="amz-move-to-cart-btn" data-action="move-to-cart" data-id="${id}" type="button" data-i18n="move_to_cart">Move to cart</button>
+        <button class="amz-saved-delete-btn" data-action="remove-saved" data-id="${id}" type="button" data-i18n="delete">Delete</button>
+      </div>
+    `;
+  }).join("");
+}
+
+function syncHeaderCartCount() {
+  const countEl = document.getElementById("cartCount") || document.querySelector(".nav-cart-count");
+  const cartMap = loadCartMap();
+  const total = Object.values(cartMap).reduce((sum, q) => sum + (Number(q) || 0), 0);
+  if (countEl) {
+    countEl.textContent = String(total);
+  }
+  if (typeof window.syncCartCount === "function") {
+    window.syncCartCount();
+  }
+}
+
 function renderCart() {
+  syncHeaderCartCount();
   const rows = getCartRows();
   const breakdown = getPricingBreakdown(rows);
   const { itemCount, subtotal, shipping, tax, total, coupon } = breakdown;
   const reservation = getReservationState(rows);
   const deliverySlot = loadDeliverySlotState();
 
-  cartMetaEl.textContent = `${itemCount} items`;
-  summaryItemsEl.textContent = `Subtotal (${itemCount} items):`;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+  const subtotalLabel = t.cart_subtotal || "Subtotal";
+  const itemsLabel = t.items || "items";
+  const proceedLabel = t.proceed_to_buy || "Proceed to Buy";
+
+  cartMetaEl.textContent = `${itemCount} ${itemsLabel}`;
+  summaryItemsEl.textContent = `${subtotalLabel} (${itemCount} ${itemsLabel}):`;
   subtotalEl.textContent = money(subtotal);
   shippingEl.textContent = money(shipping);
   taxEl.textContent = money(tax);
-  totalEl.textContent = money(total);
+  totalEl.textContent = money(subtotal);
   orderTotalEl.textContent = money(total);
-  checkoutBtn.disabled = rows.length === 0;
+  checkoutBtn.textContent = `${proceedLabel} (${itemCount} ${itemsLabel})`;
+  checkoutBtn.disabled = itemCount === 0;
+
+  const cartTaxLabel = document.getElementById("cartTaxLabel");
+  if (cartTaxLabel) {
+    const gstPrefix = t.estimated_gst || "Estimated GST";
+    cartTaxLabel.textContent = `${gstPrefix} (${breakdown.gstLabelSuffix || "18%"}):`;
+  }
+  const subtotalLabelEl = document.getElementById("subtotalLabel");
+  if (subtotalLabelEl) {
+    subtotalLabelEl.textContent = t.subtotal_excl_tax || "Subtotal (Excl. Tax)";
+  }
+
+  // Update listing bottom subtotal
+  const cartBottomSubtotalLabel = document.getElementById("cartBottomSubtotalLabel");
+  const cartBottomSubtotalValue = document.getElementById("cartBottomSubtotalValue");
+  if (cartBottomSubtotalLabel) {
+    cartBottomSubtotalLabel.textContent = `${subtotalLabel} (${itemCount} ${itemsLabel}):`;
+  }
+  if (cartBottomSubtotalValue) {
+    cartBottomSubtotalValue.textContent = money(subtotal);
+  }
+
+  // Update Deselect All / Select All Button
+  const toggleSelectAllBtn = document.getElementById("toggleSelectAllBtn");
+  if (toggleSelectAllBtn) {
+    const unselectedMap = loadUnselectedMap();
+    const hasUnselected = rows.some((r) => unselectedMap[r.id]);
+    if (hasUnselected) {
+      toggleSelectAllBtn.textContent = t.select_all || "Select all items";
+    } else {
+      toggleSelectAllBtn.textContent = t.deselect_all_items || "Deselect all items";
+    }
+  }
+
+  // Update Free Delivery Qualifier Bar
+  const freeDeliveryBar = document.getElementById("freeDeliveryBar");
+  const fdQualifiedMsg = document.getElementById("fdQualifiedMsg");
+  const fdUnqualifiedMsg = document.getElementById("fdUnqualifiedMsg");
+  const fdProgressBar = document.getElementById("fdProgressBar");
+  const fdProgressText = document.getElementById("fdProgressText");
+  const summaryFdQualifier = document.getElementById("summaryFdQualifier");
+
+  const FD_THRESHOLD = 499;
+  if (freeDeliveryBar) {
+    if (rows.length === 0) {
+      freeDeliveryBar.hidden = true;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = true;
+    } else if (isPrimeActive() || subtotal >= FD_THRESHOLD) {
+      freeDeliveryBar.hidden = false;
+      if (fdQualifiedMsg) {
+        fdQualifiedMsg.hidden = false;
+        if (isPrimeActive()) {
+          fdQualifiedMsg.innerHTML = '<span class="fd-tick" aria-hidden="true">✓</span> <span><strong>Prime Delivery:</strong> Your order qualifies for <strong>FREE Fast Delivery</strong></span>';
+        }
+      }
+      if (fdUnqualifiedMsg) fdUnqualifiedMsg.hidden = true;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = false;
+    } else {
+      freeDeliveryBar.hidden = false;
+      if (fdQualifiedMsg) fdQualifiedMsg.hidden = true;
+      if (fdUnqualifiedMsg) fdUnqualifiedMsg.hidden = false;
+      if (summaryFdQualifier) summaryFdQualifier.hidden = true;
+
+      const diff = FD_THRESHOLD - subtotal;
+      const progressPercent = Math.min(100, Math.round((subtotal / FD_THRESHOLD) * 100));
+      if (fdProgressBar) {
+        fdProgressBar.style.width = `${progressPercent}%`;
+      }
+      if (fdProgressText) {
+        const template = t.add_more_for_free_delivery || "Add items worth ₹{amount} more for FREE Delivery.";
+        fdProgressText.innerHTML = template.replace("{amount}", diff.toLocaleString("en-IN"));
+      }
+    }
+  }
 
   if (couponInput) {
     couponInput.value = coupon.code || "";
@@ -337,6 +741,13 @@ function renderCart() {
     const showDiscount = Number(coupon.amount || 0) > 0;
     discountRow.hidden = !showDiscount;
     discountValue.textContent = `-${money(coupon.amount || 0)}`;
+  }
+  const exRow = document.getElementById("exchangeDiscountRow");
+  const exVal = document.getElementById("exchangeDiscountValue");
+  if (exRow && exVal) {
+    const showEx = Number(breakdown.exchangeDiscount || 0) > 0;
+    exRow.hidden = !showEx;
+    exVal.textContent = `-${money(breakdown.exchangeDiscount || 0)}`;
   }
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
@@ -357,12 +768,34 @@ function renderCart() {
   }
 
   if (rows.length === 0) {
-    cartItemsEl.innerHTML = "<div class='empty-message'>Your cart is empty. Add items from the store.</div>";
+    const emptyMsg = t.cart_empty || "Your ElectroMart Cart is empty.";
+    cartItemsEl.innerHTML = `
+      <div class="amz-empty-cart-wrap">
+        <img class="amz-empty-cart-img" src="https://m.media-amazon.com/images/G/31/cart/empty/kettle-desaturated._CB424694257_.svg" alt="Empty Cart" onerror="this.style.display='none'" />
+        <div class="amz-empty-cart-content">
+          <h2 data-i18n="cart_empty">${emptyMsg}</h2>
+          <p style="color:#565959;font-size:14px;margin:0 0 10px;">Check your Saved for later items below or discover great deals across all categories.</p>
+          <a href="todays-deals.html" class="amz-empty-deals-btn" data-i18n="todays_deals">Explore Today's Deals</a>
+        </div>
+      </div>
+    `;
+    renderSavedForLater();
+    if (typeof window.applyFullPageTranslation === "function") {
+      window.applyFullPageTranslation(currentLang);
+    }
     return;
   }
 
-  cartItemsEl.innerHTML = rows.map(cartItemCard).join("");
+  cartItemsEl.innerHTML = rows.map((row) => cartItemCard(row, currentLang)).join("");
+  renderSavedForLater();
+
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(currentLang);
+  }
 }
+
+window.renderCart = renderCart;
+window.renderSavedForLater = renderSavedForLater;
 
 function updateQuantity(productId, change) {
   const key = String(productId || "").trim();
@@ -376,8 +809,31 @@ function updateQuantity(productId, change) {
 
   if (next <= 0) {
     delete cartMap[key];
+    const unselectedMap = loadUnselectedMap();
+    delete unselectedMap[key];
+    saveUnselectedMap(unselectedMap);
   } else {
     cartMap[key] = next;
+  }
+
+  saveCartMap(cartMap);
+  renderCart();
+}
+
+function setQuantity(productId, newQty) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const qty = parseInt(newQty, 10);
+  const cartMap = loadCartMap();
+
+  if (isNaN(qty) || qty <= 0) {
+    delete cartMap[key];
+    const unselectedMap = loadUnselectedMap();
+    delete unselectedMap[key];
+    saveUnselectedMap(unselectedMap);
+  } else {
+    cartMap[key] = qty;
   }
 
   saveCartMap(cartMap);
@@ -393,9 +849,70 @@ function removeItem(productId) {
   const cartMap = loadCartMap();
   delete cartMap[key];
   saveCartMap(cartMap);
+
+  const unselectedMap = loadUnselectedMap();
+  delete unselectedMap[key];
+  saveUnselectedMap(unselectedMap);
+
+  try {
+    const exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+    if (exCart[key]) {
+      delete exCart[key];
+      localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
+    }
+  } catch (e) {}
+
   renderCart();
 }
 
+function saveForLater(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const cartMap = loadCartMap();
+  const qty = Number(cartMap[key] || 1);
+  delete cartMap[key];
+  saveCartMap(cartMap);
+
+  const unselectedMap = loadUnselectedMap();
+  delete unselectedMap[key];
+  saveUnselectedMap(unselectedMap);
+
+  const savedMap = loadSavedMap();
+  savedMap[key] = (savedMap[key] || 0) + qty;
+  saveSavedMap(savedMap);
+
+  renderCart();
+}
+
+function moveToCart(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const savedMap = loadSavedMap();
+  const qty = Number(savedMap[key] || 1);
+  delete savedMap[key];
+  saveSavedMap(savedMap);
+
+  const cartMap = loadCartMap();
+  cartMap[key] = (cartMap[key] || 0) + qty;
+  saveCartMap(cartMap);
+
+  renderCart();
+}
+
+function removeSavedItem(productId) {
+  const key = String(productId || "").trim();
+  if (!key) return;
+
+  const savedMap = loadSavedMap();
+  delete savedMap[key];
+  saveSavedMap(savedMap);
+
+  renderSavedForLater();
+}
+
+// Global click delegation
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) {
@@ -410,25 +927,103 @@ document.addEventListener("click", (event) => {
 
   if (action === "increase") {
     updateQuantity(productId, 1);
-  }
-
-  if (action === "decrease") {
+  } else if (action === "decrease") {
     updateQuantity(productId, -1);
-  }
-
-  if (action === "remove") {
+  } else if (action === "remove") {
     removeItem(productId);
+  } else if (action === "remove-exchange") {
+    try {
+      const exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+      delete exCart[productId];
+      localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
+    } catch (e) {}
+    renderCart();
+  } else if (action === "remove-protection") {
+    if (typeof window.setSelectedProtection === "function") window.setSelectedProtection(productId, null);
+    renderCart();
+  } else if (action === "save-for-later") {
+    saveForLater(productId);
+  } else if (action === "move-to-cart") {
+    moveToCart(productId);
+  } else if (action === "remove-saved") {
+    removeSavedItem(productId);
+  } else if (action === "see-more") {
+    const row = getCatalogProduct(productId);
+    const cat = row?.category || "all";
+    window.location.href = `products.html?category=${encodeURIComponent(cat)}`;
+  } else if (action === "share") {
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('cart.html', '')}product-detail.html?id=${encodeURIComponent(productId)}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("Product link copied to clipboard!");
+      }).catch(() => {});
+    } else {
+      prompt("Copy product link:", shareUrl);
+    }
   }
 });
 
+// Change event delegation for Qty dropdown and Checkboxes
+document.addEventListener("change", (event) => {
+  const select = event.target.closest("select[data-action='change-qty']");
+  if (select) {
+    const productId = select.getAttribute("data-id");
+    setQuantity(productId, select.value);
+    return;
+  }
+
+  const checkbox = event.target.closest("input[data-action='toggle-select']");
+  if (checkbox) {
+    const productId = checkbox.getAttribute("data-id");
+    const unselectedMap = loadUnselectedMap();
+    if (checkbox.checked) {
+      delete unselectedMap[String(productId)];
+    } else {
+      unselectedMap[String(productId)] = true;
+    }
+    saveUnselectedMap(unselectedMap);
+    renderCart();
+    return;
+  }
+});
+
+// Deselect / Select all button
+const toggleSelectAllBtn = document.getElementById("toggleSelectAllBtn");
+if (toggleSelectAllBtn) {
+  toggleSelectAllBtn.addEventListener("click", () => {
+    const rows = getCartRows();
+    const unselectedMap = loadUnselectedMap();
+    const hasUnselected = rows.some((r) => unselectedMap[r.id]);
+
+    if (hasUnselected) {
+      // Select all
+      rows.forEach((r) => {
+        delete unselectedMap[r.id];
+      });
+    } else {
+      // Deselect all
+      rows.forEach((r) => {
+        unselectedMap[r.id] = true;
+      });
+    }
+
+    saveUnselectedMap(unselectedMap);
+    renderCart();
+  });
+}
+
 clearCartBtn.addEventListener("click", () => {
   saveCartMap({});
+  saveUnselectedMap({});
   clearCouponState();
+  try {
+    localStorage.removeItem("electromart_exchange_cart_v1");
+  } catch (e) {}
   renderCart();
 });
 
 checkoutBtn.addEventListener("click", () => {
-  const rows = getCartRows();
+  const rows = getCartRows().filter((r) => r.selected !== false);
   if (rows.length === 0) {
     return;
   }
@@ -438,9 +1033,9 @@ checkoutBtn.addEventListener("click", () => {
 if (applyCouponBtn) {
   applyCouponBtn.addEventListener("click", () => {
     const code = normalizeCouponCode(couponInput?.value || "");
-    const rows = getCartRows();
+    const rows = getCartRows().filter((r) => r.selected !== false);
     const subtotal = rows.reduce((sum, row) => sum + row.price * row.quantity, 0);
-    const shipping = rows.length > 0 ? 19 : 0;
+    const shipping = rows.length > 0 ? (isPrimeActive() || subtotal >= 499 ? 0 : 19) : 0;
     const coupon = evaluateCoupon(code, subtotal, shipping);
     if (!coupon.code) {
       clearCouponState();
@@ -460,6 +1055,19 @@ if (applyCouponBtn) {
 if (removeCouponBtn) {
   removeCouponBtn.addEventListener("click", () => {
     clearCouponState();
+    renderCart();
+  });
+}
+
+// Re-render cart when Prime status changes in any tab or custom event
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === CART_STORAGE_KEY || e.key === null || e.key === "electromart_prime_status_v1") {
+      renderCart();
+    }
+  });
+
+  window.addEventListener("electromart_prime_updated", () => {
     renderCart();
   });
 }

@@ -1444,13 +1444,73 @@ async function confirmPhoneVerification() {
 }
 
 function setActivePanel(panelName) {
-  menuButtons.forEach((button) => {
+  const currentMenuButtons = document.querySelectorAll(".menu-btn");
+  const currentPanels = document.querySelectorAll(".panel");
+  const breadcrumbSep = document.getElementById("breadcrumbSeparator");
+  const breadcrumbSec = document.getElementById("breadcrumbCurrentSection");
+
+  currentMenuButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.panel === panelName);
   });
 
-  panels.forEach((panel) => {
+  currentPanels.forEach((panel) => {
     panel.classList.toggle("active", panel.id === `panel-${panelName}`);
   });
+
+  if (breadcrumbSep && breadcrumbSec) {
+    if (panelName === "overview" || !panelName) {
+      breadcrumbSep.style.display = "none";
+      breadcrumbSec.style.display = "none";
+      breadcrumbSec.textContent = "";
+    } else {
+      breadcrumbSep.style.display = "inline";
+      breadcrumbSec.style.display = "inline";
+      const sectionLabels = {
+        security: "Login & security",
+        addresses: "Your Addresses",
+        payments: "Payment Options",
+        "pay-balance": "ElectroMart Pay Balance",
+        prime: "Prime Membership",
+        contact: "Contact Us",
+        notifications: "Notification Center",
+        profile: "Profile Details",
+        business: "Business Profile"
+      };
+      breadcrumbSec.textContent = sectionLabels[panelName] || panelName;
+    }
+  }
+
+  const main = document.getElementById("accountMainContainer");
+  if (main && typeof main.scrollIntoView === "function" && panelName !== "overview") {
+    main.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  if (panelName === "prime") {
+    syncAccountPrimePanel();
+  }
+}
+
+function syncAccountPrimePanel() {
+  try {
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const status = raw ? JSON.parse(raw) : null;
+    const statusInfo = document.querySelector("#panel-prime .prime-status-info");
+    if (!statusInfo) return;
+
+    if (status && status.active) {
+      statusInfo.innerHTML = `
+        <h3>${status.tierName || "Active Prime Member"}</h3>
+        <p>Your membership renews on <strong>${status.renewalDate || "next year"}</strong>. Enjoy unlimited shopping and entertainment privileges.</p>
+      `;
+    } else {
+      statusInfo.innerHTML = `
+        <h3>Not an Active Member</h3>
+        <p>Join ElectroMart Prime to unlock unlimited Free One-Day &amp; Same-Day delivery, 5% cashback, and exclusive lightning deal access.</p>
+      `;
+    }
+  } catch (e) {
+    console.warn("syncAccountPrimePanel error:", e);
+  }
 }
 
 function applyProfile(profile) {
@@ -1805,6 +1865,496 @@ signOutBtn.addEventListener("click", () => {
   window.location.href = "auth.html";
 });
 
+const PAY_BALANCE_KEY = "electromart_pay_balance_v1";
+
+function getPayBalance() {
+  const stored = localStorage.getItem(PAY_BALANCE_KEY);
+  if (stored !== null && !isNaN(parseFloat(stored))) {
+    return parseFloat(stored);
+  }
+  return 2450.00;
+}
+
+function savePayBalance(amount) {
+  localStorage.setItem(PAY_BALANCE_KEY, String(amount));
+  window.dispatchEvent(new Event("electromart_pay_balance_updated"));
+}
+
+function updatePayBalanceDisplay() {
+  const amountEl = document.getElementById("accountPayBalanceAmount");
+  if (amountEl) {
+    const bal = getPayBalance();
+    amountEl.textContent = `₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+}
+
+function setupPayBalanceHandlers() {
+  updatePayBalanceDisplay();
+
+  window.addEventListener("storage", (e) => {
+    if (e.key === PAY_BALANCE_KEY) {
+      updatePayBalanceDisplay();
+    }
+  });
+  window.addEventListener("electromart_pay_balance_updated", () => {
+    updatePayBalanceDisplay();
+  });
+
+  const quickAddBtns = document.querySelectorAll(".quick-add-btn");
+  const customInput = document.getElementById("customAddAmountInput");
+  const addSubmitBtn = document.getElementById("addMoneySubmitBtn");
+  const tableBody = document.getElementById("payTransactionsBody");
+
+  quickAddBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const addVal = btn.dataset.add;
+      if (customInput) {
+        customInput.value = addVal;
+      }
+    });
+  });
+
+  if (addSubmitBtn && customInput) {
+    addSubmitBtn.addEventListener("click", () => {
+      const val = parseFloat(customInput.value);
+      if (isNaN(val) || val <= 0) {
+        showAccountToast({
+          title: "Invalid Amount",
+          message: "Please enter a valid amount to add to ElectroMart Pay balance.",
+          tone: "warning"
+        });
+        return;
+      }
+      const newBal = getPayBalance() + val;
+      savePayBalance(newBal);
+      updatePayBalanceDisplay();
+      customInput.value = "";
+
+      try {
+        const raw = localStorage.getItem("electromart_pay_txns_v1");
+        const txns = raw ? JSON.parse(raw) : [];
+        txns.unshift({
+          id: "txn_" + Date.now(),
+          date: "Just now",
+          description: "Added Money via UPI",
+          type: "added",
+          category: "credit",
+          amount: val,
+          status: "Successful"
+        });
+        localStorage.setItem("electromart_pay_txns_v1", JSON.stringify(txns));
+      } catch (e) {}
+
+      if (tableBody) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>Just now</td>
+          <td>Added Money via UPI</td>
+          <td><span class="badge credit">Credit</span></td>
+          <td class="amount positive">+ ₹${val.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        `;
+        tableBody.insertBefore(tr, tableBody.firstChild);
+      }
+
+      showAccountToast({
+        title: "Balance Updated",
+        message: `₹${val.toLocaleString("en-IN", { minimumFractionDigits: 2 })} added to your ElectroMart Pay balance successfully!`,
+        tone: "success"
+      });
+    });
+  }
+}
+
+function setupContactHandlers() {
+  const startChatBtn = document.getElementById("startLiveChatBtn");
+  const requestCallBtn = document.getElementById("requestCallBackBtn");
+
+  if (startChatBtn) {
+    startChatBtn.addEventListener("click", () => {
+      showAccountToast({
+        title: "Live Chat",
+        message: "Connecting to ElectroMart Support Assistant... You are #1 in queue.",
+        tone: "info"
+      });
+    });
+  }
+
+  if (requestCallBtn) {
+    requestCallBtn.addEventListener("click", () => {
+      showAccountToast({
+        title: "Call Requested",
+        message: "A customer representative will call your verified number (+91 98765 43210) within 2 minutes.",
+        tone: "success"
+      });
+    });
+  }
+}
+
+// Global click delegation for Back to Account buttons & breadcrumb
+document.addEventListener("click", (e) => {
+  const backBtn = e.target.closest("[data-back-to-overview='true']");
+  if (backBtn) {
+    e.preventDefault();
+    setActivePanel("overview");
+    return;
+  }
+  const breadcrumbLink = e.target.closest("#breadcrumbAccountLink");
+  if (breadcrumbLink) {
+    e.preventDefault();
+    setActivePanel("overview");
+    return;
+  }
+  const tileBtn = e.target.closest(".amazon-account-tile[data-panel]") || e.target.closest("[data-panel]");
+  if (tileBtn) {
+    const target = String(tileBtn.dataset.panel || "").trim();
+    if (target) {
+      setActivePanel(target);
+    }
+  }
+});
+
+const SAVED_ADDRESSES_STORAGE_KEY = "electromart_saved_addresses_v1";
+
+const DEFAULT_INITIAL_ADDRESSES = [
+  {
+    id: "addr-default",
+    name: "John Doe",
+    phone: "9876543210",
+    email: "customer@example.com",
+    address: "Flat 402, Royal Palms, Connaught Place",
+    city: "New Delhi",
+    state: "Delhi",
+    pincode: "110001",
+    type: "home",
+    isDefault: true
+  },
+  {
+    id: "addr-work",
+    name: "John Doe",
+    phone: "9876543210",
+    email: "customer@example.com",
+    address: "ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2",
+    city: "Gurugram",
+    state: "Haryana",
+    pincode: "122002",
+    type: "work",
+    isDefault: false
+  }
+];
+
+function readProfile() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function saveProfile(profile) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  } catch (err) {
+    console.error("Failed to save profile:", err);
+  }
+}
+
+function loadSavedAddresses() {
+  try {
+    const raw = localStorage.getItem(SAVED_ADDRESSES_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load saved addresses:", err);
+  }
+  saveSavedAddresses(DEFAULT_INITIAL_ADDRESSES);
+  return DEFAULT_INITIAL_ADDRESSES;
+}
+
+function saveSavedAddresses(addresses) {
+  try {
+    localStorage.setItem(SAVED_ADDRESSES_STORAGE_KEY, JSON.stringify(addresses));
+    const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
+    if (defaultAddr) {
+      const profile = readProfile();
+      profile.address = defaultAddr.address;
+      profile.city = defaultAddr.city;
+      profile.state = defaultAddr.state;
+      profile.pincode = defaultAddr.pincode;
+      profile.phone = defaultAddr.phone;
+      if (defaultAddr.name) profile.fullName = defaultAddr.name;
+      saveProfile(profile);
+    }
+  } catch (err) {
+    console.error("Failed to save addresses:", err);
+  }
+}
+
+function renderSavedAddresses() {
+  const grid = document.getElementById("savedAddressesGrid");
+  if (!grid) return;
+
+  const addresses = loadSavedAddresses();
+  const existingCards = grid.querySelectorAll(".item-card.address-card");
+  existingCards.forEach((c) => c.remove());
+
+  addresses.forEach((addr) => {
+    const card = document.createElement("div");
+    card.className = `item-card address-card ${addr.isDefault ? "default-address" : ""}`;
+    card.setAttribute("data-id", addr.id);
+
+    const typeLabel = addr.type === "work" ? "Office / Workplace" : "Home";
+    const defaultBadgeHtml = addr.isDefault
+      ? `<span class="default-badge">Default: ${escapeHtml(typeLabel)}</span>`
+      : "";
+
+    const setDefaultHtml = addr.isDefault
+      ? ""
+      : `<a href="javascript:void(0)" class="link-action set-default-link" data-id="${escapeHtml(addr.id)}">Set as Default</a> | `;
+
+    const removeHtml = addresses.length > 1
+      ? ` | <a href="javascript:void(0)" class="link-action remove-addr-link" data-id="${escapeHtml(addr.id)}">Remove</a>`
+      : "";
+
+    card.innerHTML = `
+      ${defaultBadgeHtml}
+      <h3>${escapeHtml(typeLabel)}</h3>
+      <p><strong>${escapeHtml(addr.name)}</strong></p>
+      <p>${escapeHtml(addr.address)}, ${escapeHtml(addr.city)}, ${escapeHtml(addr.state)} ${escapeHtml(addr.pincode)}, India</p>
+      <p>Phone: +91 ${escapeHtml(addr.phone)}</p>
+      <div class="address-actions">
+        ${setDefaultHtml}
+        <a href="javascript:void(0)" class="link-action edit-addr-link" data-id="${escapeHtml(addr.id)}">Edit</a>
+        ${removeHtml}
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+function openAddressModal(editId = null) {
+  const modal = document.getElementById("addressEditModal");
+  const form = document.getElementById("addressModalForm");
+  const title = document.getElementById("addressModalTitle");
+  if (!modal || !form) return;
+
+  form.reset();
+  const idInput = document.getElementById("modalAddrId");
+  const nameInput = document.getElementById("modalAddrFullName");
+  const phoneInput = document.getElementById("modalAddrPhone");
+  const line1Input = document.getElementById("modalAddrLine1");
+  const line2Input = document.getElementById("modalAddrLine2");
+  const cityInput = document.getElementById("modalAddrCity");
+  const stateInput = document.getElementById("modalAddrState");
+  const pinInput = document.getElementById("modalAddrPincode");
+  const typeInput = document.getElementById("modalAddrType");
+  const defaultInput = document.getElementById("modalAddrIsDefault");
+
+  if (editId) {
+    const addresses = loadSavedAddresses();
+    const addr = addresses.find((a) => a.id === editId);
+    if (addr) {
+      if (title) title.textContent = "Edit delivery address";
+      if (idInput) idInput.value = addr.id;
+      if (nameInput) nameInput.value = addr.name || "";
+      if (phoneInput) phoneInput.value = addr.phone || "";
+      if (line1Input) line1Input.value = addr.address || "";
+      if (cityInput) cityInput.value = addr.city || "";
+      if (stateInput) stateInput.value = addr.state || "Delhi";
+      if (pinInput) pinInput.value = addr.pincode || "";
+      if (typeInput) typeInput.value = addr.type || "home";
+      if (defaultInput) defaultInput.checked = Boolean(addr.isDefault);
+    }
+  } else {
+    if (title) title.textContent = "Add a new address";
+    if (idInput) idInput.value = "";
+    const session = readSession();
+    if (nameInput) nameInput.value = session?.name || session?.user?.name || "";
+    if (phoneInput) phoneInput.value = session?.phone || session?.mobile || "";
+    if (defaultInput) defaultInput.checked = false;
+  }
+
+  modal.removeAttribute("hidden");
+  nameInput?.focus();
+}
+
+function closeAddressModal() {
+  const modal = document.getElementById("addressEditModal");
+  if (modal) {
+    modal.setAttribute("hidden", "");
+  }
+}
+
+function setupAddressesManagement() {
+  renderSavedAddresses();
+
+  const openAddBtn = document.getElementById("openAddAddressBtn");
+  if (openAddBtn) {
+    openAddBtn.addEventListener("click", () => openAddressModal());
+  }
+
+  const closeBtn = document.getElementById("closeAddressModalBtn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeAddressModal);
+  }
+
+  const cancelBtn = document.getElementById("cancelAddressModalBtn");
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", closeAddressModal);
+  }
+
+  const grid = document.getElementById("savedAddressesGrid");
+  if (grid) {
+    grid.addEventListener("click", (e) => {
+      const setDefLink = e.target.closest(".set-default-link");
+      if (setDefLink) {
+        e.preventDefault();
+        const id = setDefLink.dataset.id;
+        const addresses = loadSavedAddresses();
+        addresses.forEach((a) => {
+          a.isDefault = a.id === id;
+        });
+        saveSavedAddresses(addresses);
+        renderSavedAddresses();
+        showAccountToast({
+          title: "Default Address Updated",
+          message: "Your default delivery address has been updated and synced with checkout.",
+          tone: "success"
+        });
+        return;
+      }
+
+      const editLink = e.target.closest(".edit-addr-link");
+      if (editLink) {
+        e.preventDefault();
+        const id = editLink.dataset.id;
+        openAddressModal(id);
+        return;
+      }
+
+      const removeLink = e.target.closest(".remove-addr-link");
+      if (removeLink) {
+        e.preventDefault();
+        const id = removeLink.dataset.id;
+        let addresses = loadSavedAddresses();
+        if (addresses.length <= 1) {
+          showAccountToast({
+            title: "Cannot Remove",
+            message: "You must keep at least one saved delivery address.",
+            tone: "warning"
+          });
+          return;
+        }
+        const wasDefault = addresses.find((a) => a.id === id)?.isDefault;
+        addresses = addresses.filter((a) => a.id !== id);
+        if (wasDefault && addresses.length > 0) {
+          addresses[0].isDefault = true;
+        }
+        saveSavedAddresses(addresses);
+        renderSavedAddresses();
+        showAccountToast({
+          title: "Address Removed",
+          message: "The selected address was removed and changes synced.",
+          tone: "info"
+        });
+        return;
+      }
+    });
+  }
+
+  const form = document.getElementById("addressModalForm");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("modalAddrId")?.value.trim();
+      const name = document.getElementById("modalAddrFullName")?.value.trim();
+      const phone = document.getElementById("modalAddrPhone")?.value.trim();
+      const line1 = document.getElementById("modalAddrLine1")?.value.trim();
+      const line2 = document.getElementById("modalAddrLine2")?.value.trim();
+      const city = document.getElementById("modalAddrCity")?.value.trim();
+      const state = document.getElementById("modalAddrState")?.value.trim();
+      const pincode = document.getElementById("modalAddrPincode")?.value.trim();
+      const type = document.getElementById("modalAddrType")?.value || "home";
+      const isDefault = document.getElementById("modalAddrIsDefault")?.checked;
+
+      if (!name || !phone || !line1 || !city || !state || !pincode) {
+        showAccountToast({
+          title: "Missing Information",
+          message: "Please fill out all required address fields.",
+          tone: "warning"
+        });
+        return;
+      }
+
+      const fullAddress = line2 ? `${line1}, ${line2}` : line1;
+      let addresses = loadSavedAddresses();
+
+      if (id) {
+        const existing = addresses.find((a) => a.id === id);
+        if (existing) {
+          existing.name = name;
+          existing.phone = phone;
+          existing.address = fullAddress;
+          existing.city = city;
+          existing.state = state;
+          existing.pincode = pincode;
+          existing.type = type;
+          if (isDefault) {
+            addresses.forEach((a) => { a.isDefault = a.id === id; });
+          }
+        }
+      } else {
+        const newId = `addr-${Date.now()}`;
+        if (isDefault || addresses.length === 0) {
+          addresses.forEach((a) => { a.isDefault = false; });
+        }
+        addresses.push({
+          id: newId,
+          name,
+          phone,
+          email: readSession()?.email || "customer@example.com",
+          address: fullAddress,
+          city,
+          state,
+          pincode,
+          type,
+          isDefault: Boolean(isDefault || addresses.length === 0)
+        });
+      }
+
+      saveSavedAddresses(addresses);
+      closeAddressModal();
+      renderSavedAddresses();
+      showAccountToast({
+        title: "Address Saved",
+        message: "Address saved and automatically synchronized with Checkout Step 1!",
+        tone: "success"
+      });
+    });
+  }
+
+  // Outside click & Escape for address modal
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("addressEditModal");
+    if (modal && !modal.hasAttribute("hidden")) {
+      if (e.target === modal) {
+        closeAddressModal();
+      }
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeAddressModal();
+    }
+  });
+}
+
 requireAuthSession();
 loadProfile();
 syncProfileFromBackend();
@@ -1812,7 +2362,23 @@ loadNotificationPreferences();
 loadSecurityCenter();
 loadOrderNotifications();
 syncNotificationFilterControls();
+setupPayBalanceHandlers();
+setupContactHandlers();
+setupAddressesManagement();
+syncAccountPrimePanel();
 setActivePanel("overview");
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === "electromart_prime_status_v1") {
+      syncAccountPrimePanel();
+    }
+  });
+
+  window.addEventListener("electromart_prime_updated", () => {
+    syncAccountPrimePanel();
+  });
+}
 
 function requireAuthSession() {
   const session = readSession();

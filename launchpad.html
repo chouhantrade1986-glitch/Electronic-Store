@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!-- ElectroMart Launchpad Hub (Phase 38) -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Launchpad - Emerging Indian Startup Innovation | electromart.in</title>
+  <meta name="description" content="Discover and support emerging Indian hardware startups on ElectroMart Launchpad. Get early access to innovative gadgets and technology." />
+  <meta name="keywords" content="startup, innovation, Indian startups, hardware, gadgets, pre-order, crowdfunding, ElectroMart launchpad" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/launchpad.html" />
+  <meta property="og:title" content="ElectroMart Launchpad - Emerging Indian Startup Innovation" />
+  <meta property="og:description" content="Discover and support emerging Indian hardware startups on ElectroMart Launchpad." />
+  <meta property="og:image" content="https://electromart.in/launchpad-og.jpg" />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/launchpad.html" />
+  <meta property="twitter:title" content="ElectroMart Launchpad - Emerging Indian Startup Innovation" />
+  <meta property="twitter:description" content="Discover and support emerging Indian hardware startups on ElectroMart Launchpad." />
+  <meta property="twitter:image" content="https://electromart.in/launchpad-twitter.jpg" />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260925b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260925b" />
+  <link rel="stylesheet" href="launchpad.css?v=20260925b" />
+</head>
+<body class="launchpad-page">
+  <div id="headerContainer"></div>
+  <main class="launchpad-page">
+    <section id="launchpadHero" class="launchpad-hero-section" aria-labelledby="launchpadHeroTitle">
+      <div class="launchpad-hero-content">
+        <p class="launchpad-eyebrow" data-i18n="launchpad_featured_eyebrow">ElectroMart Launchpad</p>
+        <h1 id="launchpadHeroTitle" data-i18n="launchpad_hub_title">ElectroMart Launchpad</h1>
+        <p data-i18n="launchpad_hub_subtitle">Emerging Indian startup innovation hub</p>
+        <div class="launchpad-stats" aria-live="polite">
+          <div class="stat-item">
+            <span class="stat-value" id="fundedPercent">₹0</span>
+            <span class="stat-label" data-i18n="launchpad_raised_label">Raised</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="backersCount">0</span>
+            <span class="stat-label" data-i18n="launchpad_backers_count_label">Backers</span>
+          </div>
+        </div>
+        <div class="hero-progress" aria-label="Campaign funding progress">
+          <div class="progress-label">
+            <span data-i18n="launchpad_funding_progress">Funding progress</span>
+            <span id="heroFundingPercent">0%</span>
+          </div>
+          <div id="fundingProgressBar" class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n-title="launchpad_funding_progress">
+            <span></span>
+          </div>
+        </div>
+        <p id="launchpadFeedback" class="launchpad-status" role="status" aria-live="polite" hidden></p>
+        <button type="button" class="btn-primary" data-i18n="launchpad_preorder_btn" id="spotlightPreorderBtn">Pre-Order Now</button>
+      </div>
+    </section>
+
+    <section id="startupSpotlight" class="launchpad-spotlight-section" aria-labelledby="startupSpotlightTitle">
+      <h2 id="startupSpotlightTitle" data-i18n="launchpad_spotlight_title">Today's featured startup</h2>
+      <div class="spotlight-container">
+        <div class="spotlight-product">
+          <div class="spotlight-media">
+            <div class="product-art product-art--solar spotlight-art" role="img" aria-label="SolarSmart Charger">
+              <span class="art-grid" aria-hidden="true"></span>
+              <span class="art-orbit" aria-hidden="true"></span>
+              <span class="art-core" aria-hidden="true"></span>
+            </div>
+            <span class="early-bird-badge" data-i18n="launchpad_early_bird">Early bird</span>
+          </div>
+          <div class="spotlight-info">
+            <p class="launchpad-eyebrow" data-i18n="launchpad_featured_eyebrow">Featured startup</p>
+            <h3 class="spotlight-title">SolarSmart Charger</h3>
+            <p class="spotlight-description">Portable solar charger with a built-in power bank for outdoor adventures.</p>
+            <div class="spotlight-price">
+              <span class="discount-percent">-25%</span>
+              <span class="price">₹2,999</span>
+              <span class="mrp">M.R.P.: ₹3,999</span>
+            </div>
+            <p class="tax-inclusive-note" data-i18n="launchpad_taxes_included">Inclusive of all taxes</p>
+            <button type="button" class="btn-secondary" data-i18n="launchpad_preorder_btn" id="spotlightPreorderBtn2" data-launchpad-preorder="launchpad-solarsmart-charger">Pre-Order Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="categoryFilters" class="launchpad-filters-section" aria-labelledby="categoryFiltersTitle">
+      <h2 id="categoryFiltersTitle" data-i18n="launchpad_category_label">Categories</h2>
+      <div class="filters-container" role="group" aria-label="Filter startup products">
+        <button type="button" class="filter-btn active" data-category="all" data-i18n="launchpad_category_all" aria-pressed="true">All</button>
+        <button type="button" class="filter-btn" data-category="electronics" data-i18n="launchpad_category_electronics" aria-pressed="false">Electronics</button>
+        <button type="button" class="filter-btn" data-category="wearables" data-i18n="launchpad_category_wearables" aria-pressed="false">Wearables</button>
+        <button type="button" class="filter-btn" data-category="home-automation" data-i18n="launchpad_category_home_automation" aria-pressed="false">Home automation</button>
+        <button type="button" class="filter-btn" data-category="audio" data-i18n="launchpad_category_audio" aria-pressed="false">Audio</button>
+        <button type="button" class="filter-btn" data-category="computing" data-i18n="launchpad_category_computing" aria-pressed="false">Computing</button>
+        <button type="button" class="filter-btn" data-category="gaming" data-i18n="launchpad_category_gaming" aria-pressed="false">Gaming</button>
+      </div>
+    </section>
+
+    <section class="launchpad-discovery-section" aria-label="Search and sort startup products">
+      <div class="launchpad-discovery-bar">
+        <label class="launchpad-search-field" for="launchpadSearchInput">
+          <span data-i18n="launchpad_search_label">Search startups</span>
+          <input id="launchpadSearchInput" type="search" autocomplete="off" data-i18n-placeholder="launchpad_search_placeholder" placeholder="Search by product, category, or use" />
+        </label>
+        <label class="launchpad-sort-field" for="launchpadSortSelect">
+          <span data-i18n="launchpad_sort_label">Sort by</span>
+          <select id="launchpadSortSelect">
+            <option value="featured" data-i18n="launchpad_sort_featured">Featured</option>
+            <option value="funded" data-i18n="launchpad_sort_funded">Most funded</option>
+            <option value="discount" data-i18n="launchpad_sort_discount">Biggest discount</option>
+            <option value="backers" data-i18n="launchpad_sort_backers">Most backed</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section id="launchpadProductGrid" class="launchpad-products-section" aria-labelledby="launchpadProductsTitle">
+      <div class="section-heading-row">
+        <h2 id="launchpadProductsTitle" data-i18n="launchpad_products_title">Innovative startup products</h2>
+        <p id="launchpadResultsMeta" class="results-meta" role="status" aria-live="polite"></p>
+      </div>
+      <div class="products-grid" id="launchpadProductsContainer">
+        <!-- Products are rendered by the page controller. -->
+      </div>
+      <p id="launchpadEmptyState" class="launchpad-empty-state" data-i18n="launchpad_no_products" hidden>No startup products match this filter.</p>
+      <div class="load-more-container">
+        <button type="button" class="btn-outline" id="loadMoreBtn" data-i18n="launchpad_load_more">Load more products</button>
+      </div>
+    </section>
+
+    <section class="launchpad-apply-section" aria-labelledby="launchpadApplyTitle">
+      <h2 id="launchpadApplyTitle" data-i18n="launchpad_apply_cta">Apply to Launchpad</h2>
+      <p data-i18n="launchpad_apply_description">Have an innovative Indian startup product? Apply to be featured on ElectroMart Launchpad.</p>
+      <button type="button" class="btn-primary btn-large" id="openApplyModalBtn" data-i18n="launchpad_apply_cta_btn">Apply now</button>
+    </section>
+  </main>
+
+  <dialog id="startupApplyModal" class="launchpad-apply-modal" aria-labelledby="startupApplyModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="startupApplyModalTitle" data-i18n="launchpad_apply_modal_title">Apply to ElectroMart Launchpad</h3>
+        <button type="button" class="modal-close" id="closeApplyModalBtn" aria-label="Close application form" data-i18n-title="launchpad_close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="startupApplyForm" class="launchpad-apply-form">
+          <div class="form-group">
+            <label for="startupName" data-i18n="launchpad_startup_name_label">Startup name</label>
+            <input type="text" id="startupName" name="startupName" class="form-input" required maxlength="120" autocomplete="organization" data-i18n-placeholder="launchpad_startup_name_placeholder" placeholder="Enter your startup name">
+          </div>
+
+          <div class="form-group">
+            <label for="founderEmail" data-i18n="launchpad_founder_email_label">Founder email</label>
+            <input type="email" id="founderEmail" name="founderEmail" class="form-input" required maxlength="254" autocomplete="email" data-i18n-placeholder="launchpad_founder_email_placeholder" placeholder="Enter your email address">
+          </div>
+
+          <div class="form-group">
+            <label for="productCategory" data-i18n="launchpad_category_label">Product category</label>
+            <select id="productCategory" name="productCategory" class="form-select" required>
+              <option value="" disabled selected data-i18n="launchpad_category_select_placeholder">Select category</option>
+              <option value="electronics" data-i18n="launchpad_category_electronics">Electronics</option>
+              <option value="wearables" data-i18n="launchpad_category_wearables">Wearables</option>
+              <option value="home-automation" data-i18n="launchpad_category_home_automation">Home automation</option>
+              <option value="audio" data-i18n="launchpad_category_audio">Audio</option>
+              <option value="computing" data-i18n="launchpad_category_computing">Computing</option>
+              <option value="gaming" data-i18n="launchpad_category_gaming">Gaming</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dpiitNumber" data-i18n="launchpad_dpiit_label">DPIIT registration number</label>
+            <input type="text" id="dpiitNumber" name="dpiitNumber" class="form-input" maxlength="40" pattern="[A-Za-z0-9-]{6,40}" data-i18n-placeholder="launchpad_dpiit_placeholder" placeholder="DPIIT registration number (optional)">
+          </div>
+
+          <div class="form-group">
+            <label for="applyStatus" data-i18n="launchpad_apply_status_label">Application status</label>
+            <select id="applyStatus" name="applyStatus" class="form-select">
+              <option value="idea" data-i18n="launchpad_status_idea">Idea stage</option>
+              <option value="prototype" data-i18n="launchpad_status_prototype">Prototype</option>
+              <option value="ready-to-launch" data-i18n="launchpad_status_ready">Ready to launch</option>
+              <option value="launched" data-i18n="launchpad_status_launched">Already launched</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="startupDescription" data-i18n="launchpad_description_label">Startup description</label>
+            <textarea id="startupDescription" name="startupDescription" class="form-textarea" rows="4" required minlength="10" maxlength="2000" data-i18n-placeholder="launchpad_description_placeholder" placeholder="Tell us about your innovative product and vision"></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="fundingGoal" data-i18n="launchpad_funding_goal_label">Funding goal (₹)</label>
+            <input type="number" id="fundingGoal" name="fundingGoal" class="form-input" min="100000" step="1" inputmode="numeric" data-i18n-placeholder="launchpad_funding_goal_placeholder" placeholder="Enter your funding goal in INR">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="currentFunding" data-i18n="launchpad_current_funding_label">Current funding (₹)</label>
+            <input type="number" id="currentFunding" name="currentFunding" class="form-input" min="0" step="1" inputmode="numeric" data-i18n-placeholder="launchpad_current_funding_placeholder" placeholder="Enter current funding amount">
+          </div>
+          <p id="launchpadApplyStatus" class="launchpad-status" role="status" aria-live="polite" hidden></p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-outline" id="cancelApplyBtn" data-i18n="launchpad_cancel">Cancel</button>
+        <button type="submit" class="btn-primary" id="submitApplyBtn" form="startupApplyForm" data-i18n="launchpad_apply_submit_btn">Submit application</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="launchpadDetailsModal" class="launchpad-details-modal" aria-labelledby="launchpadDetailsTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="launchpadDetailsTitle" data-i18n="launchpad_details_title">Product details</h3>
+        <button type="button" class="modal-close" id="closeDetailsModalBtn" aria-label="Close product details" data-i18n-title="launchpad_close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="launchpad-details-layout">
+          <div id="launchpadDetailsVisual" class="details-visual" aria-live="polite"></div>
+          <div class="details-copy">
+            <p id="launchpadDetailsCategory" class="product-category-label"></p>
+            <h4 id="launchpadDetailsName" class="details-name"></h4>
+            <p id="launchpadDetailsDescription" class="details-description"></p>
+            <p id="launchpadDetailsPrice" class="details-price"></p>
+            <div class="launchpad-progress details-progress">
+              <div class="progress-label"><span data-i18n="launchpad_funding_progress">Funding progress</span><strong id="launchpadDetailsProgressPercent">0%</strong></div>
+              <div id="launchpadDetailsProgressBar" class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+              <div class="progress-meta"><span id="launchpadDetailsFunding"></span><span id="launchpadDetailsBackers"></span></div>
+            </div>
+            <p class="tax-inclusive-note" data-i18n="launchpad_taxes_included">Inclusive of all taxes</p>
+            <p class="launchpad-demo-note" data-i18n="launchpad_demo_note">Early-bird reservations are saved on this device; no payment is collected in this demo.</p>
+            <p id="launchpadDetailsStatus" class="launchpad-status" role="status" aria-live="polite" hidden></p>
+            <button type="button" class="btn-primary details-preorder-btn" id="launchpadDetailsPreorderBtn" data-i18n="launchpad_preorder_btn" data-launchpad-preorder="launchpad-solarsmart-charger">Pre-Order Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="closeDetailsModalBtn2" data-i18n="launchpad_close">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="applySuccessModal" class="launchpad-success-modal" aria-labelledby="applySuccessModalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="applySuccessModalTitle" data-i18n="launchpad_apply_success_title">Application saved!</h3>
+        <button type="button" class="modal-close" id="closeSuccessModalBtn" aria-label="Close success modal" data-i18n-title="launchpad_close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p data-i18n="launchpad_apply_success_message">Your application has been saved on this device in this preview. No data is sent to a server yet.</p>
+        <div class="application-summary">
+          <p><strong data-i18n="launchpad_application_id_label">Application ID:</strong> <span id="applicationIdDisplay">—</span></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="applySuccessCloseBtn" data-i18n="launchpad_close">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Shared i18n, catalog, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="launchpad.js?v=20260925b"></script>
+</body>
+</html>

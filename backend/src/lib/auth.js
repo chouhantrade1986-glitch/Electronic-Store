@@ -28,8 +28,6 @@ function looksLikePlaceholderSecret(value) {
 
 function resolveJwtSecret(env = process.env) {
   const secret = String(env.JWT_SECRET || "").trim();
-  console.log("[DEBUG] JWT_SECRET value:", secret);
-  console.log("[DEBUG] looksLikePlaceholderSecret:", looksLikePlaceholderSecret(secret));
   if (DISALLOWED_JWT_SECRETS.has(secret) || looksLikePlaceholderSecret(secret)) {
     const error = new Error("JWT_SECRET is required and must not use a default placeholder value.");
     error.code = "JWT_SECRET_REQUIRED";

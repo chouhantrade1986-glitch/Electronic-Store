@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Store Settings</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_settings">Store Settings</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_settings">Store Settings & Business Policies</h1>
+        <p>Configure free delivery thresholds, shipping rates, pincode serviceability, and promo vouchers.</p>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-bottom: 28px;">
+      <!-- Shipping Rates & Policy Form -->
+      <section class="amz-action-queue" style="padding: 24px;">
+        <h2 style="margin: 0 0 16px; font-size: 1.15rem; font-weight: 700;">🚚 Shipping & Fulfillment Rules</h2>
+        <form id="shippingSettingsForm">
+          <div class="amz-form-group">
+            <label for="freeShippingThreshold">Free Delivery Minimum Cart Value (₹)</label>
+            <input type="number" id="freeShippingThreshold" value="499" required />
+            <small style="color: var(--subtle); font-size: 0.78rem;">Orders equal or above this amount qualify for ₹0 Free Delivery.</small>
+          </div>
+
+          <div class="amz-form-group">
+            <label for="standardShippingFee">Standard Delivery Fee (₹)</label>
+            <input type="number" id="standardShippingFee" value="40" required />
+            <small style="color: var(--subtle); font-size: 0.78rem;">Charged on orders below the free delivery threshold.</small>
+          </div>
+
+          <div class="amz-form-group">
+            <label for="expressShippingFee">Express / One-Day Delivery Fee (₹)</label>
+            <input type="number" id="expressShippingFee" value="99" required />
+          </div>
+
+          <div class="amz-form-group">
+            <label for="returnWindowDays">Customer Return & Replacement Window (Days)</label>
+            <input type="number" id="returnWindowDays" value="7" required />
+            <small style="color: var(--subtle); font-size: 0.78rem;">Standard consumer electronics return guarantee.</small>
+          </div>
+
+          <button type="submit" class="amz-btn-primary" style="margin-top: 10px;">
+            <span>💾 Save Shipping Policies</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Pincode Serviceability Tool -->
+      <section class="amz-action-queue" style="padding: 24px;">
+        <h2 style="margin: 0 0 16px; font-size: 1.15rem; font-weight: 700;">📍 Pincode Serviceability Inspector</h2>
+        <p style="color: var(--subtle); font-size: 0.85rem; margin-top: 0;">Test Easy Ship courier network coverage and estimated delivery timelines for any Indian pincode.</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <input type="text" id="testPincodeInput" placeholder="Enter 6-digit PIN (e.g. 110001)" maxlength="6" style="flex: 1; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 6px;" />
+          <button type="button" class="amz-btn-secondary" id="checkPincodeBtn">Check Coverage</button>
+        </div>
+
+        <div id="pincodeResultBox" style="background: #f7fafa; border: 1px solid var(--line); border-radius: 6px; padding: 14px; font-size: 0.86rem;" hidden>
+          <div id="pincodeResultText"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Active Promo Codes & Vouchers -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div>
+          <h2 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Active Store Vouchers & Promo Codes</h2>
+          <small style="color: var(--subtle);">Discount coupons redeemable on checkout</small>
+        </div>
+        <button type="button" class="amz-btn-primary" id="openAddCouponBtn">
+          <span>➕ Create Voucher</span>
+        </button>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>Coupon Code</th>
+            <th>Discount Value</th>
+            <th>Min Cart Amount</th>
+            <th>Valid Across</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="couponsTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Add Coupon Modal -->
+  <div class="amz-modal-overlay" id="addCouponModal" hidden>
+    <div class="amz-modal" role="dialog" aria-modal="true" aria-labelledby="couponModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="couponModalTitle">Create Promotional Voucher</h3>
+        <button type="button" class="modal-close-btn" id="closeCouponModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body">
+        <div class="amz-form-group">
+          <label for="newCouponCode">Coupon Code (Uppercase) *</label>
+          <input type="text" id="newCouponCode" placeholder="e.g. FESTIVE15" required style="text-transform: uppercase;" />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="amz-form-group">
+            <label for="newCouponDiscount">Discount Value (₹ or %) *</label>
+            <input type="text" id="newCouponDiscount" placeholder="10% or 500" required />
+          </div>
+          <div class="amz-form-group">
+            <label for="newCouponMinOrder">Min Order Value (₹) *</label>
+            <input type="number" id="newCouponMinOrder" placeholder="1999" required />
+          </div>
+        </div>
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="cancelCouponModalBtn">Cancel</button>
+        <button type="button" class="amz-btn-primary" id="saveCouponBtn">Create Coupon</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-settings.js?v=20260412a"></script>
+</body>
+</html>

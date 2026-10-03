@@ -1,0 +1,640 @@
+const fs = require('fs');
+const path = require('path');
+
+const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+
+// ============================================================================
+// 1. Create products-data.js
+// ============================================================================
+const productsDataContent = `/**
+ * ElectroMart Multilingual Product Catalog Database & Title Resolver
+ * Full parity with Amazon India's catalog localization model.
+ */
+
+(function () {
+  const EM_CATALOG = [
+    {
+      id: "product_c5367fc4-ca38-9435-27dc-8d383b5faa59",
+      brand: "Pantony",
+      category: "mobile",
+      title: {
+        en: "Pantony 6P Activity Tracker with Heart Rate and Sleep Monitoring",
+        hi: "पैंटोनी 6P एक्टिविटी ट्रैकर स्मार्टवॉच (हार्ट रेट और स्लीप मॉनिटरिंग)",
+        ta: "பான்டோனி 6P ஆக்டிவிட்டி டிராக்கர் ஸ்மார்ட்வாட்ச் (இதய துடிப்பு மற்றும் தூக்க கண்காணிப்பு)",
+        te: "పాంటోని 6P యాక్టివిటీ ట్రాకర్ స్మార్ట్‌వాచ్ (గుండె రేటు & నిద్ర పర్యవేక్షణ)",
+        kn: "ಪ್ಯಾಂಟೋನಿ 6P ಚಟುವಟಿಕೆ ಟ್ರ್ಯಾಕರ್ ಸ್ಮಾರ್ಟ್‌ವಾಚ್ (ಹೃದಯ ಬಡಿತ ಮತ್ತು ನಿದ್ರೆ ಮೇಲ್ವಿಚಾರಣೆ)",
+        ml: "പന്റോണി 6P ആക്റ്റിവിറ്റി ട്രാക്കർ സ്മാർട്ട് വാച്ച് (ഹൃദയമിടിപ്പും ഉറക്കവും നിരീക്ഷിക്കൽ)",
+        bn: "প্যান্টোনি 6P অ্যাক্টিভিটি ট্র্যাকার স্মার্টওয়াচ (হার্ট রেট এবং স্লিপ মনিটরিং)",
+        mr: "पँटोनी 6P अ‍ॅक्टिव्हिटी ट्रॅकर स्मार्टवॉच (हृदय गती आणि झोप निरीक्षण)",
+        ur: "پینٹونی 6P ایکٹیویٹی ٹریکر اسمارٹ واچ (دل کی دھڑکن اور نیند کی نگرانی)",
+        pa: "ਪੈਂਟੋਨੀ 6P ਗਤੀਵਿਧੀ ਟਰੈਕਰ ਸਮਾਰਟਵਾਚ (ਦਿਲ ਦੀ ਧੜਕਣ ਅਤੇ ਨੀਂਦ ਨਿਗਰਾਨੀ)",
+        gu: "પેન્ટોની 6P એક્ટિવિટી ટ્રેકર સ્માર્ટવોચ (હાર્ટ રેટ અને સ્લીપ મોનિટરિંગ)"
+      },
+      description: {
+        en: "Smart fitness tracker with real-time heart rate, comprehensive sleep monitoring, and multi-sport tracking modes for everyday wellness.",
+        hi: "हार्ट रेट, संपूर्ण स्लीप मॉनिटरिंग और मल्टीपल स्पोर्ट्स मोड्स के साथ स्मार्ट फिटनेस ट्रैकर जो हर रोज़ आपकी सेहत का ध्यान रखता है।",
+        ta: "நிகழ்நேர இதய துடிப்பு, விரிவான தூக்க கண்காணிப்பு மற்றும் தினசரி ஆரோக்கியத்திற்கான பல விளையாட்டு கண்காணிப்பு முறைகளுடன் கூடிய ஸ்மார்ட் ஃபிட்னஸ் டிராக்கர்.",
+        te: "నిజ-సమయ గుండె రేటు, సమగ్ర నిద్ర పర్యవేక్షణ మరియు రోజువారీ ఆరోగ్యం కోసం మల్టీ-స్పోర్ట్స్ మోడ్‌లతో కూడిన స్మార్ట్ ఫిట్‌నెస్ ట్రాకర్.",
+        mr: "रिअल-टाइम हृदय गती, सर्वसमावेशक झोप निरीक्षण आणि दैनंदिन आरोग्यासाठी मल्टी-स्पोर्ट्स मोडसह स्मार्ट फिटनेस ट्रॅकर.",
+        bn: "রিয়েল-টাইম হার্ট রেট, বিস্তৃত স্লিপ মনিটরিং এবং দৈনন্দিন সুস্থতার জন্য মাল্টি-স্পোর্টস ট্র্যাকিং মোড সহ স্মার্ট ফিটনেস ট্র্যাকার।",
+        kn: "ನೈಜ-ಸಮಯದ ಹೃದಯ ಬಡಿತ, ಸಮಗ್ರ ನಿದ್ರೆ ಮೇಲ್ವಿಚಾರಣೆ ಮತ್ತು ದೈನಂದಿನ ಆರೋಗ್ಯಕ್ಕಾಗಿ ಬಹು-ಕ್ರೀಡಾ ಟ್ರ್ಯಾಕಿಂಗ್ ಮೋಡ್‌ಗಳೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಫಿಟ್‌ನೆಸ್ ಟ್ರ್ಯಾಕರ್.",
+        ml: "തത്സമയ ഹൃദയമിടിപ്പ്, സമഗ്രമായ ഉറക്ക നിരീക്ഷണം, ദൈനംദിന ക്ഷേമത്തിനായി മൾട്ടി-സ്പോർട്സ് ട്രാക്കിംഗ് മോഡുകൾ എന്നിവയുള്ള സ്മാർട്ട് ഫിറ്റ്നസ് ട്രാക്കർ."
+      },
+      aboutSpecs: {
+        en: [
+          "Mobile and Wearable Tech compatible with Android and iOS",
+          "Water resistant IP68 for swimming and sweat resistance",
+          "Up to 7 days battery life on a single charge",
+          "All-day heart rate and blood oxygen monitoring"
+        ],
+        hi: [
+          "मोबाइल और वियरेबल तकनीक - Android और iOS के साथ संगत",
+          "वॉटर रेसिस्टेंट IP68 रेटिंग (तैराकी और पसीना रोधी)",
+          "एक बार चार्ज करने पर 7 दिनों तक की लंबी बैटरी लाइफ",
+          "दिन भर हार्ट रेट और ब्लड ऑक्सीजन (SpO2) मॉनिटरिंग"
+        ],
+        ta: [
+          "மொபைல் மற்றும் அணியக்கூடிய தொழில்நுட்பம் - Android மற்றும் iOS உடன் இணக்கமானது",
+          "நீச்சல் மற்றும் வியர்வை எதிர்ப்பிற்கான நீர் எதிர்ப்பு IP68",
+          "ஒருமுறை சார்ஜ் செய்தால் 7 நாட்கள் வரை பேட்டரி ஆயுள்",
+          "நாள் முழுவதும் இதய துடிப்பு மற்றும் ரத்த ஆக்ஸிஜன் கண்காணிப்பு"
+        ],
+        te: [
+          "మొబైల్ & ధరించదగిన సాంకేతికత - Android మరియు iOS తో అనుకూలమైనది",
+          "ఈత మరియు చెమట నిరోధకత కోసం నీటి నిరోధక IP68",
+          "ఒకే ఛార్జ్ పై 7 రోజుల వరకు బ్యాటరీ లైఫ్",
+          "రోజంతా గుండె రేటు మరియు రక్త ఆక్సిజన్ పర్యవేక్షణ"
+        ],
+        mr: [
+          "मोबाइल आणि वेअरेबल तंत्रज्ञान - Android आणि iOS सह सुसंगत",
+          "जलरोधक IP68 रेटिंग (जलतरण व घाम प्रतिबंधक)",
+          "एका चार्जवर 7 दिवसांपर्यंतची बॅटरी लाईफ",
+          "दिवसभर हृदय गती आणि रक्त ऑक्सिजन निरीक्षण"
+        ],
+        bn: [
+          "মোবাইল এবং পরিধানযোগ্য প্রযুক্তি - Android এবং iOS এর সাথে সামঞ্জস্যপূর্ণ",
+          "সাঁতার এবং ঘাম প্রতিরোধের জন্য জল প্রতিরোধী IP68",
+          "একক চার্জে 7 দিন পর্যন্ত ব্যাটারি লাইফ",
+          "সারাদিন হার্ট রেট এবং রক্তে অক্সিজেন পর্যবেক্ষণ"
+        ]
+      },
+      price: 2499,
+      mrp: 4999,
+      stock: 35,
+      status: "ACTIVE"
+    },
+    {
+      id: "2",
+      brand: "Apple",
+      category: "laptop",
+      title: {
+        en: "Apple 2026 MacBook Air 13″ Laptop with M5 chip: AI and Apple Intelligence, 34.46 cm (13.6″) Liquid Retina Display, 16GB Unified Memory, 1TB SSD Storage, 12MP Center Stage Camera, Touch ID; Silver",
+        hi: "Apple 2026 मैकबुक एयर 13″ लैपटॉप M5 चिप के साथ: AI और Apple इंटेलिजेंस, 34.46 cm (13.6″) लिक्विड रेटिना डिस्प्ले, 16GB यूनिफाइड मेमोरी, 1TB SSD स्टोरेज, 12MP सेंटर स्टेज कैमरा, टच आईडी; सिल्वर",
+        ta: "Apple 2026 மேக்புக் ஏர் 13″ லேப்டாப் M5 சிப் உடன்: AI மற்றும் Apple இன்டெலிஜென்ஸ், 16GB ஒருங்கிணைந்த மெமரி, 1TB SSD",
+        te: "Apple 2026 మ్యాక్‌బుక్ ఎయిర్ 13″ ల్యాప్‌టాప్ M5 చిప్‌తో: AI మరియు Apple ఇంటెలిజెన్స్, 16GB యూనిఫైడ్ మెమరీ, 1TB SSD",
+        kn: "Apple 2026 ಮ್ಯಾಕ್‌ಬುಕ್ ಏರ್ 13″ ಲ್ಯಾಪ್‌ಟಾಪ್ M5 ಚಿಪ್‌ನೊಂದಿಗೆ: AI ಮತ್ತು Apple ಇಂಟೆಲಿಜೆನ್ಸ್, 16GB ಯೂನಿಫೈಡ್ ಮೆಮೊರಿ, 1TB SSD",
+        ml: "Apple 2026 മാക്ബുക്ക് എയർ 13″ ലാപ്‌ടോപ്പ് M5 ചിപ്പിൽ: AI, Apple ഇന്റലിജൻസ്, 16GB യൂണിഫൈഡ് മെമ്മറി, 1TB SSD",
+        bn: "Apple 2026 ম্যাকবুক এয়ার 13″ ল্যাপটপ M5 চিপ সহ: AI এবং Apple ইন্টেলিজেন্স, 16GB ইউনিফাইড মেমরি, 1TB SSD",
+        mr: "Apple 2026 मॅकबुक एअर 13″ लॅपटॉप M5 चिपसह: AI आणि Apple इंटेलिजन्स, 16GB युनिफाइड मेमरी, 1TB SSD",
+        ur: "Apple 2026 میک بک ایئر 13″ لیپ ٹاپ M5 چپ کے ساتھ: AI اور ایپل انٹیلی جنس, 16GB یونیفائیڈ میموری, 1TB SSD",
+        pa: "Apple 2026 ਮੈਕਬੁੱਕ ਏਅਰ 13″ ਲੈਪਟਾਪ M5 ਚਿੱਪ ਨਾਲ: AI ਅਤੇ ਐਪਲ ਇੰਟੈਲੀਜੈਂਸ, 16GB ਯੂਨੀਫਾਈਡ ਮੈਮੋਰੀ, 1TB SSD",
+        gu: "Apple 2026 મેકબુક એર 13″ લેપટોપ M5 ચિપ સાથે: AI અને એપલ ઇન્ટેલિજન્સ, 16GB યુનિફાઇડ મેમરી, 1TB SSD"
+      },
+      description: {
+        en: "The revolutionary MacBook Air with M5 chip delivers mind-blowing performance, ground-breaking Apple Intelligence, and up to 18 hours of all-day battery life in an impossibly thin aluminum enclosure.",
+        hi: "M5 चिप के साथ क्रांतिकारी मैकबुक एयर अविश्वसनीय प्रदर्शन, अभूतपूर्व Apple इंटेलिजेंस और बेहद पतले एल्युमिनियम डिज़ाइन में 18 घंटे तक की ऑल-डे बैटरी लाइफ प्रदान करता है।"
+      },
+      aboutSpecs: {
+        en: [
+          "Apple M5 chip with 10-core CPU, 10-core GPU and 16-core Neural Engine",
+          "16GB Unified Memory for fluid multitasking and AI workloads",
+          "1TB superfast SSD storage for immediate app launches and files",
+          "34.46 cm (13.6-inch) Liquid Retina display with True Tone and 500 nits brightness",
+          "12MP Center Stage camera with Desk View and spatial audio support",
+          "MagSafe 3 charging port, two Thunderbolt / USB 4 ports, headphone jack"
+        ],
+        hi: [
+          "10-कोर CPU, 10-कोर GPU और 16-कोर न्यूरल इंजन के साथ Apple M5 चिप",
+          "सुगम मल्टीटास्किंग और AI वर्कलोड के लिए 16GB यूनिफाइड मेमोरी",
+          "तुरंत ऐप लॉन्च और फाइलों के लिए 1TB अल्ट्रा-फास्ट SSD स्टोरेज",
+          "ट्रू टोन और 500 निट्स ब्राइटनेस के साथ 34.46 सेमी (13.6-इंच) लिक्विड रेटिना डिस्प्ले",
+          "डेस्क व्यू और स्थानिक ऑडियो सपोर्ट के साथ 12MP सेंटर स्टेज कैमरा",
+          "मैगसेफ 3 चार्जिंग पोर्ट, दो थंडरबोल्ट / USB 4 पोर्ट्स, हेडफ़ोन जैक"
+        ]
+      },
+      price: 172490,
+      mrp: 185900,
+      stock: 10,
+      status: "ACTIVE"
+    },
+    {
+      id: "1",
+      brand: "AstraTech",
+      category: "laptop",
+      title: {
+        en: "AstraBook Pro 14 Laptop (Intel Core i5, 16GB RAM, 512GB SSD, Windows 11)",
+        hi: "एस्ट्राबुक प्रो 14 लैपटॉप (इंटेल कोर i5, 16GB रैम, 512GB एसएसडी, विंडोज़ 11)",
+        ta: "அஸ்ட்ராபுக் ப்ரோ 14 லேப்டாப் (இன்டெல் கோர் i5, 16GB ரேம், 512GB SSD, Windows 11)",
+        te: "ఆస్ట్రాబుక్ ప్రో 14 ల్యాప్‌టాప్ (ఇంటెల్ కోర్ i5, 16GB ర్యామ్, 512GB SSD, Windows 11)",
+        kn: "ಆಸ್ಟ್ರಾಬುಕ್ ಪ್ರೋ 14 ಲ್ಯಾಪ್‌ಟಾಪ್ (ಇಂಟೆಲ್ ಕೋರ್ i5, 16GB RAM, 512GB SSD)",
+        ml: "അസ്ട്രാബുക്ക് പ്രോ 14 ലാപ്‌ടോപ്പ് (ഇന്റൽ കോർ i5, 16GB റാം, 512GB SSD)",
+        bn: "অ্যাস্ট্রাবুক প্রো 14 ল্যাপটপ (ইন্টেল কোর i5, 16GB র‍্যাম, 512GB SSD)",
+        mr: "अ‍ॅस्ट्राबुक प्रो 14 लॅपटॉप (इंटेल कोर i5, 16GB रॅम, 512GB SSD)",
+        ur: "ایسٹرا بک پرو 14 لیپ ٹاپ (انٹیل کور i5, 16GB ریم, 512GB ایس ایس ڈی)",
+        pa: "ਐਸਟਰਾਬੁੱਕ ਪ੍ਰੋ 14 ਲੈਪਟਾਪ (ਇੰਟੇਲ ਕੋਰ i5, 16GB ਰੈਮ, 512GB SSD)",
+        gu: "એસ્ટ્રાબુક પ્રો 14 લેપટોપ (ઇન્ટેલ કોર i5, 16GB રેમ, 512GB SSD)"
+      },
+      description: {
+        en: "High-performance professional laptop equipped with Intel Core i5 processor, crisp display, and rapid SSD storage for productivity.",
+        hi: "इंटेल कोर i5 प्रोसेसर, शानदार डिस्प्ले और तीव्र एसएसडी स्टोरेज से सुसज्जित उच्च प्रदर्शन वाला लैपटॉप।"
+      },
+      aboutSpecs: {
+        en: [
+          "Intel Core i5 13th Gen processor with Turbo Boost",
+          "16GB DDR5 High Speed RAM and 512GB NVMe SSD",
+          "14-inch Full HD Anti-Glare Eye Care Display",
+          "Pre-installed Windows 11 Home and MS Office"
+        ],
+        hi: [
+          "टर्बो बूस्ट के साथ इंटेल कोर i5 13वीं पीढ़ी का प्रोसेसर",
+          "16GB DDR5 हाई स्पीड रैम और 512GB NVMe एसएसडी",
+          "14-इंच फुल एचडी एंटी-ग्लेयर आई केयर डिस्प्ले",
+          "प्री-इंस्टॉल्ड विंडोज़ 11 होम और एमएस ऑफिस"
+        ]
+      },
+      price: 79920,
+      mrp: 99771,
+      stock: 18,
+      status: "ACTIVE"
+    },
+    {
+      id: "related_smartphone_z_pixel",
+      name: "Smartphone Z Pixel Max 128GB Unlocked",
+      brand: "PixelMax",
+      category: "mobile",
+      title: {
+        en: "Smartphone Z Pixel Max 128GB Unlocked (5G, 6.7\" AMOLED, 50MP Triple Camera)",
+        hi: "स्मार्टफ़ोन Z पिक्सेल मैक्स 128GB अनलॉक्ड (5G सक्षम, 6.7\" AMOLED, 50MP ट्रिपल कैमरा)",
+        ta: "ஸ்மார்ட்போன் Z பிக்சல் மேக்ஸ் 128GB அன்லாக் செய்யப்பட்டது (5G, 6.7\" AMOLED)",
+        te: "స్మార్ట్‌ఫోన్ Z పిక్సెల్ మాక్స్ 128GB అన్‌లాక్ చేయబడింది (5G, 6.7\" AMOLED)",
+        mr: "स्मार्टफोन Z पिक्सेल मॅक्स 128GB अनलॉक केलेला (5G, 6.7\" AMOLED)",
+        bn: "স্মার্টফোন Z পিক্সেল ম্যাক্স 128GB আনলকড (5G, 6.7\" AMOLED)"
+      },
+      price: 49999,
+      mrp: 59999
+    },
+    {
+      id: "related_corr_playtime",
+      name: "Corr Playtime 10.3\"",
+      brand: "Playtime",
+      category: "mobile",
+      title: {
+        en: "Corr Playtime 10.3\" Study & Entertainment Tablet (Wi-Fi, 64GB, Kids Mode)",
+        hi: "कोर प्ले-टाइम 10.3″ स्टडी एवं एंटरटेनमेंट टैबलेट (वाई-फ़ाई, 64GB, किड्स मोड)",
+        ta: "கார் ப்ளேடைம் 10.3\" டேப்லெட் (வைஃபை, 64GB)",
+        te: "కార్ ప్లేటైమ్ 10.3\" టాబ్లెట్ (వై-ఫై, 64GB)",
+        mr: "कॉर्ड प्ले-टाईम 10.3″ स्टडी टॅबलेट (वाय-फाय, 64GB)",
+        bn: "কর প্লেটাইম 10.3\" স্টাডি ট্যাবলেট (ওয়াই-ফাই, 64GB)"
+      },
+      price: 18999,
+      mrp: 24999
+    },
+    {
+      id: "related_hv_vr_system",
+      name: "HV Virtual Reality System",
+      brand: "HyperVision",
+      category: "accessory",
+      title: {
+        en: "HV Virtual Reality System with Dual Motion Controllers & Spatial 3D Audio",
+        hi: "एचवी वर्चुअल Reality (VR) सिस्टम डुअल मोशन कंट्रोलर्स और 3D स्थानिक ऑडियो के साथ",
+        ta: "HV விர்ச்சுவல் ரியாலிட்டி சிஸ்டம் மோஷன் கன்ட்ரோலர்களுடன்",
+        te: "HV వర్చువల్ రియాలిటీ సిస్టమ్ మోషన్ కంట్రోలర్లతో",
+        mr: "एचव्ही व्हर्च्युअल रिअॅलिटी सिस्टीम ड्युअल मोशन कंट्रोलर्ससह",
+        bn: "এইচভি ভার্চুয়াল রিয়েলিটি সিস্টেম মোশন কন্ট্রোলার সহ"
+      },
+      price: 32990,
+      mrp: 39990
+    },
+    {
+      id: "product_6b489a18-ef31-ee2b-92af-4929d58b70c1",
+      name: "L19M3PF4 Laptop battery For Lenovo IdeaPad 5-14ALC05 14ARE05 14ARE05 14ITL05",
+      brand: "Lenovo",
+      category: "laptop",
+      title: {
+        en: "L19M3PF4 Laptop Battery for Lenovo IdeaPad 5-14ALC05 14ARE05 14ITL05 Series",
+        hi: "Lenovo IdeaPad 5-14ALC05 14ARE05 14ITL05 सीरीज़ के लिए L19M3PF4 लैपटॉप बैटरी",
+        ta: "Lenovo IdeaPad தொடருக்கான L19M3PF4 லேப்டாப் பேட்டரி",
+        te: "Lenovo IdeaPad సిరీస్ కోసం L19M3PF4 ల్యాప్‌టాప్ బ్యాటరీ",
+        mr: "Lenovo IdeaPad साठी L19M3PF4 लॅपटॉप बॅटरी",
+        bn: "Lenovo IdeaPad-এর জন্য L19M3PF4 ল্যাপটপ ব্যাটারি"
+      },
+      description: {
+        en: "Original replacement battery engineered for Lenovo IdeaPad series, offering optimal runtime, safety protection, and long cycle life.",
+        hi: "Lenovo IdeaPad सीरीज़ के लिए उच्च गुणवत्ता वाली रिप्लेसमेंट बैटरी, जो अधिकतम बैकअप, ओवरचार्ज सुरक्षा और लंबी लाइफ प्रदान करती है।"
+      },
+      aboutSpecs: {
+        en: [
+          "High capacity Lithium-ion cells with multi-protection circuitry",
+          "100% compatible with Lenovo IdeaPad 5-14 series",
+          "1 Year brand warranty with replacement guarantee"
+        ],
+        hi: [
+          "सुरक्षा सर्किट के साथ उच्च क्षमता वाले लिथियम-आयन सेल्स",
+          "Lenovo IdeaPad 5-14 सीरीज़ के साथ 100% संगत",
+          "रिप्लेसमेंट गारंटी के साथ 1 वर्ष की निर्माता वारंटी"
+        ]
+      }
+    },
+    {
+      id: "product_a27ea6d9-02b5-ec8c-d994-f6b6a3ea05cc",
+      name: "L18M3PD1 Laptop Battery for Lenovo ThinkPad T14s ,T490S Serie",
+      brand: "Lenovo",
+      category: "laptop",
+      title: {
+        en: "L18M3PD1 Laptop Battery for Lenovo ThinkPad T14s, T490s Series",
+        hi: "Lenovo ThinkPad T14s, T490s सीरीज़ के लिए L18M3PD1 लैपटॉप बैटरी",
+        ta: "Lenovo ThinkPad தொடருக்கான L18M3PD1 லேப்டாப் பேட்டரி",
+        te: "Lenovo ThinkPad సిరీస్ కోసం L18M3PD1 ల్యాప్‌టాప్ బ్యాటరీ"
+      }
+    },
+    {
+      id: "product_23f723f7-de16-37e8-138b-bd61216f4d08",
+      name: "L17M4PE1 Laptop Battery For Lenovo IdeaPad 730S-13IWL S730-13IWL S730-13IML",
+      brand: "Lenovo",
+      category: "laptop",
+      title: {
+        en: "L17M4PE1 Laptop Battery for Lenovo IdeaPad 730S-13IWL S730-13IWL Series",
+        hi: "Lenovo IdeaPad 730S-13IWL S730-13IWL के लिए L17M4PE1 लैपटॉप बैटरी",
+        ta: "Lenovo IdeaPad தொடருக்கான L17M4PE1 லேப்டாப் பேட்டரி",
+        te: "Lenovo IdeaPad సిరీస్ కోసం L17M4PE1 ల్యాప్‌టాప్ బ్యాటరీ"
+      }
+    }
+  ];
+
+  // Category localized names matching Amazon India
+  const CATEGORY_NAMES = {
+    laptop: {
+      en: "Laptops & Accessories",
+      hi: "लैपटॉप और एक्सेसरीज़",
+      ta: "லேப்டாப்கள் & பாகங்கள்",
+      te: "ల్యాప్‌టాప్‌లు & ఉపకరణాలు",
+      kn: "ಲ್ಯಾಪ್‌ಟಾಪ್‌ಗಳು ಮತ್ತು ಪರಿಕರಗಳು",
+      ml: "ലാപ്‌ടോപ്പുകളും ആക്‌സസറികളും",
+      bn: "ল্যাপটপ এবং আনুষাঙ্গিক",
+      mr: "लॅपटॉप आणि अ‍ॅक्सेसरीज",
+      ur: "لیپ ٹاپ اور لوازمات",
+      pa: "ਲੈਪਟਾਪ ਅਤੇ ਸਹਾਇਕ ਉਪਕਰਣ",
+      gu: "લેપટોપ અને એસેસરીઝ"
+    },
+    mobile: {
+      en: "Mobile Phones & Wearable Tech",
+      hi: "मोबाइल फ़ोन और वियरेबल तकनीक",
+      ta: "மொபைல் போன்கள் & அணியக்கூடிய சாதனங்கள்",
+      te: "మొబైల్ ఫోన్లు & ధరించదగిన సాంకేతికత",
+      kn: "ಮೊಬೈಲ್ ಫೋನ್‌ಗಳು ಮತ್ತು ವೇರಬಲ್ ತಂತ್ರಜ್ಞಾನ",
+      ml: "മൊബൈൽ ഫോണുകളും വെയറബിൾ സാങ്കേതികവിദ്യയും",
+      bn: "মোবাইল ফোন এবং পরিধানযোগ্য প্রযুক্তি",
+      mr: "मोबाइल फोन आणि वेअरेबल तंत्रज्ञान",
+      ur: "موبائل فون اور پہننے کے قابل ٹیک",
+      pa: "ਮੋਬਾਈਲ ਫੋਨ ਅਤੇ ਪਹਿਨਣਯੋਗ ਤਕਨੀਕ",
+      gu: "મોબાઇલ ફોન અને વેરેબલ ટેક"
+    },
+    computer: {
+      en: "Computers & Components",
+      hi: "कंप्यूटर और सहायक उपकरण",
+      ta: "கம்ப்யூட்டர்கள் & பாகங்கள்",
+      te: "కంప్యూటర్లు & భాగాలు",
+      kn: "ಕಂಪ್ಯೂಟರ್‌ಗಳು ಮತ್ತು ಬಿಡಿಭಾಗಗಳು",
+      ml: "കമ്പ്യൂട്ടറുകളും ഘടകങ്ങളും",
+      bn: "কম্পিউটার এবং উপাদান",
+      mr: "संगणक आणि घटक",
+      ur: "کمپیوٹرز اور پرزے",
+      pa: "ਕੰਪਿਊਟਰ ਅਤੇ ਕੰਪੋਨੈਂਟ",
+      gu: "કમ્પ્યુટર્સ અને ઘટકો"
+    },
+    audio: {
+      en: "Audio, Headphones & Speakers",
+      hi: "ऑडियो, हेडफ़ोन और स्पीकर",
+      ta: "ஆடியோ, ஹெட்ஃபோன்கள் & ஸ்பீக்கர்கள்",
+      te: "ఆడియో, హెడ్‌ఫోన్లు & స్పీకర్లు",
+      kn: "ಆಡಿಯೋ, ಹೆಡ್‌ಫೋನ್ ಮತ್ತು ಸ್ಪೀಕರ್‌ಗಳು",
+      ml: "ഓഡിയോ, ഹെഡ്‌ഫോണുകൾ & സ്പീക്കറുകൾ",
+      bn: "অডিও, হেডফোন এবং স্পিকার",
+      mr: "ऑडिओ, हेडफोन आणि स्पीकर्स",
+      ur: "آڈیو، ہیڈ فون اور اسپیکر",
+      pa: "ਆਡੀਓ, ਹੈੱਡਫੋਨ ਅਤੇ ਸਪੀਕਰ",
+      gu: "ઓડિયો, હેડફોન અને સ્પીકર્સ"
+    },
+    accessory: {
+      en: "Electronics Accessories",
+      hi: "इलेक्ट्रॉनिक्स एक्सेसरीज़",
+      ta: "எலக்ட்ரானிக்ஸ் பாகங்கள்",
+      te: "ఎలక్ట్రానిక్స్ ఉపకరణాలు",
+      kn: "ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಪರಿಕರಗಳು",
+      ml: "ഇലക്ട്രോണിക്സ് ആക്സസറികൾ",
+      bn: "ইলেকট্রনিক্স আনুষাঙ্গিক",
+      mr: "इलेक्ट्रॉनिक्स अ‍ॅक्सेसरीज",
+      ur: "الیکٹرانکس کے لوازمات",
+      pa: "ਇਲੈਕਟ੍ਰਾਨਿਕਸ ਸਹਾਇਕ ਉਪਕਰਣ",
+      gu: "ઇલેક્ટ્રોનિક્સ એસેસરીઝ"
+    },
+    printer: {
+      en: "Printers & Inks",
+      hi: "प्रिंटर और स्याही",
+      ta: "பிரிண்டர்கள் & மை",
+      te: "ప్రింటర్లు & ఇంక్",
+      kn: "ಪ್ರಿಂಟರ್‌ಗಳು ಮತ್ತು ಶಾಯಿ",
+      ml: "പ്രിന്ററുകളും മഷിയും",
+      bn: "প্রিন্টার এবং কালি",
+      mr: "प्रिंटर आणि शाई",
+      ur: "پرنٹرز اور انک",
+      pa: "ਪ੍ਰਿੰਟਰ ਅਤੇ ਸਿਆਹੀ",
+      gu: "પ્રિન્ટર્સ અને શાહી"
+    }
+  };
+
+  // Build indexed map for O(1) lookup
+  const EM_CATALOG_MAP = {};
+  EM_CATALOG.forEach((item) => {
+    if (item.id) EM_CATALOG_MAP[String(item.id)] = item;
+    if (item.name) EM_CATALOG_MAP[item.name.toLowerCase()] = item;
+    if (item.title && typeof item.title === "object" && item.title.en) {
+      EM_CATALOG_MAP[item.title.en.toLowerCase()] = item;
+    }
+  });
+
+  // Dynamic Pattern Translators for catalog items not explicitly in EM_CATALOG
+  function dynamicTranslateCatalogTitle(rawTitle, lang) {
+    if (!rawTitle || typeof rawTitle !== "string") return rawTitle || "";
+    if (lang === "en") return rawTitle;
+
+    let s = rawTitle.trim();
+
+    if (lang === "hi") {
+      s = s.replace(/\\bLaptop\\s+battery\\s+for\\s+/gi, "के लिए लैपटॉप बैटरी - ")
+           .replace(/\\bLaptop\\s+Battery\\b/gi, "लैपटॉप बैटरी")
+           .replace(/\\bLaptop\\s+Keyboard\\s+for\\s+/gi, "के लिए लैपटॉप कीबोर्ड - ")
+           .replace(/\\bLaptop\\s+Keyboard\\b/gi, "लैपटॉप कीबोर्ड")
+           .replace(/\\bActivity\\s+Tracker\\b/gi, "एक्टिविटी ट्रैकर स्मार्टवॉच")
+           .replace(/\\bHeart\\s+Rate\\b/gi, "हार्ट रेट मॉनिटरिंग")
+           .replace(/\\bSmart\\s+Watch\\b/gi, "स्मार्टवॉच")
+           .replace(/\\bSmart\\s+Television\\b/gi, "स्मार्ट टेलीविज़न (4K Ultra HD)")
+           .replace(/\\bMechanical\\s+Keyboard\\b/gi, "मैकेनिकल कीबोर्ड (RGB बैकलिट)")
+           .replace(/\\bGaming\\s+Laptop\\b/gi, "गेमिंग लैपटॉप (हाई-स्पीड ग्राफिक्स)")
+           .replace(/\\bWireless\\s+Headphones\\b/gi, "वायरलेस हेडफ़ोन (नॉइज़ कैंसलेशन)")
+           .replace(/\\bSmart\\s+Speaker\\b/gi, "स्मार्ट स्पीकर (वॉयस कंट्रोल)")
+           .replace(/\\bSeries\\b/gi, "सीरीज़");
+      return s;
+    }
+
+    if (lang === "ta") {
+      s = s.replace(/\\bLaptop\\s+Battery\\b/gi, "லேப்டாப் பேட்டரி")
+           .replace(/\\bLaptop\\s+Keyboard\\b/gi, "லேப்டாப் விசைப்பலகை");
+      return s;
+    }
+
+    if (lang === "te") {
+      s = s.replace(/\\bLaptop\\s+Battery\\b/gi, "ల్యాప్‌టాప్ బ్యాటరీ")
+           .replace(/\\bLaptop\\s+Keyboard\\b/gi, "ల్యాప్‌టాప్ కీబోర్డ్");
+      return s;
+    }
+
+    return s;
+  }
+
+  // Universal Field Localizer
+  function getLocalizedField(item, fieldName, targetLang) {
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    if (!item) return "";
+
+    let targetItem = item;
+    const id = String(item.id || "").trim();
+    const name = String(item.name || item.title || "").trim().toLowerCase();
+
+    if (EM_CATALOG_MAP[id]) {
+      targetItem = Object.assign({}, EM_CATALOG_MAP[id], item);
+    } else if (EM_CATALOG_MAP[name]) {
+      targetItem = Object.assign({}, EM_CATALOG_MAP[name], item);
+    }
+
+    const val = targetItem[fieldName];
+    if (!val) return "";
+
+    if (typeof val === "object" && !Array.isArray(val)) {
+      return val[lang] || val.en || Object.values(val)[0] || "";
+    }
+
+    if (fieldName === "title" || fieldName === "name") {
+      return dynamicTranslateCatalogTitle(String(val), lang);
+    }
+
+    return val;
+  }
+
+  function getLocalizedTitle(product, targetLang) {
+    if (!product) return "";
+    const title = getLocalizedField(product, "title", targetLang);
+    if (title) return title;
+    const name = getLocalizedField(product, "name", targetLang);
+    if (name) return name;
+    return typeof product === "string" ? dynamicTranslateCatalogTitle(product, targetLang) : (product.title || product.name || "");
+  }
+
+  function getLocalizedDescription(product, targetLang) {
+    if (!product) return "";
+    return getLocalizedField(product, "description", targetLang) || (product.description || "");
+  }
+
+  function getLocalizedSpecs(product, targetLang) {
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    if (!product) return [];
+
+    let targetItem = product;
+    const id = String(product.id || "").trim();
+    const name = String(product.name || product.title || "").trim().toLowerCase();
+
+    if (EM_CATALOG_MAP[id] && (EM_CATALOG_MAP[id].aboutSpecs || EM_CATALOG_MAP[id].specs)) {
+      targetItem = EM_CATALOG_MAP[id];
+    } else if (EM_CATALOG_MAP[name] && (EM_CATALOG_MAP[name].aboutSpecs || EM_CATALOG_MAP[name].specs)) {
+      targetItem = EM_CATALOG_MAP[name];
+    }
+
+    const specs = targetItem.aboutSpecs || targetItem.specs;
+    if (specs && typeof specs === "object" && !Array.isArray(specs)) {
+      return specs[lang] || specs.en || Object.values(specs)[0] || [];
+    }
+    if (Array.isArray(specs)) return specs;
+    return [];
+  }
+
+  function getLocalizedCategory(catKey, targetLang) {
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const key = String(catKey || "").toLowerCase().trim();
+    if (CATEGORY_NAMES[key] && CATEGORY_NAMES[key][lang]) {
+      return CATEGORY_NAMES[key][lang];
+    }
+    return catKey || "";
+  }
+
+  // Expose to global window scope
+  window.EM_CATALOG = EM_CATALOG;
+  window.EM_CATALOG_MAP = EM_CATALOG_MAP;
+  window.CATEGORY_NAMES = CATEGORY_NAMES;
+  window.getLocalizedField = getLocalizedField;
+  window.getLocalizedTitle = getLocalizedTitle;
+  window.getLocalizedDescription = getLocalizedDescription;
+  window.getLocalizedSpecs = getLocalizedSpecs;
+  window.getLocalizedCategory = getLocalizedCategory;
+})();
+`;
+
+fs.writeFileSync(path.join(repoRoot, 'products-data.js'), productsDataContent, 'utf8');
+console.log('Created products-data.js');
+
+// ============================================================================
+// 2. Create universal-i18n-bus.js
+// ============================================================================
+const busContent = `/**
+ * ElectroMart Universal i18n Bus & DOM Observer
+ * Central reactive synchronizer for full-theme Amazon India parity.
+ */
+
+(function () {
+  function applyGlobalThemeTranslation() {
+    const lang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[lang]) ? window.EM_TRANSLATIONS[lang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
+
+    // 1. All elements with data-i18n
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (dict && dict[key] !== undefined) {
+        el.textContent = dict[key];
+      }
+    });
+
+    // 2. All placeholders with data-i18n-placeholder
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict && dict[key] !== undefined) {
+        el.placeholder = dict[key];
+      }
+    });
+
+    // 3. All titles with data-i18n-title
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-title");
+      if (dict && dict[key] !== undefined) {
+        el.title = dict[key];
+      }
+    });
+
+    // 4. Trigger active page re-renderers
+    if (typeof window.renderProductDetailPage === "function" && (window.currentLoadedProduct || window.activeRenderedProduct)) {
+      window.renderProductDetailPage(window.currentLoadedProduct || window.activeRenderedProduct);
+    }
+    if (typeof window.renderProductsList === "function" && window.allLoadedProducts) {
+      window.renderProductsList(window.allLoadedProducts);
+    }
+    if (typeof window.renderHomepageProducts === "function") {
+      window.renderHomepageProducts(lang);
+    } else if (typeof window.renderProducts === "function") {
+      window.renderProducts(lang);
+    }
+    if (typeof window.renderTodaysDeals === "function") {
+      window.renderTodaysDeals(lang);
+    }
+    if (typeof window.renderBestSellers === "function") {
+      window.renderBestSellers(lang);
+    }
+    if (typeof window.renderCart === "function") {
+      window.renderCart();
+    }
+  }
+
+  // Cross-tab and live dispatch synchronization
+  window.applyGlobalThemeTranslation = applyGlobalThemeTranslation;
+
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", applyGlobalThemeTranslation);
+  } else {
+    applyGlobalThemeTranslation();
+  }
+
+  window.addEventListener("storage", (e) => {
+    if (e.key === "electromart_lang_v1" || e.key === "electromart_lang") {
+      applyGlobalThemeTranslation();
+    }
+  });
+
+  window.addEventListener("languageChanged", () => {
+    applyGlobalThemeTranslation();
+  });
+})();
+`;
+
+fs.writeFileSync(path.join(repoRoot, 'universal-i18n-bus.js'), busContent, 'utf8');
+console.log('Created universal-i18n-bus.js');
+
+// ============================================================================
+// 3. Update translations.js
+// ============================================================================
+const transPath = path.join(repoRoot, 'translations.js');
+let transContent = fs.readFileSync(transPath, 'utf8');
+
+// Ensure getLocalizedTitle, getLocalizedField, etc. are defined and bound
+if (!transContent.includes('window.getLocalizedField =')) {
+  const helpersCode = `
+  // Universal Field & Title Helpers for Full Parity
+  window.getLocalizedField = window.getLocalizedField || function(item, fieldName, targetLang) {
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    if (!item) return "";
+    const id = String(item.id || "").trim();
+    const name = String(item.name || item.title || "").trim().toLowerCase();
+    let target = item;
+    if (window.EM_CATALOG_MAP) {
+      if (window.EM_CATALOG_MAP[id]) target = Object.assign({}, window.EM_CATALOG_MAP[id], item);
+      else if (window.EM_CATALOG_MAP[name]) target = Object.assign({}, window.EM_CATALOG_MAP[name], item);
+    }
+    const val = target[fieldName];
+    if (!val) return "";
+    if (typeof val === "object" && !Array.isArray(val)) {
+      return val[lang] || val.en || Object.values(val)[0] || "";
+    }
+    return val;
+  };
+
+  window.getLocalizedTitle = window.getLocalizedTitle || function(product, targetLang) {
+    if (!product) return "";
+    return window.getLocalizedField(product, "title", targetLang) || window.getLocalizedField(product, "name", targetLang) || (typeof product === "string" ? product : (product.title || product.name || ""));
+  };
+
+  window.getLocalizedDescription = window.getLocalizedDescription || function(product, targetLang) {
+    if (!product) return "";
+    return window.getLocalizedField(product, "description", targetLang) || (product.description || "");
+  };
+
+  window.getLocalizedSpecs = window.getLocalizedSpecs || function(product, targetLang) {
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    if (!product) return [];
+    let target = product;
+    const id = String(product.id || "").trim();
+    const name = String(product.name || product.title || "").trim().toLowerCase();
+    if (window.EM_CATALOG_MAP) {
+      if (window.EM_CATALOG_MAP[id]) target = window.EM_CATALOG_MAP[id];
+      else if (window.EM_CATALOG_MAP[name]) target = window.EM_CATALOG_MAP[name];
+    }
+    const specs = target.aboutSpecs || target.specs;
+    if (specs && typeof specs === "object" && !Array.isArray(specs)) {
+      return specs[lang] || specs.en || Object.values(specs)[0] || [];
+    }
+    if (Array.isArray(specs)) return specs;
+    return [];
+  };
+`;
+
+  transContent = transContent.replace('window.applyFullPageTranslation = applyFullPageTranslation;', `window.applyFullPageTranslation = applyFullPageTranslation;\n${helpersCode}`);
+  fs.writeFileSync(transPath, transContent, 'utf8');
+  console.log('Updated translations.js with universal field and title helpers');
+}
+
+console.log('System files initialized successfully!');

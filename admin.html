@@ -16,25 +16,25 @@
   <header class="admin-portal-header">
     <a href="index.html" class="brand">ElectroMart</a>
     <nav class="header-links">
-      <a href="index.html">Storefront</a>
-      <a href="account.html">Account</a>
-      <a href="orders.html">Orders</a>
-      <a href="auth.html?mode=admin&redirect=admin-dashboard.html">Admin Sign In</a>
+      <a href="index.html" data-i18n="nav_storefront">Storefront</a>
+      <a href="account.html" data-i18n="nav_account">Account</a>
+      <a href="orders.html" data-i18n="nav_orders">Orders</a>
+      <a href="auth.html?mode=admin&redirect=admin-dashboard.html" data-i18n="admin_signin_title">Admin Sign In</a>
     </nav>
   </header>
 
   <main class="admin-portal-main">
     <section class="admin-hero">
-      <div class="eyebrow">Seller Central</div>
-      <h1>Admin Panel Access</h1>
-      <p>Manage products, orders, analytics, automation, notifications, and store operations from one dashboard.</p>
+      <div class="eyebrow" data-i18n="seller_central">Seller Central</div>
+      <h1 data-i18n="admin_panel_access">Admin Panel Access</h1>
+      <p data-i18n="admin_panel_desc">Manage products, orders, analytics, automation, notifications, and store operations from one dashboard.</p>
       <div id="adminPortalStatus" class="admin-status-card pending">
         <strong>Checking account status...</strong>
         <p>Open the dashboard with an admin account. Demo users will remain available for now.</p>
       </div>
       <div class="hero-actions">
-        <a id="adminPrimaryAction" class="primary-btn" href="auth.html?mode=admin&redirect=admin-dashboard.html">Sign In as Admin</a>
-        <a id="adminSecondaryAction" class="secondary-btn" href="account.html">Go to Account</a>
+        <a id="adminPrimaryAction" class="primary-btn" href="auth.html?mode=admin&redirect=admin-dashboard.html" data-i18n="signin_as_admin">Sign In as Admin</a>
+        <a id="adminSecondaryAction" class="secondary-btn" href="account.html" data-i18n="go_to_account">Go to Account</a>
       </div>
     </section>
 
@@ -64,7 +64,16 @@
     </section>
   </main>
 
+  <script src="translations.js"></script>
   <script src="admin-portal.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+      if (typeof window.applyFullPageTranslation === "function") {
+        window.applyFullPageTranslation(currentLang);
+      }
+    });
+  </script>
 </body>
 </html>
 

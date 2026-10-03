@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title data-i18n="pay_page_title">ElectroMart Pay &amp; UPI Hub - ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260424a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="electromart-pay.css?v=20260909a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="electromart-pay-body">
+  <div id="headerContainer"></div>
+
+  <main class="pay-page-wrapper" id="payPageWrapper">
+    <!-- Breadcrumbs -->
+    <nav class="pay-breadcrumb" id="payBreadcrumb" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <span class="pay-crumb-sep">&gt;</span>
+      <a href="account.html" data-i18n="your_account">Your Account</a>
+      <span class="pay-crumb-sep">&gt;</span>
+      <span class="pay-crumb-current" data-i18n="electromart_pay_hub">ElectroMart Pay &amp; UPI Hub</span>
+    </nav>
+
+    <!-- Page Header Banner -->
+    <header class="pay-page-header">
+      <div class="pay-header-left">
+        <div class="pay-brand-badge">
+          <span class="pay-logo-em">ElectroMart</span>
+          <span class="pay-logo-pill">Pay</span>
+        </div>
+        <h1 class="pay-page-h1" data-i18n="pay_page_title">ElectroMart Pay &amp; UPI Hub</h1>
+        <p class="pay-page-sub" data-i18n="pay_page_sub">Fastest 1-Click checkout, instant refunds, bill payments &amp; virtual UPI in one place.</p>
+      </div>
+      <div class="pay-header-stats">
+        <div class="stat-bubble">
+          <span class="stat-num" id="statCashbackNum">₹480</span>
+          <span class="stat-lbl" data-i18n="pay_total_cashback_earned">Total Cashback</span>
+        </div>
+        <div class="stat-bubble">
+          <span class="stat-num">100%</span>
+          <span class="stat-lbl" data-i18n="pay_secure_badge">Bank Grade Security</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main 2-Column Hub Layout -->
+    <div class="pay-hub-grid">
+      <!-- Left / Primary Column -->
+      <section class="pay-main-col">
+
+        <!-- 1. Hero Balance Card -->
+        <article class="pay-card hero-balance-card" id="payBalanceCard">
+          <div class="hero-balance-top">
+            <div class="balance-meta">
+              <span class="balance-label" data-i18n="electromart_pay_balance">ElectroMart Pay Balance</span>
+              <div class="hero-amount-wrap">
+                <span class="currency-symbol">₹</span>
+                <strong class="hero-balance-val" id="heroBalanceAmount">2,450.00</strong>
+              </div>
+              <div class="balance-tags">
+                <span class="kyc-badge"><span class="badge-dot">●</span> <span data-i18n="pay_full_kyc">Full KYC Verified</span></span>
+                <span class="wallet-badge" data-i18n="pay_wallet_active">Active</span>
+              </div>
+            </div>
+
+            <!-- Auto-Reload Feature -->
+            <div class="auto-reload-card" id="autoReloadBox">
+              <div class="auto-reload-head">
+                <div class="reload-icon">⚡</div>
+                <div>
+                  <strong class="reload-title" data-i18n="pay_auto_reload_title">1-Click Auto-Reload</strong>
+                  <p class="reload-desc" data-i18n="pay_auto_reload_desc">Automatically adds ₹1,000 when balance falls below ₹200</p>
+                </div>
+              </div>
+              <div class="auto-reload-toggle-wrap">
+                <label class="switch" for="autoReloadToggle">
+                  <input type="checkbox" id="autoReloadToggle" />
+                  <span class="slider round"></span>
+                </label>
+                <span class="auto-reload-state-text" id="autoReloadStatus" data-i18n="pay_auto_reload_off">Disabled</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. Quick Add Money Section -->
+        <article class="pay-card" id="addMoneySection">
+          <div class="pay-card-header">
+            <h2 class="pay-card-title" data-i18n="pay_add_money_title">Add Money to Balance</h2>
+            <span class="pay-card-subtitle" data-i18n="pay_add_money_sub">Fast top-up using UPI, Credit/Debit Cards, or Net Banking</span>
+          </div>
+
+          <div class="add-money-presets">
+            <button type="button" class="pay-preset-btn" data-preset="500">+ ₹500</button>
+            <button type="button" class="pay-preset-btn" data-preset="1000">+ ₹1,000</button>
+            <button type="button" class="pay-preset-btn" data-preset="2000">+ ₹2,000</button>
+            <button type="button" class="pay-preset-btn" data-preset="5000">+ ₹5,000</button>
+          </div>
+
+          <div class="add-money-form">
+            <div class="amount-input-group">
+              <span class="input-currency-prefix">₹</span>
+              <input type="number" id="customAmountInput" class="custom-amount-input" placeholder="Enter amount (₹100 - ₹50,000)" min="100" max="50000" step="50" />
+            </div>
+
+            <div class="add-payment-method-selector">
+              <label class="add-method-option active">
+                <input type="radio" name="topupMethod" value="upi" checked />
+                <span>UPI FastPay</span>
+              </label>
+              <label class="add-method-option">
+                <input type="radio" name="topupMethod" value="card" />
+                <span>Debit / Credit Card</span>
+              </label>
+              <label class="add-method-option">
+                <input type="radio" name="topupMethod" value="netbanking" />
+                <span>Net Banking</span>
+              </label>
+            </div>
+
+            <button type="button" id="addMoneySubmitBtn" class="pay-action-btn pay-action-primary" data-i18n="pay_add_money_btn">Add Money to Balance</button>
+          </div>
+        </article>
+
+        <!-- 3. Virtual UPI Simulator Section -->
+        <article class="pay-card" id="upiHubSection">
+          <div class="pay-card-header">
+            <h2 class="pay-card-title" data-i18n="pay_upi_section_title">ElectroMart Pay UPI</h2>
+            <span class="pay-card-subtitle" data-i18n="pay_upi_section_sub">Virtual UPI ID linked directly to your store account</span>
+          </div>
+
+          <div class="vpa-box">
+            <div class="vpa-details">
+              <span class="vpa-label" data-i18n="pay_virtual_vpa_label">Your Virtual UPI ID:</span>
+              <code class="vpa-id" id="virtualVpaDisplay">user@electromart</code>
+            </div>
+            <button type="button" id="copyVpaBtn" class="pay-action-btn pay-action-secondary" data-i18n="pay_copy_vpa">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              <span>Copy UPI ID</span>
+            </button>
+            <button type="button" id="openQrScannerBtn" class="pay-action-btn pay-action-highlight" data-i18n="pay_scan_qr_btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 4h6v6H4V4zm2 2v2h2V6H6zm-2 8h6v6H4v-6zm2 2v2h2v-2H6zm8-12h6v6h-6V4zm2 2v2h2V6h-2zm-2 8h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4-4h2v4h-2v-4zm0 4h2v2h-2v-2z"/></svg>
+              <span>Scan any UPI QR</span>
+            </button>
+          </div>
+
+          <!-- Pending Collect Requests -->
+          <div class="pending-collects-wrap">
+            <div class="pending-head">
+              <strong data-i18n="pay_pending_requests_title">Pending UPI Collect Requests</strong>
+              <span class="pending-badge" id="pendingRequestsCount">2 Pending</span>
+            </div>
+            <div class="pending-collect-list" id="pendingCollectList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. Passbook / Statement Section -->
+        <article class="pay-card" id="payStatementSection">
+          <div class="pay-card-header statement-header-row">
+            <div>
+              <h2 class="pay-card-title" data-i18n="pay_statement_title">Passbook &amp; Transaction History</h2>
+              <span class="pay-card-subtitle" data-i18n="pay_statement_sub">Comprehensive audit trail of all credits, debits and cashback</span>
+            </div>
+            <button type="button" id="downloadStatementBtn" class="pay-download-btn" data-i18n="pay_download_statement">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+              <span>Download Statement</span>
+            </button>
+          </div>
+
+          <!-- Filter Tabs & Search -->
+          <div class="statement-controls">
+            <div class="statement-tabs" id="statementFilterTabs" role="tablist">
+              <button type="button" class="statement-tab active" data-filter="all" data-i18n="filter_all">All</button>
+              <button type="button" class="statement-tab" data-filter="added" data-i18n="pay_filter_added">Added Money</button>
+              <button type="button" class="statement-tab" data-filter="orders" data-i18n="pay_filter_orders">Orders Paid</button>
+              <button type="button" class="statement-tab" data-filter="cashback" data-i18n="pay_filter_cashback">Cashback</button>
+            </div>
+            <div class="statement-search-wrap">
+              <input type="search" id="statementSearchInput" class="statement-search" placeholder="Search transactions..." data-i18n="pay_search_transactions_placeholder" />
+            </div>
+          </div>
+
+          <!-- Statement List -->
+          <div class="statement-list" id="statementList">
+            <!-- Dynamic rows rendered via ElectroMart Pay controller -->
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Right / Sidebar Column -->
+      <aside class="pay-sidebar-col">
+
+        <!-- Cashback & Rewards Box -->
+        <article class="pay-card rewards-card" id="cashbackRewardsSection">
+          <div class="pay-card-header">
+            <h2 class="pay-card-title" data-i18n="pay_rewards_title">Cashback &amp; Scratch Cards</h2>
+            <span class="pay-card-subtitle" data-i18n="pay_rewards_sub">Guaranteed 5% cashback on every ElectroMart Pay order</span>
+          </div>
+
+          <div class="scratch-card-box" id="scratchCardWidget">
+            <div class="scratch-card-header">
+              <div class="gift-icon">🎁</div>
+              <div>
+                <strong data-i18n="pay_scratch_card_title">Surprise Scratch Card</strong>
+                <p data-i18n="pay_scratch_card_desc">Unlock instant wallet balance rewards</p>
+              </div>
+            </div>
+
+            <div class="scratch-canvas-container" id="scratchCardContainer">
+              <div class="scratch-cover" id="scratchCover">
+                <span class="scratch-cover-text" data-i18n="pay_scratch_here">Scratch Here!</span>
+              </div>
+              <div class="scratch-under-content">
+                <span class="reward-sparkle">✨</span>
+                <strong class="reward-congrats" data-i18n="pay_reward_won">You Won!</strong>
+                <span class="reward-amount" id="scratchRewardAmount">₹50.00</span>
+                <span class="reward-wallet-note" data-i18n="pay_reward_note">Credited instantly to your ElectroMart Pay Balance</span>
+              </div>
+            </div>
+
+            <button type="button" id="revealScratchCardBtn" class="pay-action-btn pay-action-scratch" data-i18n="pay_scratch_btn">Scratch &amp; Reveal Reward</button>
+            <div id="scratchRewardResult" class="scratch-result-banner" hidden>
+              🎉 <strong data-i18n="pay_reward_claimed">Reward Claimed!</strong> <span id="scratchResultMsg">₹50.00 added to your balance.</span>
+            </div>
+          </div>
+
+          <!-- Promotional Perks Banner -->
+          <div class="pay-perks-list">
+            <div class="pay-perk-item">
+              <div class="perk-icon">⚡</div>
+              <div class="perk-text">
+                <strong data-i18n="pay_perk_fast_title">Fastest 1-Click Checkout</strong>
+                <p data-i18n="pay_perk_fast_desc">No OTP, no bank gateway redirects or waiting.</p>
+              </div>
+            </div>
+            <div class="pay-perk-item">
+              <div class="perk-icon">🔄</div>
+              <div class="perk-text">
+                <strong data-i18n="pay_perk_refund_title">Instant Refunds in 15 Minutes</strong>
+                <p data-i18n="pay_perk_refund_desc">Cancelled order refunds reach your balance immediately.</p>
+              </div>
+            </div>
+            <div class="pay-perk-item">
+              <div class="perk-icon">🛡️</div>
+              <div class="perk-text">
+                <strong data-i18n="pay_perk_protection_title">100% Buyer Protection</strong>
+                <p data-i18n="pay_perk_protection_desc">RBI compliant semi-closed prepaid instrument security.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Quick Links / Help Card -->
+        <article class="pay-card quick-links-card">
+          <div class="pay-card-header">
+            <h2 class="pay-card-title" data-i18n="pay_help_title">Help &amp; FAQs</h2>
+          </div>
+          <ul class="pay-help-links">
+            <li><a href="checkout.html" data-i18n="pay_link_test_checkout">Go to Checkout &amp; Pay with Balance ›</a></li>
+            <li><a href="account.html" data-i18n="pay_link_account">Manage Account &amp; Saved Cards ›</a></li>
+            <li><a href="faq.html" data-i18n="pay_link_faq">ElectroMart Pay FAQ &amp; Limits ›</a></li>
+          </ul>
+        </article>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- QR Code Scanner Simulator Modal -->
+  <div id="qrScannerModal" class="pay-modal" hidden>
+    <div class="pay-modal-backdrop" id="qrScannerModalBackdrop"></div>
+    <div class="pay-modal-dialog" role="dialog" aria-labelledby="qrModalTitle" aria-modal="true">
+      <div class="pay-modal-header">
+        <h3 id="qrModalTitle" class="pay-modal-title" data-i18n="pay_qr_modal_title">Scan any UPI QR Code</h3>
+        <button type="button" id="closeQrModalBtn" class="pay-modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="pay-modal-body">
+        <div class="qr-camera-viewport">
+          <div class="qr-crosshair"></div>
+          <div class="qr-laser-beam"></div>
+          <div class="qr-viewport-hint" data-i18n="pay_qr_align_hint">Align QR code within frame to pay instantly</div>
+        </div>
+
+        <div class="qr-simulation-presets">
+          <p class="qr-presets-title" data-i18n="pay_qr_presets_title">Simulate Merchant QR Scan:</p>
+          <div class="qr-preset-buttons">
+            <button type="button" class="qr-scan-preset-btn" data-merchant="Cafe Coffee Day" data-amount="180">
+              ☕ Cafe Coffee Day &bull; ₹180.00
+            </button>
+            <button type="button" class="qr-scan-preset-btn" data-merchant="Apollo Pharmacy" data-amount="340">
+              💊 Apollo Pharmacy &bull; ₹340.00
+            </button>
+            <button type="button" class="qr-scan-preset-btn" data-merchant="Reliance Fresh" data-amount="890">
+              🛒 Reliance Fresh &bull; ₹890.00
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="payToastContainer" class="pay-toast-container" aria-live="polite"></div>
+
+  <!-- Script sequence per AGENT_INSTRUCTIONS.md -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js?v=20260313b"></script>
+  <script src="auth-state.js?v=20260313b"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="electromart-pay.js?v=20260909a"></script>
+</body>
+</html>

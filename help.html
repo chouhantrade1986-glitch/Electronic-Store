@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ElectroMart 24x7 Customer Service & Help Center Hub. Manage orders, track packages, initiate returns, instant 2-min callback, live chat assistant, and inquiry tickets." />
+  <title data-i18n="help_center_title">ElectroMart Customer Service - 24x7 Help Center</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007185'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 .88-.36 1.68-.93 2.25z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="header.css" />
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body class="help-page">
+  <!-- Global Shared Header Container -->
+  <div id="header-container"></div>
+
+  <main class="help-main-container" id="helpMainContainer">
+    <!-- Breadcrumbs -->
+    <nav class="help-breadcrumbs" id="helpBreadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="home">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current" data-i18n="customer_service">Customer Service</span>
+    </nav>
+
+    <!-- Hero Search Header Banner -->
+    <section class="help-hero-banner" id="helpHeroBanner">
+      <div class="help-hero-badge" data-i18n="help_hero_badge">🎧 24x7 ElectroMart Support</div>
+      <h1 class="help-hero-title" id="helpHeroHeadline" data-i18n="help_hero_title">Hello. What can we help you with?</h1>
+      <p class="help-hero-subtitle" data-i18n="help_hero_subtitle">Search our help library, manage orders, or connect with an ElectroMart specialist.</p>
+
+      <!-- Smart Search Input -->
+      <div class="help-search-container" id="helpSearchSection">
+        <div class="help-search-input-wrap">
+          <span class="help-search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="text"
+            id="helpSearchInput"
+            class="help-search-input"
+            placeholder="Search our help library (e.g., track order, return item, refund timeline)..."
+            data-i18n-placeholder="help_search_placeholder"
+            aria-label="Search help topics and FAQs"
+            autocomplete="off"
+          />
+          <button type="button" id="helpSearchClearBtn" class="help-search-clear" aria-label="Clear search" title="Clear">&times;</button>
+        </div>
+
+        <!-- Quick Search Chips -->
+        <div class="help-search-chips">
+          <span class="help-chip-label" data-i18n="help_popular_searches">Popular:</span>
+          <button type="button" class="help-chip" id="chipWhereOrder" data-query="track">Where's my order?</button>
+          <button type="button" class="help-chip" id="chipReturns" data-query="return">Return or Replace</button>
+          <button type="button" class="help-chip" id="chipCancelOrder" data-query="cancel">Cancel an Item</button>
+          <button type="button" class="help-chip" id="chipPayment" data-query="payment">Payment &amp; Refund</button>
+          <button type="button" class="help-chip" id="chipPrime" data-query="prime">Prime Benefits</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Active Order Help Section -->
+    <section class="active-order-help-card" id="activeOrderHelpSection" aria-label="Recent Order Quick Help">
+      <div class="active-order-header">
+        <h2>
+          <span>📦</span>
+          <span data-i18n="help_recent_order_heading">Need help with a recent order?</span>
+        </h2>
+        <a href="orders.html" class="active-order-header-link" id="helpAllOrdersLink" data-i18n="help_view_all_orders">View all orders &rsaquo;</a>
+      </div>
+
+      <!-- Filled Active Order State -->
+      <div class="active-order-content" id="activeOrderCard">
+        <div class="active-order-thumb-wrap">
+          <img id="activeOrderThumb" class="active-order-thumb" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150" alt="Product thumbnail" />
+        </div>
+        <div class="active-order-info">
+          <span class="active-order-status-badge status-delivered" id="activeOrderStatusBadge">Delivered Yesterday</span>
+          <h3 class="active-order-title" id="activeOrderTitle">Sony WH-1000XM5 Wireless Noise-Cancelling Headphones</h3>
+          <p class="active-order-meta" id="activeOrderMeta">Order #EM-84920194 &bull; Placed on Sep 12, 2026</p>
+        </div>
+        <div class="active-order-actions">
+          <a href="tracking.html" id="helpTrackPackageBtn" class="btn-order-action action-primary">
+            <span>🚚</span>
+            <span data-i18n="help_btn_track">Track Package</span>
+          </a>
+          <a href="returns.html" id="helpReturnBtn" class="btn-order-action">
+            <span>🔄</span>
+            <span data-i18n="help_btn_return">Return or Replace</span>
+          </a>
+          <a href="invoice.html" id="helpInvoiceBtn" class="btn-order-action">
+            <span>📄</span>
+            <span data-i18n="help_btn_invoice">Invoice</span>
+          </a>
+          <button type="button" id="helpReportIssueBtn" class="btn-order-action">
+            <span>⚠️</span>
+            <span data-i18n="help_btn_issue">Report an Issue</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State Fallback (Clean fallback if no order exists) -->
+      <div class="active-order-empty" id="activeOrderEmptyState" style="display: none;">
+        <div class="active-order-empty-left">
+          <span class="active-order-empty-icon">🛍️</span>
+          <div class="active-order-empty-text">
+            <h3 data-i18n="help_no_recent_orders_title">No recent orders found</h3>
+            <p data-i18n="help_no_recent_orders_desc">Browse our electronics catalog or check your order history.</p>
+          </div>
+        </div>
+        <a href="products.html" class="btn-order-action action-primary" id="startShoppingBtn" data-i18n="help_start_shopping">Start Shopping</a>
+      </div>
+    </section>
+
+    <!-- 6-Core Help Categories Section -->
+    <section class="help-section" id="helpCategoriesSection" aria-label="Help Categories">
+      <h2 class="help-section-title">
+        <span>📚</span>
+        <span data-i18n="help_browse_categories_heading">Browse Help Categories</span>
+      </h2>
+      <div class="help-categories-grid">
+        <!-- 1. Your Orders -->
+        <div class="help-category-card" id="catYourOrders" data-category="orders" role="button" tabindex="0" aria-label="Your Orders Category">
+          <div class="help-cat-icon-wrap">📦</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_orders_title">Your Orders</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_orders_desc">Track packages, edit delivery address, view invoice, or cancel unwanted items.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+
+        <!-- 2. Returns & Refunds -->
+        <div class="help-category-card" id="catReturns" data-category="returns" role="button" tabindex="0" aria-label="Returns & Refunds Category">
+          <div class="help-cat-icon-wrap">🔄</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_returns_title">Returns &amp; Refunds</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_returns_desc">7-day doorstep pickup, zero-cost replacement, or instant ElectroMart Pay wallet refund.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+
+        <!-- 3. Payment & Wallet -->
+        <div class="help-category-card" id="catPayment" data-category="payment" role="button" tabindex="0" aria-label="Payment & Wallet Category">
+          <div class="help-cat-icon-wrap">💳</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_payment_title">Payment &amp; Wallet</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_payment_desc">ElectroMart Pay balance, UPI/Card transaction issues, and No-Cost EMI details.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+
+        <!-- 4. Prime Membership -->
+        <div class="help-category-card" id="catPrime" data-category="prime" role="button" tabindex="0" aria-label="Prime Membership Category">
+          <div class="help-cat-icon-wrap">👑</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_prime_title">Prime Membership</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_prime_desc">Free 1-day delivery perks, early deal access, renewal dates, and membership pause/cancel.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+
+        <!-- 5. Account Settings -->
+        <div class="help-category-card" id="catAccount" data-category="account" role="button" tabindex="0" aria-label="Account Settings Category">
+          <div class="help-cat-icon-wrap">👤</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_account_title">Account Settings</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_account_desc">Password reset, 2-factor authentication, email/mobile updates, and saved addresses.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+
+        <!-- 6. Safe Shopping & Security -->
+        <div class="help-category-card" id="catSecurity" data-category="security" role="button" tabindex="0" aria-label="Safe Shopping & Security Category">
+          <div class="help-cat-icon-wrap">🛡️</div>
+          <h3 class="help-cat-title" data-i18n="help_cat_security_title">Safe Shopping &amp; Security</h3>
+          <p class="help-cat-desc" data-i18n="help_cat_security_desc">GST billing compliance, phishing prevention, verified seller warranty, and privacy safety.</p>
+          <span class="help-cat-link" data-i18n="help_cat_explore">Explore solutions &rarr;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24x7 Support Channels Section -->
+    <section class="support-channels-container" id="supportChannelsSection" aria-label="24x7 Support Channels">
+      <h2 class="help-section-title">
+        <span>🛎️</span>
+        <span data-i18n="help_support_channels_heading">Need More Help? Connect With Us 24x7</span>
+      </h2>
+      <div class="support-channels-grid">
+        <!-- Channel 1: Live Chat -->
+        <div class="support-channel-card" id="channelChatCard">
+          <div class="channel-icon">💬</div>
+          <span class="channel-badge" data-i18n="channel_badge_instant">Instant Response</span>
+          <h3 class="channel-title" data-i18n="channel_chat_title">Chat with ElectroMart Assistant</h3>
+          <p class="channel-desc" data-i18n="channel_chat_desc">Interactive AI support for instant troubleshooting, order tracking, and human agent transfer.</p>
+          <button type="button" id="openChatBtn" class="channel-btn btn-channel-yellow" data-i18n="btn_start_chat">Start Chat Now</button>
+        </div>
+
+        <!-- Channel 2: Instant Callback -->
+        <div class="support-channel-card" id="channelCallbackCard">
+          <div class="channel-icon">📞</div>
+          <span class="channel-badge" data-i18n="channel_badge_within_2m">&lt; 2 Minutes</span>
+          <h3 class="channel-title" data-i18n="channel_callback_title">Instant Call Me Back</h3>
+          <p class="channel-desc" data-i18n="channel_callback_desc">Enter your 10-digit mobile number and our dedicated customer support specialist will call you.</p>
+          <button type="button" id="openCallbackModalBtn" class="channel-btn btn-channel-orange" data-i18n="btn_call_me_now">Call Me Now</button>
+        </div>
+
+        <!-- Channel 3: Inquiry Ticket -->
+        <div class="support-channel-card" id="channelTicketCard">
+          <div class="channel-icon">✉️</div>
+          <span class="channel-badge" data-i18n="channel_badge_email">4-Hour SLA</span>
+          <h3 class="channel-title" data-i18n="channel_ticket_title">Submit an Inquiry Ticket</h3>
+          <p class="channel-desc" data-i18n="channel_ticket_desc">Log a detailed support request with order context and receive a trackable ticket reference ID.</p>
+          <button type="button" id="openTicketModalBtn" class="channel-btn btn-channel-outline" data-i18n="btn_submit_ticket">Submit Ticket</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Library / Search Results Section -->
+    <section class="help-faq-container" id="helpFaqSection" aria-label="Frequently Asked Questions">
+      <div class="faq-header-wrap">
+        <h2 class="help-section-title" id="faqHeaderTitle" style="margin: 0;">
+          <span>💡</span>
+          <span data-i18n="help_faq_heading">Recommended Help Topics &amp; FAQs</span>
+        </h2>
+        <span class="faq-results-count" id="helpSearchResultsCount">Showing 18 help articles</span>
+      </div>
+
+      <!-- FAQ Accordion List -->
+      <div class="faq-list" id="helpFaqList" role="region" aria-live="polite">
+        <!-- Dynamically rendered by help.js with 18+ rich items across all 6 categories -->
+      </div>
+
+      <!-- Empty State for Search -->
+      <div class="faq-empty-state" id="faqEmptyState" style="display: none;">
+        <span style="font-size: 36px;">🔍</span>
+        <h3 data-i18n="faq_empty_title">No matching articles found</h3>
+        <p data-i18n="faq_empty_desc">Try searching for keywords like "order", "delivery", "refund", or start a live chat.</p>
+        <button type="button" class="btn-order-action action-primary" id="faqResetSearchBtn" data-i18n="faq_reset_search">View All Topics</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Category Detail Modal -->
+  <div class="help-modal-backdrop" id="categoryDetailModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="catModalTitle">
+    <div class="help-modal-content">
+      <div class="help-modal-header">
+        <h3 id="catModalTitle">
+          <span id="catModalIcon">📦</span>
+          <span id="catModalHeadline">Category Solutions</span>
+        </h3>
+        <button type="button" class="help-modal-close-btn" id="closeCategoryModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="help-modal-body" id="catModalContent">
+        <!-- Injected dynamically based on selected category -->
+      </div>
+      <div class="help-modal-footer">
+        <button type="button" class="btn-order-action" id="catModalCloseFooterBtn" data-i18n="close">Close</button>
+        <a href="#" id="catModalActionLink" class="btn-order-action action-primary" data-i18n="cat_modal_go_to">Go to Service</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instant Callback Modal -->
+  <div class="help-modal-backdrop" id="callbackModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="callbackModalTitle">
+    <div class="help-modal-content">
+      <div class="help-modal-header">
+        <h3 id="callbackModalTitle">
+          <span>📞</span>
+          <span data-i18n="callback_modal_title">Instant Call Me Back</span>
+        </h3>
+        <button type="button" class="help-modal-close-btn" id="closeCallbackModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="help-modal-body">
+        <!-- Callback Form State -->
+        <form id="callbackForm">
+          <p style="margin-top: 0;" data-i18n="callback_intro">
+            We'll call you right now! Please confirm your 10-digit Indian mobile number and preferred language.
+          </p>
+          <div class="form-group">
+            <label for="callbackPhoneInput" class="form-label" data-i18n="callback_label_phone">Mobile Number (+91)</label>
+            <div style="display: flex; gap: 8px;">
+              <span style="display: inline-flex; align-items: center; padding: 0 12px; background: #f0f2f2; border: 1px solid var(--em-border); border-radius: var(--em-radius); font-weight: 700; font-size: 14px;">+91</span>
+              <input type="tel" id="callbackPhoneInput" class="form-control" placeholder="9876543210" maxlength="10" required />
+            </div>
+            <div class="form-help" id="callbackPhoneError" style="color: var(--em-danger); display: none;">Please enter a valid 10-digit Indian mobile number.</div>
+          </div>
+          <div class="form-group">
+            <label for="callbackLangSelect" class="form-label" data-i18n="callback_label_language">Preferred Language</label>
+            <select id="callbackLangSelect" class="form-control">
+              <option value="English">English</option>
+              <option value="Hindi">हिन्दी (Hindi)</option>
+              <option value="Tamil">தமிழ் (Tamil)</option>
+              <option value="Telugu">తెలుగు (Telugu)</option>
+              <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+              <option value="Malayalam">മലയാളം (Malayalam)</option>
+              <option value="Bengali">বাংলা (Bengali)</option>
+              <option value="Marathi">मराठी (Marathi)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="callbackIssueSelect" class="form-label" data-i18n="callback_label_topic">Issue Topic</label>
+            <select id="callbackIssueSelect" class="form-control">
+              <option value="Order Tracking">Order Tracking &amp; Delivery</option>
+              <option value="Return or Replacement">Return or Replacement</option>
+              <option value="Refund Status">Refund Status</option>
+              <option value="Payment Issue">Payment Issue</option>
+              <option value="Other Assistance">Other General Assistance</option>
+            </select>
+          </div>
+          <div style="margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn-order-action" id="cancelCallbackFormBtn" data-i18n="cancel">Cancel</button>
+            <button type="submit" class="btn-order-action action-primary" id="submitCallbackBtn" data-i18n="btn_request_call">Request Call Now</button>
+          </div>
+        </form>
+
+        <!-- Live Timer Box (Hidden initially) -->
+        <div id="callbackTimerContainer" style="display: none;">
+          <div class="callback-timer-box">
+            <div style="font-size: 30px;">📲</div>
+            <div class="callback-timer-status" id="callbackStatusHeadline">Connecting to ElectroMart Support Specialist...</div>
+            <div class="callback-timer-digits" id="callbackCountdownTimer">02:00</div>
+            <p style="font-size: 13px; color: #4a5568; margin: 4px 0;">Please keep your phone unlocked. You will receive an automated incoming call shortly.</p>
+            <div class="callback-ref-str" id="callbackRefId">Reference ID: EM-CALL-84910</div>
+          </div>
+          <div style="text-align: center; margin-top: 14px;">
+            <button type="button" class="btn-order-action" id="cancelCallbackTimerBtn" style="color: var(--em-danger); border-color: #febd69;">Cancel Callback</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Inquiry Ticket Modal -->
+  <div class="help-modal-backdrop" id="ticketModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="ticketModalTitle">
+    <div class="help-modal-content">
+      <div class="help-modal-header">
+        <h3 id="ticketModalTitle">
+          <span>✉️</span>
+          <span data-i18n="ticket_modal_title">Submit an Inquiry Ticket</span>
+        </h3>
+        <button type="button" class="help-modal-close-btn" id="closeTicketModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="help-modal-body">
+        <form id="ticketForm">
+          <div class="form-group">
+            <label for="ticketNameInput" class="form-label" data-i18n="ticket_label_name">Full Name</label>
+            <input type="text" id="ticketNameInput" class="form-control" placeholder="Your full name" required />
+          </div>
+          <div class="form-group">
+            <label for="ticketEmailInput" class="form-label" data-i18n="ticket_label_email">Email Address</label>
+            <input type="email" id="ticketEmailInput" class="form-control" placeholder="yourname@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="ticketOrderSelect" class="form-label" data-i18n="ticket_label_order">Related Order (Optional)</label>
+            <select id="ticketOrderSelect" class="form-control">
+              <option value="">-- Select an Order or N/A --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ticketCategorySelect" class="form-label" data-i18n="ticket_label_category">Category</label>
+            <select id="ticketCategorySelect" class="form-control" required>
+              <option value="Orders">Order Tracking &amp; Delays</option>
+              <option value="Returns">Returns &amp; Replacements</option>
+              <option value="Payments">Payment &amp; Refund Issues</option>
+              <option value="Prime">Prime Membership</option>
+              <option value="Security">Account &amp; Security</option>
+              <option value="Feedback">Website Feedback &amp; Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ticketSubjectInput" class="form-label" data-i18n="ticket_label_subject">Subject</label>
+            <input type="text" id="ticketSubjectInput" class="form-control" placeholder="Brief summary of issue" required />
+          </div>
+          <div class="form-group">
+            <label for="ticketMessageInput" class="form-label" data-i18n="ticket_label_message">Detailed Description</label>
+            <textarea id="ticketMessageInput" class="form-control" rows="4" placeholder="Please provide details so we can resolve your issue quickly..." required></textarea>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+            <button type="button" class="btn-order-action" id="cancelTicketBtn" data-i18n="cancel">Cancel</button>
+            <button type="submit" class="btn-order-action action-primary" id="submitTicketBtn" data-i18n="btn_submit_ticket">Submit Ticket</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Chat Assistant Widget -->
+  <aside class="help-chat-widget-container" id="helpChatWidget" style="display: none;" aria-label="ElectroMart Assistant Live Chat">
+    <div class="chat-widget-header">
+      <div class="chat-header-info">
+        <span class="chat-avatar">🤖</span>
+        <div>
+          <h4 class="chat-header-title">ElectroMart Assistant</h4>
+          <span class="chat-online-indicator">
+            <span class="chat-online-dot"></span>
+            <span>Online 24x7</span>
+          </span>
+        </div>
+      </div>
+      <button type="button" class="chat-close-btn" id="chatCloseBtn" aria-label="Close chat">&times;</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages-container" id="chatMessagesContainer">
+      <!-- Injected dynamically by help.js -->
+    </div>
+
+    <!-- Typing Indicator -->
+    <div class="chat-typing-indicator" id="chatTypingIndicator" style="display: none;">
+      ElectroMart Assistant is typing...
+    </div>
+
+    <!-- Quick Query Chips -->
+    <div class="chat-quick-chips-wrap" id="chatQuickChips">
+      <button type="button" class="chat-chip-btn" data-query="Where is my order?">Where is my order?</button>
+      <button type="button" class="chat-chip-btn" data-query="Return an item">Return an item</button>
+      <button type="button" class="chat-chip-btn" data-query="Refund timeline">Refund timeline</button>
+      <button type="button" class="chat-chip-btn" data-query="Connect to Human Agent">Speak to Agent</button>
+    </div>
+
+    <!-- Chat Input Form -->
+    <form class="chat-input-container" id="chatForm">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Type a question..." autocomplete="off" />
+      <button type="submit" class="chat-send-btn" id="chatSendBtn">Send</button>
+    </form>
+  </aside>
+
+  <!-- Floating Toast Notification Stack -->
+  <div id="helpToastContainer" class="help-toast-container" aria-live="polite"></div>
+
+  <!-- Core Scripts in Strict Dependency Order -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="help.js?v=20260414a"></script>
+</body>
+</html>

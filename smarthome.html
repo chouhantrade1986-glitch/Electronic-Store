@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Smart Home</title>
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="smarthome.css?v=20260917a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body>
+  <div id="headerContainer"></div>
+  <main id="smartHomeHub" class="smart-home-page">
+    <section class="smart-home-hero" aria-labelledby="smartHomeTitle">
+      <div>
+        <p class="smart-home-eyebrow" data-i18n="smarthome_eyebrow">ElectroMart Connect</p>
+        <h1 id="smartHomeTitle" data-i18n="smarthome_title">Build a smarter home, room by room</h1>
+        <p data-i18n="smarthome_subtitle">Explore compatible devices, preview routines, and shape a connected setup that fits your day.</p>
+      </div>
+      <div class="smart-home-hero-stat"><strong id="smartHomeDeviceCount">0</strong><span data-i18n="smarthome_devices_ready">devices ready to explore</span></div>
+    </section>
+
+    <section class="smart-home-controls" aria-label="Smart home discovery controls">
+      <div id="smartHomeRoomTabs" class="smart-home-room-tabs" role="tablist" aria-label="Choose a room">
+        <button type="button" class="smart-room-tab active" role="tab" aria-selected="true" data-smart-room="living" data-i18n="smarthome_room_living">Living room</button>
+        <button type="button" class="smart-room-tab" role="tab" aria-selected="false" data-smart-room="bedroom" data-i18n="smarthome_room_bedroom">Bedroom</button>
+        <button type="button" class="smart-room-tab" role="tab" aria-selected="false" data-smart-room="kitchen" data-i18n="smarthome_room_kitchen">Kitchen</button>
+        <button type="button" class="smart-room-tab" role="tab" aria-selected="false" data-smart-room="office" data-i18n="smarthome_room_office">Work-from-home office</button>
+      </div>
+      <label class="smart-home-search"><span data-i18n="smarthome_search_label">Search devices</span><input id="smartHomeSearchInput" type="search" data-i18n-placeholder="smarthome_search_placeholder" placeholder="Search lights, cameras, speakers..." /></label>
+      <div id="smartHomeEcosystemFilters" class="smart-home-filter-group" role="group" aria-label="Filter by ecosystem">
+        <span class="smart-home-filter-label" data-i18n="smarthome_ecosystem_filter">Works with</span>
+        <button type="button" class="smart-filter active" data-smart-ecosystem="all" data-i18n="smarthome_ecosystem_all">All</button>
+        <button type="button" class="smart-filter" data-smart-ecosystem="alexa" data-i18n="smarthome_ecosystem_alexa">Alexa</button>
+        <button type="button" class="smart-filter" data-smart-ecosystem="google" data-i18n="smarthome_ecosystem_google">Google Home</button>
+        <button type="button" class="smart-filter" data-smart-ecosystem="matter" data-i18n="smarthome_ecosystem_matter">Matter</button>
+        <button type="button" class="smart-filter" data-smart-ecosystem="homekit" data-i18n="smarthome_ecosystem_homekit">Apple HomeKit</button>
+      </div>
+    </section>
+
+    <section class="smart-home-workspace">
+      <div id="smartHomeVisualizer" class="smart-home-visualizer" aria-labelledby="smartHomeVisualizerTitle">
+        <div class="smart-home-section-heading"><p class="smart-home-eyebrow" data-i18n="smarthome_scene_label">Room scene</p><h2 id="smartHomeVisualizerTitle" data-i18n="smarthome_visualizer_title">Your living room, connected</h2></div>
+        <div class="smart-room-scene" role="img" aria-label="Illustrated smart home room scene">
+          <div class="scene-wall"></div><div class="scene-floor"></div><div class="scene-window"></div><div class="scene-sofa"></div><div class="scene-lamp"></div><div class="scene-device scene-device-a">Wi-Fi</div><div class="scene-device scene-device-b">AI</div>
+        </div>
+        <div id="smartHomeCompatibilityStatus" class="smart-home-status" role="status" aria-live="polite"></div>
+      </div>
+
+      <aside id="smartHomeAssistant" class="smart-home-assistant" aria-labelledby="smartHomeAssistantTitle">
+        <p class="smart-home-eyebrow" data-i18n="smarthome_assistant_eyebrow">ElectroMart Smart Guide</p>
+        <h2 id="smartHomeAssistantTitle" data-i18n="smarthome_assistant_title">What should your home do better?</h2>
+        <label><span data-i18n="smarthome_goal_label">Your goal</span><select id="smartHomeGoalSelect"><option value="comfort" data-i18n="smarthome_goal_comfort">Comfort</option><option value="security" data-i18n="smarthome_goal_security">Security</option><option value="energy" data-i18n="smarthome_goal_energy">Energy saving</option><option value="entertainment" data-i18n="smarthome_goal_entertainment">Entertainment</option><option value="office" data-i18n="smarthome_goal_office">Work from home</option></select></label>
+        <label><span data-i18n="smarthome_budget_label">Budget</span><input id="smartHomeBudgetInput" type="number" min="1000" step="500" value="25000" /></label>
+        <button type="button" id="smartHomeApplyGuideBtn" class="smart-home-primary" data-i18n="smarthome_apply_guide">Refresh recommendations</button>
+        <p id="smartHomeAssistantNote" class="smart-home-note" data-i18n="smarthome_ai_note">Recommendations are explainable suggestions, not live device control.</p>
+      </aside>
+    </section>
+
+    <section class="smart-home-content-section" aria-labelledby="smartHomeProductsTitle">
+      <div class="smart-home-section-heading"><div><p class="smart-home-eyebrow" data-i18n="smarthome_products_eyebrow">Curated devices</p><h2 id="smartHomeProductsTitle" data-i18n="smarthome_products_title">Devices for this room</h2></div><p id="smartHomeResultsMeta" role="status" aria-live="polite"></p></div>
+      <div id="smartHomeProductGrid" class="smart-home-product-grid"></div>
+      <p id="smartHomeEmptyState" class="smart-home-empty" hidden data-i18n="smarthome_no_products">No matching smart-home devices found. Try another room or ecosystem.</p>
+    </section>
+
+    <section class="smart-home-content-section" aria-labelledby="smartHomeRoutinesTitle">
+      <div class="smart-home-section-heading"><div><p class="smart-home-eyebrow" data-i18n="smarthome_routines_eyebrow">Preview only</p><h2 id="smartHomeRoutinesTitle" data-i18n="smarthome_routines_title">Routines for real life</h2></div><p data-i18n="smarthome_routines_desc">See how a setup could work together before you buy.</p></div>
+      <div id="smartHomeRoutineGrid" class="smart-home-routine-grid"></div>
+    </section>
+
+    <section id="smartHomeBundleSummary" class="smart-home-bundle-summary" aria-labelledby="smartHomeBundleTitle">
+      <div><p class="smart-home-eyebrow" data-i18n="smarthome_bundle_eyebrow">Complete Smart Living Kit</p><h2 id="smartHomeBundleTitle" data-i18n="smarthome_bundle_title">Your selected setup</h2><p id="smartHomeBundleMeta"></p></div>
+      <div class="smart-home-total"><span data-i18n="smarthome_estimated_total">Estimated total</span><strong id="smartHomeBundleTotal">₹0</strong><small id="smartHomeBundleSavings"></small></div>
+      <button type="button" id="smartHomeAddSetupBtn" class="smart-home-primary" data-i18n="smarthome_add_setup">Add setup to cart</button>
+    </section>
+  </main>
+
+  <dialog id="smartHomeSetupModal" class="smart-home-modal" aria-labelledby="smartHomeCompatibilityTitle">
+    <form method="dialog" class="smart-home-modal-card"><button value="cancel" class="smart-home-modal-close" aria-label="Close">&times;</button><p class="smart-home-eyebrow" data-i18n="smarthome_compatibility_eyebrow">ElectroMart Connect</p><h2 id="smartHomeCompatibilityTitle" data-i18n="smarthome_compatibility_title">Check your ecosystem</h2><label for="smartHomeEcosystemSelect" data-i18n="smarthome_ecosystem_filter">Works with</label><select id="smartHomeEcosystemSelect"><option value="alexa">Alexa</option><option value="google">Google Home</option><option value="matter">Matter</option><option value="homekit">Apple HomeKit</option></select><div id="smartHomeCompatibilityResult" class="smart-home-compatibility-result" role="status" aria-live="polite"></div><button type="button" id="smartHomeCompatibilityCheckBtn" class="smart-home-primary" data-i18n="smarthome_compatibility_check">Check compatibility</button></form>
+  </dialog>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js?v=20260313b"></script>
+  <script src="auth-state.js?v=20260313b"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="smarthome.js?v=20260917a"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+:root {
+  --protect-ink: #132238;
+  --protect-teal: #007a78;
+  --protect-gold: #f2b134;
+  --protect-bg: #eef5f4;
+  --protect-border: #c8dcda;
+}
+
+.warranty-page { margin: 0; background: var(--protect-bg); color: var(--protect-ink); font-family: "Barlow", "Segoe UI", sans-serif; }
+.warranty-main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+.warranty-hero { background: linear-gradient(135deg, #102a43, #007a78); color: #fff; padding: 44px 36px; border-radius: 10px; margin-bottom: 24px; }
+.warranty-hero h1 { margin: 8px 0 12px; font-size: clamp(30px, 5vw, 48px); }
+.warranty-hero p { max-width: 720px; line-height: 1.6; margin: 0; color: #e1f5f3; }
+.protection-eyebrow { color: var(--protect-gold); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.warranty-section { background: #fff; border: 1px solid var(--protect-border); padding: 28px; margin-bottom: 20px; border-radius: 8px; }
+.protection-plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.protection-plan-card { border: 1px solid var(--protect-border); border-top: 4px solid var(--protect-teal); padding: 20px; border-radius: 6px; background: #fbfefd; }
+.protection-plan-card h2 { font-size: 20px; margin: 8px 0; }
+.protection-plan-card p { min-height: 48px; line-height: 1.45; color: #425466; }
+.protection-plan-card strong, .protection-plan-card span:last-child { display: block; margin-top: 10px; }
+.protection-plan-kicker { color: var(--protect-teal); font-weight: 800; }
+.coverage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.coverage-grid article { padding: 18px; background: #f4faf9; border-left: 4px solid var(--protect-gold); }
+.claim-form { display: grid; gap: 14px; max-width: 620px; }
+.claim-form label { display: grid; gap: 6px; font-weight: 700; }
+.claim-form input, .claim-form select, .claim-form textarea { border: 1px solid #aebfbe; border-radius: 4px; padding: 11px; font: inherit; }
+.claim-form button { width: fit-content; border: 0; border-radius: 20px; padding: 11px 20px; background: var(--protect-gold); color: #132238; font-weight: 800; cursor: pointer; }
+.claim-result { padding: 14px; background: #e7f7ef; border: 1px solid #74c69d; color: #14532d; font-weight: 800; }
+@media (max-width: 700px) { .warranty-hero, .warranty-section { padding: 22px 18px; } .coverage-grid { grid-template-columns: 1fr; } }

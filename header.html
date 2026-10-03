@@ -4,53 +4,324 @@
       <span class="brand-main">electro<span class="brand-accent">mart</span></span>
       <span class="brand-sub">.in</span>
     </a>
-    <button class="deliver-btn" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
-      <span>Deliver to</span> <strong id="deliveryLocationText">New Delhi 110001</strong>
-    </button>
-    <div class="search-stack">
-      <form id="searchForm" class="search-form" role="search">
-        <select id="categoryFilter" aria-label="Filter category">
-          <option value="all">All Catalogue</option>
-          <option value="computer">Computers</option>
-          <option value="laptop">Laptops</option>
-          <option value="printer">Printers</option>
-          <option value="mobile">Mobiles</option>
-          <option value="audio">Audio</option>
-          <option value="accessory">Accessories</option>
-        </select>
-        <div class="search-input-wrap">
-          <input id="searchInput" type="search" placeholder="Search electronics" aria-label="Search products" autocomplete="off" />
-        </div>
-        <button type="submit">Search</button>
-      </form>
-      <div class="search-trust-strip" aria-label="Search benefits">
-        <span>Top Deals live</span>
-        <span>Fast delivery</span>
-        <span>GST invoicing available</span>
+    <!-- Amazon Distraction-Free Checkout Header Bar (Shown only on checkout) -->
+    <div class="amz-checkout-distraction-free-bar" id="checkoutHeaderBar">
+      <div class="amz-checkout-header-middle">
+        <span class="amz-checkout-header-title" data-i18n="checkout_title">Checkout</span> <span class="amz-checkout-header-cart-wrap">(<a href="cart.html" id="checkoutHeaderCountLink" class="amz-checkout-header-cart-link"><span id="checkoutHeaderItemCount">0</span> <span data-i18n="items">items</span></a>)</span>
+      </div>
+      <div class="amz-checkout-header-secure">
+        <svg class="amz-checkout-lock-icon" viewBox="0 0 24 24" width="18" height="18" fill="#007600" aria-hidden="true">
+          <path d="M12 2C9.24 2 7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm3 8H9V7c0-1.66 1.34-3 3-3s3 1.34 3 3v3z"/>
+        </svg>
+        <span class="amz-checkout-lock-text" data-i18n="checkout_secure_badge">100% Secure</span>
       </div>
     </div>
+    <button class="deliver-btn nav-deliver-box" id="locationTrigger" type="button" aria-haspopup="dialog" aria-controls="locationModal">
+      <svg class="nav-location-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <div class="deliver-text-group">
+        <span class="deliver-to-label" data-i18n="deliver_to_prefix">Deliver to</span>
+        <strong class="deliver-location" id="deliveryLocationText">New Delhi 110001</strong>
+      </div>
+    </button>
+    <div class="search-stack search-bar-wrapper">
+      <form id="searchForm" class="search-form" role="search" action="products.html" method="get" data-shared-search="1">
+        <div class="nav-search-facade-wrap" id="navCategoryFacadeWrap">
+          <span class="nav-search-facade-text" id="navCategoryLabel">All <span class="nav-arrow">▾</span></span>
+          <select id="categoryFilter" class="search-context-select" data-search-catalog="1" aria-label="Filter category">
+            <option id="catAll" data-i18n="categoryFilter.all" value="all">All Categories</option>
+            <option id="catComputer" data-i18n="categoryFilter.computer" value="computer">Computers &amp; Desktops</option>
+            <option id="catLaptop" data-i18n="categoryFilter.laptop" value="laptop">Laptops &amp; Accessories</option>
+            <option id="catComponents" data-i18n="categoryFilter.components" value="components">Components &amp; Parts (RAM, SSD, GPU)</option>
+            <option id="catPrinter" data-i18n="categoryFilter.printer" value="printer">Printers &amp; Cartridges</option>
+            <option id="catAudio" data-i18n="categoryFilter.audio" value="audio">Audio &amp; Headphones</option>
+            <option id="catMobile" data-i18n="categoryFilter.mobile" value="mobile">Mobile Accessories</option>
+          </select>
+        </div>
+        <div class="search-input-wrap">
+          <input id="searchInput" type="search" name="search" placeholder="Search ElectroMart.in" data-i18n-placeholder="search_placeholder" aria-label="Search products" autocomplete="off" />
+          <button id="searchClearBtn" class="search-clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+          <div id="searchSuggestions" class="search-suggestions" hidden></div>
+        </div>
+        <button id="searchSubmitBtn" class="search-submit-btn" type="submit" aria-label="Submit search">
+          <svg class="search-lens-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#111111" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
     <div class="nav-actions">
-      <a href="auth.html" class="account-link nav-action-card">
-        <span>Hello, sign in</span>
-        <strong>Account</strong>
-      </a>
+      <div class="nav-lang-dropdown-wrap">
+        <a href="language-settings.html" class="nav-lang-picker nav-action-card" title="Change Language">
+          <span class="flag-icon">🇮🇳</span>
+          <span class="lang-text">EN</span>
+          <span class="nav-arrow">▾</span>
+        </a>
+        <div class="lang-flyout-menu" id="navLangFlyout" aria-label="Language options">
+          <div class="flyout-arrow"></div>
+          <div class="lang-flyout-list">
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="en" /> <span>English - EN</span></label>
+            <div class="lang-flyout-divider"></div>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="hi" /> <span>हिन्दी - HI</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ta" /> <span>தமிழ் - TA</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="te" /> <span>తెలుగు - TE</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="kn" /> <span>ಕನ್ನಡ - KN</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ml" /> <span>മലയാളം - ML</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="bn" /> <span>বাংলা - BN</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="mr" /> <span>मराठी - MR</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="ur" /> <span>اردو - UR</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="pa" /> <span>ਪੰਜਾਬੀ - PA</span></label>
+            <label class="lang-flyout-item"><input type="radio" name="headerLangRadio" value="gu" /> <span>ગુજરાતી - GU</span></label>
+          </div>
+          <div class="lang-flyout-footer">
+            <a href="language-settings.html" data-i18n="lang_info_title">भाषा सेटिंग बदलें ›</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-account-dropdown-wrap">
+        <a href="login.html" class="account-link nav-action-card" id="navAccountTrigger">
+          <span data-i18n="hello_sign_in">Hello, sign in</span>
+          <strong data-i18n="account_lists">Account &amp; Lists ▾</strong>
+        </a>
+        <div class="account-flyout-menu" id="navAccountFlyout" aria-label="Account and Lists Menu">
+          <div class="flyout-arrow"></div>
+          <div class="flyout-top-signin">
+            <a href="login.html" class="flyout-signin-btn" data-i18n="drawer_sign_in">Sign in</a>
+            <p class="flyout-new-customer"><span data-i18n="new_customer">New customer?</span> <a href="register.html" data-i18n="start_here">Start here.</a></p>
+          </div>
+          <div class="flyout-columns">
+            <div class="flyout-col">
+              <h3 data-i18n="nav.yourLists">Your Lists</h3>
+              <a href="wishlist.html" data-i18n="nav.createWishlist">Create a Wish List</a>
+              <a href="registry.html" data-i18n="registry_hero_title">Gift Registry &amp; Celebrations</a>
+              <a href="wishlist.html" data-i18n="nav.wishAnyWebsite">Wish from Any Website</a>
+              <a href="wishlist.html" data-i18n="nav.yourSavedItems">Your Saved Items</a>
+              <a href="products.html" data-i18n="nav.discoverStyle">Discover Your Style</a>
+              <a href="mega-store.html" data-i18n="nav.exploreShowroom">Explore Showroom</a>
+              <a href="compare.html" data-i18n="compare_title">Compare Products</a>
+              <a href="customer-media.html" data-i18n="media_breadcrumb_gallery">Customer Photos &amp; Videos</a>
+              <a href="showroom.html" data-i18n="showroom_breadcrumb_3d">3D Interactive Showroom</a>
+               <a href="launchpad.html" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
+              <a href="workspace-builder.html" data-i18n="workspace_title">Virtual Workspace Studio</a>
+              <a href="exchange.html" data-i18n="nav_device_exchange">Device Trade-In &amp; Exchange</a>
+              <a href="renewed.html" data-i18n="nav_renewed_store">Certified Renewed Store</a>
+              <a href="warranty.html" data-i18n="protection_plan">ElectroMart Protect &amp; Care</a>
+              <a href="gaming.html" data-i18n="nav_gaming">ElectroMart Gaming Arena</a>
+              <a href="edu-store.html" data-i18n="nav_edu">ElectroMart Campus Store</a>
+            </div>
+            <div class="flyout-col">
+              <h3 data-i18n="footer.yourAccount">Your Account</h3>
+              <a href="account.html" data-i18n="footer.yourAccount">Your Account</a>
+              <a href="orders.html" data-i18n="nav.orders">Your Orders</a>
+              <a href="exchange.html" data-i18n="nav_device_exchange">Device Trade-In &amp; Exchange</a>
+              <a href="renewed.html" data-i18n="nav_renewed_store">Certified Renewed Store</a>
+              <a href="warranty.html" data-i18n="protection_plan">Device Protection &amp; Care</a>
+              <a href="wishlist.html" data-i18n="footer.wishlist">Your Wish List</a>
+              <a href="todays-deals.html" data-i18n="nav.yourRecommendations">Your Recommendations</a>
+              <a href="pc-builder.html" data-i18n="dept.pcBuilder">PC Builder &amp; Custom PC</a>
+              <a href="business.html" data-i18n="nav_business">ElectroMart Business</a>
+              <a href="terms-and-conditions.html" data-i18n="category.customerService">Customer Service</a>
+              <a href="faq.html" data-i18n="footer.faq">FAQ &amp; Help</a>
+            </div>
+          </div>
+        </div>
+      </div>
       <a href="orders.html" class="orders-link nav-action-card">
-        <span>Orders</span>
-        <strong>Orders</strong>
+        <span data-i18n="returns">Returns</span>
+        <strong data-i18n="orders">&amp; Orders</strong>
       </a>
-      <a href="wishlist.html" class="orders-link nav-action-card">
-        <span>Wishlist</span>
-        <strong>Wishlist</strong>
+      <a href="cart.html" class="cart-link nav-action-card" aria-label="Shopping Cart">
+        <div class="cart-icon-container">
+          <span id="cartCount" class="cart-count-badge">0</span>
+          <svg class="cart-trolley-icon" viewBox="0 0 38 32" width="38" height="32" aria-hidden="true">
+            <path fill="#ffffff" d="M10 24c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zm18 0c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zM8.5 6L11 18h18l3.6-12H8.5zM6.1 2H2v3h2.6l4.6 15.6c-.3.5-.5 1.1-.5 1.7 0 1.7 1.3 3 3 3h19v-3H11.8c-.2 0-.3-.1-.3-.3l.1-.6 1.4-2.4H28c1.1 0 2.1-.6 2.6-1.6l4.9-10.4c.3-.6.1-1.3-.4-1.7-.5-.4-1.2-.4-1.7-.1L32 5H7.2L6.1 2z"/>
+          </svg>
+        </div>
+        <span class="cart-text" data-i18n="cart">Cart</span>
       </a>
-      <a href="cart.html" class="cart-link"><span>Cart</span> <span id="cartCount">0</span></a>
     </div>
   </nav>
+
   <nav class="category-nav home-main-nav" aria-label="Main navigation">
     <button id="deptTrigger" class="dept-trigger amazon-hamburger" type="button" aria-expanded="false" aria-controls="deptSidebar">
       <span class="hamburger-icon" aria-hidden="true">
         <span></span><span></span><span></span>
       </span>
-      <span class="hamburger-label">All</span>
+      <span class="hamburger-label" data-i18n="all">All</span>
     </button>
+    <div class="category-quick-links">
+      <a href="todays-deals.html" class="category-quick-link" data-i18n="todays_deals">Today's Deals</a>
+      <a href="best-sellers.html" class="category-quick-link" data-i18n="best_sellers">Best Sellers</a>
+      <a href="products.html" class="category-quick-link" data-i18n="all_products">All Products</a>
+      <a href="products.html?search=mobile" class="category-quick-link" data-i18n="mobiles">Mobiles</a>
+      <a href="laptop.html" class="category-quick-link" data-i18n="laptops">Laptops</a>
+      <a href="pc-builder.html" class="category-quick-link" data-i18n="pc_builder">PC Builder</a>
+      <a href="creator-studio.html" class="category-quick-link" data-i18n="creator_studio">Creator Studio</a>
+      <a href="help.html" class="category-quick-link" data-i18n="customer_service">Customer Service</a>
+    </div>
+    <div class="category-nav-promo">
+      <a href="business.html" class="category-promo-link" data-i18n="fast_delivery">⚡ Fast Delivery | GST Invoicing</a>
+    </div>
   </nav>
+
+  <!-- Amazon-style All Departments Sidebar -->
+  <div id="deptOverlay" class="dept-overlay" hidden></div>
+  <aside id="deptSidebar" class="dept-sidebar" aria-label="All departments" hidden>
+    <div class="dept-header-signin">
+      <div class="dept-header-user">
+        <span class="dept-header-avatar" id="sidebarAvatar" aria-hidden="true">👤</span>
+        <span class="dept-header-greeting" id="sidebarGreeting" data-i18n="hello_sign_in_menu"><strong>Hello,</strong> <a href="auth.html">sign in</a></span>
+      </div>
+      <button id="deptCloseInside" class="dept-close-inside" type="button" aria-label="Close menu">&times;</button>
+    </div>
+
+    <!-- Multi-Panel Sliding Layout -->
+    <div class="dept-slider-track" id="deptSliderTrack">
+      <!-- MAIN PANEL -->
+      <div class="dept-panel" id="deptMainPanel">
+        <!-- Trending -->
+        <div class="dept-section-title" data-i18n="menu_trending">Trending</div>
+        <a class="dept-menu-item" href="best-sellers.html" data-i18n="best_sellers">Best Sellers</a>
+        <a class="dept-menu-item" href="todays-deals.html" data-i18n="todays_deals">Today's Deals</a>
+        <a class="dept-menu-item" href="products.html?filter=new" data-i18n="new_arrivals">New Arrivals</a>
+
+        <hr class="dept-menu-divider" />
+
+        <!-- Shop by Department -->
+        <div class="dept-section-title" data-i18n="menu_shop_department">Shop by Department</div>
+        <button class="dept-menu-item dept-submenu-trigger" type="button" data-submenu="pc-components">
+          <span data-i18n="components_parts">PC Components &amp; Parts</span>
+          <span class="dept-arrow" aria-hidden="true">›</span>
+        </button>
+        <button class="dept-menu-item dept-submenu-trigger" type="button" data-submenu="laptops-desktops">
+          <span data-i18n="laptops_desktops">Laptops &amp; Desktops</span>
+          <span class="dept-arrow" aria-hidden="true">›</span>
+        </button>
+        <a class="dept-menu-item" href="products.html?search=mobile">
+          <span data-i18n="mobiles_accessories">Mobiles &amp; Accessories</span>
+          <span class="dept-arrow" aria-hidden="true">›</span>
+        </a>
+        <a class="dept-menu-item" href="products.html?search=audio">
+          <span data-i18n="audio_headphones">Audio &amp; Headphones</span>
+          <span class="dept-arrow" aria-hidden="true">›</span>
+        </a>
+        <div id="deptShopMore" class="dept-collapsible" hidden>
+          <a class="dept-menu-item" href="printer.html">
+            <span data-i18n="printers_office">Printers &amp; Office</span>
+            <span class="dept-arrow" aria-hidden="true">›</span>
+          </a>
+          <a class="dept-menu-item" href="barebone-desktop.html">
+            <span data-i18n="barebone_desktops">Barebone Desktops</span>
+            <span class="dept-arrow" aria-hidden="true">›</span>
+          </a>
+          <a class="dept-menu-item" href="branded-desktop.html">
+            <span data-i18n="branded_desktops">Branded Desktops</span>
+            <span class="dept-arrow" aria-hidden="true">›</span>
+          </a>
+          <a class="dept-menu-item" href="pc-builder.html">
+            <span data-i18n="pc_builder_custom">PC Builder (Custom Rig)</span>
+            <span class="dept-arrow" aria-hidden="true">›</span>
+          </a>
+        </div>
+        <button id="deptSeeAllBtn" class="dept-menu-item dept-see-all-btn" type="button" aria-expanded="false">
+          <span id="deptSeeAllLabel" data-i18n="see_all">See all</span>
+          <span class="dept-toggle-arrow" id="deptSeeAllArrow" aria-hidden="true">▾</span>
+        </button>
+
+        <hr class="dept-menu-divider" />
+
+        <!-- Programs & Features -->
+        <div class="dept-section-title" data-i18n="menu_programs">Programs &amp; Features</div>
+        <a class="dept-menu-item" href="electromart-pay.html" data-i18n="electromart_pay_hub">ElectroMart Pay &amp; UPI Hub</a>
+        <a class="dept-menu-item" href="pc-builder.html" data-i18n="pc_builder_custom">PC Builder (Custom Rig)</a>
+        <a class="dept-menu-item" href="creator-studio.html" data-i18n="creator_studio">Creator Studio</a>
+        <a class="dept-menu-item" href="products.html?search=gst" data-i18n="business_gst_invoicing">Business &amp; GST Invoicing</a>
+        <a class="dept-menu-item" href="brands.html" data-i18n="top_brands_store">Top Brands Store</a>
+        <a class="dept-menu-item" href="customer-media.html" data-i18n="media_breadcrumb_gallery">Customer Photos &amp; Videos</a>
+        <a class="dept-menu-item" href="launchpad.html" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
+        <a class="dept-menu-item" href="showroom.html" data-i18n="showroom_breadcrumb_3d">3D Interactive Showroom</a>
+        <a class="dept-menu-item" href="workspace-builder.html" data-i18n="workspace_title">Virtual Workspace Studio</a>
+        <a class="dept-menu-item" href="exchange.html" data-i18n="nav_device_exchange">Device Trade-In &amp; Exchange</a>
+        <a class="dept-menu-item" href="renewed.html" data-i18n="nav_renewed_store">ElectroMart Certified Renewed Store</a>
+        <a class="dept-menu-item" href="warranty.html" data-i18n="protection_plan">ElectroMart Protect &amp; Care</a>
+
+        <hr class="dept-menu-divider" />
+
+        <!-- Help & Settings -->
+        <div class="dept-section-title" data-i18n="menu_help_settings">Help &amp; Settings</div>
+        <a class="dept-menu-item" href="account.html" data-i18n="your_account">Your Account</a>
+        <a class="dept-menu-item" href="orders.html" data-i18n="returns_orders">Returns &amp; Orders</a>
+        <a class="dept-menu-item dept-drawer-lang-link" href="language-settings.html">🇮🇳 <span class="dept-drawer-lang-text" id="deptDrawerLangText">English</span></a>
+        <a class="dept-menu-item" href="faq.html" data-i18n="customer_service_help">Customer Service / Help</a>
+        <a class="dept-menu-item" href="auth.html" data-i18n="sign_in">Sign In</a>
+      </div>
+
+      <!-- SUBMENU PANEL -->
+      <div class="dept-panel" id="deptSubPanel">
+        <div class="dept-back-row" id="deptBackBtn" role="button" tabindex="0">
+          <span class="dept-back-arrow">‹</span> <strong data-i18n="main_menu">MAIN MENU</strong>
+        </div>
+        <div class="dept-section-title" id="deptSubTitle">Subcategory</div>
+        <div id="deptSubList"></div>
+      </div>
+    </div>
+  </aside>
+  <button id="deptClose" class="dept-close-btn" aria-label="Close menu" hidden>&times;</button>
+
+  <!-- Amazon-style Cart Flyout Drawer -->
+  <div id="cartFlyoutOverlay" class="cart-flyout-overlay" style="display: none; pointer-events: none;" hidden></div>
+  <aside id="cartFlyout" class="cart-flyout-drawer" aria-label="Shopping Cart Flyout" style="display: none; pointer-events: none;" hidden>
+    <div class="cart-flyout-header">
+      <div class="cart-flyout-title-wrap">
+        <span class="cart-flyout-check" aria-hidden="true">✓</span>
+        <h2 class="cart-flyout-title" data-i18n="flyout_added_to_cart">Added to Cart</h2>
+      </div>
+      <button id="cartFlyoutClose" class="cart-flyout-close" type="button" aria-label="Close cart flyout">&times;</button>
+    </div>
+
+    <!-- Active / Added Item Card -->
+    <div class="cart-flyout-item-card" id="cartFlyoutItemCard" style="display: none;">
+      <img id="cartFlyoutItemImg" class="cart-flyout-item-img" src="product-placeholder.svg" alt="" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+      <div class="cart-flyout-item-info">
+        <h3 id="cartFlyoutItemTitle" class="cart-flyout-item-title">Product Name</h3>
+        <div class="cart-flyout-item-meta">
+          <span id="cartFlyoutItemQty" class="cart-flyout-item-qty">Qty: 1</span>
+          <span class="cart-flyout-item-sep">|</span>
+          <span id="cartFlyoutItemPrice" class="cart-flyout-item-price">₹0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Delivery Milestone Banner -->
+    <div class="cart-flyout-delivery-banner" id="cartFlyoutDeliveryBanner">
+      <span class="delivery-tick" aria-hidden="true">✓</span>
+      <span class="delivery-text" data-i18n="flyout_free_delivery_eligible">Your order qualifies for FREE Delivery</span>
+    </div>
+
+    <!-- Subtotal & Direct Checkout Actions -->
+    <div class="cart-flyout-actions-box">
+      <div class="cart-flyout-subtotal-row">
+        <span class="subtotal-label" data-i18n="flyout_cart_subtotal">Cart subtotal</span>
+        <span class="subtotal-items" id="cartFlyoutSubtotalItems">(1 item):</span>
+        <span class="subtotal-amount" id="cartFlyoutSubtotalAmount">₹0</span>
+      </div>
+
+      <div class="cart-flyout-buttons">
+        <a href="checkout.html" class="cart-flyout-checkout-btn amazon-btn-cart" id="cartFlyoutCheckoutBtn">
+          <span data-i18n="flyout_proceed_to_checkout">Proceed to checkout</span>
+          <span id="cartFlyoutCheckoutCount">(1 item)</span>
+        </a>
+        <a href="cart.html" class="cart-flyout-cart-btn amazon-btn-secondary" data-i18n="flyout_go_to_cart">Go to Cart</a>
+      </div>
+    </div>
+
+    <!-- Mini Cart Items Preview List -->
+    <div class="cart-flyout-recent-section">
+      <h4 class="cart-flyout-recent-title" data-i18n="shopping_cart">Shopping Cart</h4>
+      <div id="cartFlyoutItemsList" class="cart-flyout-items-list"></div>
+    </div>
+  </aside>
 </header>

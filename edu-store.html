@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!-- ElectroMart Student & Educator Campus Store (Phase 40) -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Campus Store - Verified Student Discounts &amp; Faculty Course Lists</title>
+  <meta name="description" content="The ElectroMart Student &amp; Educator Campus Store: check local student eligibility, buy semester course material, estimate your verified student discount, and build faculty course lists in INR." />
+  <meta name="keywords" content="student discount, campus store, course material, faculty course list, verified student, ElectroMart campus store" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/edu-store.html" />
+  <meta property="og:title" content="ElectroMart Campus Store - Student Discounts &amp; Faculty Course Lists" />
+  <meta property="og:description" content="Check local student eligibility, buy semester course material and estimate your verified student discount." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/edu-store.html" />
+  <meta property="twitter:title" content="ElectroMart Campus Store - Student Discounts &amp; Faculty Course Lists" />
+  <meta property="twitter:description" content="Check local student eligibility, buy semester course material and estimate your verified student discount." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260926a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260926a" />
+  <link rel="stylesheet" href="edu-store.css?v=20260926a" />
+</head>
+<body class="edu-body">
+  <div id="headerContainer"></div>
+
+  <main class="edu-page">
+    <!-- ============ HERO ============ -->
+    <section id="eduHero" class="edu-hero" aria-labelledby="eduHeroTitle">
+      <span class="edu-hero__grid" aria-hidden="true"></span>
+      <span class="edu-hero__lamp" aria-hidden="true"></span>
+
+      <div class="edu-shell edu-hero__inner">
+        <div class="edu-hero__copy">
+          <p class="edu-eyebrow" data-i18n="edu_store_eyebrow">ElectroMart Campus Store</p>
+          <h1 id="eduHeroTitle" data-i18n="edu_store_title">Student &amp; Educator Campus Store</h1>
+          <p class="edu-hero__lede" data-i18n="edu_store_subtitle">Semester course material, a deterministic student discount estimator, and faculty course lists — all priced in rupees and built for Indian campuses.</p>
+
+          <div class="edu-hero__actions">
+            <a href="#studentVerifySection" class="btn-edu btn-edu--primary" data-i18n="edu_hero_cta_verify">Check my eligibility</a>
+            <a href="#facultySection" class="btn-edu btn-edu--ghost" data-i18n="edu_hero_cta_faculty">I am a faculty member</a>
+          </div>
+
+          <dl class="edu-stat-rail" aria-live="polite">
+            <div class="edu-stat">
+              <dt data-i18n="edu_stat_materials_label">Course materials</dt>
+              <dd id="eduMaterialCount">0</dd>
+            </div>
+            <div class="edu-stat">
+              <dt data-i18n="edu_stat_max_discount_label">Best student discount</dt>
+              <dd id="eduMaxDiscount">-0%</dd>
+            </div>
+            <div class="edu-stat">
+              <dt data-i18n="edu_stat_faculty_label">Faculty lists saved</dt>
+              <dd id="eduFacultyCount">0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="edu-eligibility-card" aria-labelledby="eduEligibilityTitle">
+          <div class="edu-eligibility-card__head">
+            <h2 id="eduEligibilityTitle" data-i18n="edu_eligibility_title">Eligibility preview</h2>
+            <span class="edu-local-pill"><span class="edu-local-dot" aria-hidden="true"></span><span data-i18n="edu_local_badge">On-device</span></span>
+          </div>
+
+          <p class="edu-eligibility-card__note" data-i18n="edu_local_only_note">This is a local eligibility preview that runs entirely on this device. ElectroMart does not contact, and is not approved by, any university — nothing here is a server-side or university verification.</p>
+
+          <dl class="edu-eligibility-card__readout">
+            <li><span data-i18n="edu_status_label">Status</span><strong id="eduStatusPill">—</strong></li>
+            <li><span data-i18n="edu_semester_label">Semester</span><strong id="eduSemesterPill">—</strong></li>
+            <li><span data-i18n="edu_discount_label">Student discount</span><strong id="eduDiscountPill">—</strong></li>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ STUDENT VERIFICATION ============ -->
+    <section id="studentVerifySection" class="edu-section edu-verify" aria-labelledby="eduVerifyTitle">
+      <header class="edu-section__head">
+        <p class="edu-eyebrow" data-i18n="edu_verify_eyebrow">Student desk</p>
+        <h2 id="eduVerifyTitle" data-i18n="edu_verify_title">Student verification</h2>
+        <p class="edu-section__lede" data-i18n="edu_verify_subtitle">Enter your student ID and your college email address. The check runs on this device, follows a fixed student-ID format, and accepts institutional academic domains only.</p>
+      </header>
+
+      <div class="edu-verify__grid">
+        <form class="edu-panel" id="studentVerifyForm" autocomplete="off" novalidate>
+          <div class="edu-field">
+            <label for="studentIdInput" data-i18n="edu_student_id_label">Student ID</label>
+            <input type="text" id="studentIdInput" name="studentId" class="edu-input" required minlength="6" maxlength="24" pattern="[A-Za-z]{2,4}[0-9]{4}[A-Za-z0-9]{1,6}" autocapitalize="characters" spellcheck="false" data-i18n-placeholder="edu_student_id_placeholder" placeholder="For example STU2026A1" aria-describedby="studentIdHint" />
+            <p class="edu-field__hint" id="studentIdHint" data-i18n="edu_student_id_hint">Two to four letters, four digits, then one to six letters or digits.</p>
+          </div>
+
+          <div class="edu-field">
+            <label for="collegeEmailInput" data-i18n="edu_college_email_label">College email address</label>
+            <input type="email" id="collegeEmailInput" name="collegeEmail" class="edu-input" required maxlength="254" autocomplete="email" spellcheck="false" data-i18n-placeholder="edu_college_email_placeholder" placeholder="you@college.ac.in" aria-describedby="collegeEmailHint" />
+            <p class="edu-field__hint" id="collegeEmailHint" data-i18n="edu_college_email_hint">Academic domains such as .ac.in, .edu, .edu.in or .univ are accepted.</p>
+          </div>
+
+          <button type="submit" id="verifyStudentBtn" class="btn-edu btn-edu--primary edu-verify__cta" data-i18n="edu_verify_btn">Check eligibility</button>
+          <button type="button" id="clearStudentBtn" class="btn-edu btn-edu--quiet" data-i18n="edu_clear_btn">Clear</button>
+        </form>
+
+        <div class="edu-panel edu-panel--readout">
+          <p class="edu-status" id="studentStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+          <div class="edu-ladder" id="eduDiscountLadder" aria-labelledby="eduLadderTitle">
+            <h3 class="edu-ladder__title" id="eduLadderTitle" data-i18n="edu_ladder_title">Discount ladder</h3>
+            <ol class="edu-ladder__list" id="eduLadderList"></ol>
+          </div>
+
+          <p class="edu-storage-note" id="eduProfileStamp" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SEMESTER COURSE MATERIAL ============ -->
+    <section id="semesterSection" class="edu-section edu-material" aria-labelledby="eduMaterialTitle">
+      <header class="edu-section__head edu-section__head--row">
+        <div>
+          <p class="edu-eyebrow" data-i18n="edu_material_eyebrow">Syllabus shelf</p>
+          <h2 id="eduMaterialTitle" data-i18n="edu_course_material_title">Semester course material</h2>
+          <p class="edu-section__lede" data-i18n="edu_course_material_subtitle">Textbooks, notes and lab kits priced in rupees. Your semester selection is remembered on this device.</p>
+        </div>
+        <div class="edu-semester-picker">
+          <label for="semesterSelect" data-i18n="edu_semester_label">Semester</label>
+          <select id="semesterSelect" name="semester" class="edu-select"></select>
+        </div>
+      </header>
+
+      <p class="edu-filter-label" id="eduFilterLabel" data-i18n="edu_filter_label">Filter by category</p>
+      <div class="edu-filter-rail" id="courseMaterialFilter" role="group" aria-labelledby="eduFilterLabel"></div>
+      <p class="edu-material-count" id="eduMaterialGridCount" role="status" aria-live="polite"></p>
+
+      <div class="edu-material-skeleton" id="eduMaterialSkeleton" aria-hidden="true">
+        <div class="edu-skeleton-card"></div>
+        <div class="edu-skeleton-card"></div>
+        <div class="edu-skeleton-card"></div>
+        <div class="edu-skeleton-card"></div>
+      </div>
+
+      <div class="edu-material-grid" id="courseMaterialGrid" aria-busy="false"></div>
+
+      <p class="edu-empty" id="eduMaterialEmpty" data-i18n="edu_course_material_empty" hidden>No course material is listed for this semester. Please check back soon.</p>
+    </section>
+
+    <!-- ============ STUDENT DISCOUNT ESTIMATOR ============ -->
+    <section id="discountEstimator" class="edu-section edu-estimator" aria-labelledby="eduEstimatorTitle">
+      <header class="edu-section__head">
+        <p class="edu-eyebrow" data-i18n="edu_estimator_eyebrow">Scholarship desk</p>
+        <h2 id="eduEstimatorTitle" data-i18n="edu_discount_estimator_title">Student discount estimator</h2>
+        <p class="edu-section__lede" data-i18n="edu_discount_estimator_subtitle">Move the academic score and pick a category. The same score and category always return the same percentage and the same rupee price.</p>
+      </header>
+
+      <div class="edu-estimator__grid">
+        <form class="edu-panel" id="discountEstimatorForm" autocomplete="off">
+          <div class="edu-field">
+            <label for="cgpaRange" data-i18n="edu_cgpa_label">Academic score (%)</label>
+            <input type="range" id="cgpaRange" name="cgpa" class="edu-range" min="40" max="100" step="1" value="75" aria-describedby="cgpaReadout" />
+            <p class="edu-range__readout" id="cgpaReadout" role="status" aria-live="polite">75%</p>
+            <input type="number" id="cgpaNumber" name="cgpaNumber" class="edu-input edu-input--number" min="40" max="100" step="1" value="75" data-i18n-title="edu_cgpa_label" aria-label="Academic score in percent" />
+          </div>
+
+          <div class="edu-field">
+            <label for="categorySelect" data-i18n="edu_category_label">Category</label>
+            <select id="categorySelect" name="category" class="edu-select"></select>
+          </div>
+
+          <div class="edu-field">
+            <label for="basePriceInput" data-i18n="edu_base_price_label">Reference price (₹)</label>
+            <input type="number" id="basePriceInput" name="basePrice" class="edu-input" min="99" max="250000" step="1" value="1200" data-i18n-title="edu_base_price_label" />
+          </div>
+        </form>
+
+        <div class="edu-panel edu-panel--readout">
+          <figure class="edu-estimate" id="studentPriceEstimate" role="status" aria-live="polite">
+            <div class="edu-dial" id="eduDiscountDial" role="img" aria-labelledby="eduDialTitle">
+              <span class="edu-dial__inner">
+                <strong class="edu-dial__value" id="eduDiscountValue">-0%</strong>
+                <small class="edu-dial__unit" id="eduDialTitle" data-i18n="edu_discount_label">Student discount</small>
+              </span>
+            </div>
+            <p class="edu-dial__scale" id="eduDialScale">0 &ndash; 20%</p>
+            <figcaption class="edu-estimate__caption">
+              <span class="edu-estimate__label" data-i18n="edu_student_price_label">Student price</span>
+              <span class="edu-estimate__price" id="eduStudentPrice">₹0</span>
+              <span class="edu-estimate__mrp">M.R.P.: <s id="eduBasePrice">₹0</s></span>
+              <span class="edu-estimate__tax" data-i18n="edu_taxes_included">Inclusive of all taxes</span>
+            </figcaption>
+          </figure>
+          <p class="edu-estimate__hint" id="eduEstimateHint" data-i18n="edu_estimate_placeholder">Verify your eligibility to unlock the student discount.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BACK TO COLLEGE OFFERS ============ -->
+    <section class="edu-section edu-offers" aria-labelledby="eduOffersTitle">
+      <header class="edu-section__head">
+        <p class="edu-eyebrow" data-i18n="edu_offers_eyebrow">Reopening season</p>
+        <h2 id="eduOffersTitle" data-i18n="edu_back_to_college_title">Back to college offers</h2>
+        <p class="edu-section__lede" data-i18n="edu_back_to_college_subtitle">Seasonal ElectroMart campus offers for hostel setups, first-year laptops and lab work.</p>
+      </header>
+
+      <div class="edu-offer-grid" id="backToCollegeGrid" aria-busy="false"></div>
+
+      <p class="edu-empty" id="eduOffersEmpty" data-i18n="edu_offers_empty" hidden>No campus offer is running right now. Please check back soon.</p>
+    </section>
+
+    <!-- ============ FACULTY COURSE LISTS ============ -->
+    <section id="facultySection" class="edu-section edu-faculty" aria-labelledby="eduFacultyTitle">
+      <header class="edu-section__head">
+        <p class="edu-eyebrow" data-i18n="edu_faculty_eyebrow">Department desk</p>
+        <h2 id="eduFacultyTitle" data-i18n="edu_faculty_title">Faculty &amp; educator course list</h2>
+        <p class="edu-section__lede" data-i18n="edu_faculty_subtitle">Build a class course list, preview the copies and the rupee total, then add the whole list to your cart in one click.</p>
+      </header>
+
+      <div class="edu-faculty__grid">
+        <form class="edu-panel" id="facultyCourseListForm" autocomplete="off" novalidate>
+          <div class="edu-field">
+            <label for="courseCodeInput" data-i18n="edu_faculty_course_code_label">Course code</label>
+            <input type="text" id="courseCodeInput" name="courseCode" class="edu-input" required minlength="3" maxlength="16" pattern="[A-Za-z]{2,6}[0-9]{2,4}[A-Za-z]{0,4}" autocapitalize="characters" spellcheck="false" data-i18n-placeholder="edu_faculty_course_code_placeholder" placeholder="For example CS204" aria-describedby="courseCodeHint" />
+            <p class="edu-field__hint" id="courseCodeHint" data-i18n="edu_faculty_course_code_hint">Two to six letters, then two to four digits.</p>
+          </div>
+
+          <div class="edu-field">
+            <label for="courseNameInput" data-i18n="edu_faculty_course_name_label">Course name</label>
+            <input type="text" id="courseNameInput" name="courseName" class="edu-input" required minlength="3" maxlength="80" data-i18n-placeholder="edu_faculty_course_name_placeholder" placeholder="For example Data Structures" aria-describedby="courseNameHint" />
+            <p class="edu-field__hint" id="courseNameHint" data-i18n="edu_faculty_course_name_hint">Three to eighty characters.</p>
+          </div>
+
+          <div class="edu-field">
+            <label for="studentCountInput" data-i18n="edu_faculty_student_count_label">Class size</label>
+            <input type="number" id="studentCountInput" name="studentCount" class="edu-input" min="1" max="500" step="1" value="60" required data-i18n-title="edu_faculty_student_count_label" aria-describedby="studentCountHint" />
+            <p class="edu-field__hint" id="studentCountHint" data-i18n="edu_faculty_student_count_hint">Between one and five hundred students.</p>
+          </div>
+
+          <div class="edu-field">
+            <label for="copyPriceSelect" data-i18n="edu_faculty_copy_price_label">Per-student copy</label>
+            <select id="copyPriceSelect" name="perStudentCopyPrice" class="edu-select"></select>
+          </div>
+
+          <div class="edu-faculty__actions">
+            <button type="submit" id="facultySubmitBtn" form="facultyCourseListForm" class="btn-edu btn-edu--primary" data-i18n="edu_faculty_submit_btn">Build course list</button>
+            <button type="button" id="addFacultyListToCartBtn" class="btn-edu btn-edu--cart" data-i18n="edu_faculty_add_to_cart">Add course list to cart</button>
+          </div>
+        </form>
+
+        <div class="edu-panel edu-panel--readout">
+          <p class="edu-status" id="facultyListStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+          <div class="edu-preview" id="facultyListPreview" aria-labelledby="eduPreviewTitle">
+            <h3 class="edu-preview__title" id="eduPreviewTitle" data-i18n="edu_faculty_preview_title">Course list preview</h3>
+            <ul class="edu-preview__list" id="facultyListRows"></ul>
+            <p class="edu-preview__totals">
+              <span data-i18n="edu_faculty_total_label">Class total</span>
+              <strong id="facultyTotalPrice">₹0</strong>
+            </p>
+            <p class="edu-preview__tax" data-i18n="edu_taxes_included">Inclusive of all taxes</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="edu-faculty-saved" aria-labelledby="eduSavedTitle">
+        <h3 class="edu-preview__title" id="eduSavedTitle" data-i18n="edu_faculty_saved_title">Course lists saved on this device</h3>
+        <ol class="edu-saved-list" id="facultySavedList"></ol>
+        <p class="edu-empty edu-empty--tight" id="eduFacultyEmpty" data-i18n="edu_faculty_empty" hidden>No course list has been saved on this device yet.</p>
+      </section>
+    </section>
+  </main>
+
+  <!-- Shared i18n, catalog, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="edu-store.js?v=20260926a"></script>
+</body>
+</html>

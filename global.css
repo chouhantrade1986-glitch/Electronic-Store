@@ -1,0 +1,381 @@
+/* ElectroMart Global Store Hub — Phase 37 Stylesheet */
+:root {
+  --primary-blue: #0F62FE;
+  --primary-blue-hover: #0353e9;
+  --navy-dark: #131921;
+  --navy-sub: #232f3e;
+  --electromart-amber: #f0c14b;
+  --electromart-amber-dark: #a88734;
+  --bg-slate: #f4f7fb;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(15, 98, 254, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+  --text-primary: #0f1111;
+  --text-secondary: #565959;
+  --success-green: #067d62;
+  --error-red: #c40000;
+}
+
+body.global-store-body {
+  background-color: var(--bg-slate);
+  color: var(--text-primary);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.global-container {
+  max-width: 1280px;
+  margin: 24px auto 48px;
+  padding: 0 16px;
+}
+
+/* Hero Banner */
+.global-hero {
+  background: linear-gradient(135deg, #0F62FE 0%, #002d9c 100%);
+  color: #ffffff;
+  padding: 36px 32px;
+  border-radius: 12px;
+  margin-bottom: 28px;
+  box-shadow: 0 6px 20px rgba(15, 98, 254, 0.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.global-hero-content h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.global-hero-content p {
+  margin: 0;
+  font-size: 15px;
+  opacity: 0.95;
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+.global-hero-badge {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Two Column Layout */
+.global-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 900px) {
+  .global-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Glassmorphism Cards */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 36px 0 rgba(15, 98, 254, 0.12);
+}
+
+.card-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #002d9c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-subtitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Forms & Inputs */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.form-group input[type="number"],
+.form-group input[type="text"],
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="number"]:focus,
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.2);
+}
+
+/* Radio Group */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.radio-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radio-card:hover {
+  border-color: var(--primary-blue);
+  background: #f0f7ff;
+}
+
+.radio-card input[type="radio"] {
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  background: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-blue-hover);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Result Box */
+.result {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f8fbff;
+  border: 1px solid #cbe4ff;
+  border-radius: 8px;
+}
+
+.result.hidden {
+  display: none !important;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.result-row.total-row {
+  border-top: 2px dashed #cbe4ff;
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.result-row span.bold {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* KYC Status */
+.status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status.hidden {
+  display: none !important;
+}
+
+.status.success {
+  background: #e6f4ea;
+  color: var(--success-green);
+  border: 1px solid #b7e1cd;
+}
+
+.status.error {
+  background: #fce8e6;
+  color: var(--error-red);
+  border: 1px solid #fad2cf;
+}
+
+/* Showcase Section */
+.global-showcase {
+  margin-top: 36px;
+}
+
+.showcase-header {
+  margin-bottom: 20px;
+}
+
+.showcase-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.showcase-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.showcase-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.showcase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(15, 98, 254, 0.12);
+}
+
+.showcase-badge {
+  align-self: flex-start;
+  background: #e8f0fe;
+  color: #0F62FE;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.showcase-img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.showcase-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #0f1111;
+  line-height: 1.35;
+}
+
+.showcase-duty-tag {
+  font-size: 12px;
+  color: var(--success-green);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.showcase-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #b12704;
+  margin-bottom: 12px;
+}
+
+.showcase-btn {
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.showcase-btn:hover {
+  background: #f7ca00;
+}

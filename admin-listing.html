@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Inventory & Catalog</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_inventory">Inventory & Catalog</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_inventory">Inventory & Catalog Management</h1>
+        <p>Manage product listings, monitor real-time stock levels, adjust prices, and add new SKUs.</p>
+      </div>
+      <div class="amz-header-actions">
+        <button type="button" class="amz-btn-primary" id="openAddProductModalBtn">
+          <span>➕</span>
+          <span data-i18n="add_product">Add Product</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Inventory KPIs -->
+    <section class="amz-kpi-grid" aria-label="Inventory Metrics">
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Total Active SKUs</div>
+        <div class="kpi-value" id="kpiTotalSkus">751</div>
+        <div class="kpi-subtext">Catalog products indexed</div>
+      </article>
+
+      <article class="amz-kpi-card success">
+        <div class="kpi-title">In Stock</div>
+        <div class="kpi-value" id="kpiInStock">738</div>
+        <div class="kpi-subtext">Healthy inventory levels</div>
+      </article>
+
+      <article class="amz-kpi-card urgent">
+        <div class="kpi-title">Low Stock (&lt; 5)</div>
+        <div class="kpi-value" id="kpiLowStockCount">9</div>
+        <div class="kpi-subtext">Requires immediate restock</div>
+      </article>
+
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Out of Stock</div>
+        <div class="kpi-value" id="kpiOutOfStock">4</div>
+        <div class="kpi-subtext">Zero inventory units</div>
+      </article>
+    </section>
+
+    <!-- Catalog Table & Filters -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div class="amz-table-filters">
+          <input type="search" id="catalogSearchInput" placeholder="Search product name, brand, SKU..." aria-label="Search Catalog" style="min-width: 260px;" />
+
+          <select id="catalogCategoryFilter" aria-label="Filter by Category">
+            <option value="all">All Categories</option>
+            <option value="Laptops">Laptops</option>
+            <option value="Mobiles">Mobiles</option>
+            <option value="Audio">Audio & Headphones</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Monitors">Monitors</option>
+            <option value="Tablets">Tablets</option>
+            <option value="Gaming">Gaming</option>
+          </select>
+
+          <select id="catalogStockFilter" aria-label="Filter by Stock Status">
+            <option value="all">All Stock Statuses</option>
+            <option value="in_stock">In Stock (&gt; 5)</option>
+            <option value="low_stock">Low Stock (&lt; 5)</option>
+            <option value="out_of_stock">Out of Stock (0)</option>
+          </select>
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--subtle);" id="catalogCountMeta">
+          Showing 0 products
+        </div>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>SKU / ID</th>
+            <th>Category</th>
+            <th>Selling Price</th>
+            <th>MRP (List)</th>
+            <th>Available Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="catalogTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #f7fafa; border-top: 1px solid var(--line);">
+        <span style="font-size: 0.82rem; color: var(--subtle);" id="paginationMeta">Page 1</span>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="amz-btn-secondary" id="prevPageBtn" disabled>« Previous</button>
+          <button type="button" class="amz-btn-secondary" id="nextPageBtn">Next »</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Product Modal -->
+  <div class="amz-modal-overlay" id="addProductModal" hidden>
+    <div class="amz-modal" role="dialog" aria-modal="true" aria-labelledby="addProductModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="addProductModalTitle">Add New Product to Catalog</h3>
+        <button type="button" class="modal-close-btn" id="closeAddProductModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body">
+        <div class="amz-form-group">
+          <label for="newProductTitle">Product Title *</label>
+          <input type="text" id="newProductTitle" placeholder="e.g. Apple MacBook Air M3 13-inch (16GB RAM, 512GB SSD)" required />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="amz-form-group">
+            <label for="newProductBrand">Brand *</label>
+            <input type="text" id="newProductBrand" placeholder="e.g. Apple" required />
+          </div>
+          <div class="amz-form-group">
+            <label for="newProductCategory">Category *</label>
+            <select id="newProductCategory">
+              <option value="Laptops">Laptops</option>
+              <option value="Mobiles">Mobiles</option>
+              <option value="Audio">Audio</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Monitors">Monitors</option>
+              <option value="Tablets">Tablets</option>
+              <option value="Gaming">Gaming</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+          <div class="amz-form-group">
+            <label for="newProductPrice">Selling Price (₹) *</label>
+            <input type="number" id="newProductPrice" placeholder="114900" required />
+          </div>
+          <div class="amz-form-group">
+            <label for="newProductListPrice">MRP (List ₹)</label>
+            <input type="number" id="newProductListPrice" placeholder="124900" />
+          </div>
+          <div class="amz-form-group">
+            <label for="newProductStock">Stock Units *</label>
+            <input type="number" id="newProductStock" placeholder="25" required />
+          </div>
+        </div>
+        <div class="amz-form-group">
+          <label for="newProductImage">Image URL</label>
+          <input type="url" id="newProductImage" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="cancelAddProductBtn">Cancel</button>
+        <button type="button" class="amz-btn-primary" id="saveAddProductBtn">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Stock & Price Modal -->
+  <div class="amz-modal-overlay" id="editProductModal" hidden>
+    <div class="amz-modal" role="dialog" aria-modal="true" aria-labelledby="editProductModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="editProductModalTitle">Update Price & Inventory</h3>
+        <button type="button" class="modal-close-btn" id="closeEditProductModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body">
+        <input type="hidden" id="editProductId" />
+        <div class="amz-form-group">
+          <label>Product</label>
+          <input type="text" id="editProductTitle" readonly style="background: #f7fafa;" />
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="amz-form-group">
+            <label for="editProductPrice">Selling Price (₹)</label>
+            <input type="number" id="editProductPrice" />
+          </div>
+          <div class="amz-form-group">
+            <label for="editProductStock">Available Stock (Units)</label>
+            <input type="number" id="editProductStock" />
+          </div>
+        </div>
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="cancelEditProductBtn">Cancel</button>
+        <button type="button" class="amz-btn-primary" id="saveEditProductBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="products-data.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-listing.js?v=20260412a"></script>
+</body>
+</html>

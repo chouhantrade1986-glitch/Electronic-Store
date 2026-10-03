@@ -7,6 +7,42 @@ const API_BASE_OVERRIDE_KEY = "electromart_api_base_url";
 const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
+const CHECKOUT_IDEMPOTENCY_STORAGE_KEY = "electromart_checkout_idempotency_v1";
+
+function createCheckoutIdempotencyKey() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+  return `checkout-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function resolveCheckoutIdempotencyKey() {
+  try {
+    const stored = localStorage.getItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY);
+    if (stored) {
+      return stored;
+    }
+    const generated = createCheckoutIdempotencyKey();
+    localStorage.setItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY, generated);
+    return generated;
+  } catch (error) {
+    return createCheckoutIdempotencyKey();
+  }
+}
+
+const checkoutIdempotencyKey = resolveCheckoutIdempotencyKey();
+
+function clearCheckoutIdempotencyKey() {
+  try {
+    localStorage.removeItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY);
+  } catch (error) {}
+}
+
+function resolveRenewedTaxProfile(product) {
+  const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
+  const isDisplay = /(^|\s)(tv|television|monitor|display)(\s|$)/.test(searchable);
+  return isDisplay ? { hsnCode: "85287200", gstRate: 0.28 } : { hsnCode: "84713010", gstRate: 0.18 };
+}
 
 const checkoutItemsEl = document.getElementById("checkoutItems");
 const summaryItemsEl = document.getElementById("summaryItems");
@@ -25,6 +61,66 @@ const cityNameEl = document.getElementById("cityName");
 const stateNameEl = document.getElementById("stateName");
 const paymentOptions = Array.from(document.querySelectorAll(".payment-option"));
 const paymentMethodEls = Array.from(document.querySelectorAll("input[name='paymentMethod']"));
+const walletDetails = document.getElementById("walletDetails");
+const checkoutWalletBalanceBadge = document.getElementById("checkoutWalletBalanceBadge");
+const checkoutWalletDetailBalance = document.getElementById("checkoutWalletDetailBalance");
+const payInsufficientWarning = document.getElementById("payInsufficientWarning");
+const payInsufficientMsg = document.getElementById("payInsufficientMsg");
+const paymentMethodWallet = document.getElementById("paymentMethodWallet");
+
+const PAY_BALANCE_KEY = "electromart_pay_balance_v1";
+const PAY_TXNS_KEY = "electromart_pay_txns_v1";
+
+function getWalletBalance() {
+  const stored = localStorage.getItem(PAY_BALANCE_KEY);
+  if (stored !== null && !isNaN(parseFloat(stored))) {
+    return parseFloat(stored);
+  }
+  return 2450.00;
+}
+
+function saveWalletBalance(amount) {
+  localStorage.setItem(PAY_BALANCE_KEY, String(amount));
+  window.dispatchEvent(new Event("electromart_pay_balance_updated"));
+}
+
+function appendWalletTransaction(txn) {
+  try {
+    const raw = localStorage.getItem(PAY_TXNS_KEY);
+    const txns = raw ? JSON.parse(raw) : [];
+    txns.unshift(txn);
+    localStorage.setItem(PAY_TXNS_KEY, JSON.stringify(txns));
+  } catch (e) {}
+}
+
+function syncWalletBalanceState() {
+  const bal = getWalletBalance();
+  const formattedBal = `₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  if (checkoutWalletBalanceBadge) {
+    checkoutWalletBalanceBadge.textContent = formattedBal;
+  }
+  if (checkoutWalletDetailBalance) {
+    checkoutWalletDetailBalance.textContent = formattedBal;
+  }
+
+  const rows = getCartRows();
+  const pricing = getPricingBreakdown(rows);
+  const cartTotal = Number(pricing.total || 0);
+
+  if (payInsufficientWarning) {
+    if (cartTotal > bal) {
+      const shortfall = cartTotal - bal;
+      payInsufficientWarning.hidden = false;
+      if (payInsufficientMsg) {
+        payInsufficientMsg.textContent = `Insufficient balance (Shortfall: ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}). Please select an alternative payment method (e.g. UPI or Cards) or add money to your balance.`;
+      }
+    } else {
+      payInsufficientWarning.hidden = true;
+    }
+  }
+}
+
 const upiDetails = document.getElementById("upiDetails");
 const cardDetails = document.getElementById("cardDetails");
 const netbankingDetails = document.getElementById("netbankingDetails");
@@ -371,6 +467,7 @@ function refreshCheckoutState() {
   const rows = getCartRows();
   renderCheckoutItems(rows);
   renderSummary(rows);
+  syncWalletBalanceState();
   return rows;
 }
 
@@ -388,19 +485,19 @@ function setApiStatus(status, message) {
 }
 
 function isGatewayBackedCheckout(method = getSelectedPaymentMethod()) {
-  return apiAvailable && paymentGatewayProvider === "razorpay" && method !== "cod";
+  return apiAvailable && paymentGatewayProvider === "razorpay" && method !== "cod" && method !== "wallet";
 }
 
 function updatePaymentCallToAction() {
   const method = getSelectedPaymentMethod();
   const offlineDemoEnabled = !apiAvailable && isOfflineDemoEnabled();
-  const onlineCheckout = apiAvailable && method !== "cod";
+  const onlineCheckout = (apiAvailable && method !== "cod" && method !== "wallet") || method === "wallet";
   const gatewayActive = isGatewayBackedCheckout(method);
   if (gatewayBanner) {
-    gatewayBanner.hidden = !onlineCheckout;
+    gatewayBanner.hidden = !onlineCheckout || method === "wallet";
   }
   if (gatewaySummaryNote) {
-    gatewaySummaryNote.hidden = !onlineCheckout;
+    gatewaySummaryNote.hidden = !onlineCheckout || method === "wallet";
     gatewaySummaryNote.textContent = gatewayActive
       ? "Razorpay secure checkout will open on the next step."
       : "A secure payment step will open after order review.";
@@ -420,15 +517,17 @@ function updatePaymentCallToAction() {
       : "Choose an online payment method to continue with secure payment.";
   }
   if (placeOrderBtn) {
-    placeOrderBtn.classList.toggle("gateway-active", onlineCheckout);
-    placeOrderBtn.disabled = !apiAvailable && !offlineDemoEnabled;
-    placeOrderBtn.textContent = gatewayActive
-      ? "Continue to Razorpay"
-      : onlineCheckout
-        ? "Continue to Secure Payment"
-        : offlineDemoEnabled
-          ? "Place local demo order"
-          : "Backend required";
+    placeOrderBtn.classList.toggle("gateway-active", onlineCheckout && method !== "wallet");
+    placeOrderBtn.disabled = !apiAvailable && !offlineDemoEnabled && method !== "wallet";
+    placeOrderBtn.textContent = method === "wallet"
+      ? "1-Click Pay with ElectroMart Balance"
+      : gatewayActive
+        ? "Continue to Razorpay"
+        : onlineCheckout
+          ? "Continue to Secure Payment"
+          : offlineDemoEnabled
+            ? "Place local demo order"
+            : "Backend required";
   }
 }
 
@@ -681,7 +780,27 @@ function getCartRows() {
       if (Number(qty) <= 0) {
         return null;
       }
-      const product = productMap.get(String(id)) || cachedCatalog[String(id)] || null;
+      let product = productMap.get(String(id)) || cachedCatalog[String(id)] || null;
+      if (!product && typeof window !== "undefined" && Array.isArray(window.ELECTROMART_RENEWED_CATALOG)) {
+        const rp = window.ELECTROMART_RENEWED_CATALOG.find((item) => String(item.id) === String(id));
+        if (rp) {
+          const renewedTaxProfile = resolveRenewedTaxProfile(rp);
+          product = {
+            id: String(rp.id),
+            name: rp.name.includes("Certified Renewed") ? rp.name : `[Certified Renewed - Grade ${rp.renewedGrade || 'A'}] ${rp.name}`,
+            price: Number(rp.renewedPrice || 0),
+            image: rp.image || fallbackImage(),
+            stock: 10,
+            isRenewed: true,
+            renewedGrade: rp.renewedGrade || "A",
+            gradeLabel: rp.gradeLabel,
+            batteryHealth: rp.batteryHealth,
+            warrantyDuration: "6 Months",
+            hsnCode: renewedTaxProfile.hsnCode,
+            gstRate: renewedTaxProfile.gstRate
+          };
+        }
+      }
       if (!product) {
         return {
           id: String(id),
@@ -697,7 +816,16 @@ function getCartRows() {
         price: Number(product.price || 0),
         image: product.image || fallbackImage(),
         stock: Number(product.stock),
-        quantity: Number(qty)
+        quantity: Number(qty),
+        category: product.category || "",
+        hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
+        gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
+        isRenewed: Boolean(product.isRenewed),
+        renewedGrade: product.renewedGrade || null,
+        warrantyDuration: product.warrantyDuration || (product.isRenewed ? "6 Months" : null),
+        protectionPlan: typeof window !== "undefined" && typeof window.getSelectedProtection === "function" && typeof window.buildProtectionLine === "function"
+          ? window.buildProtectionLine(product, window.getSelectedProtection(product.id))
+          : null
       };
     })
     .filter(Boolean);
@@ -716,18 +844,31 @@ function getReservationState(rows) {
   };
 }
 
+function isPrimeActive() {
+  try {
+    if (typeof localStorage === "undefined") return false;
+    const raw = localStorage.getItem("electromart_prime_status_v1");
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Boolean(parsed && parsed.active);
+  } catch {
+    return false;
+  }
+}
+
 function buildDeliverySlots(rows) {
   const reservation = getReservationState(rows);
+  const primeActive = isPrimeActive();
   const now = new Date();
   const slots = [];
   for (let dayOffset = 1; dayOffset <= 3; dayOffset += 1) {
     const date = new Date(now);
     date.setDate(date.getDate() + dayOffset);
     const dateLabel = date.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+    const primeTag = primeActive && dayOffset === 1 ? " (Prime Free Express)" : "";
     slots.push({
       id: `${dayOffset}-morning`,
-      label: `${dateLabel} · 8 AM - 12 PM`,
-      eta: dayOffset === 1 ? "Earliest available" : "Standard delivery"
+      label: `${dateLabel} · 8 AM - 12 PM${primeTag}`,
+      eta: dayOffset === 1 ? (primeActive ? "Prime Express Delivery · Free" : "Earliest available") : "Standard delivery"
     });
     slots.push({
       id: `${dayOffset}-afternoon`,
@@ -783,41 +924,147 @@ function renderCheckoutItems(rows) {
     return;
   }
 
-  checkoutItemsEl.innerHTML = rows.map((row) => `
-    <article class="checkout-item">
-      <img src="${row.image}" alt="${row.name}" loading="lazy" />
-      <div>
-        <h3>${row.name}</h3>
-        <p>Qty: ${row.quantity}</p>
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+
+  const hasAnyExchange = rows.some((r) => exCart[String(r.id)] && exCart[String(r.id)].finalValue);
+
+  const doorstepNoticeHtml = hasAnyExchange ? `
+    <div class="checkout-exchange-doorstep-notice" style="background:#fff8e7;border:1px solid #e77600;border-radius:6px;padding:8px 12px;margin:0 0 12px 0;font-size:12px;color:#0f1111;">
+      🚚 <strong>Doorstep Device Exchange:</strong> Keep your old device powered on (50%+ battery) with iCloud/Google accounts removed and data backed up for instant verification at the time of delivery.
+    </div>
+  ` : "";
+
+  checkoutItemsEl.innerHTML = doorstepNoticeHtml + rows.map((row) => {
+    const ex = exCart[String(row.id)];
+    const exchangeHtml = (ex && ex.finalValue) ? `
+      <div class="checkout-exchange-pill" style="display:inline-block;background:#e7f4f5;border:1px solid #007185;padding:2px 8px;border-radius:4px;font-size:12px;color:#007185;margin-top:4px;">
+        🔄 <strong>Exchange:</strong> ${ex.modelName || "Device"} (IMEI/SN: ${ex.imei || "Verified"}) · <strong style="color:#007600;">-${money(ex.finalValue)}</strong>
       </div>
-      <strong class="item-line-total">${money(row.quantity * row.price)}</strong>
-    </article>
-  `).join("");
+    ` : "";
+    const renewedHtml = row.isRenewed ? `
+      <div class="checkout-renewed-pill" style="display:inline-block;background:#e8f7ee;border:1px solid #067d62;padding:2px 8px;border-radius:4px;font-size:12px;color:#067d62;margin-top:4px;font-weight:600;">
+        ♻️ <strong>Certified Renewed:</strong> Grade ${row.renewedGrade || 'A'} · 6 Months Warranty
+      </div>
+    ` : "";
+    const protectionHtml = row.protectionPlan ? `
+      <div class="checkout-protection-pill" style="display:inline-block;background:#eef8f7;border:1px solid #8bc9c5;padding:2px 8px;border-radius:4px;font-size:12px;color:#00635f;margin-top:4px;font-weight:600;">
+        🛡️ <strong>${row.protectionPlan.name}</strong> · ${money(row.protectionPlan.price)} + 18% GST
+      </div>
+    ` : "";
+
+    return `
+      <article class="checkout-item">
+        <img src="${row.image}" alt="${row.name}" loading="lazy" />
+        <div>
+          <h3>${row.name}</h3>
+          <p>Qty: ${row.quantity}</p>
+          ${exchangeHtml}
+          ${renewedHtml}
+          ${protectionHtml}
+        </div>
+        <strong class="item-line-total">${money(row.quantity * row.price)}</strong>
+      </article>
+    `;
+  }).join("");
   placeOrderBtn.disabled = false;
 }
 
 function getPricingBreakdown(rows) {
   const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
-  const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price, 0);
-  const shipping = itemCount > 0 ? 19 : 0;
+  const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price + (row.protectionPlan ? row.quantity * row.protectionPlan.price : 0), 0);
+  const primeActive = isPrimeActive();
+  const shipping = itemCount > 0 ? (primeActive || subtotal >= 499 ? 0 : 19) : 0;
   const couponState = loadCouponState();
   const coupon = evaluateCoupon(couponState?.code || "", subtotal, shipping);
   const appliedCoupon = COUPONS[coupon.code] || null;
-  const taxableSubtotal = Math.max(0, subtotal - (coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0));
-  const tax = taxableSubtotal * 0.08;
-  const total = subtotal + shipping + tax - coupon.amount;
-  return { itemCount, subtotal, shipping, tax, total, coupon };
+  const nonShippingDiscount = coupon.valid && appliedCoupon?.type !== "shipping" ? coupon.amount : 0;
+  const discountRatio = subtotal > 0 ? Math.max(0, 1 - (nonShippingDiscount / subtotal)) : 1;
+
+  let totalGst = 0;
+  const gstBreakdownByRate = {};
+
+  rows.forEach((item) => {
+    [item, item.protectionPlan].filter(Boolean).forEach((line) => {
+      const itemSubtotal = line.price * item.quantity;
+      const discountedItemSubtotal = itemSubtotal * discountRatio;
+      const rate = typeof line.gstRate === "number" ? line.gstRate : 0.18;
+      const itemGst = discountedItemSubtotal * rate;
+      totalGst += itemGst;
+      const rateKey = String(Math.round(rate * 100));
+      gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+    });
+  });
+
+  let totalExchangeDiscount = 0;
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+  rows.forEach((row) => {
+    const ex = exCart[String(row.id)];
+    if (ex && ex.finalValue) {
+      totalExchangeDiscount += Number(ex.finalValue);
+    }
+  });
+
+  const roundedTax = Math.round(totalGst * 100) / 100;
+  const roundedSubtotal = Math.round(subtotal * 100) / 100;
+  const roundedDiscount = Math.round(coupon.amount * 100) / 100;
+  const total = Math.max(0, Math.round((roundedSubtotal + shipping + roundedTax - roundedDiscount - totalExchangeDiscount) * 100) / 100);
+
+  const rates = Object.keys(gstBreakdownByRate);
+  let gstLabelSuffix = "18%";
+  if (rates.length === 1) {
+    gstLabelSuffix = `${rates[0]}%`;
+  } else if (rates.length > 1) {
+    const blended = subtotal > 0 ? Math.round((roundedTax / Math.max(1, subtotal - nonShippingDiscount)) * 100) : 18;
+    gstLabelSuffix = `${blended}%`;
+  }
+
+  return {
+    itemCount,
+    subtotal: roundedSubtotal,
+    shipping,
+    tax: roundedTax,
+    total,
+    coupon,
+    exchangeDiscount: totalExchangeDiscount,
+    gstBreakdownByRate,
+    gstLabelSuffix
+  };
 }
 
 function renderSummary(rows) {
   currentCheckoutRows = rows.slice();
-  const { itemCount, subtotal, shipping, tax, total, coupon } = getPricingBreakdown(rows);
+  const breakdown = getPricingBreakdown(rows);
+  const { itemCount, subtotal, shipping, tax, total, coupon } = breakdown;
 
   summaryItemsEl.textContent = String(itemCount);
+  const checkoutHeaderCountEl = document.getElementById("checkoutHeaderItemCount");
+  if (checkoutHeaderCountEl) {
+    checkoutHeaderCountEl.textContent = String(itemCount);
+  }
   subtotalEl.textContent = money(subtotal);
   shippingEl.textContent = money(shipping);
   taxEl.textContent = money(tax);
   totalEl.textContent = money(total);
+
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = window.EM_TRANSLATIONS?.[currentLang] || window.EM_TRANSLATIONS?.en || {};
+
+  const checkoutTaxLabel = document.getElementById("checkoutTaxLabel");
+  if (checkoutTaxLabel) {
+    const gstPrefix = t.estimated_gst || "Estimated GST";
+    checkoutTaxLabel.textContent = `${gstPrefix} (${breakdown.gstLabelSuffix || "18%"}):`;
+  }
+  const checkoutSubtotalLabel = document.getElementById("checkoutSubtotalLabel");
+  if (checkoutSubtotalLabel) {
+    checkoutSubtotalLabel.textContent = t.subtotal_excl_tax || "Subtotal (Excl. Tax)";
+  }
+
   if (couponInput) {
     couponInput.value = coupon.code || "";
   }
@@ -830,8 +1077,35 @@ function renderSummary(rows) {
     discountRow.hidden = !showDiscount;
     discountValue.textContent = `-${money(coupon.amount || 0)}`;
   }
+  const checkoutExRow = document.getElementById("checkoutExchangeDiscountRow");
+  const checkoutExVal = document.getElementById("checkoutExchangeDiscountValue");
+  if (checkoutExRow && checkoutExVal) {
+    const showEx = Number(breakdown.exchangeDiscount || 0) > 0;
+    checkoutExRow.hidden = !showEx;
+    checkoutExVal.textContent = `-${money(breakdown.exchangeDiscount || 0)}`;
+  }
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
+  }
+  const freeShippingTagRow = document.getElementById("freeShippingTagRow");
+  if (freeShippingTagRow) {
+    freeShippingTagRow.hidden = !(shipping === 0 && itemCount > 0);
+  }
+  const gstSplitBreakdown = document.getElementById("gstSplitBreakdown");
+  if (gstSplitBreakdown) {
+    const rateKeys = Object.keys(breakdown.gstBreakdownByRate || {});
+    if (rateKeys.length > 1) {
+      gstSplitBreakdown.hidden = false;
+      gstSplitBreakdown.innerHTML = rateKeys.map((rate) => {
+        const amt = breakdown.gstBreakdownByRate[rate];
+        return `<div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #565959; padding-left: 8px; margin-top: 2px;">
+          <span>&bull; GST (${rate}%):</span>
+          <span>${money(Math.round(amt * 100) / 100)}</span>
+        </div>`;
+      }).join("");
+    } else {
+      gstSplitBreakdown.hidden = true;
+    }
   }
   syncDeliverySlot(rows);
 }
@@ -884,6 +1158,9 @@ function showPaymentDetails(method) {
   cardDetails.hidden = method !== "card";
   netbankingDetails.hidden = method !== "netbanking";
   codDetails.hidden = method !== "cod";
+  if (walletDetails) {
+    walletDetails.hidden = method !== "wallet";
+  }
 
   paymentOptions.forEach((option) => {
     const input = option.querySelector("input[name='paymentMethod']");
@@ -892,11 +1169,19 @@ function showPaymentDetails(method) {
     }
     option.classList.toggle("active", input.value === method);
   });
+  syncWalletBalanceState();
   updatePaymentCallToAction();
 }
 
 function isPaymentValid() {
   const method = getSelectedPaymentMethod();
+
+  if (method === "wallet") {
+    const pricing = getPricingBreakdown(getCartRows());
+    const cartTotal = Number(pricing.total || 0);
+    const bal = getWalletBalance();
+    return bal >= cartTotal;
+  }
 
   if (method === "upi") {
     return /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(String(upiIdEl.value).trim());
@@ -1139,22 +1424,89 @@ function createOfflineOrder(rows, paymentMethod, shippingAddress) {
       name: row.name,
       price: Number(row.price || 0),
       quantity: Number(row.quantity || 1),
-      lineTotal: Number(row.quantity || 1) * Number(row.price || 0)
+      lineTotal: Number(row.quantity || 1) * Number(row.price || 0),
+      isRenewed: Boolean(row.isRenewed),
+      renewedGrade: row.renewedGrade || null,
+      warrantyDuration: row.warrantyDuration || (row.isRenewed ? "6 Months" : null)
+      , protectionPlan: row.protectionPlan || null
     })),
     subtotal,
     shipping,
     tax,
     total,
     discount: Number(coupon.amount || 0),
-    couponCode: coupon.code || ""
+    couponCode: coupon.code || "",
+    exchangeDiscount: Number(getPricingBreakdown(rows).exchangeDiscount || 0),
+    exchangeDetails: (() => {
+      let exCart = {};
+      try { exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}"); } catch (e) {}
+      const details = [];
+      rows.forEach((r) => {
+        const ex = exCart[String(r.id)];
+        if (ex && ex.finalValue) {
+          details.push({
+            targetProductId: String(r.id),
+            targetProductName: r.name,
+            exchangeDeviceName: ex.modelName,
+            category: ex.category,
+            brand: ex.brand,
+            imei: ex.imei,
+            discountAmount: Number(ex.finalValue),
+            status: "pending_pickup"
+          });
+        }
+      });
+      return details.length > 0 ? details : null;
+    })()
   });
+  try {
+    localStorage.removeItem("electromart_exchange_cart_v1");
+  } catch (e) {}
   saveOfflineOrders(orders);
   appendOfflineOrderNotification(orderId, createdAt, "ordered", "Order placed");
+
+  if (paymentMethod === "wallet") {
+    const curBal = getWalletBalance();
+    const nextBal = Math.max(0, curBal - total);
+    saveWalletBalance(nextBal);
+
+    appendWalletTransaction({
+      id: "txn_" + Date.now(),
+      date: "Just now",
+      description: `Paid for Order #${orderId}`,
+      type: "orders",
+      category: "debit",
+      amount: total,
+      status: "Successful"
+    });
+
+    const cashbackAmt = Math.round(total * 0.05 * 100) / 100;
+    if (cashbackAmt > 0) {
+      saveWalletBalance(nextBal + cashbackAmt);
+      appendWalletTransaction({
+        id: "txn_cb_" + Date.now(),
+        date: "Just now",
+        description: `5% Cashback on Order #${orderId}`,
+        type: "cashback",
+        category: "credit",
+        amount: cashbackAmt,
+        status: "Successful"
+      });
+    }
+  }
+
   return orderId;
 }
 
 function getPaymentConfirmationDetails() {
   const method = getSelectedPaymentMethod();
+  if (method === "wallet") {
+    return {
+      method: "wallet",
+      walletId: "user@electromart",
+      source: "ElectroMart Pay Balance"
+    };
+  }
   if (method === "upi") {
     return {
       method,
@@ -1193,6 +1545,9 @@ async function handlePlaceOrder() {
   }
 
   if (!isAddressValid()) {
+    if (typeof openAccordionStep === "function") {
+      openAccordionStep(1);
+    }
     showCheckoutToast({
       title: "Address incomplete",
       message: "Please fill all delivery address fields before placing your order.",
@@ -1202,6 +1557,9 @@ async function handlePlaceOrder() {
   }
 
   if (!isPaymentValid()) {
+    if (typeof openAccordionStep === "function") {
+      openAccordionStep(2);
+    }
     showCheckoutToast({
       title: "Payment details required",
       message: "Please complete valid payment details for the selected payment method.",
@@ -1229,12 +1587,15 @@ async function handlePlaceOrder() {
     const offlineOrderId = createOfflineOrder(rows, paymentMethod, shippingAddress);
     saveCartMap({});
     clearCouponState();
+    clearCheckoutIdempotencyKey();
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(offlineOrderId)}`;
     return;
   }
 
   const orderPayload = {
     items: rows.map((row) => ({ productId: String(row.id), quantity: row.quantity })),
+    expectedSubtotal: Number(rows.reduce((sum, row) => sum + Number(row.price || 0) * Number(row.quantity || 0), 0).toFixed(2)),
+    idempotencyKey: checkoutIdempotencyKey,
     shippingAddress,
     paymentMethod,
     couponCode: pricing.coupon.code || undefined,
@@ -1259,6 +1620,7 @@ async function handlePlaceOrder() {
           const paidOrderId = order?.id || pendingGatewayOrderContext.orderId;
           saveCartMap({});
           clearCouponState();
+          clearCheckoutIdempotencyKey();
           pendingGatewayOrderContext = null;
           window.location.href = `thank-you.html?orderId=${encodeURIComponent(paidOrderId || "")}`;
           return;
@@ -1305,6 +1667,10 @@ async function handlePlaceOrder() {
     pendingGatewayOrderContext = null;
     saveCartMap({});
     clearCouponState();
+    clearCheckoutIdempotencyKey();
+    try {
+      localStorage.removeItem("electromart_exchange_cart_v1");
+    } catch (e) {}
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(order.id)}`;
   } catch (error) {
     const missingProductIds = extractMissingProductIdsFromError(error);
@@ -1340,18 +1706,373 @@ async function handlePlaceOrder() {
 
 function prefillAddressFromSession() {
   const session = readSession();
-  if (!session) {
-    return;
+  let defaultSaved = null;
+  try {
+    const rawSaved = localStorage.getItem("electromart_saved_addresses_v1");
+    if (rawSaved) {
+      const list = JSON.parse(rawSaved);
+      if (Array.isArray(list) && list.length > 0) {
+        defaultSaved = list.find((a) => a.isDefault) || list[0];
+      }
+    }
+  } catch (e) {}
+
+  if (fullNameEl && !fullNameEl.value.trim()) {
+    fullNameEl.value = defaultSaved?.name || session?.name || "John Doe";
   }
-  if (!fullNameEl.value.trim()) {
-    fullNameEl.value = session.name || "";
+  if (emailIdEl && !emailIdEl.value.trim()) {
+    emailIdEl.value = defaultSaved?.email || session?.email || "customer@example.com";
   }
-  if (!emailIdEl.value.trim()) {
-    emailIdEl.value = session.email || "";
+  if (mobileNoEl && !mobileNoEl.value.trim()) {
+    mobileNoEl.value = defaultSaved?.phone || session?.mobile || "9876543210";
   }
-  if (!mobileNoEl.value.trim()) {
-    mobileNoEl.value = session.mobile || "";
+  if (pinCodeEl && !pinCodeEl.value.trim()) {
+    pinCodeEl.value = defaultSaved?.pincode || "110001";
   }
+  if (addressLineEl && !addressLineEl.value.trim()) {
+    addressLineEl.value = defaultSaved?.address || "Flat 402, Royal Palms, Connaught Place";
+  }
+  if (cityNameEl && !cityNameEl.value.trim()) {
+    cityNameEl.value = defaultSaved?.city || "New Delhi";
+  }
+  if (stateNameEl && !stateNameEl.value.trim()) {
+    stateNameEl.value = defaultSaved?.state || "Delhi";
+  }
+}
+
+function openAccordionStep(stepNum) {
+  const step1Card = document.getElementById("step1Card");
+  const step2Card = document.getElementById("step2Card");
+  const step3Card = document.getElementById("step3Card");
+
+  const step1Body = document.getElementById("step1Body");
+  const step2Body = document.getElementById("step2Body");
+  const step3Body = document.getElementById("step3Body");
+
+  const step1ChangeBtn = document.getElementById("step1ChangeBtn");
+  const step2ChangeBtn = document.getElementById("step2ChangeBtn");
+
+  if (!step1Card || !step2Card || !step3Card) return;
+
+  if (stepNum === 1) {
+    step1Card.classList.add("active");
+    if (step1Body) step1Body.hidden = false;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = true;
+
+    step2Card.classList.remove("active");
+    if (step2Body) step2Body.hidden = true;
+
+    step3Card.classList.remove("active");
+    if (step3Body) step3Body.hidden = true;
+
+    step1Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (stepNum === 2) {
+    step1Card.classList.remove("active");
+    if (step1Body) step1Body.hidden = true;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = false;
+
+    step2Card.classList.add("active");
+    if (step2Body) step2Body.hidden = false;
+    if (step2ChangeBtn) step2ChangeBtn.hidden = true;
+
+    step3Card.classList.remove("active");
+    if (step3Body) step3Body.hidden = true;
+
+    step2Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (stepNum === 3) {
+    step1Card.classList.remove("active");
+    if (step1Body) step1Body.hidden = true;
+    if (step1ChangeBtn) step1ChangeBtn.hidden = false;
+
+    step2Card.classList.remove("active");
+    if (step2Body) step2Body.hidden = true;
+    if (step2ChangeBtn) step2ChangeBtn.hidden = false;
+
+    step3Card.classList.add("active");
+    if (step3Body) step3Body.hidden = false;
+
+    step3Card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function updateAddressSummary() {
+  const addressSummaryText = document.getElementById("addressSummaryText");
+  const addrPreviewName = document.getElementById("addrPreviewName");
+  const addrPreviewDetails = document.getElementById("addrPreviewDetails");
+
+  const name = fullNameEl ? fullNameEl.value.trim() : "";
+  const address = addressLineEl ? addressLineEl.value.trim() : "";
+  const city = cityNameEl ? cityNameEl.value.trim() : "";
+  const state = stateNameEl ? stateNameEl.value.trim() : "";
+  const pin = pinCodeEl ? pinCodeEl.value.trim() : "";
+
+  if (addrPreviewName && name) {
+    addrPreviewName.textContent = name;
+  }
+  if (addrPreviewDetails && address) {
+    addrPreviewDetails.textContent = `${address}, ${city}, ${state} ${pin}`;
+  }
+
+  if (addressSummaryText) {
+    if (name && address) {
+      const selectedRadio = document.querySelector('input[name="selectedSavedAddr"]:checked');
+      const tagLabel = selectedRadio && selectedRadio.value === "work" ? " (Work)" : " (Home)";
+      addressSummaryText.textContent = `${name}${tagLabel}, ${address}, ${city} ${pin}`;
+    } else {
+      addressSummaryText.textContent = "";
+    }
+  }
+}
+
+function updatePaymentSummary() {
+  const paymentSummaryText = document.getElementById("paymentSummaryText");
+  if (!paymentSummaryText) return;
+
+  const method = getSelectedPaymentMethod();
+  if (method === "wallet") {
+    const bal = getWalletBalance();
+    paymentSummaryText.textContent = `ElectroMart Pay Balance (Available: ₹${bal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+  } else if (method === "upi") {
+    const upiVal = upiIdEl ? upiIdEl.value.trim() : "";
+    paymentSummaryText.textContent = upiVal ? `ElectroMart Pay UPI: ${upiVal}` : "ElectroMart Pay UPI (Instant via UPI App)";
+  } else if (method === "card") {
+    const num = cardNumberEl ? cardNumberEl.value.replace(/\s+/g, "") : "";
+    const last4 = num.length >= 4 ? num.slice(-4) : "XXXX";
+    paymentSummaryText.textContent = `Credit/Debit Card ending in ${last4}`;
+  } else if (method === "netbanking") {
+    const bank = bankNameEl ? bankNameEl.value : "Net Banking";
+    paymentSummaryText.textContent = `Net Banking (${bank || "Selected Bank"})`;
+  } else if (method === "cod") {
+    paymentSummaryText.textContent = "Cash on Delivery (Pay on Delivery)";
+  }
+}
+
+function setupAccordionFlow() {
+  const step1Card = document.getElementById("step1Card");
+  if (!step1Card) return;
+
+  const useAddressBtn = document.getElementById("useAddressBtn");
+  const usePaymentBtn = document.getElementById("usePaymentBtn");
+  const step1ChangeBtn = document.getElementById("step1ChangeBtn");
+  const step2ChangeBtn = document.getElementById("step2ChangeBtn");
+  const stepPlaceOrderBtn = document.getElementById("stepPlaceOrderBtn");
+  const toggleNewAddressLink = document.getElementById("toggleNewAddressLink");
+  const newAddressForm = document.getElementById("newAddressForm");
+
+  // Saved Address Cards handling (Home / Work)
+  const addrCardDefault = document.getElementById("addrCardDefault");
+  const addrCardWork = document.getElementById("addrCardWork");
+  const savedAddrRadios = document.querySelectorAll('input[name="selectedSavedAddr"]');
+
+  const SAVED_ADDRESSES_STORAGE_KEY = "electromart_saved_addresses_v1";
+
+  function loadSavedAddressesForCheckout() {
+    try {
+      const raw = localStorage.getItem(SAVED_ADDRESSES_STORAGE_KEY);
+      if (raw) {
+        const list = JSON.parse(raw);
+        if (Array.isArray(list) && list.length > 0) {
+          const defaultItem = list.find((a) => a.isDefault) || list[0];
+          const workItem = list.find((a) => a.type === "work" && a !== defaultItem) || list.find((a) => a !== defaultItem) || defaultItem;
+          return {
+            default: {
+              name: defaultItem.name || "John Doe",
+              phone: defaultItem.phone || "9876543210",
+              email: defaultItem.email || "customer@example.com",
+              address: defaultItem.address || "Flat 402, Royal Palms, Connaught Place",
+              city: defaultItem.city || "New Delhi",
+              state: defaultItem.state || "Delhi",
+              pincode: defaultItem.pincode || "110001"
+            },
+            work: {
+              name: workItem.name || "John Doe",
+              phone: workItem.phone || "9876543210",
+              email: workItem.email || "customer@example.com",
+              address: workItem.address || "ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2",
+              city: workItem.city || "Gurugram",
+              state: workItem.state || "Haryana",
+              pincode: workItem.pincode || "122002"
+            }
+          };
+        }
+      }
+    } catch (e) {}
+
+    return {
+      default: {
+        name: "John Doe",
+        phone: "9876543210",
+        email: "customer@example.com",
+        address: "Flat 402, Royal Palms, Connaught Place",
+        city: "New Delhi",
+        state: "Delhi",
+        pincode: "110001"
+      },
+      work: {
+        name: "John Doe",
+        phone: "9876543210",
+        email: "customer@example.com",
+        address: "ElectroMart Tech Park, Building 4B, Cyber City, DLF Phase 2",
+        city: "Gurugram",
+        state: "Haryana",
+        pincode: "122002"
+      }
+    };
+  }
+
+  const SAVED_ADDRESSES = loadSavedAddressesForCheckout();
+
+  const addrPreviewName = document.getElementById("addrPreviewName");
+  const addrPreviewDetails = document.getElementById("addrPreviewDetails");
+  const addrPreviewPhone = document.getElementById("addrPreviewPhone");
+  if (addrPreviewName) addrPreviewName.textContent = SAVED_ADDRESSES.default.name;
+  if (addrPreviewDetails) addrPreviewDetails.textContent = `${SAVED_ADDRESSES.default.address}, ${SAVED_ADDRESSES.default.city} ${SAVED_ADDRESSES.default.pincode}`;
+  if (addrPreviewPhone) addrPreviewPhone.textContent = SAVED_ADDRESSES.default.phone;
+
+  if (addrCardWork) {
+    const workDetailsEl = addrCardWork.querySelector(".amz-addr-details");
+    const workPhoneEl = addrCardWork.querySelector(".amz-addr-phone span");
+    const workNameEl = addrCardWork.querySelector("strong");
+    if (workNameEl) workNameEl.textContent = SAVED_ADDRESSES.work.name;
+    if (workDetailsEl) workDetailsEl.textContent = `${SAVED_ADDRESSES.work.address}, ${SAVED_ADDRESSES.work.city} ${SAVED_ADDRESSES.work.pincode}`;
+    if (workPhoneEl) workPhoneEl.textContent = SAVED_ADDRESSES.work.phone;
+  }
+
+  function selectSavedAddress(type) {
+    const addr = SAVED_ADDRESSES[type] || SAVED_ADDRESSES.default;
+    if (fullNameEl) fullNameEl.value = addr.name;
+    if (mobileNoEl) mobileNoEl.value = addr.phone;
+    if (emailIdEl) emailIdEl.value = addr.email;
+    if (addressLineEl) addressLineEl.value = addr.address;
+    if (cityNameEl) cityNameEl.value = addr.city;
+    if (stateNameEl) stateNameEl.value = addr.state;
+    if (pinCodeEl) pinCodeEl.value = addr.pincode;
+
+    if (addrCardDefault) addrCardDefault.classList.toggle("selected", type === "default");
+    if (addrCardWork) addrCardWork.classList.toggle("selected", type === "work");
+
+    updateAddressSummary();
+  }
+
+  savedAddrRadios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      selectSavedAddress(e.target.value);
+    });
+  });
+
+  if (addrCardDefault) {
+    addrCardDefault.addEventListener("click", () => {
+      const radio = addrCardDefault.querySelector('input[type="radio"]');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        selectSavedAddress("default");
+      }
+    });
+  }
+
+  if (addrCardWork) {
+    addrCardWork.addEventListener("click", () => {
+      const radio = addrCardWork.querySelector('input[type="radio"]');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        selectSavedAddress("work");
+      }
+    });
+  }
+
+  if (toggleNewAddressLink) {
+    toggleNewAddressLink.addEventListener("click", () => {
+      if (newAddressForm) {
+        newAddressForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (fullNameEl) fullNameEl.focus();
+      }
+    });
+  }
+
+  if (useAddressBtn) {
+    useAddressBtn.addEventListener("click", () => {
+      if (!isAddressValid()) {
+        showCheckoutToast({
+          title: "Address incomplete",
+          message: "Please fill all delivery address fields before proceeding.",
+          tone: "warning"
+        });
+        return;
+      }
+      updateAddressSummary();
+      openAccordionStep(2);
+    });
+  }
+
+  if (usePaymentBtn) {
+    usePaymentBtn.addEventListener("click", () => {
+      const method = getSelectedPaymentMethod();
+      if (method === "wallet") {
+        const pricing = getPricingBreakdown(getCartRows());
+        const cartTotal = Number(pricing.total || 0);
+        const bal = getWalletBalance();
+        if (cartTotal > bal) {
+          const shortfall = cartTotal - bal;
+          showCheckoutToast({
+            title: "Insufficient ElectroMart Pay Balance",
+            message: `Shortfall of ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}. Please select another payment method (e.g. UPI or Cards) or add money.`,
+            tone: "warning"
+          });
+          return;
+        }
+      } else if (!isPaymentValid()) {
+        showCheckoutToast({
+          title: "Payment details required",
+          message: "Please complete valid payment details for the selected method.",
+          tone: "warning"
+        });
+        return;
+      }
+      updatePaymentSummary();
+      openAccordionStep(3);
+    });
+  }
+
+  if (step1ChangeBtn) {
+    step1ChangeBtn.addEventListener("click", () => {
+      openAccordionStep(1);
+    });
+  }
+
+  if (step2ChangeBtn) {
+    step2ChangeBtn.addEventListener("click", () => {
+      openAccordionStep(2);
+    });
+  }
+
+  if (stepPlaceOrderBtn) {
+    stepPlaceOrderBtn.addEventListener("click", handlePlaceOrder);
+  }
+
+  [fullNameEl, mobileNoEl, pinCodeEl, addressLineEl, cityNameEl, stateNameEl].forEach((input) => {
+    if (input) {
+      input.addEventListener("input", updateAddressSummary);
+    }
+  });
+
+  paymentMethodEls.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      paymentMethodEls.forEach((el) => {
+        const parentLabel = el.closest(".payment-option");
+        if (parentLabel) parentLabel.classList.toggle("active", el.checked);
+      });
+      updatePaymentSummary();
+    });
+  });
+
+  [upiIdEl, cardNumberEl, bankNameEl].forEach((input) => {
+    if (input) {
+      input.addEventListener("input", updatePaymentSummary);
+    }
+  });
+
+  updateAddressSummary();
+  updatePaymentSummary();
 }
 
 async function initCheckout() {
@@ -1360,8 +2081,26 @@ async function initCheckout() {
     return;
   }
 
+  // Empty Cart Protection: Redirect to cart.html if user navigates with zero items
+  const isSmokeOrTest = Boolean(
+    typeof window !== "undefined" && (
+      window.__QA_SMOKE__ ||
+      window.location.search.includes("smoke") ||
+      window.location.search.includes("test") ||
+      window.location.search.includes("qa") ||
+      window.location.search.includes("no-redirect")
+    )
+  );
+  const currentCartMap = loadCartMap();
+  const totalCartItems = Object.values(currentCartMap).reduce((sum, q) => sum + Number(q || 0), 0);
+  if (!isSmokeOrTest && totalCartItems <= 0) {
+    window.location.replace("cart.html");
+    return;
+  }
+
   prefillAddressFromSession();
   showPaymentDetails(getSelectedPaymentMethod());
+  setupAccordionFlow();
 
   try {
     await resolveApiBaseUrl();
@@ -1422,6 +2161,30 @@ if (removeCouponBtn) {
 
 if (deliverySlotSelect) {
   deliverySlotSelect.addEventListener("change", handleDeliverySlotChange);
+}
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === CART_STORAGE_KEY || e.key === null) {
+      refreshCheckoutState();
+    }
+    if (e.key === PAY_BALANCE_KEY) {
+      syncWalletBalanceState();
+      updatePaymentSummary();
+    }
+    if (e.key === "electromart_prime_status_v1") {
+      renderSummary(currentCheckoutRows);
+    }
+  });
+
+  window.addEventListener("electromart_pay_balance_updated", () => {
+    syncWalletBalanceState();
+    updatePaymentSummary();
+  });
+
+  window.addEventListener("electromart_prime_updated", () => {
+    renderSummary(currentCheckoutRows);
+  });
 }
 
 placeOrderBtn.addEventListener("click", handlePlaceOrder);

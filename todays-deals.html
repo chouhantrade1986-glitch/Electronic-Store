@@ -21,94 +21,149 @@
 
   <main class="deals-main">
     <section class="hero">
-      <p class="eyebrow">Limited Time Offers</p>
-      <h1>Today's Deals</h1>
-      <p>Grab flash discounts on top electronics before they expire.</p>
+      <p class="eyebrow" data-i18n="limited_time_offers">Limited Time Offers</p>
+      <h1 data-i18n="todays_deals">Today's Deals</h1>
+      <p data-i18n="deals_subheading">Grab flash discounts on top electronics before they expire.</p>
       <div class="hero-pills">
-        <span>Daily Refresh</span>
-        <span>Top Categories</span>
-        <span>Fast Checkout</span>
+        <span data-i18n="daily_refresh">Daily Refresh</span>
+        <span data-i18n="top_categories">Top Categories</span>
+        <span data-i18n="fast_checkout">Fast Checkout</span>
       </div>
     </section>
+
+    <!-- Amazon-Style Horizontal Department Filter Bar -->
+    <nav class="amz-dept-pills-bar" id="dealsDeptBar" aria-label="Department filters">
+      <button type="button" class="amz-dept-pill active" data-category="all" data-i18n="all_deals">All Deals</button>
+      <button type="button" class="amz-dept-pill" data-category="laptop" data-i18n="laptops">Laptops</button>
+      <button type="button" class="amz-dept-pill" data-category="mobile" data-i18n="mobiles">Mobiles</button>
+      <button type="button" class="amz-dept-pill" data-category="audio" data-i18n="audio_headphones">Audio</button>
+      <button type="button" class="amz-dept-pill" data-category="accessory" data-i18n="accessories">Accessories</button>
+      <button type="button" class="amz-dept-pill" data-category="computer" data-i18n="computers">Computers</button>
+      <button type="button" class="amz-dept-pill" data-category="creator-studio" data-i18n="creator_studio">Creator Studio</button>
+    </nav>
 
     <section class="amazon-layout">
       <aside class="panel refine-panel">
         <div class="panel-head">
-          <h2>Refine Results</h2>
-          <p>Amazon style filters</p>
+          <h2 data-i18n="filter_by">Refine Results</h2>
+          <p data-i18n="amazon_style_filters">ElectroMart Filters</p>
         </div>
 
         <section class="filters" aria-label="Filter deals">
           <div class="filter-block">
-            <h3>Brand</h3>
+            <h3 data-i18n="brands">Brand</h3>
             <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
               <p class="brand-filter-empty">Loading brands...</p>
             </div>
           </div>
           <div class="filter-block">
-            <h3>Price Range</h3>
+            <h3 data-i18n="price">Price Range</h3>
             <select id="priceRangeFilter" aria-label="Filter by price range">
-              <option value="all">All</option>
-              <option value="0-499">Under ₹500</option>
-              <option value="500-999">₹500 - ₹999</option>
-              <option value="1000-1999">₹1000 - ₹1999</option>
-              <option value="2000-4999">₹2000 - ₹4999</option>
-              <option value="5000-9999">₹5000 - ₹9999</option>
-              <option value="10000-999999">₹10000 & Above</option>
+              <option value="all" data-i18n="all_option">All</option>
+              <option value="0-499" data-i18n="under_500">Under ₹500</option>
+              <option value="500-999" data-i18n="price_500_999">₹500 - ₹999</option>
+              <option value="1000-1999" data-i18n="price_1000_1999">₹1000 - ₹1999</option>
+              <option value="2000-4999" data-i18n="price_2000_4999">₹2000 - ₹4999</option>
+              <option value="5000-9999" data-i18n="price_5000_9999">₹5000 - ₹9999</option>
+              <option value="10000-999999" data-i18n="price_10000_above">₹10000 & Above</option>
             </select>
           </div>
           <div class="filter-block">
-            <h3>Discount</h3>
+            <h3 data-i18n="discount">Discount</h3>
             <select id="discountFilter" aria-label="Filter by discount">
-              <option value="all">All</option>
-              <option value="10">10% or more</option>
-              <option value="20">20% or more</option>
-              <option value="30">30% or more</option>
-              <option value="40">40% or more</option>
-              <option value="50">50% or more</option>
+              <option value="all" data-i18n="all_option">All</option>
+              <option value="10" data-i18n="discount_10_more">10% or more</option>
+              <option value="20" data-i18n="discount_20_more">20% or more</option>
+              <option value="30" data-i18n="discount_30_more">30% or more</option>
+              <option value="40" data-i18n="discount_40_more">40% or more</option>
+              <option value="50" data-i18n="discount_50_more">50% or more</option>
             </select>
           </div>
           <select id="categoryFilter" aria-label="Filter category">
-            <option value="all">All Categories</option>
-            <option value="laptop">Laptops</option>
-            <option value="mobile">Mobiles</option>
-            <option value="audio">Audio</option>
-            <option value="accessory">Accessories</option>
+            <option value="all" data-i18n="all_categories">All Categories</option>
+            <option value="laptop" data-i18n="laptops">Laptops</option>
+            <option value="mobile" data-i18n="mobiles">Mobiles</option>
+            <option value="audio" data-i18n="audio_headphones">Audio</option>
+            <option value="accessory" data-i18n="accessories">Accessories</option>
           </select>
           <select id="sortFilter" aria-label="Sort deals">
-            <option value="relevance">Sort: Relevance</option>
-            <option value="discount_desc">Highest Discount</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
+            <option value="relevance" data-i18n="sort_relevance">Sort: Relevance</option>
+            <option value="discount_desc" data-i18n="sort_highest_discount">Highest Discount</option>
+            <option value="price_asc" data-i18n="price_low_high">Price: Low to High</option>
+            <option value="price_desc" data-i18n="price_high_low">Price: High to Low</option>
           </select>
         </section>
 
         <div class="rail-block promo-block">
-          <h3>Deal Tip</h3>
-          <p>Open product details and checkout quickly before stock runs out.</p>
+          <h3 data-i18n="deal_tip_title">Deal Tip</h3>
+          <p data-i18n="deal_tip_desc">Open product details and checkout quickly before stock runs out.</p>
         </div>
       </aside>
 
       <section class="panel result-panel">
         <div class="panel-head">
-          <h2>Best Deals Today</h2>
+          <h2 data-i18n="best_deals_today">Best Deals Today</h2>
           <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 deals</p>
         </div>
-        <p class="result-note">Limited-time pricing updates daily.</p>
+        <p class="result-note" data-i18n="limited_time_pricing_note">Limited-time pricing updates daily.</p>
+        
+        <!-- Deal Type Quick Filter Pills -->
+        <div class="amz-deal-types-bar" id="dealTypeBar">
+          <button type="button" class="amz-deal-type-pill active" data-type="all" data-deal-type="all" data-i18n="all_deals">All Deals</button>
+          <button type="button" class="amz-deal-type-pill" data-type="dotd" data-deal-type="dotd" data-i18n="deal_of_the_day">Deal of the Day</button>
+          <button type="button" class="amz-deal-type-pill" data-type="lightning" data-deal-type="lightning" data-i18n="lightning_deals">Lightning Deals</button>
+          <button type="button" class="amz-deal-type-pill" data-type="under500" data-deal-type="under500" data-i18n="under_500_deals">Under ₹500</button>
+          <button type="button" class="amz-deal-type-pill" data-type="halfprice" data-deal-type="fifty_plus" data-i18n="half_price_deals">50% Off or More</button>
+        </div>
+
+        <!-- Phase 22: Deal Status Sub-Tabs (Live Now, Upcoming Drops, Waitlist Available) -->
+        <div class="amz-deal-status-tabs" id="dealStatusTabs" role="tablist" aria-label="Deal status navigation">
+          <button type="button" class="amz-deal-status-tab active" data-status="live" role="tab" aria-selected="true">
+            <span class="status-indicator live-dot"></span>
+            <span data-i18n="live_now">Live Now</span>
+            <span class="amz-tab-count" id="liveDealsCount">(6)</span>
+          </button>
+          <button type="button" class="amz-deal-status-tab" data-status="upcoming" role="tab" aria-selected="false">
+            <span class="status-indicator upcoming-dot"></span>
+            <span data-i18n="upcoming_drops">Upcoming Drops</span>
+            <span class="amz-tab-count" id="upcomingDealsCount">(3)</span>
+          </button>
+          <button type="button" class="amz-deal-status-tab" data-status="waitlist" role="tab" aria-selected="false">
+            <span class="status-indicator waitlist-dot"></span>
+            <span data-i18n="waitlist_deals">Waitlist Available</span>
+            <span class="amz-tab-count" id="waitlistDealsCount">(1)</span>
+          </button>
+        </div>
+
+        <!-- Lightning Drops Schedule Timeline -->
+        <div class="amz-drops-schedule" id="lightningDropsSchedule" style="display: none;">
+          <span class="drops-schedule-label" data-i18n="drops_schedule_title">⏰ Drop Time:</span>
+          <div class="drops-schedule-pills" id="dropsSchedulePills" style="display: inline-flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="amz-drop-pill active" data-slot="all" data-i18n="all_drops">All Drops</button>
+            <button type="button" class="amz-drop-pill" data-slot="1h" data-i18n="next_1_hour">Next 1 Hour</button>
+            <button type="button" class="amz-drop-pill" data-slot="3h" data-i18n="next_3_hours">Next 3 Hours</button>
+            <button type="button" class="amz-drop-pill" data-slot="tomorrow" data-i18n="tomorrows_drops">Tomorrow's Drops</button>
+          </div>
+        </div>
+
+        <!-- Featured Deal Spotlight Banner -->
+        <div id="dealsSpotlightBanner"></div>
+
         <div id="dealsGrid" class="deals-grid"></div>
+
+        <!-- Floating Feedback Toast Notification -->
+        <div id="dealToastContainer" class="deal-toast-container" aria-live="polite"></div>
       </section>
     </section>
   </main>
 
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
   <script src="listing-filter-chips.js?v=20260314a"></script>
   <script src="todays-deals.js?v=20260315d"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
-  <script src="header.js"></script>
 </body>
 </html>
-
-
-
-
-
