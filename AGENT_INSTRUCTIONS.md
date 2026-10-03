@@ -61,18 +61,18 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (73 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (75 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 73 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 40 ElectroMart Student & Educator Campus Store और सभी regression/guardrail सूट्स शामिल हैं।)*
+*(सभी 75 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 40 ElectroMart Student & Educator Campus Store, desktops.html UI पॉलिश, Stage 1 static-server compression/caching परफॉरमेंस टेस्ट (`test-static-server-perf.js`) और सभी regression/guardrail सूट्स शामिल हैं।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
+### 2. बैकएंड यूनिट टेस्ट्स (105 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 74 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 147 / 147 टेस्ट उत्तीर्ण है।)*
+*(सभी 105 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 180 / 180 टेस्ट उत्तीर्ण है।)*
 
 ---
 
@@ -153,6 +153,7 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 38:** ElectroMart Launchpad & Innovative Tech Hub (`launchpad.html`, `launchpad.css`, `launchpad.js`, `product-detail.html`, `product-detail.js`, `product-detail.css`, `header.html`, `header.js`, `sitemap.xml`): उभरते भारतीय हार्डवेयर स्टार्टअप्स के लिए शोकेस, नामांकित ऑफर IDs, INR pricing/MRP/early-bird reservation flow, funding progress, category filters, product details modal, सुरक्षित application persistence, 11 भाषाएं और deterministic PDP callout; 71/71 frontend suites तथा 74/74 backend unit tests PASS।
 - **चरण 39:** ElectroMart Gaming & eSports Arena (`gaming.html`, `gaming.css`, `gaming.js`, `product-detail.html`, `product-detail.js`, `product-detail.css`): dark cyber/neon arena थीम, कस्टम रिग कॉन्फ़िग्युरेटर (CPU/GPU/RAM/storage/resolution), deterministic FPS अनुमानक (`window.ElectroMart.Gaming.calculateFpsEstimate`), ई-स्पोर्ट्स व क्रिएटर स्पॉन्सरशिप पोर्टल (bounded local persistence), namespaced `gaming-rig-*`/`gaming-gear-*` कार्ट इंटीग्रेशन, deterministic PDP callout, 11 भाषाएं; `scratch/test-amazon-gaming-arena.js` PASS (8/8), 73/73 frontend suites तथा 74/74 backend unit tests PASS (147/147 total)।
 - **चरण 40:** ElectroMart Student & Educator Campus Store (`edu-store.html`, `edu-store.css`, `edu-store.js`, `product-detail.html`, `product-detail.js`): midnight lecture-hall थीम, deterministic local student eligibility check (`.ac.in` domain + honesty disclaimer), सेमेस्टर कोर्स मटीरियल ग्रिड, deterministic discount estimator (`calculateStudentDiscount`/`calculateStudentPrice`), validated faculty course lists (`buildFacultyList`) विथ 1-क्लिक `edu-faculty-*` कार्ट इंटीग्रेशन, deterministic PDP callout, 11 भाषाएं (165 base keys); `scratch/test-amazon-edu-store.js` PASS (9/9), 73/73 frontend suites तथा 74/74 backend unit tests PASS (147/147 total)।
+- **desktops.html UI पॉलिश (Quick Fix):** Amazon-स्टाइल पॉलिश (`desktops.css`, `scratch/test-desktops-ui.js`): रिस्पॉन्सिव प्रोडक्ट ग्रिड 4/3/2/1 कॉलम (base / ≤1020 / ≤640 / ≤420), स्लिम hero पैडिंग, JS-रेंडर्ड कार्ड क्लासेस `.desktop-add-btn` (एम्बर pill, `cursor: pointer`) व `.current-price` (बोल्ड, प्रमुख प्राइस) को पेज-स्कोप्ड Amazon स्टाइल, ब्रांड-सेफ्टी व कैटलॉग इंटीग्रेशन अनलॉक्ड; TDD वर्कफ़्लो (पहले फेलिंग टेस्ट), `scratch/test-desktops-ui.js` PASS (6/6), 74/74 frontend suites तथा 74/74 backend unit tests PASS (148/148 total)।
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य third-party marketplace टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):

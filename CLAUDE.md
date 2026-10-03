@@ -2,6 +2,8 @@
 
 > **CRITICAL INSTRUCTIONS FOR ALL AI AGENTS (Claude, Copilot, Cursor, Windsurf, Antigravity, ChatGPT, etc.)**
 > You MUST read and strictly adhere to these rules before taking any action in this repository.
+>
+> **Canonical source:** The full, up-to-date manual (architecture, Phase 1–40 roadmap, and Universal Agent Rules) lives in **`AGENT_INSTRUCTIONS.md`**; current status/test-metrics in **`PROJECT_STATUS.md`**. The rules below are a concise operational quick-reference and are fully consolidated in `AGENT_INSTRUCTIONS.md` §"Universal Agent Rules".
 
 ---
 

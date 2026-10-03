@@ -1,41 +1,37 @@
 # ElectroMart — AI Agent Guidelines & Architecture Manual (AI एजेंट दिशा-निर्देश)
 
+> [!NOTE]
+> **Canonical source:** यह फ़ाइल एक संक्षिप्त प्रवेश-बिंदु (concise entry-point) है। पूर्ण और अद्यतन मैनुअल (विस्तृत आर्किटेक्चर, Phase 1–40 रोडमैप, और Universal Agent Rules) के लिए **`AGENT_INSTRUCTIONS.md`** पढ़ें। वर्तमान स्थिति और टेस्ट-मेट्रिक्स के लिए **`PROJECT_STATUS.md`** देखें।
+
 > [!IMPORTANT]
 > **सभी AI एजेंट्स (VS Code, Claude, Copilot, Antigravity) के लिए अनिवार्य नियम:**
-> 1. ElectroMart एक पूर्ण ई-कॉमर्स प्लेटफ़ॉर्म है जो **Amazon India UI/UX लेआउट** और **11 भारतीय भाषाओं (i18n)** पर आधारित है।
-> 2. **सख्त ब्रांड व कानूनी सुरक्षा नियम (Strict Legal & Brand Safety Rule):** लेआउट और स्टाइलिंग Amazon जैसी होगी, परंतु वेबसाइट (`electromart.in`) पर **"Amazon" या "अमेज़न"** नाम का उल्लेख किसी भी विज़िबल टेक्स्ट, बैज, डिक्शनरी या विवरण में **पूर्णतः वर्जित (Strictly Prohibited)** है। वेबसाइट का नाम केवल और केवल **ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट)** है।
-> 3. किसी भी नए फीचर को जोड़ने या बग फिक्स करने से पहले इस दस्तावेज़ को पूरा पढ़ें ताकि पिछला कोई भी काम प्रभावित न हो।
+> 1. ElectroMart एक पूर्ण ई-कॉमर्स प्लेटफ़ॉर्म है जो परिचित भारतीय marketplace UX patterns और **11 भारतीय भाषाओं (i18n)** पर आधारित है।
+> 2. **सख्त ब्रांड व कानूनी सुरक्षा नियम (Strict Legal & Brand Safety Rule):** वेबसाइट (`electromart.in`) के किसी भी customer-facing text, badge, dictionary value, alt/title/placeholder/aria label, tooltip या generated label में किसी third-party marketplace का नाम **पूर्णतः वर्जित (Strictly Prohibited)** है। वेबसाइट का नाम केवल और केवल **ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट)** है।
+> 3. **आंतरिक पहचानकर्ता सुरक्षित रखें:** legacy CSS क्लासें (उदा. `.amazon-layout`, `.amazon-price-block`, `.ac-badge-pill`) और आंतरिक DOM IDs (उदा. `#amazonsChoiceBadge`, `#amazonAccountGrid`) को **न बदलें** — स्टाइलशीट्स और regression टेस्ट उन पर निर्भर हैं। केवल दिखने वाला टेक्स्ट ElectroMart होना चाहिए।
+> 4. किसी भी नए फीचर या बग-फिक्स से पहले `AGENT_INSTRUCTIONS.md` पूरा पढ़ें, ताकि पिछला कोई भी काम प्रभावित न हो।
 
 ---
 
 ## 1. प्रोजेक्ट आर्किटेक्चर (Core Architecture Overview)
 
-### A. डेटा इंजन (Data Engine & Products Catalog)
-- **751 इलेक्ट्रॉनिक्स उत्पाद:** पूरा कैटलॉग दो जगह सिंक्रोनाइज़ रहता है:
-  1. `products-data.js` (`window.EM_CATALOG` और `window.EM_CATALOG_MAP`) — फ्रंटएंड के लिए हाई-स्पीड इन-मेमोरी कैटलॉग।
+- **डेटा इंजन (Data Engine):** 751 इलेक्ट्रॉनिक्स उत्पाद दो जगह सिंक्रोनाइज़ रहते हैं —
+  1. `products-data.js` (`window.EM_CATALOG` और `window.EM_CATALOG_MAP`) — फ्रंटएंड के लिए हाई-स्पीड इन-मेमरी कैटलॉग।
   2. `backend/src/data/db.json` — बैकएंड REST API डेटाबेस।
-- **मूल्य निर्धारण (Pricing Convention):**
-  - सभी कीमतें **भारतीय रुपयों (₹ INR)** में हैं (जैसे ₹1,399, ₹1,713)।
-  - किसी भी एक्सेसरी या प्रोडक्ट की कीमत को मनमाने ढंग से पैसे (paise) या 100 से गुणा/भाग न करें।
-
-### B. अनुवाद इंजन (Multilingual 11-Language i18n Engine)
-- **डिक्शनरी:** `translations.js` (हिंदी `hi`, तमिल `ta`, तेलुगु `te`, मराठी `mr`, बंगाली `bn`, गुजराती `gu`, कन्नड़ `kn`, मलयालम `ml`, पंजाबी `pa`, उड़िया `or`, अंग्रेजी `en`)।
-- **ट्रांसलेशन बस:** `universal-i18n-bus.js` (DOM म्यूटेशन ऑब्जर्वर जो डायनामिक एलिमेंट्स का भी रियल-टाइम अनुवाद करता है)।
-- **लोकल स्टोरेज कीज (Storage Keys):** भाषा को हमेशा दोनों कीज में एक साथ अपडेट करें:
+  सभी कीमतें **भारतीय रुपयों (₹ INR)** में हैं; किसी कीमत को मनमाने ढंग से पैसे या 100 से गुणा/भाग न करें।
+- **अनुवाद इंजन (i18n):** डिक्शनरी `translations.js` — 11 भाषाएँ `en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu`। रियल-टाइम अनुवाद बस `universal-i18n-bus.js`। भाषा हमेशा दोनों storage keys में एक साथ लिखें:
   ```javascript
   localStorage.setItem("electromart_lang_v1", lang);
   localStorage.setItem("electromart_lang", lang);
   ```
-
-### C. बैकएंड और पोर्ट्स (Backend & Ports)
-- **बैकएंड API:** Node.js Express (Port `4000`)
-- **लाइव फ्रंटएंड:** Live Server / Static (Port `5500`)
+- **बैकएंड और पोर्ट्स:** Backend API (Node.js/Express) पोर्ट `4000` (`http://127.0.0.1:4000/api`); Frontend static server `qa-static-server.js` पोर्ट `5500` (`http://127.0.0.1:5500/index.html`)।
+- **एकमात्र लॉन्च (Single canonical launch):** `npm start` (= `node launch-electromart.js`), जो बैकएंड (4000) और फ्रंटएंड (5500) दोनों चलाता है। नया launcher, alternate server, duplicate `index.html`, git worktree या parallel project folder बनाना **निषिध** है। केवल इसी repo root में काम करें: `C:\Users\Admin\Documents\GitHub\Electronic-Store`।
 
 ---
 
 ## 2. स्क्रिप्ट लोडिंग का अनिवार्य क्रम (Script Loading Rule)
 
-प्रत्येक HTML पेज में स्क्रिप्ट्स का क्रम हमेशा इसी क्रम में होना चाहिए:
+प्रत्येक HTML पेज में स्क्रिप्ट्स हमेशा इसी क्रम में हों, और सभी `<script>` टैग `</body>` के अंदर रहें:
+
 ```html
   <!-- 1. बहुभाषी डिक्शनरी -->
   <script src="translations.js"></script>
@@ -43,90 +39,54 @@
   <script src="products-data.js"></script>
   <!-- 3. रियल-टाइम अनुवाद बस -->
   <script src="universal-i18n-bus.js"></script>
-  <!-- 4. अमेज़न ग्लोबल हेडर -->
+  <!-- 4. ग्लोबल हेडर और साझा निर्भरताएँ -->
   <script src="header.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js"></script>
-  <!-- 5. इसके बाद ही पेज की मुख्य स्क्रिप्ट लगाएं (उदा. cart.js, orders.js आदि) -->
+  <!-- 5. इसके बाद ही पेज की मुख्य स्क्रिप्ट (उदा. cart.js, orders.js) -->
   <script src="page-specific.js"></script>
 </body>
 </html>
 ```
-*(ध्यान दें: कोई भी `<script>` टैग `</body>` के बाहर न लगाएं।)*
 
 ---
 
 ## 3. अनिवार्य प्री-फ्लाइट और पोस्ट-एडिट टेस्ट (Pre-flight & Post-edit Checklist)
 
-किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
+किसी भी फाइल में बदलाव करने से **पहले और बाद में** दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (35 Test Suites):
 ```bash
-node scratch/run_all_tests.js
+node scratch/run_all_tests.js          # फ्रंटएंड व i18n: सभी 75 टेस्ट सूट्स PASS होने चाहिए
+cd backend && npm run test:unit        # बैकएंड यूनिट: सभी 105 टेस्ट PASS होने चाहिए
 ```
-*(सभी 35 टेस्ट सूट्स PASS होने चाहिए, जिसमें 35वां सूट लीगल ब्रांड सेफ्टी गार्डरेल है।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (74 Unit Tests):
-```bash
-cd backend
-npm run test:unit
-```
-*(सभी 74 टेस्ट PASS होने चाहिए।)*
+- वर्तमान लक्ष्य: **75 frontend suites + 105 backend unit tests = 180 / 180 (100%)**।
+- **TDD अपनाएँ:** हर नए फीचर के लिए पहले एक focused failing टेस्ट लिखें, फिर implement करें, फिर focused टेस्ट और दोनों regression suites हरे करें।
+- काम तब तक पूरा नहीं माना जाएगा जब तक focused suite और दोनों regression suites PASS न हों (या blocker स्पष्ट रूप से दर्ज न हो)।
 
 ---
 
-## 4. अमेज़न इंडिया डिज़ाइन नियम (Amazon India Theme Principles)
-> [!CAUTION]
-> **ब्रांडिंग एवं ट्रेडमार्क सुरक्षा का सख्त नियम (Strict Brand Compliance Rule):**
-> - लेआउट, UI/UX, कलर पैलेट और कार्यप्रणाली **Amazon India स्टाइल** की तरह होगी, लेकिन वेबसाइट पर **"Amazon" या "अमेज़न"** नाम का उल्लेख किसी भी दृश्य (User-Visible) टेक्स्ट, बटन, बैज, डिक्शनरी या विवरण में **कदापि नहीं होना चाहिए**।
-> - वेबसाइट का नाम केवल और केवल **ElectroMart / electromart.in / इलेक्ट्रोमार्ट** है।
-> - उदाहरण: "Amazon's Choice" के स्थान पर हमेशा **"ElectroMart's Choice" (इलेक्ट्रोमार्ट चॉइस)** होगा।
-> - "Amazon style filters" के स्थान पर हमेशा **"ElectroMart Filters" (इलेक्ट्रोमार्ट फ़िल्टर)** होगा।
-> - किसी भी नए कोड, कंपोनेंट या अनुवाद में Amazon ब्रांड नाम का प्रयोग वर्जित है।
+## 4. ब्रांड एवं डिज़ाइन अनुपालन (Brand & Design Compliance)
 
-1. **कीमत ब्लॉक (Price Block):**
-   - बड़ा लाल डिस्काउंट प्रतिशत (उदा. `-18%`, रंग: `#cc0c39`, फ़ॉन्ट: 28px)।
-   - मुख्य कीमत के ऊपर या साथ में `M.R.P.: ₹...` और `सभी टैक्स सहित (Inclusive of all taxes)`.
-   - लाइटनिंग डील पिल: लाल बैकग्राउंड `#cc0c39` के साथ सफेद टेक्स्ट।
-2. **ब्रांड लिंक:** `HP स्टोर पर जाएं` (बिना किसी कोलन `:` के)।
-3. **सर्च बार:**
-   - बाईं ओर "All ▾" श्रेणी चयनकर्ता ड्रॉपडाउन (`.nav-search-facade-wrap`).
-   - सर्च इनपुट बॉक्स (`#navSearchInput`) का अलग व स्वतंत्र क्लिक/होवर क्षेत्र।
-   - दाईं ओर प्रामाणिक अमेज़न येलो/ऑरेंज सर्च लेंस बटन (`#navSearchBtn`).
-   - ऑटो-सजेस्ट ड्रॉपडाउन में कीवर्ड हाइलाइटिंग और `See all results for "query"` लिंक।
-4. **बाय बॉक्स (Buy Box):**
-   - गतिशील फ्री डिलीवरी और टाइमर काउंटडाउन ("Order within X hrs Y mins")।
-   - अमेज़न येलो `Add to Cart` (`#ffd814`) और अमेज़न ऑरेंज `Buy Now` (`#ffa41c`) 20px पिल बटन।
-5. **हैमबर्गर मेन्यू:** उप-श्रेणी शुद्ध हिंदी में सक्रिय और बैक बटन के साथ।
+> [!CAUTION]
+> - Layout, UX, pricing hierarchy और interaction patterns मौजूदा ElectroMart conventions के अनुरूप रखें।
+> - Website, translations और नए documentation में केवल **ElectroMart / electromart.in / इलेक्ट्रोमार्ट** branding रखें; किसी third-party marketplace का नाम customer-facing output में न जोड़ें।
+> - Badge हमेशा **"ElectroMart's Choice"**, filters हमेशा **"ElectroMart Filters"**।
+> - पूरा होने से पहले `scratch/test-brand-safety-and-legal-compliance.js` चलाएँ — कोई भी customer-visible third-party marketplace reference एक release blocker है।
+> - विस्तृत डिज़ाइन-नियम (price block, buy box, search bar आदि) `AGENT_INSTRUCTIONS.md` सेक्शन 4 में हैं।
 
 ---
 
 ## 5. कार्य समाप्ति चेकपॉइंट (Work Done Checkpoint)
-जब आपका काम पूरा हो जाए और सभी टेस्ट पास हो जाएं, तो बदलावों को सुरक्षित रखने के लिए Git Commit अवश्य बनाएं:
+
+जब काम पूरा हो और सभी टेस्ट पास हो जाएं, तो बदलाव सुरक्षित रखने के लिए Git commit बनाएं:
+
 ```bash
-git add .
+git add <specific-files>
 git commit -m "feat(scope): your descriptive commit message"
 ```
 
 ---
 
-## 6. पूर्ण हो चुके चरण और आगामी रोडमैप (Handover Roadmap)
-
-### A. पूर्ण हो चुके चरण (Phases 1-8 Completed):
-- **चरण 1:** Shopping Cart Upgrade (`cart.html`, `cart.js`)
-- **चरण 2:** Products Listing & Faceting (`products.html`, `products.js`)
-- **चरण 3:** Homepage & Quad Overlap Cards (`index.html`, `homepage-products.js`)
-- **चरण 4:** Accordion Checkout 3-Step Flow (`checkout.html`, `checkout.js`)
-- **चरण 5:** Your Orders & Tracking Hub (`orders.html`, `orders.js`)
-- **चरण 6:** Product Detail Page (PDP) Suite (`product-detail.html`, `product-detail.js`)
-- **चरण 7:** Your Account 8-Tile Navigation Hub (`account.html`, `account.js`)
-- **चरण 8:** Wishlist Hub (`wishlist.html`, `wishlist.js`, `wishlist.css`): 2-कॉलम लेआउट, मल्टी-लिस्ट, पब्लिक/प्राइवेट टॉगल, प्राइस ड्रॉप अलर्ट, 1-क्लिक Move to Cart।
-- **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य Amazon टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`).
-
-### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **चरण 9 (Auth Flow - `auth.html`):** अमेज़न इंडिया स्टाइल सेंटर्ड कार्ड (`#authCard`), इंडिया मोबाइल `+91` प्रीफ़िक्स, क्लीन हेल्प अकॉर्डियन।
-- **चरण 10 (Header Location / Pincode Modal):** हेडर में "Deliver to [City] [Pincode]" पर क्लिक करने पर अमेज़न स्टाइल पिनकोड सेलेक्टर मोडल।
-- **चरण 11 (Deals & Best Sellers Grids - `todays-deals.html`, `best-sellers.html`):** डिपार्टमेंट पिल्स (Electronics, Accessories आदि) और Deal of the Day फीचर्ड ग्रिड।
-- **चरण 12 (Seller / Store Admin - `admin-dashboard.html`):** Seller Central स्टाइल डार्क-नेवी डैशबोर्ड और ऑपरेशंस व्यू।
-
+**पूर्ण मैनुअल व Universal Agent Rules:** `AGENT_INSTRUCTIONS.md` · **स्थिति व टेस्ट-मेट्रिक्स:** `PROJECT_STATUS.md` · **संचालन नियम (forbidden actions):** `CLAUDE.md`
