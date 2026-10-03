@@ -5,7 +5,7 @@
 
 (function () {
   function applyGlobalThemeTranslation() {
-    const lang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     const dict = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[lang]) ? window.EM_TRANSLATIONS[lang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
     // 1. All elements with data-i18n
