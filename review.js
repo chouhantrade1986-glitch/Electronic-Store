@@ -32,7 +32,7 @@ let uploadedImages = [];
  * Translation helper
  */
 function getTranslation(key, fallback) {
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   if (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang] && window.EM_TRANSLATIONS[currentLang][key]) {
     return window.EM_TRANSLATIONS[currentLang][key];
   }

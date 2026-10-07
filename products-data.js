@@ -743,7 +743,7 @@
 
   // Universal Field Localizer
   function getLocalizedField(item, fieldName, targetLang) {
-    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     if (!item) return "";
 
     let targetItem = item;
@@ -785,7 +785,7 @@
   }
 
   function getLocalizedSpecs(product, targetLang) {
-    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     if (!product) return [];
 
     let targetItem = product;
@@ -807,7 +807,7 @@
   }
 
   function getLocalizedCategory(catKey, targetLang) {
-    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     const key = String(catKey || "").toLowerCase().trim();
     if (CATEGORY_NAMES[key] && CATEGORY_NAMES[key][lang]) {
       return CATEGORY_NAMES[key][lang];

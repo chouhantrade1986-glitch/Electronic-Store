@@ -10142,7 +10142,7 @@ const AMAZON_COMPARE_HUB_I18N = {
 
   // Universal Field & Title Helpers for Full Parity
   window.getLocalizedField = window.getLocalizedField || function(item, fieldName, targetLang) {
-    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     if (!item) return "";
     const id = String(item.id || "").trim();
     const name = String(item.name || item.title || "").trim().toLowerCase();
@@ -10170,7 +10170,7 @@ const AMAZON_COMPARE_HUB_I18N = {
   };
 
   window.getLocalizedSpecs = window.getLocalizedSpecs || function(product, targetLang) {
-    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const lang = targetLang || localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
     if (!product) return [];
     let target = product;
     const id = String(product.id || "").trim();

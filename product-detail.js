@@ -396,7 +396,7 @@ if (typeof window !== "undefined" && typeof window.addEventListener === "functio
 
 function renderAmazonPrice(product, priceVal, listPriceVal, discountVal, trans) {
   if (!product) return;
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = trans || ((window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {});
   
   const price = priceVal != null ? Number(priceVal) : Number(product.price || 0);
@@ -530,7 +530,7 @@ function renderOffers(price, listPrice, category) {
   if (!offersBlock || !offersGrid) {
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const savings = Math.max(0, Number(listPrice) - Number(price));
   const offers = [
@@ -581,7 +581,7 @@ function renderServices(product, isInStock) {
   if (!servicesBlock || !serviceDeliveryText || !serviceReturnText || !serviceWarrantyText || !serviceSellerText) {
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const categoryFamily = getProductCategoryFamily(product);
 
@@ -619,7 +619,7 @@ function renderReviewSummary(product) {
   if (!reviewsBlock || !reviewHeadline || !reviewBars) {
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
   const writeReviewBtn = document.querySelector(".amazon-btn-write-review");
@@ -881,7 +881,7 @@ function renderQa(product) {
   if (!qaBlock || !qaList) {
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
   // Load community Q&A from localStorage
@@ -1478,7 +1478,7 @@ function syncWishlistButton(productId) {
   if (!targetWishlistBtn) {
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const active = isWishlisted(productId);
   targetWishlistBtn.classList.toggle("active", active);
@@ -2380,7 +2380,7 @@ function renderRelatedProducts(items) {
     relatedBlock.hidden = true;
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   relatedGrid.innerHTML = items.map((item) => {
     const locTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(item, currentLang) : (item.title || item.name || "")).trim();
     return `
@@ -2438,7 +2438,7 @@ async function hydrateRelatedProducts(product) {
 }
 
 function renderProductInfoTable(product, stockCount, categoryFamily, price, listPrice) {
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
   const statusUpper = String(product.status || "active").toUpperCase();
@@ -2537,7 +2537,7 @@ function renderFrequentlyBoughtTogether(product, t) {
     container.hidden = true;
     return;
   }
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const mainTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : product.name).trim();
   const bundleItemTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(bundleItem, currentLang) : bundleItem.name).trim();
   const total = Number(product.price || 0) + Number(bundleItem.price || 0);
@@ -3224,7 +3224,7 @@ window.openExchangeModal = openExchangeModal;
 // ==========================================
 function renderPdpRenewedAlternative(product, currentPrice) {
   if (!product) return;
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
   const params = new URLSearchParams(window.location.search);
@@ -3364,7 +3364,7 @@ window.renderProtectionAddon = renderProtectionAddon;
 
 let activeRenderedProduct = null;
 function renderProductHeader(product) {
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const localizedTitle = (window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : (product.title || product.name || "")).trim();
   const titleEl = document.getElementById("productName") || document.getElementById("productTitle") || document.querySelector("h2.product-title") || document.querySelector("h1.product-title");
   if (titleEl) titleEl.textContent = localizedTitle;
@@ -3378,7 +3378,7 @@ function renderProductHeader(product) {
 window.renderProductHeader = renderProductHeader;
 function renderProduct(product) {
   activeRenderedProduct = product;
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
   currentProductRecord = product;
   cacheCatalogProduct(product);
@@ -3684,7 +3684,7 @@ function renderStarCharacters(rating) {
 }
 
 function localizeBatterySpecs() {
-  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
   if (currentLang !== "hi") return;
   const specTranslations = [
     { en: /Capacity:\s*/gi, hi: "क्षमता: " },
@@ -3902,7 +3902,7 @@ addToCartBtn.addEventListener("click", () => {
     }
     addProductToCart(productId, addQty);
 
-    const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
+    const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
     const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
     const origText = addToCartBtn.textContent;
     addToCartBtn.classList.add("btn-added");
@@ -4082,7 +4082,7 @@ window.renderProductDetailPage = function(prod) {
 
 // 1. Global Language State Auto-Read on Page Load
 document.addEventListener("DOMContentLoaded", () => {
-  const currentLang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+  const currentLang = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en";
   if (typeof applyFullPageTranslation === "function") {
     applyFullPageTranslation(currentLang);
   }
