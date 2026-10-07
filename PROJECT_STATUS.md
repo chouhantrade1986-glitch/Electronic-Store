@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 2 अक्टूबर 2026 (टेस्ट-काउंट सिंक — 75 frontend suites + 105 backend unit tests = 180 total; Stage 1 static-server compression/caching और SQLite busy_timeout हार्डनिंग शामिल)
+**अंतिम अद्यतन (Last Updated):** 7 अक्टूबर 2026 (Phase 41 ElectroMart B2B Corporate Bulk Trade-In Hub Completed; 76 frontend suites + 105 backend unit tests = 181 total)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 75 / 75 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 76 / 76 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
 | **कैम्पस स्टोर टेस्ट** | `node scratch/test-amazon-edu-store.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
 | **गेमिंग व ई-स्पोर्ट्स एरेना टेस्ट** | `node scratch/test-amazon-gaming-arena.js` | ✅ **PASS** | 8 / 8 स्तर उत्तीर्ण (100%) |
 | **लॉन्चपैड व इनोवेटिव टेक हब टेस्ट** | `node scratch/test-amazon-launchpad-hub.js` | ✅ **PASS** | 7 / 7 स्तर उत्तीर्ण (100%) |
@@ -35,7 +36,7 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 105 / 105 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **180 / 180 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **181 / 181 (100% Pass Rate)** |
 
 ---
 
@@ -535,10 +536,25 @@
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
 - **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-edu-store.js` PASS (9/9), 73/73 frontend suites PASS, 74/74 backend unit tests PASS (147/147 total)।
 
+### W. ElectroMart B2B Corporate Bulk Trade-In Hub (Phase 41 Completed)
+- **समर्पित B2B ट्रेड-इन हब (`trade-in.html`, `trade-in.css`, `trade-in.js`):** "Fleet Ledger" aesthetic (`--tradein-accent: #0F4C81`) layered on the shared storefront, with corporate navy/blueprint grid, `Archivo`/`IBM Plex Sans`/`IBM Plex Mono` typography और CSS-art fleet visuals।
+- **बल्क वैल्यूएशन इंजन:** multiple device rows (category, brand, model, quantity, fleet condition grade) → live total estimated value + per-device breakdown; volume-tier uplift (20/50/100 units); deterministic (hash-derived, no randomness)।
+- **GST क्रेडिट कैलकुलेटर:** trade-in value × 18% GST = ITC credit amount; corporate entity type; deterministic।
+- **कॉर्पोरेट टैक्स सेविंग्स कैलकुलेटर:** Section 32/35AD depreciation benefit estimation (trade-in value × corporate tax rate 25% × depreciation rate 40%); deterministic।
+- **ऑन-साइट बल्क पिकअप बुकिंग:** date, time slot, address, device count, contact person/phone → booking ID `EM-TI-XXXXXX` (FNV-1a hash), confirmed date/time, stored in `electromart_tradein_pickup_bookings_v1`।
+- **एंटरप्राइज़ क्रेडिट वाउचर:** two types — `business_account_balance` (ElectroMart Business Account credit) या `credit_note` (Credit Note); generates `EM-VCR-XXXXXX`, links to `businessAccountId`, 365-day expiry, stored in `electromart_tradein_vouchers_v1`; deterministic (hash-derived code); zero payable cart value with rupee face value on catalog record।
+- **कार्ट/चेकआउट इंटीग्रेशन:** voucher applies as `tradein-voucher-*` line item using `electromart_cart_v1` + `electromart_catalog_v1` convention।
+- **पीडीपी इंटीग्रेशन:** deterministic bulk trade-in callout (metadata → signal → category/price, कोई randomness नहीं) with honesty fine-print।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_TRADEIN_I18N` base (173 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-trade-in.js` PASS (13/13), 76/76 frontend suites PASS, 105/105 backend unit tests PASS (181/181 total)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
+- `<Phase-41-commit-sha>`: feat(phase-41): add ElectroMart B2B Corporate Bulk Trade-In Hub with bulk valuation, GST credit, tax savings, pickup booking, enterprise vouchers and 11-language support
+- `<Phase-41-contract-sha>`: test(phase-41): add failing B2B corporate bulk trade-in contract
 - `59e63a6`: feat(phase-40): add ElectroMart Student & Educator Campus Store with student verification, discount estimator, faculty course lists and 11-language support
 - `b6fac9c`: feat(phase-39): add ElectroMart Gaming and eSports Arena with rig configurator, deterministic FPS estimator, sponsorship portal and 11-language support
 - `9e04517`: test(phase-40): add failing student and educator campus store contract

@@ -5,6 +5,7 @@ const BACK_IN_STOCK_REQUESTS_STORAGE_KEY = "electromart_back_in_stock_requests_v
 const WISHLIST_STORAGE_KEY = "electromart_wishlist_v1";
 const COMPARE_STORAGE_KEY = "electromart_compare_v1";
 const RECENTLY_VIEWED_STORAGE_KEY = "electromart_recently_viewed_v1";
+const PDP_EXCHANGE_IMEI_SESSION_PREFIX = "electromart_exchange_imei_v1:";
 const API_BASE_URL = (() => {
   const { protocol, hostname, port } = window.location;
   if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
@@ -2873,6 +2874,156 @@ window.calculatePdpStudentDiscount = calculatePdpStudentDiscount;
 window.renderPdpStudentDiscountCallout = renderPdpStudentDiscountCallout;
 
 // ==========================================
+// Phase 41: ElectroMart Corporate Bulk Trade-In Callout
+// ==========================================
+// The bulk trade-in hub reads the enterprise fleet ledger the user has already
+// built. The PDP only mirrors that ledger: it never invents a value, never
+// contacts a server, and the same product plus the same ledger always produces
+// the same rupee estimate.
+const PDP_TRADEIN_LEDGER_KEY = "electromart_tradein_bulk_valuation_v1";
+
+// Corporate IT asset classes the hub can value, mapped to the ledger ids it
+// uses. Anything outside these classes is simply not a bulk trade-in candidate.
+const PDP_TRADEIN_CLASS_MAP = [
+  { pattern: /\blaptop|notebook|thinkpad|latitude|probook|ideapad|macbook|ultrabook/i, category: "laptop", brand: "dell", model: "latitude-5420" },
+  { pattern: /\bmonitor|display|panel|\bscreen\b.*\b(19|22|24|27)\b/i, category: "monitor", brand: "dell", model: "p2422h" },
+  { pattern: /\bdesktop|tower|workstation|all-?in-?one|mini-?pc/i, category: "desktop", brand: "hp", model: "pro-tower-280" },
+  { pattern: /\bprinter|scanner|multifunction|mfp/i, category: "printer", brand: "hp", model: "laserjet-m428" },
+  { pattern: /\bups|inverter|power\s?backup|rack\s?mount/i, category: "ups", brand: "apc", model: "smart-ups-1500" }
+];
+
+const PDP_TRADEIN_CONDITION_FACTORS = [
+  { id: "excellent", factor: 0.72 },
+  { id: "good", factor: 0.62 },
+  { id: "fair", factor: 0.46 },
+  { id: "for_parts", factor: 0.22 }
+];
+
+const PDP_TRADEIN_VOLUME_TIERS = [
+  { min: 100, factor: 1.06 },
+  { min: 50, factor: 1.04 },
+  { min: 20, factor: 1.02 },
+  { min: 1, factor: 1 }
+];
+
+// Mirrors the hub's reference resolution exactly: one base value and one
+// condition factor produce one unit rate, so the PDP and the hub can never
+// quote the same asset at two different numbers.
+function getPdpTradeInAssetBase(category, brand, model) {
+  const hub = window.ElectroMart && window.ElectroMart.TradeIn;
+  if (hub && typeof hub.getAssetTable === "function") {
+    for (const entry of hub.getAssetTable()) {
+      if (entry.category !== category) continue;
+      for (const brandEntry of entry.brands) {
+        if (brandEntry.brand !== brand) continue;
+        for (const modelEntry of brandEntry.models) {
+          if (modelEntry.model === model) return Number(modelEntry.base) || 0;
+        }
+      }
+    }
+  }
+  return 0;
+}
+
+function resolveTradeInClass(product) {
+  const signal = [product.category, product.tags, product.keywords, product.name, product.title, product.description]
+    .flat(Infinity)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  for (const rule of PDP_TRADEIN_CLASS_MAP) {
+    if (rule.pattern.test(signal)) return rule;
+  }
+  return null;
+}
+
+function readTradeInLedger() {
+  try {
+    const raw = localStorage.getItem(PDP_TRADEIN_LEDGER_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((line) => line && typeof line === "object") : [];
+  } catch (error) {
+    // A blocked or corrupted store simply means "no fleet ledger yet".
+    return [];
+  }
+}
+
+// Deterministic unit value, shared with the hub's ladder.
+function calculatePdpTradeInUnitRate(category, brand, model, condition, quantity) {
+  const base = getPdpTradeInAssetBase(category, brand, model);
+  if (base <= 0) return 0;
+  const grade = PDP_TRADEIN_CONDITION_FACTORS.find((step) => step.id === condition) || PDP_TRADEIN_CONDITION_FACTORS[1];
+  const units = Math.max(1, Math.round(Number(quantity) || 1));
+  const tier = PDP_TRADEIN_VOLUME_TIERS.find((step) => units >= step.min) || PDP_TRADEIN_VOLUME_TIERS[PDP_TRADEIN_VOLUME_TIERS.length - 1];
+  return Math.round(base * grade.factor * tier.factor);
+}
+
+function renderPdpBulkTradeInCallout(product) {
+  const callout = document.getElementById("pdpBulkTradeInCallout");
+  if (!callout || !product) return;
+
+  // Only genuine corporate IT asset classes earn the callout.
+  const assetClass = resolveTradeInClass(product);
+  if (!assetClass) {
+    callout.hidden = true;
+    return;
+  }
+  callout.hidden = false;
+
+  const productId = encodeURIComponent(String(product.id || ""));
+  const hubLink = document.getElementById("pdpBulkTradeInHubLink");
+  if (hubLink) {
+    hubLink.href = productId ? `trade-in.html?productId=${productId}&class=${assetClass.category}` : "trade-in.html";
+  }
+
+  const estimateRow = document.getElementById("pdpBulkTradeInEstimate");
+  if (!estimateRow) return;
+
+  // The estimate is only shown when the user already has ledger lines on this
+  // device for the same asset class, so the PDP mirrors real work rather than
+  // advertising a number nobody entered.
+  const ledger = readTradeInLedger();
+  const relevant = ledger.filter((line) => line.category === assetClass.category);
+  if (!relevant.length) {
+    estimateRow.hidden = true;
+    return;
+  }
+
+  let totalValue = 0;
+  let totalUnits = 0;
+  for (const line of relevant) {
+    const units = Math.max(1, Math.round(Number(line.quantity) || 1));
+    const unitRate = calculatePdpTradeInUnitRate(
+      assetClass.category,
+      line.brand || assetClass.brand,
+      line.model || assetClass.model,
+      line.condition,
+      units
+    );
+    if (unitRate <= 0) continue;
+    totalValue += unitRate * units;
+    totalUnits += units;
+  }
+
+  if (totalValue <= 0) {
+    estimateRow.hidden = true;
+    return;
+  }
+
+  const valueEl = document.getElementById("pdpBulkTradeInValue");
+  const unitsEl = document.getElementById("pdpBulkTradeInUnits");
+  if (valueEl) valueEl.textContent = `₹${totalValue.toLocaleString("en-IN")}`;
+  if (unitsEl) unitsEl.textContent = `${totalUnits.toLocaleString("en-IN")} units · GST credit ₹${Math.round(totalValue * 0.18).toLocaleString("en-IN")}`;
+  estimateRow.hidden = false;
+}
+
+window.readTradeInLedger = readTradeInLedger;
+window.resolveTradeInClass = resolveTradeInClass;
+window.calculatePdpTradeInUnitRate = calculatePdpTradeInUnitRate;
+window.renderPdpBulkTradeInCallout = renderPdpBulkTradeInCallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -3045,7 +3196,7 @@ function openExchangeModal(product, currentPrice) {
   if (closeBtn) closeBtn.onclick = closeModal;
 
   if (applyBtn) {
-    applyBtn.onclick = () => {
+    applyBtn.onclick = async () => {
       const q = updateQuote();
       const imei = String(imeiInput ? imeiInput.value : "").trim();
       const isPhone = q.category === "smartphones";
@@ -3056,22 +3207,62 @@ function openExchangeModal(product, currentPrice) {
       }
       if (imeiError) imeiError.style.display = "none";
 
+      const session = readAuthSession();
+      if (!session || !session.token) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      applyBtn.disabled = true;
       try {
+        const response = await fetch(`${API_BASE_URL}/exchange/quote`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.token}`
+          },
+          body: JSON.stringify({
+            targetProductId: String(product.id),
+            category: q.category,
+            brand: q.brand,
+            modelName: q.model.name,
+            condition: {
+              power: document.querySelector('input[name="modalDiagPower"]:checked')?.value || "yes",
+              screen: screenSelect ? screenSelect.value : "flawless",
+              body: bodySelect ? bodySelect.value : "flawless"
+            }
+          })
+        });
+        const quote = await response.json().catch(() => ({}));
+        if (!response.ok || !quote.quoteId) {
+          throw new Error(quote.message || "Unable to issue an exchange quote.");
+        }
+
         const exCart = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}");
         exCart[String(product.id)] = {
           targetProductId: String(product.id),
+          quoteId: quote.quoteId,
+          discountAmount: Number(quote.discountAmount),
+          expiresAt: quote.expiresAt,
           category: q.category,
           brand: q.brand,
           modelName: q.model.name,
-          finalValue: q.finalVal,
-          imei: imei,
           timestamp: new Date().toISOString()
         };
         localStorage.setItem(PDP_EXCHANGE_STORAGE_KEY, JSON.stringify(exCart));
-      } catch (e) {}
+        sessionStorage.setItem(`${PDP_EXCHANGE_IMEI_SESSION_PREFIX}${quote.quoteId}`, imei);
+        if (quoteValEl) quoteValEl.textContent = `₹${Number(quote.discountAmount).toLocaleString("en-IN")}`;
 
-      closeModal();
-      renderPdpExchangeWidget(product, currentPrice);
+        closeModal();
+        renderPdpExchangeWidget(product, currentPrice);
+      } catch (error) {
+        if (imeiError) {
+          imeiError.textContent = error.message || "Unable to issue an exchange quote.";
+          imeiError.style.display = "block";
+        }
+      } finally {
+        applyBtn.disabled = false;
+      }
     };
   }
 
@@ -3126,15 +3317,15 @@ function renderPdpExchangeWidget(product, currentPrice) {
     buyBoxPriceEl.textContent = money(currentPrice);
   }
 
-  if (currentEx && currentEx.finalValue) {
+  if (currentEx && currentEx.quoteId && currentEx.discountAmount) {
     if (withExchangeRadio) withExchangeRadio.checked = true;
     if (noExchangeRadio) noExchangeRadio.checked = false;
     if (detailsPanel) detailsPanel.style.display = "block";
     if (unselectedState) unselectedState.style.display = "none";
     if (selectedCard) selectedCard.style.display = "block";
     if (appliedNameEl) appliedNameEl.textContent = currentEx.modelName || "Exchange Device";
-    if (appliedSavingsEl) appliedSavingsEl.textContent = "-₹" + Number(currentEx.finalValue).toLocaleString("en-IN");
-    applyDiscountedPrice(Number(currentEx.finalValue));
+    if (appliedSavingsEl) appliedSavingsEl.textContent = "-₹" + Number(currentEx.discountAmount).toLocaleString("en-IN");
+    applyDiscountedPrice(Number(currentEx.discountAmount));
   } else {
     if (noExchangeRadio) noExchangeRadio.checked = true;
     if (withExchangeRadio) withExchangeRadio.checked = false;
@@ -3169,7 +3360,7 @@ function renderPdpExchangeWidget(product, currentPrice) {
         let c = {};
         try { c = JSON.parse(localStorage.getItem(PDP_EXCHANGE_STORAGE_KEY) || "{}"); } catch (e) {}
         if (c[String(product.id)]) {
-          applyDiscountedPrice(Number(c[String(product.id)].finalValue));
+          applyDiscountedPrice(Number(c[String(product.id)].discountAmount));
         } else {
           openExchangeModal(product, currentPrice);
         }
@@ -3606,6 +3797,7 @@ function renderStarCharacters(rating) {
   renderPdpLaunchpadCallout(product);
   renderPdpGamingArenaCallout(product);
   renderPdpStudentDiscountCallout(product);
+  renderPdpBulkTradeInCallout(product);
 
   renderRecentlyViewedDetailSection();
 

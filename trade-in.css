@@ -1,0 +1,1088 @@
+/* ElectroMart B2B Corporate Bulk Trade-In Hub Styles (Phase 41) */
+/* Aesthetic: "Fleet Ledger" — a light, precise asset-disposal boardroom. Warm
+   paper ground, corporate navy authority, blueprint grid, and monospaced tabular
+   figures so every rupee total reads like a line item in a signed statement. */
+
+:root {
+  /* Corporate navy (contract token + accessible solid variants) */
+  --tradein-accent: #0F4C81;
+  --tradein-accent-strong: #0B3A63;
+  --tradein-accent-deep: #072843;
+  --tradein-accent-soft: rgba(15, 76, 129, 0.10);
+  --tradein-accent-line: rgba(15, 76, 129, 0.28);
+
+  /* Settlement green — GST credit and depreciation benefit */
+  --tradein-credit: #0F7B4F;
+  --tradein-credit-soft: rgba(15, 123, 79, 0.10);
+
+  /* Amber — estimate / advisory marker */
+  --tradein-amber: #B45309;
+  --tradein-amber-soft: rgba(180, 83, 9, 0.10);
+
+  /* Paper / ledger surface */
+  --tradein-paper: #FFFFFF;
+  --tradein-paper-2: #F4F6F9;
+  --tradein-paper-3: #E8EDF3;
+  --tradein-ink: #16202B;
+  --tradein-ink-2: #3C4A5A;
+  --tradein-ink-3: #64748B;
+  --tradein-rule: #D3DCE6;
+
+  --tradein-cart: #ffd814;
+  --tradein-focus: #0B3A63;
+  --tradein-error: #B42318;
+
+  /* Type */
+  --tradein-font-display: "Archivo", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", sans-serif;
+  --tradein-font-body: "IBM Plex Sans", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", sans-serif;
+  --tradein-font-numeric: "IBM Plex Mono", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", monospace;
+
+  --tradein-shadow: 0 1px 2px rgba(22, 32, 43, 0.06), 0 12px 32px rgba(22, 32, 43, 0.08);
+  --tradein-shadow-lift: 0 2px 4px rgba(22, 32, 43, 0.08), 0 22px 46px rgba(15, 76, 129, 0.18);
+}
+
+/* ==========================================================================
+   1. Page shell
+   ========================================================================== */
+body.tradein-body {
+  background-color: var(--tradein-paper-2) !important;
+  background-image:
+    radial-gradient(1100px 520px at 8% -6%, rgba(15, 76, 129, 0.10), transparent 60%),
+    radial-gradient(900px 480px at 96% 0%, rgba(180, 83, 9, 0.07), transparent 58%),
+    linear-gradient(180deg, #FFFFFF 0%, var(--tradein-paper-2) 40%, #EEF2F7 100%);
+  background-attachment: fixed;
+  color: var(--tradein-ink) !important;
+  font-family: var(--tradein-font-body) !important;
+}
+
+.tradein-body a { color: var(--tradein-accent-strong); }
+
+.tradein-page {
+  position: relative;
+  display: block;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(14px, 3vw, 34px) clamp(56px, 7vw, 96px);
+  color: var(--tradein-ink);
+  font-family: var(--tradein-font-body);
+}
+
+.tradein-shell { width: 100%; }
+
+.tradein-page h1,
+.tradein-page h2,
+.tradein-page h3,
+.tradein-page dt,
+.tradein-page legend,
+.tradein-page .tradein-eyebrow {
+  font-family: var(--tradein-font-display) !important;
+  color: var(--tradein-ink) !important;
+}
+
+/* Every rupee figure is monospaced and tabular so columns of money line up
+   exactly the way they do in a printed statement. */
+.tradein-page .tradein-money,
+.tradein-page strong,
+.tradein-page dd {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   2. Hero — blueprint sheet with a raking light
+   ========================================================================== */
+.tradein-hero {
+  position: relative;
+  margin: 0 calc(-1 * clamp(14px, 3vw, 34px)) clamp(34px, 4.5vw, 56px);
+  padding: clamp(38px, 5.5vw, 76px) 0 clamp(46px, 6vw, 80px);
+  overflow: hidden;
+  background: linear-gradient(168deg, #FFFFFF 0%, #F1F5FA 62%, #E9EFF6 100%);
+  border-bottom: 1px solid var(--tradein-rule);
+  isolation: isolate;
+}
+
+/* Drafting grid, masked so it fades out instead of tiling edge to edge. */
+.tradein-hero__blueprint {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    repeating-linear-gradient(90deg, rgba(15, 76, 129, 0.09) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, rgba(15, 76, 129, 0.09) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, rgba(15, 76, 129, 0.045) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(0deg, rgba(15, 76, 129, 0.045) 0 1px, transparent 1px 16px);
+  mask-image: radial-gradient(118% 88% at 34% 6%, #000 14%, transparent 74%);
+  -webkit-mask-image: radial-gradient(118% 88% at 34% 6%, #000 14%, transparent 74%);
+}
+
+.tradein-hero__beam {
+  position: absolute;
+  right: -8%;
+  top: -30%;
+  z-index: -1;
+  width: min(680px, 78vw);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgba(15, 76, 129, 0.14) 0%, rgba(15, 76, 129, 0.04) 44%, transparent 68%);
+}
+
+.tradein-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(24px, 3.6vw, 52px);
+  align-items: center;
+}
+
+.tradein-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 5px 13px;
+  border: 1px solid var(--tradein-accent-line);
+  background: var(--tradein-accent-soft);
+  color: var(--tradein-accent-strong);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tradein-eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--tradein-accent);
+}
+
+.tradein-hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 4.8vw, 3.6rem);
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--tradein-accent-deep) !important;
+}
+
+.tradein-hero__lede {
+  max-width: 60ch;
+  margin: 0 0 24px;
+  color: var(--tradein-ink-2);
+  font-size: clamp(0.97rem, 1.3vw, 1.08rem);
+  line-height: 1.75;
+}
+
+.tradein-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.tradein-stat-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--tradein-rule);
+}
+
+.tradein-stat {
+  padding: 15px 16px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.tradein-stat dt {
+  margin: 0 0 4px;
+  color: var(--tradein-ink-3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tradein-stat dd {
+  margin: 0;
+  font-family: var(--tradein-font-numeric);
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  font-weight: 700;
+  color: var(--tradein-accent-deep);
+}
+
+/* Ledger note panel — the honesty panel, set as a signed statement margin note */
+.tradein-ledger-note {
+  padding: 22px;
+  border: 1px solid var(--tradein-rule);
+  border-left: 4px solid var(--tradein-amber);
+  border-radius: 4px 12px 12px 4px;
+  background: linear-gradient(160deg, rgba(180, 83, 9, 0.07), rgba(255, 255, 255, 0.94) 58%);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: var(--tradein-shadow);
+}
+
+.tradein-ledger-note__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tradein-ledger-note__head h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.tradein-note-pill {
+  padding: 4px 10px;
+  border: 1px solid rgba(180, 83, 9, 0.42);
+  border-radius: 999px;
+  background: var(--tradein-amber-soft);
+  color: var(--tradein-amber);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tradein-ledger-note__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: tradein-note;
+}
+
+.tradein-ledger-note__list li {
+  position: relative;
+  padding-left: 26px;
+  color: var(--tradein-ink-2);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  counter-increment: tradein-note;
+}
+
+/* Numbered like the margin notes on a signed statement. */
+.tradein-ledger-note__list li::before {
+  content: counter(tradein-note);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--tradein-accent-soft);
+  color: var(--tradein-accent-strong);
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   3. Buttons
+   ========================================================================== */
+.btn-tradein {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: var(--tradein-font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.btn-tradein--primary {
+  background: var(--tradein-accent);
+  border-color: var(--tradein-accent-strong);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(15, 76, 129, 0.26);
+}
+
+.btn-tradein--primary:hover {
+  transform: translateY(-2px);
+  background: var(--tradein-accent-strong);
+  box-shadow: 0 14px 28px rgba(15, 76, 129, 0.34);
+}
+
+.btn-tradein--ghost {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: var(--tradein-accent-line);
+  color: var(--tradein-accent-strong);
+  font-weight: 700;
+}
+
+.btn-tradein--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--tradein-accent);
+  background: var(--tradein-accent-soft);
+}
+
+.btn-tradein--accent {
+  background: var(--tradein-cart);
+  border-color: #fcd200;
+  color: #1B1400;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(255, 216, 20, 0.28);
+}
+
+.btn-tradein--accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(255, 216, 20, 0.36);
+}
+
+.btn-tradein--quiet {
+  padding: 10px 18px;
+  background: transparent;
+  border-color: var(--tradein-rule);
+  color: var(--tradein-ink-2);
+  font-weight: 700;
+}
+
+.btn-tradein--quiet:hover { border-color: var(--tradein-accent-line); color: var(--tradein-accent-strong); }
+
+.btn-tradein--block { width: 100%; }
+
+.btn-tradein:active { transform: translateY(0); }
+
+.btn-tradein:disabled,
+.btn-tradein[disabled],
+.btn-tradein[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.45);
+}
+
+/* The shared storefront theme ships a global `outline: 2px solid #e77600
+   !important` on every anchor/button/input/select, so each trade-in focus ring
+   must also be !important to win. The navy ring on the light ground measures
+   ~10.4:1, comfortably over the 3:1 non-text floor. */
+.btn-tradein:focus-visible {
+  outline: 3px solid var(--tradein-focus) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 5px rgba(15, 76, 129, 0.20) !important;
+}
+
+/* ==========================================================================
+   4. Section frames
+   ========================================================================== */
+.tradein-section {
+  position: relative;
+  margin-bottom: clamp(28px, 4vw, 48px);
+  padding: clamp(20px, 2.8vw, 32px);
+  border: 1px solid var(--tradein-rule);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 246, 249, 0.90));
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  box-shadow: var(--tradein-shadow);
+  animation: tradein-rise 0.5s ease both;
+}
+
+.tradein-section__head { margin-bottom: 22px; max-width: 78ch; }
+
+.tradein-section__head--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: none;
+}
+
+.tradein-section h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.32rem, 2.6vw, 1.95rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+}
+
+.tradein-section__lede {
+  margin: 0;
+  color: var(--tradein-ink-2);
+  font-size: 0.94rem;
+  line-height: 1.72;
+}
+
+.tradein-section__meta {
+  margin: 0;
+  color: var(--tradein-accent-strong);
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@keyframes tradein-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tradein-valuation__grid,
+.tradein-pickup__grid,
+.tradein-voucher__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(18px, 2.4vw, 28px);
+  align-items: start;
+}
+
+.tradein-panel {
+  display: grid;
+  gap: 15px;
+  align-content: start;
+  padding: clamp(16px, 2vw, 22px);
+  border: 1px solid var(--tradein-rule);
+  border-radius: 12px;
+  background: var(--tradein-paper);
+}
+
+.tradein-panel--readout { gap: 18px; }
+
+.tradein-panel__title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--tradein-ink-3) !important;
+}
+
+.tradein-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.tradein-field { display: grid; gap: 6px; min-width: 0; }
+
+.tradein-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tradein-field > label,
+.tradein-field legend {
+  padding: 0;
+  color: var(--tradein-ink-2);
+  font-family: var(--tradein-font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tradein-field__hint {
+  margin: 0;
+  color: var(--tradein-ink-3);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.tradein-select,
+.tradein-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 7px;
+  background-color: var(--tradein-paper) !important;
+  color: var(--tradein-ink) !important;
+  font-family: var(--tradein-font-body) !important;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tradein-input--area { resize: vertical; min-height: 84px; }
+.tradein-input--num { font-family: var(--tradein-font-numeric); font-weight: 600; }
+
+.tradein-select {
+  appearance: none;
+  padding-right: 36px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--tradein-accent) 50%),
+    linear-gradient(135deg, var(--tradein-accent) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 20px, calc(100% - 12px) 20px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.tradein-select option { background-color: var(--tradein-paper); color: var(--tradein-ink); }
+
+.tradein-select:hover,
+.tradein-input:hover { border-color: var(--tradein-accent-line); }
+
+.tradein-select:focus-visible,
+.tradein-input:focus-visible {
+  outline: 2px solid var(--tradein-focus) !important;
+  outline-offset: 2px !important;
+  border-color: var(--tradein-focus) !important;
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.16);
+}
+
+.tradein-input:invalid:not(:placeholder-shown) { border-color: var(--tradein-error); }
+
+/* ==========================================================================
+   5. Ledger — the valuation table
+   ========================================================================== */
+.tradein-ledger {
+  display: grid;
+  gap: 0;
+}
+
+.tradein-ledger-head,
+.tradein-ledger-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) 62px 96px 116px 34px;
+  gap: 10px;
+  align-items: center;
+}
+
+.tradein-ledger-head {
+  padding: 0 10px 8px;
+  border-bottom: 2px solid var(--tradein-accent);
+  color: var(--tradein-ink-3);
+  font-family: var(--tradein-font-display);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tradein-ledger-head span:nth-child(2),
+.tradein-ledger-head span:nth-child(3),
+.tradein-ledger-head span:nth-child(4) { text-align: right; }
+
+.tradein-ledger-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: tradein-line;
+}
+
+.tradein-ledger-row {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--tradein-rule);
+  animation: tradein-rise 0.4s ease both;
+  counter-increment: tradein-line;
+}
+
+.tradein-ledger-row:hover { background: rgba(15, 76, 129, 0.035); }
+
+.tradein-ledger-row__asset { display: grid; gap: 2px; min-width: 0; }
+
+.tradein-ledger-row__name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--tradein-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tradein-ledger-row__meta {
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.68rem;
+  color: var(--tradein-ink-3);
+}
+
+.tradein-ledger-row__units {
+  text-align: right;
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--tradein-ink-2);
+}
+
+.tradein-ledger-row__rate {
+  text-align: right;
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.8rem;
+  color: var(--tradein-ink-3);
+}
+
+.tradein-ledger-row__value {
+  text-align: right;
+  font-family: var(--tradein-font-numeric);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--tradein-credit);
+  white-space: nowrap;
+}
+
+.tradein-ledger-row__remove {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tradein-ink-3);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.tradein-ledger-row__remove:hover {
+  border-color: var(--tradein-error);
+  background: rgba(180, 35, 24, 0.08);
+  color: var(--tradein-error);
+}
+
+.tradein-ledger-row__remove:focus-visible {
+  outline: 3px solid var(--tradein-focus) !important;
+  outline-offset: 2px !important;
+}
+
+.tradein-totals {
+  display: grid;
+  gap: 2px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 2px solid var(--tradein-accent);
+}
+
+.tradein-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0;
+  padding: 4px 2px;
+  color: var(--tradein-ink-2);
+  font-size: 0.88rem;
+}
+
+.tradein-total strong {
+  font-family: var(--tradein-font-numeric);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--tradein-ink);
+  white-space: nowrap;
+}
+
+.tradein-total--grand {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--tradein-accent-soft);
+  color: var(--tradein-accent-deep);
+  font-weight: 700;
+}
+
+.tradein-total--grand strong {
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  font-weight: 700;
+  color: var(--tradein-accent-deep);
+}
+
+.tradein-total--credit strong { color: var(--tradein-credit); }
+.tradein-total--note {
+  justify-content: flex-start;
+  color: var(--tradein-ink-3);
+  font-size: 0.74rem;
+}
+
+/* Status messaging */
+.tradein-status,
+.tradein-panel__status {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--tradein-rule);
+  border-left: 3px solid var(--tradein-accent);
+  border-radius: 6px;
+  background: var(--tradein-paper-2);
+  color: var(--tradein-ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.tradein-status.is-success,
+.tradein-panel__status.is-success { border-left-color: var(--tradein-credit); background: var(--tradein-credit-soft); }
+.tradein-status.is-error,
+.tradein-panel__status.is-error { border-left-color: var(--tradein-error); background: rgba(180, 35, 24, 0.07); }
+.tradein-status.is-warn,
+.tradein-panel__status.is-warn { border-left-color: var(--tradein-amber); background: var(--tradein-amber-soft); }
+
+/* Receipts (pickup + voucher) */
+.tradein-receipt,
+.tradein-voucher-preview {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(15, 76, 129, 0.05) 27px 28px),
+    var(--tradein-paper);
+}
+
+.tradein-receipt__list,
+.tradein-voucher-preview__rows {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.tradein-receipt__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--tradein-rule);
+  font-size: 0.86rem;
+}
+
+.tradein-receipt__row:last-child { border-bottom: 0; }
+.tradein-receipt__row dt { margin: 0; color: var(--tradein-ink-3); font-size: 0.8rem; letter-spacing: 0.02em; }
+.tradein-receipt__row dd {
+  margin: 0;
+  font-family: var(--tradein-font-numeric);
+  font-weight: 700;
+  color: var(--tradein-ink);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* Saved lists (pickup history, raised vouchers) */
+.tradein-saved-list {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tradein-saved-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--tradein-rule);
+  border-left: 3px solid var(--tradein-accent);
+  border-radius: 4px 10px 10px 4px;
+  background: var(--tradein-paper-2);
+  font-size: 0.84rem;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.tradein-saved-row:hover { border-color: var(--tradein-accent-line); transform: translateX(3px); }
+
+.tradein-saved-row__code {
+  font-family: var(--tradein-font-numeric);
+  font-weight: 700;
+  color: var(--tradein-accent-deep);
+}
+
+.tradein-saved-row__meta { color: var(--tradein-ink-3); font-size: 0.76rem; }
+
+/* Voucher preview — the hero artefact of the settlement desk */
+.tradein-voucher-preview__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tradein-voucher-preview__seal {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 2px solid var(--tradein-accent);
+  border-radius: 50%;
+  background:
+    conic-gradient(from 0deg, transparent 0 12%, rgba(15, 76, 129, 0.16) 12% 25%, transparent 25% 37.5%, rgba(15, 76, 129, 0.16) 37.5% 50%, transparent 50% 62.5%, rgba(15, 76, 129, 0.16) 62.5% 75%, transparent 75% 87.5%, rgba(15, 76, 129, 0.16) 87.5% 100%);
+}
+
+.tradein-voucher-preview__code {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed var(--tradein-accent-line);
+  border-radius: 8px;
+  background: var(--tradein-paper);
+  font-family: var(--tradein-font-numeric);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--tradein-accent-deep);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tradein-voucher-preview__caption {
+  margin: -6px 0 0;
+  color: var(--tradein-ink-3);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   6. Enterprise refresh catalogue
+   ========================================================================== */
+.tradein-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 16px;
+}
+
+.tradein-catalog-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 12px;
+  background: var(--tradein-paper);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: tradein-rise 0.45s ease both;
+}
+
+.tradein-catalog-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--tradein-accent);
+  box-shadow: var(--tradein-shadow-lift);
+}
+
+.tradein-catalog-card__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 128px;
+  border: 1px solid var(--tradein-rule);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 34% 20%, rgba(15, 76, 129, 0.16), transparent 62%),
+    linear-gradient(155deg, #F7FAFD, #E6EDF4);
+  overflow: hidden;
+}
+
+.tradein-catalog-card__tag {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  padding: 3px 8px;
+  border: 1px solid var(--tradein-accent-line);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--tradein-accent-strong);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tradein-catalog-card__body { display: flex; flex-direction: column; min-width: 0; }
+
+.tradein-catalog-card h3 {
+  margin: 0 0 4px;
+  font-family: var(--tradein-font-body) !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--tradein-ink) !important;
+}
+
+.tradein-catalog-card__brand {
+  margin: 0 0 8px;
+  color: var(--tradein-ink-3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tradein-catalog-card__spec {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 10px;
+  color: var(--tradein-ink-2);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.tradein-catalog-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed var(--tradein-rule);
+}
+
+.tradein-catalog-card__price strong {
+  font-family: var(--tradein-font-numeric);
+  font-size: 1.06rem;
+  font-weight: 700;
+  color: var(--tradein-accent-deep);
+}
+
+.tradein-catalog-card__price s { color: var(--tradein-ink-3); font-size: 0.78rem; }
+.tradein-catalog-card .btn-tradein { width: 100%; min-height: 40px; font-size: 0.78rem; }
+
+/* CSS-art fleet silhouettes (no external imagery) */
+.tradein-art { position: relative; width: 92px; height: 78px; }
+.tradein-art span { position: absolute; display: block; }
+
+.tradein-art--laptop .art-screen {
+  inset: 6px 14px 26px 14px;
+  border: 2px solid var(--tradein-accent-strong);
+  border-radius: 5px;
+  background: linear-gradient(150deg, rgba(15, 76, 129, 0.20), rgba(15, 76, 129, 0.05));
+}
+.tradein-art--laptop .art-bezel { left: 22px; top: 16px; right: 22px; height: 4px; border-radius: 2px; background: rgba(15, 76, 129, 0.55); box-shadow: 0 10px 0 rgba(15, 76, 129, 0.35), 0 20px 0 rgba(15, 76, 129, 0.20); }
+.tradein-art--laptop .art-deck { left: 6px; right: 6px; top: 52px; height: 8px; border-radius: 0 0 5px 5px; background: var(--tradein-accent); }
+.tradein-art--laptop .art-hinge { left: 40px; top: 50px; width: 12px; height: 4px; background: var(--tradein-accent-strong); }
+
+.tradein-art--monitor .art-panel { inset: 6px 10px 24px 10px; border: 2px solid var(--tradein-accent-strong); border-radius: 5px; background: linear-gradient(150deg, rgba(15, 76, 129, 0.22), rgba(15, 76, 129, 0.06)); }
+.tradein-art--monitor .art-bar { left: 18px; top: 18px; right: 18px; height: 4px; background: rgba(15, 76, 129, 0.5); box-shadow: 0 9px 0 rgba(15, 76, 129, 0.3), 0 18px 0 rgba(15, 76, 129, 0.18); }
+.tradein-art--monitor .art-neck { left: 42px; top: 50px; width: 8px; height: 14px; background: var(--tradein-accent); }
+.tradein-art--monitor .art-foot { left: 26px; top: 62px; width: 40px; height: 6px; border-radius: 3px; background: var(--tradein-accent-strong); }
+
+.tradein-art--desktop .art-case { inset: 8px 22px 8px 22px; border: 2px solid var(--tradein-accent-strong); border-radius: 4px; background: linear-gradient(160deg, rgba(15, 76, 129, 0.20), rgba(15, 76, 129, 0.05)); }
+.tradein-art--desktop .art-slot { left: 30px; right: 30px; top: 18px; height: 4px; background: rgba(15, 76, 129, 0.45); box-shadow: 0 8px 0 rgba(15, 76, 129, 0.28), 0 16px 0 rgba(15, 76, 129, 0.16); }
+.tradein-art--desktop .art-led { left: 52px; bottom: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--tradein-credit); box-shadow: 0 0 8px rgba(15, 123, 79, 0.8); }
+.tradein-art--desktop .art-foot { left: 18px; right: 18px; bottom: 2px; height: 5px; border-radius: 3px; background: var(--tradein-accent-strong); }
+
+.tradein-art--printer .art-body { inset: 12px 14px 18px 14px; border: 2px solid var(--tradein-accent-strong); border-radius: 6px; background: linear-gradient(160deg, rgba(15, 76, 129, 0.18), rgba(15, 76, 129, 0.05)); }
+.tradein-art--printer .art-tray { left: 22px; right: 22px; top: 22px; height: 6px; border-radius: 3px; background: rgba(15, 76, 129, 0.5); }
+.tradein-art--printer .art-sheet { left: 30px; top: 32px; width: 32px; height: 18px; background: var(--tradein-paper); border: 1px solid var(--tradein-rule); transform: rotate(-4deg); }
+.tradein-art--printer .art-led { right: 20px; top: 40px; width: 5px; height: 5px; border-radius: 50%; background: var(--tradein-amber); }
+
+.tradein-art--ups .art-tower { inset: 6px 26px 12px 26px; border: 2px solid var(--tradein-accent-strong); border-radius: 4px; background: linear-gradient(160deg, rgba(15, 76, 129, 0.20), rgba(15, 76, 129, 0.05)); }
+.tradein-art--ups .art-vent { left: 34px; right: 34px; top: 16px; height: 3px; background: rgba(15, 76, 129, 0.4); box-shadow: 0 7px 0 rgba(15, 76, 129, 0.3), 0 14px 0 rgba(15, 76, 129, 0.2); }
+.tradein-art--ups .art-display { left: 36px; top: 44px; width: 20px; height: 8px; border-radius: 2px; background: var(--tradein-credit); opacity: 0.8; }
+.tradein-art--ups .art-foot { left: 22px; right: 22px; bottom: 4px; height: 5px; border-radius: 3px; background: var(--tradein-accent-strong); }
+
+/* Loading / empty states */
+.tradein-catalog-skeleton,
+.tradein-ledger-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 16px;
+}
+
+.tradein-ledger-skeleton { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.tradein-catalog-skeleton[hidden],
+.tradein-ledger-skeleton[hidden] { display: none; }
+
+.tradein-skeleton-card,
+.tradein-skeleton-row {
+  height: 250px;
+  border-radius: 12px;
+  background: linear-gradient(100deg, rgba(15, 76, 129, 0.05) 30%, rgba(15, 76, 129, 0.16) 50%, rgba(15, 76, 129, 0.05) 70%);
+  background-size: 220% 100%;
+  animation: tradein-shimmer 1.5s linear infinite;
+}
+
+.tradein-skeleton-row { height: 52px; }
+
+@keyframes tradein-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -20% 0; }
+}
+
+.tradein-empty {
+  margin: 0;
+  padding: 24px;
+  border: 1px dashed var(--tradein-rule);
+  border-radius: 10px;
+  background: var(--tradein-paper-2);
+  color: var(--tradein-ink-2);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.tradein-empty--tight { padding: 14px; font-size: 0.82rem; }
+
+/* ==========================================================================
+   7. Footer rhythm
+   ========================================================================== */
+.tradein-page > .tradein-section:last-of-type { margin-bottom: 0; }
+
+/* ==========================================================================
+   8. Responsive
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .tradein-hero__inner { grid-template-columns: minmax(0, 1fr); }
+  .tradein-valuation__grid,
+  .tradein-pickup__grid,
+  .tradein-voucher__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .tradein-stat-rail { grid-template-columns: minmax(0, 1fr); }
+  .tradein-field-row { grid-template-columns: minmax(0, 1fr); }
+  .tradein-hero__actions .btn-tradein { width: 100%; }
+  .tradein-panel__actions .btn-tradein { flex: 1 1 180px; }
+
+  /* The ledger table folds into stacked statement lines on narrow screens. */
+  .tradein-ledger-head { display: none; }
+  .tradein-ledger-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "asset remove"
+      "units value";
+    row-gap: 6px;
+  }
+  .tradein-ledger-row__asset { grid-area: asset; }
+  .tradein-ledger-row__units { grid-area: units; text-align: left; }
+  .tradein-ledger-row__rate { display: none; }
+  .tradein-ledger-row__value { grid-area: value; text-align: right; }
+  .tradein-ledger-row__remove { grid-area: remove; }
+}
+
+/* ==========================================================================
+   9. Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .tradein-page *,
+  .tradein-page *::before,
+  .tradein-page *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tradein-section,
+  .tradein-ledger-row,
+  .tradein-catalog-card,
+  .tradein-catalog-skeleton,
+  .tradein-ledger-skeleton { animation: none; }
+}

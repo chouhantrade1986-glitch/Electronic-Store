@@ -172,6 +172,7 @@
                    <a href="launchpad.html" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
                    <a href="gaming.html" data-i18n="nav_gaming">ElectroMart Gaming Arena</a>
                    <a href="edu-store.html" data-i18n="nav_edu">ElectroMart Campus Store</a>
+                   <a href="trade-in.html" data-i18n="nav_tradein">ElectroMart Corporate Bulk Trade-In</a>
                 </div>
                 <div class="flyout-col">
                   <h3 data-i18n="footer.yourAccount">Your Account</h3>
@@ -222,6 +223,7 @@
           <a href="launchpad.html" class="category-quick-link" data-i18n="nav_launchpad">ElectroMart Launchpad</a>
           <a href="gaming.html" class="category-quick-link nav-gaming-link" data-i18n="nav_gaming">ElectroMart Gaming Arena</a>
           <a href="edu-store.html" class="category-quick-link nav-edu-link" data-i18n="nav_edu">ElectroMart Campus Store</a>
+          <a href="trade-in.html" class="category-quick-link nav-tradein-link" data-i18n="nav_tradein">ElectroMart Corporate Bulk Trade-In</a>
           <a href="help.html" class="category-quick-link" data-i18n="customer_service">Customer Service</a>
         </div>
         <div class="category-nav-promo">

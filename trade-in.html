@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!-- ElectroMart B2B Corporate Bulk Trade-In Hub (Phase 41) -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Corporate Bulk Trade-In - Fleet Valuation, GST Credit &amp; Enterprise Voucher</title>
+  <meta name="description" content="The ElectroMart B2B Corporate Bulk Trade-In Hub: value a whole IT fleet, estimate GST input tax credit and corporate depreciation benefit, book on-site bulk pickup, and raise an enterprise credit voucher." />
+  <meta name="keywords" content="bulk trade in, corporate IT asset disposal, fleet valuation, GST input tax credit, enterprise credit voucher, ElectroMart B2B" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/trade-in.html" />
+  <meta property="og:title" content="ElectroMart Corporate Bulk Trade-In - Fleet Valuation &amp; Enterprise Voucher" />
+  <meta property="og:description" content="Value a whole IT fleet, estimate GST input tax credit and depreciation benefit, and raise an enterprise credit voucher." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/trade-in.html" />
+  <meta property="twitter:title" content="ElectroMart Corporate Bulk Trade-In - Fleet Valuation &amp; Enterprise Voucher" />
+  <meta property="twitter:description" content="Value a whole IT fleet, estimate GST input tax credit and depreciation benefit, and raise an enterprise credit voucher." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260926a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260926a" />
+  <link rel="stylesheet" href="trade-in.css?v=20260926a" />
+</head>
+<body class="tradein-body">
+  <div id="headerContainer"></div>
+
+  <main class="tradein-page">
+    <!-- ============ HERO ============ -->
+    <section id="tradeInHero" class="tradein-hero" aria-labelledby="tradeInHeroTitle">
+      <span class="tradein-hero__blueprint" aria-hidden="true"></span>
+      <span class="tradein-hero__beam" aria-hidden="true"></span>
+
+      <div class="tradein-shell tradein-hero__inner">
+        <div class="tradein-hero__copy">
+          <p class="tradein-eyebrow" data-i18n="tradein_hub_eyebrow">ElectroMart Enterprise Asset Recovery</p>
+          <h1 id="tradeInHeroTitle" data-i18n="tradein_hub_title">Corporate Bulk Trade-In</h1>
+          <p class="tradein-hero__lede" data-i18n="tradein_hub_subtitle">Value a whole IT fleet in one ledger, estimate your GST input tax credit and depreciation benefit, book on-site bulk pickup, and raise an enterprise credit voucher.</p>
+
+          <div class="tradein-hero__actions">
+            <a href="#bulkValuationSection" class="btn-tradein btn-tradein--primary" data-i18n="tradein_hero_cta_valuation">Value my fleet</a>
+            <a href="#pickupBookingSection" class="btn-tradein btn-tradein--ghost" data-i18n="tradein_hero_cta_pickup">Book on-site pickup</a>
+          </div>
+
+          <dl class="tradein-stat-rail" aria-live="polite">
+            <div class="tradein-stat">
+              <dt data-i18n="tradein_stat_fleet_label">Fleet lines valued</dt>
+              <dd id="tradeInLineCount">0</dd>
+            </div>
+            <div class="tradein-stat">
+              <dt data-i18n="tradein_stat_units_label">Units in ledger</dt>
+              <dd id="tradeInUnitCount">0</dd>
+            </div>
+            <div class="tradein-stat">
+              <dt data-i18n="tradein_stat_vouchers_label">Vouchers raised</dt>
+              <dd id="tradeInVoucherCount">0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <aside class="tradein-ledger-note" aria-labelledby="tradeInNoteTitle">
+          <div class="tradein-ledger-note__head">
+            <h2 id="tradeInNoteTitle" data-i18n="tradein_ledger_note_title">How this estimate works</h2>
+            <span class="tradein-note-pill" data-i18n="tradein_estimate_pill">Estimate only</span>
+          </div>
+          <ul class="tradein-ledger-note__list">
+            <li data-i18n="tradein_note_line_1">Fleet values are a deterministic estimate from a fixed asset table. The same fleet always returns the same rupee total.</li>
+            <li data-i18n="tradein_note_line_2">GST input tax credit is shown at your stated rate so it matches your return. Section 32 and Section 35AD depreciation is indicative.</li>
+            <li data-i18n="tradein_note_line_3">Nothing here is a binding offer or tax advice. Every figure is re-confirmed in writing after the physical asset audit.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ BULK VALUATION ============ -->
+    <section id="bulkValuationSection" class="tradein-section tradein-valuation" aria-labelledby="tradeinValuationTitle">
+      <header class="tradein-section__head tradein-section__head--row">
+        <div>
+          <p class="tradein-eyebrow" data-i18n="tradein_valuation_eyebrow">Asset ledger</p>
+          <h2 id="tradeinValuationTitle" data-i18n="tradein_bulk_valuation_title">Bulk valuation engine</h2>
+          <p class="tradein-section__lede" data-i18n="tradein_bulk_valuation_subtitle">Compose each fleet line, add it to the ledger, and watch the rupee total, GST credit and depreciation benefit recalculate.</p>
+        </div>
+        <p class="tradein-section__meta" id="tradeInLedgerMeta" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="tradein-valuation__grid">
+        <form class="tradein-panel" id="bulkValuationForm" autocomplete="off" novalidate>
+          <h3 class="tradein-panel__title" data-i18n="tradein_line_item_title">New ledger line</h3>
+
+          <div class="tradein-field">
+            <label for="categorySelect" data-i18n="tradein_category_label">Asset category</label>
+            <select id="categorySelect" name="category" class="tradein-select"></select>
+          </div>
+
+          <div class="tradein-field">
+            <label for="brandSelect" data-i18n="tradein_brand_label">Brand</label>
+            <select id="brandSelect" name="brand" class="tradein-select"></select>
+          </div>
+
+          <div class="tradein-field">
+            <label for="modelSelect" data-i18n="tradein_model_label">Model</label>
+            <select id="modelSelect" name="model" class="tradein-select"></select>
+          </div>
+
+          <div class="tradein-field-row">
+            <div class="tradein-field">
+              <label for="quantityInput" data-i18n="tradein_quantity_label">Units</label>
+              <input type="number" id="quantityInput" name="quantity" class="tradein-input tradein-input--num" min="1" max="5000" step="1" value="25" required />
+            </div>
+
+            <div class="tradein-field">
+              <label for="conditionSelect" data-i18n="tradein_condition_label">Fleet condition</label>
+              <select id="conditionSelect" name="condition" class="tradein-select"></select>
+            </div>
+          </div>
+
+          <div class="tradein-panel__actions">
+            <button type="button" id="addDeviceRowBtn" form="bulkValuationForm" class="btn-tradein btn-tradein--primary" data-i18n="tradein_add_device_btn">Add device row</button>
+            <button type="button" id="clearLedgerBtn" class="btn-tradein btn-tradein--quiet" data-i18n="tradein_clear_ledger_btn">Clear ledger</button>
+          </div>
+
+          <p class="tradein-panel__status" id="valuationStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </form>
+
+        <div class="tradein-panel tradein-panel--readout">
+          <div class="tradein-ledger" id="valuationSummary" aria-labelledby="tradeinSummaryTitle">
+            <h3 class="tradein-panel__title" id="tradeinSummaryTitle" data-i18n="tradein_valuation_summary_title">Valuation summary</h3>
+
+            <div class="tradein-ledger-head" aria-hidden="true">
+              <span data-i18n="tradein_ledger_col_asset">Asset</span>
+              <span data-i18n="tradein_ledger_col_units">Units</span>
+              <span data-i18n="tradein_ledger_col_rate">Rate</span>
+              <span data-i18n="tradein_ledger_col_value">Value</span>
+              <span class="tradein-ledger-head__action"></span>
+            </div>
+
+            <ol class="tradein-ledger-list" id="deviceRowsContainer"></ol>
+
+            <p class="tradein-empty" id="deviceRowsEmpty" data-i18n="tradein_ledger_empty" hidden>No ledger lines yet. Compose an asset and add it to start valuing your fleet.</p>
+
+            <div class="tradein-totals">
+              <p class="tradein-total tradein-total--grand">
+                <span data-i18n="tradein_estimated_value_label">Estimated fleet value</span>
+                <strong id="estimatedTotalValue">₹0</strong>
+              </p>
+              <p class="tradein-total tradein-total--credit">
+                <span data-i18n="tradein_gst_credit_label">GST input tax credit</span>
+                <strong id="gstCreditEstimate">₹0</strong>
+              </p>
+              <p class="tradein-total tradein-total--credit">
+                <span data-i18n="tradein_tax_savings_label">Corporate tax savings</span>
+                <strong id="taxSavingsEstimate">₹0</strong>
+              </p>
+              <p class="tradein-total tradein-total--note" data-i18n="tradein_taxes_note">Inclusive of all taxes</p>
+            </div>
+          </div>
+
+          <div class="tradein-ledger-skeleton" id="valuationSkeleton" aria-hidden="true">
+            <div class="tradein-skeleton-row"></div>
+            <div class="tradein-skeleton-row"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ON-SITE PICKUP BOOKING ============ -->
+    <section id="pickupBookingSection" class="tradein-section tradein-pickup" aria-labelledby="tradeinPickupTitle">
+      <header class="tradein-section__head">
+        <p class="tradein-eyebrow" data-i18n="tradein_pickup_eyebrow">Asset recovery</p>
+        <h2 id="tradeinPickupTitle" data-i18n="tradein_pickup_booking_title">On-site bulk pickup booking</h2>
+        <p class="tradein-section__lede" data-i18n="tradein_pickup_booking_subtitle">Our asset-recovery crew collects sealed, data-wiped equipment from your office floor. Bookings are stored on this device and confirmed with a reference number.</p>
+      </header>
+
+      <div class="tradein-pickup__grid">
+        <form class="tradein-panel" id="pickupBookingForm" autocomplete="off" novalidate>
+          <div class="tradein-field">
+            <label for="pickupDateInput" data-i18n="tradein_pickup_date_label">Pickup date</label>
+            <input type="date" id="pickupDateInput" name="pickupDate" class="tradein-input" required aria-describedby="pickupDateHint" />
+            <p class="tradein-field__hint" id="pickupDateHint" data-i18n="tradein_pickup_date_hint">Weekday slots only, subject to asset-recovery crew availability in your city.</p>
+          </div>
+
+          <div class="tradein-field">
+            <label for="pickupTimeSlotSelect" data-i18n="tradein_pickup_time_label">Time slot</label>
+            <select id="pickupTimeSlotSelect" name="pickupTimeSlot" class="tradein-select" required></select>
+          </div>
+
+          <div class="tradein-field">
+            <label for="pickupAddressInput" data-i18n="tradein_pickup_address_label">Collection address</label>
+            <textarea id="pickupAddressInput" name="pickupAddress" class="tradein-input tradein-input--area" rows="3" required minlength="10" maxlength="240" aria-describedby="pickupAddressHint"></textarea>
+            <p class="tradein-field__hint" id="pickupAddressHint" data-i18n="tradein_pickup_address_hint">Include floor, wing and a contact number for the loading bay.</p>
+          </div>
+
+          <div class="tradein-field-row">
+            <div class="tradein-field">
+              <label for="pickupDeviceCountInput" data-i18n="tradein_pickup_device_count_label">Units to collect</label>
+              <input type="number" id="pickupDeviceCountInput" name="deviceCount" class="tradein-input tradein-input--num" min="1" max="5000" step="1" required />
+            </div>
+
+            <div class="tradein-field">
+              <label for="pickupContactPersonInput" data-i18n="tradein_pickup_contact_label">Contact person</label>
+              <input type="text" id="pickupContactPersonInput" name="contactPerson" class="tradein-input" required minlength="2" maxlength="80" autocomplete="name" aria-describedby="pickupContactHint" />
+            </div>
+          </div>
+
+          <p class="tradein-field__hint" id="pickupContactHint" data-i18n="tradein_pickup_contact_hint">Site lead who will hand over the sealed crates.</p>
+
+          <div class="tradein-field">
+            <label for="pickupContactPhoneInput" data-i18n="tradein_pickup_phone_label">Contact phone (+91)</label>
+            <input type="tel" id="pickupContactPhoneInput" name="contactPhone" class="tradein-input" required pattern="[6-9][0-9]{9}" maxlength="10" autocomplete="tel" inputmode="numeric" placeholder="9876543210" />
+          </div>
+
+          <button type="submit" id="bookPickupBtn" form="pickupBookingForm" class="btn-tradein btn-tradein--primary btn-tradein--block" data-i18n="tradein_book_pickup_btn">Book on-site pickup</button>
+        </form>
+
+        <div class="tradein-panel tradein-panel--readout">
+          <p class="tradein-status" id="pickupStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+          <div class="tradein-receipt" id="pickupReceipt" aria-labelledby="tradeinReceiptTitle">
+            <h3 class="tradein-panel__title" id="tradeinReceiptTitle" data-i18n="tradein_pickup_receipt_title">Pickup confirmation</h3>
+
+            <dl class="tradein-receipt__list">
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_pickup_id_label">Booking reference</dt>
+                <dd id="pickupBookingId">—</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_pickup_confirmed_date_label">Confirmed date</dt>
+                <dd id="pickupConfirmedDate">—</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_pickup_confirmed_slot_label">Confirmed slot</dt>
+                <dd id="pickupConfirmedSlot">—</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_pickup_units_label">Units</dt>
+                <dd id="pickupUnitTotal">—</dd>
+              </div>
+            </dl>
+
+            <p class="tradein-empty tradein-empty--tight" id="pickupReceiptEmpty" data-i18n="tradein_pickup_empty" hidden>No pickup is booked on this device yet.</p>
+          </div>
+
+          <ol class="tradein-saved-list" id="pickupHistoryList"></ol>
+          <p class="tradein-empty tradein-empty--tight" id="pickupHistoryEmpty" data-i18n="tradein_pickup_history_empty" hidden>No earlier pickup bookings on this device.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENTERPRISE CREDIT VOUCHER ============ -->
+    <section id="creditVoucherSection" class="tradein-section tradein-voucher" aria-labelledby="tradeinVoucherTitle">
+      <header class="tradein-section__head">
+        <p class="tradein-eyebrow" data-i18n="tradein_voucher_eyebrow">Settlement desk</p>
+        <h2 id="tradeinVoucherTitle" data-i18n="tradein_credit_voucher_title">Enterprise credit voucher</h2>
+        <p class="tradein-section__lede" data-i18n="tradein_credit_voucher_subtitle">Settle the fleet value as ElectroMart Business Account credit or as a formal credit note against your GSTIN, then apply it straight to a cart order.</p>
+      </header>
+
+      <div class="tradein-voucher__grid">
+        <form class="tradein-panel" id="creditVoucherForm" autocomplete="off" novalidate>
+          <div class="tradein-field">
+            <label for="voucherTypeSelect" data-i18n="tradein_voucher_type_label">Voucher type</label>
+            <select id="voucherTypeSelect" name="voucherType" class="tradein-select" required></select>
+          </div>
+
+          <div class="tradein-field">
+            <label for="businessAccountIdInput" data-i18n="tradein_business_account_label">Business account ID</label>
+            <input type="text" id="businessAccountIdInput" name="businessAccountId" class="tradein-input" required minlength="6" maxlength="32" pattern="EM-BIZ-[0-9]{4}-[0-9]{5}" autocapitalize="characters" spellcheck="false" placeholder="EM-BIZ-2026-00123" aria-describedby="businessAccountHint" />
+            <p class="tradein-field__hint" id="businessAccountHint" data-i18n="tradein_business_account_hint">Issued with your ElectroMart Business onboarding, for example EM-BIZ-2026-00123.</p>
+          </div>
+
+          <div class="tradein-field-row">
+            <div class="tradein-field">
+              <label for="voucherGstinInput" data-i18n="tradein_gstin_label">GSTIN</label>
+              <input type="text" id="voucherGstinInput" name="gstin" class="tradein-input" maxlength="15" autocapitalize="characters" spellcheck="false" placeholder="07AAAAA0000A1Z5" aria-describedby="gstinHint" />
+              <p class="tradein-field__hint" id="gstinHint" data-i18n="tradein_gstin_hint">Required for a formal credit note.</p>
+            </div>
+
+            <div class="tradein-field">
+              <label for="voucherValidDaysInput" data-i18n="tradein_voucher_validity_label">Validity (days)</label>
+              <input type="number" id="voucherValidDaysInput" name="validDays" class="tradein-input tradein-input--num" min="1" max="1095" step="1" value="365" />
+            </div>
+          </div>
+
+          <button type="submit" id="generateVoucherBtn" form="creditVoucherForm" class="btn-tradein btn-tradein--primary btn-tradein--block" data-i18n="tradein_generate_voucher_btn">Generate enterprise voucher</button>
+
+          <p class="tradein-status" id="voucherStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </form>
+
+        <div class="tradein-panel tradein-panel--readout">
+          <div class="tradein-voucher-preview" id="voucherPreview" aria-labelledby="tradeinPreviewTitle">
+            <div class="tradein-voucher-preview__head">
+              <h3 class="tradein-panel__title" id="tradeinPreviewTitle" data-i18n="tradein_voucher_preview_title">Credit voucher preview</h3>
+              <span class="tradein-voucher-preview__seal" aria-hidden="true"></span>
+            </div>
+
+            <p class="tradein-voucher-preview__code" id="voucherCode">—</p>
+            <p class="tradein-voucher-preview__caption" data-i18n="tradein_voucher_code_label">Voucher code</p>
+
+            <dl class="tradein-voucher-preview__rows">
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_voucher_value_label">Voucher value</dt>
+                <dd id="voucherValue">₹0</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_voucher_expiry_label">Valid until</dt>
+                <dd id="voucherExpiry">—</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_voucher_type_label">Voucher type</dt>
+                <dd id="voucherTypeLabel">—</dd>
+              </div>
+              <div class="tradein-receipt__row">
+                <dt data-i18n="tradein_business_account_label">Business account</dt>
+                <dd id="voucherAccountLabel">—</dd>
+              </div>
+            </dl>
+
+            <button type="button" id="applyVoucherToCartBtn" class="btn-tradein btn-tradein--accent btn-tradein--block" data-i18n="tradein_apply_voucher_btn">Apply voucher to cart</button>
+          </div>
+
+          <ol class="tradein-saved-list" id="voucherList"></ol>
+          <p class="tradein-empty tradein-empty--tight" id="voucherListEmpty" data-i18n="tradein_voucher_empty" hidden>No enterprise voucher has been raised on this device.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENTERPRISE REFRESH CATALOG ============ -->
+    <section class="tradein-section tradein-catalog" aria-labelledby="tradeinCatalogTitle">
+      <header class="tradein-section__head tradein-section__head--row">
+        <div>
+          <p class="tradein-eyebrow" data-i18n="tradein_catalog_eyebrow">Replacement fleet</p>
+          <h2 id="tradeinCatalogTitle" data-i18n="tradein_catalog_title">Enterprise refresh catalogue</h2>
+          <p class="tradein-section__lede" data-i18n="tradein_catalog_subtitle">Commercial-grade replacements for the assets you are trading in, with GST invoicing on every unit.</p>
+        </div>
+        <p class="tradein-section__meta" id="tradeInCatalogCount" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="tradein-catalog-skeleton" id="tradeInCatalogSkeleton" aria-hidden="true">
+        <div class="tradein-skeleton-card"></div>
+        <div class="tradein-skeleton-card"></div>
+        <div class="tradein-skeleton-card"></div>
+      </div>
+
+      <div class="tradein-catalog-grid" id="tradeInProductGrid" aria-busy="false"></div>
+
+      <p class="tradein-empty" id="tradeInCatalogEmpty" data-i18n="tradein_catalog_empty" hidden>No enterprise refresh catalogue is available right now. Please check back soon.</p>
+    </section>
+  </main>
+
+  <!-- Shared i18n, catalog, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="trade-in.js?v=20260926a"></script>
+</body>
+</html>

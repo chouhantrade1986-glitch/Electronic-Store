@@ -207,3 +207,194 @@ git commit -m "feat(scope): your descriptive commit message"
 > सभी AI एजेंट ध्यान दें: प्रत्येक कार्रवाई मुख्य प्रोजेक्ट डायरेक्टरी `C:\Users\Admin\Documents\GitHub\Electronic-Store` में ही करें। नई duplicate files या project copies न बनाएं, पुराने working code और script order को सुरक्षित रखें, और काम समाप्त करने से पहले focused तथा full regression tests चलाकर परिणाम दर्ज करें।
 >
 > वेबसाइट launch करने के लिए केवल `npm start` और `launch-electromart.js` का उपयोग करें। नया launcher, alternate frontend root, duplicate `index.html`, parallel server या दूसरा project folder बनाना निषिद्ध है।
+---
+## 6. Code Review & Quality Gates (Mandatory)
+
+- **Pre-commit hooks**: ESLint + Prettier + type-check (`npm run lint`, `npm run typecheck`) हर commit से पहले चलने चाहिए — `husky` से enforce करें।
+- **PR template**: हर PR में `## Summary`, `## Breaking Changes`, `## Test Plan`, `## Screenshots / Video`, `## Checklist` सेक्शन अनिवार्य।
+- **Approval rule**: कम से कम 1 senior agent/human review बिना merge न हो; self-merge निषिद्ध।
+- **Coverage floor**: नए code पर ≥80% unit coverage; critical paths (cart, checkout, payments, auth) पर ≥95% — `npm run test:coverage` से enforce।
+- **Bundle size budget**: नया JS/CSS जोड़ने पर `npm run build -- --analyze` से size delta ≤5KB gzipped; breach = block।
+- **Dependency freshness**: `npm audit --audit-level=high` हर PR पर; high/critical = block, `npm outdated` monthly review।
+
+## 7. Accessibility Standards (WCAG 2.1 AA — Non-Negotiable)
+
+- **Semantic HTML**: `<button>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<header>`, `<footer>` — कभी `<div onclick>` न लिखें।
+- **Focus management**: हर modal/drawer खुलने पर focus trap, `Escape` से बंद, वापस trigger element पर focus return।
+- **ARIA**: `aria-label`, `aria-live="polite"`, `role="status"`, `aria-expanded`, `aria-controls`, `aria-describedby` सभी interactive elements पर सही लगे हों।
+- **Color contrast**: टेक्स्ट ≥4.5:1, large text (≥18px/14px bold) ≥3:1, UI components (borders, icons) ≥3:1 — automated `axe-core` check CI में।
+- **Keyboard**: हर action `Tab`/`Shift+Tab`/`Enter`/`Space`/`Arrow keys` से पहुंच योग्य; focus indicator visible (`outline` कभी `none` न हो बिना replacement के)।
+- **Screen reader**: `alt` text meaningful हो (content images के लिए कभी खाली नहीं); decorative = `alt=""`; `role="img"` + `aria-label` जहां ज़रूरी।
+- **Reduced motion**: `@media (prefers-reduced-motion: reduce)` पर सभी animations/transitions/auto-play disable।
+- **Language declaration**: `<html lang>` हर page पर सही हो; RTL languages (`ur`) के लिए `dir="rtl"` + CSS logical properties (`margin-inline-start`)।
+
+## 8. Security Rules
+
+- **No secrets in code**: API keys, tokens, DB passwords, JWT secrets केवल `backend/.env` में (`.gitignore` में हों) — कभी repo में commit न हों।
+- **Input validation**: Client + Server दोनों तरफ — shared Zod/JSON Schema schemas (`shared/schemas/`) से validate करें।
+- **XSS prevention**: `innerHTML` केवल trusted/sanitized data के लिए (DOMPurify), बाकी `textContent` या framework auto-escaping।
+- **CSP headers**: `Content-Security-Policy` header सख्त — `script-src 'self' 'nonce-...'`; inline scripts केवल `nonce` के साथ।
+- **CSRF protection**: State-changing endpoints (POST/PUT/DELETE/PATCH) पर `SameSite=Strict` cookies + CSRF token header।
+- **Rate limiting**: Auth (`/api/auth/*`), search, API endpoints पर per-IP/per-user limits (token bucket)।
+- **PII masking**: Logs/analytics/telemetry में email/phone/name mask करें (`a***@b.com`, `98****1234`, `R***h`)।
+- **Dependency scanning**: `npm audit --audit-level=high` हर PR पर; `package-lock.json` commit होता है।
+
+## 9. Performance Budgets (Enforced in CI)
+
+| Metric | Budget | Tool |
+|--------|--------|------|
+| LCP (Largest Contentful Paint) | ≤2.5s | Lighthouse CI |
+| CLS (Cumulative Layout Shift) | ≤0.1 | Lighthouse CI |
+| TBT (Total Blocking Time) | ≤200ms | Lighthouse CI |
+| JS bundle (gzipped, initial) | ≤120KB | webpack-bundle-analyzer / `npm run build -- --analyze` |
+| CSS (gzipped) | ≤30KB | — |
+| Image weight/page | ≤500KB | — |
+| Third-party requests | ≤10 | — |
+| TTI (Time to Interactive) | ≤3.5s | Lighthouse CI |
+
+- **Regression gate**: नया feature merge से पहले सभी budgets pass होने चाहिए — Lighthouse CI job fail = merge block।
+
+## 10. Testing Strategy
+
+- **Unit (Jest/Vitest)**: Pure functions, utils, engines (discount, GST, FPS, verification) — fast, isolated, deterministic।
+- **Integration (Playwright)**: Critical user flows — add-to-cart → checkout → order confirmation → tracking; cross-browser (Chromium, Firefox, WebKit)।
+- **Visual regression (Chromatic/Percy)**: Key pages (PDP, cart, checkout, account, hub pages) — baseline से pixel diff ≤0.5%।
+- **Contract tests**: API schemas (OpenAPI 3.0) — frontend/backend sync; breaking change = CI fail।
+- **i18n smoke**: हर language (`en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu`) में 1 बार full page render + no missing keys।
+- **A11y audit**: `axe-core` हर PR पर — violations = fail।
+- **Flaky test quarantine**: >2 बार flaky → quarantine label + fix within 48h; quarantine tests CI gate block नहीं करते लेकिन visibility रहती है।
+
+## 11. Internationalization Workflow (11 Languages)
+
+- **Single source**: `translations.js` में `window.EM_TRANSLATIONS` — कोई separate JSON/PO/YAML files नहीं।
+- **Key naming**: `feature_subfeature_element` (snake_case, hierarchical) — e.g., `gaming_rig_configurator_cpu_label`।
+- **Fallback chain**: `lang → en → key` — never blank; missing key = console warn + fallback।
+- **Pluralization**: ICU MessageFormat syntax — `{count, plural, one {...} other {...}}`।
+- **RTL support**: `ur` के लिए `dir="rtl"` + CSS logical properties (`margin-inline-start`, `padding-inline-end`, `border-inline-start`)।
+- **Font fallbacks**: हर language के लिए `font-family` stack में Noto Sans <script> शामिल (e.g., `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Nastaliq Urdu`)।
+- **New key checklist**:
+  1. English value add करें `ELECTROMART_<FEATURE>_I18N` block में।
+  2. 10 अन्य भाषाओं में translate करें (ML-assisted + human review)।
+  3. `scratch/test-brand-safety-and-legal-compliance.js` pass करे।
+  4. Visual spot-check 320px/1440px दोनों में, RTL में `ur`।
+- **Date/Number formatting**: `Intl.DateTimeFormat` / `Intl.NumberFormat` with `en-IN` locale for ₹, भारतीय calendar।
+
+## 12. CSS Architecture (Amazon-style + ElectroMart Brand)
+
+- **Methodology**: BEM (`block__element--modifier`) + CSS Custom Properties (design tokens)।
+- **Design tokens**: `amazon-theme.css` में — colors (`--color-primary`, `--color-accent`), spacing (`--space-*`), typography (`--font-*`), shadows (`--shadow-*`), radii (`--radius-*`), z-index scale (`--z-*`)।
+- **Utility classes**: केवल layout/spacing के लिए (`.d-flex`, `.gap-3`, `.p-2`, `.text-center`) — component styles BEM में।
+- **No `!important`**: except focus-visible overrides vs global theme (`amazon-theme.css:2274` amber outline) — उस स्थिति में `outline: 3px solid var(--color-focus) !important;`।
+- **Responsive**: Mobile-first, breakpoints: `320, 640, 1024, 1280, 1440` — container queries जहां appropriate।
+- **Print styles**: `@media print` — हर transactional page (invoice, return slip, order detail, GST certificate) पर clean A4 rendering।
+- **Dark mode ready**: `prefers-color-scheme: dark` support future के लिए — tokens के via switchable (`@media (prefers-color-scheme: dark) { :root { --color-bg: #0a0a0f; } }`)।
+- **Animation**: `prefers-reduced-motion` respect — transitions केवल `transform`/`opacity` पर (GPU accelerated), layout-triggering properties avoid करें।
+
+## 13. State Management Patterns
+
+- **Server state**: React Query / SWR style — cache + stale-while-revalidate (backend API `/api/*`)।
+- **Client state**: `localStorage` (`electromart_*_v1` keys) — synchronous, versioned (`_v1`), migratable (`migrateStorage()` utility)।
+- **URL state**: Search params (`?category=laptops&page=2&sort=price_asc`) — shareable, bookmarkable, SSR-friendly।
+- **Event bus**: `window.dispatchEvent(new CustomEvent('electromart:cartUpdated', { detail: {...} }))` — cross-tab sync via `storage` event।
+- **No circular deps**: Page scripts only import shared utils (`shared/*.js`), never other page scripts।
+- **Namespace**: सभी globals `window.ElectroMart.<Feature>` under — e.g., `ElectroMart.Gaming`, `ElectroMart.EduStore`, `ElectroMart.Business`।
+- **Immutability**: State updates हमेशा new object/array — `Object.freeze` production में read-only views के लिए।
+
+## 14. Dependencies & Build
+
+- **Lockfile**: `package-lock.json` commit होता है — CI में `npm ci` (faster, reproducible)।
+- **Audit**: `npm audit --audit-level=high` हर PR पर — high/critical = block।
+- **Outdated check**: महीने में एक बार `npm outdated` review; major updates के लिए PR बनाएं।
+- **No duplicate deps**: `npm ls` — single version per package; `dedupe` यदि ज़रूरी।
+- **Build reproducibility**: `npm run build` deterministic (same input → same output hash) — `SOURCES_DATE_EPOCH` set करें।
+- **Source maps**: Production में `hidden-source-map` (error tracking के लिए Sentry/Datadog, public नहीं)।
+- **Tree shaking**: ES modules only — side-effect-free packages `package.json` में `"sideEffects": false`।
+- **Bundle analysis**: `webpack-bundle-analyzer` output CI artifact के रूप में store करें।
+
+## 15. Release Process
+
+- **Versioning**: SemVer — `MAJOR.MINOR.PATCH` (breaking / feature / fix)।
+- **Changelog**: `CHANGELOG.md` — [Keep a Changelog](https://keepachangelog.com/) format, हर release पर update।
+- **Tagging**: `git tag v1.2.3` + `git push --tags`; annotated tag with release notes।
+- **Rollback**: `git revert <commit>` + hotfix branch (`hotfix/v1.2.4`) — कभी force-push `main` पर नहीं।
+- **Feature flags**: नए risky features `localStorage` flag के पीछे launch करें (`electromart_ff_<name>`) — instant rollback possible।
+- **Canary**: Production पर 5% traffic → 24h monitor (error rate, latency, business metrics) → full rollout।
+- **Release notes**: Auto-generated from merged PR titles + manual curation; stakeholders को notify।
+
+## 16. Multi-Agent Collaboration Protocol
+
+- **Work allocation**: एक समय पर एक agent एक feature — `git branch feat/<phase>-<slug>` (e.g., `feat/41-trade-in`)।
+- **Handoff doc**: हर phase पूरा होने पर `HANDOVER.md` update — context, decisions, known issues, follow-up tasks।
+- **Conflict resolution**: Same file पर simultaneous edits → human/lead agent resolve; `git merge --no-ff` for feature branches।
+- **Knowledge sharing**: नया pattern/utility create करने पर `docs/patterns/<name>.md` में document करें (e.g., `docs/patterns/discount-engine.md`)।
+- **Regression ownership**: अगर आपका change किसी existing test को break करता है → आप ही fix करें (blameless, लेकिन accountable)।
+- **Communication**: Breaking changes से पहले `#dev-sync` channel / issue comment में announce करें।
+- **Documentation sync**: Code change के साथ `AGENT_INSTRUCTIONS.md`, `PROJECT_STATUS.md`, `README.md` update atomic commit में।
+---
+## 17. Legal Protection & Trademark Risk Mitigation (CRITICAL — ZERO TOLERANCE)
+
+> ⚠️ **LEGAL WARNING**: Amazon holds registered trademarks worldwide for "Amazon", "अमेज़न", and related marks. Unauthorized use in customer-facing content on `electromart.in` constitutes **trademark infringement** and **passing off** under Indian Trade Marks Act, 1999 and international IP law. Amazon's legal team actively monitors and enforces — **cease-and-desist, injunctions, and damages are real risks**.
+
+### 17.1 Absolute Prohibitions (Customer-Facing — ZERO Occurrences Allowed)
+
+| Context | Forbidden | Required ElectroMart Equivalent |
+|---------|-----------|--------------------------------|
+| **Visible text** | "Amazon", "अमेज़न", "अमेजन", "अमेजॉन" | "ElectroMart", "इलेक्ट्रोमार्ट" |
+| **Translations** (all 11 langs) | Any transliteration of Amazon | "ElectroMart" / native script इलेक्ट्रोमार्ट |
+| **Badges** | "Amazon's Choice", "Amazon Prime" | "ElectroMart's Choice", "ElectroMart Prime" |
+| **Filters/UI** | "Amazon Filters", "Amazon Deals" | "ElectroMart Filters", "ElectroMart Deals" |
+| **Alt/Title/Placeholder/Aria** | Any Amazon reference | ElectroMart equivalent |
+| **Tooltips/Toasts/Notifications** | Amazon mentions | ElectroMart equivalent |
+| **Error messages** | "Amazon server error" | "ElectroMart server error" |
+| **Legal pages** (Terms, Privacy) | "Amazon.com", "Amazon India" | "electromart.in", "ElectroMart India" |
+
+### 17.2 Internal Code — Safe but Documented
+
+| Item | Status | Rule |
+|------|--------|------|
+| Legacy CSS classes (`.amazon-layout`, `.amazon-price-block`, `.ac-badge-pill`) | **Allowed internally** | **Never rename** — regression tests depend on them |
+| Legacy DOM IDs (`#amazonsChoiceBadge`, `#amazonAccountGrid`) | **Allowed internally** | **Never rename** — tests/selectors depend on them |
+| Test filenames (`test-amazon-*.js`) | **Allowed** | Internal only — never rendered to customer |
+| Comments referencing Amazon | **Allowed** | Internal documentation only |
+| Variable names (`amazonTheme`, `amazonConfig`) | **Allowed** | Internal scope only |
+
+### 17.3 Automated Enforcement (Mandatory Gates)
+
+| Gate | Tool | Frequency | Failure = |
+|------|------|-----------|-----------|
+| **Brand Safety Test** | `node scratch/test-brand-safety-and-legal-compliance.js` | Every commit (pre-commit hook) + CI | **Release blocker** |
+| **Translation Audit** | Same test scans `translations.js` all 11 langs | Every commit | **Release blocker** |
+| **HTML Content Scan** | Strips scripts/styles/comments, checks text nodes + attributes | Every commit | **Release blocker** |
+| **PR Checklist** | Manual verification: "No Amazon text in customer-facing output" | Every PR | Merge block |
+
+### 17.4 Pre-Release Legal Checklist (Must Complete Before Any Deploy)
+
+```
+☐ Run `node scratch/test-brand-safety-and-legal-compliance.js` — PASS
+☐ Grep all 11 language dictionaries for "amazon|अमेज़न" — ZERO results
+☐ Grep all HTML files for visible Amazon text — ZERO results  
+☐ Check alt/title/placeholder/aria-label attributes — ZERO Amazon
+☐ Verify all badges say "ElectroMart's Choice" / "ElectroMart Prime"
+☐ Verify all filters say "ElectroMart Filters" / "ElectroMart Deals"
+☐ Confirm `scratch/run_all_tests.js` = 75/75 PASS
+☐ Confirm `cd backend && npm run test:unit` = 105/105 PASS
+☐ Legal sign-off documented (if available)
+```
+
+### 17.5 Incident Response (If Amazon Reference Found in Production)
+
+1. **Immediate**: Hotfix branch → remove reference → deploy within 1 hour
+2. **Root cause**: How did it bypass gates? (test gap? manual edit? third-party lib?)
+3. **Fix gate**: Add specific regex to brand safety test for the missed pattern
+4. **Document**: `INCIDENT_LOG.md` with timeline, fix, prevention
+5. **Notify**: Stakeholders + legal counsel (if available)
+
+### 17.6 Third-Party Library Audit
+
+- Any npm package that injects UI text (toast libraries, UI kits, analytics) **must be audited** for hardcoded "Amazon" strings
+- Use `grep -r "amazon" node_modules/<pkg>/dist` before adding dependency
+- If found: patch, fork, or reject the package
+
+---
+
+**THIS SECTION IS NON-NEGOTIABLE. ANY AGENT VIOLATING THIS WILL HAVE THEIR WORK REVERTED IMMEDIATELY.**

@@ -2229,3 +2229,95 @@ a {
   display: none !important;
 }
 
+/* Phase 41: ElectroMart Corporate Bulk Trade-In PDP callout */
+.pdp-bulk-tradein-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #bcd3e6;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2f7fb 0%, #e8f0f7 100%);
+}
+
+.pdp-bulk-tradein-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-bulk-tradein-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-bulk-tradein-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-bulk-tradein-text strong {
+  color: #0b3a63;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-bulk-tradein-subtext {
+  color: #3c4a5a;
+  font-size: 12px;
+}
+
+/* Mirrors the enterprise ledger already built on this device. Shown only when
+   that ledger actually holds lines for this asset class. */
+.pdp-bulk-tradein-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #d3dce6;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 12px;
+  color: #3c4a5a;
+}
+
+.pdp-bulk-tradein-row strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0b3a63;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-bulk-tradein-row em {
+  color: #0f7b4f;
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-bulk-tradein-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.pdp-bulk-tradein-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #0f4c81;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-bulk-tradein-link:hover,
+.pdp-bulk-tradein-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-bulk-tradein-callout[hidden] {
+  display: none !important;
+}
+
