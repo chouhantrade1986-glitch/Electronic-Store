@@ -12,6 +12,14 @@
   box-sizing: border-box;
 }
 
+[hidden],
+.product-detail[hidden],
+.missing-state[hidden],
+.detail-card[hidden],
+.detail-info-table[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: "Barlow", sans-serif;
@@ -70,6 +78,88 @@ a {
   color: #111827;
   border-radius: 0 8px 8px 0;
   font-weight: 700;
+}
+
+.pdp-smart-home-compatibility {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid #a7d8d3;
+  border-left: 4px solid #087f8c;
+  border-radius: 6px;
+  background: #effaf8;
+}
+
+.pdp-smart-home-compatibility-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.pdp-smart-home-compatibility-copy span,
+.pdp-smart-home-compatibility a {
+  color: #52636b;
+  font-size: 12px;
+}
+
+.pdp-smart-home-compatibility-btn {
+  justify-self: start;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid #087f8c;
+  border-radius: 18px;
+  background: #fff;
+  color: #075d66;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pdp-smart-home-compatibility-btn:hover,
+.pdp-smart-home-compatibility-btn:focus-visible {
+  background: #087f8c;
+  color: #fff;
+}
+
+.smart-home-modal {
+  width: min(430px, calc(100vw - 30px));
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 20px 70px rgba(15, 17, 17, .35);
+}
+
+.smart-home-modal::backdrop {
+  background: rgba(15, 17, 17, .55);
+}
+
+.smart-home-modal-card {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.smart-home-modal-close {
+  justify-self: end;
+  border: 0;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.smart-home-modal-card select {
+  min-height: 40px;
+  padding: 7px 10px;
+  border: 1px solid #aab7b8;
+  border-radius: 5px;
+  font: inherit;
+}
+
+.smart-home-compatibility-result {
+  min-height: 52px;
+  padding: 12px;
+  background: #effaf8;
+  color: #24585b;
 }
 
 .header-links {
@@ -198,6 +288,50 @@ a {
   transition: transform 0.12s ease-out;
 }
 
+.product-image-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 520px;
+  background: #ffffff;
+  border: 1px solid #edf1f1;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.product-image-stage > img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.image-zoom-lens {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 1px solid #888888;
+  background-color: rgba(255, 255, 255, 0.4);
+  background-image: radial-gradient(rgba(0, 113, 133, 0.1) 1px, transparent 0);
+  background-size: 8px 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  display: none;
+  z-index: 10;
+  cursor: crosshair;
+}
+
+.image-zoom-lens.show {
+  display: block;
+}
+
 .product-media > video {
   width: 100%;
   height: 520px;
@@ -270,6 +404,57 @@ a {
   border: 0;
   border-top: 1px solid #e5e7eb;
   margin: 0 0 10px;
+}
+
+.amazon-price-block {
+  margin: 12px 0;
+}
+.deal-badge-pill {
+  background-color: #cc0c39;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+.price-row-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.discount-percent-val {
+  color: #cc0c39;
+  font-size: 28px;
+  font-weight: 300;
+}
+.currency-symbol {
+  font-size: 14px;
+  font-weight: 400;
+  vertical-align: super;
+}
+.main-price-val {
+  font-size: 28px;
+  font-weight: 500;
+  color: #0f1111;
+}
+.price-fraction {
+  font-size: 14px;
+  font-weight: 400;
+}
+.mrp-tax-row {
+  color: #565959;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.mrp-strikethrough {
+  text-decoration: line-through;
+}
+.tax-inclusive {
+  color: #0f1111;
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 .price {
@@ -482,6 +667,26 @@ a {
   border: 1px solid #d1d5db;
   background: #ffffff;
 }
+
+.pdp-live-stream-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 11px 12px;
+  border: 1px solid #e7b8c2;
+  border-left: 4px solid #cc0c39;
+  border-radius: 6px;
+  background: #fff7f8;
+}
+
+.pdp-live-stream-callout[hidden] { display: none !important; }
+.pdp-live-stream-copy { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.pdp-live-stream-copy div { display: grid; gap: 3px; }
+.pdp-live-stream-copy span:last-child { color: #565959; font-size: 12px; }
+.pdp-live-dot { width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; background: #cc0c39; box-shadow: 0 0 0 5px rgba(204,12,57,.12); }
+#pdpWatchLiveBtn { border-radius: 999px; padding: 8px 12px; background: #ffd814; color: #111; font-size: 12px; font-weight: 800; text-decoration: none; white-space: nowrap; }
 
 #wishlistBtn.active {
   border-color: #ffd200;
@@ -1018,4 +1223,1009 @@ a {
   }
 }
 
+/* ==========================================================================
+   ElectroMart Phase 28: PDP Customer Media Gallery & Video Thumbnails
+   ========================================================================== */
+.customer-media-gallery {
+  margin: 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.customer-gallery-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.customer-gallery-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f1111;
+  margin: 0;
+}
+
+.see-all-customer-media-link {
+  font-size: 13px;
+  color: #007185;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.see-all-customer-media-link:hover {
+  color: #c45500;
+  text-decoration: underline;
+}
+
+.customer-gallery-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+.customer-gallery-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.customer-gallery-track::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.customer-gallery-thumb-wrapper {
+  position: relative;
+  flex: 0 0 92px;
+  width: 92px;
+  height: 92px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #d5d9d9;
+  cursor: pointer;
+  background-color: #f7fafa;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.customer-gallery-thumb-wrapper:hover,
+.customer-gallery-thumb-wrapper:focus-visible {
+  transform: scale(1.05);
+  border-color: #007185;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  outline: 2px solid #007185;
+}
+
+.customer-gallery-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.customer-gallery-video-tag {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(15, 17, 17, 0.82);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Phase 29: 360 Showroom & Workspace Studio CTAs */
+.btn-pdp-360-showroom {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(15, 17, 17, 0.88);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 8;
+  transition: all 0.2s ease;
+}
+
+.btn-pdp-360-showroom:hover {
+  background: #007185;
+  border-color: #007185;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.buybox-workspace-entry {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.link-pdp-workspace-builder {
+  display: block;
+  background: #f7fafa;
+  border: 1.5px solid #007185;
+  color: #007185;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.link-pdp-workspace-builder:hover {
+  background: #e7f4f5;
+  border-color: #005a6a;
+  color: #005a6a;
+}
+
+/* =============================================================================
+   Phase 30: PDP Instant Exchange Offer Selector & Valuation Modal Styles
+   ============================================================================= */
+.pdp-exchange-selector-card {
+  margin: 14px 0;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.exchange-radio-option {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e7e7e7;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.exchange-radio-option:last-child {
+  border-bottom: none;
+}
+
+.exchange-radio-option:hover {
+  background-color: #fcfdfd;
+}
+
+.exchange-radio-option.selected {
+  background-color: #f7fafa;
+  border-left: 3px solid #007185;
+}
+
+.exchange-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.exchange-radio-label input[type="radio"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: #007185;
+}
+
+.exchange-radio-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  font-size: 13px;
+  color: #0f1111;
+}
+
+.exchange-radio-price {
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.exchange-badge-pill {
+  background: #e7f4f5;
+  color: #007185;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.pdp-exchange-details-panel {
+  padding: 12px 14px 10px 26px;
+  border-top: 1px dashed #d5d9d9;
+  background: #ffffff;
+}
+
+.pdp-exchange-pincode-box {
+  margin-bottom: 12px;
+}
+
+.pdp-pincode-input-group {
+  display: flex;
+  gap: 6px;
+}
+
+.pdp-exchange-pincode-input {
+  flex: 1;
+  border: 1px solid #d5d9d9;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+}
+
+.pdp-exchange-pincode-input:focus {
+  border-color: #e77600;
+  box-shadow: 0 0 0 2px rgba(231, 118, 0, 0.2);
+}
+
+.btn-check-pincode {
+  background: #f0f2f2;
+  border: 1px solid #d5d9d9;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-check-pincode:hover {
+  background: #e3e6e6;
+}
+
+.pdp-pincode-feedback {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.pdp-pincode-feedback.eligible {
+  color: #067d62;
+}
+
+.pdp-pincode-feedback.ineligible {
+  color: #cc0c39;
+}
+
+.btn-pdp-choose-exchange {
+  width: 100%;
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+}
+
+.btn-pdp-choose-exchange:hover {
+  background: #f7ca00;
+}
+
+.pdp-applied-exchange-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.applied-exchange-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.applied-icon {
+  font-size: 16px;
+}
+
+.applied-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.applied-title {
+  font-size: 11px;
+  color: #166534;
+  font-weight: 600;
+}
+
+.applied-info strong {
+  font-size: 13px;
+  color: #0f1111;
+}
+
+.applied-savings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed #bbf7d0;
+  padding-top: 6px;
+}
+
+.applied-savings-badge {
+  font-size: 14px;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.applied-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #888888;
+}
+
+.applied-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #007185;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.applied-link-btn:hover {
+  text-decoration: underline;
+  color: #c45500;
+}
+
+.applied-link-btn.applied-remove {
+  color: #cc0c39;
+}
+
+/* Valuation Modal Dialog */
+.exchange-modal-dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
+  max-width: 540px;
+  width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+}
+
+.exchange-modal-dialog::backdrop {
+  background: rgba(15, 17, 17, 0.65);
+  backdrop-filter: blur(2px);
+}
+
+.modal-dialog-content {
+  background: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f7f9fa;
+  border-bottom: 1px solid #d5d9d9;
+}
+
+.modal-dialog-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #565959;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-dialog-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.modal-wizard-step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-step-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.modal-category-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-cat-pill {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-cat-pill.active {
+  background: #007185;
+  color: #ffffff;
+  border-color: #007185;
+}
+
+.modal-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.modal-select {
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.modal-diag-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f8fafb;
+  border: 1px solid #e7ecee;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.modal-q-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.modal-radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.modal-quote-summary-card {
+  background: #e7f4f5;
+  border: 1px solid #bce1e5;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.modal-quote-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.modal-quote-highlight {
+  font-size: 20px;
+  color: #007185;
+  font-weight: 800;
+}
+
+.modal-imei-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-imei-input {
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+.imei-hint-text {
+  font-size: 11px;
+  color: #565959;
+}
+
+.modal-imei-error {
+  color: #cc0c39;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modal-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  background: #f7f9fa;
+  border-top: 1px solid #d5d9d9;
+}
+
+.btn-modal-cancel {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-modal-apply {
+  background: #ffd814;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-modal-apply:hover {
+  background: #f7ca00;
+}
+
+/* ==========================================================================
+   Phase 31: ElectroMart Certified Renewed PDP Callout & Badges
+   ========================================================================== */
+.pdp-renewed-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #16a34a;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #166534;
+  margin-bottom: 8px;
+}
+
+.pdp-renewed-hero-badge .badge-icon {
+  font-size: 14px;
+}
+
+.pdp-renewed-hero-badge .badge-grade {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.pdp-renewed-hero-badge .badge-warranty {
+  font-size: 11px;
+  color: #047857;
+  font-weight: 600;
+}
+
+.pdp-protection-widget {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid #b7d8d5;
+  border-radius: 6px;
+  background: #f3fbfa;
+}
+
+.pdp-protection-widget h3 {
+  margin: 0 0 6px;
+  color: #00635f;
+  font-size: 15px;
+}
+
+.protection-plan-help {
+  margin: 0 0 8px;
+  color: #4b5f62;
+  font-size: 12px;
+}
+
+.protection-option {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.protection-option small {
+  display: block;
+  color: #00635f;
+  margin-top: 2px;
+}
+
+.pdp-renewed-callout {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1.5px solid #a7f3d0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  box-shadow: 0 2px 6px rgba(22, 163, 74, 0.08);
+}
+
+.pdp-renewed-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.renewed-leaf-icon {
+  font-size: 16px;
+}
+
+.renewed-callout-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.pdp-renewed-callout-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pdp-renewed-price-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.renewed-grade-tag {
+  background: #15803d;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.renewed-alt-price {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f1111;
+}
+
+.renewed-alt-savings {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+.pdp-renewed-warranty-text {
+  font-size: 12px;
+  color: #334155;
+  margin: 0 0 6px 0;
+  line-height: 1.35;
+}
+
+.btn-pdp-view-renewed {
+  display: inline-block;
+  background: #ffffff;
+  border: 1px solid #16a34a;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 14px;
+  text-decoration: none;
+  text-align: center;
+  align-self: flex-start;
+  transition: all 0.2s ease;
+}
+
+.btn-pdp-view-renewed:hover {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+/* Phase 37: ElectroMart Global Store Callout */
+.pdp-global-store-callout {
+  margin: 14px 0;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+  border: 1px solid #cbe4ff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pdp-global-store-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-global-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.pdp-global-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pdp-global-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #002d9c;
+}
+
+.pdp-global-subtext {
+  font-size: 12px;
+  color: #565959;
+}
+
+.pdp-global-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F62FE;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.pdp-global-link:hover {
+  text-decoration: underline;
+}
+
+/* Phase 38: ElectroMart Launchpad PDP callout */
+.pdp-launchpad-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #f3c7a4;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fff8f0 0%, #fff1df 100%);
+}
+
+.pdp-launchpad-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-launchpad-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-launchpad-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pdp-launchpad-text strong {
+  color: #8a3d00;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-launchpad-subtext {
+  color: #5f4a36;
+  font-size: 12px;
+}
+
+.pdp-launchpad-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-launchpad-link:hover,
+.pdp-launchpad-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-launchpad-callout[hidden] {
+  display: none !important;
+}
+
+/* Phase 39: ElectroMart Gaming Arena PDP callout */
+.pdp-gaming-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #d8c2f0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8f2ff 0%, #eef0ff 100%);
+}
+
+.pdp-gaming-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-gaming-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-gaming-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pdp-gaming-text strong {
+  color: #5b21b6;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-gaming-subtext {
+  color: #4c3a63;
+  font-size: 12px;
+}
+
+.pdp-gaming-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-gaming-link:hover,
+.pdp-gaming-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-gaming-callout[hidden] {
+  display: none !important;
+}
+
+/* Phase 40: ElectroMart Campus Store PDP callout */
+.pdp-student-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2f4ff 0%, #fff8e8 100%);
+}
+
+.pdp-student-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-student-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pdp-student-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-student-text strong {
+  color: #3730a3;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pdp-student-subtext {
+  color: #433c58;
+  font-size: 12px;
+}
+
+/* Deterministic student pricing line: shown only when a locally verified
+   student profile exists on this device, and never as a server-side promise. */
+.pdp-student-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 12px;
+  color: #433c58;
+}
+
+.pdp-student-price strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #b01535;
+}
+
+.pdp-student-price s {
+  color: #6b7280;
+}
+
+.pdp-student-price em {
+  color: #047857;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.pdp-student-price-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.pdp-student-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-student-link:hover,
+.pdp-student-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-student-callout[hidden] {
+  display: none !important;
+}
 

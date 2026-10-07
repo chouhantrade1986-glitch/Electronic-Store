@@ -1,4 +1,4 @@
-const TAX_RATE = 0.08;
+const TAX_RATE = 0.18;
 const BASE_SHIPPING_CHARGE = 19;
 
 const COUPONS = {
@@ -161,6 +161,8 @@ function buildOrderPricing(items, products, options = {}) {
     }
 
     const price = roundCurrency(product.price);
+    const gstRate = typeof product.gstRate === "number" ? product.gstRate : 0.18;
+    const hsnCode = product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010");
     enrichedItems.push({
       productId: String(product.id),
       sku: String(product.sku || ""),
@@ -169,6 +171,8 @@ function buildOrderPricing(items, products, options = {}) {
       price,
       quantity,
       stockReserved: quantity,
+      hsnCode,
+      gstRate,
       lineTotal: roundCurrency(price * quantity)
     });
   }
@@ -188,8 +192,23 @@ function buildOrderPricing(items, products, options = {}) {
   const nonShippingDiscount = couponResult.valid && couponResult.coupon && couponResult.coupon.type !== "shipping"
     ? couponResult.amount
     : 0;
+  const discountRatio = subtotal > 0 ? Math.max(0, 1 - (nonShippingDiscount / subtotal)) : 1;
+
+  let totalGst = 0;
+  const gstBreakdownByRate = {};
+
+  for (const item of enrichedItems) {
+    const discountedItemTotal = item.lineTotal * discountRatio;
+    const rate = typeof item.gstRate === "number" ? item.gstRate : TAX_RATE;
+    const itemGst = discountedItemTotal * rate;
+    totalGst += itemGst;
+
+    const rateKey = String(Math.round(rate * 100));
+    gstBreakdownByRate[rateKey] = (gstBreakdownByRate[rateKey] || 0) + itemGst;
+  }
+
   const taxableSubtotal = roundCurrency(Math.max(0, subtotal - nonShippingDiscount));
-  const tax = roundCurrency(taxableSubtotal * TAX_RATE);
+  const tax = roundCurrency(totalGst);
   const discount = roundCurrency(couponResult.valid ? couponResult.amount : 0);
   const total = roundCurrency(subtotal + shipping + tax - discount);
 
@@ -203,7 +222,8 @@ function buildOrderPricing(items, products, options = {}) {
     discount,
     couponCode: couponResult.valid ? couponResult.code : "",
     taxableSubtotal,
-    coupon: couponResult
+    coupon: couponResult,
+    gstBreakdownByRate
   };
 }
 

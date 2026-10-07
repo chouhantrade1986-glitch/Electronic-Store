@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>ElectroMart Prime - Delivery, Deals & Benefits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="prime.css?v=20260413a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="prime-page">
+  <div id="headerContainer"></div>
+
+  <main class="amz-prime-main">
+    <!-- Breadcrumbs Navigation -->
+    <nav class="amz-prime-breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="home">Home</a>
+      <span class="separator">&rsaquo;</span>
+      <a href="account.html" data-i18n="your_account">Your Account</a>
+      <span class="separator">&rsaquo;</span>
+      <span data-i18n="prime_hub_title">ElectroMart Prime Hub</span>
+    </nav>
+
+    <!-- 1. HERO SECTION: NON-MEMBER PROMO -->
+    <section class="amz-prime-hero" id="primeHeroNonMember">
+      <div class="amz-prime-hero-content">
+        <div class="amz-prime-logo-badge">
+          <span class="crown-icon">👑</span>
+          <span class="prime-txt">ELECTROMART PRIME</span>
+        </div>
+        <h1 class="amz-prime-hero-title" data-i18n="prime_hero_title">Join ElectroMart Prime. Fast, Free Delivery &amp; Exclusive Perks.</h1>
+        <p class="amz-prime-hero-subtitle" data-i18n="prime_hero_subtitle">Enjoy unlimited Free One-Day &amp; Same-Day Delivery, early access to lightning deals, 5% unlimited cashback, and ad-free entertainment.</p>
+        <div class="amz-prime-hero-actions">
+          <button type="button" class="amz-prime-btn-primary" id="startTrialHeroBtn" data-i18n="start_30_day_trial">Start Your 30-Day Free Trial</button>
+          <a href="#primePlansSection" class="amz-prime-btn-secondary" id="explorePlansHeroBtn" data-i18n="see_all_plans">See All Plans</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1b. HERO SECTION: ACTIVE MEMBER MANAGE BANNER -->
+    <section class="amz-prime-member-banner" id="primeHeroMember" style="display: none;">
+      <div class="amz-prime-member-info">
+        <h2>
+          <span class="crown-icon" style="color: #ffd814;">👑</span>
+          <span id="memberTierHeadline">ElectroMart Prime Member</span>
+        </h2>
+        <p id="memberRenewalText">Your membership renews on <strong id="primeRenewalDateStr">14 Oct 2026</strong>. Thank you for being a Prime member!</p>
+      </div>
+      <div class="amz-prime-member-actions">
+        <button type="button" class="amz-prime-btn-primary" id="openChangePlanModalBtn" data-i18n="change_plan">Change Plan</button>
+        <button type="button" class="amz-prime-btn-secondary" id="openCancelModalBtn" data-i18n="cancel_pause_membership">Cancel / Pause</button>
+      </div>
+    </section>
+
+    <!-- 2. PRIME SAVINGS TRACKER WIDGET -->
+    <section class="amz-prime-savings-card" id="primeSavingsCard">
+      <div class="amz-savings-header">
+        <div class="amz-savings-title-box">
+          <h3 data-i18n="savings_tracker_title">Your Prime Savings &amp; Rewards</h3>
+          <p data-i18n="savings_tracker_desc">See how much value your ElectroMart Prime membership has unlocked this year.</p>
+        </div>
+        <div class="amz-savings-total-pill">
+          <span data-i18n="total_prime_savings">Total Estimated Savings</span>
+          <strong id="primeTotalSavings">₹2,450</strong>
+        </div>
+      </div>
+      <div class="amz-savings-metrics-grid">
+        <div class="amz-savings-metric-box">
+          <div class="metric-label">🚚 <span data-i18n="delivery_savings">Delivery Fees Saved</span></div>
+          <div class="metric-value" id="primeDeliverySavings">₹1,250</div>
+        </div>
+        <div class="amz-savings-metric-box">
+          <div class="metric-label">💳 <span data-i18n="cashback_savings">5% Pay Cashback</span></div>
+          <div class="metric-value" id="primeCashbackSavings">₹820</div>
+        </div>
+        <div class="amz-savings-metric-box">
+          <div class="metric-label">⚡ <span data-i18n="deals_savings">Exclusive Deals Discount</span></div>
+          <div class="metric-value" id="primeDealsSavings">₹380</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. PRIME MEMBERSHIP PLANS GRID -->
+    <section class="amz-prime-plans-section" id="primePlansSection">
+      <h2 class="amz-section-headline" data-i18n="select_prime_plan">Choose the Plan That Fits You</h2>
+      
+      <div class="amz-prime-plans-grid" id="primePlansGrid">
+        <!-- Monthly Plan Card -->
+        <div class="amz-prime-plan-card" id="planMonthlyCard" data-plan="monthly">
+          <div class="amz-plan-header">
+            <h3 class="amz-plan-title" data-i18n="plan_monthly">ElectroMart Prime Monthly</h3>
+            <div class="amz-plan-price-block">
+              <span class="amz-plan-price">₹299</span>
+              <span class="amz-plan-period">/ month</span>
+            </div>
+            <p class="amz-plan-subtext" data-i18n="cancel_anytime">Flexible monthly billing, cancel anytime</p>
+          </div>
+          <ul class="amz-plan-features">
+            <li><span class="check-bullet">✓</span> Free 1-Day &amp; Same-Day Delivery</li>
+            <li><span class="check-bullet">✓</span> 30-min Early Access to Lightning Deals</li>
+            <li><span class="check-bullet">✓</span> 5% Cashback with ElectroMart Pay</li>
+            <li><span class="check-bullet">✓</span> Prime Video &amp; Music streaming</li>
+          </ul>
+          <button type="button" class="amz-plan-action-btn" id="selectMonthlyPlanBtn" data-plan="monthly" data-i18n="join_monthly">Join Monthly (₹299/mo)</button>
+        </div>
+
+        <!-- Annual Plan Card (Featured) -->
+        <div class="amz-prime-plan-card featured" id="planAnnualCard" data-plan="annual">
+          <div class="amz-plan-ribbon" data-i18n="best_value_badge">BEST VALUE - SAVE 58%</div>
+          <div class="amz-plan-header">
+            <h3 class="amz-plan-title" data-i18n="plan_annual">ElectroMart Prime Annual</h3>
+            <div class="amz-plan-price-block">
+              <span class="amz-plan-price">₹1,499</span>
+              <span class="amz-plan-period">/ year</span>
+            </div>
+            <p class="amz-plan-subtext" data-i18n="annual_savings_note">Effective ₹125/month - Best annual savings</p>
+          </div>
+          <ul class="amz-plan-features">
+            <li><span class="check-bullet">✓</span> Unlimited Free 1-Day &amp; Same-Day Delivery</li>
+            <li><span class="check-bullet">✓</span> 30-min Early Access to Top Drops</li>
+            <li><span class="check-bullet">✓</span> 5% Unlimited Cashback on All Electronics</li>
+            <li><span class="check-bullet">✓</span> Prime Video 4K Ultra HD &amp; Ad-free Music</li>
+            <li><span class="check-bullet">✓</span> Prime Gaming Free Games &amp; Loot Drops</li>
+          </ul>
+          <button type="button" class="amz-plan-action-btn" id="selectAnnualPlanBtn" data-plan="annual" data-i18n="join_annual">Join Annual (₹1,499/yr)</button>
+        </div>
+
+        <!-- Prime Lite Plan Card -->
+        <div class="amz-prime-plan-card" id="planLiteCard" data-plan="lite">
+          <div class="amz-plan-header">
+            <h3 class="amz-plan-title" data-i18n="plan_lite">ElectroMart Prime Lite</h3>
+            <div class="amz-plan-price-block">
+              <span class="amz-plan-price">₹799</span>
+              <span class="amz-plan-period">/ year</span>
+            </div>
+            <p class="amz-plan-subtext" data-i18n="lite_subtext">Effective ₹67/month - Essential delivery perks</p>
+          </div>
+          <ul class="amz-plan-features">
+            <li><span class="check-bullet">✓</span> Free 2-Day Delivery on All Orders</li>
+            <li><span class="check-bullet">✓</span> Early Access to Lightning Deals</li>
+            <li><span class="check-bullet">✓</span> 5% Cashback with ElectroMart Pay</li>
+            <li><span class="check-bullet">✓</span> Prime Video (HD, 1 Mobile/TV screen)</li>
+          </ul>
+          <button type="button" class="amz-plan-action-btn" id="selectLitePlanBtn" data-plan="lite" data-i18n="join_lite">Join Lite (₹799/yr)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PRIME BENEFITS GRID -->
+    <section class="amz-prime-benefits-section" id="primeBenefitsSection">
+      <h2 class="amz-section-headline" data-i18n="all_prime_benefits">All ElectroMart Prime Benefits</h2>
+      <div class="amz-prime-benefits-grid">
+        <!-- Benefit 1: Fast Delivery -->
+        <div class="amz-benefit-card" id="benefitFastDelivery">
+          <div class="amz-benefit-icon-box">🚚</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_delivery_title">Free Fast Delivery</h4>
+            <p data-i18n="benefit_delivery_desc">Unlimited Free One-Day and Same-Day Delivery to eligible pin codes with no minimum purchase required.</p>
+          </div>
+        </div>
+
+        <!-- Benefit 2: Early Access to Deals -->
+        <div class="amz-benefit-card" id="benefitEarlyAccess">
+          <div class="amz-benefit-icon-box">⚡</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_deals_title">Early Access to Deals</h4>
+            <p data-i18n="benefit_deals_desc">Get a 30-minute head start on Lightning Deals, Deal of the Day, and major festive drop events.</p>
+          </div>
+        </div>
+
+        <!-- Benefit 3: Cashback Rewards -->
+        <div class="amz-benefit-card" id="benefitCashback">
+          <div class="amz-benefit-icon-box">💳</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_cashback_title">5% Cashback Rewards</h4>
+            <p data-i18n="benefit_cashback_desc">Earn unlimited 5% cashback on all orders made using ElectroMart Pay ICICI Bank Credit Card or UPI.</p>
+          </div>
+        </div>
+
+        <!-- Benefit 4: Prime Video -->
+        <div class="amz-benefit-card" id="benefitPrimeVideo">
+          <div class="amz-benefit-icon-box">🎬</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_video_title">Prime Video</h4>
+            <p data-i18n="benefit_video_desc">Watch the latest movies, award-winning originals, and live tech keynotes in crystal clear 4K HDR.</p>
+          </div>
+        </div>
+
+        <!-- Benefit 5: Prime Music -->
+        <div class="amz-benefit-card" id="benefitPrimeMusic">
+          <div class="amz-benefit-icon-box">🎵</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_music_title">Ad-Free Prime Music</h4>
+            <p data-i18n="benefit_music_desc">Over 100 million songs and top podcasts in HD quality with offline downloads and unlimited skips.</p>
+          </div>
+        </div>
+
+        <!-- Benefit 6: Prime Gaming -->
+        <div class="amz-benefit-card" id="benefitPrimeGaming">
+          <div class="amz-benefit-icon-box">🎮</div>
+          <div class="amz-benefit-content">
+            <h4 data-i18n="benefit_gaming_title">Prime Gaming</h4>
+            <p data-i18n="benefit_gaming_desc">Claim free monthly PC games, in-game weapon skins, loot crates, and a free Twitch channel subscription.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Change Plan Modal -->
+  <div class="amz-prime-modal" id="primeChangePlanModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalChangePlanTitle">
+    <div class="amz-prime-modal-dialog">
+      <div class="amz-prime-modal-head">
+        <h2 class="amz-prime-modal-title" id="modalChangePlanTitle" data-i18n="change_plan_modal_title">Change Your Prime Plan</h2>
+        <button type="button" class="amz-prime-modal-close" id="closeChangePlanModalBtn" aria-label="Close">&times;</button>
+      </div>
+      <form id="changePlanForm">
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+          <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #d5d9d9; border-radius: 8px; cursor: pointer;">
+            <input type="radio" name="primePlanRadio" value="monthly" id="radioMonthlyPlan" />
+            <div>
+              <strong data-i18n="plan_monthly">ElectroMart Prime Monthly</strong> - ₹299/mo
+            </div>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #00a8e1; border-radius: 8px; cursor: pointer; background: #fdfefe;">
+            <input type="radio" name="primePlanRadio" value="annual" id="radioAnnualPlan" checked />
+            <div>
+              <strong data-i18n="plan_annual">ElectroMart Prime Annual</strong> - ₹1,499/yr <span style="color: #007600; font-weight: 700;">(Save 58%)</span>
+            </div>
+          </label>
+          <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #d5d9d9; border-radius: 8px; cursor: pointer;">
+            <input type="radio" name="primePlanRadio" value="lite" id="radioLitePlan" />
+            <div>
+              <strong data-i18n="plan_lite">ElectroMart Prime Lite</strong> - ₹799/yr
+            </div>
+          </label>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="amz-prime-btn-secondary" id="dismissChangePlanBtn" style="color: #0f1111; border-color: #d5d9d9;" data-i18n="cancel_btn">Cancel</button>
+          <button type="submit" class="amz-prime-btn-primary" id="confirmChangePlanBtn" data-i18n="save_plan">Save Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cancel / Pause Membership Modal -->
+  <div class="amz-prime-modal" id="primeCancelModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalCancelTitle">
+    <div class="amz-prime-modal-dialog">
+      <div class="amz-prime-modal-head">
+        <h2 class="amz-prime-modal-title" id="modalCancelTitle" data-i18n="manage_membership">Manage Your Prime Membership</h2>
+        <button type="button" class="amz-prime-modal-close" id="closeCancelModalBtn" aria-label="Close">&times;</button>
+      </div>
+      <p style="font-size: 14px; line-height: 1.5; color: #333333; margin: 0 0 16px;" data-i18n="cancel_membership_confirm">
+        Are you sure you want to pause or end your ElectroMart Prime membership? You will lose unlimited free fast delivery and 5% cashback rewards at the end of your billing cycle.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;">
+        <button type="button" class="amz-prime-btn-secondary" id="dismissCancelModalBtn" style="color: #0f1111; border-color: #d5d9d9;" data-i18n="keep_benefits">Keep My Benefits</button>
+        <button type="button" class="amz-prime-btn-secondary" id="pauseMembershipBtn" style="color: #007185; border-color: #007185;" data-i18n="pause_membership">Pause for 30 Days</button>
+        <button type="button" class="amz-prime-btn-primary" id="confirmCancelPrimeBtn" style="background: #e77600; border-color: #d46a00; color: #fff;" data-i18n="end_membership">End Membership</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div id="primeToastContainer" class="amz-prime-toast-container" aria-live="polite"></div>
+
+  <!-- Core Scripts in Strict Dependency Order -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="prime.js?v=20260413a"></script>
+</body>
+</html>

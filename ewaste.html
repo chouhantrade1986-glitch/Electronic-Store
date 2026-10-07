@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Recycling & Green Initiative</title>
+  <meta name="description" content="Recycle old electronics, book a free doorstep pickup, and earn ElectroMart Green Rewards." />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="ewaste.css?v=20260917a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="ewaste-page-body">
+  <div id="headerContainer"></div>
+
+  <main class="ewaste-main-container">
+    <nav class="amz-breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="breadcrumb_home">Home</a>
+      <span class="sep">›</span>
+      <a href="account.html" data-i18n="your_account">Your Account</a>
+      <span class="sep">›</span>
+      <span class="current" data-i18n="ewaste_nav_label">ElectroMart Recycling</span>
+    </nav>
+
+    <header class="ewaste-hero">
+      <div class="ewaste-hero-copy">
+        <span class="ewaste-eyebrow" data-i18n="ewaste_nav_label">ElectroMart Recycling</span>
+        <h1 data-i18n="ewaste_hero_title">ElectroMart Green Initiative</h1>
+        <p data-i18n="ewaste_hero_subtitle">Book a free doorstep pickup for old electronics and unlock green rewards for a cleaner future.</p>
+        <div class="ewaste-hero-actions">
+          <button type="button" class="ewaste-primary-btn" id="ewasteScrollToWizard" data-i18n="ewaste_submit_button">Schedule Pickup</button>
+          <a class="ewaste-secondary-btn" href="account.html" data-i18n="account_lists">Your Account</a>
+        </div>
+      </div>
+      <div class="ewaste-hero-metrics">
+        <div class="metric-card">
+          <span class="metric-value" id="ewasteMetricKg">2,450+</span>
+          <span class="metric-label" data-i18n="ewaste_metric_kg">kg e-waste diverted</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value" id="ewasteMetricCo2">1,300+</span>
+          <span class="metric-label" data-i18n="ewaste_metric_co2">kg CO₂ avoided</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value" id="ewasteMetricReward">₹1,000</span>
+          <span class="metric-label" data-i18n="ewaste_metric_reward">max green reward</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="ewaste-main-layout">
+      <aside class="ewaste-side-panel">
+        <div class="impact-panel impact-card" id="ewasteImpactPanel">
+          <h2 data-i18n="ewaste_impact_title">Eco-Impact Calculator</h2>
+          <div class="impact-row">
+            <span>Recovered metals</span>
+            <strong id="ewasteMetalValue">0.00 kg</strong>
+          </div>
+          <div class="impact-row">
+            <span>CO₂ avoided</span>
+            <strong id="ewasteCarbonValue">0 kg</strong>
+          </div>
+          <div class="impact-row">
+            <span>E-waste diverted</span>
+            <strong id="ewasteDivertedValue">0 kg</strong>
+          </div>
+        </div>
+
+        <div class="reward-panel impact-card" id="ewasteRewardPanel">
+          <h2 data-i18n="ewaste_reward_title">Green Rewards</h2>
+          <div class="reward-value"><span data-i18n="ewaste_voucher_label">Reward voucher</span><strong id="ewasteRewardAmount">₹0</strong></div>
+          <div class="reward-code" id="ewasteVoucherCode">EM-GREEN-000000</div>
+        </div>
+      </aside>
+
+      <section class="ewaste-content-panel">
+        <form id="ewasteRequestForm" class="ewaste-wizard-form" novalidate>
+          <div id="ewasteWizard" class="ewaste-wizard">
+            <div class="wizard-header">
+              <span class="wizard-badge" data-i18n="ewaste_pickup_title">Pickup request</span>
+              <h2 data-i18n="ewaste_pickup_subtitle">Free doorstep collection for old electronics</h2>
+            </div>
+
+            <div class="wizard-step active" id="ewasteStep1">
+            <div class="step-header">
+              <span>Step 1</span>
+              <h3 data-i18n="ewaste_step1_title">Select your e-waste</h3>
+            </div>
+            <div class="ewaste-category-grid" id="ewasteCategoryGrid">
+              <button type="button" class="ewaste-category-card selected" data-category="mobile" data-weight="0.6">
+                <span class="category-icon">📱</span>
+                <span class="category-name">Smartphone</span>
+              </button>
+              <button type="button" class="ewaste-category-card" data-category="laptop" data-weight="2.6">
+                <span class="category-icon">💻</span>
+                <span class="category-name">Laptop</span>
+              </button>
+              <button type="button" class="ewaste-category-card" data-category="printer" data-weight="4.5">
+                <span class="category-icon">🖨️</span>
+                <span class="category-name">Printer</span>
+              </button>
+              <button type="button" class="ewaste-category-card" data-category="accessory" data-weight="0.9">
+                <span class="category-icon">🔌</span>
+                <span class="category-name">Cable / Accessory</span>
+              </button>
+              <button type="button" class="ewaste-category-card" data-category="cartridge" data-weight="1.8">
+                <span class="category-icon">🖊️</span>
+                <span class="category-name">Ink / Cartridge</span>
+              </button>
+              <button type="button" class="ewaste-category-card" data-category="keyboard" data-weight="1.1">
+                <span class="category-icon">⌨️</span>
+                <span class="category-name">Keyboard</span>
+              </button>
+            </div>
+            <div class="step-actions">
+              <button type="button" class="ewaste-next-btn" id="ewasteNextStep1">Continue</button>
+            </div>
+          </div>
+
+          <div class="wizard-step" id="ewasteStep2">
+            <div class="step-header">
+              <span>Step 2</span>
+              <h3 data-i18n="ewaste_step2_title">Pickup details</h3>
+            </div>
+
+            <div class="field-grid">
+              <label class="ewaste-field">
+                <span data-i18n="ewaste_pincode_label">Pincode</span>
+                <input id="ewastePincodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="110001" />
+                <small id="ewastePincodeError" class="field-error" hidden>Enter a valid 6-digit Indian pincode.</small>
+              </label>
+
+              <label class="ewaste-field">
+                <span data-i18n="ewaste_weight_label">Approx. item weight (kg)</span>
+                <input id="ewasteWeightInput" type="number" min="0.2" step="0.1" value="1.5" />
+              </label>
+            </div>
+
+            <div class="field-grid">
+              <label class="ewaste-field">
+                <span data-i18n="ewaste_date_label">Pickup date</span>
+                <input id="ewastePickupDate" type="date" />
+              </label>
+
+              <label class="ewaste-field">
+                <span data-i18n="ewaste_slot_label">Pickup slot</span>
+                <select id="ewastePickupSlot">
+                  <option value="morning">9:00 AM - 12:00 PM</option>
+                  <option value="afternoon">12:00 PM - 3:00 PM</option>
+                  <option value="evening">4:00 PM - 7:00 PM</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="step-actions two-actions">
+              <button type="button" class="ewaste-back-btn" id="ewasteBackStep2">Back</button>
+              <button type="button" class="ewaste-next-btn" id="ewasteNextStep2">Review</button>
+            </div>
+          </div>
+
+          <div class="wizard-step" id="ewasteStep3">
+            <div class="step-header">
+              <span>Step 3</span>
+              <h3 data-i18n="ewaste_step3_title">Confirm pickup</h3>
+            </div>
+
+            <div class="review-card" id="ewasteReviewCard">
+              <div class="review-row"><span>Category</span><strong id="ewasteReviewCategory">Smartphone</strong></div>
+              <div class="review-row"><span>Weight</span><strong id="ewasteReviewWeight">1.5 kg</strong></div>
+              <div class="review-row"><span>Pincode</span><strong id="ewasteReviewPincode">110001</strong></div>
+              <div class="review-row"><span>Pickup slot</span><strong id="ewasteReviewSlot">9:00 AM - 12:00 PM</strong></div>
+              <div class="review-row"><span>Reward voucher</span><strong id="ewasteReviewReward">₹0</strong></div>
+            </div>
+
+            <div class="step-actions two-actions">
+              <button type="button" class="ewaste-back-btn" id="ewasteBackStep3">Back</button>
+              <button type="submit" class="ewaste-primary-btn" id="ewasteSubmitBtn">Submit pickup request</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      </section>
+    </section>
+  </main>
+
+  <div id="footerContainer"></div>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="ewaste.js"></script>
+</body>
+</html>

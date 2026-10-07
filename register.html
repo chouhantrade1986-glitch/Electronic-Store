@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>ElectroMart Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="auth.css?v=20260411b" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body>
+  <main class="auth-main">
+    <!-- Centered Brand Wordmark -->
+    <div class="amz-auth-logo-wrap">
+      <a href="index.html" class="amz-auth-brand-logo" aria-label="ElectroMart Home">
+        <span class="amz-logo-text">Electro<span class="amz-logo-accent">Mart</span><span class="amz-logo-tld">.in</span></span>
+      </a>
+    </div>
+
+    <!-- Centered Amazon India Registration Card (#authCard) -->
+    <section id="authCard" class="auth-panel amz-auth-card">
+      <h1 id="registerHeading" data-i18n="register_heading">Create Account</h1>
+
+      <form id="registerForm" novalidate style="display: grid; gap: 12px;">
+        <label for="registerName">
+          <span data-i18n="your_name_label">Your name</span>
+          <input id="registerName" type="text" required placeholder="First and last name" autocomplete="name" autofocus />
+        </label>
+
+        <label for="registerMobile">
+          <span data-i18n="mobile_number_label">Mobile number</span>
+          <div class="amz-phone-input-wrap">
+            <span class="amz-country-prefix" aria-label="India country code">IN +91</span>
+            <input id="registerMobile" type="tel" required placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" autocomplete="tel" />
+          </div>
+        </label>
+
+        <label for="registerEmail">
+          <span data-i18n="email_optional_label">Email (optional)</span>
+          <input id="registerEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+        </label>
+
+        <div>
+          <label for="registerPassword">
+            <span data-i18n="login_password_label">Password</span>
+          </label>
+          <div class="amz-password-wrap">
+            <input id="registerPassword" type="password" required minlength="6" placeholder="At least 6 characters" autocomplete="new-password" />
+            <button type="button" class="amz-toggle-pwd-btn" data-target="registerPassword" aria-label="Toggle password visibility" title="Show/Hide password">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="amz-password-hint">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span data-i18n="passwords_must_be_at_least_6_chars">Passwords must be at least 6 characters.</span>
+          </div>
+        </div>
+
+        <!-- Dynamic OTP Verification Step -->
+        <div id="registerOtpSection" style="display: none; margin-top: 4px; border: 1px dashed var(--amazon-border); border-radius: 6px; padding: 10px; background: #fdfdfd;">
+          <label for="registerOtp">
+            <span data-i18n="enter_otp">Enter OTP</span>
+            <input id="registerOtp" type="text" inputmode="numeric" maxlength="6" placeholder="6-digit OTP" style="height: 34px; width: 100%; border: 1px solid #888c8c; border-radius: 4px; padding: 0 10px; font: inherit;" />
+          </label>
+          <p id="registerOtpAssist" class="otp-assist-line subtle" style="font-size: 11.5px; margin: 4px 0 0;"></p>
+        </div>
+
+        <!-- Security Notification Notice -->
+        <p class="amz-auth-legal" style="margin: 4px 0 0;">
+          To verify your number, we will send you a text message with a temporary code. Message and data rates may apply.
+        </p>
+
+        <!-- Terms & Conditions Disclaimer -->
+        <p class="amz-auth-legal" style="margin: 4px 0 6px;">
+          <span data-i18n="auth_terms_prefix">By continuing, you agree to ElectroMart's</span>
+          <a href="terms.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+          <span class="amz-legal-and">&amp;</span>
+          <a href="privacy.html" data-i18n="auth_privacy_notice">Privacy Notice</a>.
+        </p>
+
+        <button id="registerSubmitBtn" type="submit" class="amz-btn-auth-primary" data-i18n="verify_mobile_number_btn">Verify mobile number</button>
+
+        <!-- Already have an account link -->
+        <div class="amz-signup-footer-switch">
+          <span data-i18n="auth_already_have_account">Already have an account?</span>
+          <a id="backToSigninLink" href="login.html" class="auth-link-btn" data-i18n="signin_tab" style="text-decoration: none;">Sign in ▾</a>
+        </div>
+      </form>
+
+      <!-- Feedback Alert Area -->
+      <p id="authMessage" class="auth-message" role="alert" aria-live="polite"></p>
+    </section>
+
+    <!-- Minimalist Auth Footer -->
+    <footer class="amz-auth-footer">
+      <div class="amz-auth-footer-links">
+        <a href="terms.html" data-i18n="auth_conditions_of_use">Conditions of Use</a>
+        <a href="privacy.html" data-i18n="auth_privacy_notice">Privacy Notice</a>
+        <a href="account.html" data-i18n="auth_help_link">Help</a>
+      </div>
+      <p class="amz-auth-copyright" data-i18n="auth_footer_copyright">© 2026, ElectroMart.in, Inc. or its affiliates</p>
+    </footer>
+  </main>
+
+  <!-- Script Sequence -->
+  <script src="translations.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="register.js"></script>
+</body>
+</html>

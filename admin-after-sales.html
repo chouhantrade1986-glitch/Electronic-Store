@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Returns & Support</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_returns">Returns & Support</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_returns">Returns, Refunds & Customer Support</h1>
+        <p>Manage return authorizations, process customer replacements, and issue instant refunds.</p>
+      </div>
+      <div class="amz-header-actions">
+        <button type="button" class="amz-btn-secondary" id="refreshClaimsBtn">
+          <span>🔄</span>
+          <span>Refresh Claims</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Returns KPIs -->
+    <section class="amz-kpi-grid" aria-label="Returns Metrics">
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Total Cases</div>
+        <div class="kpi-value" id="kpiTotalClaims">4</div>
+        <div class="kpi-subtext">Lifetime after-sales claims</div>
+      </article>
+
+      <article class="amz-kpi-card urgent">
+        <div class="kpi-title">Pending Inspection</div>
+        <div class="kpi-value" id="kpiPendingClaimsCount">1</div>
+        <div class="kpi-subtext">Requires staff review</div>
+      </article>
+
+      <article class="amz-kpi-card highlight">
+        <div class="kpi-title">Approved / In Transit</div>
+        <div class="kpi-value" id="kpiApprovedClaims">2</div>
+        <div class="kpi-subtext">Reverse pickup scheduled</div>
+      </article>
+
+      <article class="amz-kpi-card success">
+        <div class="kpi-title">Total Refunds Processed</div>
+        <div class="kpi-value" id="kpiTotalRefunds">₹29,990</div>
+        <div class="kpi-subtext">Credited to customer accounts</div>
+      </article>
+    </section>
+
+    <!-- Claims Table with Filters -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div class="amz-table-filters">
+          <input type="search" id="claimsSearchInput" placeholder="Search case ID, order ID, customer..." aria-label="Search Claims" style="min-width: 260px;" />
+
+          <select id="claimTypeFilter" aria-label="Filter by Claim Type">
+            <option value="all">All Claim Types</option>
+            <option value="Return">Return & Refund</option>
+            <option value="Replacement">Replacement</option>
+            <option value="Warranty">Warranty Support</option>
+          </select>
+
+          <select id="claimStatusFilter" aria-label="Filter by Status">
+            <option value="all">All Statuses</option>
+            <option value="pending">Pending Review</option>
+            <option value="approved">Approved</option>
+            <option value="refunded">Refunded</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--subtle);" id="claimsCountMeta">
+          Showing 0 claims
+        </div>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Item & Reason</th>
+            <th>Claim Type</th>
+            <th>Claim Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="claimsTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Process Claim Modal -->
+  <div class="amz-modal-overlay" id="processClaimModal" hidden>
+    <div class="amz-modal" role="dialog" aria-modal="true" aria-labelledby="processClaimModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="processClaimModalTitle">Resolve Customer Claim</h3>
+        <button type="button" class="modal-close-btn" id="closeClaimModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body">
+        <input type="hidden" id="modalClaimId" />
+        <div class="amz-form-group">
+          <label>Case Details</label>
+          <input type="text" id="modalClaimDisplay" readonly style="background: #f7fafa;" />
+        </div>
+        <div class="amz-form-group">
+          <label for="modalClaimAction">Resolution Action *</label>
+          <select id="modalClaimAction">
+            <option value="approved">Approve Return & Schedule Pickup</option>
+            <option value="refunded">Issue Full Refund (₹)</option>
+            <option value="rejected">Reject Claim</option>
+          </select>
+        </div>
+        <div class="amz-form-group">
+          <label for="modalClaimRefundAmount">Refund Amount (₹)</label>
+          <input type="number" id="modalClaimRefundAmount" />
+        </div>
+        <div class="amz-form-group">
+          <label for="modalClaimNotes">Staff Resolution Note</label>
+          <textarea id="modalClaimNotes" rows="3" placeholder="e.g. Verified device serial number. Customer confirmed return pickup address."></textarea>
+        </div>
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="cancelClaimModalBtn">Cancel</button>
+        <button type="button" class="amz-btn-primary" id="saveClaimModalBtn">Submit Resolution</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-after-sales.js?v=20260412a"></script>
+</body>
+</html>

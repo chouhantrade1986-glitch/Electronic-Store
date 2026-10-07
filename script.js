@@ -264,8 +264,10 @@ const translations = {
     "location.postalPlaceholder": "110001",
     "location.cancel": "Cancel",
     "location.save": "Save location",
-    "nav.account": "Account",
-    "nav.orders": "Orders",
+    "nav.helloSignIn": "Hello, sign in",
+    "nav.account": "Account & Lists ▾",
+    "nav.returns": "Returns",
+    "nav.orders": "& Orders",
     "nav.cart": "Cart",
     "category.allDepartments": "All Departments",
     "category.deals": "Today's Deals",
@@ -341,13 +343,13 @@ const translations = {
     "footer.shippingRates": "Shipping Rates",
     "footer.returns": "Returns",
     "footer.copyright": "© 2026 ElectroMart clone experience",
-    "categoryFilter.all": "All Catalogue",
-    "categoryFilter.computer": "Computers",
-    "categoryFilter.laptop": "Laptops",
-    "categoryFilter.printer": "Printers",
-    "categoryFilter.mobile": "Mobiles",
-    "categoryFilter.audio": "Audio",
-    "categoryFilter.accessory": "Accessories"
+    "categoryFilter.all": "All Categories",
+    "categoryFilter.computer": "Computers & Desktops",
+    "categoryFilter.laptop": "Laptops & Accessories",
+    "categoryFilter.components": "Components & Parts",
+    "categoryFilter.printer": "Printers & Cartridges",
+    "categoryFilter.audio": "Audio & Headphones",
+    "categoryFilter.mobile": "Mobile Accessories"
   },
   hi: {
     "header.deliverTo": "पहुंचाएं",
@@ -361,8 +363,10 @@ const translations = {
     "location.postalPlaceholder": "110001",
     "location.cancel": "रद्द करें",
     "location.save": "स्थान सेव करें",
-    "nav.account": "अकाउंट",
-    "nav.orders": "ऑर्डर",
+    "nav.helloSignIn": "नमस्ते, साइन इन करें",
+    "nav.account": "अकाउंट और लिस्ट ▾",
+    "nav.returns": "रिटर्न",
+    "nav.orders": "& ऑर्डर",
     "nav.cart": "कार्ट",
     "category.allDepartments": "सभी विभाग",
     "category.deals": "आज के ऑफर",
@@ -438,13 +442,145 @@ const translations = {
     "footer.shippingRates": "शिपिंग दरें",
     "footer.returns": "रिटर्न",
     "footer.copyright": "© 2026 इलेक्ट्रोमार्ट क्लोन अनुभव",
-    "categoryFilter.all": "सभी कैटलॉग",
-    "categoryFilter.computer": "कंप्यूटर",
-    "categoryFilter.laptop": "लैपटॉप",
-    "categoryFilter.printer": "प्रिंटर",
-    "categoryFilter.mobile": "मोबाइल",
-    "categoryFilter.audio": "ऑडियो",
-    "categoryFilter.accessory": "एक्सेसरी"
+    "categoryFilter.all": "सभी कैटेगरी",
+    "categoryFilter.computer": "कंप्यूटर और डेस्कटॉप",
+    "categoryFilter.laptop": "लैपटॉप और एक्सेसरीज",
+    "categoryFilter.components": "कंपोनेंट्स और पार्ट्स",
+    "categoryFilter.printer": "प्रिंटर और कार्ट्रिज",
+    "categoryFilter.audio": "ऑडियो और हेडफोन",
+    "categoryFilter.mobile": "मोबाइल एक्सेसरीज"
+  },
+  bn: {
+    "header.deliverTo": "ডেলিভারি",
+    "header.searchPlaceholder": "ইলেকট্রনিক্স খুঁজুন",
+    "header.searchBtn": "অনুসন্ধান",
+    "header.language": "ভাষা",
+    "nav.helloSignIn": "হ্যালো, সাইন ইন",
+    "nav.account": "অ্যাকাউন্ট ও তালিকা ▾",
+    "nav.returns": "রিটার্ন",
+    "nav.orders": "& অর্ডার",
+    "nav.cart": "কার্ট",
+    "category.allDepartments": "সব বিভাগ",
+    "category.deals": "আজকের ডিল",
+    "category.bestSellers": "সেরা বিক্রীত",
+    "hero.shopNow": "এখনই কিনুন",
+    "categoryFilter.all": "সব বিভাগ",
+    "categoryFilter.computer": "কম্পিউটার ও ডেস্কটপ",
+    "categoryFilter.laptop": "ল্যাপটপ ও আনুষাঙ্গিক",
+    "categoryFilter.components": "কম্পোনেন্ট ও পার্টস",
+    "categoryFilter.printer": "প্রিন্টার",
+    "categoryFilter.audio": "অডিও ও হেডফোন",
+    "categoryFilter.mobile": "মোবাইল এক্সেসরিজ"
+  },
+  mr: {
+    "header.deliverTo": "येथे पाठवा",
+    "header.searchPlaceholder": "इलेक्ट्रॉनिक्स शोधा",
+    "header.searchBtn": "शोधा",
+    "header.language": "भाषा",
+    "nav.helloSignIn": "नमस्कार, साइन इन",
+    "nav.account": "खाते आणि याद्या ▾",
+    "nav.returns": "रिटर्न",
+    "nav.orders": "& ऑर्डर्स",
+    "nav.cart": "कार्ट",
+    "category.allDepartments": "सर्व विभाग",
+    "category.deals": "आजच्या डील्स",
+    "category.bestSellers": "बेस्ट सेलर्स",
+    "hero.shopNow": "आता खरेदी करा",
+    "categoryFilter.all": "सर्व कॅटेगरी",
+    "categoryFilter.computer": "संगणक आणि डेस्कटॉप",
+    "categoryFilter.laptop": "लॅपटॉप आणि अ‍ॅक्सेसरीज",
+    "categoryFilter.components": "भाग आणि स्पेअर्स",
+    "categoryFilter.printer": "प्रिंटर्स",
+    "categoryFilter.audio": "ऑडिओ आणि हेडफोन्स",
+    "categoryFilter.mobile": "मोबाइल अ‍ॅक्सेसरीज"
+  },
+  ta: {
+    "header.deliverTo": "டெலிவரி",
+    "header.searchPlaceholder": "எலக்ட்ரானிக்ஸ் தேடுக",
+    "header.searchBtn": "தேடு",
+    "header.language": "மொழி",
+    "nav.helloSignIn": "வணக்கம், உள்நுழைக",
+    "nav.account": "கணக்கு & பட்டியல்கள் ▾",
+    "nav.returns": "ரிட்டர்ன்ஸ்",
+    "nav.orders": "& ஆர்டர்கள்",
+    "nav.cart": "கார்ட்",
+    "category.allDepartments": "அனைத்து பிரிவுகள்",
+    "category.deals": "இன்றைய டீல்கள்",
+    "category.bestSellers": "சிறந்த விற்பனை",
+    "hero.shopNow": "இப்போதே வாங்க",
+    "categoryFilter.all": "அனைத்தும்",
+    "categoryFilter.computer": "கணினி & டெஸ்க்டாப்",
+    "categoryFilter.laptop": "லேப்டாப் & பாகங்கள்",
+    "categoryFilter.components": "உதிரிபாகங்கள்",
+    "categoryFilter.printer": "பிரிண்டர்கள்",
+    "categoryFilter.audio": "ஆடியோ & ஹெட்போன்கள்",
+    "categoryFilter.mobile": "மொபைல் பாகங்கள்"
+  },
+  te: {
+    "header.deliverTo": "డెలివరీ",
+    "header.searchPlaceholder": "ఎలక్ట్రానిక్స్ శోధించండి",
+    "header.searchBtn": "శోధన",
+    "header.language": "భాష",
+    "nav.helloSignIn": "హలో, సైన్ ఇన్",
+    "nav.account": "ఖాతా & జాబితాలు ▾",
+    "nav.returns": "రిటర్న్స్",
+    "nav.orders": "& ఆర్డర్లు",
+    "nav.cart": "కార్ట్",
+    "category.allDepartments": "అన్ని విభాగాలు",
+    "category.deals": "నేటి డీల్స్",
+    "category.bestSellers": "బెస్ట్ సెల్లర్స్",
+    "hero.shopNow": "ఇప్పుడే కొనండి",
+    "categoryFilter.all": "అన్నీ",
+    "categoryFilter.computer": "కంప్యూటర్లు & డెస్క్‌టాప్‌లు",
+    "categoryFilter.laptop": "ల్యాప్‌టాప్‌లు & ఉపకరణాలు",
+    "categoryFilter.components": "భాగములు",
+    "categoryFilter.printer": "ప్రింటర్లు",
+    "categoryFilter.audio": "ఆడియో & హెడ్‌ఫోన్లు",
+    "categoryFilter.mobile": "మొబైల్ ఉపకరణాలు"
+  },
+  kn: {
+    "header.deliverTo": "ತಲುಪಿಸಿ",
+    "header.searchPlaceholder": "ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಹುಡುಕಿ",
+    "header.searchBtn": "ಹುಡುಕಿ",
+    "header.language": "ಭಾಷೆ",
+    "nav.helloSignIn": "ನಮಸ್ಕಾರ, ಸೈನ್ ಇನ್",
+    "nav.account": "ಖಾತೆ & ಪಟ್ಟಿಗಳು ▾",
+    "nav.returns": "ರಿಟರ್ನ್ಸ್",
+    "nav.orders": "& ಆರ್ಡರ್‌ಗಳು",
+    "nav.cart": "ಕಾರ್ಟ್",
+    "category.allDepartments": "ಎಲ್ಲಾ ವಿಭಾಗಗಳು",
+    "category.deals": "ಇಂದಿನ ಡೀಲ್‌ಗಳು",
+    "category.bestSellers": "ಬೆಸ್ಟ್ ಸೆಲ್ಲರ್‌ಗಳು",
+    "hero.shopNow": "ಈಗಲೇ ಖರೀದಿಸಿ",
+    "categoryFilter.all": "ಎಲ್ಲಾ",
+    "categoryFilter.computer": "ಕಂಪ್ಯೂಟರ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್",
+    "categoryFilter.laptop": "ಲ್ಯಾಪ್‌ಟಾಪ್ ಮತ್ತು ಪರಿಕರಗಳು",
+    "categoryFilter.components": "ಬಿಡಿಭಾಗಗಳು",
+    "categoryFilter.printer": "ಪ್ರಿಂಟರ್‌ಗಳು",
+    "categoryFilter.audio": "ಆಡಿಯೋ ಮತ್ತು ಹೆಡ್‌ಫೋನ್‌ಗಳು",
+    "categoryFilter.mobile": "ಮೊಬೈಲ್ ಪರಿಕರಗಳು"
+  },
+  ml: {
+    "header.deliverTo": "ഡെലിവറി",
+    "header.searchPlaceholder": "ഇലക്ട്രോണിക്സ് തിരയുക",
+    "header.searchBtn": "തിരയുക",
+    "header.language": "ഭാഷ",
+    "nav.helloSignIn": "ഹലോ, സൈൻ ഇൻ",
+    "nav.account": "അക്കൗണ്ട് & ലിസ്റ്റുകൾ ▾",
+    "nav.returns": "റിട്ടേൺസ്",
+    "nav.orders": "& ഓർഡറുകൾ",
+    "nav.cart": "കാർട്ട്",
+    "category.allDepartments": "എല്ലാ വിഭാഗങ്ങളും",
+    "category.deals": "ഇന്നത്തെ ഡീലുകൾ",
+    "category.bestSellers": "ബെസ്റ്റ് സെല്ലറുകൾ",
+    "hero.shopNow": "ഇപ്പോൾ വാങ്ങുക",
+    "categoryFilter.all": "എല്ലാം",
+    "categoryFilter.computer": "കമ്പ്യൂട്ടറുകൾ & ഡെസ്ക്ടോപ്പ്",
+    "categoryFilter.laptop": "ലാപ്‌ടോപ്പുകൾ & അനുബന്ധങ്ങൾ",
+    "categoryFilter.components": "ഘടകങ്ങൾ",
+    "categoryFilter.printer": "പ്രിന്ററുകൾ",
+    "categoryFilter.audio": "ഓഡിയോ & ഹെഡ്‌ഫോണുകൾ",
+    "categoryFilter.mobile": "മൊബൈൽ അനുബന്ധങ്ങൾ"
   }
 };
 
@@ -469,9 +605,17 @@ function getLanguagePack(lang) {
 }
 
 function t(key) {
+  if (window.EM_TRANSLATIONS) {
+    const emDict = window.EM_TRANSLATIONS[currentLang] || window.EM_TRANSLATIONS.en;
+    if (emDict && emDict[key] !== undefined) {
+      return emDict[key];
+    }
+  }
   const selected = getLanguagePack(currentLang);
   const english = translations.en || {};
-  return selected[key] || english[key] || key;
+  if (selected[key] !== undefined) return selected[key];
+  if (english[key] !== undefined) return english[key];
+  return "";
 }
 
 function formatLocationLabel(preference) {
@@ -522,7 +666,9 @@ function loadLanguagePreference() {
 
 function saveLanguagePreference(lang) {
   try {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, String(lang || "en").toLowerCase());
+    const val = String(lang || "en").toLowerCase();
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, val);
+    localStorage.setItem("electromart_lang", val);
   } catch (error) {
     return;
   }
@@ -849,26 +995,44 @@ function getReadableCategoryLabel(value) {
     .replace(/\b\w/g, (ch) => ch.toUpperCase());
 }
 
-function syncCategoryFilterOptions(sourceProducts) {
+const MAIN_SEARCH_CATEGORIES = [
+  { value: "all", label: "All Categories" },
+  { value: "computer", label: "Computers & Desktops" },
+  { value: "laptop", label: "Laptops & Accessories" },
+  { value: "components", label: "Components & Parts (RAM, SSD, GPU)" },
+  { value: "printer", label: "Printers & Cartridges" },
+  { value: "audio", label: "Audio & Headphones" },
+  { value: "mobile", label: "Mobile Accessories" }
+];
+
+function syncCategoryFilterOptions() {
   if (!categoryFilter) {
     return;
   }
   const activeValue = String(categoryFilter.value || "all").trim() || "all";
-  const categorySet = new Set();
-  sourceProducts.forEach((item) => {
-    const category = normalizeHomeCategory(item?.category);
-    if (category) {
-      categorySet.add(category);
-    }
-  });
-  const categories = Array.from(categorySet).sort((a, b) => a.localeCompare(b));
-  const optionsMarkup = [
-    `<option id="catAll" value="all">${t("categoryFilter.all")}</option>`,
-    ...categories.map((category) => `<option value="${category}">${getReadableCategoryLabel(category)}</option>`)
-  ].join("");
-  categoryFilter.innerHTML = optionsMarkup;
-  const nextValue = categories.includes(activeValue) || activeValue === "all" ? activeValue : "all";
-  categoryFilter.value = nextValue;
+  categoryFilter.innerHTML = MAIN_SEARCH_CATEGORIES.map(
+    (c) => `<option value="${c.value}"${c.value === activeValue ? ' selected="selected"' : ''}>${c.label}</option>`
+  ).join("");
+  categoryFilter.value = MAIN_SEARCH_CATEGORIES.some((c) => c.value === activeValue) ? activeValue : "all";
+  syncNavCategoryLabel();
+}
+
+function syncNavCategoryLabel() {
+  const select = document.getElementById("categoryFilter");
+  const label = document.getElementById("navCategoryLabel");
+  if (!select || !label) return;
+  const shortLabels = {
+    all: "All",
+    computer: "Computers",
+    laptop: "Laptops",
+    components: "Components",
+    printer: "Printers",
+    audio: "Audio",
+    mobile: "Mobiles"
+  };
+  const val = select.value || "all";
+  const display = shortLabels[val] || (select.options[select.selectedIndex]?.text?.split('&')[0]?.trim() || "All");
+  label.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
 }
 
 function saveCartMap(cartMap) {
@@ -959,6 +1123,16 @@ function rememberSearchQuery(query) {
     return;
   }
   saveSearchHistory([value, ...loadSearchHistory()]);
+}
+
+function removeSearchHistoryItem(query) {
+  const value = String(query || "").trim();
+  if (!value) {
+    return;
+  }
+  const history = loadSearchHistory();
+  const updated = history.filter((item) => item.toLowerCase() !== value.toLowerCase());
+  saveSearchHistory(updated);
 }
 
 function getProductStockState(product) {
@@ -1445,24 +1619,26 @@ function getHeroBackdrop(category, product) {
 }
 
 function buildHeroSlides(sourceProducts) {
+  const activeLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const heroT = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[activeLang]) ? window.EM_TRANSLATIONS[activeLang] : {};
   const slides = [];
   const creatorItems = getHomeCollectionProducts(sourceProducts, "creator-studio");
   if (creatorItems.length) {
     const featuredCreator = creatorItems[0];
     slides.push({
       id: "creator-studio-launch",
-      eyebrow: "Just launched",
-      title: "Creator Studio setups built for editing, streaming, and sharper desks",
-      description: `${creatorItems.length} creator-ready products are live now across ${getUniqueCollectionCount(creatorItems)} shopping paths. ${featuredCreator?.name || "Creator Studio"} leads the collection with premium-ready confidence.`,
-      pills: ["Creator Studio", `From ${money(getStartingPrice(creatorItems))}`, `${getHomeRatingBadge(creatorItems)} top rated`],
+      eyebrow: heroT.just_launched || "Just launched",
+      title: heroT.hero_creator_title || "Creator Studio setups built for editing, streaming, and sharper desks",
+      description: `${creatorItems.length} ${heroT.live_now || "live now"}. ${featuredCreator?.name || "Creator Studio"}`,
+      pills: ["Creator Studio", `${heroT.starting_at || "From"} ${money(getStartingPrice(creatorItems))}`, `${getHomeRatingBadge(creatorItems)} ${heroT.top_rating || "top rated"}`],
       stats: [
-        { label: "Live picks", value: `${creatorItems.length}` },
-        { label: "Starting at", value: money(getStartingPrice(creatorItems)) },
-        { label: "Top rating", value: getHomeRatingBadge(creatorItems) }
+        { label: heroT.live_now || "Live picks", value: `${creatorItems.length}` },
+        { label: heroT.starting_at || "Starting at", value: money(getStartingPrice(creatorItems)) },
+        { label: heroT.top_rating || "Top rating", value: getHomeRatingBadge(creatorItems) }
       ],
       actions: [
-        { href: "creator-studio.html", label: "Explore Creator Studio", secondary: false },
-        { href: featuredCreator ? `product-detail.html?id=${encodeURIComponent(featuredCreator.id)}` : "products.html?search=creator", label: "View featured creator pick", secondary: true }
+        { href: "creator-studio.html", label: heroT.explore_creator_studio || "Explore Creator Studio", secondary: false },
+        { href: featuredCreator ? `product-detail.html?id=${encodeURIComponent(featuredCreator.id)}` : "products.html?search=creator", label: heroT.view_featured_pick || "View featured pick", secondary: true }
       ],
       backgroundImage: getHeroBackdrop("creator-studio", featuredCreator)
     });
@@ -1497,18 +1673,18 @@ function buildHeroSlides(sourceProducts) {
     const label = getReadableCategoryLabel(category);
     slides.push({
       id: `${category}-${index}`,
-      eyebrow: index === 0 && !creatorItems.length ? "Today’s headline offer" : "Trending right now",
-      title: `${label} deals built for fast checkout`,
-      description: `${items.length} options live now. ${featured?.name || label} is leading this category with strong ratings and ready-to-ship pricing.`,
-      pills: [label, featured?.brand || "ElectroMart", `From ${money(getStartingPrice(items))}`],
+      eyebrow: index === 0 && !creatorItems.length ? (heroT.todays_headline_offer || "Today’s headline offer") : (heroT.trending_right_now || "Trending right now"),
+      title: `${label} ${heroT.deals_fast_checkout || "deals built for fast checkout"}`,
+      description: `${items.length} ${heroT.live_now || "live now"}. ${featured?.name || label}`,
+      pills: [label, featured?.brand || "ElectroMart", `${heroT.starting_at || "From"} ${money(getStartingPrice(items))}`],
       stats: [
-        { label: "Live now", value: `${items.length}` },
-        { label: "Starting at", value: money(getStartingPrice(items)) },
-        { label: "Top rating", value: getHomeRatingBadge(items) }
+        { label: heroT.live_now || "Live now", value: `${items.length}` },
+        { label: heroT.starting_at || "Starting at", value: money(getStartingPrice(items)) },
+        { label: heroT.top_rating || "Top rating", value: getHomeRatingBadge(items) }
       ],
       actions: [
-        { href: getCategoryLandingLink(category), label: `Shop ${label}`, secondary: false },
-        { href: featured ? `product-detail.html?id=${encodeURIComponent(featured.id)}` : "products.html", label: "View featured pick", secondary: true }
+        { href: getCategoryLandingLink(category), label: `${label} ${heroT.shop_now_prefix || "Shop"}`, secondary: false },
+        { href: featured ? `product-detail.html?id=${encodeURIComponent(featured.id)}` : "products.html", label: heroT.view_featured_pick || "View featured pick", secondary: true }
       ],
       backgroundImage: getHeroBackdrop(category, featured)
     });
@@ -2000,14 +2176,18 @@ function highlightSuggestionQuery(text, query) {
 }
 
 function renderSuggestionCard(item, query) {
-  const media =
-    item.type === "product" && item.image
-      ? `
-        <span class="suggestion-media suggestion-thumb" aria-hidden="true">
-          <img src="${escapeSuggestionHtml(item.image)}" alt="" loading="lazy" />
-        </span>
-      `
-      : `<span class="suggestion-media suggestion-icon suggestion-icon--${escapeSuggestionHtml(item.type)}" aria-hidden="true"></span>`;
+  let media = "";
+  if (item.type === "product" && item.image) {
+    media = `
+      <span class="suggestion-media suggestion-thumb" aria-hidden="true">
+        <img src="${escapeSuggestionHtml(item.image)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='product-placeholder.svg';" />
+      </span>
+    `;
+  } else if (item.type === "history") {
+    media = `<span class="suggestion-media suggestion-clock" aria-hidden="true">🕒</span>`;
+  } else {
+    media = `<span class="suggestion-media suggestion-icon suggestion-icon--${escapeSuggestionHtml(item.type)}" aria-hidden="true">🔍</span>`;
+  }
 
   const kicker = item.kicker
     ? `<span class="suggestion-kicker">${escapeSuggestionHtml(item.kicker)}</span>`
@@ -2022,16 +2202,21 @@ function renderSuggestionCard(item, query) {
   if (item.action) {
     trailingParts.push(`<span class="suggestion-action">${escapeSuggestionHtml(item.action)}</span>`);
   }
+  if (item.type === "history") {
+    trailingParts.push(`<span class="suggestion-remove-btn" role="button" tabindex="0" title="Delete from search history" aria-label="Delete ${escapeSuggestionHtml(item.value)} from search history" data-remove-history="${escapeSuggestionHtml(item.value)}">&times;</span>`);
+  }
   const trailing = trailingParts.length
     ? `<span class="suggestion-trailing">${trailingParts.join("")}</span>`
     : "";
 
+  const categoryAttr = item.category ? ` data-suggestion-category="${escapeSuggestionHtml(item.category)}"` : "";
+
   return `
-    <button class="suggestion-item suggestion-item--${escapeSuggestionHtml(item.type)}" type="button" data-suggestion-type="${escapeSuggestionHtml(item.type)}" data-suggestion-value="${escapeSuggestionHtml(item.value)}">
+    <button class="suggestion-item suggestion-item--${escapeSuggestionHtml(item.type)}" type="button" data-suggestion-type="${escapeSuggestionHtml(item.type)}" data-suggestion-value="${escapeSuggestionHtml(item.value)}"${categoryAttr}>
       ${media}
       <span class="suggestion-copy">
         ${kicker}
-        <span class="suggestion-label">${highlightSuggestionQuery(item.label, query)}</span>
+        <span class="suggestion-label${item.type === "history" ? " suggestion-label--history" : ""}">${item.type === "scoped" ? item.label : highlightSuggestionQuery(item.label, query)}</span>
         ${meta}
       </span>
       ${trailing}
@@ -2153,7 +2338,8 @@ function activateActiveSearchSuggestion() {
   const activeItem = items[activeSearchSuggestionIndex];
   const type = activeItem.getAttribute("data-suggestion-type");
   const value = String(activeItem.getAttribute("data-suggestion-value") || "").trim();
-  handleSearchSuggestionSelection(type, value);
+  const category = String(activeItem.getAttribute("data-suggestion-category") || "").trim();
+  handleSearchSuggestionSelection(type, value, category);
   return true;
 }
 
@@ -2168,50 +2354,35 @@ function handleSearchSuggestionKeydown(event) {
     }
     return;
   }
-  if (event.key === "Tab") {
+  if (event.key === "Enter") {
     if (searchSuggestions.hidden) {
       return;
     }
-    const items = getSearchSuggestionButtons();
-    if (!items.length) {
-      if (event.shiftKey) {
+    if (activeSearchSuggestionIndex >= 0) {
+      event.preventDefault();
+      if (!activateActiveSearchSuggestion()) {
         closeSearchSuggestions();
       }
       return;
     }
-    if (event.shiftKey) {
-      closeSearchSuggestions();
-      return;
-    }
-    event.preventDefault();
-    const nextIndex = activeSearchSuggestionIndex >= 0 ? activeSearchSuggestionIndex : 0;
-    setActiveSearchSuggestionIndex(nextIndex);
-    items[nextIndex].focus();
-    return;
-  }
-  if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) {
-    return;
-  }
-  if (searchSuggestions.hidden) {
-    renderSearchSuggestions();
-  }
-  const items = getSearchSuggestionButtons();
-  if (!items.length) {
+    closeSearchSuggestions();
     return;
   }
   if (event.key === "ArrowDown") {
     event.preventDefault();
+    if (searchSuggestions.hidden) {
+      renderSearchSuggestions();
+    }
     moveActiveSearchSuggestion(1);
     return;
   }
   if (event.key === "ArrowUp") {
     event.preventDefault();
+    if (searchSuggestions.hidden) {
+      renderSearchSuggestions();
+    }
     moveActiveSearchSuggestion(-1);
     return;
-  }
-  if (event.key === "Enter" && activeSearchSuggestionIndex >= 0) {
-    event.preventDefault();
-    activateActiveSearchSuggestion();
   }
 }
 
@@ -2229,10 +2400,15 @@ function buildProductsSearchUrl(query = "", category = "all") {
   return suffix ? `products.html?${suffix}` : "products.html";
 }
 
-function handleSearchSuggestionSelection(type, value) {
+function handleSearchSuggestionSelection(type, value, category = "") {
   closeSearchSuggestions();
   if (type === "product" && value) {
     window.location.href = `product-detail.html?id=${encodeURIComponent(value)}`;
+    return;
+  }
+  if (type === "scoped" && value) {
+    rememberSearchQuery(value);
+    window.location.href = buildProductsSearchUrl(value, category || "all");
     return;
   }
   if (type === "category" && value) {
@@ -2240,10 +2416,10 @@ function handleSearchSuggestionSelection(type, value) {
     window.location.href = buildProductsSearchUrl("", value);
     return;
   }
-  if (type === "history" && value) {
+  if ((type === "history" || type === "keyword" || type === "see-all") && value) {
     searchInput.value = value;
     rememberSearchQuery(value);
-    window.location.href = buildProductsSearchUrl(value, categoryFilter.value || "all");
+    window.location.href = buildProductsSearchUrl(value, categoryFilter?.value || "all");
   }
 }
 
@@ -2260,13 +2436,13 @@ function renderSearchSuggestions() {
     }
     searchSuggestions.innerHTML = renderSuggestionSection(
       "Recent Searches",
-      recent.map((item) => ({
+      recent.slice(0, 4).map((item) => ({
         type: "history",
         value: item,
         label: item,
-        meta: "Recent search",
-        kicker: "Recent",
-        action: "Use"
+        meta: "",
+        kicker: "",
+        action: ""
       })),
       ""
     );
@@ -2280,42 +2456,131 @@ function renderSearchSuggestions() {
     return;
   }
 
-  const sourceProducts = getHomeProducts().filter((item) => item.segment !== "b2b");
-  const categoryMatches = Array.from(new Set(sourceProducts
-    .map((item) => normalizeHomeCategory(item.category))
-    .filter((category) => category && getReadableCategoryLabel(category).toLowerCase().includes(query))))
-    .slice(0, 2)
-    .map((category) => ({
-      type: "category",
-      value: category,
-      label: getReadableCategoryLabel(category),
-      meta: "Browse category",
-      kicker: "Category",
-      action: "Browse"
+  let memoryCatalog = [];
+  if (typeof window !== "undefined") {
+    if (Array.isArray(window.EM_CATALOG) && window.EM_CATALOG.length) {
+      memoryCatalog = window.EM_CATALOG;
+    } else if (window.EM_CATALOG_MAP && typeof window.EM_CATALOG_MAP === "object") {
+      memoryCatalog = typeof window.EM_CATALOG_MAP.values === "function"
+        ? Array.from(window.EM_CATALOG_MAP.values())
+        : Object.values(window.EM_CATALOG_MAP);
+    }
+  }
+  const homeProds = getHomeProducts().filter((item) => item.segment !== "b2b");
+  const mergedSearchMap = new Map();
+  homeProds.forEach((p) => {
+    if (p && p.id) mergedSearchMap.set(String(p.id), p);
+  });
+  memoryCatalog.forEach((p) => {
+    if (p && p.id && !mergedSearchMap.has(String(p.id))) {
+      const normalized = mapHomeCatalogProduct(p) || p;
+      if (normalized.segment !== "b2b") {
+        mergedSearchMap.set(String(p.id), normalized);
+      }
+    }
+  });
+  const sourceProducts = Array.from(mergedSearchMap.values());
+
+  // 1. Scoped Category Match (Amazon style: e.g. "laptop in Laptops & Accessories")
+  const scopedCat = MAIN_SEARCH_CATEGORIES.find(
+    (c) => c.value !== "all" && (c.label.toLowerCase().includes(query) || query.includes(c.value))
+  );
+  const scopedSuggestions = scopedCat ? [{
+    type: "scoped",
+    value: query,
+    category: scopedCat.value,
+    label: `${escapeSuggestionHtml(query)} <strong class="suggestion-scope-tag">in ${escapeSuggestionHtml(scopedCat.label)}</strong>`,
+    meta: "",
+    kicker: "",
+    action: ""
+  }] : [];
+
+  // 2. Popular Tech Keyword Predictions
+  const TECH_KEYWORDS = [
+    "laptop", "gaming laptop", "laptop ram", "laptop ssd", "wireless headphones", 
+    "bluetooth earphones", "smartphones", "mechanical keyboard", "gaming mouse", 
+    "pc cabinet", "cpu processor", "graphics card gpu", "all in one printer", 
+    "color printer", "desktop computer", "power supply smps", "ram ddr4", "nvme ssd"
+  ];
+  const keywordMatches = TECH_KEYWORDS
+    .filter((kw) => kw.includes(query) && kw !== query)
+    .slice(0, 4)
+    .map((kw) => ({
+      type: "keyword",
+      value: kw,
+      label: kw,
+      meta: "",
+      kicker: "",
+      action: ""
     }));
 
+  // 3. Product Matches (top 4)
   const productMatches = sourceProducts
-    .filter((item) => `${item.name} ${item.brand} ${item.category}`.toLowerCase().includes(query))
+    .filter((item) => {
+      const titleHi = (item.title && typeof item.title === "object" && item.title.hi) || "";
+      const titleEn = (item.title && typeof item.title === "object" && item.title.en) || item.name || "";
+      const brand = item.brand || "";
+      const cat = item.category || "";
+      const sku = item.sku || "";
+      return `${titleEn} ${titleHi} ${brand} ${cat} ${sku}`.toLowerCase().includes(query);
+    })
+    .slice(0, 4)
     .map((item) => {
       const stockState = getProductStockState(item);
+      const title = (typeof window !== "undefined" && typeof window.getLocalizedTitle === "function")
+        ? window.getLocalizedTitle(item)
+        : (item.name || `Product #${item.id}`);
+      const thumb = item.image || (Array.isArray(item.images) && item.images[0]) || "";
       return {
         type: "product",
         value: String(item.id),
-        label: item.name,
-        meta: `${item.brand} | ${getReadableCategoryLabel(normalizeHomeCategory(item.category))} | ${stockState.label}`,
-        kicker: Number(item.rating || 0) > 0 ? `${Number(item.rating).toFixed(1)} star rated` : "Top match",
+        label: title,
+        meta: `${item.brand} | ${money(item.price)}`,
+        kicker: Number(item.rating || 0) > 0 ? `★ ${Number(item.rating).toFixed(1)}` : "",
         stockRank: stockState.rank,
         priceText: money(item.price),
         action: "View",
-        image: normalizeImageUrl(item.image || "")
+        image: normalizeImageUrl(thumb)
       };
-    })
-    .sort((a, b) => a.stockRank - b.stockRank || a.label.localeCompare(b.label))
-    .slice(0, 4);
+    });
+
+  const allMatchesCount = sourceProducts.filter((item) => {
+    const titleHi = (item.title && typeof item.title === "object" && item.title.hi) || "";
+    const titleEn = (item.title && typeof item.title === "object" && item.title.en) || item.name || "";
+    const brand = item.brand || "";
+    const cat = item.category || "";
+    const sku = item.sku || "";
+    return `${titleEn} ${titleHi} ${brand} ${cat} ${sku}`.toLowerCase().includes(query);
+  }).length;
+
+  const currentLang = (typeof localStorage !== "undefined" && (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en")).toLowerCase();
+  const isHindi = currentLang === "hi";
+  const seeAllLabel = isHindi
+    ? `"${escapeSuggestionHtml(query)}" के सभी परिणाम देखें`
+    : `See all results for "${escapeSuggestionHtml(query)}"`;
+  const countBadge = isHindi
+    ? `(${allMatchesCount} उत्पाद) ›`
+    : `(${allMatchesCount} results) ›`;
+
+  const seeAllMarkup = allMatchesCount > 0 ? `
+    <div class="suggestion-footer">
+      <button class="suggestion-item suggestion-item--see-all" type="button" data-suggestion-type="see-all" data-suggestion-value="${escapeSuggestionHtml(query)}"${categoryFilter?.value && categoryFilter.value !== "all" ? ` data-suggestion-category="${escapeSuggestionHtml(categoryFilter.value)}"` : ""}>
+        <span class="suggestion-media suggestion-icon" aria-hidden="true">🔍</span>
+        <span class="suggestion-copy">
+          <span class="suggestion-label">${seeAllLabel}</span>
+        </span>
+        <span class="suggestion-trailing">
+          <span class="suggestion-action suggestion-see-all-count">${countBadge}</span>
+        </span>
+      </button>
+    </div>
+  ` : "";
 
   const markup = [
-    renderSuggestionSection("Categories", categoryMatches, query),
-    renderSuggestionSection("Top Matches", productMatches, query)
+    renderSuggestionSection("", scopedSuggestions, query),
+    renderSuggestionSection("Suggestions", keywordMatches, query),
+    renderSuggestionSection("Products", productMatches, query),
+    seeAllMarkup
   ]
     .filter(Boolean)
     .join("");
@@ -2398,9 +2663,37 @@ function handleSuggestionListKeydown(event) {
 function applyTranslations() {
   document.documentElement.setAttribute("lang", currentLang);
 
+  const LANGUAGE_NAMES_MAP = {
+    en: "English",
+    hi: "हिन्दी - HI",
+    ta: "தமிழ் - TA",
+    te: "తెలుగు - TE",
+    kn: "ಕನ್ನಡ - KN",
+    ml: "മലയാളം - ML",
+    bn: "বাংলা - BN",
+    mr: "मराठी - MR",
+    ur: "اردو - UR",
+    pa: "ਪੰਜਾਬੀ - PA",
+    gu: "ગુજરાતી - GU"
+  };
+
+  document.querySelectorAll(".lang-text, #currentLangCode").forEach((element) => {
+    element.textContent = currentLang.toUpperCase();
+  });
+
+  document.querySelectorAll(".dept-drawer-lang-text, #deptDrawerLangText").forEach((element) => {
+    element.textContent = LANGUAGE_NAMES_MAP[currentLang] || "English";
+  });
+
+  document.querySelectorAll("#footerLanguageSelect, .footer-language-select, #languageSelect").forEach((element) => {
+    if (element.value !== currentLang) {
+      element.value = currentLang;
+    }
+  });
+
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.getAttribute("data-i18n");
-    element.textContent = t(key);
+    const trVal = t(key); if (trVal) element.textContent = trVal;
   });
 
   document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
@@ -2414,13 +2707,21 @@ function applyTranslations() {
       `<option value="all">${t("categoryFilter.all")}</option>`,
       `<option value="computer">${t("categoryFilter.computer")}</option>`,
       `<option value="laptop">${t("categoryFilter.laptop")}</option>`,
+      `<option value="components">${t("categoryFilter.components")}</option>`,
       `<option value="printer">${t("categoryFilter.printer")}</option>`,
-      `<option value="mobile">${t("categoryFilter.mobile")}</option>`,
       `<option value="audio">${t("categoryFilter.audio")}</option>`,
-      `<option value="accessory">${t("categoryFilter.accessory")}</option>`
+      `<option value="mobile">${t("categoryFilter.mobile")}</option>`
     ].join("");
-    categoryFilter.value = ["all", "computer", "laptop", "printer", "mobile", "audio", "accessory"].includes(currentValue) ? currentValue : "all";
+    categoryFilter.value = ["all", "computer", "laptop", "components", "printer", "audio", "mobile"].includes(currentValue) ? currentValue : "all";
   }
+
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(currentLang);
+  }
+  if (typeof window.renderProducts === "function") {
+    window.renderProducts(currentLang);
+  }
+
   renderStores();
 }
 
@@ -2473,7 +2774,7 @@ searchInput.addEventListener("focus", renderSearchSuggestions);
 searchInput.addEventListener("keydown", handleSearchSuggestionKeydown);
 if (searchSuggestions) {
   searchSuggestions.addEventListener("mousedown", (event) => {
-    if (event.target.closest("[data-suggestion-type], [data-clear-search-history]")) {
+    if (event.target.closest("[data-suggestion-type], [data-clear-search-history], [data-remove-history]")) {
       event.preventDefault();
     }
   });
@@ -2501,6 +2802,15 @@ if (searchSuggestions) {
   });
   searchSuggestions.addEventListener("keydown", handleSuggestionListKeydown);
   searchSuggestions.addEventListener("click", (event) => {
+    const removeBtn = event.target.closest("[data-remove-history]");
+    if (removeBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      const queryToRemove = removeBtn.getAttribute("data-remove-history");
+      removeSearchHistoryItem(queryToRemove);
+      renderSearchSuggestions();
+      return;
+    }
     const clearButton = event.target.closest("[data-clear-search-history]");
     if (clearButton) {
       event.preventDefault();
@@ -2518,15 +2828,27 @@ if (searchSuggestions) {
     }
     const type = suggestion.getAttribute("data-suggestion-type");
     const value = String(suggestion.getAttribute("data-suggestion-value") || "").trim();
-    handleSearchSuggestionSelection(type, value);
+    const category = String(suggestion.getAttribute("data-suggestion-category") || "").trim();
+    handleSearchSuggestionSelection(type, value, category);
   });
 }
-categoryFilter.addEventListener("change", filterProducts);
-languageSelect.addEventListener("change", (event) => {
-  currentLang = event.target.value;
-  saveLanguagePreference(currentLang);
-  applyTranslations();
-  renderHomeSurface();
+if (categoryFilter) {
+  categoryFilter.addEventListener("change", () => {
+    filterProducts();
+    syncNavCategoryLabel();
+  });
+}
+const allLangSelectors = document.querySelectorAll("#languageSelect, #footerLanguageSelect, .footer-language-select");
+allLangSelectors.forEach((sel) => {
+  sel.addEventListener("change", (event) => {
+    currentLang = String(event.target.value || "en").toLowerCase();
+    saveLanguagePreference(currentLang);
+    applyTranslations();
+    if (typeof applySavedLanguage === "function") {
+      applySavedLanguage();
+    }
+    renderHomeSurface();
+  });
 });
 
 if (heroPrev) {
@@ -2695,42 +3017,35 @@ if (quickViewWishlistBtn) {
 }
 
 currentLang = loadLanguagePreference();
-if (languageSelect) {
-  languageSelect.value = currentLang;
-}
+document.querySelectorAll("#languageSelect, #footerLanguageSelect, .footer-language-select").forEach((sel) => {
+  sel.value = currentLang;
+});
 applyTranslations();
 initLocationPicker();
 syncCartCount();
 renderHomeSurface();
 void fetchHomeProductsFromApi();
 
-// Back to Top Button Functionality for Homepage
+// Back to Top functionality matching Amazon India
+const footerTopBar = document.querySelector('.footer-top');
 const backToTopHomeBtn = document.getElementById('backToTopHome');
+
+function scrollToTopSmooth(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+if (footerTopBar) {
+  footerTopBar.addEventListener('click', scrollToTopSmooth);
+  footerTopBar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      scrollToTopSmooth(e);
+    }
+  });
+}
 if (backToTopHomeBtn) {
-  backToTopHomeBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-  
-  // Style the button
-  backToTopHomeBtn.style.cssText = `
-    background: none;
-    border: none;
-    color: #f8fafc;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
-  `;
-  
-  backToTopHomeBtn.addEventListener('mouseenter', () => {
-    backToTopHomeBtn.style.color = '#ffd814';
-  });
-  
-  backToTopHomeBtn.addEventListener('mouseleave', () => {
-    backToTopHomeBtn.style.color = '#f8fafc';
-  });
+  backToTopHomeBtn.addEventListener('click', scrollToTopSmooth);
 }

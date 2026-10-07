@@ -50,6 +50,105 @@ function resolveRunbookUrl(config, anchor) {
   return normalizedAnchor ? `${base}#${normalizedAnchor}` : base;
 }
 
+function parseWebhookTargets(rawValue) {
+  const candidates = String(rawValue || "")
+    .split(/[\r\n,;\s]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return candidates.filter((item) => item.startsWith("http://") || item.startsWith("https://"));
+}
+
+function resolveAlertWebhookTargets(env = process.env) {
+  const values = [
+    env && env.ALERT_WEBHOOK_URL,
+    env && env.ALERT_DISCORD_WEBHOOK_URL,
+    env && env.ALERT_WEBHOOK_URLS,
+    env && env.ALERT_NOTIFICATION_WEBHOOK_URL
+  ];
+
+  const collected = values.flatMap((value) => parseWebhookTargets(value));
+  return [...new Set(collected)];
+}
+
+function buildIncidentAlertPayload({
+  error,
+  service = "electromart-backend",
+  runbookBaseUrl,
+  context = {},
+  env = process.env,
+  now = new Date().toISOString()
+} = {}) {
+  const message = error && error.message ? error.message : String(error || "Unhandled process error");
+  const config = { runbookBaseUrl: runbookBaseUrl || resolveAlertPolicyConfig().runbookBaseUrl };
+  const payload = {
+    id: "backend-process-incident",
+    severity: "critical",
+    service: String(service || "electromart-backend").trim() || "electromart-backend",
+    message,
+    detectedAt: String(now || new Date().toISOString()),
+    runbookUrl: resolveRunbookUrl(config, "incident-triggered"),
+    context: context && typeof context === "object" ? { ...context } : {},
+    escalationTargets: resolveAlertWebhookTargets(env)
+  };
+
+  if (error && error.stack) {
+    payload.stack = String(error.stack);
+  }
+
+  return payload;
+}
+
+function registerIncidentHooks(options = {}) {
+  const proc = options.processObject || process;
+  const env = options.env || process.env;
+  const service = String(options.service || "electromart-backend").trim() || "electromart-backend";
+  const runbookBaseUrl = options.runbookBaseUrl || resolveAlertPolicyConfig(env).runbookBaseUrl;
+
+  const handleProcessError = (label, error, extraContext = {}) => {
+    const payload = buildIncidentAlertPayload({
+      error,
+      service,
+      runbookBaseUrl,
+      env,
+      context: {
+        trigger: label,
+        ...extraContext
+      }
+    });
+
+    if (typeof options.onIncident === "function") {
+      options.onIncident(payload, { label, env });
+    }
+
+    const output = {
+      label,
+      payload,
+      escalationTargets: resolveAlertWebhookTargets(env)
+    };
+
+    try {
+      process.stderr.write(`${JSON.stringify(output)}\n`);
+    } catch (_error) {
+      // noop: best effort logging only
+    }
+
+    return payload;
+  };
+
+  if (typeof proc.on !== "function") {
+    return { registered: false, events: [] };
+  }
+
+  proc.on("uncaughtException", (error) => handleProcessError("uncaughtException", error));
+  proc.on("unhandledRejection", (reason) => handleProcessError("unhandledRejection", reason));
+
+  return {
+    registered: true,
+    events: ["uncaughtException", "unhandledRejection"]
+  };
+}
+
 function buildAlert({
   id,
   severity = "high",
@@ -197,7 +296,10 @@ function evaluateAlertRules({
 }
 
 module.exports = {
+  buildIncidentAlertPayload,
   evaluateAlertRules,
+  registerIncidentHooks,
+  resolveAlertWebhookTargets,
   resolveAlertPolicyConfig,
   resolveRunbookUrl
 };

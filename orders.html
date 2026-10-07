@@ -21,25 +21,62 @@
   <div id="headerContainer"></div>
 
   <main class="orders-main">
-    <section class="orders-head">
-      <div class="orders-title-wrap">
-        <h1>Your Orders</h1>
+    <!-- Amazon Breadcrumb -->
+    <nav class="amz-orders-breadcrumb" aria-label="Breadcrumb">
+      <a href="account.html" data-i18n="footer.yourAccount">Your Account</a> &rsaquo; <span data-i18n="your_orders">Your Orders</span>
+    </nav>
+
+    <!-- Amazon Orders Top Header -->
+    <section class="amz-orders-header">
+      <div class="amz-orders-title-group">
+        <h1 data-i18n="your_orders">Your Orders</h1>
         <span id="ordersPhoneVerificationBadge" class="verification-badge pending">Phone Pending</span>
       </div>
-      <div class="orders-controls">
-        <input id="orderSearch" type="search" placeholder="Search by order ID or product" aria-label="Search orders" />
-        <select id="statusFilter" aria-label="Filter by status">
-          <option value="all">All Status</option>
+      <form id="orderSearchForm" class="amz-order-search-box" role="search" onsubmit="event.preventDefault();">
+        <input id="orderSearch" type="search" placeholder="Search all orders" data-i18n-placeholder="search_orders_placeholder" aria-label="Search orders" />
+        <button id="orderSearchSubmitBtn" class="amz-order-search-btn" type="submit" aria-label="Search orders">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+          </svg>
+          <span data-i18n="search_orders_btn">Search Orders</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Amazon 4-Tab Navigation Bar -->
+    <nav class="amz-orders-nav-tabs" id="orderTabs" aria-label="Order navigation tabs">
+      <button class="amz-order-tab-btn active" data-tab="orders" type="button" data-i18n="tab_orders">Orders</button>
+      <button class="amz-order-tab-btn" data-tab="buy_again" type="button" data-i18n="tab_buy_again">Buy Again</button>
+      <button class="amz-order-tab-btn" data-tab="not_yet_shipped" type="button" data-i18n="tab_not_yet_shipped">Not Yet Shipped</button>
+      <button class="amz-order-tab-btn" data-tab="cancelled" type="button" data-i18n="tab_cancelled">Cancelled Orders</button>
+    </nav>
+
+    <!-- Amazon Orders Filter Row -->
+    <section class="amz-orders-filter-row">
+      <p id="ordersMeta" class="orders-meta" role="status" aria-live="polite" aria-atomic="true">Showing 0 orders</p>
+      <div class="amz-orders-time-filter-wrap">
+        <label for="timeFilter" class="visually-hidden">Filter orders by time period</label>
+        <select id="timeFilter" aria-label="Filter orders by time">
+          <option value="past_3_months" data-i18n="time_past_3_months">past 3 months</option>
+          <option value="past_6_months" data-i18n="time_past_6_months">past 6 months</option>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="archived" data-i18n="time_archived">Archived orders</option>
+        </select>
+        <!-- Keep statusFilter present for compatibility with test assertions and programmatic filters -->
+        <select id="statusFilter" aria-label="Filter by status" style="display:none;">
+          <option value="all" data-i18n="all_status">All Status</option>
           <option value="awaiting_payment">Awaiting Payment</option>
-          <option value="delivered">Delivered</option>
-          <option value="shipped">Shipped</option>
-          <option value="processing">Processing</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="delivered" data-i18n="status_delivered">Delivered</option>
+          <option value="shipped" data-i18n="status_shipped">Shipped</option>
+          <option value="processing" data-i18n="status_processing">Processing</option>
+          <option value="cancelled" data-i18n="status_cancelled">Cancelled</option>
         </select>
       </div>
     </section>
 
-    <p id="ordersMeta" class="orders-meta" role="status" aria-live="polite" aria-atomic="true">Showing 0 orders</p>
+    <!-- Notification / Updates Panel -->
     <section class="order-updates-panel">
       <div class="orders-head compact">
         <div>
@@ -50,29 +87,37 @@
       </div>
       <div id="orderNotificationsList" class="order-updates-list"></div>
     </section>
+
+    <!-- Orders Grid -->
     <section id="ordersGrid" class="orders-grid"></section>
   </main>
 
-  <script src="listing-filter-chips.js?v=20260314c"></script>
-  <script src="orders.js?v=20260314a"></script>
+  <!-- Amazon-style Order Details Modal -->
+  <div id="orderDetailsModal" class="amz-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="modalOrderTitle">
+    <div class="amz-modal-container" role="document">
+      <div class="amz-modal-header">
+        <h3 id="modalOrderTitle" data-i18n="view_order_details_modal">Order Details</h3>
+        <button type="button" class="amz-modal-close-btn" id="closeOrderDetailsBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="amz-modal-body" id="orderDetailsModalContent">
+        <!-- Injected dynamically by orders.js -->
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="secondary-pill-btn" id="dismissOrderDetailsBtn" data-i18n="close_modal">Close</button>
+        <a href="invoice.html" id="modalDownloadInvoiceLink" target="_blank" rel="noopener" class="amz-btn-primary" data-i18n="download_tax_invoice">Download Tax Invoice (PDF)</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="warranty.js"></script>
+  <script src="listing-filter-chips.js?v=20260314c"></script>
+  <script src="orders.js?v=20260314a"></script>
 </body>
-  <script src="header.js"></script>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

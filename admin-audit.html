@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Audit Trail & Security</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_audit">Audit Trail</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_audit">Staff Security & Audit Trail</h1>
+        <p>Immutable operational activity logs tracking order fulfillment, inventory changes, and refund issuance.</p>
+      </div>
+      <div class="amz-header-actions">
+        <button type="button" class="amz-btn-secondary" id="refreshAuditBtn">
+          <span>🔄</span>
+          <span>Refresh Trail</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Audit KPIs -->
+    <section class="amz-kpi-grid" aria-label="Audit Metrics">
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Total Audit Entries</div>
+        <div class="kpi-value" id="kpiTotalAudit">0</div>
+        <div class="kpi-subtext">Immutable recorded mutations</div>
+      </article>
+
+      <article class="amz-kpi-card highlight">
+        <div class="kpi-title">Order Status Events</div>
+        <div class="kpi-value" id="kpiOrderAudits">0</div>
+        <div class="kpi-subtext">Fulfillment transitions</div>
+      </article>
+
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Catalog Changes</div>
+        <div class="kpi-value" id="kpiCatalogAudits">0</div>
+        <div class="kpi-subtext">Price & inventory edits</div>
+      </article>
+
+      <article class="amz-kpi-card urgent">
+        <div class="kpi-title">Refund Authorizations</div>
+        <div class="kpi-value" id="kpiRefundAudits">0</div>
+        <div class="kpi-subtext">After-sales financial actions</div>
+      </article>
+    </section>
+
+    <!-- Audit Table with Filters -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div class="amz-table-filters">
+          <input type="search" id="auditSearchInput" placeholder="Search actor, target ID, action..." aria-label="Search Audit Trail" style="min-width: 260px;" />
+
+          <select id="auditCategoryFilter" aria-label="Filter by Category">
+            <option value="all">All Categories</option>
+            <option value="order">Order Fulfillment</option>
+            <option value="catalog">Catalog & Pricing</option>
+            <option value="refund">Refunds & Claims</option>
+            <option value="general">General Admin</option>
+          </select>
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--subtle);" id="auditCountMeta">
+          Showing 0 log entries
+        </div>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Staff Actor</th>
+            <th>Category</th>
+            <th>Action</th>
+            <th>Target ID</th>
+            <th>Action Summary</th>
+          </tr>
+        </thead>
+        <tbody id="auditTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-audit.js?v=20260412a"></script>
+</body>
+</html>

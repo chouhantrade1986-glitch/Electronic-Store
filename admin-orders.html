@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Orders & Fulfillment</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_orders">Orders & Fulfillment</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_orders">Manage Orders & Fulfillment</h1>
+        <p>Track Easy Ship dispatches, print GST tax invoices, and manage customer shipments.</p>
+      </div>
+      <div class="amz-header-actions">
+        <button type="button" class="amz-btn-secondary" id="refreshOrdersBtn">
+          <span>🔄</span>
+          <span>Refresh Orders</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Order Pipeline KPIs -->
+    <section class="amz-kpi-grid" aria-label="Order Metrics">
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Total Orders</div>
+        <div class="kpi-value" id="orderKpiTotal">0</div>
+        <div class="kpi-subtext">All-time lifetime orders</div>
+      </article>
+
+      <article class="amz-kpi-card urgent">
+        <div class="kpi-title">Pending Dispatch</div>
+        <div class="kpi-value" id="orderKpiPending">0</div>
+        <div class="kpi-subtext">Requires packaging & label</div>
+      </article>
+
+      <article class="amz-kpi-card highlight">
+        <div class="kpi-title">In Transit</div>
+        <div class="kpi-value" id="orderKpiShipped">0</div>
+        <div class="kpi-subtext">Shipped via courier</div>
+      </article>
+
+      <article class="amz-kpi-card success">
+        <div class="kpi-title">Delivered</div>
+        <div class="kpi-value" id="orderKpiDelivered">0</div>
+        <div class="kpi-subtext">Successfully fulfilled</div>
+      </article>
+    </section>
+
+    <!-- Orders Table with Filters -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div class="amz-table-filters">
+          <input type="search" id="orderSearchInput" placeholder="Search order ID, customer, city..." aria-label="Search Orders" style="min-width: 260px;" />
+          
+          <select id="orderStatusFilter" aria-label="Filter by Status">
+            <option value="all">All Statuses</option>
+            <option value="pending">Pending Dispatch</option>
+            <option value="shipped">Shipped / In Transit</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+
+          <select id="orderCourierFilter" aria-label="Filter by Courier">
+            <option value="all">All Couriers</option>
+            <option value="Easy Ship">Easy Ship</option>
+            <option value="Delhivery">Delhivery</option>
+            <option value="Blue Dart">Blue Dart</option>
+          </select>
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--subtle);" id="ordersCountMeta">
+          Showing 0 orders
+        </div>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Placed On</th>
+            <th>Customer & Address</th>
+            <th>Items</th>
+            <th>Total Amount</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Courier / Tracking</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Ship / Update Order Modal -->
+  <div class="amz-modal-overlay" id="shipOrderModal" hidden>
+    <div class="amz-modal" role="dialog" aria-modal="true" aria-labelledby="shipModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="shipModalTitle">Update Order Fulfillment</h3>
+        <button type="button" class="modal-close-btn" id="closeShipModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body">
+        <input type="hidden" id="modalOrderId" />
+        <div class="amz-form-group">
+          <label>Order ID</label>
+          <input type="text" id="modalOrderDisplayId" readonly style="background: #f7fafa;" />
+        </div>
+        <div class="amz-form-group">
+          <label for="modalOrderStatus">Fulfillment Status</label>
+          <select id="modalOrderStatus">
+            <option value="pending">Pending Dispatch</option>
+            <option value="shipped">Shipped (In Transit)</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="amz-form-group">
+          <label for="modalOrderCourier">Courier Service</label>
+          <select id="modalOrderCourier">
+            <option value="Easy Ship Standard">Easy Ship Standard</option>
+            <option value="Easy Ship Express">Easy Ship Express</option>
+            <option value="Delhivery Air">Delhivery Air</option>
+            <option value="Blue Dart Express">Blue Dart Express</option>
+          </select>
+        </div>
+        <div class="amz-form-group">
+          <label for="modalOrderTracking">Tracking AWB Number</label>
+          <input type="text" id="modalOrderTracking" placeholder="e.g. EM-IN-7821990" />
+        </div>
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="cancelShipModalBtn">Cancel</button>
+        <button type="button" class="amz-btn-primary" id="saveShipModalBtn">Save & Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tax Invoice Modal -->
+  <div class="amz-modal-overlay" id="invoiceModal" hidden>
+    <div class="amz-modal" style="max-width: 720px;" role="dialog" aria-modal="true" aria-labelledby="invoiceModalTitle">
+      <div class="amz-modal-header">
+        <h3 id="invoiceModalTitle">GST Tax Invoice / Shipping Label</h3>
+        <button type="button" class="modal-close-btn" id="closeInvoiceModalBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="amz-modal-body" id="invoiceModalContent">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="amz-modal-footer">
+        <button type="button" class="amz-btn-secondary" id="closeInvoiceFooterBtn">Close</button>
+        <button type="button" class="amz-btn-primary" id="printInvoiceBtn">
+          <span>🖨️</span>
+          <span>Print Document</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="products-data.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-orders.js?v=20260412a"></script>
+</body>
+</html>

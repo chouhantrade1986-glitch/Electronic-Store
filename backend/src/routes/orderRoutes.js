@@ -1,5 +1,5 @@
 const express = require("express");
-const { randomUUID } = require("crypto");
+const { createHash, randomUUID } = require("crypto");
 const { readDb, writeDb, withWriteLock } = require("../lib/db");
 const { requireAuth } = require("../middleware/authMiddleware");
 const { appendOrderStatusEvent, withNormalizedOrderStatusHistory } = require("../lib/orderStatus");
@@ -56,6 +56,21 @@ function persistOrderRouteMutation(db, collections) {
   writeDb(db);
 }
 
+function buildOrderRequestFingerprint({ items, shippingAddress, paymentMethod, couponCode, deliverySlot, expectedSubtotal }) {
+  const payload = {
+    items: items.map((item) => ({
+      productId: String(item && item.productId || "").trim(),
+      quantity: Number(item && item.quantity)
+    })),
+    shippingAddress: String(shippingAddress || ""),
+    paymentMethod: String(paymentMethod || "cod").trim().toLowerCase(),
+    couponCode: String(couponCode || "").trim().toUpperCase(),
+    deliverySlot: deliverySlot || null,
+    expectedSubtotal: expectedSubtotal === undefined || expectedSubtotal === null ? null : Number(expectedSubtotal)
+  };
+  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+}
+
 function formatAfterSalesTypeLabel(type) {
   const value = String(type || "").trim().toLowerCase();
   if (!value) {
@@ -83,13 +98,16 @@ function buildAfterSalesCaseView(caseItem) {
 
 function withOrderAfterSales(db, order) {
   ensureAfterSalesCollections(db);
+  const publicOrder = { ...withNormalizedOrderStatusHistory(order) };
+  delete publicOrder.idempotencyKey;
+  delete publicOrder.idempotencyFingerprint;
   const afterSalesCases = db.afterSalesCases
     .filter((item) => item.orderId === order.id)
     .map((item) => buildAfterSalesCaseView(item))
     .sort((left, right) => new Date(right.updatedAt || right.createdAt || 0).getTime() - new Date(left.updatedAt || left.createdAt || 0).getTime());
   const openCase = afterSalesCases.find((item) => !item.final) || null;
   return {
-    ...withNormalizedOrderStatusHistory(order),
+    ...publicOrder,
     afterSalesCases,
     openAfterSalesCaseId: openCase ? openCase.id : "",
     canRequestAfterSales: canCustomerRequestAfterSalesForOrder(order) && !openCase
@@ -103,16 +121,59 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     paymentMethod = "cod",
     couponCode = "",
     deliverySlot = null,
-    reservationUntil = ""
+    reservationUntil = "",
+    expectedSubtotal,
+    idempotencyKey: bodyIdempotencyKey = ""
   } = req.body || {};
   if (!Array.isArray(items) || items.length === 0 || !shippingAddress) {
     return res.status(400).json({ message: "Invalid order payload" });
   }
 
+  const idempotencyKey = String(req.get("Idempotency-Key") || bodyIdempotencyKey || "").trim();
+  if (idempotencyKey.length > 128) {
+    return res.status(400).json({ message: "Idempotency key must be 128 characters or fewer." });
+  }
+
   const db = readDb();
+  const requestFingerprint = buildOrderRequestFingerprint({
+    items,
+    shippingAddress,
+    paymentMethod,
+    couponCode,
+    deliverySlot,
+    expectedSubtotal
+  });
+  if (idempotencyKey) {
+    const existingOrder = (Array.isArray(db.orders) ? db.orders : []).find((item) =>
+      item.userId === req.user.id && item.idempotencyKey === idempotencyKey
+    );
+    if (existingOrder) {
+      if (existingOrder.idempotencyFingerprint !== requestFingerprint) {
+        return res.status(409).json({ message: "Idempotency key was already used for a different order." });
+      }
+      return res.status(200).json({
+        ...withOrderAfterSales(db, existingOrder),
+        notification: { skipped: true, reason: "idempotent-replay" },
+        idempotentReplay: true
+      });
+    }
+  }
+
   const pricing = buildOrderPricing(items, db.products, { couponCode });
   if (!pricing.ok) {
     return res.status(pricing.status || 400).json({ message: pricing.message || "Unable to create order." });
+  }
+  if (expectedSubtotal !== undefined && expectedSubtotal !== null) {
+    const parsedExpectedSubtotal = Number(expectedSubtotal);
+    if (!Number.isFinite(parsedExpectedSubtotal) || parsedExpectedSubtotal < 0) {
+      return res.status(400).json({ message: "Expected cart subtotal must be a non-negative number." });
+    }
+    if (Math.abs(parsedExpectedSubtotal - pricing.subtotal) > 0.01) {
+      return res.status(409).json({
+        code: "CART_CHANGED",
+        message: "Your cart prices have changed. Review the updated subtotal before placing your order."
+      });
+    }
   }
 
   const createdAt = new Date().toISOString();
@@ -133,6 +194,7 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     shipping: pricing.shipping,
     tax: pricing.tax,
     total: pricing.total,
+    ...(idempotencyKey ? { idempotencyKey, idempotencyFingerprint: requestFingerprint } : {}),
     createdAt
   };
   order.statusHistory = appendOrderStatusEvent(order, "processing", createdAt);

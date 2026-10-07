@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Seller Central — Customer Accounts</title>
+  <link rel="stylesheet" href="admin-dashboard.css?v=20260412a" />
+</head>
+<body>
+  <div id="sellerHeaderContainer"></div>
+
+  <main class="amz-seller-container">
+    <nav class="amz-breadcrumb" aria-label="Breadcrumb">
+      <a href="admin-dashboard.html" data-i18n="seller_central">Seller Central</a>
+      <span>›</span>
+      <strong data-i18n="dept_customers">Customer Accounts</strong>
+    </nav>
+
+    <div class="amz-page-header">
+      <div>
+        <h1 data-i18n="dept_customers">Customer Directory & Staff Management</h1>
+        <p>Monitor registered buyer profiles, phone verification status, order history, and staff roles.</p>
+      </div>
+      <div class="amz-header-actions">
+        <button type="button" class="amz-btn-secondary" id="refreshUsersBtn">
+          <span>🔄</span>
+          <span>Refresh Directory</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Users KPIs -->
+    <section class="amz-kpi-grid" aria-label="Customer Metrics">
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Total Accounts</div>
+        <div class="kpi-value" id="kpiTotalUsers">1,420</div>
+        <div class="kpi-subtext">Registered shopper accounts</div>
+      </article>
+
+      <article class="amz-kpi-card success">
+        <div class="kpi-title">Mobile Verified</div>
+        <div class="kpi-value" id="kpiVerifiedUsers">1,385</div>
+        <div class="kpi-subtext">97.5% OTP verified (+91)</div>
+      </article>
+
+      <article class="amz-kpi-card highlight">
+        <div class="kpi-title">ElectroMart Plus</div>
+        <div class="kpi-value" id="kpiPlusMembers">245</div>
+        <div class="kpi-subtext">Free express shipping tier</div>
+      </article>
+
+      <article class="amz-kpi-card">
+        <div class="kpi-title">Staff / Operations</div>
+        <div class="kpi-value" id="kpiStaffCount">3</div>
+        <div class="kpi-subtext">Seller Central administrators</div>
+      </article>
+    </section>
+
+    <!-- Users Table with Filters -->
+    <section class="amz-seller-table-wrap">
+      <div class="amz-table-toolbar">
+        <div class="amz-table-filters">
+          <input type="search" id="userSearchInput" placeholder="Search customer name, email, mobile..." aria-label="Search Customers" style="min-width: 260px;" />
+
+          <select id="userRoleFilter" aria-label="Filter by Role">
+            <option value="all">All Roles</option>
+            <option value="customer">Customer</option>
+            <option value="admin">Admin / Staff</option>
+          </select>
+
+          <select id="userVerificationFilter" aria-label="Filter by Verification">
+            <option value="all">All Verification Statuses</option>
+            <option value="verified">Verified Mobile</option>
+            <option value="pending">Pending Verification</option>
+          </select>
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--subtle);" id="usersCountMeta">
+          Showing 0 accounts
+        </div>
+      </div>
+
+      <table class="amz-seller-table">
+        <thead>
+          <tr>
+            <th>User / Customer</th>
+            <th>Mobile Number</th>
+            <th>Role</th>
+            <th>OTP Verification</th>
+            <th>Lifetime Spend</th>
+            <th>Registered On</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- Injected via JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="translations.js?v=20260412a"></script>
+  <script src="admin-shared.js?v=20260412a"></script>
+  <script src="admin-users.js?v=20260412a"></script>
+</body>
+</html>

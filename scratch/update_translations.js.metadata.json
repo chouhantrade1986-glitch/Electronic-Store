@@ -1,0 +1,4 @@
+{
+  "summary": "Script to update translations.js: strip trailing colons from visit_store_prefix and add drawer_subcategory across all languages",
+  "updatedAt": "2026-09-04T12:58:11.204240100Z"
+}

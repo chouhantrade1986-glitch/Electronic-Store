@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ElectroMart Returns & Replacements Center. Hassle-free doorstep pickup, free replacements, and instant wallet refunds." />
+  <title data-i18n="returns_center_title">ElectroMart Returns & Replacements Center</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23007185'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="header.css" />
+  <link rel="stylesheet" href="returns.css" />
+</head>
+<body class="returns-page">
+  <!-- Global Shared Header Container -->
+  <div id="header-container"></div>
+
+  <main class="returns-main-container" id="returnsMainContainer">
+    <!-- Breadcrumbs -->
+    <nav class="returns-breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="home">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <a href="orders.html" data-i18n="returns_orders">Your Orders</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current" data-i18n="breadcrumb_returns">Returns Center</span>
+    </nav>
+
+    <!-- Header Card Banner -->
+    <div class="returns-header-card">
+      <h1 data-i18n="returns_hub_heading">Returns &amp; Replacements Center</h1>
+      <p data-i18n="returns_hub_subheading">Need to return or replace an item? We've got you covered with hassle-free doorstep pickup.</p>
+      <div class="returns-guarantee-pill">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span data-i18n="return_policy_note">ElectroMart 7-Day Hassle-Free Return Guarantee.</span>
+      </div>
+    </div>
+
+    <!-- Empty State (Shown when no eligible order found) -->
+    <div class="returns-empty-state" id="returnsEmptyState" style="display: none;">
+      <svg class="returns-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+      </svg>
+      <h2 data-i18n="empty_returns_title">No eligible items selected for return</h2>
+      <p data-i18n="empty_returns_desc">Please select a delivered order from your Order History to start a return or replacement.</p>
+      <a href="orders.html" class="returns-btn-primary" data-i18n="btn_view_orders">Go to Orders</a>
+    </div>
+
+    <!-- Active Return Wizard Container -->
+    <div id="returnsWizardContainer">
+      <!-- 4-Stage Stepper Progress Bar -->
+      <div class="returns-stepper-wrap">
+        <div class="returns-stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" id="returnsStepperProgressWrap">
+          <div class="returns-stepper-line"></div>
+          <div class="returns-stepper-progress" id="returnsStepperProgress" style="width: 0%;"></div>
+
+          <!-- Step 1 -->
+          <div class="returns-step-node active" id="stepNode1">
+            <div class="returns-step-bubble" id="stepBubble1">1</div>
+            <span class="returns-step-title" data-i18n="step_item_reason">1. Choose items &amp; reason</span>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="returns-step-node" id="stepNode2">
+            <div class="returns-step-bubble" id="stepBubble2">2</div>
+            <span class="returns-step-title" data-i18n="step_resolution">2. Choose resolution</span>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="returns-step-node" id="stepNode3">
+            <div class="returns-step-bubble" id="stepBubble3">3</div>
+            <span class="returns-step-title" data-i18n="step_pickup">3. Schedule pickup</span>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="returns-step-node" id="stepNode4">
+            <div class="returns-step-bubble" id="stepBubble4">4</div>
+            <span class="returns-step-title" data-i18n="step_confirmation">4. Confirmation &amp; slip</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Item & Return Reason Selection -->
+      <section class="returns-card" id="returnsStep1">
+        <h2 class="returns-card-title" data-i18n="select_order_item">Choose items to return</h2>
+
+        <!-- Order Item Preview -->
+        <div class="returns-item-preview" id="step1ItemPreview">
+          <img class="returns-item-thumb" id="step1ItemThumb" src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=300&q=80" alt="Product Thumbnail" />
+          <div class="returns-item-meta">
+            <h3 id="step1ItemTitle">ElectroMart Item</h3>
+            <p><span data-i18n="order_num_label">ORDER #</span> <strong id="step1OrderId">EM-ORD-000000</strong></p>
+            <p id="step1OrderDate">Ordered: -</p>
+            <p class="returns-item-price" id="step1ItemPrice">₹0.00</p>
+          </div>
+        </div>
+
+        <!-- Reason Selection Prompt -->
+        <div class="returns-form-group">
+          <label class="returns-label" data-i18n="reason_select_prompt">Why are you returning this?</label>
+          <div class="returns-options-grid" id="step1ReasonsList">
+            <!-- Reason Option Cards -->
+            <label class="returns-option-card" for="reasonDefective">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonDefective" value="defective" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_defective">Performance or quality not adequate</div>
+                <p class="returns-option-desc">Device does not perform as expected or exhibits lower quality than described.</p>
+              </div>
+            </label>
+
+            <label class="returns-option-card" for="reasonDamaged">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonDamaged" value="damaged" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_damaged">Item arrived damaged / broken packaging</div>
+                <p class="returns-option-desc">Physical cracks, broken seals, or dented parcel upon arrival.</p>
+              </div>
+            </label>
+
+            <label class="returns-option-card" for="reasonMissingParts">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonMissingParts" value="missing_parts" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_missing_parts">Missing parts or accessories</div>
+                <p class="returns-option-desc">Power cable, manual, charger, or included component was not inside the box.</p>
+              </div>
+            </label>
+
+            <label class="returns-option-card" for="reasonWrongItem">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonWrongItem" value="wrong_item" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_wrong_item">Different item was received</div>
+                <p class="returns-option-desc">Delivered product model, color, or specification differs from what was ordered.</p>
+              </div>
+            </label>
+
+            <label class="returns-option-card" for="reasonPerformance">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonPerformance" value="performance_issue" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_performance_issue">Technical malfunction or hardware defect</div>
+                <p class="returns-option-desc">Device fails to power on, overheats, or screen/ports are not functional.</p>
+              </div>
+            </label>
+
+            <label class="returns-option-card" for="reasonNoLongerNeeded">
+              <input type="radio" class="returns-option-radio" name="returnReason" id="reasonNoLongerNeeded" value="no_longer_needed" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="reason_no_longer_needed">No longer needed / bought by mistake</div>
+                <p class="returns-option-desc">Accidental purchase or requirement fulfilled through alternative equipment.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Additional Comments -->
+        <div class="returns-form-group">
+          <label class="returns-label" for="step1Comments" data-i18n="comments_label">Additional details or comments (optional)</label>
+          <textarea class="returns-textarea" id="step1Comments" placeholder="Provide any extra information about the problem..." data-i18n="comments_placeholder"></textarea>
+        </div>
+
+        <!-- Upload Photos -->
+        <div class="returns-form-group">
+          <label class="returns-label" data-i18n="upload_photos_label">Upload photos of the issue (optional)</label>
+          <div class="returns-upload-box" id="step1UploadBox" tabindex="0" role="button" aria-label="Upload photo">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#007185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-bottom: 4px;">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <div><strong>Click or drag photos here to upload</strong></div>
+            <div class="returns-upload-hint" data-i18n="upload_photos_hint">PNG, JPG up to 5MB. Demonstrating physical damage or serial number helps expedite inspection.</div>
+            <input type="file" id="step1FileInput" accept="image/*" multiple style="display: none;" />
+          </div>
+          <div class="returns-photo-previews" id="step1PhotoPreviews"></div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="returns-action-bar">
+          <a href="orders.html" class="returns-btn-secondary" data-i18n="btn_back">&lsaquo; Back to Orders</a>
+          <!-- Continue Button: Disabled until reason is selected! -->
+          <button type="button" class="returns-btn-primary" id="step1ContinueBtn" disabled data-i18n="btn_continue">
+            Continue &rsaquo;
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2: Choose Resolution (Replacement vs Refund) -->
+      <section class="returns-card" id="returnsStep2" style="display: none;">
+        <h2 class="returns-card-title" data-i18n="resolution_title">How would you like to resolve this?</h2>
+
+        <div class="returns-options-grid" id="step2ResolutionList">
+          <!-- Choice 1: Replacement (Free) -->
+          <label class="returns-option-card selected" for="resReplacement">
+            <input type="radio" class="returns-option-radio" name="returnResolution" id="resReplacement" value="replacement" checked />
+            <div class="returns-option-content">
+              <div class="returns-option-title">
+                <span data-i18n="res_replacement_title">Replacement (Free of charge)</span>
+                <span class="returns-badge-rec">Recommended</span>
+              </div>
+              <p class="returns-option-desc" data-i18n="res_replacement_desc">
+                Receive a brand new replacement unit at ₹0 additional charge. Dispatched right after inspection.
+              </p>
+            </div>
+          </label>
+
+          <!-- Choice 2: Refund to ElectroMart Pay Wallet -->
+          <label class="returns-option-card" for="resRefundWallet">
+            <input type="radio" class="returns-option-radio" name="returnResolution" id="resRefundWallet" value="refund_wallet" />
+            <div class="returns-option-content">
+              <div class="returns-option-title">
+                <span data-i18n="res_refund_wallet">ElectroMart Pay Wallet (Instant upon pickup)</span>
+                <span class="returns-badge-instant">Instant</span>
+              </div>
+              <p class="returns-option-desc" data-i18n="res_refund_wallet_desc">
+                Instantly credited to your ElectroMart Pay balance as soon as our executive picks up the package.
+              </p>
+            </div>
+          </label>
+
+          <!-- Choice 3: Refund to Original Payment Method -->
+          <label class="returns-option-card" for="resRefundOriginal">
+            <input type="radio" class="returns-option-radio" name="returnResolution" id="resRefundOriginal" value="refund_original" />
+            <div class="returns-option-content">
+              <div class="returns-option-title" data-i18n="res_refund_original">Original Payment Method (3-5 business days)</div>
+              <p class="returns-option-desc" data-i18n="res_refund_original_desc">
+                Credited back to your source bank/card within 3-5 business days of doorstep verification.
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="returns-action-bar">
+          <button type="button" class="returns-btn-secondary" id="step2BackBtn" data-i18n="btn_back">&lsaquo; Back</button>
+          <button type="button" class="returns-btn-primary" id="step2ContinueBtn" data-i18n="btn_continue">
+            Continue &rsaquo;
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 3: Schedule Doorstep Pickup -->
+      <section class="returns-card" id="returnsStep3" style="display: none;">
+        <h2 class="returns-card-title" data-i18n="pickup_title">Schedule Doorstep Pickup</h2>
+
+        <!-- Date Selection -->
+        <div class="returns-form-group">
+          <label class="returns-label" for="pickupDateSelect" data-i18n="pickup_date_label">Select Pickup Date</label>
+          <select class="returns-textarea" id="pickupDateSelect" style="min-height: 42px; cursor: pointer;"></select>
+        </div>
+
+        <!-- Time Slot Selection -->
+        <div class="returns-form-group">
+          <label class="returns-label" data-i18n="pickup_slot_label">Select Time Slot</label>
+          <div class="returns-options-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <label class="returns-option-card selected" for="slotMorning">
+              <input type="radio" class="returns-option-radio" name="pickupSlot" id="slotMorning" value="morning" checked />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="slot_morning">Morning (9:00 AM - 1:00 PM)</div>
+                <p class="returns-option-desc">Ideal for residential deliveries and daytime access.</p>
+              </div>
+            </label>
+            <label class="returns-option-card" for="slotAfternoon">
+              <input type="radio" class="returns-option-radio" name="pickupSlot" id="slotAfternoon" value="afternoon" />
+              <div class="returns-option-content">
+                <div class="returns-option-title" data-i18n="slot_afternoon">Afternoon (2:00 PM - 6:00 PM)</div>
+                <p class="returns-option-desc">Convenient post-lunch and evening slot.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Pickup Address Box -->
+        <div class="returns-form-group">
+          <label class="returns-label" data-i18n="pickup_address_label">Pickup Address</label>
+          <div class="returns-address-box">
+            <div class="returns-address-text" id="pickupAddressDisplay">
+              <strong>Customer</strong>
+              <span>Flat 402, Royal Palms, Connaught Place, New Delhi 110001</span>
+            </div>
+            <button type="button" class="returns-btn-secondary" id="changeAddressBtn" data-i18n="change_address">Change</button>
+          </div>
+        </div>
+
+        <!-- Doorstep Preparation Checklist -->
+        <div class="returns-checklist-card">
+          <div class="returns-checklist-title">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <span data-i18n="prep_checklist_title">Doorstep Preparation Checklist</span>
+          </div>
+          <ul class="returns-checklist-items">
+            <li data-i18n="prep_item_1">Keep all original box, tags, and accessories intact.</li>
+            <li data-i18n="prep_item_2">Erase personal data and sign out of personal accounts if device is a laptop/mobile.</li>
+            <li data-i18n="prep_item_3">Handover the package to our verified ElectroMart Logistics executive.</li>
+          </ul>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="returns-action-bar">
+          <button type="button" class="returns-btn-secondary" id="step3BackBtn" data-i18n="btn_back">&lsaquo; Back</button>
+          <button type="button" class="returns-btn-primary" id="step3SubmitBtn" data-i18n="btn_submit_return">
+            Confirm &amp; Submit Return Request
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 4: Confirmation & Digital Return Slip -->
+      <section class="returns-card" id="returnsStep4" style="display: none;">
+        <!-- Confirmation Banner -->
+        <div class="returns-confirmation-banner">
+          <div class="returns-confirmation-icon">✓</div>
+          <div class="returns-confirmation-text">
+            <h2 data-i18n="return_confirmed_title">Return Request Initiated Successfully!</h2>
+            <p><span data-i18n="return_id_label">Return Request ID:</span> <strong id="confirmationReturnId">EM-RET-000000</strong></p>
+          </div>
+        </div>
+
+        <!-- Digital Return Slip Card (Printable) -->
+        <div class="returns-slip-container" id="returnsSlipCard">
+          <div class="returns-slip-header">
+            <div>
+              <div class="returns-slip-brand">ElectroMart Logistics</div>
+              <small style="color:#565959; font-weight:600;">DOORSTEP RETURN MANIFEST</small>
+            </div>
+            <span class="returns-slip-badge" id="slipBadgeStatus" data-i18n="pickup_scheduled_badge">Pickup Scheduled</span>
+          </div>
+
+          <!-- Barcode Visualization -->
+          <div class="returns-barcode-wrap">
+            <svg class="returns-barcode-svg" id="returnBarcodeSvg" viewBox="0 0 280 50" aria-label="Return Barcode"></svg>
+            <div class="returns-barcode-num" id="returnBarcodeText">EM-RET-000000</div>
+          </div>
+
+          <!-- Slip Details Table -->
+          <table class="returns-slip-table">
+            <tbody>
+              <tr>
+                <td class="label">Return ID</td>
+                <td class="val" id="slipReturnId">-</td>
+              </tr>
+              <tr>
+                <td class="label">Original Order ID</td>
+                <td class="val" id="slipOrderId">-</td>
+              </tr>
+              <tr>
+                <td class="label">Item for Return</td>
+                <td class="val" id="slipItemTitle">-</td>
+              </tr>
+              <tr>
+                <td class="label">Return Reason</td>
+                <td class="val" id="slipReturnReason">-</td>
+              </tr>
+              <tr>
+                <td class="label">Selected Resolution</td>
+                <td class="val" id="slipResolution">-</td>
+              </tr>
+              <tr>
+                <td class="label">Pickup Slot</td>
+                <td class="val" id="slipPickupSlot">-</td>
+              </tr>
+              <tr>
+                <td class="label">Pickup Address</td>
+                <td class="val" id="slipPickupAddress">-</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="font-size:12px; color:#565959; margin: 0; text-align: center;" data-i18n="slip_notice">
+            Please show this digital slip or barcode to the pickup agent upon arrival.
+          </p>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="returns-action-bar">
+          <a href="orders.html" class="returns-btn-secondary" id="backToOrdersBtn" data-i18n="btn_back_to_orders">&lsaquo; Back to Your Orders</a>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" class="returns-btn-secondary" id="printSlipBtn" data-i18n="btn_print_slip">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Print Return Slip</span>
+            </button>
+            <a href="tracking.html" class="returns-btn-primary" id="trackReturnOrderBtn" data-i18n="btn_track_return">
+              Track Order &amp; Return Status &rsaquo;
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Address Edit Modal -->
+  <div class="returns-modal-backdrop" id="addressEditModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalAddressTitle">
+    <div class="returns-modal-dialog">
+      <h3 id="modalAddressTitle">Change Pickup Address</h3>
+      <div>
+        <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">Full Name</label>
+        <input type="text" class="returns-modal-input" id="modalNameInput" value="Customer" />
+      </div>
+      <div>
+        <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">Address Line</label>
+        <input type="text" class="returns-modal-input" id="modalAddressLineInput" value="Flat 402, Royal Palms, Connaught Place" />
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">City</label>
+          <input type="text" class="returns-modal-input" id="modalCityInput" value="New Delhi" />
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">State</label>
+          <input type="text" class="returns-modal-input" id="modalStateInput" value="Delhi" />
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">Pincode</label>
+          <input type="text" class="returns-modal-input" id="modalPincodeInput" value="110001" />
+        </div>
+        <div style="flex: 1;">
+          <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px;">Phone Number</label>
+          <input type="text" class="returns-modal-input" id="modalPhoneInput" value="+91 98765 43210" />
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px;">
+        <button type="button" class="returns-btn-secondary" id="modalCancelAddressBtn" data-i18n="cancel">Cancel</button>
+        <button type="button" class="returns-btn-primary" id="modalSaveAddressBtn" data-i18n="save_changes">Save Address</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notification Stack -->
+  <div id="returnsToastContainer" class="returns-toast-container" aria-live="polite"></div>
+
+  <!-- Core Scripts in Strict Dependency Order -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="returns.js?v=20260414a"></script>
+</body>
+</html>

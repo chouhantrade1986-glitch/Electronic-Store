@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title data-i18n="showroom_title">ElectroMart 3D Product Showroom - 360° Interactive Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="showroom.css?v=20260916a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="showroom-page">
+  <!-- Universal Header -->
+  <div id="headerContainer"></div>
+
+  <main class="showroom-main">
+    <!-- Breadcrumb Navigation -->
+    <nav class="amz-breadcrumb" id="showroomBreadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="showroom_breadcrumb_home">Home</a> &rsaquo;
+      <a href="products.html" data-i18n="showroom_breadcrumb_store">ElectroMart Store</a> &rsaquo;
+      <span id="currentBreadcrumbPage" data-i18n="showroom_breadcrumb_3d">3D Interactive Showroom</span>
+    </nav>
+
+    <!-- Showroom Header -->
+    <header class="showroom-hero-header">
+      <div class="showroom-hero-meta">
+        <span class="showroom-badge" id="showroomHeroBadge" data-i18n="showroom_badge">✨ ElectroMart 3D Studio</span>
+        <h1 class="showroom-title" id="showroomTitle" data-i18n="showroom_title">ElectroMart 3D Product Showroom</h1>
+        <p class="showroom-subtitle" id="showroomSubtitle" data-i18n="showroom_subtitle">
+          Experience products in 360° interactive turntable with hardware feature hotspots, zoom inspection, and AR Room Simulator.
+        </p>
+      </div>
+      <div class="showroom-quick-links">
+        <a href="workspace-builder.html" class="btn-workspace-link" id="linkToWorkspaceBuilderHero" data-i18n="showroom_build_workspace_cta">
+          🖥️ Virtual Workspace Studio ›
+        </a>
+      </div>
+    </header>
+
+    <!-- Main 2-Column Showroom Experience -->
+    <div class="showroom-stage-layout">
+      <!-- Left / Center: Interactive 360 Turntable Viewport -->
+      <section class="showroom-viewport-section" aria-label="360 Turntable Viewport">
+        <div class="turntable-container" id="showroomTurntableContainer">
+          <!-- Top Info Bar: Angle badge & instruction -->
+          <div class="turntable-header-bar">
+            <div class="turntable-angle-chip">
+              <span class="angle-icon">🔄</span>
+              <span id="turntableAngleBadge">0°</span>
+            </div>
+            <div class="turntable-instruction" id="showroomDragInstruction" data-i18n="showroom_drag_instruction">
+              Drag horizontally or touch to rotate 360°
+            </div>
+            <div class="turntable-lighting-chip" id="currentLightingBadge">
+              Studio Light
+            </div>
+          </div>
+
+          <!-- Turntable Stage (Interactive Touch/Pointer surface) -->
+          <div class="turntable-stage" id="showroomTurntableStage" tabindex="0" role="region" aria-label="3D Turntable Stage">
+            <!-- 360 Floor Ring with graduation ticks -->
+            <div class="turntable-floor-ring" id="turntableRing"></div>
+
+            <!-- 3D Canvas / Device Presentation Layer -->
+            <div class="turntable-canvas-holder" id="turntableCanvasHolder">
+              <div class="device-3d-wrapper" id="device3dWrapper">
+                <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="360 Product Presentation" class="turntable-device-img" id="turntableDeviceImg" draggable="false" />
+                <div class="device-dynamic-shadow" id="deviceDynamicShadow"></div>
+              </div>
+
+              <!-- Interactive Hotspot Pins with 3D Orbit coordinates -->
+              <div class="hotspot-pin" id="hotspotDisplay" data-hotspot="display" title="Display Specifications" role="button" tabindex="0" aria-label="Display Hotspot">
+                <span class="hotspot-pulse"></span>
+                <span class="hotspot-core">1</span>
+                <span class="hotspot-label" data-i18n="hotspot_display_title">Retina XDR Pro Display</span>
+              </div>
+
+              <div class="hotspot-pin" id="hotspotPorts" data-hotspot="ports" title="Ports & Connectivity" role="button" tabindex="0" aria-label="Ports Hotspot">
+                <span class="hotspot-pulse"></span>
+                <span class="hotspot-core">2</span>
+                <span class="hotspot-label" data-i18n="hotspot_ports_title">Universal Thunderbolt & HDMI</span>
+              </div>
+
+              <div class="hotspot-pin" id="hotspotCooling" data-hotspot="cooling" title="Thermal Engineering" role="button" tabindex="0" aria-label="Cooling Hotspot">
+                <span class="hotspot-pulse"></span>
+                <span class="hotspot-core">3</span>
+                <span class="hotspot-label" data-i18n="hotspot_cooling_title">Dual Bionic Vapor Chamber</span>
+              </div>
+
+              <div class="hotspot-pin" id="hotspotKeyboard" data-hotspot="keyboard" title="Keyboard & Trackpad" role="button" tabindex="0" aria-label="Keyboard Hotspot">
+                <span class="hotspot-pulse"></span>
+                <span class="hotspot-core">4</span>
+                <span class="hotspot-label" data-i18n="hotspot_keyboard_title">Magic Mechanical Keyboard</span>
+              </div>
+
+              <!-- Hotspot Detail Popover Card -->
+              <div class="hotspot-popover" id="hotspotPopover" role="dialog" aria-hidden="true">
+                <div class="popover-header">
+                  <span class="popover-badge">ElectroMart Tech Deep-Dive</span>
+                  <button type="button" class="btn-close-popover" id="closeHotspotBtn" aria-label="Close details">&times;</button>
+                </div>
+                <h4 class="popover-title" id="hotspotTitle">Hotspot Detail</h4>
+                <p class="popover-desc" id="hotspotDesc">Detailed hardware engineering description.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Turntable Control Bar -->
+          <div class="turntable-control-bar">
+            <button type="button" class="btn-turntable-ctrl" id="toggleAutoRotateBtn" aria-label="Toggle Auto-Rotate">
+              <span class="ctrl-icon">▶</span>
+              <span class="ctrl-label" data-i18n="showroom_auto_rotate">Auto-Rotate</span>
+            </button>
+            <button type="button" class="btn-turntable-ctrl" id="resetViewBtn" aria-label="Reset View">
+              <span class="ctrl-icon">↺</span>
+              <span class="ctrl-label" data-i18n="showroom_reset_view">Reset View</span>
+            </button>
+            <button type="button" class="btn-turntable-ctrl" id="zoomInBtn" aria-label="Zoom In">
+              <span class="ctrl-icon">+</span>
+              <span class="ctrl-label" data-i18n="showroom_zoom_in">Zoom In</span>
+            </button>
+            <button type="button" class="btn-turntable-ctrl" id="zoomOutBtn" aria-label="Zoom Out">
+              <span class="ctrl-icon">&minus;</span>
+              <span class="ctrl-label" data-i18n="showroom_zoom_out">Zoom Out</span>
+            </button>
+            <button type="button" class="btn-turntable-ctrl btn-room-sim" id="openRoomSimulatorBtn" aria-label="View in Room">
+              <span class="ctrl-icon">🏠</span>
+              <span class="ctrl-label" data-i18n="showroom_view_in_room">View in Your Room (AR)</span>
+            </button>
+          </div>
+
+          <!-- Color / Finish Selector Bar -->
+          <div class="showroom-color-bar" id="showroomColorBar">
+            <span class="color-bar-label" data-i18n="showroom_color_label">Finish &amp; Color:</span>
+            <div class="color-options-row">
+              <button type="button" class="color-swatch-btn active" id="colorSpaceGray" data-color="space-gray" title="Space Gray">
+                <span class="swatch-circle swatch-gray"></span>
+                <span class="swatch-name">Space Gray</span>
+              </button>
+              <button type="button" class="color-swatch-btn" id="colorArcticSilver" data-color="arctic-silver" title="Arctic Silver">
+                <span class="swatch-circle swatch-silver"></span>
+                <span class="swatch-name">Arctic Silver</span>
+              </button>
+              <button type="button" class="color-swatch-btn" id="colorMidnightBlack" data-color="midnight-black" title="Midnight Black">
+                <span class="swatch-circle swatch-black"></span>
+                <span class="swatch-name">Midnight Black</span>
+              </button>
+              <button type="button" class="color-swatch-btn" id="colorCyberRgb" data-color="cyber-rgb" title="Cyber RGB">
+                <span class="swatch-circle swatch-rgb"></span>
+                <span class="swatch-name">Cyber Edition</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Sidebar: Product Selection, Buybox, Specs -->
+      <aside class="showroom-sidebar" id="showroomBuybox" aria-label="Showroom Product Buybox">
+        <div class="sidebar-card">
+          <!-- Product Selector Dropdown -->
+          <div class="form-group-showroom">
+            <label for="showroomProductSelect" class="sidebar-label" data-i18n="showroom_select_product">Select Showroom Product:</label>
+            <select id="showroomProductSelect" class="showroom-select">
+              <option value="1">AstraBook Pro 14 (Intel Core i5, 16GB, 512GB SSD)</option>
+              <option value="product_apple_macbook_air_m5_2026">MacBook Air 13.6″ (Apple M5 Chip, 16GB, 1TB SSD)</option>
+              <option value="related_ultrafine_4k_monitor">UltraFine 4K HDR USB-C 27″ Monitor (90W PD)</option>
+              <option value="related_pulse_anc_headphones">Pulse ANC Wireless Studio Headphones</option>
+              <option value="related_cyber_mechanical_keyboard">Vector RGB Mechanical Gaming Keyboard</option>
+            </select>
+          </div>
+
+          <!-- Product Title & Rating -->
+          <h2 class="showroom-prod-title" id="showroomProdTitle">AstraBook Pro 14 Laptop</h2>
+          <div class="showroom-prod-rating" id="showroomProdRating">
+            <span class="rating-stars">★★★★☆</span>
+            <span class="rating-number">4.6 out of 5</span>
+            <span class="rating-count">(342 verified reviews)</span>
+          </div>
+
+          <!-- Price Block -->
+          <div class="showroom-price-block">
+            <div class="price-mrp-row">
+              <span class="mrp-label" data-i18n="showroom_mrp_label">M.R.P.:</span>
+              <span class="mrp-strikethrough" id="showroomProdMrp">₹99,771</span>
+              <span class="discount-pill" id="showroomProdDiscount">20% Off</span>
+            </div>
+            <div class="price-deal-row">
+              <span class="deal-currency">₹</span>
+              <span class="deal-amount" id="showroomProdPrice">79,920</span>
+              <span class="gst-tag">(Incl. 18% GST)</span>
+            </div>
+          </div>
+
+          <!-- Stock & Prime Status -->
+          <div class="showroom-availability-stack">
+            <div class="stock-badge-verified" id="showroomInStockBadge" data-i18n="showroom_in_stock">
+              ✓ In Stock - ElectroMart Verified Express
+            </div>
+            <div class="prime-badge-tag" id="showroomPrimeBadge" data-i18n="showroom_prime_badge">
+              ⚡ ElectroMart Prime Eligible
+            </div>
+          </div>
+
+          <!-- Buy Actions -->
+          <div class="showroom-buybox-actions">
+            <button type="button" class="btn-showroom-cart" id="showroomAddToCartBtn" data-i18n="showroom_add_to_cart">
+              🛒 Add to Cart
+            </button>
+            <a href="workspace-builder.html?computeId=1" class="btn-showroom-workspace" id="linkToWorkspaceBuilder" data-i18n="showroom_build_workspace_cta">
+              🖥️ Build in Virtual Workspace Studio ›
+            </a>
+          </div>
+
+          <!-- Key Hardware Specs Checklist -->
+          <div class="showroom-specs-box">
+            <h3 class="specs-box-title" data-i18n="showroom_specs_title">Key Hardware Specifications</h3>
+            <ul class="specs-list" id="showroomSpecsList">
+              <li><strong>Display:</strong> 14.0″ FHD Anti-Glare 100% sRGB Eye-Care</li>
+              <li><strong>Processor:</strong> Intel Core i5 13th Gen Turbo Boost 4.6GHz</li>
+              <li><strong>Memory:</strong> 16GB High-Speed DDR5 Dual-Channel</li>
+              <li><strong>Storage:</strong> 512GB NVMe PCIe 4.0 SSD</li>
+              <li><strong>Ports:</strong> 2× Thunderbolt 4 / USB-C, 1× HDMI 2.1, 2× USB-A</li>
+              <li><strong>Battery:</strong> 70Wh Lithium-Ion (Up to 14 Hours Runtime)</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- AR & Room Simulator Modal -->
+  <dialog class="room-simulator-modal" id="roomSimulatorModal" aria-labelledby="roomModalTitle">
+    <div class="room-modal-container">
+      <div class="room-modal-header">
+        <div>
+          <span class="room-badge">Augmented Reality &amp; Studio View</span>
+          <h3 class="room-modal-title" id="roomModalTitle" data-i18n="room_simulator_title">ElectroMart Virtual Room &amp; AR Simulator</h3>
+        </div>
+        <button type="button" class="btn-close-modal" id="closeRoomSimulatorBtn" aria-label="Close Simulator">&times;</button>
+      </div>
+
+      <div class="room-modal-body">
+        <!-- Room Backdrop Viewport -->
+        <div class="room-simulator-viewport" id="roomSimulatorPreview">
+          <div class="room-backdrop-canvas backdrop-office" id="roomBackdropCanvas">
+            <div class="ambient-lighting-layer lighting-studio" id="ambientLightingLayer"></div>
+            <!-- Scaled Device Representation in Room -->
+            <div class="room-device-container" id="roomDeviceContainer">
+              <img src="https://static.wixstatic.com/media/9db3dd_bd739df27b6e419497fe08362b05d225~mv2.jpg" alt="Product in Room" class="room-device-img" id="roomDeviceImg" />
+              <div class="room-tape-measure" id="roomDimensionTag" data-i18n="room_dimension_tag">
+                Dimensions: 31.2cm × 22.1cm × 1.55cm | 1.6 kg
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Simulator Controls Toolbar -->
+        <div class="room-controls-panel">
+          <!-- Backdrop Switcher -->
+          <div class="room-control-group">
+            <label class="control-label" data-i18n="room_backdrop_label">Room Ambience:</label>
+            <div class="room-pill-group">
+              <button type="button" class="btn-room-pill active" id="roomBackdropOffice" data-backdrop="office" data-i18n="room_backdrop_office">Modern Minimalist Studio</button>
+              <button type="button" class="btn-room-pill" id="roomBackdropGaming" data-backdrop="gaming" data-i18n="room_backdrop_gaming">Cyber Battlestation Den</button>
+              <button type="button" class="btn-room-pill" id="roomBackdropLoft" data-backdrop="loft" data-i18n="room_backdrop_loft">Industrial Creator Loft</button>
+              <button type="button" class="btn-room-pill" id="roomBackdropLiving" data-backdrop="living" data-i18n="room_backdrop_living">Warm Living Space</button>
+            </div>
+          </div>
+
+          <!-- Lighting Switcher -->
+          <div class="room-control-group">
+            <label class="control-label" data-i18n="room_lighting_label">Lighting Environment:</label>
+            <div class="room-pill-group">
+              <button type="button" class="btn-room-pill" id="roomLightingDaylight" data-lighting="daylight" data-i18n="room_lighting_daylight">Natural Daylight (5500K)</button>
+              <button type="button" class="btn-room-pill active" id="roomLightingStudio" data-lighting="studio" data-i18n="room_lighting_studio">Cool Studio White (4500K)</button>
+              <button type="button" class="btn-room-pill" id="roomLightingRgb" data-lighting="rgb" data-i18n="room_lighting_rgb">Cyber RGB Glow (Neon)</button>
+              <button type="button" class="btn-room-pill" id="roomLightingWarm" data-lighting="warm" data-i18n="room_lighting_warm">Warm Sunset Glow (3000K)</button>
+            </div>
+          </div>
+
+          <!-- Scale & Perspective Slider -->
+          <div class="room-control-group">
+            <div class="scale-label-row">
+              <label for="roomScaleSlider" class="control-label" data-i18n="room_scale_label">Perspective &amp; Scale:</label>
+              <span class="scale-value" id="roomScaleValue">100%</span>
+            </div>
+            <input type="range" id="roomScaleSlider" min="70" max="130" value="100" class="room-scale-slider" aria-label="Room Scale Slider" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Universal Toast Feedback -->
+  <div id="amzToast" class="amz-toast" role="status" aria-live="polite"></div>
+
+  <!-- Mandatory Script Loading Sequence -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="showroom.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+{
+  "htmlFiles": [
+    {
+      "file": "accessibility-statement.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "account.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "admin-after-sales.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin-analytics.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-audit.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin-dashboard.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-listing.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-orders.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "admin-settings.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin-users.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "admin.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "auth.html",
+      "scriptCount": 7
+    },
+    {
+      "file": "barebone-desktop.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "best-sellers.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "branded-desktop.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "brands.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "business.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "cabinet-fan.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cabinet.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cart.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "catalogs.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "checkout.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "compare.html",
+      "scriptCount": 8
+    },
+    {
+      "file": "contact-us.html",
+      "scriptCount": 0
+    },
+    {
+      "file": "cpu-fan.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "cpu-processor.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "creator-studio.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "customer-media.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "desktop-ram-memory.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "desktops.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "electromart-pay.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "ewaste.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "exchange.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "faq.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "forgot-password.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "graphics-card-gpu.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "header.html",
+      "scriptCount": 0
+    },
+    {
+      "file": "help.html",
+      "scriptCount": 8
+    },
+    {
+      "file": "index.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "invoice.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "language-settings.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "laptop.html",
+      "scriptCount": 10
+    },
+    {
+      "file": "live-shopping.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "login.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "mega-store.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "motherboard.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "orders.html",
+      "scriptCount": 11
+    },
+    {
+      "file": "pc-builder.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "power-supply-smps.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "prime.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "printer.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "privacy.html",
+      "scriptCount": 7
+    },
+    {
+      "file": "product-detail.html",
+      "scriptCount": 13
+    },
+    {
+      "file": "product.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "products.html",
+      "scriptCount": 6
+    },
+    {
+      "file": "qa-auth-state.html",
+      "scriptCount": 1
+    },
+    {
+      "file": "qa-checkout-gateway.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-invoice-print.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-orders-resume.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "qa-razorpay-modal.html",
+      "scriptCount": 2
+    },
+    {
+      "file": "refund-policy.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "register.html",
+      "scriptCount": 4
+    },
+    {
+      "file": "registry.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "renewed.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "returns.html",
+      "scriptCount": 8
+    },
+    {
+      "file": "review.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "shipping-policy.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "showroom.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "smarthome.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "terms-and-conditions.html",
+      "scriptCount": 3
+    },
+    {
+      "file": "thank-you.html",
+      "scriptCount": 7
+    },
+    {
+      "file": "todays-deals.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "tracking.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "ups-ups-batteries.html",
+      "scriptCount": 5
+    },
+    {
+      "file": "warranty.html",
+      "scriptCount": 8
+    },
+    {
+      "file": "wishlist.html",
+      "scriptCount": 9
+    },
+    {
+      "file": "workspace-builder.html",
+      "scriptCount": 9
+    }
+  ],
+  "brokenReferences": [
+    {
+      "file": "help.html",
+      "type": "css",
+      "href": "index.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\index.css"
+    },
+    {
+      "file": "help.html",
+      "type": "css",
+      "href": "header.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\header.css"
+    },
+    {
+      "file": "returns.html",
+      "type": "css",
+      "href": "index.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\index.css"
+    },
+    {
+      "file": "returns.html",
+      "type": "css",
+      "href": "header.css",
+      "missingPath": "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\header.css"
+    }
+  ],
+  "syntaxErrors": [],
+  "databaseIssues": [],
+  "storageKeyInconsistencies": [],
+  "missingTranslations": [],
+  "scriptOrderingIssues": []
+}

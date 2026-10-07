@@ -1,0 +1,623 @@
+/* ElectroMart Phase 24: Prime Membership Hub & Rewards Ecosystem Styles */
+
+:root {
+  --prime-blue: #00a8e1;
+  --prime-blue-hover: #0093c7;
+  --prime-navy-dark: #002f36;
+  --prime-black: #0f1111;
+  --prime-gold: #ff9900;
+  --prime-amber: #ffd814;
+  --prime-amber-hover: #f7ca00;
+  --prime-green: #007600;
+  --prime-border: #d5d9d9;
+}
+
+.prime-page {
+  background-color: #f7fafa;
+  color: #0f1111;
+  font-family: "Barlow", "Segoe UI", Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.amz-prime-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px 60px;
+}
+
+/* Breadcrumbs */
+.amz-prime-breadcrumbs {
+  font-size: 12px;
+  color: #565959;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.amz-prime-breadcrumbs a {
+  color: #007185;
+  text-decoration: none;
+}
+
+.amz-prime-breadcrumbs a:hover {
+  text-decoration: underline;
+  color: #c45500;
+}
+
+.amz-prime-breadcrumbs .separator {
+  color: #888888;
+}
+
+/* ==========================================================================
+   1. HERO SECTION (NON-MEMBER VS ACTIVE MEMBER)
+   ========================================================================== */
+.amz-prime-hero {
+  background: linear-gradient(135deg, #002f36 0%, #081a24 60%, #0f1111 100%);
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 40px 48px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 47, 54, 0.25);
+}
+
+.amz-prime-hero::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(0, 168, 225, 0.2) 0%, rgba(0, 168, 225, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.amz-prime-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.amz-prime-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 6px 14px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.amz-prime-logo-badge .crown-icon {
+  font-size: 16px;
+  color: #ffd814;
+}
+
+.amz-prime-logo-badge .prime-txt {
+  color: #00a8e1;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.amz-prime-hero-title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: #ffffff;
+}
+
+.amz-prime-hero-subtitle {
+  font-size: 17px;
+  line-height: 1.5;
+  color: #d5e6ec;
+  margin: 0 0 28px;
+}
+
+.amz-prime-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.amz-prime-btn-primary {
+  background: #ffd814;
+  color: #0f1111;
+  border: 1px solid #fcd200;
+  border-radius: 24px;
+  padding: 13px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  transition: all 0.2s ease;
+}
+
+.amz-prime-btn-primary:hover {
+  background: #f7ca00;
+  border-color: #f2c200;
+  transform: translateY(-1px);
+}
+
+.amz-prime-btn-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  padding: 12px 26px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.amz-prime-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+/* Active Member Hero View */
+.amz-prime-member-banner {
+  background: linear-gradient(135deg, #002f36 0%, #004b57 100%);
+  border-radius: 12px;
+  padding: 32px 40px;
+  color: #ffffff;
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 16px rgba(0, 47, 54, 0.2);
+}
+
+.amz-prime-member-info h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.amz-prime-member-info p {
+  font-size: 15px;
+  color: #d5e6ec;
+  margin: 0;
+}
+
+.amz-prime-member-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ==========================================================================
+   2. PRIME SAVINGS TRACKER WIDGET
+   ========================================================================== */
+.amz-prime-savings-card {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.amz-savings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.amz-savings-title-box h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f1111;
+  margin: 0 0 4px;
+}
+
+.amz-savings-title-box p {
+  font-size: 13px;
+  color: #565959;
+  margin: 0;
+}
+
+.amz-savings-total-pill {
+  background: #f0f8ff;
+  border: 1px solid #cce9f5;
+  border-radius: 8px;
+  padding: 8px 18px;
+  text-align: right;
+}
+
+.amz-savings-total-pill span {
+  font-size: 12px;
+  color: #007185;
+  display: block;
+  font-weight: 600;
+}
+
+.amz-savings-total-pill strong {
+  font-size: 24px;
+  font-weight: 800;
+  color: #007600;
+}
+
+.amz-savings-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.amz-savings-metric-box {
+  background: #f7fafa;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  padding: 16px 18px;
+  position: relative;
+}
+
+.amz-savings-metric-box .metric-label {
+  font-size: 13px;
+  color: #565959;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amz-savings-metric-box .metric-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f1111;
+}
+
+/* ==========================================================================
+   3. MEMBERSHIP PLANS GRID (MONTHLY / ANNUAL / LITE)
+   ========================================================================== */
+.amz-prime-plans-section {
+  margin-bottom: 40px;
+}
+
+.amz-section-headline {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f1111;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.amz-prime-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.amz-prime-plan-card {
+  background: #ffffff;
+  border: 2px solid #d5d9d9;
+  border-radius: 12px;
+  padding: 28px 24px 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.amz-prime-plan-card:hover {
+  border-color: #00a8e1;
+  box-shadow: 0 4px 16px rgba(0, 168, 225, 0.15);
+  transform: translateY(-2px);
+}
+
+.amz-prime-plan-card.featured {
+  border-color: #00a8e1;
+  background: #fdfefe;
+  box-shadow: 0 4px 18px rgba(0, 168, 225, 0.18);
+}
+
+.amz-prime-plan-card.active-plan {
+  border-color: #007600;
+  background: #f8fff9;
+}
+
+/* Best Value Badge */
+.amz-plan-ribbon {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ff9900, #ffb800);
+  color: #0f1111;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 14px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.amz-plan-header {
+  margin-bottom: 20px;
+}
+
+.amz-plan-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f1111;
+  margin: 0 0 6px;
+}
+
+.amz-plan-price-block {
+  margin-bottom: 8px;
+}
+
+.amz-plan-price {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f1111;
+}
+
+.amz-plan-period {
+  font-size: 15px;
+  color: #565959;
+  font-weight: 500;
+}
+
+.amz-plan-subtext {
+  font-size: 13px;
+  color: #007600;
+  font-weight: 600;
+  margin: 0;
+}
+
+.amz-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  flex: 1;
+}
+
+.amz-plan-features li {
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.amz-plan-features .check-bullet {
+  color: #007600;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.amz-plan-action-btn {
+  width: 100%;
+  background: #ffd814;
+  color: #0f1111;
+  border: 1px solid #fcd200;
+  border-radius: 20px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.amz-plan-action-btn:hover {
+  background: #f7ca00;
+  border-color: #f2c200;
+}
+
+/* ==========================================================================
+   4. PRIME BENEFITS GRID (6 CATEGORIES)
+   ========================================================================== */
+.amz-prime-benefits-section {
+  margin-bottom: 48px;
+}
+
+.amz-prime-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.amz-benefit-card {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.amz-benefit-card:hover {
+  border-color: #00a8e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.amz-benefit-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #e7f6fc;
+  color: #00a8e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.amz-benefit-content h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f1111;
+  margin: 0 0 6px;
+}
+
+.amz-benefit-content p {
+  font-size: 13px;
+  color: #565959;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================================
+   5. MODALS (CHANGE PLAN & CANCEL / PAUSE)
+   ========================================================================== */
+.amz-prime-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.amz-prime-modal-dialog {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 520px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: amzModalPop 0.2s ease-out;
+}
+
+@keyframes amzModalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.amz-prime-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.amz-prime-modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f1111;
+  margin: 0;
+}
+
+.amz-prime-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #565959;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.amz-prime-modal-close:hover {
+  color: #111111;
+}
+
+/* ==========================================================================
+   6. FLOATING TOAST NOTIFICATIONS
+   ========================================================================== */
+.amz-prime-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.amz-prime-toast {
+  background: #0f1111;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  animation: amzToastSlideIn 0.3s ease-out;
+}
+
+.amz-prime-toast.success {
+  border-left: 4px solid #007600;
+}
+
+.amz-prime-toast.info {
+  border-left: 4px solid #00a8e1;
+}
+
+.amz-prime-toast.error {
+  border-left: 4px solid #b12704;
+}
+
+@keyframes amzToastSlideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .amz-prime-hero {
+    padding: 28px 24px;
+  }
+  .amz-prime-hero-title {
+    font-size: 26px;
+  }
+  .amz-prime-member-banner {
+    padding: 24px 20px;
+  }
+  .amz-prime-plans-grid {
+    grid-template-columns: 1fr;
+  }
+}

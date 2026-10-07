@@ -15,7 +15,8 @@ const API_BASE_URL = (() => {
 const productsGrid = document.getElementById("productsGrid");
 const resultMeta = document.getElementById("resultMeta");
 const segmentFilter = document.getElementById("segmentFilter");
-const categoryFilter = document.getElementById("categoryFilter");
+const categoryFilter = document.getElementById("sidebarCategoryFilter") || document.querySelector(".filters-panel select.filter-select, aside select.filter-select, #categoryFilter");
+const headerCategoryFilter = document.querySelector(".nav-search-facade-wrap select, .site-header select.search-context-select");
 const searchCatalogSelect = document.getElementById("searchCatalogSelect");
 const searchInput = document.getElementById("searchInput");
 const searchForm = document.getElementById("searchForm");
@@ -69,6 +70,7 @@ const qvFbtAddAll = document.getElementById("qvFbtAddAll");
 const searchSuggestions = document.getElementById("searchSuggestions");
 
 let selectedMinRating = 0;
+let selectedMinDiscount = 0;
 let currentQuickViewProductId = "";
 let lastRenderedProducts = [];
 let fullResultSet = [];
@@ -359,6 +361,34 @@ function syncSearchCategoryControls(nextValue) {
   if (categoryFilter) {
     categoryFilter.value = safeValue;
   }
+  const deptLinks = document.querySelectorAll("#amzDeptTree .amz-dept-link");
+  if (deptLinks.length) {
+    deptLinks.forEach((link) => {
+      link.classList.toggle("active", (link.getAttribute("data-category") || "all") === safeValue);
+    });
+  }
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  if (headerCat && headerCat !== categoryFilter) {
+    if (headerCat.querySelector(`option[value="${safeValue}"]`)) {
+      headerCat.value = safeValue;
+    } else {
+      headerCat.value = "all";
+    }
+    const labelEl = document.getElementById("navCategoryLabel");
+    if (labelEl) {
+      const shortLabels = {
+        all: "All",
+        computer: "Computers",
+        laptop: "Laptops",
+        components: "Parts",
+        printer: "Printers",
+        audio: "Audio",
+        mobile: "Mobiles"
+      };
+      const display = shortLabels[headerCat.value] || headerCat.options[headerCat.selectedIndex]?.text || "All";
+      labelEl.innerHTML = `${display} <span class="nav-arrow">▾</span>`;
+    }
+  }
   if (searchCatalogSelect) {
     searchCatalogSelect.value = safeValue;
   }
@@ -367,6 +397,27 @@ function syncSearchCategoryControls(nextValue) {
 
 function getBrandFilters() {
   return brandFilterList ? Array.from(brandFilterList.querySelectorAll(".brand-filter")) : [];
+}
+
+function updateDeptTreeCounts(productsList = mergeProductsById(fallbackProducts, loadCatalogProductsList())) {
+  if (!Array.isArray(productsList) || !productsList.length) return;
+  const counts = { all: productsList.length };
+  productsList.forEach((item) => {
+    const collections = normalizeCollectionValues(item.collections, item.category);
+    collections.forEach((cat) => {
+      const c = String(cat).toLowerCase().trim();
+      counts[c] = (counts[c] || 0) + 1;
+    });
+  });
+  document.querySelectorAll("[data-category-count]").forEach((span) => {
+    const cat = span.getAttribute("data-category-count");
+    if (cat === "all") {
+      span.textContent = `(${productsList.length})`;
+    } else {
+      const cnt = counts[cat] || 0;
+      span.textContent = cnt ? `(${cnt})` : "";
+    }
+  });
 }
 
 const BRAND_ALIAS_MAP = {
@@ -441,7 +492,7 @@ function getProductsForBrandOptions(sourceProducts) {
 }
 
 let _brandSeeMoreExpanded = false;
-const BRAND_FILTER_VISIBLE_COUNT = 6;
+const BRAND_FILTER_VISIBLE_COUNT = 10;
 let _brandSeeMoreDelegationAttached = false;
 
 function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts, loadCatalogProductsList())) {
@@ -491,11 +542,22 @@ function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts,
   const needsToggle = options.length > BRAND_FILTER_VISIBLE_COUNT;
   const isCollapsed = needsToggle && !_brandSeeMoreExpanded;
 
-  /* Move selected brands to the top so checked items are always visible */
+  /* Major brands requested by standard Amazon India electronics catalogue */
+  const majorBrandsOrder = ["Apple", "Samsung", "ASUS", "Sony", "Lenovo", "HP", "Dell", "OnePlus", "boAt", "Logitech"];
+
+  /* Prioritise selected brands first, followed by major catalog brands, then alphabetical */
   const prioritised = [...options].sort((a, b) => {
     const aSelected = selectedBrandKeys.has(a.key) ? 0 : 1;
     const bSelected = selectedBrandKeys.has(b.key) ? 0 : 1;
-    return aSelected - bSelected;
+    if (aSelected !== bSelected) return aSelected - bSelected;
+
+    const aMajorIdx = majorBrandsOrder.findIndex((m) => m.toLowerCase() === a.key.toLowerCase());
+    const bMajorIdx = majorBrandsOrder.findIndex((m) => m.toLowerCase() === b.key.toLowerCase());
+    if (aMajorIdx !== -1 && bMajorIdx !== -1) return aMajorIdx - bMajorIdx;
+    if (aMajorIdx !== -1) return -1;
+    if (bMajorIdx !== -1) return 1;
+
+    return a.label.localeCompare(b.label);
   });
 
   brandFilterList.className = "brand-filter-list" + (isCollapsed ? " collapsed" : "");
@@ -504,7 +566,7 @@ function syncDynamicBrandUI(sourceProducts = mergeProductsById(fallbackProducts,
     .map((option, idx) => {
       const checked = selectedBrandKeys.has(option.key) ? " checked" : "";
       const extraClass = idx >= BRAND_FILTER_VISIBLE_COUNT ? " brand-filter-item-extra" : "";
-      return `<label class="check-item${extraClass}"><input type="checkbox" class="brand-filter" value="${escapeSuggestionHtml(option.label)}"${checked} /> ${escapeSuggestionHtml(option.label)}</label>`;
+      return `<label class="brand-checkbox check-item${extraClass}"><input type="checkbox" class="brand-filter" value="${escapeSuggestionHtml(option.label)}"${checked} /> <span>${escapeSuggestionHtml(option.label)}</span></label>`;
     })
     .join("") + (needsToggle
     ? `<button type="button" class="brand-see-more-btn${_brandSeeMoreExpanded ? " expanded" : ""}" id="brandSeeMoreBtn">
@@ -1190,6 +1252,12 @@ function mapSort(value) {
   if (value === "rating-desc" || value === "rating") {
     return "rating_desc";
   }
+  if (value === "newest") {
+    return "newest";
+  }
+  if (value === "bestseller") {
+    return "bestseller";
+  }
   return "relevance";
 }
 
@@ -1528,7 +1596,7 @@ function renderActiveFilterMeta() {
     });
   }
   if (state.selectedMinRating > 0) {
-    const label = `Rating: ${state.selectedMinRating}+`;
+    const label = `Rating: ${state.selectedMinRating}★ & Up`;
     summaryBits.push(label);
     chips.push({
       action: "rating",
@@ -1547,16 +1615,62 @@ function renderActiveFilterMeta() {
       ariaLabel: `Reset price range filter`
     });
   }
+  if (selectedMinDiscount > 0) {
+    const label = `Discount: ${selectedMinDiscount}%+ Off`;
+    summaryBits.push(label);
+    chips.push({
+      action: "discount",
+      value: "0",
+      label,
+      ariaLabel: `Remove discount filter ${selectedMinDiscount}% and above`
+    });
+  }
+  const codEl = document.getElementById("payOnDelivery");
+  if (codEl && codEl.checked) {
+    const label = "Pay on Delivery";
+    summaryBits.push(label);
+    chips.push({
+      action: "pay-on-delivery",
+      value: "",
+      label,
+      ariaLabel: "Remove Pay on Delivery filter"
+    });
+  }
+  const freeDelEl = document.getElementById("freeDelivery");
+  if (freeDelEl && freeDelEl.checked) {
+    const label = "Free Delivery";
+    summaryBits.push(label);
+    chips.push({
+      action: "free-delivery",
+      value: "",
+      label,
+      ariaLabel: "Remove Free Delivery filter"
+    });
+  }
+  const inStockEl = document.getElementById("inStockOnly");
+  if (inStockEl && inStockEl.checked) {
+    const label = "Include Out of Stock";
+    summaryBits.push(label);
+    chips.push({
+      action: "in-stock",
+      value: "",
+      label,
+      ariaLabel: "Remove Include Out of Stock filter"
+    });
+  }
 
   const nextSummary = summaryBits.length ? `Filters: ${summaryBits.join(" | ")}` : "Filters: None";
   activeFilterMeta.textContent = nextSummary;
 
+  const activeContainer = document.getElementById("activeFiltersContainer");
   if (activeFilterChips) {
     if (!chips.length) {
       activeFilterChips.hidden = true;
       activeFilterChips.innerHTML = "";
+      if (activeContainer) activeContainer.style.display = "none";
     } else {
       activeFilterChips.hidden = false;
+      if (activeContainer) activeContainer.style.display = "block";
       const filterChipMarkup = chips
         .map((chip) => `
           <button
@@ -1748,6 +1862,9 @@ function debounceFetch() {
 }
 
 function productCard(product) {
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : ((window.EM_TRANSLATIONS && window.EM_TRANSLATIONS.en) ? window.EM_TRANSLATIONS.en : {});
+
   const segment = product.segment || "b2c";
   const image = normalizeImageUrl(product.image) || fallbackImage();
   const ribbon = getRibbonLabel(product);
@@ -1762,15 +1879,25 @@ function productCard(product) {
   const onImageError = "handleProductImageError(this)";
   const couponAmount = isCouponEligible(product);
 
-  /* --- Ribbon / Badge (one per product, hierarchy enforced) --- */
+  /* --- Ribbon / Badge --- */
+  let ribbonLabel = ribbon ? ribbon.label : "";
+  if (ribbonLabel === "BEST SELLER") {
+    ribbonLabel = t.badge_best_seller || "BEST SELLER";
+  } else if (ribbonLabel === "DEAL") {
+    ribbonLabel = t.deal_badge || "DEAL";
+  } else if (ribbonLabel === "BULK VALUE") {
+    ribbonLabel = t.bulk_value || "BULK VALUE";
+  } else if (ribbonLabel && (ribbonLabel.includes("Choice") || ribbonLabel === "ElectroMart’s Choice")) {
+    ribbonLabel = t.electromarts_choice || t.amazons_choice || "ElectroMart's Choice";
+  }
   const ribbonHtml = ribbon
-    ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbon.label}</span>`
+    ? `<span class="card-ribbon ${ribbon.cssClass}">${ribbonLabel}</span>`
     : "";
 
   /* --- Star characters --- */
   const starChars = rating > 0 ? renderStarCharacters(rating) : "";
 
-  /* --- Rating row (Amazon-style: stars + value + count) --- */
+  /* --- Rating row --- */
   let ratingHtml = "";
   if (rating > 0) {
     ratingHtml = `
@@ -1782,63 +1909,79 @@ function productCard(product) {
   } else {
     ratingHtml = `
       <div class="rating-row">
-        <span class="rating-count-link" style="color: #007185; font-size: 12px;">New arrival</span>
+        <span class="rating-count-link" style="color: #007185; font-size: 12px;">${t.new_arrival || "New arrival"}</span>
       </div>`;
   }
 
-  /* --- Price section (Amazon-style) --- */
+  /* --- Social proof --- */
+  let socialProofHtml = "";
+  if (reviewCount >= 10) {
+    let countStr = "100";
+    if (reviewCount >= 500) countStr = "2K";
+    else if (reviewCount >= 250) countStr = "1K";
+    else if (reviewCount >= 100) countStr = "500";
+    else if (reviewCount >= 50) countStr = "200";
+    const proofTemplate = t.bought_in_past_month || "{count}+ bought in past month";
+    socialProofHtml = `<p class="card-social-proof">${proofTemplate.replace("{count}", countStr)}</p>`;
+  }
+
+  /* --- Price section --- */
   let priceHtml = `
     <div class="price-section">
+      ${discountPercent >= 10 ? `<span class="price-deal-tag">-${discountPercent}%</span>` : ""}
       <div class="price-current-amazon">
-        <span class="price-symbol">\u20B9</span>${price.toLocaleString("en-IN")}
+        <span class="price-symbol">₹</span>${price.toLocaleString("en-IN")}
       </div>`;
   if (discountPercent > 0) {
     priceHtml += `
       <div class="price-mrp-row">
-        <span class="mrp-label">M.R.P.:</span>
-        <span class="mrp-value">\u20B9${listPrice.toLocaleString("en-IN")}</span>
-        <span class="price-discount-tag">(${discountPercent}% off)</span>
+        <span class="mrp-label">${t.mrp || "M.R.P.:"}</span>
+        <span class="mrp-value">₹${listPrice.toLocaleString("en-IN")}</span>
+        <span class="price-discount-tag">(${discountPercent}% ${t.percent_off || "off"})</span>
       </div>`;
     if (savings > 0) {
-      priceHtml += `<div class="price-savings-row">You save: \u20B9${savings.toLocaleString("en-IN")}</div>`;
+      priceHtml += `<div class="price-savings-row">${t.you_save || "You save:"} ₹${savings.toLocaleString("en-IN")}</div>`;
     }
   }
   priceHtml += `</div>`;
 
-  /* --- Coupon checkbox (Amazon-style, on select products) --- */
+  /* --- Coupon checkbox --- */
   let couponHtml = "";
   if (couponAmount) {
     couponHtml = `
       <label class="card-coupon-box">
         <input type="checkbox" class="card-coupon-checkbox" data-product-id="${product.id}" data-coupon-amount="${couponAmount}" />
-        <span class="card-coupon-text">Apply <strong>\u20B9${couponAmount}</strong> coupon</span>
+        <span class="card-coupon-text">${t.apply_coupon_prefix || "Apply"} <strong>₹${couponAmount}</strong> ${t.apply_coupon_suffix || "coupon"}</span>
       </label>`;
   }
 
-  /* --- Stock urgency (FOMO) — show when stock is low --- */
+  /* --- Stock urgency --- */
   let stockUrgencyHtml = "";
   if (Number.isFinite(stock) && stock > 0 && stock <= 5) {
-    stockUrgencyHtml = `<div class="card-stock-urgency">Only ${stock} left in stock \u2014 order soon</div>`;
+    const urgencyText = t.only_left_stock
+      ? t.only_left_stock.replace("{count}", stock)
+      : `Only ${stock} left in stock — order soon`;
+    stockUrgencyHtml = `<div class="card-stock-urgency">${urgencyText}</div>`;
   }
 
-  /* --- Delivery promise (Prime-style) --- */
+  /* --- Delivery promise --- */
   const deliveryHtml = segment === "b2c"
     ? `<div class="card-delivery-promise">
-        <span class="delivery-truck-icon">\uD83D\uDE9A</span>
-        <span class="delivery-text-fast">FREE delivery <span class="delivery-date">Tomorrow</span></span>
+        <span class="delivery-truck-icon">🚚</span>
+        <span class="delivery-text-fast">${t.free_delivery_tomorrow || "FREE delivery Tomorrow"}</span>
       </div>`
     : `<div class="card-delivery-promise">
-        <span class="delivery-truck-icon">\uD83D\uDCE6</span>
+        <span class="delivery-truck-icon">📦</span>
         <span class="delivery-text-free">Business delivery options available</span>
       </div>`;
 
-  /* --- Bulk note (B2B) --- */
+  /* --- Bulk note --- */
   const bulkMeta = segment === "b2b" && product.moq
-    ? `<p class="bulk-note">MOQ: ${product.moq} units \u2022 Bulk pricing available</p>`
+    ? `<p class="bulk-note">MOQ: ${product.moq} units • Bulk pricing available</p>`
     : "";
 
   /* --- Brand line --- */
-  const brandHtml = `<p class="product-brand" style="margin:0;font-size:12px;color:#565959;">by <a href="${brandStoreUrl(product.brand || "ElectroMart")}" style="color:#007185;text-decoration:none;">${product.brand || "ElectroMart"}</a></p>`;
+  const brandHtml = `<p class="product-brand" style="margin:0;font-size:12px;color:#565959;">${t.by_brand || "by"} <a href="${brandStoreUrl(product.brand || "ElectroMart")}" style="color:#007185;text-decoration:none;">${product.brand || "ElectroMart"}</a></p>`;
 
   return `
     <article class="product-card">
@@ -1848,8 +1991,9 @@ function productCard(product) {
       </a>
       <div class="content">
         ${brandHtml}
-        <h3><a class="title-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${product.name}</a></h3>
+        <h3><a class="title-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${window.getLocalizedTitle ? window.getLocalizedTitle(product, currentLang) : product.name}</a></h3>
         ${ratingHtml}
+        ${socialProofHtml}
         ${priceHtml}
         ${couponHtml}
         ${deliveryHtml}
@@ -1857,13 +2001,13 @@ function productCard(product) {
         ${bulkMeta}
         <div class="card-atc-row">
           <button class="card-atc-btn" data-id="${product.id}" data-name="${product.name}" data-price="${Number(product.price || 0)}" data-image="${image}" type="button">
-            <span class="atc-icon">\uD83D\uDED2</span> Add to Cart
+            <span class="atc-icon">🛒</span> ${t.add_to_cart || "Add to Cart"}
           </button>
-          <button class="card-quick-view-link" data-quick-view-id="${product.id}" type="button">Quick view</button>
+          <button class="card-quick-view-link" data-quick-view-id="${product.id}" type="button">${t.quick_view || "Quick view"}</button>
         </div>
         <div class="card-links-row">
-          <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">View details</a>
-          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button"><span class="heart-icon">${wishlisted ? "\u2665" : "\u2661"}</span> ${wishlisted ? "Wishlisted" : "Wishlist"}</button>
+          <a class="view-link" href="product-detail.html?id=${encodeURIComponent(product.id)}">${t.view_details || "View details"}</a>
+          <button class="wishlist-btn ${wishlisted ? "active" : ""}" data-wishlist-id="${product.id}" type="button"><span class="heart-icon">${wishlisted ? "♥" : "♡"}</span> ${wishlisted ? (t.wishlisted || "Wishlisted") : (t.wishlist || "Wishlist")}</button>
         </div>
       </div>
     </article>
@@ -1998,15 +2142,23 @@ function renderFBTSection(product) {
 
 function syncDrawerWishlistState(productId) {
   if (!qvWishlist) return;
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
   const active = isWishlisted(productId);
   qvWishlist.classList.toggle("active", active);
-  qvWishlist.innerHTML = active ? "\u2665 Wishlisted" : "\u2661 Add to Wishlist";
+  qvWishlist.innerHTML = active ? `♥ ${t.wishlisted || "Wishlisted"}` : `♡ ${t.add_to_wishlist || "Add to Wishlist"}`;
 }
 
 function closeQuickViewDrawer() {
   if (!qvDrawer) return;
   qvDrawer.classList.remove("open");
-  if (qvDrawerOverlay) qvDrawerOverlay.style.display = "none";
+  qvDrawer.style.display = "none";
+  qvDrawer.style.pointerEvents = "none";
+  if (qvDrawerOverlay) {
+    qvDrawerOverlay.classList.remove("open");
+    qvDrawerOverlay.style.display = "none";
+    qvDrawerOverlay.style.pointerEvents = "none";
+  }
   document.body.classList.remove("quick-view-open");
   currentQuickViewProductId = "";
 }
@@ -2108,6 +2260,24 @@ function openQuickViewDrawer(productId) {
   /* Quantity */
   if (qvQuantity) qvQuantity.value = "1";
 
+  /* Apply i18n to Quick View Drawer */
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  if (qvAddToCart) qvAddToCart.textContent = t.add_to_cart || "Add to Cart";
+  if (qvBuyNow) qvBuyNow.textContent = t.buy_now || "Buy Now";
+  if (qvStockStatus) {
+    if (stock > 0) {
+      qvStockStatus.className = "qv-stock-status in-stock";
+      qvStockStatus.textContent = stock > 5 ? (t.in_stock || "In Stock") : (t.only_left_stock ? t.only_left_stock.replace("{count}", stock) : `Only ${stock} left in stock - order soon`);
+    } else {
+      qvStockStatus.className = "qv-stock-status out-of-stock";
+      qvStockStatus.textContent = t.out_of_stock || "Out of Stock";
+    }
+  }
+  if (typeof window.applyFullPageTranslation === "function") {
+    window.applyFullPageTranslation(currentLang);
+  }
+
   /* Wishlist state */
   syncDrawerWishlistState(currentQuickViewProductId);
 
@@ -2115,7 +2285,14 @@ function openQuickViewDrawer(productId) {
   renderFBTSection(product);
 
   /* Open the drawer */
-  if (qvDrawerOverlay) qvDrawerOverlay.style.display = "block";
+  if (qvDrawerOverlay) {
+    qvDrawerOverlay.style.display = "block";
+    qvDrawerOverlay.style.pointerEvents = "auto";
+    qvDrawerOverlay.classList.add("open");
+  }
+  qvDrawer.style.display = "flex";
+  qvDrawer.style.pointerEvents = "auto";
+  void qvDrawer.offsetWidth;
   qvDrawer.classList.add("open");
   document.body.classList.add("quick-view-open");
 }
@@ -2124,38 +2301,125 @@ function openQuickViewDrawer(productId) {
 function openQuickViewModal(productId) { openQuickViewDrawer(productId); }
 function closeQuickViewModal() { closeQuickViewDrawer(); }
 
+let currentPage = 1;
+let itemsPerPage = 20;
+
+function renderPagination(totalItems, currentPg, perPage) {
+  const paginationEl = document.getElementById("pagination");
+  if (!paginationEl) return;
+  const totalPages = Math.ceil(totalItems / perPage) || 1;
+  if (totalPages <= 1) {
+    paginationEl.innerHTML = "";
+    paginationEl.style.display = "none";
+    return;
+  }
+  paginationEl.style.display = "flex";
+  let html = "";
+  
+  // Previous button
+  const prevDisabled = currentPg <= 1 ? " disabled" : "";
+  html += `<button type="button" class="pagination-btn pagination-prev"${prevDisabled} data-page="${currentPg - 1}">‹ Previous</button>`;
+
+  // Page numbers
+  const maxButtons = 5;
+  let startPage = Math.max(1, currentPg - 2);
+  let endPage = Math.min(totalPages, currentPg + 2);
+  if (startPage <= 2) {
+    startPage = 1;
+    endPage = Math.min(totalPages, maxButtons);
+  } else if (endPage >= totalPages - 1) {
+    endPage = totalPages;
+    startPage = Math.max(1, totalPages - maxButtons + 1);
+  }
+
+  if (startPage > 1) {
+    html += `<button type="button" class="pagination-btn" data-page="1">1</button>`;
+    if (startPage > 2) html += `<span class="pagination-ellipsis">...</span>`;
+  }
+
+  for (let p = startPage; p <= endPage; p++) {
+    const active = p === currentPg ? " active" : "";
+    html += `<button type="button" class="pagination-btn${active}" data-page="${p}">${p}</button>`;
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) html += `<span class="pagination-ellipsis">...</span>`;
+    html += `<button type="button" class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+  }
+
+  // Next button
+  const nextDisabled = currentPg >= totalPages ? " disabled" : "";
+  html += `<button type="button" class="pagination-btn pagination-next"${nextDisabled} data-page="${currentPg + 1}">Next ›</button>`;
+
+  paginationEl.innerHTML = html;
+}
+
 function renderProducts(list) {
   lastRenderedProducts = list.slice();
   fullResultSet = list.slice();
+  window.allLoadedProducts = fullResultSet;
+  window.renderProductsList = (items) => {
+    if (Array.isArray(items) && items.length) {
+      renderProducts(items);
+    } else {
+      renderProducts(fullResultSet);
+    }
+  };
   setProductsGridBusy(false);
 
   if (!list.length) {
-    visibleResultCount = 0;
-    resultMeta.textContent = "Showing 0 products";
     productsGrid.innerHTML = renderZeroResultsState();
+    renderPagination(0, 1, itemsPerPage);
     if (resultsFooter) {
       resultsFooter.hidden = true;
     }
-    if (resultsWindowMeta) {
-      resultsWindowMeta.textContent = "";
-    }
-    flushFilterAnnouncement(resultMeta.textContent);
+    syncQuickViewDrawerTargets();
     return;
   }
 
-  visibleResultCount = Math.min(list.length, Math.max(PRODUCTS_INITIAL_RENDER_LIMIT, visibleResultCount || 0));
-  const visibleItems = list.slice(0, visibleResultCount);
-  resultMeta.textContent = `Showing ${visibleItems.length} of ${list.length} products`;
-  productsGrid.innerHTML = visibleItems.map(productCard).join("");
+  const itemsPerPageSelect = document.getElementById("itemsPerPage");
+  if (itemsPerPageSelect) {
+    itemsPerPage = Number(itemsPerPageSelect.value) || 20;
+  }
 
-  if (resultsFooter && resultsWindowMeta && loadMoreBtn) {
-    const hasMore = visibleItems.length < list.length;
-    resultsFooter.hidden = false;
-    resultsWindowMeta.textContent = hasMore
-      ? `${list.length - visibleItems.length} more products available`
-      : "All matching products loaded";
-    loadMoreBtn.hidden = !hasMore;
-    loadMoreBtn.disabled = !hasMore;
+  const totalPages = Math.ceil(list.length / itemsPerPage) || 1;
+  currentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, list.length);
+  const visibleItems = list.slice(startIndex, endIndex);
+
+  const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+  const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+  
+  const startNum = startIndex + 1;
+  const endNum = endIndex;
+  const activeQuery = (searchInput?.value || "").trim();
+  const activeCat = categoryFilter?.value || "all";
+  const totalStr = list.length > 700 ? `over ${Math.floor(list.length / 100) * 100}` : String(list.length);
+
+  if (currentLang === "en") {
+    if (activeQuery) {
+      resultMeta.textContent = `${startNum}-${endNum} of ${totalStr} results for "${activeQuery}"`;
+    } else if (activeCat !== "all") {
+      resultMeta.textContent = `${startNum}-${endNum} of ${list.length} results for "${categoryLabel(activeCat)}"`;
+    } else {
+      resultMeta.textContent = `${startNum}-${endNum} of ${totalStr} results`;
+    }
+  } else {
+    if (activeQuery) {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"} ${t.results_for_prefix || "for"} "${activeQuery}"`;
+    } else if (activeCat !== "all") {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"} (${categoryLabel(activeCat)})`;
+    } else {
+      resultMeta.textContent = `${t.showing || "Showing"} ${startNum}-${endNum} ${t.of || "of"} ${list.length} ${t.products || "products"}`;
+    }
+  }
+
+  productsGrid.innerHTML = visibleItems.map(productCard).join("");
+  renderPagination(list.length, currentPage, itemsPerPage);
+
+  if (resultsFooter) {
+    resultsFooter.hidden = true;
   }
   flushFilterAnnouncement(resultMeta.textContent);
 }
@@ -2220,26 +2484,58 @@ function resetAllFilters() {
   if (segmentFilter) {
     segmentFilter.value = "all";
   }
-  categoryFilter.value = "all";
+  if (categoryFilter) {
+    categoryFilter.value = "all";
+  }
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  if (headerCat && headerCat !== categoryFilter) {
+    headerCat.value = "all";
+    const labelEl = document.getElementById("navCategoryLabel");
+    if (labelEl) labelEl.innerHTML = `All <span class="nav-arrow">▾</span>`;
+  }
   if (searchCatalogSelect) {
     searchCatalogSelect.value = "all";
   }
   sortFilter.value = "relevance";
   searchInput.value = "";
   minPriceRange.value = String(minPriceRange.min || 0);
-  maxPriceRange.value = String(maxPriceRange.max || 16000);
+  maxPriceRange.value = String(maxPriceRange.max || 200000);
   selectedMinRating = 0;
+  selectedMinDiscount = 0;
+  currentPage = 1;
+  const minInp = document.getElementById("minPriceInput");
+  const maxInp = document.getElementById("maxPriceInput");
+  if (minInp) minInp.value = "";
+  if (maxInp) maxInp.value = "";
+  document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".amz-dept-link").forEach((el) => {
+    el.classList.toggle("active", el.getAttribute("data-category") === "all");
+  });
+  document.querySelectorAll(".amz-rating-item").forEach((el) => el.classList.remove("active"));
+  document.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+  const payCod = document.getElementById("payOnDelivery");
+  if (payCod) payCod.checked = false;
+  const freeDel = document.getElementById("freeDelivery");
+  if (freeDel) freeDel.checked = false;
+  const nextDay = document.getElementById("nextDayDelivery");
+  if (nextDay) nextDay.checked = false;
+  const inStockOnly = document.getElementById("inStockOnly");
+  if (inStockOnly) inStockOnly.checked = false;
   syncRatingChipUI();
   getBrandFilters().forEach((checkbox) => {
     checkbox.checked = false;
   });
+  syncDynamicCategoryUI();
   updatePriceLabels();
   visibleResultCount = PRODUCTS_INITIAL_RENDER_LIMIT;
   fetchProductsFromApi();
 }
 
 function buildQueryParams() {
-  const selectedCategory = normalizeCategory(searchCatalogSelect?.value || categoryFilter.value);
+  const sidebarCategory = categoryFilter ? normalizeCategory(categoryFilter.value) : "all";
+  const headerCat = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+  const headerCategory = headerCat && headerCat !== categoryFilter ? normalizeCategory(headerCat.value) : "all";
+  const selectedCategory = sidebarCategory !== "all" ? sidebarCategory : (headerCategory !== "all" ? headerCategory : normalizeCategory(searchCatalogSelect?.value || "all"));
   const selectedSegment = segmentFilter?.value || "all";
   const query = (searchInput?.value || "").trim();
   const minPrice = Number(minPriceRange.value);
@@ -2296,8 +2592,27 @@ function applyClientFilters(sourceProducts) {
     const segmentMatch = selectedSegment === "all" || item.segment === selectedSegment;
     const priceMatch = Number(item.price || 0) >= priceFloor && Number(item.price || 0) <= priceCeil;
     const ratingMatch = Number(item.rating || 0) >= selectedMinRating;
-    const brandMatch = !checkedBrands.length || checkedBrands.includes(item.brand);
-    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch;
+    const brandMatch = !checkedBrands.length || checkedBrands.some((b) => b.trim().toLowerCase() === String(item.brand || "").trim().toLowerCase());
+
+    // Discount filter
+    const listPrice = Number(item.listPrice || item.price || 0);
+    const price = Number(item.price || 0);
+    const discountPercent = listPrice > price ? Math.round(((listPrice - price) / listPrice) * 100) : 0;
+    const discountMatch = !selectedMinDiscount || discountPercent >= selectedMinDiscount;
+
+    // Availability / Stock filter
+    const inStockOnly = document.getElementById("inStockOnly");
+    const stockMatch = inStockOnly && inStockOnly.checked ? true : (Number(item.stock) > 0 || isNaN(Number(item.stock)));
+
+    // Pay on Delivery filter
+    const payOnDelivery = document.getElementById("payOnDelivery");
+    const codMatch = !payOnDelivery || !payOnDelivery.checked ? true : (item.segment !== "b2b");
+
+    // Free Delivery filter
+    const freeDelivery = document.getElementById("freeDelivery");
+    const freeDeliveryMatch = !freeDelivery || !freeDelivery.checked ? true : (Number(item.price || 0) >= 499 || item.segment === "b2b");
+
+    return queryMatch && categoryMatch && segmentMatch && priceMatch && ratingMatch && brandMatch && discountMatch && stockMatch && codMatch && freeDeliveryMatch;
   });
 
   if (selectedSort === "price_asc") {
@@ -2306,6 +2621,10 @@ function applyClientFilters(sourceProducts) {
     items = items.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
   } else if (selectedSort === "rating_desc") {
     items = items.sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
+  } else if (selectedSort === "newest") {
+    items = items.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  } else if (selectedSort === "bestseller") {
+    items = items.sort((a, b) => (Number(b.rating || 0) * (Number(b.reviewCount || 10))) - (Number(a.rating || 0) * (Number(a.reviewCount || 10))));
   }
 
   return items;
@@ -2329,6 +2648,7 @@ async function fetchProductsFromApi() {
   try {
     response = await fetch(`${API_BASE_URL}/products?${params.toString()}`);
   } catch (error) {
+    updateDeptTreeCounts(fallbackSource);
     renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
@@ -2336,6 +2656,7 @@ async function fetchProductsFromApi() {
 
   const data = await response.json().catch(() => null);
   if (!response.ok || !data || !Array.isArray(data.products)) {
+    updateDeptTreeCounts(fallbackSource);
     renderProducts(applyClientFilters(fallbackSource));
     resultMeta.textContent = `${resultMeta.textContent} (Offline mode)`;
     return;
@@ -2345,9 +2666,10 @@ async function fetchProductsFromApi() {
   const sourceItems = mergeProductsById(data.products, loadCatalogProductsList());
   syncDynamicCategoryUI();
   syncDynamicBrandUI(sourceItems);
+  updateDeptTreeCounts(sourceItems);
   let items = sourceItems;
   if (!activeQuery && checkedBrands.length > 1) {
-    items = items.filter((item) => checkedBrands.includes(item.brand));
+    items = items.filter((item) => checkedBrands.some((b) => b.trim().toLowerCase() === String(item.brand || "").trim().toLowerCase()));
   }
   items = applyClientFilters(items);
   renderProducts(items);
@@ -2369,7 +2691,8 @@ if (loadMoreBtn) {
 if (searchForm) {
   searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    syncSearchCategoryControls(searchCatalogSelect?.value || categoryFilter.value || "all");
+    const activeCat = headerCategoryFilter?.value || searchCatalogSelect?.value || categoryFilter?.value || "all";
+    syncSearchCategoryControls(activeCat);
     rememberSearchQuery(searchInput?.value || "");
     fetchProductsFromApi();
   });
@@ -2378,10 +2701,19 @@ if (searchForm) {
 if (segmentFilter) {
   segmentFilter.addEventListener("change", fetchProductsFromApi);
 }
-categoryFilter.addEventListener("change", () => {
-  syncSearchCategoryControls(categoryFilter.value || "all");
-  fetchProductsFromApi();
-});
+if (categoryFilter) {
+  categoryFilter.addEventListener("change", () => {
+    syncSearchCategoryControls(categoryFilter.value || "all");
+    fetchProductsFromApi();
+  });
+}
+const headerCatEl = headerCategoryFilter || document.querySelector(".nav-search-facade-wrap select, .search-context-select");
+if (headerCatEl && headerCatEl !== categoryFilter) {
+  headerCatEl.addEventListener("change", () => {
+    syncSearchCategoryControls(headerCatEl.value || "all");
+    fetchProductsFromApi();
+  });
+}
 if (searchCatalogSelect) {
   searchCatalogSelect.addEventListener("change", () => {
     syncSearchCategoryControls(searchCatalogSelect.value || "all");
@@ -2464,15 +2796,20 @@ if (searchSuggestions) {
   });
 }
 if (sortFilter) {
-  sortFilter.addEventListener("change", fetchProductsFromApi);
+  sortFilter.addEventListener("change", () => {
+    currentPage = 1;
+    fetchProductsFromApi();
+  });
 }
 
 minPriceRange.addEventListener("input", () => {
+  currentPage = 1;
   updatePriceLabels();
   fetchProductsFromApi();
 });
 
 maxPriceRange.addEventListener("input", () => {
+  currentPage = 1;
   updatePriceLabels();
   fetchProductsFromApi();
 });
@@ -2480,12 +2817,21 @@ maxPriceRange.addEventListener("input", () => {
 if (brandFilterList) {
   brandFilterList.addEventListener("change", (event) => {
     if (event.target.closest(".brand-filter")) {
+      currentPage = 1;
       fetchProductsFromApi();
     }
   });
 }
 if (resetFiltersBtn) {
   resetFiltersBtn.addEventListener("click", resetAllFilters);
+}
+const clearAllTop = document.getElementById("clearAllFilters");
+if (clearAllTop && clearAllTop !== resetFiltersBtn) {
+  clearAllTop.addEventListener("click", resetAllFilters);
+}
+const clearAllEmpty = document.getElementById("clearFiltersBtn");
+if (clearAllEmpty && clearAllEmpty !== resetFiltersBtn) {
+  clearAllEmpty.addEventListener("click", resetAllFilters);
 }
 
   function animateFilterChipRemoval(chip, callback) {
@@ -2542,10 +2888,34 @@ if (resetFiltersBtn) {
         feedbackMessage = "Removed rating filter. Focus moved to the rating options.";
       } else if (action === "price") {
         minPriceRange.value = String(minPriceRange.min || 0);
-        maxPriceRange.value = String(maxPriceRange.max || 16000);
+        maxPriceRange.value = String(maxPriceRange.max || 200000);
+        const minInp = document.getElementById("minPriceInput");
+        const maxInp = document.getElementById("maxPriceInput");
+        if (minInp) minInp.value = "";
+        if (maxInp) maxInp.value = "";
+        document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
         updatePriceLabels();
         focusTarget = minPriceRange;
         feedbackMessage = "Removed price filter. Focus moved to the minimum price slider.";
+      } else if (action === "discount") {
+        selectedMinDiscount = 0;
+        document.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+        feedbackMessage = "Removed discount filter.";
+      } else if (action === "pay-on-delivery") {
+        const cod = document.getElementById("payOnDelivery");
+        if (cod) cod.checked = false;
+        focusTarget = cod;
+        feedbackMessage = "Removed Pay on Delivery filter.";
+      } else if (action === "free-delivery") {
+        const fd = document.getElementById("freeDelivery");
+        if (fd) fd.checked = false;
+        focusTarget = fd;
+        feedbackMessage = "Removed Free Delivery filter.";
+      } else if (action === "in-stock") {
+        const stk = document.getElementById("inStockOnly");
+        if (stk) stk.checked = false;
+        focusTarget = stk;
+        feedbackMessage = "Removed Out of Stock filter.";
       } else {
         return;
       }
@@ -2625,7 +2995,10 @@ document.addEventListener("click", (event) => {
     if (productId) {
       const active = toggleWishlist(productId);
       wishlistBtn.classList.toggle("active", active);
-      wishlistBtn.textContent = active ? "Wishlisted" : "Wishlist";
+      const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "en").toLowerCase();
+      const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : {};
+      const label = active ? (t.wishlisted || "Wishlisted") : (t.wishlist || "Wishlist");
+      wishlistBtn.innerHTML = `<span class="heart-icon">${active ? "♥" : "♡"}</span> ${label}`;
     }
     return;
   }
@@ -2730,10 +3103,237 @@ if (qvFbtAddAll) {
   });
 }
 
+function setupViewToggleAndPagination() {
+  // 1. Grid / List View Toggle
+  const viewBtns = document.querySelectorAll(".view-btn");
+  const savedView = localStorage.getItem("electromart_view_mode") || "grid";
+  if (productsGrid) {
+    if (savedView === "list") {
+      productsGrid.classList.add("list-view");
+    } else {
+      productsGrid.classList.remove("list-view");
+    }
+  }
+  viewBtns.forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-view") === savedView);
+    btn.addEventListener("click", () => {
+      const mode = btn.getAttribute("data-view") || "grid";
+      viewBtns.forEach((b) => b.classList.toggle("active", b.getAttribute("data-view") === mode));
+      if (productsGrid) {
+        if (mode === "list") {
+          productsGrid.classList.add("list-view");
+        } else {
+          productsGrid.classList.remove("list-view");
+        }
+      }
+      localStorage.setItem("electromart_view_mode", mode);
+    });
+  });
+
+  // 2. Items per page selector
+  const itemsPerPageSelect = document.getElementById("itemsPerPage");
+  if (itemsPerPageSelect) {
+    itemsPerPageSelect.addEventListener("change", () => {
+      itemsPerPage = Number(itemsPerPageSelect.value) || 20;
+      currentPage = 1;
+      if (fullResultSet && fullResultSet.length) {
+        renderProducts(fullResultSet);
+      }
+    });
+  }
+
+  // 3. Pagination click delegation
+  const paginationEl = document.getElementById("pagination");
+  if (paginationEl) {
+    paginationEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pagination-btn");
+      if (!btn || btn.disabled || btn.classList.contains("disabled")) return;
+      const targetPage = Number(btn.getAttribute("data-page"));
+      if (targetPage && targetPage !== currentPage) {
+        currentPage = targetPage;
+        if (fullResultSet && fullResultSet.length) {
+          renderProducts(fullResultSet);
+        }
+        if (productsGrid) {
+          productsGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  }
+}
+
+function setupAmazonListingFilters() {
+  // 1. Department Tree
+  const deptTree = document.getElementById("amzDeptTree");
+  if (deptTree) {
+    deptTree.addEventListener("click", (e) => {
+      const link = e.target.closest(".amz-dept-link");
+      if (!link) return;
+      e.preventDefault();
+      const cat = link.getAttribute("data-category") || "all";
+      currentPage = 1;
+      deptTree.querySelectorAll(".amz-dept-link").forEach((el) => el.classList.remove("active"));
+      link.classList.add("active");
+      if (categoryFilter) {
+        categoryFilter.value = cat;
+      }
+      syncSearchCategoryControls(cat);
+      fetchProductsFromApi();
+    });
+  }
+
+  // 2. Customer Star Ratings
+  const ratingList = document.getElementById("amzRatingList");
+  if (ratingList) {
+    ratingList.addEventListener("click", (e) => {
+      const item = e.target.closest(".amz-rating-item");
+      if (!item) return;
+      e.preventDefault();
+      const rating = Number(item.getAttribute("data-rating") || 0);
+      currentPage = 1;
+      if (selectedMinRating === rating) {
+        selectedMinRating = 0;
+        item.classList.remove("active");
+      } else {
+        selectedMinRating = rating;
+        ratingList.querySelectorAll(".amz-rating-item").forEach((el) => el.classList.remove("active"));
+        item.classList.add("active");
+      }
+      syncRatingChipUI();
+      fetchProductsFromApi();
+    });
+  }
+
+  // 3. Discount Links
+  const discountList = document.getElementById("amzDiscountList");
+  if (discountList) {
+    discountList.addEventListener("click", (e) => {
+      const link = e.target.closest(".amz-discount-link");
+      if (!link) return;
+      e.preventDefault();
+      const discount = Number(link.getAttribute("data-discount") || 0);
+      currentPage = 1;
+      if (selectedMinDiscount === discount) {
+        selectedMinDiscount = 0;
+        link.classList.remove("active");
+      } else {
+        selectedMinDiscount = discount;
+        discountList.querySelectorAll(".amz-discount-link").forEach((el) => el.classList.remove("active"));
+        link.classList.add("active");
+      }
+      fetchProductsFromApi();
+    });
+  }
+
+  // 4. Min/Max Go Button
+  const priceGoBtn = document.getElementById("priceGoBtn");
+  const minPriceInput = document.getElementById("minPriceInput");
+  const maxPriceInput = document.getElementById("maxPriceInput");
+  if (priceGoBtn) {
+    const handlePriceGo = () => {
+      let minVal = minPriceInput && minPriceInput.value !== "" ? Number(minPriceInput.value) : null;
+      let maxVal = maxPriceInput && maxPriceInput.value !== "" ? Number(maxPriceInput.value) : null;
+      if (minVal !== null && maxVal !== null && minVal > maxVal) {
+        const tmp = minVal;
+        minVal = maxVal;
+        maxVal = tmp;
+        minPriceInput.value = minVal;
+        maxPriceInput.value = maxVal;
+      }
+      if (minVal !== null && !isNaN(minVal)) {
+        minPriceRange.value = String(Math.max(0, minVal));
+      }
+      if (maxVal !== null && !isNaN(maxVal)) {
+        maxPriceRange.value = String(Math.min(200000, maxVal));
+      }
+      currentPage = 1;
+      document.querySelectorAll(".price-preset-btn").forEach((btn) => btn.classList.remove("active"));
+      updatePriceLabels();
+      fetchProductsFromApi();
+    };
+    priceGoBtn.addEventListener("click", handlePriceGo);
+    if (minPriceInput) {
+      minPriceInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handlePriceGo();
+        }
+      });
+    }
+    if (maxPriceInput) {
+      maxPriceInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handlePriceGo();
+        }
+      });
+    }
+  }
+
+  // 5. Price Preset Buttons
+  document.querySelectorAll(".price-preset-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const min = btn.getAttribute("data-min");
+      const max = btn.getAttribute("data-max");
+      const wasActive = btn.classList.contains("active");
+      document.querySelectorAll(".price-preset-btn").forEach((b) => b.classList.remove("active"));
+      currentPage = 1;
+      if (wasActive) {
+        minPriceRange.value = String(minPriceRange.min || 0);
+        maxPriceRange.value = String(maxPriceRange.max || 200000);
+        if (minPriceInput) minPriceInput.value = "";
+        if (maxPriceInput) maxPriceInput.value = "";
+      } else {
+        btn.classList.add("active");
+        if (min !== null) minPriceRange.value = String(min);
+        if (max !== null) maxPriceRange.value = String(max);
+        if (minPriceInput) minPriceInput.value = min || "";
+        if (maxPriceInput) maxPriceInput.value = max || "";
+      }
+      updatePriceLabels();
+      fetchProductsFromApi();
+    });
+  });
+
+  // 6. Pay on Delivery, Free Delivery & Stock filters
+  const payCod = document.getElementById("payOnDelivery");
+  if (payCod) {
+    payCod.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+  const freeDelivery = document.getElementById("freeDelivery");
+  if (freeDelivery) {
+    freeDelivery.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+  const nextDay = document.getElementById("nextDayDelivery");
+  if (nextDay) {
+    nextDay.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+  const inStockOnly = document.getElementById("inStockOnly");
+  if (inStockOnly) {
+    inStockOnly.addEventListener("change", () => {
+      currentPage = 1;
+      fetchProductsFromApi();
+    });
+  }
+}
+
+closeQuickViewDrawer();
+setupAmazonListingFilters();
+setupViewToggleAndPagination();
 syncCartCount();
 syncDynamicCategoryUI();
 applyInitialQueryFilters();
 syncDynamicBrandUI();
 updatePriceLabels();
+updateDeptTreeCounts();
 fetchProductsFromApi();
 

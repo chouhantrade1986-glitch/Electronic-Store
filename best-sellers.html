@@ -21,72 +21,80 @@
 
   <main class="best-main">
     <section class="hero">
-      <p class="eyebrow">Most Loved Products</p>
-      <h1>Best Sellers</h1>
-      <p>See what customers are buying most across top categories.</p>
+      <p class="eyebrow" data-i18n="most_loved">Most Loved Products</p>
+      <h1 data-i18n="best_sellers">Best Sellers</h1>
+      <p data-i18n="best_sellers_desc">See what customers are buying most across top categories.</p>
       <div class="hero-pills">
-        <span>Updated Weekly</span>
-        <span>Top Rated</span>
-        <span>Fast Delivery</span>
+        <span data-i18n="updated_weekly">Updated Weekly</span>
+        <span data-i18n="top_rated">Top Rated</span>
+        <span data-i18n="fast_delivery">Fast Delivery</span>
       </div>
     </section>
+
+    <!-- Amazon-Style Horizontal Department Filter Bar -->
+    <nav class="amz-dept-pills-bar" id="bestSellersDeptBar" aria-label="Department filters">
+      <button type="button" class="amz-dept-pill active" data-category="all" data-i18n="all_best_sellers">All Best Sellers</button>
+      <button type="button" class="amz-dept-pill" data-category="laptop" data-i18n="laptops">Laptops</button>
+      <button type="button" class="amz-dept-pill" data-category="mobile" data-i18n="mobiles">Mobiles</button>
+      <button type="button" class="amz-dept-pill" data-category="audio" data-i18n="audio_headphones">Audio</button>
+      <button type="button" class="amz-dept-pill" data-category="accessory" data-i18n="accessories">Accessories</button>
+      <button type="button" class="amz-dept-pill" data-category="computer" data-i18n="computers">Computers</button>
+    </nav>
 
     <section class="amazon-layout">
       <aside class="panel refine-panel">
         <div class="panel-head">
-          <h2>Refine Results</h2>
-          <p>Amazon style filters</p>
+          <h2 data-i18n="filter_by">Refine Results</h2>
+          <p data-i18n="amazon_style_filters">ElectroMart Filters</p>
         </div>
 
         <section class="filters" aria-label="Filter best sellers">
           <div class="filter-block">
-            <h3>Brand</h3>
+            <h3 data-i18n="brands">Brand</h3>
             <div id="brandFilterList" class="brand-filter-list" role="group" aria-label="Filter by brand">
               <p class="brand-filter-empty">Loading brands...</p>
             </div>
           </div>
           <select id="categoryFilter" aria-label="Filter category">
-            <option value="all">All Categories</option>
-            <option value="laptop">Laptops</option>
-            <option value="mobile">Mobiles</option>
-            <option value="audio">Audio</option>
-            <option value="accessory">Accessories</option>
+            <option value="all" data-i18n="all_categories">All Categories</option>
+            <option value="laptop" data-i18n="laptops">Laptops</option>
+            <option value="mobile" data-i18n="mobiles">Mobiles</option>
+            <option value="audio" data-i18n="audio_headphones">Audio</option>
+            <option value="accessory" data-i18n="accessories">Accessories</option>
           </select>
           <select id="sortFilter" aria-label="Sort best sellers">
-            <option value="relevance">Sort: Relevance</option>
-            <option value="sold_desc">Most Sold</option>
-            <option value="rating_desc">Top Rated</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
+            <option value="relevance" data-i18n="sort_featured">Sort: Relevance</option>
+            <option value="sold_desc" data-i18n="most_sold">Most Sold</option>
+            <option value="rating_desc" data-i18n="top_rated">Top Rated</option>
+            <option value="price_asc" data-i18n="price_low_high">Price: Low to High</option>
+            <option value="price_desc" data-i18n="price_high_low">Price: High to Low</option>
           </select>
         </section>
 
         <div class="rail-block promo-block">
-          <h3>Best Seller Tip</h3>
-          <p>Open product details to compare ratings and delivery options before buying.</p>
+          <h3 data-i18n="best_seller_tip">Best Seller Tip</h3>
+          <p data-i18n="best_seller_tip_desc">Open product details to compare ratings and delivery options before buying.</p>
         </div>
       </aside>
 
       <section class="panel result-panel">
         <div class="panel-head">
-          <h2>Customer Favorites</h2>
+          <h2 data-i18n="customer_favorites">Customer Favorites</h2>
           <p id="resultMeta" role="status" aria-live="polite" aria-atomic="true">Showing 0 products</p>
         </div>
-        <p class="result-note">Ranked by customer demand and ratings.</p>
+        <p class="result-note" data-i18n="ranked_by_demand">Ranked by customer demand and ratings.</p>
         <div id="bestGrid" class="best-grid"></div>
       </section>
     </section>
   </main>
 
-  <script src="listing-filter-chips.js?v=20260314a"></script>
-  <script src="best-sellers.js?v=20260315d"></script>
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="menu-manager.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
   <script src="header.js"></script>
+  <script src="listing-filter-chips.js?v=20260314a"></script>
+  <script src="best-sellers.js?v=20260315e"></script>
 </body>
 </html>
-
-
-
-
-

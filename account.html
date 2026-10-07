@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="android-compat.css?v=20260410a" />
-  <title>ElectroMart Account</title>
+  <title>Your Account - ElectroMart</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,87 +12,341 @@
   <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
   <link rel="stylesheet" href="account.css" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
-
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
   <script src="android-compat.js?v=20260410a"></script>
 </head>
-  <body>
-    <div id="accountToastStack" style="position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:1rem;pointer-events:none;"></div>
-    <div id="headerContainer"></div>
+<body>
+  <div id="accountToastStack" style="position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:1rem;pointer-events:none;"></div>
+  <div id="headerContainer"></div>
 
-  <main class="account-layout">
-    <aside class="account-sidebar">
-      <div class="account-sidebar-head">
-        <h1>My Account</h1>
+  <main class="account-layout amazon-account-page" id="accountMainContainer">
+    <!-- Amazon Breadcrumb -->
+    <nav class="amazon-breadcrumb" id="accountBreadcrumb">
+      <a href="account.html" id="breadcrumbAccountLink" data-i18n="account_title">Your Account</a>
+      <span id="breadcrumbSeparator" class="breadcrumb-separator" style="display:none;">›</span>
+      <span id="breadcrumbCurrentSection" class="breadcrumb-current" style="display:none;"></span>
+    </nav>
+
+    <!-- Amazon Account Header -->
+    <div class="amazon-account-header">
+      <h1 class="amazon-account-title" data-i18n="account_title">Your Account</h1>
+      <div class="amazon-account-header-badges">
         <span id="accountPhoneVerificationBadge" class="verification-badge pending">Phone Pending</span>
+        <button id="signOutBtn" class="menu-btn signout-btn" type="button" data-i18n="sign_out">Sign Out</button>
       </div>
-      <button class="menu-btn active" data-panel="overview" type="button">Overview</button>
+    </div>
+
+    <!-- Quick Sidebar for Direct Access (Retained for 100% backward compatibility) -->
+    <aside class="account-sidebar" id="accountSidebar">
+      <div class="account-sidebar-head">
+        <h1 data-i18n="your_account_title">My Account</h1>
+      </div>
+      <button class="menu-btn active" data-panel="overview" type="button" data-i18n="account_overview">Overview</button>
+      <button class="menu-btn" data-panel="security" type="button" data-i18n="card_security_title">Login & security</button>
+      <button class="menu-btn" data-panel="addresses" type="button" data-i18n="card_addresses_title">Addresses</button>
+      <button class="menu-btn" data-panel="payments" type="button" data-i18n="card_payments_title">Payments</button>
+      <button class="menu-btn" data-panel="pay-balance" type="button" data-i18n="card_pay_balance_title">Pay balance</button>
+      <button class="menu-btn" data-panel="prime" type="button" data-i18n="card_prime_title">Prime</button>
       <button class="menu-btn" data-panel="notifications" type="button">Notifications</button>
-      <button class="menu-btn" data-panel="profile" type="button">Profile</button>
-      <button class="menu-btn" data-panel="addresses" type="button">Addresses</button>
-      <button class="menu-btn" data-panel="payments" type="button">Payments</button>
-      <button class="menu-btn" data-panel="security" type="button">Security</button>
+      <button class="menu-btn" data-panel="contact" type="button" data-i18n="card_contact_title">Contact Us</button>
+      <button class="menu-btn" data-panel="profile" type="button" data-i18n="account_profile">Profile</button>
       <button class="menu-btn" data-panel="business" type="button">Business Profile</button>
       <a id="adminDashboardLink" class="menu-btn" href="admin-dashboard.html" hidden>Admin Dashboard</a>
-      <button id="signOutBtn" class="menu-btn signout-btn" type="button">Sign Out</button>
     </aside>
 
-    <section class="account-content">
+    <section class="account-content" id="accountContent">
+      <!-- 1. OVERVIEW: THE AMAZON 8-TILE GRID -->
       <article id="panel-overview" class="panel active">
-        <div class="panel-head">
-          <h2>Dashboard</h2>
-          <p>Manage your orders, profile, and account settings.</p>
+        <div class="amazon-account-grid" id="amazonAccountGrid">
+          <!-- 1. Your Orders -->
+          <a href="orders.html" class="amazon-account-tile" id="tileOrders">
+            <div class="tile-icon-box tile-orders-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_orders_title">Your Orders</h3>
+              <p class="tile-desc" data-i18n="card_orders_desc">Track, return, or buy things again</p>
+            </div>
+          </a>
+
+          <!-- 2. Login & security -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="security" id="tileSecurity">
+            <div class="tile-icon-box tile-security-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_security_title">Login & security</h3>
+              <p class="tile-desc" data-i18n="card_security_desc">Edit name, mobile number, password, and 2FA</p>
+            </div>
+          </button>
+
+          <!-- 3. Prime Membership -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="prime" id="tilePrime">
+            <div class="tile-icon-box tile-prime-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c45500" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14a1 1 0 0 0 1-1v-1H4v1a1 1 0 0 0 1 1z"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_prime_title">Prime Membership</h3>
+              <p class="tile-desc" data-i18n="card_prime_desc">View benefits, rewards, and membership status</p>
+            </div>
+          </button>
+
+          <!-- 4. Your Addresses -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="addresses" id="tileAddresses">
+            <div class="tile-icon-box tile-addresses-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e77600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_addresses_title">Your Addresses</h3>
+              <p class="tile-desc" data-i18n="card_addresses_desc">Edit addresses for orders and gifts</p>
+            </div>
+          </button>
+
+          <!-- 5. Payment options -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="payments" id="tilePayments">
+            <div class="tile-icon-box tile-payments-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_payments_title">Payment options</h3>
+              <p class="tile-desc" data-i18n="card_payments_desc">Manage payment methods, cards, and UPI</p>
+            </div>
+          </button>
+
+          <!-- 6. ElectroMart Pay balance -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="pay-balance" id="tilePayBalance">
+            <div class="tile-icon-box tile-wallet-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b12704" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                <path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path>
+                <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_pay_balance_title">ElectroMart Pay balance</h3>
+              <p class="tile-desc" data-i18n="card_pay_balance_desc">Add money, view statements, and UPI setup</p>
+            </div>
+          </button>
+
+          <!-- 7. Contact Us -->
+          <button type="button" class="amazon-account-tile menu-btn" data-panel="contact" id="tileContact">
+            <div class="tile-icon-box tile-contact-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_contact_title">Contact Us</h3>
+              <p class="tile-desc" data-i18n="card_contact_desc">Browse help topics, FAQs, and 24x7 customer service</p>
+            </div>
+          </button>
+
+          <!-- 8. Your Wish List -->
+          <a href="wishlist.html" class="amazon-account-tile" id="tileWishlist">
+            <div class="tile-icon-box tile-wishlist-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cc0c39" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_wishlist_title">Your Wish List</h3>
+              <p class="tile-desc" data-i18n="card_wishlist_desc">Explore saved items and public wishlists</p>
+            </div>
+          </a>
+
+          <!-- 8b. Gift Registry & Celebrations -->
+          <a href="registry.html" class="amazon-account-tile" id="tileRegistry">
+            <div class="tile-icon-box tile-registry-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                <rect x="2" y="7" width="20" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="registry_hero_title">Gift Registry &amp; Celebrations</h3>
+              <p class="tile-desc" data-i18n="registry_hero_subtitle">Manage wedding, birthday &amp; milestone event registries</p>
+            </div>
+          </a>
+
+          <!-- ElectroMart Business (B2B Bulk Purchase & GST Invoicing) -->
+          <a href="business.html" class="amazon-account-tile" id="tileBusiness">
+            <div class="tile-icon-box tile-business-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1a3048" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="business_portal_title">ElectroMart Business</h3>
+              <p class="tile-desc" data-i18n="business_portal_subtitle">Bulk purchasing, GST invoicing, and volume discount tiers</p>
+            </div>
+          </a>
+
+          <!-- Customer Reviews Video & Photo Gallery Hub -->
+          <a href="customer-media.html" class="amazon-account-tile" id="tileCustomerMedia">
+            <div class="tile-icon-box tile-media-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e77600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="media_breadcrumb_gallery">Customer Photos &amp; Videos</h3>
+              <p class="tile-desc" data-i18n="media_hero_sub">Explore verified unboxing videos, customer photos &amp; real reviews</p>
+            </div>
+          </a>
+
+          <!-- Phase 29: ElectroMart 3D Showroom & Virtual Workspace Studio -->
+          <a href="showroom.html" class="amazon-account-tile" id="tileShowroom">
+            <div class="tile-icon-box tile-showroom-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="showroom_breadcrumb_3d">3D Interactive Showroom</h3>
+              <p class="tile-desc" data-i18n="showroom_subtitle">Explore 360° products, hardware hotspots, and AR Room Simulator</p>
+            </div>
+          </a>
+
+          <!-- Phase 30: ElectroMart Device Trade-In & Exchange Hub -->
+          <a href="exchange.html" class="amazon-account-tile" id="tileExchange">
+            <div class="tile-icon-box tile-exchange-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="exchange_hero_title">Device Trade-In &amp; Exchange</h3>
+              <p class="tile-desc" data-i18n="exchange_hero_subtitle">Instant quotes up to ₹25,000 off with doorstep pickup and verified data wipe</p>
+            </div>
+          </a>
+
+          <!-- Phase 31: ElectroMart Certified Renewed Electronics Hub -->
+          <a href="renewed.html" class="amazon-account-tile" id="tileRenewed">
+            <div class="tile-icon-box tile-renewed-icon" style="background:#e8f7ee;border-radius:50%;display:flex;align-items:center;justify-content:center;width:48px;height:48px;">
+              <span style="font-size:26px;">♻️</span>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="renewed_hero_title">ElectroMart Renewed</h3>
+              <p class="tile-desc" data-i18n="renewed_hero_subtitle">Certified refurbished devices with 6-month warranty &amp; 47-point diagnostic check</p>
+            </div>
+          </a>
+
+          <!-- Phase 32: ElectroMart Protect and Care -->
+          <a href="warranty.html" class="amazon-account-tile" id="tileWarranty">
+            <div class="tile-icon-box" style="background:#e8f5f3;border-radius:50%;display:flex;align-items:center;justify-content:center;width:48px;height:48px;">
+              <span style="font-size:26px;">🛡️</span>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="protection_plan">ElectroMart Protect</h3>
+              <p class="tile-desc" data-i18n="protection_plan_desc">Extended warranty and device damage protection</p>
+            </div>
+          </a>
+
+          <!-- 9. Admin Panel / Seller Central (Conditional) -->
+          <a id="adminQuickCard" href="admin.html" class="amazon-account-tile" hidden>
+            <div class="tile-icon-box tile-admin-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#795548" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3h18v18H3z"></path>
+                <path d="M3 9h18"></path>
+                <path d="M9 21V9"></path>
+              </svg>
+            </div>
+            <div class="tile-text-box">
+              <h3 class="tile-title" data-i18n="card_seller_title">Seller Central</h3>
+              <p class="tile-desc" data-i18n="card_seller_desc">Open Seller Central dashboard, catalog controls, and order operations.</p>
+            </div>
+          </a>
         </div>
-        <div class="stat-grid">
-          <div class="stat-card">
-            <p>Total Orders</p>
-            <strong>26</strong>
+
+        <!-- Amazon India Sublinks Section -->
+        <div class="amazon-account-sublinks">
+          <div class="sublinks-col">
+            <h4 data-i18n="digital_content_title">Digital content and devices</h4>
+            <ul>
+              <li><a href="products.html?category=mobiles" class="sublink-item">Apps and devices</a></li>
+              <li><a href="products.html?category=laptops" class="sublink-item">Creator software & tools</a></li>
+            </ul>
           </div>
-          <div class="stat-card">
-            <p>Open Orders</p>
-            <strong>3</strong>
+          <div class="sublinks-col">
+            <h4 data-i18n="email_prefs_title">Email preferences, messages, and notifications</h4>
+            <ul>
+              <li><button type="button" class="sublink-item menu-btn" data-panel="notifications">Notification center & preferences ›</button></li>
+              <li><button type="button" class="sublink-item menu-btn" data-panel="profile">Personal profile & contact info ›</button></li>
+            </ul>
           </div>
-          <div class="stat-card">
-            <p>Saved Addresses</p>
-            <strong>4</strong>
-          </div>
-          <div class="stat-card">
-            <p>Payment Methods</p>
-            <strong>2</strong>
+          <div class="sublinks-col">
+            <h4 data-i18n="more_ways_to_pay_title">More ways to pay</h4>
+            <ul>
+              <li><button type="button" class="sublink-item menu-btn" data-panel="pay-balance">ElectroMart Pay & Gift cards ›</button></li>
+              <li><button type="button" class="sublink-item menu-btn" data-panel="business">Business profile & GST settings ›</button></li>
+            </ul>
           </div>
         </div>
-        <div class="quick-grid">
-          <a href="orders.html" class="quick-card">
-            <h3>Track Orders</h3>
-            <p>View order status and delivery updates.</p>
-          </a>
-          <a href="cart.html" class="quick-card">
-            <h3>Review Cart</h3>
-            <p>Update quantities and proceed to checkout.</p>
-          </a>
-          <a href="wishlist.html" class="quick-card">
-            <h3>Saved for Later</h3>
-            <p>12 products in your wishlist.</p>
-          </a>
-          <div class="quick-card">
-            <h3>Support Tickets</h3>
-            <p>1 active conversation with customer support.</p>
+
+        <!-- Collapsible Activity Summary -->
+        <details class="amazon-account-stats-summary" open>
+          <summary class="stats-summary-header">Account Activity & Stats</summary>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <p>Total Orders</p>
+              <strong>26</strong>
+            </div>
+            <div class="stat-card">
+              <p>Open Orders</p>
+              <strong>3</strong>
+            </div>
+            <div class="stat-card">
+              <p>Saved Addresses</p>
+              <strong>4</strong>
+            </div>
+            <div class="stat-card">
+              <p>Payment Methods</p>
+              <strong>2</strong>
+            </div>
           </div>
-          <a id="adminQuickCard" href="admin.html" class="quick-card" hidden>
-            <h3>Admin Panel</h3>
-            <p>Open Seller Central dashboard, catalog controls, and order operations.</p>
-          </a>
-        </div>
-        <section class="notification-center compact">
-          <div class="panel-head">
-            <h3>Recent Order Updates</h3>
-            <p id="overviewNotificationsMeta">0 updates</p>
+          <div class="quick-grid" style="display:none;">
+            <a href="orders.html" class="quick-card"><h3>Track Orders</h3></a>
+            <a href="cart.html" class="quick-card"><h3>Review Cart</h3></a>
+            <a href="wishlist.html" class="quick-card"><h3>Saved for Later</h3></a>
           </div>
-          <div id="overviewNotificationsList" class="notification-list"></div>
-        </section>
+          <section class="notification-center compact">
+            <div class="panel-head">
+              <h3>Recent Order Updates</h3>
+              <p id="overviewNotificationsMeta">0 updates</p>
+            </div>
+            <div id="overviewNotificationsList" class="notification-list"></div>
+          </section>
+        </details>
       </article>
 
+      <!-- 2. NOTIFICATIONS PANEL -->
       <article id="panel-notifications" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
           <div>
             <h2>Notification Center</h2>
@@ -191,58 +445,85 @@
         <div id="accountNotificationsList" class="notification-list"></div>
       </article>
 
+      <!-- 3. PROFILE PANEL -->
       <article id="panel-profile" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
-          <h2>Profile Details</h2>
-          <p>Update your personal information.</p>
+          <h2 data-i18n="account_profile">Profile Details</h2>
+          <p>Update your personal information and contact preferences.</p>
         </div>
         <form id="profileForm" class="form-grid">
           <label>Full Name<input id="fullName" type="text" /></label>
           <label>Email<input id="email" type="email" /></label>
           <label>Phone<input id="phone" type="tel" /></label>
           <label>Company<input id="company" type="text" /></label>
-          <button type="submit">Save Profile</button>
+          <button type="submit" class="primary-btn">Save Profile</button>
         </form>
       </article>
 
+      <!-- 4. ADDRESSES PANEL -->
       <article id="panel-addresses" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
-          <h2>Addresses</h2>
-          <p>Manage shipping and billing addresses.</p>
+          <h2 data-i18n="card_addresses_title">Your Addresses</h2>
+          <p data-i18n="card_addresses_desc">Manage shipping and billing addresses for delivery across India.</p>
         </div>
-        <div class="card-list">
-          <div class="item-card">
-            <h3>Home</h3>
-            <p>221B Baker Street, New York, NY 10001</p>
+        <div class="amazon-addresses-grid" id="savedAddressesGrid">
+          <div class="add-address-card" id="openAddAddressBtn" role="button" tabindex="0" aria-label="Add new delivery address">
+            <span class="plus-icon">+</span>
+            <strong>Add Address</strong>
           </div>
-          <div class="item-card">
-            <h3>Office</h3>
-            <p>77 Madison Ave, Suite 800, New York, NY 10016</p>
-          </div>
+          <!-- Dynamic address cards rendered here by account.js -->
         </div>
       </article>
 
+      <!-- 5. PAYMENTS PANEL -->
       <article id="panel-payments" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
-          <h2>Payment Methods</h2>
-          <p>Securely manage cards and billing options.</p>
+          <h2 data-i18n="card_payments_title">Payment Options</h2>
+          <p data-i18n="card_payments_desc">Securely manage saved cards, UPI IDs, and billing options.</p>
         </div>
         <div class="card-list">
-          <div class="item-card">
-            <h3>Visa ending 2281</h3>
-            <p>Expires 11/28</p>
+          <div class="item-card payment-method-card">
+            <div class="payment-card-head">
+              <h3>Visa ending in 2281</h3>
+              <span class="badge verified">Verified</span>
+            </div>
+            <p>Name on Card: John Doe</p>
+            <p>Expires: 11/28</p>
+            <div class="payment-actions">
+              <a href="javascript:void(0)" class="link-action">Edit</a> |
+              <a href="javascript:void(0)" class="link-action">Remove</a>
+            </div>
           </div>
-          <div class="item-card">
-            <h3>Business Invoice</h3>
-            <p>Net 30 enabled for B2B orders.</p>
+          <div class="item-card payment-method-card">
+            <div class="payment-card-head">
+              <h3>UPI ID: user@okhdfcbank</h3>
+              <span class="badge upi">Instant Refund</span>
+            </div>
+            <p>Linked to HDFC Bank Savings Account</p>
+            <div class="payment-actions">
+              <a href="javascript:void(0)" class="link-action">Edit UPI</a> |
+              <a href="javascript:void(0)" class="link-action">De-link</a>
+            </div>
+          </div>
+          <div class="item-card payment-method-card">
+            <div class="payment-card-head">
+              <h3>Business Invoicing</h3>
+              <span class="badge b2b">B2B Enabled</span>
+            </div>
+            <p>Net 30 terms approved with GST verification.</p>
           </div>
         </div>
       </article>
 
+      <!-- 6. SECURITY PANEL -->
       <article id="panel-security" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
           <div>
-            <h2>Security</h2>
+            <h2 data-i18n="card_security_title">Login & security</h2>
             <p id="securityPreferencesMeta">Review account security settings and session activity.</p>
           </div>
           <button id="saveSecurityPreferencesBtn" class="menu-btn" type="button">Save Security Settings</button>
@@ -270,7 +551,7 @@
             <label>Current Password<input id="currentPassword" type="password" autocomplete="current-password" /></label>
             <label>New Password<input id="newPassword" type="password" autocomplete="new-password" /></label>
             <label>Confirm Password<input id="confirmPassword" type="password" autocomplete="new-password" /></label>
-            <button id="changePasswordBtn" type="submit">Change Password</button>
+            <button id="changePasswordBtn" type="submit" class="primary-btn">Change Password</button>
           </form>
         </section>
 
@@ -296,19 +577,179 @@
         </section>
       </article>
 
+      <!-- 7. PAY BALANCE PANEL -->
+      <article id="panel-pay-balance" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
+        <div class="panel-head">
+          <h2 data-i18n="card_pay_balance_title">ElectroMart Pay balance</h2>
+          <p data-i18n="card_pay_balance_desc">Add money, view statements, and UPI setup</p>
+        </div>
+        <div class="pay-balance-card">
+          <div class="pay-balance-display">
+            <span class="pay-balance-label" data-i18n="current_balance">Current Balance</span>
+            <strong class="pay-balance-amount" id="accountPayBalanceAmount">₹2,450.00</strong>
+          </div>
+          <div class="pay-quick-add">
+            <label>Add Money to Balance:</label>
+            <div class="quick-add-buttons">
+              <button type="button" class="quick-add-btn" data-add="500">+ ₹500</button>
+              <button type="button" class="quick-add-btn" data-add="1000">+ ₹1,000</button>
+              <button type="button" class="quick-add-btn" data-add="2000">+ ₹2,000</button>
+            </div>
+            <div class="custom-add-row">
+              <input type="number" id="customAddAmountInput" placeholder="Enter amount (₹)" min="100" max="50000" />
+              <button type="button" id="addMoneySubmitBtn" class="primary-btn" data-i18n="add_money_btn">Add Money</button>
+            </div>
+            <div style="margin-top: 14px;">
+              <a href="electromart-pay.html" class="pay-hub-deep-link-btn" id="openFullPayHubBtn" data-i18n="electromart_pay_hub" style="display: inline-flex; align-items: center; gap: 8px; background: #ffd814; border: 1px solid #fcd200; padding: 10px 18px; border-radius: 8px; color: #0f1111; font-weight: 700; text-decoration: none; box-shadow: 0 2px 5px rgba(213,217,217,.5);">ElectroMart Pay &amp; UPI Hub ›</a>
+            </div>
+          </div>
+        </div>
+        <div class="pay-statement-section">
+          <h3>Recent Transactions</h3>
+          <div class="pay-transactions-table-wrap">
+            <table class="pay-transactions-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody id="payTransactionsBody">
+                <tr>
+                  <td>Today</td>
+                  <td>Cashback Credited - Lightning Deal</td>
+                  <td><span class="badge credit">Credit</span></td>
+                  <td class="amount positive">+ ₹120.00</td>
+                </tr>
+                <tr>
+                  <td>Yesterday</td>
+                  <td>Order Payment #EM-9824</td>
+                  <td><span class="badge debit">Debit</span></td>
+                  <td class="amount negative">- ₹1,499.00</td>
+                </tr>
+                <tr>
+                  <td>28 Aug 2026</td>
+                  <td>Added Money via UPI (HDFC Bank)</td>
+                  <td><span class="badge credit">Credit</span></td>
+                  <td class="amount positive">+ ₹1,000.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8. PRIME PANEL -->
+      <article id="panel-prime" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
+        <div class="panel-head">
+          <h2 data-i18n="card_prime_title">Prime Membership</h2>
+          <p data-i18n="card_prime_desc">View benefits, rewards, and membership status</p>
+        </div>
+        <div class="prime-status-banner">
+          <div class="prime-badge-tag">
+            <span class="prime-logo-txt">ElectroMart</span>
+            <span class="prime-crown-txt">PRIME</span>
+          </div>
+          <div class="prime-status-info">
+            <h3>Active Member</h3>
+            <p>Your membership renews on 15 Jan 2027. Enjoy unlimited shopping and entertainment privileges.</p>
+          </div>
+        </div>
+        <div class="prime-benefits-list">
+          <h3 data-i18n="prime_benefits_title">ElectroMart Prime Benefits</h3>
+          <div class="prime-benefit-row">
+            <div class="benefit-check">✓</div>
+            <div>
+              <strong data-i18n="prime_benefit_delivery">Free One-Day Delivery on eligible items</strong>
+              <p>Get unlimited free fast delivery to over 100+ cities in India with no minimum order value.</p>
+            </div>
+          </div>
+          <div class="prime-benefit-row">
+            <div class="benefit-check">✓</div>
+            <div>
+              <strong data-i18n="prime_benefit_deals">Exclusive Early Access to Lightning Deals</strong>
+              <p>Shop top deals 30 minutes before everyone else during Great Indian Festival & Prime Day.</p>
+            </div>
+          </div>
+          <div class="prime-benefit-row">
+            <div class="benefit-check">✓</div>
+            <div>
+              <strong data-i18n="prime_benefit_cashback">5% Unlimited Cashback on ElectroMart Pay</strong>
+              <p>Earn 5% cashback on all orders paid using your ElectroMart Pay balance or ICICI card.</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #d5d9d9;">
+          <a href="prime.html" id="goToPrimeHubBtn" class="primary-pill-link" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; background: #ffd814; color: #0f1111; font-weight: 700; border-radius: 20px; border: 1px solid #fcd200; box-shadow: 0 2px 5px rgba(213,217,217,0.5);">
+            <span>👑</span> <span data-i18n="manage_membership_in_hub">Manage in ElectroMart Prime Hub ›</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- 9. CONTACT US / HELP PANEL -->
+      <article id="panel-contact" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
+        <div class="panel-head">
+          <h2 data-i18n="card_contact_title">Contact Us</h2>
+          <p data-i18n="card_contact_desc">Browse help topics, FAQs, and 24x7 customer service</p>
+        </div>
+        <div class="contact-help-search">
+          <input type="text" id="helpSearchInput" placeholder="What can we help you with?" aria-label="Search help topics" />
+        </div>
+        <div class="contact-faq-accordion">
+          <details class="faq-item" open>
+            <summary class="faq-summary" data-i18n="faq_tracking_title">Where is my order?</summary>
+            <div class="faq-content">
+              <p data-i18n="faq_tracking_desc">You can track your package shipment status from the Your Orders page.</p>
+              <a href="orders.html" class="primary-pill-link">Go to Your Orders ›</a>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-summary" data-i18n="faq_returns_title">How do I return an item?</summary>
+            <div class="faq-content">
+              <p data-i18n="faq_returns_desc">Go to Your Orders and click 'Return or replace items' to begin a return.</p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-summary" data-i18n="faq_refunds_title">When will I get my refund?</summary>
+            <div class="faq-content">
+              <p data-i18n="faq_refunds_desc">Refunds are usually processed within 2-4 business days back to the original payment method.</p>
+            </div>
+          </details>
+        </div>
+        <div class="contact-action-cards">
+          <div class="contact-action-card">
+            <h4>Chat with Us</h4>
+            <p>24x7 instant assistant support</p>
+            <button type="button" id="startLiveChatBtn" class="primary-btn">Start Chat</button>
+          </div>
+          <div class="contact-action-card">
+            <h4>Call Me Back</h4>
+            <p>We'll connect you in under 2 mins</p>
+            <button type="button" id="requestCallBackBtn" class="secondary-btn">Request Call</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 10. BUSINESS PROFILE PANEL -->
       <article id="panel-business" class="panel">
+        <button type="button" class="amazon-back-to-account-btn" data-back-to-overview="true" data-i18n="back_to_account">‹ Back to Your Account</button>
         <div class="panel-head">
           <h2>Business Profile</h2>
-          <p>Configure B2B purchase details.</p>
+          <p>Configure B2B purchase details and GST settings.</p>
         </div>
         <div class="card-list">
           <div class="item-card">
             <h3>GST / Tax ID</h3>
-            <p>US-ECM-88391</p>
+            <p>07AAAAA0000A1Z5 (Verified)</p>
           </div>
           <div class="item-card">
             <h3>Procurement Contact</h3>
-            <p>Sarah Lee, procurement@electromart.com</p>
+            <p>procurement@electromart.com</p>
           </div>
           <div class="item-card">
             <h3>Approval Workflow</h3>
@@ -319,17 +760,85 @@
     </section>
   </main>
 
+  <!-- Add/Edit Address Modal -->
+  <div id="addressEditModal" class="address-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="addressModalTitle">
+    <div class="address-modal-container" role="document">
+      <div class="address-modal-header">
+        <h3 id="addressModalTitle">Add a new address</h3>
+        <button type="button" class="amz-modal-close-btn" id="closeAddressModalBtn" aria-label="Close address modal">&times;</button>
+      </div>
+      <form id="addressModalForm" onsubmit="event.preventDefault();">
+        <input type="hidden" id="modalAddrId" value="" />
+        <div class="address-form-grid">
+          <label class="full-width">
+            <span>Full name (First and Last name)</span>
+            <input type="text" id="modalAddrFullName" required placeholder="e.g. John Doe" />
+          </label>
+          <label class="full-width">
+            <span>Mobile number</span>
+            <input type="tel" id="modalAddrPhone" required placeholder="10-digit mobile number without prefixes" />
+          </label>
+          <label class="full-width">
+            <span>Flat, House no., Building, Company, Apartment</span>
+            <input type="text" id="modalAddrLine1" required placeholder="e.g. Flat 402, Royal Palms" />
+          </label>
+          <label class="full-width">
+            <span>Area, Street, Sector, Village</span>
+            <input type="text" id="modalAddrLine2" placeholder="e.g. Connaught Place" />
+          </label>
+          <label>
+            <span>Town/City</span>
+            <input type="text" id="modalAddrCity" required placeholder="e.g. New Delhi" />
+          </label>
+          <label>
+            <span>State</span>
+            <select id="modalAddrState" required>
+              <option value="Delhi">Delhi</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Kerala">Kerala</option>
+            </select>
+          </label>
+          <label>
+            <span>6-digit PIN code</span>
+            <input type="text" id="modalAddrPincode" maxlength="6" pattern="[0-9]{6}" required placeholder="6 digits [0-9] PIN code" />
+          </label>
+          <label>
+            <span>Address Type</span>
+            <select id="modalAddrType">
+              <option value="home">Home (7 AM – 9 PM delivery)</option>
+              <option value="work">Office/Commercial (9 AM – 6 PM delivery)</option>
+            </select>
+          </label>
+          <label class="full-width" style="flex-direction:row; align-items:center; gap:8px; font-weight:normal; margin-top:6px; cursor:pointer;">
+            <input type="checkbox" id="modalAddrIsDefault" style="width:18px; height:18px; cursor:pointer;" />
+            <span>Use as my default delivery address</span>
+          </label>
+        </div>
+        <div class="address-form-actions">
+          <button type="button" class="secondary-pill-btn" id="cancelAddressModalBtn">Cancel</button>
+          <button type="submit" class="primary-btn" id="saveAddressModalBtn">Save Address</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="warranty.js"></script>
   <script src="account.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-

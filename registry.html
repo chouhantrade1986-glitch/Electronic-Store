@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>ElectroMart Celebrations & Gift Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-ui.css?v=20260314b" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="registry.css" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body>
+  <div id="headerContainer"></div>
+
+  <main class="amz-registry-main">
+    <!-- Amazon Breadcrumb -->
+    <nav class="amz-registry-breadcrumb" id="registryBreadcrumb" aria-label="Breadcrumb">
+      <a href="account.html" data-i18n="registry_breadcrumb_account">Your Account</a> &rsaquo;
+      <span data-i18n="registry_breadcrumb_hub">Gift Registry & Celebrations</span>
+    </nav>
+
+    <!-- Celebrations Hero Banner -->
+    <header class="amz-registry-hero">
+      <div class="amz-registry-hero-content">
+        <span class="amz-registry-badge" id="registryHeroBadge" data-i18n="registry_hero_badge">🎁 Celebrations & Gift Registry</span>
+        <h1 class="amz-registry-hero-title" id="registryHeroTitle" data-i18n="registry_hero_title">Create your dream gift registry for any milestone</h1>
+        <p class="amz-registry-hero-subtitle" id="registryHeroSubtitle" data-i18n="registry_hero_subtitle">
+          Weddings, birthdays, housewarmings, or tech workspace upgrades. Save your dream electronics and share with friends & family.
+        </p>
+        <div class="amz-registry-hero-actions">
+          <button type="button" class="amz-btn-registry-primary" id="openCreateRegistryBtn" data-i18n="registry_btn_create">Create a Registry</button>
+          <a href="#activeRegistrySection" class="amz-btn-registry-secondary" id="findRegistryBtn" data-i18n="registry_btn_find">View Your Registry</a>
+          <a href="wishlist.html" class="amz-registry-link" id="goToWishlistBtn">View Your Wish List &rsaquo;</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3 Registry Category Showcase -->
+    <section class="amz-registry-categories" id="registryCategoriesSection" aria-label="Celebration Categories">
+      <h2 class="amz-section-title" data-i18n="registry_categories_heading">Choose your celebration registry type</h2>
+      <div class="amz-registry-cards-grid">
+        <!-- Birthday & Milestone -->
+        <article class="amz-reg-type-card" id="catBirthdayCard">
+          <div class="reg-card-icon" aria-hidden="true">🎂</div>
+          <h3 class="reg-card-title" data-i18n="reg_cat_birthday_title">Birthday & Milestone Registry</h3>
+          <p class="reg-card-desc" data-i18n="reg_cat_birthday_desc">Laptops, high-fidelity audio, gaming gadgets, and dream accessories for your special birthday.</p>
+          <button type="button" class="amz-btn-card-create" data-category="birthday">+ Create Birthday Registry</button>
+        </article>
+
+        <!-- Wedding & Housewarming -->
+        <article class="amz-reg-type-card" id="catWeddingCard">
+          <div class="reg-card-icon" aria-hidden="true">💍</div>
+          <h3 class="reg-card-title" data-i18n="reg_cat_wedding_title">Wedding & Housewarming Registry</h3>
+          <p class="reg-card-desc" data-i18n="reg_cat_wedding_desc">Smart entertainment displays, appliances, computing essentials, and audio setups for new beginnings.</p>
+          <button type="button" class="amz-btn-card-create" data-category="wedding">+ Create Wedding Registry</button>
+        </article>
+
+        <!-- Tech Workspace & Student Setup -->
+        <article class="amz-reg-type-card" id="catTechCard">
+          <div class="reg-card-icon" aria-hidden="true">💻</div>
+          <h3 class="reg-card-title" data-i18n="reg_cat_tech_title">Tech Workspace & Student Setup</h3>
+          <p class="reg-card-desc" data-i18n="reg_cat_tech_desc">Productivity monitors, developer laptops, ergonomic gear, and study electronics.</p>
+          <button type="button" class="amz-btn-card-create" data-category="tech">+ Create Tech Registry</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- Active Registry Dashboard -->
+    <section class="amz-active-registry" id="activeRegistrySection" aria-label="Active Celebration Registry">
+      <!-- Top Title & Registry Switcher Bar -->
+      <div class="amz-registry-topbar">
+        <div class="amz-reg-title-wrap">
+          <div class="amz-reg-heading-row">
+            <h2 id="activeRegistryTitle" class="amz-reg-title" data-i18n="registry_active_heading">Your Active Celebration Registry</h2>
+            <span id="activeRegistryCatBadge" class="amz-pill-badge">🎂 Birthday</span>
+            <span id="activeRegistryPrivacyBadge" class="amz-privacy-badge public">
+              <span class="privacy-icon">🔓</span>
+              <span id="regPrivacyText" data-i18n="reg_modal_privacy_public">Public</span>
+            </span>
+          </div>
+          <div class="amz-reg-submeta">
+            <span id="activeRegistryHostInfo">Host: Arjun Sharma</span>
+            <span class="amz-meta-sep">&bull;</span>
+            <span id="activeRegistryDateInfo">Event Date: 2026-10-15</span>
+            <span class="amz-meta-sep">&bull;</span>
+            <span id="activeRegistryAddressInfo">Delivery to: Bengaluru, KA</span>
+          </div>
+        </div>
+
+        <div class="amz-reg-top-actions">
+          <label for="registrySelectDropdown" class="visually-hidden">Switch Registry</label>
+          <select id="registrySelectDropdown" class="amz-select-registry" aria-label="Switch between your registries"></select>
+          <button type="button" id="newRegistryTopBtn" class="amz-btn-action-pill">+ New Registry</button>
+        </div>
+      </div>
+
+      <!-- Live Event Countdown Card -->
+      <div class="amz-reg-countdown-card" id="registryCountdownCard">
+        <div class="countdown-icon" aria-hidden="true">⏳</div>
+        <div class="countdown-text-wrap">
+          <span class="countdown-label">Event Countdown:</span>
+          <strong id="registryCountdownTimer" class="countdown-timer">Calculating...</strong>
+        </div>
+        <div class="countdown-event-name" id="countdownEventName">Arjun's 25th Tech Birthday</div>
+      </div>
+
+      <!-- Goal & Progress Fulfillment Tracker Card -->
+      <div class="amz-reg-progress-card" id="registryProgressCard">
+        <div class="reg-progress-header">
+          <h3 class="progress-title" data-i18n="reg_progress_heading">Gift Registry Goals & Progress</h3>
+          <span id="statFulfillmentPercent" class="progress-percent-badge">0% Fulfilled</span>
+        </div>
+
+        <div class="amz-reg-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div id="registryProgressFill" class="amz-reg-progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="reg-stats-strip">
+          <div class="reg-stat-col">
+            <span class="stat-num" id="statTotalItems">0</span>
+            <span class="stat-lbl" data-i18n="reg_stat_total_items">Total Registry Items</span>
+          </div>
+          <div class="reg-stat-col">
+            <span class="stat-num success" id="statFulfilledItems">0</span>
+            <span class="stat-lbl" data-i18n="reg_stat_fulfilled">Gifts Fulfilled</span>
+          </div>
+          <div class="reg-stat-col">
+            <span class="stat-num amber" id="statRemainingItems">0</span>
+            <span class="stat-lbl" data-i18n="reg_stat_remaining">Remaining to Gift</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shareable Link & Quick Add Bar -->
+      <div class="amz-reg-share-card" id="registryShareCard">
+        <div class="share-title-wrap">
+          <h3 class="share-title" data-i18n="reg_share_heading">Share your registry with friends & family</h3>
+          <p class="share-sub">Anyone with this share link can view your list and gift items directly.</p>
+        </div>
+        <div class="share-actions-row">
+          <div class="share-input-box">
+            <input type="text" id="registryShareLinkInput" readonly aria-label="Registry Share Link" />
+            <button type="button" id="copyRegistryShareBtn" class="amz-btn-copy" data-i18n="reg_btn_copy_link">Copy Link</button>
+          </div>
+          <button type="button" id="shareWhatsappBtn" class="amz-btn-whatsapp" data-i18n="reg_btn_whatsapp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.585 1.961.947 2.801.948h.005c3.18 0 5.767-2.586 5.768-5.766 0-1.54-.599-2.988-1.688-4.078-1.09-1.089-2.538-1.657-4.09-1.657zm3.376 8.21c-.139.39-.807.719-1.121.764-.313.045-.698.067-2.025-.48-1.408-.581-2.316-2.015-2.386-2.109-.07-.093-.57-0.758-.57-1.445 0-.687.36-.1.025.49-.138.13-.038.283-.038.423 0 .14.038.31.038.47.038.16.139.61.539 1.05 1.15.52.73 1.02 1.06 1.48 1.21.36.12.59.1.81-.13.26-.27.57-.7.72-.94.15-.24.08-.34-.04-.41-.12-.07-.79-.39-1.02-.5-.23-.11-.4-.16-.57.11-.17.27-.66.83-.81.99-.15.16-.3.18-.56.07-.26-.11-1.1-.41-2.1-1.3-.77-.69-1.29-1.54-1.44-1.8-.15-.26-.02-.4.11-.53.12-.12.26-.31.39-.46.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.07-.13-.57-1.37-.78-1.88-.21-.5-.42-.43-.57-.44-.15-.01-.32-.01-.49-.01zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.17L2 22l4.98-1.306A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+            </svg>
+            Share on WhatsApp
+          </button>
+          <button type="button" id="openCatalogModalBtn" class="amz-btn-add-catalog" data-i18n="reg_btn_add_products">+ Add Products from Catalog</button>
+        </div>
+      </div>
+
+      <!-- Registry Items Section -->
+      <div class="amz-reg-items-container">
+        <div class="items-header-bar">
+          <h3 class="items-title" data-i18n="reg_items_heading">Items in this Registry</h3>
+          <div class="items-filter-wrap">
+            <label for="registryItemsFilterSelect" class="visually-hidden">Filter Items</label>
+            <select id="registryItemsFilterSelect" aria-label="Filter registry items">
+              <option value="all">All Items</option>
+              <option value="unfulfilled">Unfulfilled / Needs Gifting</option>
+              <option value="fulfilled">Purchased / Fulfilled</option>
+              <option value="high_priority">High Priority Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="registryItemsGrid" class="amz-reg-items-grid" role="region" aria-label="Registry Products List"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Create New Registry Modal Dialog -->
+  <dialog id="createRegistryModal" class="amz-modal" aria-labelledby="createRegModalTitle">
+    <div class="amz-modal-content">
+      <div class="amz-modal-header">
+        <h3 id="createRegModalTitle" data-i18n="reg_create_modal_title">Create a New Celebration Registry</h3>
+        <button type="button" class="amz-modal-close" id="closeCreateRegModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+      <p class="amz-modal-desc">Tell us about your celebration so friends and family can help you celebrate with dream electronics.</p>
+
+      <form id="createRegistryForm" onsubmit="event.preventDefault();">
+        <div class="amz-form-group">
+          <label for="regTitleInput" data-i18n="reg_modal_label_name">Celebration / Registry Title</label>
+          <input type="text" id="regTitleInput" required placeholder="e.g. Vikram's Tech Birthday, Priya & Rahul Housewarming" maxlength="80" autocomplete="off" />
+        </div>
+
+        <div class="amz-form-row">
+          <div class="amz-form-group">
+            <label for="regCategorySelect" data-i18n="reg_modal_label_type">Registry Category</label>
+            <select id="regCategorySelect" required>
+              <option value="birthday">🎂 Birthday & Milestone</option>
+              <option value="wedding">💍 Wedding & Housewarming</option>
+              <option value="tech">💻 Tech Workspace & Student Setup</option>
+            </select>
+          </div>
+
+          <div class="amz-form-group">
+            <label for="regDateInput" data-i18n="reg_modal_label_date">Event / Celebration Date</label>
+            <input type="date" id="regDateInput" required />
+          </div>
+        </div>
+
+        <div class="amz-form-row">
+          <div class="amz-form-group">
+            <label for="regHostInput" data-i18n="reg_modal_label_host">Registrant / Host Name(s)</label>
+            <input type="text" id="regHostInput" required placeholder="e.g. Vikram Verma" maxlength="60" />
+          </div>
+
+          <div class="amz-form-group">
+            <label for="regAddressInput" data-i18n="reg_modal_label_address">Shipping City & State</label>
+            <input type="text" id="regAddressInput" required placeholder="e.g. Bengaluru, Karnataka - 560001" maxlength="80" />
+          </div>
+        </div>
+
+        <div class="amz-form-group">
+          <label data-i18n="reg_modal_label_privacy">Registry Privacy</label>
+          <div class="amz-radio-tile-group">
+            <label class="amz-radio-tile">
+              <input type="radio" name="regPrivacy" value="public" checked />
+              <div class="radio-info">
+                <strong data-i18n="reg_modal_privacy_public">Public</strong>
+                <span>Anyone can search and find your registry</span>
+              </div>
+            </label>
+            <label class="amz-radio-tile">
+              <input type="radio" name="regPrivacy" value="shareable" />
+              <div class="radio-info">
+                <strong data-i18n="reg_modal_privacy_shareable">Shareable</strong>
+                <span>Only people with your link can view</span>
+              </div>
+            </label>
+            <label class="amz-radio-tile">
+              <input type="radio" name="regPrivacy" value="private" />
+              <div class="radio-info">
+                <strong data-i18n="reg_modal_privacy_private">Private</strong>
+                <span>Only you can see this registry</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="amz-modal-actions">
+          <button type="button" class="amz-btn-modal-cancel" id="cancelCreateRegBtn">Cancel</button>
+          <button type="submit" class="amz-btn-modal-submit" id="submitCreateRegBtn" data-i18n="reg_btn_save_registry">Create Registry</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Add from Catalog Modal Dialog -->
+  <dialog id="catalogPickerModal" class="amz-modal amz-modal-wide" aria-labelledby="catalogPickerTitle">
+    <div class="amz-modal-content">
+      <div class="amz-modal-header">
+        <h3 id="catalogPickerTitle" data-i18n="reg_catalog_modal_title">Add Electronics to Your Registry</h3>
+        <button type="button" class="amz-modal-close" id="closeCatalogModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="catalog-modal-toolbar">
+        <div class="catalog-search-wrap">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+          </svg>
+          <input type="search" id="catalogSearchInput" placeholder="Search 751 products (e.g. laptop, headphones, printer)..." data-i18n-placeholder="reg_catalog_search_placeholder" aria-label="Search catalog products" />
+        </div>
+        <div class="catalog-category-pills" id="catalogCategoryPills">
+          <button type="button" class="cat-pill active" data-cat="all">All</button>
+          <button type="button" class="cat-pill" data-cat="laptop">Laptops</button>
+          <button type="button" class="cat-pill" data-cat="mobile">Mobiles</button>
+          <button type="button" class="cat-pill" data-cat="audio">Audio</button>
+          <button type="button" class="cat-pill" data-cat="printer">Printers</button>
+          <button type="button" class="cat-pill" data-cat="accessories">Accessories</button>
+        </div>
+      </div>
+
+      <div id="catalogResultsList" class="catalog-results-grid" role="region" aria-label="Catalog Products"></div>
+    </div>
+  </dialog>
+
+  <!-- Toast Notification Container -->
+  <div id="amzToast" class="amz-toast" role="status" aria-live="polite"></div>
+
+  <!-- Mandatory Script Loading Sequence -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="registry.js"></script>
+</body>
+</html>

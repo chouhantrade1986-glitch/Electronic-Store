@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ElectroMart Privacy & Data Rights</title>
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <style>
+    .privacy-main { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; color: #17212b; }
+    .privacy-hero { padding: 24px 0 20px; border-bottom: 1px solid #d5d9d9; }
+    .privacy-hero h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); }
+    .privacy-hero p { color: #5f6b75; }
+    .privacy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+    .privacy-card { padding: 20px; border: 1px solid #d5d9d9; border-radius: 8px; background: #fff; }
+    .privacy-card h2 { margin-top: 0; font-size: 20px; }
+    .privacy-card p, .privacy-card li { line-height: 1.6; }
+    .privacy-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .privacy-actions button { cursor: pointer; border: 1px solid #c7d1d8; border-radius: 999px; padding: 9px 14px; background: #ffd814; font: inherit; font-weight: 700; }
+    .privacy-actions button.secondary { background: #fff; }
+    .privacy-status { min-height: 24px; margin-top: 12px; color: #007600; font-weight: 700; }
+    .privacy-note { padding: 14px; border-left: 4px solid #e77600; background: #fff8e7; }
+    @media (max-width: 700px) { .privacy-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="headerContainer"></div>
+  <main class="privacy-main" id="privacyHub">
+    <section class="privacy-hero">
+      <p class="privacy-eyebrow">ElectroMart Legal & Data Rights</p>
+      <h1>Privacy, Consent & Data Rights</h1>
+      <p>Effective date: September 17, 2026. This page explains the controls available to customers and is subject to legal review before production publication.</p>
+    </section>
+
+    <section class="privacy-grid">
+      <article class="privacy-card" id="consentCard">
+        <h2>Consent preferences</h2>
+        <p>ElectroMart uses essential local storage for cart, account, language and checkout continuity. No third-party advertising tracker is enabled by this storefront.</p>
+        <label><input type="checkbox" id="essentialConsent" checked disabled /> Essential store operation</label>
+        <label><input type="checkbox" id="analyticsConsent" /> Optional product analytics</label>
+        <div class="privacy-actions"><button type="button" id="saveConsentBtn">Save consent</button></div>
+        <p class="privacy-status" id="consentStatus" aria-live="polite"></p>
+      </article>
+
+      <article class="privacy-card" id="dataRightsCard">
+        <h2>Your data rights</h2>
+        <p>You may request a copy of locally stored profile data or request deletion of eligible locally stored account data. Identity verification may be required before any account-level action.</p>
+        <div class="privacy-actions">
+          <button type="button" id="exportDataBtn">Export local data</button>
+          <button type="button" class="secondary" id="deleteDataBtn">Request data deletion</button>
+        </div>
+        <p class="privacy-status" id="dataRightsStatus" aria-live="polite"></p>
+      </article>
+
+      <article class="privacy-card">
+        <h2>Data retention & security</h2>
+        <ul>
+          <li>Cart, language and preference data remain on the customer device until cleared or removed.</li>
+          <li>Authentication and order records are retained only for account, fulfilment, fraud prevention, tax and legal obligations.</li>
+          <li>Production retention periods, processors and deletion schedules require documented legal and security approval.</li>
+        </ul>
+      </article>
+
+      <article class="privacy-card" id="grievanceCard">
+        <h2>Grievance officer & legal contact</h2>
+        <p><strong>ElectroMart Grievance Officer</strong><br />Email: <a href="mailto:legal@electromart.in">legal@electromart.in</a><br />Response target: within 48 hours for acknowledgement.</p>
+        <p>For unresolved consumer concerns, include your order reference, registered contact method and a clear description of the issue. This contact disclosure must be verified against the operating entity before production launch.</p>
+      </article>
+    </section>
+
+    <p class="privacy-note">This privacy hub is an engineering control surface, not legal advice or a certification of compliance with Indian law. The operating entity, privacy notice, consent wording, retention schedule and grievance process must be reviewed by qualified Indian counsel before production use.</p>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script>
+    (() => {
+      const consentKey = "electromart_privacy_consent_v1";
+      const requestKey = "electromart_privacy_requests_v1";
+      const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; } catch { return fallback; } };
+      const write = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+      const consentStatus = document.getElementById("consentStatus");
+      const dataRightsStatus = document.getElementById("dataRightsStatus");
+      document.getElementById("analyticsConsent").checked = Boolean(read(consentKey, {}).analytics);
+      document.getElementById("saveConsentBtn").addEventListener("click", () => {
+        write(consentKey, { essential: true, analytics: document.getElementById("analyticsConsent").checked, updatedAt: new Date().toISOString() });
+        consentStatus.textContent = "Consent preferences saved on this device.";
+      });
+      document.getElementById("exportDataBtn").addEventListener("click", () => {
+        const exportKeys = ["electromart_auth_v1", "electromart_profile_v1", "electromart_saved_addresses_v1", "electromart_lang_v1", "electromart_lang", "electromart_cart_v1", consentKey];
+        const payload = Object.fromEntries(exportKeys.map((key) => [key, read(key, null)]));
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "electromart-data-export.json"; link.click(); URL.revokeObjectURL(link.href);
+        dataRightsStatus.textContent = "A local data export was prepared.";
+      });
+      document.getElementById("deleteDataBtn").addEventListener("click", () => {
+        const requests = read(requestKey, []);
+        requests.push({ type: "deletion", createdAt: new Date().toISOString(), status: "requested" });
+        write(requestKey, requests.slice(-10));
+        dataRightsStatus.textContent = "Deletion request recorded locally. Support verification is required for account-level deletion.";
+      });
+    })();
+  </script>
+</body>
+</html>

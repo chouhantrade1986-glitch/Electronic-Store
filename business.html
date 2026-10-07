@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title>ElectroMart Business | B2B Bulk Purchase &amp; GST Invoicing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260424a" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="business.css?v=20260908a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="business-page">
+  <div id="headerContainer"></div>
+
+  <!-- Hero Section -->
+  <header class="b2b-hero">
+    <div class="b2b-hero-inner">
+      <span class="b2b-badge-pill">Enterprise Wholesale Portal</span>
+      <h1 data-i18n="business_portal_title">ElectroMart Business</h1>
+      <p class="b2b-hero-subtitle" data-i18n="business_portal_subtitle">
+        Bulk Purchasing, Statutory GST Invoicing &amp; Enterprise IT Procurement for registered businesses across India.
+      </p>
+      <div class="b2b-hero-stats">
+        <div class="b2b-stat-item">
+          <div class="b2b-stat-number">Up to 28%</div>
+          <div class="b2b-stat-label">GST Input Tax Credit (ITC)</div>
+        </div>
+        <div class="b2b-stat-item">
+          <div class="b2b-stat-number">5% – 15%</div>
+          <div class="b2b-stat-label">Quantity Tier Discounts</div>
+        </div>
+        <div class="b2b-stat-item">
+          <div class="b2b-stat-number">4 Hours</div>
+          <div class="b2b-stat-label">Fast Formal RFQ Turnaround</div>
+        </div>
+        <div class="b2b-stat-item">
+          <div class="b2b-stat-number">Pan-India</div>
+          <div class="b2b-stat-label">Doorstep Express Delivery</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="b2b-main-container">
+    <!-- 1. GSTIN Verification Card -->
+    <section class="b2b-card" id="b2bGstinSection">
+      <div class="b2b-card-header">
+        <h2 class="b2b-card-title" data-i18n="business_gstin_title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#007185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Verify Business GSTIN
+        </h2>
+        <p class="b2b-card-desc" data-i18n="business_gstin_desc">
+          Register your 15-digit GSTIN to unlock wholesale pricing and up to 28% Input Tax Credit (ITC).
+        </p>
+      </div>
+
+      <div class="b2b-input-group" style="margin-bottom: 12px;">
+        <label class="b2b-input-label" data-i18n="business_type_label">Organization Type</label>
+        <div class="b2b-type-pills">
+          <button type="button" class="b2b-type-pill active" data-type="Private Ltd / Corporate" data-i18n="business_type_pvt">Private Ltd / Corporate</button>
+          <button type="button" class="b2b-type-pill" data-type="Proprietorship / LLP" data-i18n="business_type_prop">Proprietorship / LLP</button>
+          <button type="button" class="b2b-type-pill" data-type="Institution / Enterprise" data-i18n="business_type_inst">Institution / Enterprise</button>
+        </div>
+      </div>
+
+      <div class="b2b-gstin-form-grid">
+        <div class="b2b-input-group">
+          <label class="b2b-input-label" for="b2bGstinInput">15-Digit Statutory Indian GSTIN</label>
+          <input
+            type="text"
+            id="b2bGstinInput"
+            class="b2b-text-input"
+            placeholder="Enter 15-digit GSTIN (e.g. 07ABCDE1234F1Z5)"
+            maxlength="15"
+            autocomplete="off"
+            spellcheck="false"
+            data-i18n-placeholder="business_gstin_placeholder"
+          />
+        </div>
+        <div class="b2b-input-group">
+          <button type="button" id="b2bVerifyGstinBtn" class="b2b-btn-primary" data-i18n="business_verify_btn">
+            Verify GSTIN
+          </button>
+        </div>
+      </div>
+
+      <div class="b2b-input-group" style="margin-top: 14px;">
+        <label class="b2b-input-label" for="b2bCompanyName">Registered Business Name (Optional)</label>
+        <input
+          type="text"
+          id="b2bCompanyName"
+          class="b2b-text-input"
+          placeholder="e.g. Apex Technologies Pvt Ltd"
+          maxlength="80"
+        />
+      </div>
+
+      <div id="b2bGstinStatus" class="b2b-gstin-status-box" aria-live="polite"></div>
+    </section>
+
+    <!-- 2. Quantity Discount Tiers Matrix -->
+    <section class="b2b-card" id="b2bTiersSection">
+      <div class="b2b-card-header">
+        <h2 class="b2b-card-title" data-i18n="bulk_tiers_title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#cc0c39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Quantity Discount Tiers
+        </h2>
+        <p class="b2b-card-desc">
+          Automated multi-unit volume discounts applied directly to your purchase order.
+        </p>
+      </div>
+
+      <div class="b2b-tier-matrix">
+        <div class="b2b-tier-card">
+          <span class="b2b-tier-badge">Tier 1</span>
+          <div class="b2b-tier-range">5 – 9 Units</div>
+          <div class="b2b-tier-discount">5% OFF</div>
+          <div class="b2b-tier-desc">Ideal for small office teams and departmental hardware refreshes.</div>
+        </div>
+
+        <div class="b2b-tier-card">
+          <span class="b2b-tier-badge" style="background:#007185;">Tier 2</span>
+          <div class="b2b-tier-range">10 – 24 Units</div>
+          <div class="b2b-tier-discount" style="color:#007185;">10% OFF</div>
+          <div class="b2b-tier-desc">Designed for growing startups, corporate branch setups, and labs.</div>
+        </div>
+
+        <div class="b2b-tier-card">
+          <span class="b2b-tier-badge" style="background:#007600;">Tier 3 (Enterprise)</span>
+          <div class="b2b-tier-range">25+ Units</div>
+          <div class="b2b-tier-discount" style="color:#007600;">15% OFF</div>
+          <div class="b2b-tier-desc">Maximum wholesale pricing for enterprise rollouts, colleges, and IT parks.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Interactive Bulk Savings Calculator -->
+    <section class="b2b-card" id="b2bCalculatorSection">
+      <div class="b2b-card-header">
+        <h2 class="b2b-card-title" data-i18n="bulk_calculator_title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e77600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="16" y1="14" x2="16" y2="18"></line>
+            <path d="M16 10h.01"></path>
+            <path d="M12 10h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M12 14h.01"></path>
+            <path d="M8 14h.01"></path>
+            <path d="M12 18h.01"></path>
+            <path d="M8 18h.01"></path>
+          </svg>
+          Interactive Bulk Savings Calculator
+        </h2>
+        <p class="b2b-card-desc" data-i18n="bulk_calculator_desc">
+          Estimate your total enterprise savings including tier discounts and GST Input Tax Credit.
+        </p>
+      </div>
+
+      <div class="b2b-calculator-grid">
+        <div class="b2b-calc-controls">
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="calcProductSelect">Select Commercial Hardware</label>
+            <select id="calcProductSelect" class="b2b-select"></select>
+          </div>
+
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="calcQtyInput">Order Quantity (Units)</label>
+            <div class="b2b-qty-spinner">
+              <button type="button" id="calcMinusBtn" class="b2b-qty-btn" aria-label="Decrease quantity">−</button>
+              <input type="number" id="calcQtyInput" class="b2b-qty-input" value="10" min="5" max="1000" />
+              <button type="button" id="calcPlusBtn" class="b2b-qty-btn" aria-label="Increase quantity">+</button>
+              <span id="calcTierBadge" class="b2b-state-chip" style="background:#007185;margin-left:8px;">10% Tier Discount</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="b2b-calc-results">
+          <div class="b2b-calc-row">
+            <span>Base Unit Price:</span>
+            <strong id="calcBasePrice">₹0</strong>
+          </div>
+          <div class="b2b-calc-row">
+            <span>Gross Retail Total:</span>
+            <span id="calcRetailTotal">₹0</span>
+          </div>
+          <div class="b2b-calc-row" style="color:#cc0c39;">
+            <span>Volume Tier Discount:</span>
+            <strong id="calcDiscountAmount">- ₹0</strong>
+          </div>
+          <div class="b2b-calc-row">
+            <span>Discounted Subtotal:</span>
+            <strong id="calcDiscountedTotal">₹0</strong>
+          </div>
+          <div class="b2b-calc-row" style="color:#007600;">
+            <span>GST Input Tax Credit (ITC):</span>
+            <strong id="calcItcSavings">₹0</strong>
+          </div>
+          <div class="b2b-calc-row total">
+            <span>Invoice Amount (Incl. Tax):</span>
+            <span id="calcNetCost" style="color:#b12704;">₹0</span>
+          </div>
+          <div class="b2b-calc-row highlight">
+            <span>Total Business Savings:</span>
+            <span id="calcTotalSavings">₹0</span>
+          </div>
+          <button type="button" id="calcAddToCartBtn" class="b2b-btn-primary" style="margin-top:14px;width:100%;">
+            Add Bulk Order to Cart
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. RFQ (Request for Quote) Banner -->
+    <section class="b2b-rfq-banner" id="b2bRfqBanner">
+      <div class="b2b-rfq-content">
+        <h2 data-i18n="rfq_title">Request for Quotation (RFQ)</h2>
+        <p data-i18n="rfq_subtitle">
+          Need orders above 50 units or custom corporate specs? Get a formal quote within 4 business hours.
+        </p>
+      </div>
+      <button type="button" id="openRfqModalBtn" class="b2b-btn-primary" data-i18n="rfq_btn">
+        Submit RFQ Request
+      </button>
+    </section>
+
+    <!-- 5. Curated B2B Products Catalog -->
+    <section class="b2b-card" id="b2bCatalogSection">
+      <div class="b2b-card-header">
+        <h2 class="b2b-card-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          Featured Commercial &amp; Wholesale Hardware
+        </h2>
+        <p class="b2b-card-desc">
+          High-durability enterprise systems, peripherals, and consumables with minimum order quantity (MOQ) wholesale pricing.
+        </p>
+      </div>
+
+      <div id="b2bProductsGrid" class="b2b-products-grid"></div>
+    </section>
+  </main>
+
+  <!-- RFQ Request Modal (Zero Occlusion) -->
+  <div id="rfqModalOverlay" class="b2b-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="rfqModalTitle">
+    <div class="b2b-modal-card" id="rfqModalCard">
+      <div class="b2b-modal-header">
+        <h3 id="rfqModalTitle" class="b2b-modal-title" data-i18n="rfq_modal_title">Request Custom Enterprise Quote</h3>
+        <button type="button" id="closeRfqModalBtn" class="b2b-modal-close-btn" aria-label="Close RFQ Modal">✕</button>
+      </div>
+      <form id="rfqForm" class="b2b-modal-body">
+        <div class="b2b-input-group">
+          <label class="b2b-input-label" for="rfqProductSelect" data-i18n="rfq_product_label">Selected Hardware / Category *</label>
+          <select id="rfqProductSelect" class="b2b-select" required>
+            <option value="Commercial Laptops">Commercial Laptops (Bulk Pack)</option>
+            <option value="Desktop Workstations">Desktop Workstations &amp; Mini PCs</option>
+            <option value="Enterprise Laser Printers">Enterprise Laser &amp; Label Printers</option>
+            <option value="UPS & Power Systems">Online UPS &amp; High-Capacity Batteries</option>
+            <option value="Commercial Displays">Commercial Displays &amp; Monitors</option>
+            <option value="Custom Infrastructure">Custom Enterprise IT Infrastructure</option>
+          </select>
+        </div>
+
+        <div class="b2b-form-row two-col">
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="rfqQtyInput" data-i18n="rfq_qty_label">Estimated Quantity (Min 5) *</label>
+            <input type="number" id="rfqQtyInput" class="b2b-text-input" value="10" min="5" max="5000" required />
+          </div>
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="rfqCityInput" data-i18n="rfq_city_label">Delivery City / State *</label>
+            <input type="text" id="rfqCityInput" class="b2b-text-input" placeholder="e.g. Bengaluru, Karnataka" required />
+          </div>
+        </div>
+
+        <div class="b2b-input-group">
+          <label class="b2b-input-label" for="rfqCompanyName" data-i18n="rfq_company_label">Company / Business Name *</label>
+          <input type="text" id="rfqCompanyName" class="b2b-text-input" placeholder="e.g. CloudTech Solutions Ltd" required />
+        </div>
+
+        <div class="b2b-form-row two-col">
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="rfqEmailInput" data-i18n="rfq_email_label">Official Email Address *</label>
+            <input type="email" id="rfqEmailInput" class="b2b-text-input" placeholder="procurement@company.com" required />
+          </div>
+          <div class="b2b-input-group">
+            <label class="b2b-input-label" for="rfqPhoneInput" data-i18n="rfq_phone_label">Contact Phone (+91) *</label>
+            <input type="tel" id="rfqPhoneInput" class="b2b-text-input" placeholder="9876543210" pattern="[6-9][0-9]{9}" required />
+          </div>
+        </div>
+
+        <div class="b2b-input-group">
+          <label class="b2b-input-label" for="rfqGstinInput" data-i18n="rfq_gstin_label">GSTIN (Optional / Recommended)</label>
+          <input type="text" id="rfqGstinInput" class="b2b-text-input" placeholder="15-digit GSTIN" maxlength="15" />
+        </div>
+
+        <button type="submit" id="rfqSubmitBtn" class="b2b-btn-primary" style="margin-top:8px;" data-i18n="rfq_submit_btn">
+          Generate Quote Request
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mandatory Script Loading Order (AGENT_INSTRUCTIONS.md) -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="business.js?v=20260908a"></script>
+</body>
+</html>

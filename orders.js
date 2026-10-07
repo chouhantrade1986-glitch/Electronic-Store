@@ -15,6 +15,9 @@ const ordersGrid = document.getElementById("ordersGrid");
 const ordersMeta = document.getElementById("ordersMeta");
 const orderSearch = document.getElementById("orderSearch");
 const statusFilter = document.getElementById("statusFilter");
+const timeFilter = document.getElementById("timeFilter");
+const orderTabs = document.getElementById("orderTabs");
+let currentOrderTab = "orders";
 const ordersPhoneVerificationBadge = document.getElementById("ordersPhoneVerificationBadge");
 const orderNotificationsMeta = document.getElementById("orderNotificationsMeta");
 const orderNotificationsList = document.getElementById("orderNotificationsList");
@@ -1175,6 +1178,8 @@ function buildOrderView(order) {
     discount: Number(order.discount || 0),
     couponCode: String(order.couponCode || "").trim(),
     status: order.status || "processing",
+    returnInitiated: Boolean(order.returnInitiated || String(order.status || "").toLowerCase() === "return_initiated" || String(order.status || "").toLowerCase() === "pickup_scheduled"),
+    returnId: order.returnId || null,
     paymentStatus: order.paymentStatus || "pending",
     deliverySlot: order.deliverySlot && typeof order.deliverySlot === "object"
       ? {
@@ -1285,6 +1290,42 @@ function buildDeliveryTimeline(order) {
 
 function trackingPanel(order) {
   const tracking = getTrackingSteps(order);
+  const status = String(order.status || "").toLowerCase();
+
+  const milestones = [
+    { key: "ordered", label: "Ordered", i18nKey: "track_milestone_ordered" },
+    { key: "shipped", label: "Shipped", i18nKey: "track_milestone_shipped" },
+    { key: "out_for_delivery", label: "Out for delivery", i18nKey: "track_milestone_out_for_delivery" },
+    { key: "delivered", label: "Delivered", i18nKey: "track_milestone_delivered" }
+  ];
+
+  let currentStageIndex = 0;
+  if (status === "delivered") currentStageIndex = 3;
+  else if (status === "shipped") currentStageIndex = 2;
+  else if (status === "processing") currentStageIndex = 1;
+  else currentStageIndex = 0;
+
+  const stepperProgressPercent = status === "delivered" ? 100 : (currentStageIndex === 2 ? 66 : (currentStageIndex === 1 ? 33 : 8));
+
+  const stepperHtml = `
+    <div class="amz-tracking-stepper-wrap">
+      <div class="amz-tracking-stepper">
+        <div class="amz-tracking-stepper-progress" style="width: ${stepperProgressPercent}%;"></div>
+        ${milestones.map((m, idx) => {
+          const isCompleted = idx <= currentStageIndex;
+          const isCurrent = idx === currentStageIndex;
+          const cls = isCompleted ? (isCurrent ? "current completed" : "completed") : "";
+          return `
+            <div class="amz-tracking-node ${cls}">
+              <div class="amz-tracking-dot">${isCompleted ? "✓" : ""}</div>
+              <span class="amz-tracking-label" data-i18n="${m.i18nKey}">${m.label}</span>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
   const completedCount = tracking.steps.filter((step) => step.completed).length;
   const progressPercent = Math.max(8, Math.round((completedCount / tracking.steps.length) * 100));
 
@@ -1316,7 +1357,8 @@ function trackingPanel(order) {
   `).join("");
 
   return `
-    <div class="tracking-panel" id="tracking-${order.id}" hidden>
+    <div class="tracking-panel order-tracking-panel" id="tracking-${order.id}" hidden>
+      ${stepperHtml}
       <div class="tracking-meta">
         <p><span>Carrier:</span> <strong>${order.tracking.carrier}</strong></p>
         <p><span>Tracking ID:</span> <strong>${order.tracking.trackingId}</strong></p>
@@ -1450,6 +1492,172 @@ function afterSalesPanel(order) {
   `;
 }
 
+function formatShippingAddressLines(addr) {
+  if (!addr) return "Flat 402, Royal Palms, Connaught Place, New Delhi, Delhi 110001";
+  if (typeof addr === "string") return addr;
+  const parts = [
+    addr.addressLine || addr.address || "",
+    addr.city || "",
+    addr.state || "",
+    addr.pincode || addr.pinCode || ""
+  ].filter(Boolean);
+  return parts.join(", ") || "Connaught Place, New Delhi 110001";
+}
+
+function getShippingPhone(order) {
+  if (order.shippingAddress && typeof order.shippingAddress === "object" && order.shippingAddress.phone) {
+    return order.shippingAddress.phone;
+  }
+  if (order.phone) return order.phone;
+  const session = readSession();
+  return session?.user?.phone || session?.phone || "+91 98765 43210";
+}
+
+function openOrderDetailsModal(orderId) {
+  const modal = document.getElementById("orderDetailsModal");
+  const content = document.getElementById("orderDetailsModalContent");
+  const invoiceLink = document.getElementById("modalDownloadInvoiceLink");
+  if (!modal || !content) return;
+
+  const order = orders.find((o) => String(o.id) === String(orderId));
+  if (!order) return;
+
+  if (invoiceLink) {
+    invoiceLink.href = `invoice.html?orderId=${encodeURIComponent(order.id)}`;
+  }
+
+  const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
+  const fullAddress = formatShippingAddressLines(order.shippingAddress);
+  const phone = getShippingPhone(order);
+
+  const orderItems = Array.isArray(order.items) && order.items.length > 0
+    ? order.items
+    : [{
+        productId: order.productId || "",
+        title: order.product || "Product",
+        image: order.image || "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80",
+        price: order.total || 0,
+        qty: 1
+      }];
+
+  const itemsHtml = orderItems.map((item) => {
+    const pId = item.productId || order.productId || "";
+    const pTitle = item.title || order.product || "ElectroMart Item";
+    const pImg = item.image || order.image || "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80";
+    const pPrice = Number(item.price || order.total || 0);
+    const pQty = Number(item.qty || item.quantity || 1);
+
+    return `
+      <div class="amz-modal-item-row">
+        <img src="${escapeHtml(pImg)}" alt="${escapeHtml(pTitle)}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80';" />
+        <div class="amz-modal-item-info">
+          <h5><a href="product-detail.html?id=${encodeURIComponent(pId)}">${escapeHtml(pTitle)}</a></h5>
+          <p>Quantity: ${pQty} | Price: ${money(pPrice)}</p>
+          <p class="seller-line">Sold by: <strong>ElectroMart Retail Pvt Ltd</strong></p>
+        </div>
+        <div>
+          <button type="button" class="amz-buy-again-inline-btn" data-product-id="${escapeHtml(pId)}" data-product-title="${escapeHtml(pTitle)}">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span data-i18n="buy_it_again">Buy it again</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const total = Number(order.total || 0);
+  const baseSubtotal = total / 1.18;
+  const totalGst = total - baseSubtotal;
+  const isDelhi = String(order.shippingAddress?.state || "Delhi").toLowerCase().includes("delhi");
+
+  content.innerHTML = `
+    <div class="amz-modal-order-summary-bar">
+      <div>
+        <p data-i18n="order_num_label">ORDER #</p>
+        <strong>${escapeHtml(order.idLabel || order.id)}</strong>
+      </div>
+      <div>
+        <p data-i18n="order_placed_label">ORDER PLACED</p>
+        <strong>${escapeHtml(order.date)}</strong>
+      </div>
+      <div>
+        <p data-i18n="total_label">TOTAL</p>
+        <strong>${money(total)}</strong>
+      </div>
+      <div>
+        <p>STATUS</p>
+        <span class="badge ${escapeHtml(order.status)}">${formatStatus(order.status)}</span>
+      </div>
+    </div>
+
+    <div class="amz-modal-grid">
+      <div class="amz-modal-section">
+        <h4 data-i18n="order_items_label">Items in this order</h4>
+        <div class="amz-modal-items-list">${itemsHtml}</div>
+      </div>
+
+      <div class="amz-modal-section">
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="shipping_address_label">Shipping Address</h4>
+          <p><strong>${escapeHtml(recipientName)}</strong></p>
+          <p>${escapeHtml(fullAddress)}</p>
+          <p><span data-i18n="phone_label">Phone:</span> ${escapeHtml(phone)}</p>
+          ${order.deliverySlot?.label ? `<p style="margin-top:6px; color:#067d62;"><strong>Slot:</strong> ${escapeHtml(order.deliverySlot.label)}</p>` : ""}
+        </div>
+
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="payment_method_label">Payment Method</h4>
+          <p>${escapeHtml(formatPaymentMethod(order.paymentMethod))}</p>
+          <p>Status: <span class="badge ${escapeHtml(String(order.paymentStatus || "").toLowerCase() || "completed")}">${formatPaymentStatus(order.paymentStatus)}</span></p>
+        </div>
+
+        <div class="amz-modal-side-card">
+          <h4 data-i18n="order_summary_label">Order Summary</h4>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Items Subtotal:</span>
+            <span>${money(baseSubtotal)}</span>
+          </div>
+          ${isDelhi ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>CGST (9%):</span>
+              <span>${money(totalGst / 2)}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>SGST (9%):</span>
+              <span>${money(totalGst / 2)}</span>
+            </div>
+          ` : `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:12px; color:#565959;">
+              <span>IGST (18%):</span>
+              <span>${money(totalGst)}</span>
+            </div>
+          `}
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Shipping:</span>
+            <span>FREE</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px; border-top:1px solid #d5d9d9; padding-top:6px; margin-top:4px;">
+            <span data-i18n="total_label">Grand Total:</span>
+            <span style="color:#b12704;">${money(total)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.removeAttribute("hidden");
+  window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
+}
+
+function closeOrderDetailsModal() {
+  const modal = document.getElementById("orderDetailsModal");
+  if (modal) {
+    modal.setAttribute("hidden", "");
+  }
+}
+
 function orderCard(order) {
   const canResumePayment = isOrderResumeEligible(order);
   const latestAfterSales = getLatestAfterSalesCase(order);
@@ -1476,42 +1684,111 @@ function orderCard(order) {
   const paymentHint = canResumePayment
     ? `<p class="payment-hint">This order is waiting for payment capture. Resume checkout to complete it.</p>`
     : "";
+  const exchangeMeta = (Array.isArray(order.exchangeDetails) && order.exchangeDetails.length > 0)
+    ? `<p class="order-exchange-meta" style="background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;display:inline-block;">
+        🔄 <strong>Includes Device Exchange:</strong> ${order.exchangeDetails.map(ex => `${escapeHtml(ex.exchangeDeviceName || "Trade-In Device")} (-${money(ex.discountAmount)})`).join(", ")}
+      </p>`
+    : "";
   const canCancelOrder = isOrderCancelEligible(order);
+
+  const isDelivered = String(order.status || "").toLowerCase() === "delivered";
+  const isCancelled = String(order.status || "").toLowerCase() === "cancelled";
+  const isReturnInitiated = Boolean(
+    order.returnInitiated ||
+    String(order.status || "").toLowerCase() === "return_initiated" ||
+    String(order.status || "").toLowerCase() === "pickup_scheduled" ||
+    (Array.isArray(order.afterSalesCases) && order.afterSalesCases.some(c => (c.type === "return" || c.type === "exchange") && !c.final))
+  );
+
+  const returnBadge = isReturnInitiated
+    ? `<span class="badge return-initiated" style="background:#e6f4ea; color:#137333; border:1px solid #ceead6; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:6px;" data-i18n="return_initiated_badge">Return Initiated</span>`
+    : "";
+  
+  const deliveryHeadline = isReturnInitiated
+    ? `<h2 class="order-delivery-headline" style="color:#067d62;">Return Initiated &bull; Pickup Scheduled</h2><p class="order-delivery-subtext">ElectroMart Logistics doorstep pickup is scheduled.</p>`
+    : (isDelivered
+      ? `<h2 class="order-delivery-headline delivered">Delivered ${order.tracking?.eta ? `${order.tracking.eta}` : order.date}</h2><p class="order-delivery-subtext">Package was handed directly to resident.</p>`
+      : (isCancelled
+        ? `<h2 class="order-delivery-headline">Order Cancelled</h2><p class="order-delivery-subtext">This order was cancelled and will not ship.</p>`
+        : `<h2 class="order-delivery-headline">Expected Delivery: ${order.tracking?.eta || "Arriving soon"}</h2><p class="order-delivery-subtext">${statusLine(order.status)}</p>`));
+
+  const recipientName = order.shippingAddress?.fullName || (typeof order.shippingAddress === "string" ? order.shippingAddress : (readSession()?.user?.name || "Customer"));
+  const firstProductId = order.productId || (Array.isArray(order.items) && order.items[0]?.productId) || "";
+  const hasProtectionPlan = Array.isArray(order.items) && order.items.some((item) => item && item.protectionPlan);
+
   return `
-    <article class="order-card">
+    <article class="order-card" data-order-id="${order.id}">
       <div class="order-top">
-        <div>
-          <p>ORDER PLACED</p>
-          <strong>${order.date}</strong>
+        <div class="order-top-details">
+          <div>
+            <p data-i18n="order_placed_label">ORDER PLACED</p>
+            <strong>${order.date}</strong>
+          </div>
+          <div>
+            <p data-i18n="total_label">TOTAL</p>
+            <strong>${money(order.total)}</strong>
+          </div>
+          <div>
+            <p data-i18n="ship_to_label">SHIP TO</p>
+            <div class="amz-ship-to-wrapper">
+              <button type="button" class="amz-ship-to-trigger" aria-expanded="false" aria-haspopup="true">
+                <strong title="${escapeHtml(typeof order.shippingAddress === 'string' ? order.shippingAddress : (order.shippingAddress?.addressLine || 'Address'))}">${escapeHtml(recipientName)} ▾</strong>
+              </button>
+              <div class="amz-ship-to-popover" role="tooltip" hidden>
+                <div class="amz-ship-to-popover-content">
+                  <h4 data-i18n="ship_to_address_details">Shipping Address</h4>
+                  <p><strong>${escapeHtml(recipientName)}</strong></p>
+                  <p>${escapeHtml(formatShippingAddressLines(order.shippingAddress))}</p>
+                  <p class="popover-phone"><span data-i18n="phone_label">Phone:</span> ${escapeHtml(getShippingPhone(order))}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <p>TOTAL</p>
-          <strong>${money(order.total)}</strong>
-        </div>
-        <div>
-          <p>ORDER #</p>
-          <strong>${order.idLabel}</strong>
+        <div class="order-top-right">
+          <p><span data-i18n="order_num_label">ORDER #</span> ${order.idLabel}</p>
+          <div class="order-top-links">
+            <a href="javascript:void(0);" class="view-order-details-link" data-id="${order.id}" data-i18n="view_order_details">View order details</a>
+            <span>|</span>
+            <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" target="_blank" rel="noopener" data-i18n="download_invoice">Invoice ▾</a>
+          </div>
         </div>
       </div>
       <div class="order-body">
-        <img src="${order.image}" alt="${order.product}" loading="lazy" />
-        <div>
-          <h2 class="order-product">${order.product}</h2>
-          <p class="order-date-line">Order date: ${order.date}</p>
+        <a href="product-detail.html?id=${encodeURIComponent(firstProductId)}" aria-label="${escapeHtml(order.product)}">
+          <img src="${order.image}" alt="${order.product}" loading="lazy" />
+        </a>
+        <div class="order-product-info">
+          ${deliveryHeadline}
+          <h3 class="order-product">
+            <a href="product-detail.html?id=${encodeURIComponent(firstProductId)}">${order.product}</a>
+          </h3>
+          <p class="seller-line">Sold by: <strong>ElectroMart Retail Pvt Ltd</strong> | Return eligible within 7 days</p>
+          <p class="order-item-price">${money(order.total)}</p>
+          ${exchangeMeta}
+          <button type="button" class="amz-buy-again-inline-btn" data-product-id="${escapeHtml(firstProductId)}" data-product-title="${escapeHtml(order.product)}">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span data-i18n="buy_it_again">Buy it again</span>
+          </button>
           ${couponMeta}
           ${deliveryMeta}
           ${reservationMeta}
           ${paymentMeta}
           ${paymentHint}
           ${afterSalesSummary}
-          <p class="status-line">${statusLine(order.status)} <span class="badge ${order.status}">${formatStatus(order.status)}</span></p>
+          <p class="status-line">${statusLine(order.status)} <span class="badge ${order.status}">${formatStatus(order.status)}</span>${returnBadge}</p>
         </div>
         <div class="order-actions">
           ${canResumePayment ? `<button type="button" class="primary resume-payment-btn" data-id="${order.id}">Resume Payment</button>` : ""}
-          ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}">Cancel Order</button>` : ""}
-          <button type="button" class="primary track-btn" data-id="${order.id}">Track package</button>
-          ${canShowAfterSalesPanel(order) ? `<button type="button" class="after-sales-btn" data-id="${order.id}">${order.afterSalesCases.length ? "View Request" : "Request Return / Refund / Exchange"}</button>` : ""}
-          <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" target="_blank" rel="noopener">Download Invoice</a>
+          <a href="tracking.html?orderId=${encodeURIComponent(order.id)}" class="primary track-btn" data-id="${order.id}" data-i18n="track_package">Track package</a>
+          <a href="returns.html?orderId=${encodeURIComponent(order.id)}" class="after-sales-btn" data-id="${order.id}" data-i18n="return_or_replace">${isReturnInitiated ? "Return / Replacement Details" : (order.afterSalesCases && order.afterSalesCases.length ? "View Request" : "Return or replace items")}</a>
+          ${canCancelOrder ? `<button type="button" class="cancel-order-btn" data-id="${order.id}" data-i18n="cancel_order">Cancel Order</button>` : ""}
+          <button type="button" class="secondary-pill-btn write-review-btn" data-id="${order.id}" data-product-id="${escapeHtml(firstProductId)}" data-i18n="write_review">Write a product review</button>
+          <button type="button" class="secondary-pill-btn seller-feedback-btn" data-id="${order.id}" data-i18n="seller_feedback">Leave seller feedback</button>
+          <a href="invoice.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" target="_blank" rel="noopener" data-i18n="download_invoice">Download Invoice</a>
+          ${hasProtectionPlan ? `<a href="warranty.html?orderId=${encodeURIComponent(order.id)}" class="secondary-pill-btn" data-i18n="warranty_certificate">Download Warranty Certificate</a><a href="warranty.html?orderId=${encodeURIComponent(order.id)}#claimWizardForm" class="secondary-pill-btn" data-i18n="claim_protection">Claim Protection</a>` : ""}
         </div>
       </div>
       ${trackingPanel(order)}
@@ -1562,28 +1839,77 @@ function getActiveOrderFilters() {
 
 function renderOrders(list) {
   if (list.length === 0) {
-    ordersGrid.innerHTML = "<div class='empty-message'>No orders matched your search or filter.</div>";
+    ordersGrid.innerHTML = `
+      <div class="amz-empty-orders-card">
+        <div class="amz-empty-orders-icon">
+          <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#e77600" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="amz-empty-orders-title" data-i18n="no_orders_found_title">No orders found</h2>
+        <p class="amz-empty-orders-desc" data-i18n="no_orders_found_desc">Looks like you have no orders matching this filter or time period.</p>
+        <a href="index.html" class="amz-empty-continue-btn" data-i18n="continue_shopping">Continue Shopping</a>
+      </div>
+    `;
     ordersMeta.textContent = "Showing 0 orders";
+    window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
     return;
   }
 
   ordersGrid.innerHTML = list.map(orderCard).join("");
   ordersMeta.textContent = `Showing ${list.length} orders`;
+  window.EM_I18N?.updateAllTranslations?.() || window.applyTranslations?.();
 }
 
 function filterOrders() {
-  const query = orderSearch.value.trim().toLowerCase();
-  const status = statusFilter.value;
+  const query = (orderSearch ? orderSearch.value : "").trim().toLowerCase();
+  const status = statusFilter ? statusFilter.value : "all";
+  const timeVal = timeFilter ? timeFilter.value : "past_3_months";
+
+  const now = new Date();
+  const threeMonthsAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
+  const sixMonthsAgo = new Date(now.getTime() - (180 * 24 * 60 * 60 * 1000));
 
   const filtered = orders.filter((order) => {
-    const queryMatch =
+    // 1. Tab filter
+    if (currentOrderTab === "buy_again") {
+      if (order.status === "cancelled") return false;
+    } else if (currentOrderTab === "not_yet_shipped") {
+      if (order.status === "delivered" || order.status === "cancelled") return false;
+    } else if (currentOrderTab === "cancelled") {
+      if (order.status !== "cancelled") return false;
+    }
+
+    // 2. Search query filter
+    const queryMatch = !query ||
       order.id.toLowerCase().includes(query) ||
       order.idLabel.toLowerCase().includes(query) ||
       order.product.toLowerCase().includes(query);
+
+    // 3. Status filter (if set manually)
     const statusMatch = status === "all"
       || (status === "awaiting_payment" && isOrderResumeEligible(order))
       || order.status === status;
-    return queryMatch && statusMatch;
+
+    // 4. Time filter
+    let timeMatch = true;
+    const orderDate = new Date(order.createdAt || order.date);
+    if (!Number.isNaN(orderDate.getTime())) {
+      if (timeVal === "past_3_months") {
+        timeMatch = orderDate >= threeMonthsAgo;
+      } else if (timeVal === "past_6_months") {
+        timeMatch = orderDate >= sixMonthsAgo;
+      } else if (timeVal === "2026") {
+        timeMatch = orderDate.getFullYear() === 2026;
+      } else if (timeVal === "2025") {
+        timeMatch = orderDate.getFullYear() === 2025;
+      } else if (timeVal === "archived") {
+        timeMatch = orderDate < sixMonthsAgo;
+      }
+    }
+
+    return queryMatch && statusMatch && timeMatch;
   });
 
   renderOrders(filtered);
@@ -1614,8 +1940,7 @@ async function fetchOrders() {
     orders = offlineOrders.map(buildOrderView);
     loadOrderNotifications(session);
     if (orders.length === 0) {
-      ordersMeta.textContent = "Showing 0 orders";
-      ordersGrid.innerHTML = "<div class='empty-message'>No orders available yet.</div>";
+      renderOrders([]);
       return;
     }
     filterOrders();
@@ -1628,8 +1953,7 @@ async function fetchOrders() {
     orders = offlineOrders.map(buildOrderView);
     loadOrderNotifications(session);
     if (orders.length === 0) {
-      ordersMeta.textContent = "Showing 0 orders";
-      ordersGrid.innerHTML = "<div class='empty-message'>Failed to fetch orders from server.</div>";
+      renderOrders([]);
       return;
     }
     filterOrders();
@@ -1652,10 +1976,78 @@ async function fetchOrders() {
   filterOrders();
 }
 
-orderSearch.addEventListener("input", filterOrders);
-statusFilter.addEventListener("change", filterOrders);
+if (orderSearch) orderSearch.addEventListener("input", filterOrders);
+if (statusFilter) statusFilter.addEventListener("change", filterOrders);
+if (timeFilter) timeFilter.addEventListener("change", filterOrders);
+
+if (orderTabs) {
+  orderTabs.addEventListener("click", (e) => {
+    const tabBtn = e.target.closest(".amz-order-tab-btn");
+    if (!tabBtn) return;
+    orderTabs.querySelectorAll(".amz-order-tab-btn").forEach((b) => b.classList.remove("active"));
+    tabBtn.classList.add("active");
+    currentOrderTab = tabBtn.getAttribute("data-tab") || "orders";
+    filterOrders();
+  });
+}
+
+const orderSearchForm = document.getElementById("orderSearchForm");
+if (orderSearchForm) {
+  orderSearchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    filterOrders();
+  });
+}
 
 ordersGrid.addEventListener("click", async (event) => {
+  const buyAgainBtn = event.target.closest(".amz-buy-again-inline-btn");
+  if (buyAgainBtn) {
+    const productId = buyAgainBtn.getAttribute("data-product-id");
+    if (productId) {
+      try {
+        const rawCart = localStorage.getItem("electromart_cart_v1");
+        const cart = rawCart ? JSON.parse(rawCart) : {};
+        cart[productId] = (Number(cart[productId]) || 0) + 1;
+        localStorage.setItem("electromart_cart_v1", JSON.stringify(cart));
+        const total = Object.values(cart).reduce((sum, qty) => sum + Number(qty || 0), 0);
+        const cartCountEl = document.getElementById("cartCount");
+        if (cartCountEl) cartCountEl.textContent = String(total);
+        buyAgainBtn.style.background = "#007600";
+        buyAgainBtn.style.color = "#ffffff";
+        buyAgainBtn.style.borderColor = "#006000";
+        buyAgainBtn.innerHTML = "✓ Added to Cart";
+        setTimeout(() => {
+          buyAgainBtn.style.background = "";
+          buyAgainBtn.style.color = "";
+          buyAgainBtn.style.borderColor = "";
+          buyAgainBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span>Buy it again</span>
+          `;
+        }, 2000);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    return;
+  }
+
+  const reviewBtn = event.target.closest(".write-review-btn");
+  if (reviewBtn) {
+    const orderId = reviewBtn.getAttribute("data-id") || "";
+    const pId = reviewBtn.getAttribute("data-product-id") || "";
+    window.location.href = `review.html?productId=${encodeURIComponent(pId)}&orderId=${encodeURIComponent(orderId)}`;
+    return;
+  }
+
+  const feedbackBtn = event.target.closest(".seller-feedback-btn");
+  if (feedbackBtn) {
+    alert("Thank you for rating ElectroMart Retail! Your seller feedback is highly appreciated.");
+    return;
+  }
+
   const resumeBtn = event.target.closest(".resume-payment-btn");
   if (resumeBtn) {
     const orderId = String(resumeBtn.getAttribute("data-id") || "").trim();
@@ -1678,6 +2070,9 @@ ordersGrid.addEventListener("click", async (event) => {
 
   const afterSalesBtn = event.target.closest(".after-sales-btn");
   if (afterSalesBtn) {
+    if (afterSalesBtn.tagName === "A" && afterSalesBtn.getAttribute("href")) {
+      return;
+    }
     const orderId = String(afterSalesBtn.getAttribute("data-id") || "").trim();
     const panel = document.getElementById(`after-sales-${orderId}`);
     if (!panel) {
@@ -1696,8 +2091,47 @@ ordersGrid.addEventListener("click", async (event) => {
     return;
   }
 
+  const shipToBtn = event.target.closest(".amz-ship-to-trigger");
+  if (shipToBtn) {
+    event.preventDefault();
+    event.stopPropagation();
+    const wrapper = shipToBtn.closest(".amz-ship-to-wrapper");
+    const popover = wrapper?.querySelector(".amz-ship-to-popover");
+    if (popover) {
+      const isClosed = popover.hasAttribute("hidden");
+      document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+        if (pop !== popover) {
+          pop.setAttribute("hidden", "");
+          const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+          if (tr) tr.setAttribute("aria-expanded", "false");
+        }
+      });
+      if (isClosed) {
+        popover.removeAttribute("hidden");
+        shipToBtn.setAttribute("aria-expanded", "true");
+      } else {
+        popover.setAttribute("hidden", "");
+        shipToBtn.setAttribute("aria-expanded", "false");
+      }
+    }
+    return;
+  }
+
+  const detailsBtn = event.target.closest(".view-order-details-link");
+  if (detailsBtn) {
+    event.preventDefault();
+    const orderId = detailsBtn.getAttribute("data-id");
+    if (orderId) {
+      openOrderDetailsModal(orderId);
+    }
+    return;
+  }
+
   const trackBtn = event.target.closest(".track-btn");
   if (!trackBtn) {
+    return;
+  }
+  if (trackBtn.tagName && trackBtn.tagName.toLowerCase() === "a") {
     return;
   }
 
@@ -1714,6 +2148,35 @@ ordersGrid.addEventListener("click", async (event) => {
   } else {
     panel.setAttribute("hidden", "");
     trackBtn.textContent = "Track package";
+  }
+});
+
+// Outside click & Escape key handlers for Ship To popover and Order Details modal
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".amz-ship-to-wrapper")) {
+    document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+      pop.setAttribute("hidden", "");
+      const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+      if (tr) tr.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  const modal = document.getElementById("orderDetailsModal");
+  if (modal && !modal.hasAttribute("hidden")) {
+    if (event.target === modal || event.target.closest("#closeOrderDetailsBtn") || event.target.closest("#dismissOrderDetailsBtn")) {
+      closeOrderDetailsModal();
+    }
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeOrderDetailsModal();
+    document.querySelectorAll(".amz-ship-to-popover:not([hidden])").forEach((pop) => {
+      pop.setAttribute("hidden", "");
+      const tr = pop.closest(".amz-ship-to-wrapper")?.querySelector(".amz-ship-to-trigger");
+      if (tr) tr.setAttribute("aria-expanded", "false");
+    });
   }
 });
 

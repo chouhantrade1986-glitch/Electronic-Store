@@ -7,6 +7,7 @@ const { assertRuntimeEnvPolicyConfigured } = require("./lib/envPolicy");
 const { logInfo } = require("./lib/logger");
 const { getMetricsSnapshot } = require("./lib/monitoring");
 const { buildRuntimeHealthSnapshot } = require("./lib/runtimeHealth");
+const { registerIncidentHooks } = require("./lib/alertingPolicy");
 const { startOrderReservationExpiryScheduler } = require("./lib/orderReservationExpiryScheduler");
 const { startPhoneVerificationAutomationScheduler } = require("./lib/phoneVerificationAutomationScheduler");
 const {
@@ -67,6 +68,13 @@ app.listen(PORT, () => {
     storageProvider: getDbProvider()
   }, {
     requestId: "startup"
+  });
+  registerIncidentHooks({
+    service: "electromart-backend",
+    env: process.env,
+    onIncident: (payload) => {
+      logInfo("backend_process_incident", payload, { requestId: "startup" });
+    }
   });
   startOrderReservationExpiryScheduler();
   startPhoneVerificationAutomationScheduler();

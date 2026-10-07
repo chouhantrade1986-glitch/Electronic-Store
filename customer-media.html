@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="android-compat.css?v=20260410a" />
+  <title data-i18n="media_gallery_title">Customer Photos &amp; Unboxing Videos Gallery - ElectroMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260315c" />
+  <link rel="stylesheet" href="shared-search.css?v=20260314g" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
+  <link rel="stylesheet" href="customer-media.css?v=20260916a" />
+  <script src="android-compat.js?v=20260410a"></script>
+</head>
+<body class="customer-media-page">
+  <!-- Amazon-style Universal Header -->
+  <div id="headerContainer"></div>
+
+  <main class="customer-media-main">
+    <!-- Breadcrumb Navigation -->
+    <nav class="amz-media-breadcrumb" id="mediaBreadcrumb" aria-label="Breadcrumb">
+      <a href="index.html" data-i18n="nav_home">Home</a> &rsaquo;
+      <a href="account.html" data-i18n="media_breadcrumb_account">Your Account</a> &rsaquo;
+      <a href="review.html" data-i18n="media_breadcrumb_reviews">Customer Reviews</a> &rsaquo;
+      <span id="currentBreadcrumbPage" data-i18n="media_breadcrumb_gallery">Photos &amp; Videos Gallery</span>
+    </nav>
+
+    <!-- Hero Showcase Section -->
+    <header class="amz-media-hero" id="mediaHeroSection">
+      <div class="media-hero-left">
+        <span class="media-hero-badge" id="mediaHeroBadge" data-i18n="media_hero_badge">📸 Verified Customer Gallery</span>
+        <h1 class="media-hero-title" id="mediaHeroTitle" data-i18n="media_gallery_title">ElectroMart Customer Photos &amp; Unboxing Videos Gallery</h1>
+        <p class="media-hero-subtitle" id="mediaHeroSubtitle" data-i18n="media_gallery_subtitle">
+          Explore authentic photos and video reviews uploaded by verified buyers across India. See real products in home &amp; office setups before you buy.
+        </p>
+
+        <!-- Dynamic Statistics Strip -->
+        <div class="media-stats-row">
+          <div class="media-stat-item">
+            <strong class="stat-value" id="statTotalUploads">2,480+</strong>
+            <span class="stat-label" data-i18n="media_stat_total_uploads">Verified Customer Uploads</span>
+          </div>
+          <div class="media-stat-item">
+            <strong class="stat-value" id="statPhotosCount">1,890+</strong>
+            <span class="stat-label" data-i18n="media_stat_photos">High-Res Photos</span>
+          </div>
+          <div class="media-stat-item">
+            <strong class="stat-value" id="statVideosCount">590+</strong>
+            <span class="stat-label" data-i18n="media_stat_videos">Unboxing Videos</span>
+          </div>
+          <div class="media-stat-item">
+            <strong class="stat-value" id="statVerifiedRatio">99.2%</strong>
+            <span class="stat-label" data-i18n="media_stat_verified_ratio">Verified Buyers</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="media-hero-actions">
+        <button type="button" class="btn-hero-upload" id="openUploadMediaBtn" data-i18n="media_upload_cta_btn">+ Upload Photo or Video</button>
+        <a href="review.html" class="btn-hero-review" id="goToWriteReviewBtn" data-i18n="write_review_btn">Write a Review</a>
+      </div>
+    </header>
+
+    <!-- Filter & Search Toolbar -->
+    <section class="amz-media-toolbar" id="mediaFilterToolbar" aria-label="Media Filters">
+      <div class="toolbar-top-row">
+        <!-- Media Type Selector Pills -->
+        <div class="media-type-pills" id="mediaTypePills" role="tablist" aria-label="Media type">
+          <button type="button" class="media-type-pill active" data-type="all" id="pillMediaAll" data-i18n="media_filter_all">All Media</button>
+          <button type="button" class="media-type-pill" data-type="photos" id="pillMediaPhotos" data-i18n="media_filter_photos">Photos Only</button>
+          <button type="button" class="media-type-pill" data-type="videos" id="pillMediaVideos" data-i18n="media_filter_videos">Videos Only</button>
+        </div>
+
+        <!-- Live Search Box -->
+        <div class="media-search-box" id="mediaSearchBox">
+          <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.5" y1="15.5" x2="21" y2="21"></line>
+          </svg>
+          <input
+            type="search"
+            id="mediaSearchInput"
+            placeholder="Search reviews by product name or keyword..."
+            data-i18n-placeholder="media_search_placeholder"
+            aria-label="Search reviews by product or keyword"
+            autocomplete="off"
+          />
+          <button type="button" id="mediaSearchClearBtn" class="search-clear-btn" hidden aria-label="Clear search">&times;</button>
+        </div>
+
+        <!-- Sort Select -->
+        <div class="media-sort-wrap">
+          <label for="mediaSortSelect" class="visually-hidden">Sort customer media</label>
+          <select id="mediaSortSelect" class="amz-select-sort" aria-label="Sort customer media">
+            <option value="recent" data-i18n="media_sort_recent">Most Recent</option>
+            <option value="helpful" data-i18n="media_sort_helpful">Most Helpful</option>
+            <option value="rating" data-i18n="media_sort_rating">Highest Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="toolbar-categories-row" id="mediaCategoryPills" role="tablist" aria-label="Categories">
+        <button type="button" class="category-pill active" data-cat="all" id="catPillAll" data-i18n="media_filter_cat_all">All Categories</button>
+        <button type="button" class="category-pill" data-cat="laptop" id="catPillLaptops" data-i18n="media_filter_cat_laptops">Laptops</button>
+        <button type="button" class="category-pill" data-cat="mobile" id="catPillMobiles" data-i18n="media_filter_cat_mobiles">Mobiles</button>
+        <button type="button" class="category-pill" data-cat="audio" id="catPillAudio" data-i18n="media_filter_cat_audio">Audio</button>
+        <button type="button" class="category-pill" data-cat="gaming" id="catPillGaming" data-i18n="media_filter_cat_gaming">Gaming &amp; PC</button>
+        <button type="button" class="category-pill" data-cat="printer" id="catPillPrinters" data-i18n="media_filter_cat_printers">Printers</button>
+        <button type="button" class="category-pill" data-cat="accessories" id="catPillAccessories" data-i18n="media_filter_cat_accessories">Accessories</button>
+      </div>
+
+      <!-- Result Count Info Bar -->
+      <div class="toolbar-info-bar" id="activeFilterBar">
+        <span id="mediaResultCountText" class="result-count-text"><span id="activeFilterText">Showing verified customer uploads</span></span>
+        <button type="button" id="activeFilterResetBtn" class="reset-filter-link" hidden>Clear all filters</button>
+      </div>
+    </section>
+
+    <!-- Masonry / Responsive Customer Media Grid -->
+    <section class="amz-media-grid-section" aria-label="Customer Media Items">
+      <div id="customerMediaGrid" class="amz-media-grid" role="region" aria-label="Customer Photos and Videos"></div>
+
+      <!-- Empty State Card -->
+      <div id="mediaEmptyState" class="amz-media-empty-card" hidden>
+        <div class="empty-icon" aria-hidden="true">📷</div>
+        <h3 class="empty-title">No customer photos or videos match this filter</h3>
+        <p class="empty-sub">Try selecting another category, switching to All Media, or searching for a different product keyword.</p>
+        <button type="button" class="btn-empty-reset" id="emptyStateResetBtn">Show All Customer Media</button>
+      </div>
+
+      <!-- Load More Trigger -->
+      <div class="media-load-more-wrap">
+        <button type="button" id="loadMoreMediaBtn" class="btn-load-more-media" data-i18n="media_load_more_btn">Load More Customer Media</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Full-Screen 2-Column Lightbox Modal Dialog -->
+  <dialog id="mediaLightboxModal" class="amz-lightbox-modal" aria-labelledby="lightboxHeadline">
+    <div class="lightbox-content-box">
+      <!-- Close Button -->
+      <button type="button" id="closeLightboxBtn" class="btn-lightbox-close" aria-label="Close dialog">&times;</button>
+
+      <div class="lightbox-columns">
+        <!-- Left Column: Media Canvas Viewport -->
+        <div class="lightbox-media-column">
+          <div class="lightbox-viewport-container" id="lightboxViewport">
+            <!-- Media element (Image or Video) dynamically rendered -->
+            <div id="lightboxMediaHolder" class="lightbox-media-holder"></div>
+
+            <!-- Navigation Paddles -->
+            <button type="button" id="prevMediaBtn" class="lightbox-nav-paddle prev" aria-label="Previous media">&#10094;</button>
+            <button type="button" id="nextMediaBtn" class="lightbox-nav-paddle next" aria-label="Next media">&#10095;</button>
+          </div>
+
+          <!-- Bottom Thumbnail Scrubber Strip -->
+          <div class="lightbox-scrubber-strip" id="lightboxThumbStrip" role="region" aria-label="Media Thumbnails"></div>
+        </div>
+
+        <!-- Right Column: Review & Buybox Card -->
+        <div class="lightbox-details-column">
+          <!-- Reviewer Row -->
+          <div class="lightbox-reviewer-row">
+            <div class="reviewer-avatar" id="lightboxReviewerAvatar">E</div>
+            <div class="reviewer-meta">
+              <strong class="reviewer-name" id="lightboxReviewerName">ElectroMart Customer</strong>
+              <div class="verified-badge-row" id="lightboxVerifiedBadge">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#c45500" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span data-i18n="lightbox_verified_purchase">Verified Purchase</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rating & Date -->
+          <div class="lightbox-rating-date-row">
+            <span class="lightbox-stars" id="lightboxStars">★★★★★</span>
+            <span class="lightbox-date" id="lightboxDate">Reviewed in India on August 2026</span>
+          </div>
+
+          <!-- Review Headline & Full Body -->
+          <h3 class="lightbox-headline" id="lightboxHeadline">Excellent performance and authentic build quality</h3>
+          <p class="lightbox-body" id="lightboxReviewBody">Loading customer review feedback...</p>
+
+          <!-- Helpful Vote Action -->
+          <div class="lightbox-helpful-row">
+            <button type="button" id="lightboxHelpfulBtn" class="btn-lightbox-helpful">
+              <span class="thumb-icon" aria-hidden="true">👍</span>
+              <span data-i18n="lightbox_helpful_btn">Helpful</span>
+              (<span id="lightboxHelpfulCount">18</span>)
+            </button>
+            <span class="report-link">Report</span>
+          </div>
+
+          <!-- Product Quick-Card Buybox -->
+          <div class="lightbox-product-card" id="lightboxProductCard">
+            <div class="card-head">
+              <img src="product-placeholder.svg" alt="Product thumbnail" class="card-prod-thumb" id="lightboxProdThumb" />
+              <div class="card-prod-info">
+                <a href="product-detail.html" class="card-prod-title" id="lightboxProdTitle">Product Title</a>
+                <div class="card-prod-rating" id="lightboxProdRating">★★★★☆ (4.5)</div>
+              </div>
+            </div>
+
+            <!-- Price Stack -->
+            <div class="card-price-stack">
+              <span class="card-current-price" id="lightboxProdPrice">₹0</span>
+              <span class="card-mrp-price" id="lightboxProdMrp">₹0</span>
+              <span class="card-discount-badge" id="lightboxProdDiscount">-0%</span>
+            </div>
+
+            <div class="card-stock-badge" id="lightboxProdStock" data-i18n="lightbox_in_stock">In Stock - Prime Eligible</div>
+
+            <!-- 1-Click Add to Cart Action -->
+            <button type="button" id="lightboxAddToCartBtn" class="btn-lightbox-add-cart" data-i18n="lightbox_add_to_cart">Add to Cart</button>
+            <a href="product-detail.html" id="lightboxViewProductLink" class="link-view-pdp" data-i18n="lightbox_view_product">View Product Details &rsaquo;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Upload Customer Media Modal Dialog -->
+  <dialog id="uploadMediaModal" class="amz-upload-modal" aria-labelledby="uploadModalTitle">
+    <div class="upload-modal-box">
+      <div class="upload-modal-header">
+        <h3 id="uploadModalTitle" data-i18n="media_upload_modal_title">Share Your Product Photos or Unboxing Video</h3>
+        <button type="button" id="closeUploadModalBtn" class="btn-modal-close" aria-label="Close dialog">&times;</button>
+      </div>
+      <p class="upload-modal-desc">Help millions of shoppers across India! Upload high-resolution photos or a quick unboxing video of your ElectroMart purchase.</p>
+
+      <form id="uploadMediaForm" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="uploadProductSelect" data-i18n="media_upload_product_label">Select Product</label>
+          <select id="uploadProductSelect" required>
+            <option value="">-- Choose your purchased product --</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="uploadAuthorName">Your Name</label>
+            <input type="text" id="uploadAuthorName" required placeholder="e.g. Ananya Rao" maxlength="60" />
+          </div>
+          <div class="form-group">
+            <label for="uploadRatingSelect" data-i18n="media_upload_rating_label">Your Rating</label>
+            <select id="uploadRatingSelect" required>
+              <option value="5">★★★★★ (5 - Excellent)</option>
+              <option value="4">★★★★☆ (4 - Very Good)</option>
+              <option value="3">★★★☆☆ (3 - Average)</option>
+              <option value="2">★★☆☆☆ (2 - Below Average)</option>
+              <option value="1">★☆☆☆☆ (1 - Poor)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="uploadHeadlineInput" data-i18n="media_upload_headline_label">Review Headline</label>
+          <input type="text" id="uploadHeadlineInput" required placeholder="e.g. Fantastic display and fast charging performance" maxlength="90" />
+        </div>
+
+        <div class="form-group">
+          <label for="uploadReviewTextInput" data-i18n="media_upload_text_label">Your Detailed Review</label>
+          <textarea id="uploadReviewTextInput" rows="3" required placeholder="What did you like about the electronics? How was setup and packaging?"></textarea>
+        </div>
+
+        <!-- File Upload Drag and Drop Zone -->
+        <div class="form-group">
+          <label data-i18n="media_upload_files_label">Upload Photos or Videos</label>
+          <div class="file-dropzone" id="fileDropzone">
+            <input type="file" id="uploadMediaFileInput" accept="image/*,video/*" multiple class="file-input-hidden" />
+            <div class="dropzone-hint">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#007185" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <p>Drag photos or video here, or <button type="button" class="btn-browse-files" id="browseFilesBtn">Browse Files</button></p>
+              <span>Supports JPEG, PNG, MP4, WebM (Up to 10 files)</span>
+            </div>
+          </div>
+          <!-- Uploaded Media Previews -->
+          <div id="uploadPreviewGrid" class="upload-preview-grid"></div>
+        </div>
+
+        <div class="modal-action-row">
+          <button type="button" class="btn-modal-cancel" id="cancelUploadModalBtn" data-i18n="wishlist_cancel">Cancel</button>
+          <button type="submit" class="btn-modal-submit" id="submitUploadMediaBtn" data-i18n="media_upload_submit_btn">Submit to Customer Gallery</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Universal Toast Feedback -->
+  <div id="amzToast" class="amz-toast" role="status" aria-live="polite"></div>
+
+  <!-- Mandatory Script Loading Sequence -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js?v=20260314g"></script>
+  <script src="customer-media.js"></script>
+</body>
+</html>
