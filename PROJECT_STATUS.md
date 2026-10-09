@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 42 ElectroMart Loyalty & Rewards Marketplace Completed; 77 frontend suites + 105 backend unit tests = 182 total)
+**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 43 ElectroMart Subscription & Recurring Orders Completed; 78 frontend suites + 105 backend unit tests = 183 total)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 77 / 77 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 78 / 78 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **सब्सक्रिप्शन एंड रिकरिंग ऑर्डर्स टेस्ट** | `node scratch/test-amazon-subscriptions.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **लॉयल्टी एंड रिवॉर्ड्स मार्केटप्लेस टेस्ट** | `node scratch/test-amazon-loyalty.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
 | **कैम्पस स्टोर टेस्ट** | `node scratch/test-amazon-edu-store.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
@@ -37,7 +38,7 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 105 / 105 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **182 / 182 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **183 / 183 (100% Pass Rate)** |
 
 ---
 
@@ -561,12 +562,25 @@
 - **पीडीपी इंटीग्रेशन:** deterministic loyalty callout (earn potential on product) with honesty fine-print।
 - **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_LOYALTY_I18N` base (229 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
-- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-loyalty.js` PASS (10/10), 77/77 frontend suites PASS, 105/105 backend unit tests PASS (182/182 total)।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-loyalty.js` PASS (10/10), 78/78 frontend suites PASS, 105/105 backend unit tests PASS (183/183 total)।
+
+### Y. ElectroMart Subscription & Recurring Orders Hub (Phase 43 Completed)
+- **समर्पित सब्सक्रिप्शन हब (`subscriptions.html`, `subscriptions.css`, `subscriptions.js`):** "Drafting Sheet" aesthetic (`--subscriptions-accent: #006D77`) layered on the shared storefront, with blueprint-navy cover, cyan technical rules, graph-paper content sheets, cadence ruler showing next 6 deliveries; `Bricolage Grotesque`/`Familjen Grotesk`/`Martian Mono` typography।
+- **सब्सक्राइब एंड सेव इंजन:** product enrollment with frequency (monthly/weekly/custom), day of month/week, quantity; tiered discount — Tier 1 (1-2 subs) = 5%, Tier 2 (3-4 subs) = 10%, Tier 3 (5+) = 15%; deterministic (same input = same discount tier and subscription ID `SUB-XXXXXX`)।
+- **फ्लेक्सिबल डिलीवरी शेड्यूल:** monthly (day 1-28), weekly (day 0-6), custom; next delivery date calculator deterministic, returns YYYY-MM-DD; schedule preview and modification।
+- **सब्सक्रिप्शन मैनेजमेंट:** pause (with reason), resume, cancel (with reason); status tracking — active/paused/cancelled; deterministic (same subscription + action = same result); subscription ID format `SUB-XXXXXX`।
+- **कार्ट/चेकआउट इंटीग्रेशन:** subscription items in cart with recurring badge; discount applied automatically based on tier; points integration ready for loyalty system।
+- **पीडीपी इंटीग्रेशन:** "Subscribe & Save" widget on eligible products; shows discount tier, next delivery, manage link; deterministic callout।
+- **सब्सक्रिप्शन डैशबोर्ड:** all active/paused/cancelled subscriptions list; next delivery date display; total savings summary; quick actions — modify schedule, pause, resume, cancel।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_SUBSCRIPTIONS_I18N` base (154 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-subscriptions.js` PASS (10/10), 78/78 frontend suites PASS, 105/105 backend unit tests PASS (183/183 total)।
 
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
+- `653950a`: feat(phase-43): add ElectroMart Subscription & Recurring Orders hub with Subscribe & Save, flexible schedules, pause/resume/cancel and 11-language support
 - `0957d11`: feat(phase-42): complete loyalty and rewards marketplace hub
 - `d1aecc0`: feat(phase-41): add ElectroMart B2B Corporate Bulk Trade-In Hub with bulk valuation, GST credit, tax savings, pickup booking, enterprise vouchers and 11-language support
 - `9e04517`: test(phase-40): add failing student and educator campus store contract
