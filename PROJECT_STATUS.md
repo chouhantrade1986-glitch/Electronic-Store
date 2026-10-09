@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 43 ElectroMart Subscription & Recurring Orders Completed; 78 frontend suites + 105 backend unit tests = 183 total)
+**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 44 ElectroMart BNPL & EMI Hub Completed; 79 frontend suites + 105 backend unit tests = 184 total)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 78 / 78 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 79 / 79 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **बीएनपीएल एंड ईएमआई हब टेस्ट** | `node scratch/test-amazon-emi.js` | ✅ **PASS** | 12 / 12 स्तर उत्तीर्ण (100%) |
 | **सब्सक्रिप्शन एंड रिकरिंग ऑर्डर्स टेस्ट** | `node scratch/test-amazon-subscriptions.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **लॉयल्टी एंड रिवॉर्ड्स मार्केटप्लेस टेस्ट** | `node scratch/test-amazon-loyalty.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
@@ -38,7 +39,7 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 105 / 105 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **183 / 183 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **184 / 184 (100% Pass Rate)** |
 
 ---
 
@@ -576,10 +577,26 @@
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
 - **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-subscriptions.js` PASS (10/10), 78/78 frontend suites PASS, 105/105 backend unit tests PASS (183/183 total)।
 
+### Z. ElectroMart BNPL & EMI Hub (Phase 44 Completed)
+- **समर्पित EMI हब (`emi.html`, `emi.css`, `emi.js`):** "Foil & Emboss" aesthetic (`--emi-accent: #7C3AED`) layered on the shared storefront, with deep ink-plum ground, engraved guilloché (banknote security printing from three fine-line gradient families), iridescent holographic foil field, CSS-art bank card face (punched chip, magnetic stripe, embossed figure band); `Bodoni Moda`/`Golos Text`/`Azeret Mono` typography।
+- **EMI कैलकुलेटर इंजन:** flexible tenures (3/6/9/12/18/24 months), reducing-balance formula; output: monthly installment, total interest, total amount; deterministic (same input = same output)।
+- **पार्टनर बैंक ऑफर्स इंजन:** 4 banks minimum (HDFC, ICICI, SBI, AXIS); each with effective rate, processing fee, zero-cost EMI eligibility; zero-cost EMI badge for eligible products/banks; deterministic (same principal = same offers)।
+- **पात्रता जांचकर्ता इंजन:** PAN validation (Indian format), phone (10-digit), email validation; returns eligible (boolean), credit limit, max tenure; deterministic।
+- **ऑटो-डिडक्शन मैंडेट सेटअप:** bank selection, account number, IFSC validation; mandate ID `EM-MND-XXXXXX` (FNV-1a hash); max amount, frequency (monthly/quarterly); status tracking: active/paused/cancelled; deterministic (same input = same mandate ID `EM-MND-XXXXXX`)।
+- **ज़ीरो-कॉस्ट EMI बैज:** PDP badge for eligible products; checkout EMI payment option integration; deterministic zero-cost eligibility।
+- **ईमानदारी पैनल:** zero-cost plan states cost moved from interest to fee; honesty panel lists what monthly figure excludes; mandate panel states nothing registered with any bank।
+- **पीडीपी इंटीग्रेशन:** deterministic EMI callout with zero-cost badge, partner bank offers, next EMI preview।
+- **चेकआउट इंटीग्रेशन:** EMI payment option with bank selection, tenure selection, mandate setup link।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_EMI_I18N` base (167 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-emi.js` PASS (12/12), 79/79 frontend suites PASS, 105/105 backend unit tests PASS (184/184 total)।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
+- `08085a6`: feat(phase-44): add ElectroMart BNPL & EMI Hub with EMI calculator, partner bank offers, eligibility checker, auto-deduction mandate and 11-language support
+- `515a86e`: test(phase-44): add failing BNPL & EMI hub contract
 - `653950a`: feat(phase-43): add ElectroMart Subscription & Recurring Orders hub with Subscribe & Save, flexible schedules, pause/resume/cancel and 11-language support
 - `0957d11`: feat(phase-42): complete loyalty and rewards marketplace hub
 - `d1aecc0`: feat(phase-41): add ElectroMart B2B Corporate Bulk Trade-In Hub with bulk valuation, GST credit, tax savings, pickup booking, enterprise vouchers and 11-language support
