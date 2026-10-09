@@ -3297,6 +3297,112 @@ window.isPdpProductReplenishable = isPdpProductReplenishable;
 window.renderPdpSubscriptionCallout = renderPdpSubscriptionCallout;
 
 // ==========================================
+// Phase 44: ElectroMart EMI & BNPL Callout
+// ==========================================
+// The product page mirrors the EMI hub: the same six tenures, the same plan
+// minimum, and the same reducing-balance formula. Where the hub script is
+// loaded on this page its engine is preferred, so a product can never be shown
+// one instalment here and a different one there.
+const PDP_EMI_MIN_PRINCIPAL = 10000;
+const PDP_EMI_MAX_PRINCIPAL = 10000000;
+const PDP_EMI_DEFAULT_TENURE = 9;
+// Mirrors emi.js SUPPORTED_TENURES exactly.
+const PDP_EMI_TENURES = [3, 6, 9, 12, 18, 24];
+// Mirrors emi.js. This is an illustrative example rate, shown so the instalment
+// is not blank before a bank is chosen; the hub quotes each partner's own rate.
+const PDP_EMI_ILLUSTRATIVE_RATE = 13.5;
+
+function isPdpProductEmiEligible(product) {
+  const price = Number(product && product.price);
+  // A plan needs a rupee price at or above the plan minimum. Below that the
+  // interest costs more than spreading the payment saves, so it is not offered.
+  return isFinite(price) && price >= PDP_EMI_MIN_PRINCIPAL && price <= PDP_EMI_MAX_PRINCIPAL;
+}
+
+// Standard reducing balance, mirroring emi.js so both agree to the rupee.
+function calculatePdpEmi(principal, annualRate, tenureMonths) {
+  const n = Math.max(1, Math.round(Number(tenureMonths) || PDP_EMI_DEFAULT_TENURE));
+  const monthlyRate = Math.max(0, Number(annualRate) || 0) / 12 / 100;
+  let installment;
+  if (monthlyRate === 0) {
+    installment = principal / n;
+  } else {
+    const growth = Math.pow(1 + monthlyRate, n);
+    installment = (principal * monthlyRate * growth) / (growth - 1);
+  }
+  const totalAmount = installment * n;
+  return {
+    monthlyInstallment: installment,
+    installmentRounded: Math.floor(installment + 0.5),
+    totalInterest: Math.max(0, totalAmount - principal),
+    totalAmount: totalAmount,
+    tenureMonths: n,
+  };
+}
+
+function renderPdpEMICallout(product) {
+  const callout = document.getElementById("pdpEMICallout");
+  if (!callout || !product) return;
+
+  const price = Number(product.price) || 0;
+  const offerRow = document.getElementById("pdpEMIOfferRow");
+  const eligible = price > 0 && isPdpProductEmiEligible(product);
+
+  // Show the certification on every priced product, but only offer a plan on
+  // the ones large enough to be worth spreading.
+  if (price <= 0) {
+    callout.hidden = true;
+    return;
+  }
+  callout.hidden = false;
+  if (!eligible) {
+    if (offerRow) offerRow.hidden = true;
+    return;
+  }
+  if (offerRow) offerRow.hidden = false;
+
+  // Prefer the hub's own engine when the script is present on this page.
+  const hub = window.ElectroMart && window.ElectroMart.EMI;
+  const plan =
+    hub && typeof hub.calculateEMI === "function"
+      ? hub.calculateEMI({ principal: price, annualRate: PDP_EMI_ILLUSTRATIVE_RATE, tenureMonths: PDP_EMI_DEFAULT_TENURE })
+      : calculatePdpEmi(price, PDP_EMI_ILLUSTRATIVE_RATE, PDP_EMI_DEFAULT_TENURE);
+
+  const formatted = plan.installmentRounded !== undefined
+    ? plan.installmentRounded
+    : Math.floor(plan.monthlyInstallment + 0.5);
+
+  const monthlyEl = document.getElementById("pdpEMIMonthly");
+  if (monthlyEl) {
+    monthlyEl.textContent = `₹${formatted.toLocaleString("en-IN")} / month`;
+  }
+
+  const tenureEl = document.getElementById("pdpEMITenureLabel");
+  if (tenureEl) {
+    let label = `over ${PDP_EMI_DEFAULT_TENURE} months`;
+    try {
+      const translated = window.EM_TRANSLATIONS;
+      const language = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+      const dictionary = (translated && (translated[language] || translated.en)) || {};
+      const template = dictionary.emi_tenure_months;
+      if (template) label = template.replace("{count}", String(PDP_EMI_DEFAULT_TENURE));
+    } catch (error) {
+      // The tenure label is a nicety; the instalment beside it is the content.
+    }
+    tenureEl.textContent = label;
+  }
+
+  const rateEl = document.getElementById("pdpEMIRateLabel");
+  if (rateEl) {
+    rateEl.textContent = `from ${PDP_EMI_ILLUSTRATIVE_RATE}% p.a. · ${PDP_EMI_TENURES.length} tenures available`;
+  }
+}
+
+window.isPdpProductEmiEligible = isPdpProductEmiEligible;
+window.calculatePdpEmi = calculatePdpEmi;
+window.renderPdpEMICallout = renderPdpEMICallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -4073,6 +4179,7 @@ function renderStarCharacters(rating) {
   renderPdpBulkTradeInCallout(product);
   renderPdpLoyaltyCallout(product);
   renderPdpSubscriptionCallout(product);
+  renderPdpEMICallout(product);
 
   renderRecentlyViewedDetailSection();
 

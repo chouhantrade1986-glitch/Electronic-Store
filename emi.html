@@ -103,10 +103,11 @@
           <div class="emi-field">
             <label for="emiRateInput" data-i18n="emi_rate_label">Annual interest rate</label>
             <div class="emi-field__prefixed">
-              <input type="number" id="emiRateInput" name="emiRate" class="emi-input emi-input--mono" min="0" max="48" step="0.25" value="13.5" inputmode="decimal" aria-describedby="emiRateHint" />
+              <input type="number" id="emiRateInput" name="emiRate" class="emi-input emi-input--mono" min="0" max="48" step="0.25" value="13.5" inputmode="decimal" aria-describedby="emiRateHint emiRateState" />
               <span class="emi-field__suffix" aria-hidden="true">%</span>
             </div>
-            <p class="emi-field__hint" id="emiRateHint" data-i18n="emi_rate_hint">Leave at 0 to see the principal spread evenly across the tenure with no interest at all.</p>
+            <p class="emi-field__hint" id="emiRateHint" data-i18n="emi_rate_hint">Your own rate, applied while you compare all the partner banks. Leave it at 0 to see the principal spread evenly across the tenure with no interest at all.</p>
+            <p class="emi-field__hint emi-field__hint--state" id="emiRateState" role="status" aria-live="polite"></p>
           </div>
 
           <div class="emi-field">
@@ -155,6 +156,7 @@
             <div>
               <dt data-i18n="emi_effective_rate_label">Effective rate</dt>
               <dd class="emi-mono" id="emiEffectiveRate">—</dd>
+              <dd class="emi-result__source" id="emiEffectiveRateSource"></dd>
             </div>
           </dl>
           <p class="emi-result__formula emi-mono" id="emiFormula"></p>
@@ -205,7 +207,9 @@
         <p class="emi-section__lede" data-i18n="emi_eligibility_subtitle">Three details, checked against the format each one has to follow. Nothing here contacts a bureau, pulls a credit score or sends anything to a bank: the check runs on this page and the result is yours to read or delete.</p>
       </header>
 
-      <div class="emi-split">
+      <button type="button" id="emiCheckEligibilityBtn" class="btn-emi btn-emi--quiet" data-i18n="emi_check_eligibility_btn">Check eligibility</button>
+
+      <div class="emi-split" id="emiEligibilityChecker">
         <form id="emiEligibilityForm" class="emi-form" autocomplete="off" novalidate>
           <div class="emi-field">
             <label for="emiPANInput" data-i18n="emi_pan_label">PAN number</label>

@@ -233,6 +233,11 @@ const upiDetails = document.getElementById("upiDetails");
 const cardDetails = document.getElementById("cardDetails");
 const netbankingDetails = document.getElementById("netbankingDetails");
 const codDetails = document.getElementById("codDetails");
+  // Phase 44: EMI plan details
+  const emiDetails = document.getElementById("emiPaymentSection");
+  const emiBankEl = document.getElementById("emiBankSelect");
+  const emiTenureEl = document.getElementById("emiTenureSelect");
+  const emiSummaryEl = document.getElementById("emiCheckoutSummary");
 const upiIdEl = document.getElementById("upiId");
 const cardNameEl = document.getElementById("cardName");
 const cardNumberEl = document.getElementById("cardNumber");
@@ -1296,6 +1301,12 @@ function showPaymentDetails(method) {
   if (walletDetails) {
     walletDetails.hidden = method !== "wallet";
   }
+  if (emiDetails) {
+    emiDetails.hidden = method !== "emi";
+    if (method === "emi") {
+      updateEmiCheckoutSummary();
+    }
+  }
 
   paymentOptions.forEach((option) => {
     const input = option.querySelector("input[name='paymentMethod']");
@@ -1334,7 +1345,75 @@ function isPaymentValid() {
     return String(bankNameEl.value).trim().length > 0;
   }
 
+  // An instalment plan is only submittable once a bank and a tenure are chosen;
+  // without them there is no schedule for the bank to collect against.
+  if (method === "emi") {
+    return String(emiBankEl.value).trim().length > 0 && Number(emiTenureEl.value) > 0;
+  }
+
   return true;
+}
+
+// Phase 44: EMI plan summary.
+// Quotes the order value on a reducing balance so the figure shown here matches
+// the hub to the rupee. Prefers the hub's engine when that script is on the
+// page, and falls back to the same formula otherwise.
+function calculateCheckoutEmi(principal, annualRate, tenureMonths) {
+  const hub = window.ElectroMart && window.ElectroMart.EMI;
+  if (hub && typeof hub.calculateEMI === "function") {
+    return hub.calculateEMI({ principal, annualRate, tenureMonths });
+  }
+  const n = Math.max(1, Math.round(Number(tenureMonths) || 9));
+  const monthlyRate = Math.max(0, Number(annualRate) || 0) / 12 / 100;
+  let installment;
+  if (monthlyRate === 0) {
+    installment = principal / n;
+  } else {
+    const growth = Math.pow(1 + monthlyRate, n);
+    installment = (principal * monthlyRate * growth) / (growth - 1);
+  }
+  const totalAmount = installment * n;
+  return {
+    monthlyInstallment: installment,
+    installmentRounded: Math.floor(installment + 0.5),
+    totalInterest: Math.max(0, totalAmount - principal),
+    totalAmount,
+    tenureMonths: n,
+  };
+}
+
+function updateEmiCheckoutSummary() {
+  if (!emiSummaryEl) return;
+  const orderValue = getPricingBreakdown(getCartRows()).total || 0;
+  if (!(orderValue > 0)) {
+    emiSummaryEl.textContent = "Add an item to this order before choosing an instalment plan.";
+    return;
+  }
+  if (Number(orderValue) < 10000) {
+    emiSummaryEl.textContent = "This order is below the ₹10,000 minimum for an instalment plan. Pay in full instead.";
+    return;
+  }
+  const bankCode = String(emiBankEl && emiBankEl.value ? emiBankEl.value : "").trim();
+  const tenure = Number(emiTenureEl && emiTenureEl.value) || 9;
+  const hub = window.ElectroMart && window.ElectroMart.EMI;
+  let rate = 13.5;
+  let fee = null;
+  if (hub && typeof hub.getBankOffers === "function") {
+    const offers = hub.getBankOffers({ principal: orderValue, tenureMonths: tenure });
+    const chosen = offers.filter((offer) => offer.bankCode === bankCode)[0];
+    if (chosen) {
+      rate = chosen.effectiveRate;
+      fee = chosen.processingFeeWithTax;
+    }
+  }
+  const plan = calculateCheckoutEmi(orderValue, rate, tenure);
+  const parts = [
+    `₹${plan.installmentRounded.toLocaleString("en-IN")} a month for ${plan.tenureMonths} months`,
+    `${rate.toFixed(2)}% p.a.`,
+    `total interest ₹${Math.round(plan.totalInterest).toLocaleString("en-IN")}`,
+  ];
+  if (fee !== null) parts.push(`processing fee with tax ₹${fee.toLocaleString("en-IN")}`);
+  emiSummaryEl.textContent = parts.join(" · ") + ". Your bank sets the final rate.";
 }
 
 async function fetchProducts() {
@@ -2313,6 +2392,18 @@ paymentMethodEls.forEach((element) => {
   element.addEventListener("change", () => {
     showPaymentDetails(getSelectedPaymentMethod());
   });
+});
+
+// Phase 44: re-quote the instalment whenever the bank or the tenure changes.
+[emiBankEl, emiTenureEl].forEach((element) => {
+  if (element && typeof element.addEventListener === "function") {
+    element.addEventListener("change", () => {
+      if (getSelectedPaymentMethod() === "emi") {
+        updateEmiCheckoutSummary();
+        updatePaymentCallToAction();
+      }
+    });
+  }
 });
 
 if (applyCouponBtn) {

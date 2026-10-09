@@ -860,6 +860,28 @@ select.emi-input option { background-color: var(--emi-card); color: var(--emi-in
 
 .emi-result__grid dd { margin: 0; font-size: 1rem; font-weight: 600; color: var(--emi-ink); }
 
+/* Which rate produced the figure above it. Without this the reader cannot
+   tell their own rate from a partner bank's, which is the difference between
+   quoting a plan and being quoted one. */
+.emi-result__source {
+  margin-top: 2px;
+  font-family: var(--emi-font-body) !important;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--emi-ink-3);
+}
+
+/* A disabled rate field must still read as disabled, and its live note must
+   stay legible rather than fading with it. */
+.emi-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(0.7);
+}
+
+.emi-field__hint--state { color: var(--emi-accent-deep); font-weight: 600; }
+.emi-field__hint--state:empty { display: none; }
+
 .emi-result__formula {
   margin: 0;
   padding: 9px 12px;

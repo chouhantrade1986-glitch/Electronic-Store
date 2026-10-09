@@ -2429,6 +2429,112 @@ a {
   display: none !important;
 }
 
+/* Phase 44: ElectroMart EMI & BNPL PDP callout */
+.pdp-emi-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #ddd0f5;
+  border-left: 4px solid #7c3aed;
+  border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(135deg, #fdfcff 0%, #f1ebfd 100%);
+}
+
+.pdp-emi-callout[hidden] {
+  display: none !important;
+}
+
+.pdp-emi-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-emi-icon {
+  color: #7c3aed;
+  font-family: "Azeret Mono", ui-monospace, monospace;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.pdp-emi-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-emi-text strong {
+  color: #4c1d95;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pdp-emi-subtext {
+  color: #3d2f5c;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* The offer line appears only on products large enough to be worth spreading,
+   so a low-priced accessory never advertises itself as a plan candidate. */
+.pdp-emi-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #e2d8f7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #3d2f5c;
+  font-size: 12px;
+}
+
+.pdp-emi-row[hidden] {
+  display: none !important;
+}
+
+.pdp-emi-monthly {
+  font-family: "Azeret Mono", ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1030;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-emi-row em {
+  color: #4c1d95;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.pdp-emi-rate {
+  color: #6e608a;
+  font-size: 11px;
+}
+
+.pdp-emi-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #6e608a;
+}
+
+.pdp-emi-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #4c1d95;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-emi-link:hover,
+.pdp-emi-link:focus-visible {
+  text-decoration: underline;
+}
+
 .pdp-subs-badge {
   display: flex;
   align-items: flex-start;

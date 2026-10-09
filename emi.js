@@ -114,6 +114,8 @@
   var audit = [];
   var currentPlan = null;
   var currentOffers = [];
+  // True when a partner bank's own rate is in force rather than the reader's.
+  var currentUsesBankRate = false;
   var selectedBankCode = COMPARE_ALL;
   var anchorDate = '';
 
@@ -188,7 +190,12 @@
     return text.slice(0, maxLength).trim();
   }
 
+  /* A blank field must fall back to its documented default, never to zero.
+     Number('') is 0, which is finite, so a naive guard would pass an empty
+     rate field straight through as 0% and quietly promise a plan with no
+     interest at all. Anything that is not a real number reads as absent. */
   function numberOr(value, fallback) {
+    if (typeof value === 'string' && !value.trim()) return fallback;
     var parsed = Number(value);
     return typeof parsed === 'number' && isFinite(parsed) ? parsed : fallback;
   }
@@ -871,6 +878,13 @@
       amount: Math.max(0, numberOr(result.amount, 0)),
       panLastFour: cleanText(result.panLastFour, 4),
       reasonKey: cleanText(result.reasonKey, 40),
+      // The reason code is the durable fact; the sentence beside it is resolved
+      // from the live dictionary at render time, so a verdict written in one
+      // language still reads correctly after a switch. The checks are booleans
+      // and dictionary keys only, so persisting them reveals nothing.
+      checks: Array.isArray(result.checks) ? result.checks.map(function (check) {
+        return { key: cleanText(check.key, 40), ok: Boolean(check.ok) };
+      }) : [],
       checkedOn: anchorDate
     };
     writeStorage(ELIGIBILITY_STORAGE_KEY, JSON.stringify(eligibility));
@@ -1110,7 +1124,13 @@
     setText('emiTotalInterest', money(plan.totalInterest));
     setText('emiTotalAmount', money(plan.totalAmount));
     setText('emiProcessingFee', offer ? money(offer.processingFeeWithTax) : '—');
-    setText('emiEffectiveRate', offer ? offer.effectiveRate.toFixed(2) + '%' : interpolate(text('emi_rate_customer', '{rate}%'), { rate: plan.annualRate.toFixed(2) }));
+    // Name the rate that produced the figure. Leaving the reader to guess
+    // whether they are looking at their own rate or a bank's is how a
+    // calculator starts quietly telling the wrong story.
+    setText('emiEffectiveRate', (offer ? offer.effectiveRate : plan.annualRate).toFixed(2) + '%');
+    setText('emiEffectiveRateSource', offer
+      ? interpolate(text('emi_rate_from_bank', "{bank}'s rate"), { bank: offer.bankName })
+      : text('emi_rate_from_you', 'your rate'));
 
     setText('emiFormula', interpolate(
       text('emi_formula', 'principal {principal} at {rate}% over {tenure} gives {monthly} a month'),
@@ -1237,13 +1257,19 @@
     }
 
     if (banner) banner.setAttribute('data-tone', result.eligible ? 'yes' : 'no');
-    setText('emiEligibilityHeadline', result.reason);
+    // Resolve the headline from the stored reason code rather than from a
+    // translated phrase captured at check time. A stored verdict therefore
+    // survives a reload and re-reads in whatever language is now active.
+    setText('emiEligibilityHeadline', text(
+      result.reasonKey,
+      result.eligible ? 'Your details pass the format and plausibility checks.' : 'One or more details did not pass.'
+    ));
     setText('emiCreditLimit', money(result.creditLimit));
     setText('emiMaxTenure', tenureLabel(result.maxTenure));
     setText('emiAmountRequested', money(result.amount));
 
     if (checks) {
-      checks.innerHTML = result.checks.map(function (check) {
+      checks.innerHTML = (Array.isArray(result.checks) ? result.checks : []).map(function (check) {
         return '<li data-ok="' + (check.ok ? 'true' : 'false') + '">' +
           escapeHtml(text(check.key, check.key)) +
           '</li>';
@@ -1409,24 +1435,50 @@
     for (var index = 0; index < offers.length; index += 1) {
       if (offers[index].bankCode === selectedBankCode) { chosen = offers[index]; break; }
     }
-    // A bank that will not take this ticket cannot stay selected; fall back to
-    // the cheapest quote rather than leaving the form pointing at nothing.
-    if (!chosen && offers.length) {
-      selectedBankCode = offers[0].bankCode;
-      chosen = offers[0];
+    // A bank that will not take this ticket cannot stay selected. Fall back to
+    // the comparison view rather than to one partner, because silently
+    // promoting a bank would swap the reader's own rate for a partner rate
+    // without their having asked for it.
+    if (!chosen && selectedBankCode !== COMPARE_ALL) {
+      selectedBankCode = COMPARE_ALL;
+      setFormValue('emiBankSelect', COMPARE_ALL);
     }
 
-    var rate = chosen ? chosen.effectiveRate : form.annualRate;
+    // Exactly one rate is in play, and the page always says which. A partner
+    // bank quotes its own rate; with the comparison option chosen the reader's
+    // own rate is used, which is what makes the rate field a live control.
+    var usingBankRate = Boolean(chosen);
+    var rate = usingBankRate ? chosen.effectiveRate : form.annualRate;
     var plan = calculateEMI({ principal: form.principal, annualRate: rate, tenureMonths: form.tenureMonths });
     currentPlan = plan;
+    currentUsesBankRate = usingBankRate;
 
+    syncRateFieldState(usingBankRate, chosen);
     renderResultCard(plan, chosen);
     renderSlipStrip(plan);
     renderBankOffers(offers);
+    // Re-reads the stored verdict through the live dictionary, so switching
+    // language re-renders a verdict that was written in another one.
+    renderEligibility(eligibility);
     renderMandateList();
     renderProducts();
     refreshStaticTranslations();
     return plan;
+  }
+
+  /* The rate field is never a decorative control. While a partner bank is
+     quoted its own rate is in force, so the field is disabled and says so
+     rather than silently disagreeing with the figure above it. */
+  function syncRateFieldState(usingBankRate, chosen) {
+    var field = byId('emiRateInput');
+    var note = byId('emiRateState');
+    if (field) field.disabled = usingBankRate;
+    if (!note) return;
+    note.textContent = usingBankRate
+      ? interpolate(text('emi_rate_overridden', "{bank}'s own rate is in use here. Pick the comparison option to quote your own rate again."), {
+        bank: chosen ? chosen.bankName : ''
+      })
+      : interpolate(text('emi_rate_yours', 'Your own rate, applied while you compare all partner banks.'), {});
   }
 
   /* ---------------------------------------------------------------------
@@ -1445,11 +1497,18 @@
     recordCalculation(plan, selectedBankCode);
     if (plan) {
       var chosen = currentOffers.filter(function (offer) { return offer.bankCode === selectedBankCode; })[0];
-      setStatus(interpolate(text('emi_calculated', 'Calculated {monthly} a month over {tenure} at {bank}.'), {
-        monthly: money(plan.installmentRounded),
-        tenure: tenureLabel(plan.tenureMonths),
-        bank: chosen ? chosen.bankName : interpolate(text('emi_rate_customer', '{rate}%'), { rate: plan.annualRate.toFixed(2) })
-      }), 'success', 'emiStatus');
+      var line = chosen
+        ? interpolate(text('emi_calculated', 'Calculated {monthly} a month over {tenure} at {bank}.'), {
+          monthly: money(plan.installmentRounded),
+          tenure: tenureLabel(plan.tenureMonths),
+          bank: chosen.bankName
+        })
+        : interpolate(text('emi_calculated_yours', 'Calculated {monthly} a month over {tenure} at your own rate of {rate}%.'), {
+          monthly: money(plan.installmentRounded),
+          tenure: tenureLabel(plan.tenureMonths),
+          rate: plan.annualRate.toFixed(2)
+        });
+      setStatus(line, 'success', 'emiStatus');
       focusStatus('emiStatus');
     }
     return plan;
@@ -1530,14 +1589,27 @@
     var ceiling = Math.ceil(currentPlan.installmentRounded / 100) * 100;
     setFormValue('emiMaxAmountInput', String(Math.max(100, ceiling)));
     setFormValue('emiFrequencySelect', 'monthly');
-    if (selectedBankCode !== COMPARE_ALL) setFormValue('emiMandateBankSelect', selectedBankCode);
+    // Also carry the quoted bank across, because an IFSC only belongs to one
+    // bank: leaving the previous choice in place would make the very next
+    // submission fail the consistency check for a reason the reader did not
+    // cause. The status line names the bank so nothing changes unnoticed.
+    var quotedBank = null;
+    if (selectedBankCode !== COMPARE_ALL) {
+      setFormValue('emiMandateBankSelect', selectedBankCode);
+      quotedBank = getBankByCode(selectedBankCode);
+    }
     setFieldError('emiMaxAmountError', '');
 
-    setStatus(interpolate(text('emi_mandate_prefilled', 'Filled in from your plan: ceiling {max}, collected monthly.'), {
-      max: money(Math.max(100, ceiling))
-    }), 'success', 'emiMandateStatus');
+    setStatus(interpolate(
+      text('emi_mandate_prefilled', 'Filled in from your plan: {bank}, ceiling {max}, collected {frequency}.'),
+      {
+        bank: quotedBank ? quotedBank.name : text('emi_bank_compare_all', 'Compare all partner banks'),
+        max: money(Math.max(100, ceiling)),
+        frequency: text('emi_frequency_monthly', 'Every month')
+      }
+    ), 'success', 'emiMandateStatus');
     focusStatus('emiMandateStatus');
-    return { ceiling: Math.max(100, ceiling) };
+    return { ceiling: Math.max(100, ceiling), bankCode: quotedBank ? quotedBank.code : '' };
   }
 
   function selectBank(bankCode) {
@@ -1674,11 +1746,34 @@
     // Re-quoting on every keystroke would make the page flicker while someone
     // is halfway through typing an amount, so the preview follows a change and
     // the committed figure follows the button.
-    ['emiAmountInput', 'emiRateInput', 'emiTenureSelect', 'emiBankSelect'].forEach(function (id) {
+    ['emiAmountInput', 'emiTenureSelect', 'emiBankSelect'].forEach(function (id) {
       bindControl(id, 'change', function () { render(); });
     });
 
+    // Editing the rate means quoting at that rate, so return to the comparison
+    // view first. Without this the field would be swallowed by whichever bank
+    // happened to be selected, and a reader could never test their own figure.
+    bindControl('emiRateInput', 'change', function () {
+      if (selectedBankCode !== COMPARE_ALL) {
+        selectedBankCode = COMPARE_ALL;
+        setFormValue('emiBankSelect', COMPARE_ALL);
+        render();
+        setStatus(interpolate(text('emi_rate_reapplied', 'Back to your own rate of {rate}%. Pick a bank card to quote that bank instead.'), {
+          rate: readCalculatorForm().annualRate.toFixed(2)
+        }), 'success', 'emiStatus');
+        focusStatus('emiStatus');
+      } else {
+        render();
+      }
+    });
+
     bindControl('emiMandateSetupBtn', 'click', handleUseCurrentPlan);
+    // The same check from the section head, so a reader who has not scrolled
+    // down to the form can still run it and be taken to the outcome.
+    bindControl('emiCheckEligibilityBtn', 'click', function () {
+      handleEligibilitySubmit(null);
+      scrollToSection('emiEligibilityChecker');
+    });
 
     if (doc && typeof doc.addEventListener === 'function') {
       doc.addEventListener('click', handleDocumentClick);

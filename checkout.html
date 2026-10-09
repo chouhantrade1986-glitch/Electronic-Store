@@ -125,6 +125,13 @@
                 <span class="payment-sub">All Indian scheduled banks supported</span>
               </div>
             </label>
+            <label class="payment-option" id="emiPaymentOption">
+              <input type="radio" name="paymentMethod" value="emi" />
+              <div class="payment-option-info">
+                <strong data-i18n="emi_checkout_option_title">EMI or BNPL &mdash; pay in instalments</strong>
+                <span class="payment-sub" data-i18n="emi_checkout_option_sub">Split this order over 3 to 24 months with a partner bank. You pick the bank and the tenure before anything is charged.</span>
+              </div>
+            </label>
             <label class="payment-option">
               <input type="radio" name="paymentMethod" value="cod" />
               <div class="payment-option-info">
@@ -182,6 +189,35 @@
 
           <div id="codDetails" class="payment-detail" hidden>
             <p class="payment-note">Pay with cash when your order is delivered.</p>
+          </div>
+
+          <!-- Phase 44: EMI plan details, shown when the EMI option is picked -->
+          <div id="emiPaymentSection" class="payment-detail" hidden>
+            <div class="mini-grid">
+              <label>Partner bank
+                <select id="emiBankSelect">
+                  <option value="">Select bank</option>
+                  <option value="HDFC">HDFC Bank</option>
+                  <option value="ICICI">ICICI Bank</option>
+                  <option value="SBI">State Bank of India</option>
+                  <option value="AXIS">Axis Bank</option>
+                  <option value="KOTAK">Kotak Mahindra Bank</option>
+                  <option value="PNB">Punjab National Bank</option>
+                </select>
+              </label>
+              <label>Tenure
+                <select id="emiTenureSelect">
+                  <option value="3">3 months</option>
+                  <option value="6">6 months</option>
+                  <option value="9" selected>9 months</option>
+                  <option value="12">12 months</option>
+                  <option value="18">18 months</option>
+                  <option value="24">24 months</option>
+                </select>
+              </label>
+            </div>
+            <p class="payment-note" id="emiCheckoutSummary">Choose a bank and a tenure to see the instalment for this order.</p>
+            <p class="payment-note" data-i18n="emi_checkout_option_note">You will be handed to your bank to confirm. ElectroMart never sees your bank credentials, and a zero-cost plan still carries a processing fee.</p>
           </div>
           <div id="gatewayBanner" class="gateway-banner" hidden>
             <div class="gateway-badge">Razorpay</div>

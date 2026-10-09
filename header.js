@@ -175,6 +175,7 @@
                    <a href="trade-in.html" data-i18n="nav_tradein">ElectroMart Corporate Bulk Trade-In</a>
                     <a href="loyalty.html" data-i18n="nav_loyalty">ElectroMart Loyalty &amp; Rewards</a>
                     <a href="subscriptions.html" data-i18n="nav_subscriptions">ElectroMart Subscribe &amp; Save</a>
+                    <a href="emi.html" data-i18n="nav_emi">ElectroMart EMI &amp; BNPL</a>
                 </div>
                 <div class="flyout-col">
                   <h3 data-i18n="footer.yourAccount">Your Account</h3>
@@ -228,6 +229,7 @@
           <a href="trade-in.html" class="category-quick-link nav-tradein-link" data-i18n="nav_tradein">ElectroMart Corporate Bulk Trade-In</a>
           <a href="loyalty.html" class="category-quick-link nav-loyalty-link" data-i18n="nav_loyalty">ElectroMart Loyalty &amp; Rewards</a>
           <a href="subscriptions.html" class="category-quick-link nav-subscriptions-link" data-i18n="nav_subscriptions">ElectroMart Subscribe &amp; Save</a>
+          <a href="emi.html" class="category-quick-link nav-emi-link" data-i18n="nav_emi">ElectroMart EMI &amp; BNPL</a>
           <a href="help.html" class="category-quick-link" data-i18n="customer_service">Customer Service</a>
         </div>
         <div class="category-nav-promo">
