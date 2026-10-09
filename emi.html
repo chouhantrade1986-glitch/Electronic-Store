@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart EMI &amp; BNPL - Flexible Tenures, Zero Cost Options, Partner Bank Offers</title>
+  <meta name="description" content="The ElectroMart EMI and BNPL hub: calculate a monthly instalment across six tenures, compare partner bank rates, check eligibility, set up auto-deduction, and see exactly what a zero-cost EMI costs." />
+  <meta name="keywords" content="EMI calculator, BNPL, buy now pay later, monthly instalment, zero cost EMI, no cost EMI, partner bank offers, auto deduction mandate, ElectroMart EMI" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/emi.html" />
+  <meta property="og:title" content="ElectroMart EMI &amp; BNPL - Flexible Tenures, Zero Cost Options, Partner Bank Offers" />
+  <meta property="og:description" content="Work out a monthly instalment, compare partner bank rates and set up auto-deduction from one place." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/emi.html" />
+  <meta property="twitter:title" content="ElectroMart EMI &amp; BNPL - Flexible Tenures, Zero Cost Options" />
+  <meta property="twitter:description" content="Work out a monthly instalment, compare partner bank rates and set up auto-deduction from one place." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;1,6..96,400;1,6..96,600&family=Golos+Text:wght@400;500;600;700;800&family=Azeret+Mono:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20261009a" />
+  <link rel="stylesheet" href="shared-search.css?v=20261009a" />
+  <link rel="stylesheet" href="emi.css?v=20261009a" />
+</head>
+<body class="emi-body">
+  <div id="headerContainer"></div>
+
+  <main class="emi-page">
+    <!-- ============ HERO — the foil-pressed card face ============ -->
+    <section id="emiHero" class="emi-hero" aria-labelledby="emiHeroTitle">
+      <span class="emi-hero__guilloche" aria-hidden="true"></span>
+      <span class="emi-hero__sheen" aria-hidden="true"></span>
+
+      <div class="emi-shell emi-hero__inner">
+        <div class="emi-hero__copy">
+          <p class="emi-eyebrow emi-eyebrow--foil" data-i18n="emi_hero_eyebrow">Foil plate EM-FIN-01</p>
+          <h1 id="emiHeroTitle" data-i18n="emi_hub_title">EMI &amp; BNPL</h1>
+          <p class="emi-hero__lede" data-i18n="emi_hub_subtitle">An instalment plan is a contract you can read. You choose the tenure, you see the exact monthly figure and the exact interest, and you see what a zero-cost plan really costs in fees before you commit to anything.</p>
+
+          <div class="emi-hero__actions">
+            <a href="#emiCalculatorSection" class="btn-emi btn-emi--foil" data-i18n="emi_hero_cta_calculate">Calculate an instalment</a>
+            <a href="#emiEligibilitySection" class="btn-emi btn-emi--ghost" data-i18n="emi_hero_cta_eligibility">Check my eligibility</a>
+          </div>
+
+          <!-- The zero-cost stamp, live: it only lights up when a real
+               zero-cost plan exists for the current principal and tenure. -->
+          <p class="emi-stamp" id="emiZeroCostBadge" data-tone="idle">
+            <span class="emi-stamp__seal" aria-hidden="true"></span>
+            <span class="emi-stamp__text" data-i18n="emi_zero_cost_badge">Zero-cost EMI</span>
+          </p>
+
+          <p class="emi-status" id="emiStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </div>
+
+        <!-- A card face drawn entirely in CSS: foil field, punched chip,
+             magnetic stripe, embossed figure band. -->
+        <div class="emi-plastic" aria-hidden="true">
+          <div class="emi-plastic__foil"></div>
+          <div class="emi-plastic__chip"><span></span><span></span><span></span></div>
+          <div class="emi-plastic__stripe"></div>
+          <div class="emi-plastic__brand">ElectroMart</div>
+          <div class="emi-plastic__network"></div>
+          <div class="emi-plastic__figure emi-mono">0000 &nbsp;0000 &nbsp;0000 &nbsp;0000</div>
+          <div class="emi-plastic__row">
+            <span class="emi-plastic__name">MEMBER NAME</span>
+            <span class="emi-plastic__tenure emi-mono">06 / 24</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="emi-shell">
+        <p class="emi-hero__footnote" data-i18n="emi_hero_footnote">Every figure on this page is calculated from the standard reducing-balance method and shown in whole rupees. Bank approval is the bank's decision, not ours; the rates here are illustrative examples and the rate on your approval letter is the one that applies to your account.</p>
+      </div>
+    </section>
+
+    <!-- ============ CALCULATOR ============ -->
+    <section id="emiCalculatorSection" class="emi-section" aria-labelledby="emiCalculatorTitle">
+      <header class="emi-section__head">
+        <p class="emi-eyebrow" data-i18n="emi_calculator_eyebrow">Plate i — the arithmetic</p>
+        <h2 id="emiCalculatorTitle" data-i18n="emi_calculator_title">EMI calculator</h2>
+        <p class="emi-section__lede" data-i18n="emi_calculator_subtitle">Pick an amount, a tenure and a partner bank. The monthly figure, the interest and the total are all derived from your inputs, and the schedule below is the repayment plan you would actually sign.</p>
+      </header>
+
+      <div class="emi-split">
+        <form id="emiCalculatorForm" class="emi-form" autocomplete="off" novalidate>
+          <div class="emi-field">
+            <label for="emiAmountInput" data-i18n="emi_amount_label">Purchase amount</label>
+            <div class="emi-field__prefixed">
+              <span class="emi-field__prefix" aria-hidden="true">₹</span>
+              <input type="number" id="emiAmountInput" name="emiAmount" class="emi-input emi-input--mono" min="10000" max="10000000" step="1000" value="50000" inputmode="numeric" aria-describedby="emiAmountHint" />
+            </div>
+            <p class="emi-field__hint" id="emiAmountHint" data-i18n="emi_amount_hint">Between ₹10,000 and ₹1,00,00,000. This is the price of the product, before any bank charges.</p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiRateInput" data-i18n="emi_rate_label">Annual interest rate</label>
+            <div class="emi-field__prefixed">
+              <input type="number" id="emiRateInput" name="emiRate" class="emi-input emi-input--mono" min="0" max="48" step="0.25" value="13.5" inputmode="decimal" aria-describedby="emiRateHint" />
+              <span class="emi-field__suffix" aria-hidden="true">%</span>
+            </div>
+            <p class="emi-field__hint" id="emiRateHint" data-i18n="emi_rate_hint">Leave at 0 to see the principal spread evenly across the tenure with no interest at all.</p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiTenureSelect" data-i18n="emi_tenure_label">Tenure</label>
+            <select id="emiTenureSelect" name="emiTenure" class="emi-input emi-select" aria-describedby="emiTenureHint">
+              <option value="3">3 months</option>
+              <option value="6">6 months</option>
+              <option value="9" selected>9 months</option>
+              <option value="12">12 months</option>
+              <option value="18">18 months</option>
+              <option value="24">24 months</option>
+            </select>
+            <p class="emi-field__hint" id="emiTenureHint" data-i18n="emi_tenure_hint">Six tenures from 3 to 24 months. A longer tenure lowers the monthly figure and raises the total interest.</p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiBankSelect" data-i18n="emi_bank_label">Partner bank</label>
+            <select id="emiBankSelect" name="emiBank" class="emi-input emi-select" aria-describedby="emiBankHint"></select>
+            <p class="emi-field__hint" id="emiBankHint" data-i18n="emi_bank_hint">Choose a bank to quote its rate and processing fee, or pick the comparison option to see the lowest rate across all partners.</p>
+          </div>
+
+          <button type="submit" id="calculateEmiBtn" form="emiCalculatorForm" class="btn-emi btn-emi--foil" data-i18n="emi_calculate_btn">Calculate EMI</button>
+        </form>
+
+        <!-- The result card: the three figures the contract names, plus the
+             honest line about what the instalment does not include. -->
+        <div class="emi-result" id="emiResultCard" aria-live="polite">
+          <p class="emi-result__plate" data-i18n="emi_result_plate">Schedule of record</p>
+          <p class="emi-result__headline">
+            <span class="emi-result__label" data-i18n="emi_monthly_installment_label">Monthly installment</span>
+            <strong class="emi-result__value emi-mono" id="emiMonthlyInstallment">₹0</strong>
+          </p>
+          <dl class="emi-result__grid">
+            <div>
+              <dt data-i18n="emi_total_interest_label">Total interest</dt>
+              <dd class="emi-mono" id="emiTotalInterest">₹0</dd>
+            </div>
+            <div>
+              <dt data-i18n="emi_total_amount_label">Total amount</dt>
+              <dd class="emi-mono" id="emiTotalAmount">₹0</dd>
+            </div>
+            <div>
+              <dt data-i18n="emi_processing_fee_label">Processing fee</dt>
+              <dd class="emi-mono" id="emiProcessingFee">₹0</dd>
+            </div>
+            <div>
+              <dt data-i18n="emi_effective_rate_label">Effective rate</dt>
+              <dd class="emi-mono" id="emiEffectiveRate">—</dd>
+            </div>
+          </dl>
+          <p class="emi-result__formula emi-mono" id="emiFormula"></p>
+          <p class="emi-result__note" id="emiResultNote" data-i18n="emi_result_note">Your first instalment is due one month after the plan starts. This figure excludes the processing fee and any tax on it.</p>
+        </div>
+      </div>
+
+      <!-- The signature element: the repayment plan as a perforated strip of
+           tear-off slips, the way a statement arrives. -->
+      <div class="emi-schedule">
+        <header class="emi-schedule__head">
+          <h3 class="emi-subhead" data-i18n="emi_schedule_title">Your repayment slips</h3>
+          <p class="emi-schedule__note" id="emiScheduleMeta"></p>
+        </header>
+        <ol class="emi-slips" id="emiSlipStrip"></ol>
+        <p class="emi-empty emi-empty--inline" id="emiSlipStripEmpty" data-i18n="emi_schedule_empty" hidden>No schedule yet. Enter an amount and calculate to plot your instalments.</p>
+      </div>
+    </section>
+
+    <!-- ============ PARTNER BANK OFFERS ============ -->
+    <section id="emiBankOffersSection" class="emi-section emi-section--foil" aria-labelledby="emiBankOffersTitle">
+      <span class="emi-section__watermark" aria-hidden="true">RATE</span>
+
+      <header class="emi-section__head">
+        <p class="emi-eyebrow emi-eyebrow--foil" data-i18n="emi_bank_offers_eyebrow">Plate ii — the partners</p>
+        <h2 id="emiBankOffersTitle" data-i18n="emi_bank_offers_title">Partner bank offers</h2>
+        <p class="emi-section__lede emi-section__lede--foil" data-i18n="emi_bank_offers_subtitle">Each partner quotes its own rate, its own processing fee and its own zero-cost window. The figures below are illustrative examples for the amount and tenure you entered, and every bank applies its own approval criteria.</p>
+      </header>
+
+      <div class="emi-skeleton" id="bankOffersSkeleton" aria-hidden="true">
+        <div class="emi-skeleton__card"></div>
+        <div class="emi-skeleton__card"></div>
+        <div class="emi-skeleton__card"></div>
+      </div>
+
+      <div class="emi-cards" id="bankOffersGrid" aria-busy="false"></div>
+
+      <p class="emi-empty" id="bankOffersEmpty" data-i18n="emi_bank_offers_empty" hidden>No partner bank can take this amount right now. Try a larger amount or a shorter tenure.</p>
+
+      <p class="emi-section__note" data-i18n="emi_bank_offers_note">A zero-cost plan is not free money. It moves the cost from interest into a processing fee, and that fee is still payable. The card below always shows the fee next to the rate so the two can be compared honestly.</p>
+    </section>
+
+    <!-- ============ ELIGIBILITY ============ -->
+    <section id="emiEligibilitySection" class="emi-section" aria-labelledby="emiEligibilityTitle">
+      <header class="emi-section__head">
+        <p class="emi-eyebrow" data-i18n="emi_eligibility_eyebrow">Plate iii — the file</p>
+        <h2 id="emiEligibilityTitle" data-i18n="emi_eligibility_title">Check your eligibility</h2>
+        <p class="emi-section__lede" data-i18n="emi_eligibility_subtitle">Three details, checked against the format each one has to follow. Nothing here contacts a bureau, pulls a credit score or sends anything to a bank: the check runs on this page and the result is yours to read or delete.</p>
+      </header>
+
+      <div class="emi-split">
+        <form id="emiEligibilityForm" class="emi-form" autocomplete="off" novalidate>
+          <div class="emi-field">
+            <label for="emiPANInput" data-i18n="emi_pan_label">PAN number</label>
+            <input type="text" id="emiPANInput" name="emiPAN" class="emi-input emi-input--mono" placeholder="ABCDE1234F" maxlength="10" spellcheck="false" autocapitalize="characters" aria-describedby="emiPANHint" />
+            <p class="emi-field__hint" id="emiPANHint" data-i18n="emi_pan_hint">Five letters, then four digits, then one letter.</p>
+            <p class="emi-field__error" id="emiPANError" hidden></p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiPhoneInput" data-i18n="emi_phone_label">Mobile number</label>
+            <input type="tel" id="emiPhoneInput" name="emiPhone" class="emi-input emi-input--mono" placeholder="9876543210" maxlength="10" inputmode="numeric" aria-describedby="emiPhoneHint" />
+            <p class="emi-field__hint" id="emiPhoneHint" data-i18n="emi_phone_hint">Ten digits, starting 6 to 9.</p>
+            <p class="emi-field__error" id="emiPhoneError" hidden></p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiEmailInput" data-i18n="emi_email_label">Email address</label>
+            <input type="email" id="emiEmailInput" name="emiEmail" class="emi-input" placeholder="you@example.com" spellcheck="false" aria-describedby="emiEmailHint" />
+            <p class="emi-field__hint" id="emiEmailHint" data-i18n="emi_email_hint">Where your approval letter and the schedule would be sent.</p>
+            <p class="emi-field__error" id="emiEmailError" hidden></p>
+          </div>
+
+          <button type="submit" id="checkEligibilityBtn" form="emiEligibilityForm" class="btn-emi btn-emi--foil" data-i18n="emi_check_eligibility_btn">Check eligibility</button>
+        </form>
+
+        <div class="emi-verdict" id="emiEligibilityResult" aria-live="polite">
+          <h3 class="emi-subhead" data-i18n="emi_eligibility_result_title">Eligibility result</h3>
+          <p class="emi-verdict__idle" data-i18n="emi_eligibility_idle">Nothing checked yet. Fill in the three fields and press the button to see the result.</p>
+          <div class="emi-verdict__body" id="emiEligibilityBody" hidden>
+            <p class="emi-verdict__banner" id="emiEligibilityBanner">
+              <span class="emi-verdict__dot" aria-hidden="true"></span>
+              <strong id="emiEligibilityHeadline">—</strong>
+            </p>
+            <dl class="emi-verdict__grid">
+              <div>
+                <dt data-i18n="emi_credit_limit_label">Indicative credit limit</dt>
+                <dd class="emi-mono" id="emiCreditLimit">₹0</dd>
+              </div>
+              <div>
+                <dt data-i18n="emi_max_tenure_label">Longest tenure available</dt>
+                <dd class="emi-mono" id="emiMaxTenure">—</dd>
+              </div>
+              <div>
+                <dt data-i18n="emi_amount_requested_label">Amount requested</dt>
+                <dd class="emi-mono" id="emiAmountRequested">₹0</dd>
+              </div>
+            </dl>
+            <ul class="emi-verdict__checks" id="emiEligibilityChecks"></ul>
+            <p class="emi-verdict__note" data-i18n="emi_eligibility_note">This is a format and plausibility check run in your browser. It is not a credit decision and it does not confirm approval — only the bank can do that, against its own criteria and its own record of you.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AUTO-DEDUCTION MANDATE ============ -->
+    <section id="emiAutoDeductionSection" class="emi-section emi-section--ruled" aria-labelledby="emiMandateTitle">
+      <header class="emi-section__head">
+        <p class="emi-eyebrow" data-i18n="emi_mandate_eyebrow">Plate iv — the standing instruction</p>
+        <h2 id="emiMandateTitle" data-i18n="emi_mandate_title">Auto-deduction mandate</h2>
+        <p class="emi-section__lede" data-i18n="emi_mandate_subtitle">A mandate lets the bank take each instalment from your account on its own, so nothing is missed and nothing is charged for being late. You set a ceiling it can never go past, and you can pause or close it whenever you like.</p>
+      </header>
+
+      <div class="emi-split">
+        <form id="emiMandateForm" class="emi-form" autocomplete="off" novalidate>
+          <div class="emi-field">
+            <label for="emiMandateBankSelect" data-i18n="emi_bank_label">Partner bank</label>
+            <select id="emiMandateBankSelect" name="emiBankCode" class="emi-input emi-select" aria-describedby="emiMandateBankHint"></select>
+            <p class="emi-field__hint" id="emiMandateBankHint" data-i18n="emi_mandate_bank_hint">The bank that would collect the instalments.</p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiAccountInput" data-i18n="emi_account_label">Account number</label>
+            <input type="text" id="emiAccountInput" name="emiAccount" class="emi-input emi-input--mono" placeholder="50100123456789" maxlength="18" inputmode="numeric" aria-describedby="emiAccountHint" />
+            <p class="emi-field__hint" id="emiAccountHint" data-i18n="emi_account_hint">The account the mandate draws from. It stays on this device.</p>
+            <p class="emi-field__error" id="emiAccountError" hidden></p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiIfscInput" data-i18n="emi_ifsc_label">IFSC code</label>
+            <input type="text" id="emiIfscInput" name="emiIFSC" class="emi-input emi-input--mono" placeholder="HDFC0001234" maxlength="11" spellcheck="false" aria-describedby="emiIFSCHint" />
+            <p class="emi-field__hint" id="emiIFSCHint" data-i18n="emi_ifsc_hint">Four letters, a zero, then six letters or digits.</p>
+            <p class="emi-field__error" id="emiIFSCError" hidden></p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiMaxAmountInput" data-i18n="emi_max_amount_label">Maximum amount per collection</label>
+            <div class="emi-field__prefixed">
+              <span class="emi-field__prefix" aria-hidden="true">₹</span>
+              <input type="number" id="emiMaxAmountInput" name="emiMaxAmount" class="emi-input emi-input--mono" min="1" max="10000000" step="100" value="5000" inputmode="numeric" aria-describedby="emiMaxAmountHint" />
+            </div>
+            <p class="emi-field__hint" id="emiMaxAmountHint" data-i18n="emi_max_amount_hint">A hard ceiling. The bank cannot collect more than this in one go, whatever your instalment turns out to be.</p>
+            <p class="emi-field__error" id="emiMaxAmountError" hidden></p>
+          </div>
+
+          <div class="emi-field">
+            <label for="emiFrequencySelect" data-i18n="emi_frequency_label">Collection frequency</label>
+            <select id="emiFrequencySelect" name="emiFrequency" class="emi-input emi-select" aria-describedby="emiFrequencyHint">
+              <option value="monthly" selected data-i18n="emi_frequency_monthly">Every month</option>
+              <option value="quarterly" data-i18n="emi_frequency_quarterly">Every quarter</option>
+            </select>
+            <p class="emi-field__hint" id="emiFrequencyHint" data-i18n="emi_frequency_hint">Quarterly collection suits a three or six month tenure.</p>
+          </div>
+
+          <button type="submit" id="setupMandateBtn" form="emiMandateForm" class="btn-emi btn-emi--foil" data-i18n="emi_mandate_setup_btn">Set up mandate</button>
+        </form>
+
+        <div class="emi-mandate">
+          <!-- Live status for the mandate just acted on. -->
+          <p class="emi-mandate__status" id="emiMandateStatus" role="status" aria-live="polite" tabindex="-1" data-tone="idle" data-i18n="emi_mandate_status_idle">No mandate set up on this device yet.</p>
+
+          <div class="emi-mandate__quick">
+            <h3 class="emi-subhead" data-i18n="emi_mandate_quick_title">Start from your current calculation</h3>
+            <p class="emi-mandate__quicknote" id="emiMandateQuickNote" data-i18n="emi_mandate_quicknote">Fills the form from the amount and tenure you calculated above, with the ceiling set to the monthly figure rounded up.</p>
+            <button type="button" id="emiMandateSetupBtn" class="btn-emi btn-emi--quiet" data-i18n="emi_mandate_quick_btn">Use my current calculation</button>
+          </div>
+
+          <h3 class="emi-subhead" data-i18n="emi_mandate_list_title">Mandates on this device</h3>
+          <ol class="emi-mandates" id="emiMandateList"></ol>
+          <p class="emi-empty emi-empty--inline" id="emiMandateListEmpty" data-i18n="emi_mandate_list_empty" hidden>Nothing saved. A mandate you set up appears here with its identifier and its current state.</p>
+        </div>
+      </div>
+
+      <p class="emi-section__note" data-i18n="emi_mandate_note">A mandate is created here on your own device so you can see what you are agreeing to. Nothing is registered with any bank from this page, and no account number leaves your browser. To actually collect instalments, you authorise the mandate with your bank at checkout.</p>
+    </section>
+
+    <!-- ============ EMI-ELIGIBLE PRODUCTS ============ -->
+    <section id="emiProductSection" class="emi-section" aria-labelledby="emiProductsTitle">
+      <header class="emi-section__head">
+        <p class="emi-eyebrow" data-i18n="emi_products_eyebrow">Plate v — the eligible goods</p>
+        <h2 id="emiProductsTitle" data-i18n="emi_products_title">Products you can spread over a tenure</h2>
+        <p class="emi-section__lede" data-i18n="emi_products_subtitle">Anything priced from ₹10,000 can run on an instalment plan. Lower-priced accessories are left out on purpose: spreading ₹3,000 over nine months costs more in interest than it saves in convenience.</p>
+      </header>
+
+      <div class="emi-skeleton" id="emiProductSkeleton" aria-hidden="true">
+        <div class="emi-skeleton__card"></div>
+        <div class="emi-skeleton__card"></div>
+      </div>
+
+      <div class="emi-products" id="emiProductGrid" aria-busy="false"></div>
+
+      <p class="emi-empty" id="emiProductGridEmpty" data-i18n="emi_products_empty" hidden>Nothing in the catalogue currently qualifies for an instalment plan. Please check back soon.</p>
+    </section>
+
+    <!-- ============ CHECKOUT INTEGRATION ============ -->
+    <section id="emiCheckoutIntegration" class="emi-section emi-section--foil" aria-labelledby="emiCheckoutTitle">
+      <span class="emi-section__watermark" aria-hidden="true">EMI</span>
+
+      <header class="emi-section__head">
+        <p class="emi-eyebrow emi-eyebrow--foil" data-i18n="emi_checkout_eyebrow">Plate vi — the handover</p>
+        <h2 id="emiCheckoutTitle" data-i18n="emi_checkout_title">How EMI appears at checkout</h2>
+        <p class="emi-section__lede emi-section__lede--foil" data-i18n="emi_checkout_subtitle">Choosing an instalment plan is a separate step from paying. Here is exactly what happens, and exactly what you are agreeing to at each point.</p>
+      </header>
+
+      <ol class="emi-steps">
+        <li class="emi-step">
+          <span class="emi-step__num emi-mono">01</span>
+          <h3 class="emi-step__title" data-i18n="emi_checkout_step1_title">Pick EMI as the payment method</h3>
+          <p class="emi-step__text" data-i18n="emi_checkout_step1_text">It sits alongside UPI, card and net banking in the payment step. Choosing it does not charge anything yet.</p>
+        </li>
+        <li class="emi-step">
+          <span class="emi-step__num emi-mono">02</span>
+          <h3 class="emi-step__title" data-i18n="emi_checkout_step2_title">Choose the bank and the tenure</h3>
+          <p class="emi-step__text" data-i18n="emi_checkout_step2_text">Only the banks that accepted your eligibility check are listed. The monthly figure shown there is the one from this page, to the rupee.</p>
+        </li>
+        <li class="emi-step">
+          <span class="emi-step__num emi-mono">03</span>
+          <h3 class="emi-step__title" data-i18n="emi_checkout_step3_title">Let the bank verify you</h3>
+          <p class="emi-step__text" data-i18n="emi_checkout_step3_text">You are handed to your bank's own secure page. ElectroMart never sees or stores your bank credentials, and the approval decision is the bank's alone.</p>
+        </li>
+        <li class="emi-step">
+          <span class="emi-step__num emi-mono">04</span>
+          <h3 class="emi-step__title" data-i18n="emi_checkout_step4_title">Confirm the mandate</h3>
+          <p class="emi-step__text" data-i18n="emi_checkout_step4_text">The bank sets up the auto-deduction. Your first collection is one month after the plan starts, and your first EMI is usually collected along with it or at the next collection date.</p>
+        </li>
+      </ol>
+
+      <div class="emi-honesty">
+        <p data-i18n="emi_checkout_honesty_title">What the monthly figure does not include</p>
+        <ul>
+          <li data-i18n="emi_checkout_honesty_1">The processing fee, and the tax charged on that fee. A zero-cost plan still has both.</li>
+          <li data-i18n="emi_checkout_honesty_2">Late payment charges if a collection bounces. A returned mandate is also often treated as a missed payment on your record.</li>
+          <li data-i18n="emi_checkout_honesty_3">Prepayment charges, if your plan carries them. Ask the bank before you pay it off early, and check whether a part-prepayment is treated as a full one.</li>
+          <li data-i18n="emi_checkout_honesty_4">The cost of returning the goods. Cancelling an instalment plan does not cancel the order, and the two are settled separately.</li>
+        </ul>
+        <p class="emi-honesty__foot" data-i18n="emi_checkout_honesty_foot">Read the sanction letter before you sign. It is the only document that carries your actual rate, your actual fee and your actual obligations.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared i18n, catalogue, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="emi.js?v=20261009a"></script>
+</body>
+</html>

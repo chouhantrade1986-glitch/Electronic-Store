@@ -1,0 +1,1719 @@
+/* ElectroMart BNPL & EMI Styles (Phase 44) */
+/* Aesthetic: "Foil & Emboss" — a luxury bank-card stationery world.
+   A credit card is the artefact this page is really about, so the page borrows
+   its language rather than the usual finance-page charts: engraved guilloche
+   ground, an iridescent foil field that drifts, embossed figures, and a chip
+   and magnetic stripe drawn in CSS. The memorable element is the repayment
+   schedule, set as a strip of perforated tear-off slips the way a statement
+   actually arrives. The violet is used as foil, not as decoration. */
+
+:root {
+  /* Foil violet — the contract token. Readable behind white text at 5.7:1. */
+  --emi-accent: #7C3AED;
+  --emi-accent-deep: #5B21B6;
+  --emi-accent-dark: #3B1580;
+  --emi-accent-bright: #A78BFA;
+  --emi-accent-soft: rgba(124, 58, 237, 0.10);
+  --emi-accent-line: rgba(124, 58, 237, 0.30);
+  --emi-foil-magenta: #D946EF;
+  --emi-foil-cyan: #22D3EE;
+  --emi-foil-rose: #F472B6;
+
+  /* Ink-plum ground */
+  --emi-night: #150A26;
+  --emi-night-2: #1E0F35;
+  --emi-night-3: #2A1647;
+  --emi-on-dark: #F3EEFB;
+  --emi-on-dark-2: #B9A9D6;
+  --emi-cyan-line: rgba(167, 139, 250, 0.30);
+
+  /* Bond paper */
+  --emi-paper: #F6F3FB;
+  --emi-paper-2: #EDE7F8;
+  --emi-paper-3: #E1D8F2;
+  --emi-card: #FDFCFF;
+
+  /* Engraved ink on paper */
+  --emi-ink: #1A1030;
+  --emi-ink-2: #3D2F5C;
+  --emi-ink-3: #6E608A;
+  --emi-rule: #D5CBE8;
+  --emi-rule-soft: #E6DFF3;
+
+  /* Ledger marks */
+  --emi-good: #0E7C5A;
+  --emi-good-soft: rgba(14, 124, 90, 0.10);
+  --emi-warn: #8A5A00;
+  --emi-warn-soft: rgba(138, 90, 0, 0.10);
+  --emi-bad: #A32C2C;
+  --emi-bad-soft: rgba(163, 44, 44, 0.08);
+  --emi-error: #A32C2C;
+
+  /* Type */
+  --emi-font-display: "Bodoni Moda", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", Georgia, serif;
+  --emi-font-body: "Golos Text", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", sans-serif;
+  --emi-font-mono: "Azeret Mono", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", monospace;
+
+  --emi-shadow-sm: 0 1px 2px rgba(26, 16, 48, 0.06), 0 4px 14px rgba(26, 16, 48, 0.07);
+  --emi-shadow: 0 2px 4px rgba(26, 16, 48, 0.07), 0 18px 44px rgba(26, 16, 48, 0.11);
+  --emi-shadow-lift: 0 4px 8px rgba(26, 16, 48, 0.10), 0 30px 60px rgba(91, 33, 182, 0.20);
+  --emi-radius: 12px;
+}
+
+/* ==========================================================================
+   1. Ground and page frame
+   ========================================================================== */
+body.emi-body {
+  background-color: var(--emi-paper) !important;
+  /* Bond paper: a faint engraved grain plus two cool foil washes. */
+  background-image:
+    repeating-linear-gradient(48deg, rgba(26, 16, 48, 0.020) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-48deg, rgba(26, 16, 48, 0.016) 0 1px, transparent 1px 5px),
+    radial-gradient(1000px 520px at 90% -8%, rgba(124, 58, 237, 0.08), transparent 60%),
+    radial-gradient(880px 520px at 4% 4%, rgba(217, 70, 239, 0.07), transparent 58%);
+  background-attachment: fixed;
+  color: var(--emi-ink) !important;
+  font-family: var(--emi-font-body) !important;
+}
+
+.emi-body a { color: var(--emi-accent-deep); }
+
+.emi-page {
+  position: relative;
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 0 clamp(14px, 3vw, 36px) clamp(56px, 7vw, 100px);
+  color: var(--emi-ink);
+  font-family: var(--emi-font-body);
+}
+
+.emi-shell { width: 100%; }
+
+/* Every figure, identifier and amount is set in mono with tabular figures so
+   the slip strip and the result card line up like a printed statement. */
+.emi-mono,
+.emi-page dd,
+.emi-page .emi-result__value,
+.emi-page .emi-metric__value {
+  font-family: var(--emi-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.emi-page h1,
+.emi-page h2,
+.emi-page h3,
+.emi-page dt,
+.emi-page .emi-eyebrow,
+.emi-page .emi-subhead {
+  font-family: var(--emi-font-display) !important;
+}
+
+.emi-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   2. Sections and shared chrome
+   ========================================================================== */
+.emi-section {
+  position: relative;
+  margin-bottom: clamp(24px, 3.4vw, 42px);
+  padding: clamp(20px, 2.8vw, 34px);
+  border: 1px solid var(--emi-rule);
+  border-radius: var(--emi-radius);
+  background: linear-gradient(180deg, rgba(253, 252, 255, 0.95), rgba(237, 231, 248, 0.88));
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
+  box-shadow: var(--emi-shadow);
+  animation: emi-rise 0.5s ease both;
+}
+
+/* Ruled like the fine grid printed on the reverse of a cheque. */
+.emi-section--ruled {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(26, 16, 48, 0.030) 28px 29px),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(26, 16, 48, 0.018) 28px 29px),
+    linear-gradient(180deg, rgba(253, 252, 255, 0.94), rgba(237, 231, 248, 0.86));
+}
+
+.emi-section--foil {
+  border-color: var(--emi-cyan-line);
+  background:
+    radial-gradient(720px 340px at 84% -14%, rgba(124, 58, 237, 0.52), transparent 62%),
+    linear-gradient(158deg, var(--emi-night-2) 0%, var(--emi-night) 58%, #0D0518 100%);
+  box-shadow: 0 18px 46px rgba(21, 10, 38, 0.32);
+}
+
+/* Blind-stamped watermark, pressed into the foil ground. */
+.emi-section__watermark {
+  position: absolute;
+  right: clamp(-10px, 2vw, 26px);
+  bottom: clamp(-26px, 1vw, -8px);
+  color: rgba(243, 238, 251, 0.05);
+  font-family: var(--emi-font-display);
+  font-size: clamp(5rem, 17vw, 11rem);
+  font-weight: 800;
+  line-height: 0.76;
+  letter-spacing: -0.03em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.emi-section__head { margin-bottom: 22px; max-width: 76ch; }
+
+.emi-section h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.012em;
+  color: var(--emi-ink);
+}
+
+.emi-section--foil h2 { color: var(--emi-on-dark); }
+
+.emi-section__lede {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--emi-ink-2);
+  font-size: 0.94rem;
+  line-height: 1.72;
+}
+
+.emi-section__lede--foil { color: var(--emi-on-dark-2); }
+
+.emi-section__note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--emi-accent-line);
+  border-radius: 0 8px 8px 0;
+  background: rgba(253, 252, 255, 0.72);
+  color: var(--emi-ink-3);
+  font-size: 0.8rem;
+  line-height: 1.66;
+}
+
+.emi-section--foil .emi-section__note {
+  border-left-color: var(--emi-accent-bright);
+  background: rgba(167, 139, 250, 0.10);
+  color: var(--emi-on-dark-2);
+}
+
+.emi-subhead {
+  margin: 0 0 10px;
+  color: var(--emi-ink) !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.emi-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 5px 13px;
+  border: 1px solid var(--emi-accent-line);
+  border-radius: 3px;
+  background: var(--emi-accent-soft);
+  color: var(--emi-accent-deep);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+/* A short foil rule trailing the label, like a stamped rule on a title strip. */
+.emi-eyebrow::after {
+  content: "";
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--emi-accent), var(--emi-foil-magenta));
+}
+
+.emi-eyebrow--foil {
+  border-color: var(--emi-cyan-line);
+  background: rgba(167, 139, 250, 0.14);
+  color: var(--emi-accent-bright);
+}
+
+.emi-empty {
+  margin: 0;
+  padding: 24px;
+  border: 1px dashed var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(253, 252, 255, 0.72);
+  color: var(--emi-ink-2);
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.66;
+}
+
+.emi-empty--inline { padding: 14px; font-size: 0.82rem; text-align: left; }
+
+.emi-status {
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid var(--emi-rule);
+  border-left: 3px solid var(--emi-accent);
+  border-radius: 5px;
+  background: rgba(253, 252, 255, 0.92);
+  color: var(--emi-ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.emi-status[data-tone="success"] { border-left-color: var(--emi-good); }
+.emi-status[data-tone="error"] { border-left-color: var(--emi-error); }
+.emi-status[data-tone="warn"] { border-left-color: var(--emi-warn); }
+
+@keyframes emi-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   3. Buttons
+   ========================================================================== */
+.btn-emi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 13px 26px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-family: var(--emi-font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+/* The foil plate: violet with white lettering, 5.7:1 on the foil. */
+.btn-emi--foil {
+  background: var(--emi-accent);
+  border-color: var(--emi-accent-dark);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.32);
+}
+
+.btn-emi--foil:hover {
+  transform: translateY(-2px);
+  background: var(--emi-accent-deep);
+  box-shadow: 0 12px 26px rgba(124, 58, 237, 0.38);
+}
+
+.btn-emi--quiet {
+  background: rgba(253, 252, 255, 0.86);
+  border-color: var(--emi-rule);
+  color: var(--emi-ink-2);
+}
+
+.btn-emi--quiet:hover {
+  transform: translateY(-2px);
+  border-color: var(--emi-accent-line);
+  background: var(--emi-accent-soft);
+  color: var(--emi-accent-deep);
+}
+
+.btn-emi--ghost {
+  background: transparent;
+  border-color: rgba(243, 238, 251, 0.42);
+  color: var(--emi-on-dark);
+}
+
+.btn-emi--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--emi-accent-bright);
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.btn-emi--card {
+  width: 100%;
+  background: rgba(253, 252, 255, 0.12);
+  border-color: rgba(243, 238, 251, 0.34);
+  color: var(--emi-on-dark);
+}
+
+.btn-emi--card:hover {
+  transform: translateY(-2px);
+  background: rgba(167, 139, 250, 0.20);
+  border-color: var(--emi-accent-bright);
+}
+
+.btn-emi--card[aria-pressed="true"] {
+  background: var(--emi-accent);
+  border-color: var(--emi-accent-bright);
+  color: #ffffff;
+}
+
+.btn-emi--danger {
+  background: transparent;
+  border-color: rgba(163, 44, 44, 0.5);
+  color: var(--emi-bad);
+}
+
+.btn-emi--danger:hover {
+  transform: translateY(-2px);
+  background: var(--emi-bad);
+  border-color: var(--emi-bad);
+  color: #ffffff;
+}
+
+.btn-emi:active { transform: translateY(0); }
+
+.btn-emi:disabled,
+.btn-emi[disabled],
+.btn-emi[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.46;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.55);
+}
+
+/* The shared storefront theme ships a global `outline: 2px solid #e77600
+   !important` on every button/input/select, so each focus ring here must also
+   be !important to win. The ink ring measures about 11:1 on the bond paper
+   and the white ring about 16:1 on the ink-plum ground. */
+.btn-emi:focus-visible {
+  outline: 3px solid var(--emi-ink) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.26) !important;
+}
+
+.emi-hero .btn-emi:focus-visible,
+.emi-section--foil .btn-emi:focus-visible {
+  outline-color: #FFFFFF !important;
+}
+
+.btn-emi--danger:focus-visible { outline-color: var(--emi-bad) !important; }
+
+/* ==========================================================================
+   4. Hero — the card face
+   ========================================================================== */
+.emi-hero {
+  position: relative;
+  margin: 0 calc(-1 * clamp(14px, 3vw, 36px)) clamp(24px, 3.2vw, 40px);
+  padding: clamp(36px, 5.2vw, 72px) 0 clamp(24px, 2.8vw, 36px);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(880px 420px at 76% -20%, rgba(124, 58, 237, 0.50), transparent 62%),
+    linear-gradient(158deg, var(--emi-night-2) 0%, var(--emi-night) 60%, #0D0518 100%);
+  border-bottom: 1px solid var(--emi-cyan-line);
+}
+
+/* Guilloché: three interfering families of fine engraved line. The overlap
+   is what produces the moiré rosette you see on a banknote. */
+.emi-hero__guilloche {
+  position: absolute;
+  inset: -10%;
+  z-index: -2;
+  background-image:
+    repeating-radial-gradient(circle at 22% 34%, transparent 0 3px, rgba(167, 139, 250, 0.14) 3px 4px),
+    repeating-radial-gradient(circle at 78% 62%, transparent 0 3px, rgba(217, 70, 239, 0.11) 3px 4px),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(34, 211, 238, 0.06) 0deg 1.2deg, transparent 1.2deg 3deg);
+  mask-image: radial-gradient(120% 100% at 30% 0%, #000 6%, transparent 84%);
+  -webkit-mask-image: radial-gradient(120% 100% at 30% 0%, #000 6%, transparent 84%);
+}
+
+/* A slow specular band travelling across the ground, like light on foil. */
+.emi-hero__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(104deg, transparent 34%, rgba(243, 238, 251, 0.09) 47%, transparent 60%);
+  animation: emi-sheen 11s ease-in-out infinite;
+}
+
+@keyframes emi-sheen {
+  0%, 100% { transform: translateX(-38%); }
+  50% { transform: translateX(38%); }
+}
+
+.emi-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(24px, 3.4vw, 48px);
+  align-items: center;
+}
+
+.emi-hero h1 {
+  margin: 0 0 12px;
+  max-width: 14ch;
+  font-size: clamp(2.1rem, 5.4vw, 4.1rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.028em;
+  color: var(--emi-on-dark);
+}
+
+.emi-hero__lede {
+  margin: 0 0 24px;
+  max-width: 58ch;
+  color: var(--emi-on-dark-2);
+  font-size: clamp(0.98rem, 1.2vw, 1.06rem);
+  line-height: 1.78;
+}
+
+.emi-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.emi-hero__footnote {
+  margin: clamp(24px, 3vw, 36px) 0 0;
+  max-width: 96ch;
+  color: var(--emi-on-dark-2);
+  font-size: 0.8rem;
+  line-height: 1.72;
+}
+
+/* The zero-cost stamp. Idle it is an empty foil outline; live it is pressed. */
+.emi-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin: 22px 0 0;
+  padding: 9px 16px;
+  border: 1px dashed var(--emi-cyan-line);
+  border-radius: 4px;
+  background: rgba(167, 139, 250, 0.08);
+  color: var(--emi-on-dark-2);
+  font-family: var(--emi-font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.emi-stamp__seal {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.emi-stamp__seal::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.emi-stamp[data-tone="on"] {
+  border-style: solid;
+  border-color: var(--emi-accent-bright);
+  background: rgba(124, 58, 237, 0.24);
+  color: #FFFFFF;
+}
+
+.emi-stamp[data-tone="on"] .emi-stamp__seal {
+  opacity: 1;
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.24);
+}
+
+.emi-stamp[data-tone="off"] {
+  border-color: rgba(163, 44, 44, 0.5);
+  color: #F0C9C9;
+}
+
+/* --------------------------------------------------------------------------
+   The card face: foil field, punched chip, magnetic stripe, embossed band.
+   Everything is borders and gradients; nothing is an image.
+   -------------------------------------------------------------------------- */
+.emi-plastic {
+  position: relative;
+  aspect-ratio: 1.586 / 1;
+  max-width: 420px;
+  justify-self: end;
+  width: 100%;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(243, 238, 251, 0.22);
+  background: linear-gradient(150deg, #2A1647, #150A26 62%);
+  box-shadow: 0 30px 70px rgba(13, 5, 24, 0.55), inset 0 1px 0 rgba(243, 238, 251, 0.16);
+  overflow: hidden;
+  transform: rotate(-2.4deg);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.emi-plastic:hover { transform: rotate(0deg) translateY(-4px); }
+
+/* The holographic foil field, drifting. */
+.emi-plastic__foil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(114deg,
+    var(--emi-accent) 0%, var(--emi-foil-magenta) 15%, var(--emi-foil-cyan) 30%,
+    var(--emi-accent) 46%, var(--emi-foil-rose) 62%, var(--emi-accent) 78%, var(--emi-foil-cyan) 100%);
+  background-size: 280% 280%;
+  opacity: 0.30;
+  mix-blend-mode: screen;
+  animation: emi-foil-drift 15s linear infinite;
+}
+
+@keyframes emi-foil-drift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 280% 50%; }
+}
+
+/* The chip: a rounded contact plate with three engraved traces. */
+.emi-plastic__chip {
+  position: absolute;
+  top: 26px;
+  left: 26px;
+  width: 52px;
+  height: 40px;
+  border-radius: 7px;
+  background: linear-gradient(140deg, #E7C766, #B4912F 58%, #F0DC9A);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+  padding: 6px 7px;
+  gap: 4px;
+}
+
+.emi-plastic__chip span {
+  border-radius: 2px;
+  background:
+    linear-gradient(90deg, transparent 44%, rgba(0, 0, 0, 0.30) 44% 56%, transparent 56%),
+    linear-gradient(0deg, transparent 44%, rgba(0, 0, 0, 0.30) 44% 56%, transparent 56%);
+  opacity: 0.75;
+}
+
+/* The magnetic stripe. */
+.emi-plastic__stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44%;
+  height: 30px;
+  background: linear-gradient(180deg, #17101F, #2C2038 50%, #17101F);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.emi-plastic__brand {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-family: var(--emi-font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: rgba(243, 238, 251, 0.92);
+}
+
+/* The card-network mark: four overlapping foil discs. */
+.emi-plastic__network {
+  position: absolute;
+  top: 78px;
+  right: 26px;
+  width: 42px;
+  height: 42px;
+}
+
+.emi-plastic__network::before,
+.emi-plastic__network::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(243, 238, 251, 0.5);
+}
+
+.emi-plastic__network::before { left: 0; top: 7px; background: rgba(227, 199, 102, 0.62); }
+.emi-plastic__network::after { right: 0; top: 7px; background: rgba(217, 70, 239, 0.5); }
+
+/* Embossed figures: a light edge above, a dark edge below. */
+.emi-plastic__figure {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  top: 54%;
+  font-size: clamp(0.86rem, 1.5vw, 1.14rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(243, 238, 251, 0.86);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(255, 255, 255, 0.10);
+}
+
+.emi-plastic__row {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 22px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.emi-plastic__name {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(243, 238, 251, 0.62);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.emi-plastic__tenure {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(243, 238, 251, 0.82);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================================
+   5. Calculator: form, result card, slip strip
+   ========================================================================== */
+.emi-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(18px, 2.4vw, 30px);
+  margin-bottom: 24px;
+}
+
+.emi-form {
+  display: grid;
+  gap: 15px;
+  align-content: start;
+  padding: clamp(16px, 2.1vw, 22px);
+  border: 1px dashed var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(246, 243, 251, 0.72);
+}
+
+.emi-form .btn-emi { justify-self: start; }
+
+.emi-field { display: grid; gap: 6px; min-width: 0; }
+
+.emi-field label {
+  padding: 0;
+  color: var(--emi-ink-2);
+  font-family: var(--emi-font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.emi-field__hint { margin: 0; color: var(--emi-ink-3); font-size: 0.74rem; line-height: 1.56; }
+
+.emi-field__error {
+  margin: 0;
+  color: var(--emi-error);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.emi-field__error[hidden] { display: none; }
+
+.emi-field__prefixed { position: relative; display: flex; align-items: center; }
+
+.emi-field__prefix,
+.emi-field__suffix {
+  position: absolute;
+  color: var(--emi-ink-3);
+  font-family: var(--emi-font-mono);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.emi-field__prefix { left: 12px; }
+.emi-field__suffix { right: 12px; }
+
+.emi-field__prefixed .emi-input { padding-left: 30px; }
+.emi-field__prefixed .emi-input:has(+ .emi-field__suffix) { padding-right: 30px; }
+
+.emi-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--emi-rule);
+  border-radius: 5px;
+  background-color: var(--emi-card) !important;
+  color: var(--emi-ink) !important;
+  font-family: var(--emi-font-body) !important;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.emi-input--mono { font-family: var(--emi-font-mono); font-weight: 500; letter-spacing: 0.02em; }
+
+.emi-select,
+select.emi-input {
+  appearance: none;
+  padding-right: 36px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--emi-accent-deep) 50%),
+    linear-gradient(135deg, var(--emi-accent-deep) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 20px, calc(100% - 12px) 20px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+select.emi-input option { background-color: var(--emi-card); color: var(--emi-ink); }
+
+.emi-input:hover { border-color: var(--emi-accent-line); }
+
+.emi-input:focus-visible {
+  outline: 2px solid var(--emi-ink) !important;
+  outline-offset: 2px !important;
+  border-color: var(--emi-ink) !important;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.18);
+}
+
+.emi-input[aria-invalid="true"] {
+  border-color: var(--emi-error);
+  background-color: var(--emi-bad-soft);
+}
+
+/* Result card: the three figures the contract names, pressed into the panel. */
+.emi-result {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  padding: clamp(16px, 2.1vw, 24px);
+  border: 1px solid var(--emi-accent-line);
+  border-radius: 10px;
+  background:
+    radial-gradient(420px 200px at 88% -12%, rgba(124, 58, 237, 0.16), transparent 62%),
+    linear-gradient(180deg, rgba(253, 252, 255, 0.96), rgba(237, 231, 248, 0.9));
+  box-shadow: var(--emi-shadow-sm);
+}
+
+.emi-result__plate {
+  margin: 0;
+  color: var(--emi-ink-3);
+  font-family: var(--emi-font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.emi-result__headline { margin: 0; display: grid; gap: 4px; }
+
+.emi-result__label {
+  color: var(--emi-ink-3);
+  font-family: var(--emi-font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.emi-result__value {
+  font-size: clamp(1.9rem, 4.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--emi-accent-deep);
+}
+
+.emi-result__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--emi-rule-soft);
+  border-bottom: 1px solid var(--emi-rule-soft);
+}
+
+.emi-result__grid dt {
+  margin: 0 0 3px;
+  color: var(--emi-ink-3);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.emi-result__grid dd { margin: 0; font-size: 1rem; font-weight: 600; color: var(--emi-ink); }
+
+.emi-result__formula {
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px dashed var(--emi-accent-line);
+  border-radius: 6px;
+  background: rgba(253, 252, 255, 0.72);
+  color: var(--emi-ink-2);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+.emi-result__note { margin: 0; color: var(--emi-ink-3); font-size: 0.78rem; line-height: 1.62; }
+
+/* --------------------------------------------------------------------------
+   The repayment slips: a perforated strip of tear-off stubs. Each stub is one
+   collection, and the perforation between them is the artefact a statement
+   actually has, so the plan can be read at a glance rather than scanned.
+   -------------------------------------------------------------------------- */
+.emi-schedule {
+  padding: clamp(16px, 2.1vw, 22px);
+  border: 1px solid var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(253, 252, 255, 0.86);
+}
+
+.emi-schedule__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.emi-schedule__head .emi-subhead { margin: 0; }
+
+.emi-schedule__note { margin: 0; color: var(--emi-ink-3); font-size: 0.8rem; }
+
+.emi-slips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.emi-slip {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  flex: 1 1 128px;
+  min-width: 128px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #FFFFFF, #F6F2FC);
+  box-shadow: inset 0 0 0 1px var(--emi-rule-soft);
+  animation: emi-rise 0.4s ease both;
+}
+
+/* The perforation: a dotted tear line with punch holes at each end. */
+.emi-slip + .emi-slip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--emi-rule) 0 3px, transparent 3px 7px);
+}
+
+.emi-slip + .emi-slip::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--emi-paper);
+  box-shadow: 0 0 0 1px var(--emi-rule-soft), 0 calc(100% + 0px) 0 0 transparent;
+}
+
+.emi-slip__seq {
+  color: var(--emi-accent-deep);
+  font-family: var(--emi-font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.emi-slip__amount {
+  font-family: var(--emi-font-mono);
+  font-size: clamp(0.92rem, 1.5vw, 1.08rem);
+  font-weight: 700;
+  color: var(--emi-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emi-slip__date { color: var(--emi-ink-3); font-family: var(--emi-font-mono); font-size: 0.68rem; }
+
+.emi-slip--last .emi-slip__amount { color: var(--emi-good); }
+
+.emi-slip--last::before { content: ""; }
+
+/* ==========================================================================
+   6. Partner bank cards
+   ========================================================================== */
+.emi-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 18px;
+}
+
+.emi-card {
+  position: relative;
+  display: grid;
+  gap: 11px;
+  align-content: start;
+  padding: 20px;
+  border: 1px solid rgba(243, 238, 251, 0.18);
+  border-radius: 14px;
+  background:
+    radial-gradient(320px 160px at 84% -14%, rgba(124, 58, 237, 0.40), transparent 62%),
+    linear-gradient(158deg, var(--emi-night-3) 0%, var(--emi-night) 70%);
+  box-shadow: 0 16px 40px rgba(13, 5, 24, 0.42);
+  overflow: hidden;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+  animation: emi-rise 0.45s ease both;
+}
+
+.emi-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--emi-accent-bright);
+  box-shadow: 0 24px 58px rgba(91, 33, 182, 0.46);
+}
+
+.emi-card.is-selected {
+  border-color: var(--emi-accent-bright);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.26), 0 24px 58px rgba(91, 33, 182, 0.46);
+}
+
+/* The foil band across the top of each bank card. */
+.emi-card__foil {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--emi-accent), var(--emi-foil-magenta), var(--emi-foil-cyan));
+  background-size: 200% 100%;
+  animation: emi-foil-drift 9s linear infinite;
+}
+
+.emi-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.emi-card__bank {
+  margin: 0;
+  font-family: var(--emi-font-display);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--emi-on-dark);
+}
+
+/* The zero-cost chip, struck into the corner. */
+.emi-card__zc {
+  flex: 0 0 auto;
+  padding: 3px 9px;
+  border-radius: 3px;
+  background: linear-gradient(100deg, var(--emi-accent), var(--emi-foil-magenta));
+  color: #FFFFFF;
+  font-family: var(--emi-font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.emi-card__zc[data-zero="false"] {
+  background: rgba(243, 238, 251, 0.12);
+  border: 1px solid rgba(243, 238, 251, 0.26);
+  color: var(--emi-on-dark-2);
+}
+
+.emi-card__rate {
+  margin: 0;
+  font-family: var(--emi-font-mono);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--emi-accent-bright);
+}
+
+.emi-card__ratelabel {
+  margin: -6px 0 0;
+  color: var(--emi-on-dark-2);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+}
+
+.emi-card__emi {
+  margin: 0;
+  padding: 10px 0;
+  border-top: 1px solid rgba(243, 238, 251, 0.14);
+  border-bottom: 1px solid rgba(243, 238, 251, 0.14);
+  font-family: var(--emi-font-mono);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--emi-on-dark);
+}
+
+.emi-card__emi span { color: var(--emi-on-dark-2); font-size: 0.76rem; }
+
+/* A two-column ledger of what the plan costs beyond the interest. */
+.emi-card__specs {
+  display: grid;
+  gap: 7px 14px;
+  margin: 0;
+}
+
+.emi-card__specs > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.emi-card__specs dt {
+  color: var(--emi-on-dark-2);
+  font-family: var(--emi-font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.emi-card__specs dd {
+  margin: 0;
+  font-family: var(--emi-font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--emi-on-dark);
+  white-space: nowrap;
+}
+
+.emi-card__note { margin: 0; color: var(--emi-on-dark-2); font-size: 0.74rem; line-height: 1.56; }
+
+/* ==========================================================================
+   7. Eligibility verdict
+   ========================================================================== */
+.emi-verdict {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: clamp(16px, 2.1vw, 24px);
+  border: 1px solid var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(253, 252, 255, 0.9);
+}
+
+.emi-verdict__idle { margin: 0; color: var(--emi-ink-3); font-size: 0.88rem; line-height: 1.66; }
+
+.emi-verdict__banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--emi-rule);
+  border-radius: 8px;
+  background: var(--emi-accent-soft);
+  color: var(--emi-ink);
+  font-size: 0.92rem;
+}
+
+.emi-verdict__dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--emi-ink-3);
+  box-shadow: 0 0 0 4px rgba(110, 96, 138, 0.14);
+}
+
+.emi-verdict__banner[data-tone="yes"] {
+  border-color: rgba(14, 124, 90, 0.34);
+  background: var(--emi-good-soft);
+}
+
+.emi-verdict__banner[data-tone="yes"] .emi-verdict__dot {
+  background: var(--emi-good);
+  box-shadow: 0 0 0 4px var(--emi-good-soft);
+}
+
+.emi-verdict__banner[data-tone="no"] {
+  border-color: rgba(163, 44, 44, 0.32);
+  background: var(--emi-bad-soft);
+}
+
+.emi-verdict__banner[data-tone="no"] .emi-verdict__dot {
+  background: var(--emi-bad);
+  box-shadow: 0 0 0 4px var(--emi-bad-soft);
+}
+
+.emi-verdict__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+}
+
+.emi-verdict__grid dt {
+  margin: 0 0 3px;
+  color: var(--emi-ink-3);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.emi-verdict__grid dd { margin: 0; font-size: 1rem; font-weight: 600; color: var(--emi-ink); }
+
+.emi-verdict__checks {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.emi-verdict__checks li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  color: var(--emi-ink-2);
+  font-size: 0.8rem;
+  line-height: 1.56;
+}
+
+/* A tick or a cross drawn from two borders, no icon font needed. */
+.emi-verdict__checks li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  background: var(--emi-good-soft);
+  box-shadow: inset 0 0 0 1px rgba(14, 124, 90, 0.42);
+}
+
+.emi-verdict__checks li[data-ok="false"]::before {
+  background: var(--emi-bad-soft);
+  box-shadow: inset 0 0 0 1px rgba(163, 44, 44, 0.42);
+}
+
+.emi-verdict__note { margin: 0; color: var(--emi-ink-3); font-size: 0.78rem; line-height: 1.64; }
+
+/* ==========================================================================
+   8. Mandates
+   ========================================================================== */
+.emi-mandate {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  padding: clamp(16px, 2.1vw, 24px);
+  border: 1px solid var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(253, 252, 255, 0.9);
+}
+
+.emi-mandate__status {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--emi-rule);
+  border-left: 3px solid var(--emi-accent);
+  border-radius: 5px;
+  background: rgba(246, 243, 251, 0.8);
+  color: var(--emi-ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.emi-mandate__status[data-tone="success"] { border-left-color: var(--emi-good); }
+.emi-mandate__status[data-tone="error"] { border-left-color: var(--emi-error); }
+.emi-mandate__status[data-tone="warn"] { border-left-color: var(--emi-warn); }
+
+.emi-mandate__quick {
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+  border: 1px solid var(--emi-accent-line);
+  border-radius: 8px;
+  background: var(--emi-accent-soft);
+}
+
+.emi-mandate__quick .emi-subhead { margin: 0; }
+
+.emi-mandate__quicknote { margin: 0; color: var(--emi-ink-2); font-size: 0.8rem; line-height: 1.6; }
+
+.emi-mandates {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each mandate is a slip of its own, matching the schedule strip. */
+.emi-mandate-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--emi-rule);
+  border-left: 4px solid var(--emi-good);
+  border-radius: 4px 8px 8px 4px;
+  background: rgba(246, 243, 251, 0.72);
+}
+
+.emi-mandate-row[data-status="paused"] { border-left-color: var(--emi-warn); }
+.emi-mandate-row[data-status="cancelled"] { border-left-color: var(--emi-bad); opacity: 0.75; }
+
+.emi-mandate-row__id {
+  display: block;
+  font-family: var(--emi-font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--emi-accent-deep);
+}
+
+.emi-mandate-row__meta {
+  display: block;
+  margin-top: 2px;
+  color: var(--emi-ink-3);
+  font-size: 0.74rem;
+}
+
+.emi-mandate-row__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.emi-mandate-row__actions .btn-emi { min-height: 36px; padding: 8px 14px; font-size: 0.7rem; }
+
+.emi-statuspill {
+  flex: 0 0 auto;
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-family: var(--emi-font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.emi-statuspill[data-status="active"] { background: var(--emi-good-soft); color: var(--emi-good); }
+.emi-statuspill[data-status="paused"] { background: var(--emi-warn-soft); color: var(--emi-warn); }
+.emi-statuspill[data-status="cancelled"] { background: var(--emi-bad-soft); color: var(--emi-bad); }
+
+/* ==========================================================================
+   9. EMI-eligible products
+   ========================================================================== */
+.emi-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.emi-product {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--emi-rule);
+  border-radius: 10px;
+  background: rgba(253, 252, 255, 0.92);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: emi-rise 0.45s ease both;
+}
+
+.emi-product:hover {
+  transform: translateY(-4px);
+  border-color: var(--emi-accent-line);
+  box-shadow: var(--emi-shadow-lift);
+}
+
+.emi-product__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 118px;
+  border: 1px solid var(--emi-rule-soft);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 30% 16%, rgba(124, 58, 237, 0.14), transparent 62%),
+    linear-gradient(155deg, #FBF9FF, #E7E0F6);
+  overflow: hidden;
+}
+
+/* The from-tenure stamp struck into the corner of an eligible sheet. */
+.emi-product__stamp {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: linear-gradient(100deg, var(--emi-accent), var(--emi-foil-magenta));
+  color: #FFFFFF;
+  font-family: var(--emi-font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.emi-product__body { display: grid; gap: 5px; align-content: start; min-width: 0; }
+
+.emi-product__brand {
+  color: var(--emi-ink-3);
+  font-family: var(--emi-font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.emi-product h3 {
+  margin: 0;
+  font-family: var(--emi-font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.38;
+  color: var(--emi-ink);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.emi-product__price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 0; }
+
+.emi-product__price strong {
+  font-family: var(--emi-font-mono);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--emi-ink);
+}
+
+.emi-product__from {
+  margin: 0;
+  padding-top: 9px;
+  border-top: 1px dashed var(--emi-rule);
+  color: var(--emi-ink-3);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.emi-product__from strong { font-family: var(--emi-font-mono); color: var(--emi-accent-deep); }
+
+/* ==========================================================================
+   10. Checkout handover
+   ========================================================================== */
+.emi-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
+  gap: 16px;
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+  counter-reset: emi-step;
+}
+
+.emi-step {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 18px;
+  border: 1px solid rgba(243, 238, 251, 0.16);
+  border-radius: 10px;
+  background: rgba(21, 10, 38, 0.42);
+  animation: emi-rise 0.45s ease both;
+}
+
+.emi-step__num {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--emi-accent-bright);
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.24);
+  color: var(--emi-on-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.emi-step__title {
+  margin: 0;
+  font-family: var(--emi-font-display);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--emi-on-dark);
+}
+
+.emi-step__text { margin: 0; color: var(--emi-on-dark-2); font-size: 0.8rem; line-height: 1.62; }
+
+/* The honesty panel: what the monthly figure leaves out. */
+.emi-honesty {
+  padding: clamp(16px, 2.1vw, 22px);
+  border: 1px solid rgba(227, 199, 102, 0.36);
+  border-radius: 10px;
+  background: rgba(227, 199, 102, 0.08);
+}
+
+.emi-honesty p:first-child {
+  margin: 0 0 12px;
+  font-family: var(--emi-font-display);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #F0DC9A;
+}
+
+.emi-honesty ul {
+  display: grid;
+  gap: 9px;
+  margin: 0 0 14px;
+  padding-left: 18px;
+  color: var(--emi-on-dark-2);
+  font-size: 0.84rem;
+  line-height: 1.64;
+}
+
+.emi-honesty li::marker { color: #F0DC9A; }
+
+.emi-honesty__foot {
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(227, 199, 102, 0.26);
+  color: var(--emi-on-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.62;
+}
+
+/* ==========================================================================
+   11. CSS-art marks for the eligible-product tiles
+   ==========================================================================
+   Drawn with borders and gradients only, in the same spirit as the card face
+   above: each mark is a silhouette of the thing it stands for rather than a
+   picture of it. */
+.emi-art { position: relative; width: 44px; height: 44px; }
+.emi-art span { position: absolute; display: block; }
+
+.emi-art--device .art-shell {
+  inset: 12px 4px 10px 4px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 3px;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* The foot, which is what reads the mark as a laptop rather than a tablet. */
+.emi-art--device .art-shell::after {
+  content: "";
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  bottom: -7px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--emi-accent-deep);
+}
+
+.emi-art--phone .art-shell {
+  inset: 6px 12px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 6px;
+  background: rgba(124, 58, 237, 0.10);
+}
+
+.emi-art--phone .art-shell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 10px;
+  height: 2px;
+  transform: translateX(-50%);
+  border-radius: 1px;
+  background: var(--emi-accent-deep);
+}
+
+.emi-art--screen .art-shell {
+  inset: 8px 3px 16px 3px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 3px;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.emi-art--screen .art-screen {
+  inset: 11px 6px 12px 6px;
+  background: linear-gradient(140deg, rgba(124, 58, 237, 0.34), rgba(217, 70, 239, 0.20));
+}
+
+.emi-art--screen .art-shell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 4px;
+  height: 7px;
+  transform: translateX(-50%);
+  background: var(--emi-accent-deep);
+}
+
+.emi-art--audio .art-shell {
+  inset: 13px 4px 13px 4px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 50% 50% 46% 46%;
+  background: rgba(124, 58, 237, 0.10);
+}
+
+/* The driver, so the mark reads as audio rather than as a bulb. */
+.emi-art--audio .art-shell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%);
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 50%;
+  background: var(--emi-paper);
+}
+
+.emi-art--power .art-shell {
+  inset: 13px 11px 13px 11px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 3px;
+  background: rgba(124, 58, 237, 0.12);
+}
+
+/* The charge bar: the reason this item is on a plan at all. */
+.emi-art--power .art-shell::after {
+  content: "";
+  position: absolute;
+  inset: 4px 62% 4px 4px;
+  background: var(--emi-accent);
+}
+
+.emi-art--chip .art-shell {
+  inset: 12px 12px;
+  border: 2px solid var(--emi-accent-deep);
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, transparent 42%, rgba(124, 58, 237, 0.5) 42% 58%, transparent 58%),
+    rgba(124, 58, 237, 0.12);
+}
+
+/* Contact pins along the edges, as on a memory module. */
+.emi-art--chip .art-plate {
+  inset: 20px 5px auto;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--emi-accent-deep) 0 2px, transparent 2px 5px);
+}
+
+/* Generic eligible item: a foil chip, same language as the card face. */
+.emi-art--chip .art-dot {
+  inset: 16px 16px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #E7C766, #B4912F);
+}
+
+/* ==========================================================================
+   12. Skeletons
+   ========================================================================== */
+.emi-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 18px;
+}
+
+.emi-skeleton[hidden] { display: none; }
+
+.emi-skeleton__card {
+  height: 232px;
+  border-radius: 12px;
+  background: linear-gradient(100deg, rgba(26, 16, 48, 0.05) 30%, rgba(124, 58, 237, 0.11) 50%, rgba(26, 16, 48, 0.05) 70%);
+  background-size: 220% 100%;
+  animation: emi-shimmer 1.5s linear infinite;
+}
+
+@keyframes emi-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -20% 0; }
+}
+
+/* ==========================================================================
+   13. Responsive
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .emi-hero__inner { grid-template-columns: minmax(0, 1fr); }
+  .emi-plastic { justify-self: start; max-width: 380px; }
+}
+
+@media (max-width: 900px) {
+  .emi-split { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 780px) {
+  .emi-hero__actions .btn-emi { width: 100%; }
+  .emi-form .btn-emi { justify-self: stretch; width: 100%; }
+  .emi-result__grid { grid-template-columns: minmax(0, 1fr); }
+  .emi-slip { flex: 1 1 100%; }
+  .emi-skeleton { grid-template-columns: minmax(0, 1fr); }
+  .emi-section__watermark { font-size: 4.4rem; }
+}
+
+@media (max-width: 480px) {
+  .emi-summary { grid-template-columns: minmax(0, 1fr); }
+  .emi-mandate-row { flex-direction: column; align-items: stretch; }
+  .emi-mandate-row__actions .btn-emi { flex: 1 1 auto; }
+}
+
+/* ==========================================================================
+   14. Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .emi-page *,
+  .emi-page *::before,
+  .emi-page *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .emi-hero__sheen,
+  .emi-plastic__foil,
+  .emi-card__foil { animation: none; }
+
+  .emi-section,
+  .emi-card,
+  .emi-step,
+  .emi-product,
+  .emi-slip,
+  .emi-skeleton { animation: none; }
+}
