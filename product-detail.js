@@ -3150,6 +3150,153 @@ window.calculatePdpLoyaltyEarn = calculatePdpLoyaltyEarn;
 window.renderPdpLoyaltyCallout = renderPdpLoyaltyCallout;
 
 // ==========================================
+// Phase 43: ElectroMart Subscribe & Save Callout
+// ==========================================
+// The product page mirrors the subscription hub exactly: the same 5 / 10 / 15%
+// ladder, the same 1-2 / 3-4 / 5+ thresholds, and the same replenishable
+// eligibility rule. It cannot read the hub's ledger, so it re-derives the
+// line count from the device's own store. Where the hub is loaded on this
+// page its engine is preferred, so a member can never be shown one tier here
+// and a different one there.
+const PDP_SUBSCRIPTIONS_KEY = "electromart_subscriptions_v1";
+
+// Mirrors subscriptions.js DISCOUNT_TIERS exactly.
+const PDP_SUBSCRIPTION_TIERS = [
+  { tier: 1, minLines: 1, maxLines: 2, discountPercent: 5 },
+  { tier: 2, minLines: 3, maxLines: 4, discountPercent: 10 },
+  { tier: 3, minLines: 5, maxLines: 9999, discountPercent: 15 },
+];
+
+// Mirrors subscriptions.js REPLENISHABLE_PATTERNS. A schedule only makes
+// sense for a unit that is genuinely bought again.
+const PDP_SUBSCRIPTION_PATTERNS = [
+  "battery",
+  "batteries",
+  "filter",
+  "refill",
+  "consumable",
+  "ink",
+  "toner",
+  "cartridge",
+  "bulb",
+  "fuse",
+  "cable",
+  "adapter",
+  "charger",
+  "power bank",
+  "powerbank",
+  "stylus",
+  "styler",
+];
+
+function readSubscriptionLines() {
+  try {
+    const raw = localStorage.getItem(PDP_SUBSCRIPTIONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// A paused line still holds its tier place; a cancelled line gives it back.
+// This is the single rule behind every tier figure across both surfaces.
+function countSubscriptionTierPlaces() {
+  return readSubscriptionLines().filter(
+    (entry) => entry && (entry.status === "active" || entry.status === "paused")
+  ).length;
+}
+
+function resolveSubscriptionTier(lineCount) {
+  const count = Math.max(0, Math.floor(Number(lineCount) || 0));
+  for (const tier of PDP_SUBSCRIPTION_TIERS) {
+    if (count >= tier.minLines && count <= tier.maxLines) return tier;
+  }
+  // No lines yet still sits at the entry tier, which is what the hub does.
+  return PDP_SUBSCRIPTION_TIERS[0];
+}
+
+function isPdpProductReplenishable(product) {
+  const price = Number(product && product.price);
+  // A schedule needs a rupee price to bill against, so an unpriced line is
+  // never offered one however consumable the item looks.
+  if (!isFinite(price) || price <= 0) return false;
+  const signal = [product.category, product.name, product.title]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return PDP_SUBSCRIPTION_PATTERNS.some((pattern) => signal.indexOf(pattern) !== -1);
+}
+
+function renderPdpSubscriptionCallout(product) {
+  const callout = document.getElementById("pdpSubscriptionCallout");
+  if (!callout || !product) return;
+
+  // Show the certification on every priced product, but only offer a schedule
+  // on the ones a member would genuinely reorder.
+  const price = Number(product.price) || 0;
+  const eligible = price > 0 && isPdpProductReplenishable(product);
+  const tierRow = document.getElementById("pdpSubscriptionOfferRow");
+
+  if (price <= 0) {
+    callout.hidden = true;
+    return;
+  }
+  callout.hidden = false;
+
+  if (!eligible) {
+    if (tierRow) tierRow.hidden = true;
+    return;
+  }
+  if (tierRow) tierRow.hidden = false;
+
+  // Prefer the hub's own engine when the script is present on this page.
+  const hub = window.ElectroMart && window.ElectroMart.Subscriptions;
+  const resolved = hub && typeof hub.calculateSubscriptionDiscount === "function"
+    ? hub.calculateSubscriptionDiscount({
+        basePrice: price,
+        frequency: "monthly",
+        subscriptionCount: countSubscriptionTierPlaces(),
+      })
+    : (() => {
+        const tier = resolveSubscriptionTier(countSubscriptionTierPlaces());
+        return {
+          tier: tier.tier,
+          discountPercent: tier.discountPercent,
+          discountAmount: Math.floor(price * tier.discountPercent / 100 + 0.5),
+          discountedPrice: price - Math.floor(price * tier.discountPercent / 100 + 0.5),
+        };
+      })();
+
+  const discountEl = document.getElementById("pdpSubscriptionDiscount");
+  if (discountEl) {
+    discountEl.textContent = `−${resolved.discountPercent}% → ₹${resolved.discountedPrice.toLocaleString("en-IN")}`;
+  }
+
+  const tierEl = document.getElementById("pdpSubscriptionTierLabel");
+  if (tierEl) {
+    let label = `Tier ${resolved.tier}`;
+    try {
+      const translated = window.EM_TRANSLATIONS;
+      const language = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+      const dictionary = (translated && (translated[language] || translated.en)) || {};
+      const template = dictionary.subscriptions_tier_display;
+      if (template) label = template.replace("{tier}", String(resolved.tier));
+    } catch (error) {
+      // The tier label is a nicety; the figure above it is the real content.
+    }
+    tierEl.textContent = label;
+  }
+}
+
+window.readSubscriptionLines = readSubscriptionLines;
+window.countSubscriptionTierPlaces = countSubscriptionTierPlaces;
+window.resolveSubscriptionTier = resolveSubscriptionTier;
+window.isPdpProductReplenishable = isPdpProductReplenishable;
+window.renderPdpSubscriptionCallout = renderPdpSubscriptionCallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -3925,6 +4072,7 @@ function renderStarCharacters(rating) {
   renderPdpStudentDiscountCallout(product);
   renderPdpBulkTradeInCallout(product);
   renderPdpLoyaltyCallout(product);
+  renderPdpSubscriptionCallout(product);
 
   renderRecentlyViewedDetailSection();
 

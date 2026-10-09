@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Subscribe &amp; Save - Auto-Deliver, Schedule &amp; Save Up to 15%</title>
+  <meta name="description" content="The ElectroMart Subscribe and Save hub: enroll replenishable products, set a monthly, weekly or custom delivery cadence, pause, resume or cancel any order, and see exactly what your schedule saves you." />
+  <meta name="keywords" content="subscribe and save, subscription, recurring order, auto delivery, delivery schedule, ElectroMart subscriptions" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/subscriptions.html" />
+  <meta property="og:title" content="ElectroMart Subscribe &amp; Save - Auto-Deliver &amp; Schedule" />
+  <meta property="og:description" content="Set a delivery cadence, climb the discount tiers and manage every recurring order from one drafting sheet." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/subscriptions.html" />
+  <meta property="twitter:title" content="ElectroMart Subscribe &amp; Save - Auto-Deliver &amp; Schedule" />
+  <meta property="twitter:description" content="Set a delivery cadence, climb the discount tiers and manage every recurring order from one drafting sheet." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20261004a" />
+  <link rel="stylesheet" href="shared-search.css?v=20261004a" />
+  <link rel="stylesheet" href="subscriptions.css?v=20261004a" />
+</head>
+<body class="subs-body">
+  <div id="headerContainer"></div>
+
+  <main class="subs-page">
+    <!-- ============ HERO — the drawing sheet cover with its title block ============ -->
+    <section id="subscriptionsHero" class="subs-hero" aria-labelledby="subscriptionsHeroTitle">
+      <span class="subs-hero__grid" aria-hidden="true"></span>
+      <span class="subs-hero__glow" aria-hidden="true"></span>
+
+      <div class="subs-shell subs-hero__inner">
+        <div class="subs-hero__copy">
+          <p class="subs-eyebrow subs-eyebrow--light" data-i18n="subscriptions_hero_eyebrow">Drawing sheet EM-SUB-01</p>
+          <h1 id="subscriptionsHeroTitle" data-i18n="subscriptions_hub_title">Subscribe &amp; Save</h1>
+          <p class="subs-hero__lede" data-i18n="subscriptions_hub_subtitle">Recurring orders are a specification, not an accident: you choose the cadence, the quantity and the day it lands, and the discount tier follows from how many lines you keep running.</p>
+
+          <div class="subs-hero__actions">
+            <a href="#eligibleProductsSection" class="btn-subs btn-subs--stamp" data-i18n="subscriptions_hero_cta_browse">Browse eligible products</a>
+            <a href="#pauseResumeSection" class="btn-subs btn-subs--ghost" data-i18n="subscriptions_hero_cta_manage">Manage a running order</a>
+          </div>
+
+          <p class="subs-status" id="subsStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </div>
+
+        <!-- The title block: how a real drawing records its own facts. -->
+        <aside class="subs-titleblock" aria-labelledby="subsTitleblockTitle">
+          <h2 id="subsTitleblockTitle" class="subs-visually-hidden" data-i18n="subscriptions_rate_card_title">How the schedule is drawn</h2>
+
+          <dl class="subs-titleblock__grid">
+            <div><dt data-i18n="subscriptions_sheet_scale">Scale</dt><dd class="subs-mono" data-i18n="subscriptions_rate_frequency">Any frequency, one flat price list</dd></div>
+            <div><dt data-i18n="subscriptions_sheet_revision">Revision</dt><dd class="subs-mono" data-i18n="subscriptions_sheet_revision_value">Tier 1 to 3, 5% to 15%</dd></div>
+            <div><dt data-i18n="subscriptions_sheet_drawn_by">Drawn by</dt><dd class="subs-mono" data-i18n="subscriptions_sheet_drawn_by_value">You, on this device</dd></div>
+            <div><dt data-i18n="subscriptions_sheet_sheet">Sheet</dt><dd class="subs-mono">1 of 1</dd></div>
+          </dl>
+
+          <ul class="subs-titleblock__notes">
+            <li data-i18n="subscriptions_rate_save">Tier 1 pays 5% off every cycle. Tier 2 pays 10%. Tier 3 pays 15%. The percentage depends only on how many lines you keep running, never on the cadence you pick.</li>
+            <li data-i18n="subscriptions_rate_forecast">Forecasts below count six cycles from today. They are a projection at list prices, not a quotation, and your own basket decides the real figure.</li>
+            <li data-i18n="subscriptions_rate_footnote">A subscription holds its price only while it stays active. Pausing keeps the line and stops the deliveries; cancelling closes it and releases the tier contribution.</li>
+          </ul>
+
+          <p class="subs-titleblock__stamp" data-i18n="subscriptions_sheet_stamp">Issued by ElectroMart</p>
+        </aside>
+      </div>
+
+      <!-- The cadence ruler: a dimension string across the sheet. -->
+      <div class="subs-shell">
+        <div class="subs-ruler">
+          <span class="subs-ruler__label" data-i18n="subscriptions_cadence_label">Delivery cadence</span>
+          <ol class="subs-ruler__ticks" id="cadenceRuler"></ol>
+          <p class="subs-ruler__empty" id="cadenceRulerEmpty" data-i18n="subscriptions_cadence_empty" hidden>No cadence is drawn yet. Choose a frequency below to plot six deliveries.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SUMMARY — the schedule of record ============ -->
+    <section id="subscriptionSummarySection" class="subs-section" aria-labelledby="subsSummaryTitle">
+      <header class="subs-section__head">
+        <p class="subs-eyebrow" data-i18n="subscriptions_summary_eyebrow">Schedule of record</p>
+        <h2 id="subsSummaryTitle" data-i18n="subscriptions_summary_title">Your recurring orders at a glance</h2>
+        <p class="subs-section__lede" data-i18n="subscriptions_summary_subtitle">Totals below count only active lines. A paused line still appears on the sheet but stops contributing to what you are projected to save.</p>
+      </header>
+
+      <div class="subs-summary">
+        <div class="subs-metric">
+          <span class="subs-metric__label" data-i18n="subscriptions_summary_active">Active lines</span>
+          <strong class="subs-metric__value" id="summaryActiveCount">0</strong>
+          <span class="subs-metric__note" data-i18n="subscriptions_summary_active_note">Delivering on schedule</span>
+        </div>
+        <div class="subs-metric">
+          <span class="subs-metric__label" data-i18n="subscriptions_summary_paused">Paused lines</span>
+          <strong class="subs-metric__value" id="summaryPausedCount">0</strong>
+          <span class="subs-metric__note" data-i18n="subscriptions_summary_paused_note">Kept, not delivering</span>
+        </div>
+        <div class="subs-metric">
+          <span class="subs-metric__label" data-i18n="subscriptions_summary_per_cycle">Spend per cycle</span>
+          <strong class="subs-metric__value" id="summaryPerCycle">₹0</strong>
+          <span class="subs-metric__note" data-i18n="subscriptions_summary_per_cycle_note">After your tier discount</span>
+        </div>
+        <div class="subs-metric subs-metric--accent">
+          <span class="subs-metric__label" data-i18n="subscriptions_summary_total_savings">Projected savings</span>
+          <strong class="subs-metric__value" id="totalSavingsDisplay">₹0</strong>
+          <span class="subs-metric__note" data-i18n="subscriptions_savings_note">Across the next six cycles</span>
+        </div>
+      </div>
+
+      <div class="subs-summary__bar">
+        <p class="subs-summary__next">
+          <span data-i18n="subscriptions_next_delivery_label">Next delivery</span>
+          <strong class="subs-mono" id="nextDeliverySummary">—</strong>
+        </p>
+        <button type="button" id="manageSubscriptionBtn" class="btn-subs btn-subs--quiet" data-i18n="subscriptions_manage_btn">Manage lines</button>
+      </div>
+    </section>
+
+    <!-- ============ MY SUBSCRIPTIONS ============ -->
+    <section id="mySubscriptionsSection" class="subs-section subs-section--ruled" aria-labelledby="subsListTitle">
+      <header class="subs-section__head subs-section__head--split">
+        <div>
+          <p class="subs-eyebrow" data-i18n="subscriptions_list_eyebrow">Sheet 1 of 1</p>
+          <h2 id="subsListTitle" data-i18n="subscriptions_my_subscriptions_title">My subscriptions</h2>
+          <p class="subs-section__lede" id="subscriptionsListMeta" role="status" aria-live="polite"></p>
+        </div>
+        <button type="button" id="addSubscriptionBtn" class="btn-subs btn-subs--stamp" data-i18n="subscriptions_add_new_btn">Add a subscription</button>
+      </header>
+
+      <div class="subs-skeleton" id="subscriptionsSkeleton" aria-hidden="true">
+        <div class="subs-skeleton__sheet"></div>
+        <div class="subs-skeleton__sheet"></div>
+      </div>
+
+      <div class="subs-list" id="subscriptionsList" aria-busy="false"></div>
+
+      <p class="subs-empty" id="subscriptionsListEmpty" data-i18n="subscriptions_list_empty" hidden>No recurring orders are drawn on this sheet yet. Add one from an eligible product below and it will appear here with its own identifier and delivery dates.</p>
+
+      <!-- Selected line inspector -->
+      <div class="subs-inspector" id="selectedSubscriptionPanel">
+        <h3 class="subs-subhead" data-i18n="subscriptions_inspector_title">Selected line</h3>
+        <p class="subs-inspector__none" id="selectedSubscriptionNone" data-i18n="subscriptions_selected_none">No line is selected. Choose one above to inspect its cadence, its status and its next delivery.</p>
+        <div class="subs-inspector__body" id="selectedSubscriptionBody" hidden>
+          <dl class="subs-inspector__grid">
+            <div><dt data-i18n="subscriptions_status_label">Status</dt><dd><span class="subs-statuspill" id="subscriptionStatusDisplay">Active</span></dd></div>
+            <div><dt data-i18n="subscriptions_next_delivery_label">Next delivery</dt><dd class="subs-mono" id="nextDeliveryDate">—</dd></div>
+            <div><dt data-i18n="subscriptions_subscription_id_label">Subscription ID</dt><dd class="subs-mono" id="selectedSubscriptionId">—</dd></div>
+            <div><dt data-i18n="subscriptions_discount_percent_label">Discount</dt><dd class="subs-mono" id="selectedSubscriptionDiscount">0%</dd></div>
+            <div><dt data-i18n="subscriptions_per_cycle_label">Per cycle</dt><dd class="subs-mono" id="selectedSubscriptionPerCycle">₹0</dd></div>
+          </dl>
+          <p class="subs-inspector__note" id="selectedSubscriptionReason" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DELIVERY SCHEDULE ============ -->
+    <section id="deliveryScheduleSection" class="subs-section" aria-labelledby="subsScheduleTitle">
+      <header class="subs-section__head">
+        <p class="subs-eyebrow" data-i18n="subscriptions_schedule_eyebrow">Dimension line 2</p>
+        <h2 id="subsScheduleTitle" data-i18n="subscriptions_schedule_title">Delivery schedule</h2>
+        <p class="subs-section__lede" data-i18n="subscriptions_schedule_subtitle">A monthly line lands on one day of the month, a weekly line on one weekday, and a custom line every N days. The plotted deliveries below are computed from your inputs, not sampled.</p>
+      </header>
+
+      <form id="deliveryScheduleForm" class="subs-form" autocomplete="off" novalidate>
+        <div class="subs-form__row">
+          <div class="subs-field">
+            <label for="frequencySelect" data-i18n="subscriptions_frequency_label">Frequency</label>
+            <select id="frequencySelect" name="frequency" class="subs-input" aria-describedby="frequencyHint">
+              <option value="monthly" data-i18n="subscriptions_monthly_option">Every month</option>
+              <option value="weekly" data-i18n="subscriptions_weekly_option">Every week</option>
+              <option value="custom" data-i18n="subscriptions_custom_option">Custom interval</option>
+            </select>
+            <p class="subs-field__hint" id="frequencyHint" data-i18n="subscriptions_frequency_note">Monthly and weekly lines follow the same discount rate. Only the delivery date changes.</p>
+          </div>
+
+          <div class="subs-field" id="dayOfMonthField">
+            <label for="dayOfMonthInput" data-i18n="subscriptions_day_of_month_label">Day of month</label>
+            <input type="number" id="dayOfMonthInput" name="dayOfMonth" class="subs-input subs-input--num" min="1" max="28" step="1" value="1" inputmode="numeric" aria-describedby="dayOfMonthHint" />
+            <p class="subs-field__hint" id="dayOfMonthHint" data-i18n="subscriptions_day_of_month_hint">Between 1 and 28, so every month can honour it.</p>
+          </div>
+
+          <div class="subs-field" id="dayOfWeekField">
+            <label for="dayOfWeekSelect" data-i18n="subscriptions_day_of_week_label">Day of week</label>
+            <select id="dayOfWeekSelect" name="dayOfWeek" class="subs-input" aria-describedby="dayOfWeekHint">
+              <option value="0" data-i18n="subscriptions_weekday_sunday">Sunday</option>
+              <option value="1" data-i18n="subscriptions_weekday_monday">Monday</option>
+              <option value="2" data-i18n="subscriptions_weekday_tuesday">Tuesday</option>
+              <option value="3" data-i18n="subscriptions_weekday_wednesday">Wednesday</option>
+              <option value="4" data-i18n="subscriptions_weekday_thursday">Thursday</option>
+              <option value="5" data-i18n="subscriptions_weekday_friday">Friday</option>
+              <option value="6" data-i18n="subscriptions_weekday_saturday">Saturday</option>
+            </select>
+            <p class="subs-field__hint" id="dayOfWeekHint" data-i18n="subscriptions_day_of_week_hint">Applied on the next matching weekday.</p>
+          </div>
+
+          <div class="subs-field" id="customIntervalField">
+            <label for="customIntervalInput" data-i18n="subscriptions_custom_interval_label">Custom interval</label>
+            <input type="number" id="customIntervalInput" name="customInterval" class="subs-input subs-input--num" min="1" max="365" step="1" value="30" inputmode="numeric" aria-describedby="customIntervalHint" />
+            <p class="subs-field__hint" id="customIntervalHint" data-i18n="subscriptions_custom_interval_hint">Days between deliveries.</p>
+          </div>
+        </div>
+
+        <div class="subs-form__foot">
+          <button type="submit" id="saveScheduleBtn" form="deliveryScheduleForm" class="btn-subs btn-subs--stamp" data-i18n="subscriptions_save_schedule_btn">Save schedule</button>
+          <p class="subs-form__meta" id="scheduleSavedMeta" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div class="subs-nextdelivery">
+        <div>
+          <span class="subs-nextdelivery__label" data-i18n="subscriptions_next_delivery_title">Next delivery date</span>
+          <strong class="subs-nextdelivery__value subs-mono" id="nextDeliveryDateDisplay">—</strong>
+          <span class="subs-nextdelivery__note" id="nextDeliveryDateNote"></span>
+        </div>
+        <p class="subs-nextdelivery__formula subs-mono" id="nextDeliveryFormula"></p>
+      </div>
+
+      <div class="subs-cadence">
+        <h3 class="subs-subhead" data-i18n="subscriptions_cadence_preview_title">Plotted deliveries</h3>
+        <ol class="subs-cadence__list" id="cadencePreview"></ol>
+        <p class="subs-empty subs-empty--inline" id="cadencePreviewEmpty" data-i18n="subscriptions_cadence_empty" hidden>Nothing plotted yet.</p>
+      </div>
+    </section>
+
+    <!-- ============ DISCOUNT TIERS ============ -->
+    <section id="discountTierSection" class="subs-section subs-section--dark" aria-labelledby="subsTierTitle">
+      <span class="subs-section__watermark" aria-hidden="true">TIER</span>
+
+      <header class="subs-section__head">
+        <p class="subs-eyebrow subs-eyebrow--light" data-i18n="subscriptions_tier_section_eyebrow">Revision table</p>
+        <h2 id="subsTierTitle" data-i18n="subscriptions_discount_tier_label">Discount tiers</h2>
+        <p class="subs-section__lede subs-section__lede--light" data-i18n="subscriptions_tier_section_subtitle">The tier follows the number of active lines and nothing else. Paused lines hold their place; cancelled lines free it up again.</p>
+      </header>
+
+      <div class="subs-tier-readout">
+        <div>
+          <span class="subs-tier-readout__label" data-i18n="subscriptions_your_tier_label">Your tier</span>
+          <strong class="subs-tier-readout__value" id="discountTierDisplay">Tier 1</strong>
+        </div>
+        <div>
+          <span class="subs-tier-readout__label" data-i18n="subscriptions_discount_percent_label">Discount per cycle</span>
+          <strong class="subs-tier-readout__value subs-mono" id="subscriptionDiscountDisplay">5%</strong>
+        </div>
+        <div>
+          <span class="subs-tier-readout__label" data-i18n="subscriptions_your_discount_label">Your discount</span>
+          <strong class="subs-tier-readout__value subs-mono" id="subscriptionDiscountNote">₹0 per cycle</strong>
+        </div>
+      </div>
+
+      <ol class="subs-tierladder" id="tierLadder"></ol>
+
+      <div class="subs-forecast">
+        <h3 class="subs-subhead subs-subhead--light" data-i18n="subscriptions_forecast_title">Six-cycle forecast</h3>
+        <table class="subs-forecast__table">
+          <caption class="subs-visually-hidden" data-i18n="subscriptions_forecast_title">Six-cycle forecast</caption>
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="subscriptions_forecast_cycle_col">Cycle</th>
+              <th scope="col" data-i18n="subscriptions_forecast_list_col">List price</th>
+              <th scope="col" data-i18n="subscriptions_forecast_discount_col">Discount</th>
+              <th scope="col" data-i18n="subscriptions_forecast_net_col">Net</th>
+            </tr>
+          </thead>
+          <tbody id="forecastBody"></tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" data-i18n="subscriptions_forecast_total_col">Six cycles</th>
+              <td class="subs-mono" id="forecastListTotal">₹0</td>
+              <td class="subs-mono" id="forecastDiscountTotal">₹0</td>
+              <td class="subs-mono" id="forecastNetTotal">₹0</td>
+            </tr>
+          </tfoot>
+        </table>
+        <p class="subs-forecast__note" data-i18n="subscriptions_forecast_note">Counts six cycles of your current active lines at list prices and your current tier. It is a projection, not a quotation; taxes, shipping and any partner promotion are not modelled here.</p>
+      </div>
+    </section>
+
+    <!-- ============ ENROLLMENT + ELIGIBLE PRODUCTS ============ -->
+    <section id="eligibleProductsSection" class="subs-section" aria-labelledby="subsProductsTitle">
+      <header class="subs-section__head">
+        <p class="subs-eyebrow" data-i18n="subscriptions_enroll_eyebrow">Eligible stock</p>
+        <h2 id="subsProductsTitle" data-i18n="subscriptions_product_grid_title">Products that can run on a schedule</h2>
+        <p class="subs-section__lede" data-i18n="subscriptions_product_grid_subtitle">Subscribe &amp; Save covers replenishable consumables priced in rupees. Each line keeps its own cadence, so one battery can arrive monthly while another arrives every fortnight.</p>
+      </header>
+
+      <form id="enrollForm" class="subs-form subs-form--inline" autocomplete="off" novalidate>
+        <div class="subs-form__row">
+          <div class="subs-field">
+            <label for="enrollProductSelect" data-i18n="subscriptions_product_label">Product</label>
+            <select id="enrollProductSelect" name="productId" class="subs-input" aria-describedby="enrollProductHint"></select>
+            <p class="subs-field__hint" id="enrollProductHint" data-i18n="subscriptions_enroll_product_hint">The selected item is used for the tier and the discount.</p>
+          </div>
+          <div class="subs-field">
+            <label for="enrollQuantityInput" data-i18n="subscriptions_quantity_label">Quantity per delivery</label>
+            <input type="number" id="enrollQuantityInput" name="quantity" class="subs-input subs-input--num" min="1" max="20" step="1" value="1" inputmode="numeric" aria-describedby="enrollQuantityHint" />
+            <p class="subs-field__hint" id="enrollQuantityHint" data-i18n="subscriptions_quantity_hint">One line, one quantity. Add another line for more.</p>
+          </div>
+          <div class="subs-field">
+            <label for="enrollFrequencySelect" data-i18n="subscriptions_frequency_label">Frequency</label>
+            <select id="enrollFrequencySelect" name="frequency" class="subs-input">
+              <option value="monthly" data-i18n="subscriptions_monthly_option">Every month</option>
+              <option value="weekly" data-i18n="subscriptions_weekly_option">Every week</option>
+              <option value="custom" data-i18n="subscriptions_custom_option">Custom interval</option>
+            </select>
+            <p class="subs-field__hint" data-i18n="subscriptions_enroll_cadence_hint">Applied to this line only. You can change it later.</p>
+          </div>
+          <div class="subs-field">
+            <label for="enrollDayInput" data-i18n="subscriptions_day_of_month_label">Day of month</label>
+            <input type="number" id="enrollDayInput" name="dayOfMonth" class="subs-input subs-input--num" min="1" max="28" step="1" value="1" inputmode="numeric" aria-describedby="enrollDayHint" />
+            <p class="subs-field__hint" id="enrollDayHint" data-i18n="subscriptions_day_of_month_hint">Between 1 and 28.</p>
+          </div>
+        </div>
+        <div class="subs-form__foot">
+          <button type="submit" id="enrollBtn" class="btn-subs btn-subs--stamp" data-i18n="subscriptions_subscribe_btn">Subscribe &amp; save</button>
+          <p class="subs-form__meta" id="enrollMeta" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div class="subs-skeleton" id="subscriptionProductSkeleton" aria-hidden="true">
+        <div class="subs-skeleton__card"></div>
+        <div class="subs-skeleton__card"></div>
+      </div>
+
+      <div class="subs-productgrid" id="subscriptionProductGrid" aria-busy="false"></div>
+
+      <p class="subs-empty" id="subscriptionProductGridEmpty" data-i18n="subscriptions_product_grid_empty" hidden>Nothing in the catalogue is eligible for a schedule right now. Please check back soon.</p>
+
+      <p class="subs-section__note" data-i18n="subscriptions_points_note">Subscription discounts and ElectroMart Loyalty points are calculated separately and this page does not combine them. Points will be credited on each settled delivery once that integration is live; until then the savings shown here are the whole of the benefit.</p>
+    </section>
+
+    <!-- ============ PAUSE / RESUME / CANCEL ============ -->
+    <section id="pauseResumeSection" class="subs-section subs-section--ruled" aria-labelledby="subsPauseTitle">
+      <header class="subs-section__head">
+        <p class="subs-eyebrow" data-i18n="subscriptions_pause_eyebrow">Revision marks</p>
+        <h2 id="subsPauseTitle" data-i18n="subscriptions_pause_title">Pause, resume or cancel a line</h2>
+        <p class="subs-section__lede" data-i18n="subscriptions_pause_subtitle">Pausing stops deliveries and holds your tier place. Resuming restarts it on the same cadence. Cancelling closes the line and gives the tier place back. Each of these needs a reason so the history stays readable.</p>
+      </header>
+
+      <div class="subs-actionbar">
+        <div class="subs-actionbar__field">
+          <label for="subscriptionIdInput" data-i18n="subscriptions_subscription_id_label">Subscription ID</label>
+          <input type="text" id="subscriptionIdInput" name="subscriptionId" class="subs-input subs-input--mono" placeholder="SUB-XXXXXX" spellcheck="false" autocomplete="off" aria-describedby="subscriptionIdHint" />
+          <p class="subs-field__hint" id="subscriptionIdHint" data-i18n="subscriptions_subscription_id_hint">Fill this in from a line above, or open its sheet first.</p>
+        </div>
+        <div class="subs-actionbar__buttons">
+          <button type="button" id="pauseSubscriptionBtn" class="btn-subs btn-subs--quiet" data-i18n="subscriptions_pause_btn">Pause</button>
+          <button type="button" id="resumeSubscriptionBtn" class="btn-subs btn-subs--quiet" data-i18n="subscriptions_resume_btn">Resume</button>
+          <button type="button" id="cancelSubscriptionBtn" class="btn-subs btn-subs--danger" data-i18n="subscriptions_cancel_btn">Cancel</button>
+        </div>
+      </div>
+
+      <p class="subs-status" id="subsActionStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+
+      <div class="subs-reasonforms">
+        <form id="pauseSubscriptionForm" class="subs-reasonform" autocomplete="off" novalidate>
+          <h3 class="subs-subhead" data-i18n="subscriptions_pause_title">Pause a line</h3>
+          <div class="subs-field">
+            <label for="pauseReasonSelect" data-i18n="subscriptions_pause_reason_label">Reason for pausing</label>
+            <select id="pauseReasonSelect" name="reason" class="subs-input" aria-describedby="pauseReasonHint">
+              <option value="vacation" data-i18n="subscriptions_reason_vacation">Going on holiday</option>
+              <option value="travelling" data-i18n="subscriptions_reason_travelling">Travelling for work</option>
+              <option value="budget" data-i18n="subscriptions_reason_budget">Tightening the budget</option>
+              <option value="temporary_gap" data-i18n="subscriptions_reason_temporary_gap">Only need a short gap</option>
+              <option value="other" data-i18n="subscriptions_reason_other">Another reason</option>
+            </select>
+            <p class="subs-field__hint" id="pauseReasonHint" data-i18n="subscriptions_pause_reason_hint">Your tier place is held for as long as the line stays paused.</p>
+          </div>
+          <button type="submit" id="confirmPauseBtn" form="pauseSubscriptionForm" class="btn-subs btn-subs--stamp" data-i18n="subscriptions_confirm_pause_btn">Confirm pause</button>
+        </form>
+
+        <form id="cancelSubscriptionForm" class="subs-reasonform subs-reasonform--danger" autocomplete="off" novalidate>
+          <h3 class="subs-subhead" data-i18n="subscriptions_cancel_title">Cancel a line</h3>
+          <div class="subs-field">
+            <label for="cancelReasonSelect" data-i18n="subscriptions_cancel_reason_label">Reason for cancelling</label>
+            <select id="cancelReasonSelect" name="reason" class="subs-input" aria-describedby="cancelReasonHint">
+              <option value="no_longer_needed" data-i18n="subscriptions_reason_no_longer_needed">No longer needed</option>
+              <option value="switching_product" data-i18n="subscriptions_reason_switching_product">Switching to another product</option>
+              <option value="found_alternative" data-i18n="subscriptions_reason_found_alternative">Found something better</option>
+              <option value="too_expensive" data-i18n="subscriptions_reason_too_expensive">Too expensive now</option>
+              <option value="moving_out" data-i18n="subscriptions_reason_moving_out">Moving out</option>
+              <option value="other" data-i18n="subscriptions_reason_other">Another reason</option>
+            </select>
+            <p class="subs-field__hint" id="cancelReasonHint" data-i18n="subscriptions_cancel_reason_hint">Cancelling is reversible until the next delivery is packed. Re-add the line afterwards and the same identifier returns.</p>
+          </div>
+          <button type="submit" id="confirmCancelBtn" form="cancelSubscriptionForm" class="btn-subs btn-subs--danger" data-i18n="subscriptions_confirm_cancel_btn">Confirm cancel</button>
+        </form>
+      </div>
+
+      <ol class="subs-audit" id="subscriptionAudit"></ol>
+      <p class="subs-empty subs-empty--inline" id="subscriptionAuditEmpty" data-i18n="subscriptions_audit_empty" hidden>No revisions recorded yet.</p>
+    </section>
+  </main>
+
+  <!-- Shared i18n, catalogue, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="subscriptions.js?v=20261004a"></script>
+</body>
+</html>

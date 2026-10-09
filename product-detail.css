@@ -2415,3 +2415,101 @@ a {
   display: none !important;
 }
 
+/* Phase 43: ElectroMart Subscribe & Save PDP callout */
+.pdp-subs-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #c9dfe3;
+  border-left: 4px solid #006d77;
+  border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(135deg, #fbfdfd 0%, #eaf3f4 100%);
+}
+
+.pdp-subs-callout[hidden] {
+  display: none !important;
+}
+
+.pdp-subs-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-subs-icon {
+  color: #006d77;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.pdp-subs-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-subs-text strong {
+  color: #004e55;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pdp-subs-subtext {
+  color: #3c5663;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* The offer line appears only on products a member would genuinely reorder,
+   so a one-off laptop never advertises itself as a schedule candidate. */
+.pdp-subs-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #d7e7ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #3c5663;
+  font-size: 12px;
+}
+
+.pdp-subs-row[hidden] {
+  display: none !important;
+}
+
+.pdp-subs-discount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #14252e;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-subs-row em {
+  color: #004e55;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.pdp-subs-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #6b8492;
+}
+
+.pdp-subs-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #004e55;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-subs-link:hover,
+.pdp-subs-link:focus-visible {
+  text-decoration: underline;
+}
+

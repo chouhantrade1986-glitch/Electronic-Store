@@ -1,0 +1,1636 @@
+/* ElectroMart Subscription & Recurring Orders Styles (Phase 43) */
+/* Aesthetic: "Drafting Sheet" — a recurring order treated as a specification.
+   The page reads like an engineering drawing: a blueprint-navy cover with
+   cyan technical rules and a corner title block, then cool graph-paper sheets
+   carrying ruled dimensions, tick-marked cadence strings, folded corners and
+   rubber stamps. #006D77 is the issued-stamp teal, used the way an ink colour
+   is used on a drawing: sparingly, and only where something is authoritative. */
+
+:root {
+  /* Issued-stamp teal — the contract token */
+  --subscriptions-accent: #006D77;
+  --subscriptions-accent-deep: #004E55;
+  --subscriptions-accent-dark: #00343A;
+  --subscriptions-accent-bright: #0E8A96;
+  --subscriptions-accent-soft: rgba(0, 109, 119, 0.10);
+  --subscriptions-accent-line: rgba(0, 109, 119, 0.32);
+
+  /* Blueprint navy */
+  --subs-navy: #0A2434;
+  --subs-navy-2: #0E3348;
+  --subs-navy-3: #143F57;
+  --subs-cyan: #8FDDE6;
+  --subs-cyan-line: rgba(143, 221, 230, 0.28);
+  --subs-on-dark: #E8F4F6;
+  --subs-on-dark-2: #A3C3CB;
+
+  /* Graph paper */
+  --subs-paper: #F2F6F7;
+  --subs-paper-2: #E7EFF1;
+  --subs-paper-3: #DBE7EA;
+  --subs-card: #FBFDFD;
+
+  /* Blueprint ink on light paper */
+  --subs-ink: #14252E;
+  --subs-ink-2: #3C5663;
+  --subs-ink-3: #6B8492;
+  --subs-rule: #C3D6DC;
+  --subs-rule-soft: #DBE7EA;
+
+  /* Revision marks */
+  --subs-savings: #166E44;
+  --subs-savings-soft: rgba(22, 110, 68, 0.10);
+  --subs-paused: #8A5A00;
+  --subs-paused-soft: rgba(138, 90, 0, 0.10);
+  --subs-cancelled: #A32C2C;
+  --subs-cancelled-soft: rgba(163, 44, 44, 0.09);
+  --subs-error: #A32C2C;
+
+  /* Type */
+  --subs-font-display: "Bricolage Grotesque", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", Georgia, serif;
+  --subs-font-body: "Familjen Grotesk", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", sans-serif;
+  --subs-font-mono: "Martian Mono", "Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Arabic", monospace;
+
+  --subs-shadow-sm: 0 1px 2px rgba(10, 36, 52, 0.06), 0 4px 14px rgba(10, 36, 52, 0.06);
+  --subs-shadow: 0 2px 4px rgba(10, 36, 52, 0.07), 0 18px 42px rgba(10, 36, 52, 0.10);
+  --subs-shadow-lift: 0 4px 8px rgba(10, 36, 52, 0.09), 0 28px 56px rgba(0, 109, 119, 0.18);
+  --subs-radius: 12px;
+}
+
+/* ==========================================================================
+   1. Sheet and paper ground
+   ========================================================================== */
+body.subs-body {
+  background-color: var(--subs-paper) !important;
+  /* Graph paper: two hairline grids plus a faint cool vignette. */
+  background-image:
+    linear-gradient(rgba(10, 36, 52, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 36, 52, 0.028) 1px, transparent 1px),
+    radial-gradient(1100px 560px at 88% -6%, rgba(0, 109, 119, 0.07), transparent 62%),
+    radial-gradient(900px 520px at 6% 6%, rgba(143, 221, 230, 0.10), transparent 60%);
+  background-size: 28px 28px, 28px 28px, auto, auto;
+  background-attachment: fixed;
+  color: var(--subs-ink) !important;
+  font-family: var(--subs-font-body) !important;
+}
+
+.subs-body a { color: var(--subscriptions-accent); }
+
+.subs-page {
+  position: relative;
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 0 clamp(14px, 3vw, 36px) clamp(56px, 7vw, 100px);
+  color: var(--subs-ink);
+  font-family: var(--subs-font-body);
+}
+
+.subs-shell { width: 100%; }
+
+/* Every dimension, identifier and figure is set in mono with tabular figures
+   so the columns line up like a printed schedule. */
+.subs-page dd,
+.subs-mono,
+.subs-nextdelivery__value,
+.subs-tier-readout__value,
+.subs-forecast__table td {
+  font-family: var(--subs-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.subs-page h1,
+.subs-page h2,
+.subs-page h3,
+.subs-page h4,
+.subs-page dt,
+.subs-page .subs-eyebrow,
+.subs-page .subs-subhead {
+  font-family: var(--subs-font-display) !important;
+}
+
+.subs-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   2. Sections and shared chrome
+   ========================================================================== */
+.subs-section {
+  position: relative;
+  margin-bottom: clamp(24px, 3.4vw, 42px);
+  padding: clamp(20px, 2.8vw, 34px);
+  border: 1px solid var(--subs-rule);
+  border-radius: var(--subs-radius);
+  background: linear-gradient(180deg, rgba(251, 253, 253, 0.95), rgba(231, 239, 241, 0.88));
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
+  box-shadow: var(--subs-shadow);
+  animation: subs-rise 0.5s ease both;
+}
+
+/* Ruled like graph paper rather than a plain panel. */
+.subs-section--ruled {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 30px, rgba(10, 36, 52, 0.032) 30px 31px),
+    linear-gradient(180deg, rgba(251, 253, 253, 0.94), rgba(231, 239, 241, 0.86));
+}
+
+.subs-section--dark {
+  border-color: var(--subs-cyan-line);
+  background:
+    radial-gradient(760px 340px at 86% -12%, rgba(0, 109, 119, 0.42), transparent 62%),
+    linear-gradient(158deg, var(--subs-navy-2) 0%, var(--subs-navy) 58%, #071A26 100%);
+  box-shadow: 0 18px 44px rgba(10, 36, 52, 0.30);
+}
+
+/* Blind-stamped watermark, as if pressed into the blueprint. */
+.subs-section__watermark {
+  position: absolute;
+  right: clamp(-10px, 2vw, 28px);
+  bottom: clamp(-26px, 1vw, -8px);
+  color: rgba(232, 244, 246, 0.05);
+  font-family: var(--subs-font-display);
+  font-size: clamp(6rem, 20vw, 13rem);
+  font-weight: 800;
+  line-height: 0.74;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.subs-section__head { margin-bottom: 22px; max-width: 76ch; }
+
+.subs-section__head--split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: none;
+}
+
+.subs-section h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  color: var(--subs-ink);
+}
+
+.subs-section--dark h2 { color: var(--subs-on-dark); }
+
+.subs-section__lede {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--subs-ink-2);
+  font-size: 0.94rem;
+  line-height: 1.72;
+}
+
+.subs-section__lede--light { color: var(--subs-on-dark-2); }
+
+.subs-section__note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--subs-rule);
+  border-radius: 0 8px 8px 0;
+  background: rgba(251, 253, 253, 0.72);
+  color: var(--subs-ink-3);
+  font-size: 0.8rem;
+  line-height: 1.66;
+}
+
+.subs-subhead {
+  margin: 0 0 10px;
+  color: var(--subs-ink) !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-subhead--light { color: var(--subs-on-dark) !important; }
+
+.subs-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 5px 13px;
+  border: 1px solid var(--subscriptions-accent-line);
+  border-radius: 3px;
+  background: var(--subscriptions-accent-soft);
+  color: var(--subscriptions-accent-deep);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* A short dimension stub trailing the label, like a leader line. */
+.subs-eyebrow::after {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--subscriptions-accent);
+}
+
+.subs-eyebrow--light {
+  border-color: rgba(143, 221, 230, 0.42);
+  background: rgba(143, 221, 230, 0.12);
+  color: var(--subs-cyan);
+}
+
+.subs-empty {
+  margin: 0;
+  padding: 24px;
+  border: 1px dashed var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.72);
+  color: var(--subs-ink-2);
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.66;
+}
+
+.subs-empty--inline { padding: 14px; font-size: 0.82rem; text-align: left; }
+
+.subs-status {
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid var(--subs-rule);
+  border-left: 3px solid var(--subscriptions-accent);
+  border-radius: 5px;
+  background: rgba(251, 253, 253, 0.92);
+  color: var(--subs-ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.subs-status.is-success { border-left-color: var(--subs-savings); }
+.subs-status.is-error { border-left-color: var(--subs-error); }
+.subs-status.is-warn { border-left-color: var(--subs-paused); }
+
+@keyframes subs-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   3. Buttons
+   ========================================================================== */
+.btn-subs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 13px 26px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: var(--subs-font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+/* The issued stamp: teal pressed onto the sheet. */
+.btn-subs--stamp {
+  background: var(--subscriptions-accent);
+  border-color: var(--subscriptions-accent-deep);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0, 109, 119, 0.30);
+}
+
+.btn-subs--stamp:hover {
+  transform: translateY(-2px);
+  background: var(--subscriptions-accent-deep);
+  box-shadow: 0 12px 26px rgba(0, 109, 119, 0.36);
+}
+
+.btn-subs--quiet {
+  background: rgba(251, 253, 253, 0.86);
+  border-color: var(--subs-rule);
+  color: var(--subs-ink-2);
+}
+
+.btn-subs--quiet:hover {
+  transform: translateY(-2px);
+  border-color: var(--subscriptions-accent-line);
+  background: var(--subscriptions-accent-soft);
+  color: var(--subscriptions-accent-deep);
+}
+
+.btn-subs--ghost {
+  background: transparent;
+  border-color: rgba(232, 244, 246, 0.42);
+  color: var(--subs-on-dark);
+}
+
+.btn-subs--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--subs-cyan);
+  background: rgba(143, 221, 230, 0.14);
+}
+
+.btn-subs--danger {
+  background: transparent;
+  border-color: rgba(163, 44, 44, 0.5);
+  color: var(--subs-cancelled);
+}
+
+.btn-subs--danger:hover {
+  transform: translateY(-2px);
+  background: var(--subs-cancelled);
+  border-color: var(--subs-cancelled);
+  color: #ffffff;
+}
+
+.btn-subs:active { transform: translateY(0); }
+
+.btn-subs:disabled,
+.btn-subs[disabled],
+.btn-subs[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.46;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.55);
+}
+
+/* The shared storefront theme ships a global `outline: 2px solid #e77600
+   !important` on every button/input/select, so each focus ring here must also
+   be !important to win. The ink ring measures about 12:1 on the graph paper
+   and the white ring about 11:1 on the blueprint navy. */
+.btn-subs:focus-visible {
+  outline: 3px solid var(--subs-ink) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 5px rgba(0, 109, 119, 0.26) !important;
+}
+
+.subs-hero .btn-subs:focus-visible,
+.subs-section--dark .btn-subs:focus-visible {
+  outline-color: #FFFFFF !important;
+}
+
+.btn-subs--danger:focus-visible { outline-color: var(--subs-cancelled) !important; }
+
+/* ==========================================================================
+   4. Hero — the drawing cover and its title block
+   ========================================================================== */
+.subs-hero {
+  position: relative;
+  margin: 0 calc(-1 * clamp(14px, 3vw, 36px)) clamp(24px, 3.2vw, 40px);
+  padding: clamp(36px, 5.2vw, 70px) 0 clamp(26px, 3vw, 40px);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(900px 420px at 78% -18%, rgba(0, 109, 119, 0.46), transparent 62%),
+    linear-gradient(158deg, var(--subs-navy-2) 0%, var(--subs-navy) 62%, #071A26 100%);
+  border-bottom: 1px solid var(--subs-cyan-line);
+}
+
+/* Blueprint grid, faded toward the lower edge. */
+.subs-hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(143, 221, 230, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 221, 230, 0.10) 1px, transparent 1px),
+    linear-gradient(rgba(143, 221, 230, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 221, 230, 0.05) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  mask-image: radial-gradient(130% 100% at 24% 0%, #000 8%, transparent 82%);
+  -webkit-mask-image: radial-gradient(130% 100% at 24% 0%, #000 8%, transparent 82%);
+}
+
+.subs-hero__glow {
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  z-index: -1;
+  width: clamp(280px, 38vw, 520px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 109, 119, 0.34), transparent 68%);
+  filter: blur(12px);
+}
+
+.subs-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.16fr) minmax(0, 0.84fr);
+  gap: clamp(24px, 3.4vw, 46px);
+  align-items: center;
+}
+
+.subs-hero h1 {
+  margin: 0 0 12px;
+  max-width: 14ch;
+  font-size: clamp(2.1rem, 5.4vw, 4.1rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.034em;
+  color: var(--subs-on-dark);
+}
+
+.subs-hero__lede {
+  margin: 0 0 24px;
+  max-width: 58ch;
+  color: var(--subs-on-dark-2);
+  font-size: clamp(0.98rem, 1.2vw, 1.06rem);
+  line-height: 1.78;
+}
+
+.subs-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.subs-hero .subs-status {
+  margin-top: 20px;
+  border-color: var(--subs-cyan-line);
+  background: rgba(143, 221, 230, 0.08);
+  color: var(--subs-on-dark);
+}
+
+/* Title block: how a drawing records its own facts in a ruled corner grid. */
+.subs-titleblock {
+  position: relative;
+  padding: 22px;
+  border: 1px solid var(--subs-cyan-line);
+  border-radius: 4px;
+  background: rgba(7, 26, 38, 0.52);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: 0 18px 46px rgba(7, 26, 38, 0.42);
+}
+
+.subs-titleblock h2 { color: var(--subs-on-dark); }
+
+/* The inner rule a title block always carries, offset from the border. */
+.subs-titleblock::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(143, 221, 230, 0.18);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.subs-titleblock__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 16px;
+  background: var(--subs-cyan-line);
+  border: 1px solid var(--subs-cyan-line);
+}
+
+.subs-titleblock__grid > div { padding: 10px 12px; background: rgba(7, 26, 38, 0.86); }
+
+.subs-titleblock__grid dt {
+  margin: 0 0 3px;
+  color: var(--subs-on-dark-2);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.subs-titleblock__grid dd {
+  margin: 0;
+  color: var(--subs-cyan);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.subs-titleblock__notes {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0 0 0 22px;
+  list-style: none;
+}
+
+.subs-titleblock__notes li {
+  position: relative;
+  color: var(--subs-on-dark-2);
+  font-size: 0.82rem;
+  line-height: 1.66;
+}
+
+.subs-titleblock__notes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 12px;
+  height: 1px;
+  background: var(--subs-cyan);
+}
+
+.subs-titleblock__stamp {
+  position: relative;
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(143, 221, 230, 0.18);
+  color: var(--subs-on-dark-2);
+  font-family: var(--subs-font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   The cadence ruler: a dimension string with tick marks, arrows and the date
+   written under each station. This is the memorable thing on the page.
+   -------------------------------------------------------------------------- */
+.subs-ruler {
+  position: relative;
+  margin-top: clamp(26px, 3vw, 38px);
+  padding: 14px 18px 10px;
+  border: 1px solid var(--subs-cyan-line);
+  border-radius: 4px;
+  background: rgba(7, 26, 38, 0.44);
+}
+
+.subs-ruler__label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--subs-on-dark-2);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.subs-ruler__ticks {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0 0 22px;
+  list-style: none;
+}
+
+/* The dimension line itself. */
+.subs-ruler__ticks::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--subs-cyan) 8%, var(--subs-cyan) 92%, transparent);
+}
+
+/* Arrowhead ticks at both ends, drawn with rotated borders. */
+.subs-ruler__ticks::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-left: 1px solid var(--subs-cyan);
+  border-bottom: 1px solid var(--subs-cyan);
+  transform: rotate(45deg);
+  box-shadow: calc(100% + 100vw - 9px) 0 0 -0.5px var(--subs-cyan);
+}
+
+.subs-ruler__tick {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding-top: 26px;
+  color: var(--subs-cyan);
+}
+
+/* A station mark dropping from the dimension line to the label. */
+.subs-ruler__tick::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 18px;
+  background: var(--subs-cyan);
+}
+
+.subs-ruler__tick__seq {
+  font-family: var(--subs-font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--subs-on-dark-2);
+}
+
+.subs-ruler__tick__date {
+  font-family: var(--subs-font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--subs-on-dark);
+}
+
+.subs-ruler__empty {
+  margin: 0;
+  padding: 8px 0 4px;
+  color: var(--subs-on-dark-2);
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   5. Summary metrics
+   ========================================================================== */
+.subs-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  margin-bottom: 16px;
+  border: 1px solid var(--subs-rule);
+  background: var(--subs-rule);
+  overflow: hidden;
+}
+
+.subs-metric {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 16px;
+  background: rgba(251, 253, 253, 0.94);
+}
+
+.subs-metric--accent { background: var(--subscriptions-accent-soft); }
+
+.subs-metric__label {
+  color: var(--subs-ink-3);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-metric__value {
+  font-family: var(--subs-font-mono);
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.06;
+  font-variant-numeric: tabular-nums;
+  color: var(--subs-ink);
+}
+
+.subs-metric--accent .subs-metric__value { color: var(--subs-savings); }
+
+.subs-metric__note { color: var(--subs-ink-3); font-size: 0.74rem; line-height: 1.5; }
+
+.subs-summary__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.9);
+}
+
+.subs-summary__next {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  color: var(--subs-ink-3);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-summary__next strong { font-size: 1.02rem; letter-spacing: 0; text-transform: none; color: var(--subs-ink); }
+
+/* ==========================================================================
+   6. Subscription sheets
+   ========================================================================== */
+.subs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Each running order is a drawing sheet: corner fold, dashed cut line, stamp. */
+.subs-sheet {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 16px 16px 16px 18px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 4px 10px 10px 4px;
+  background: var(--subs-card);
+  box-shadow: var(--subs-shadow-sm);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: subs-rise 0.42s ease both;
+}
+
+.subs-sheet:hover {
+  transform: translateY(-4px);
+  border-color: var(--subscriptions-accent-line);
+  box-shadow: var(--subs-shadow-lift);
+}
+
+/* The cut line down the left margin, as on a tear-off drawing sheet. */
+.subs-sheet::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(0deg, var(--subs-rule) 0 5px, transparent 5px 10px);
+}
+
+/* The corner fold. */
+.subs-sheet::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--subs-paper);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+.subs-sheet.is-selected {
+  border-color: var(--subscriptions-accent);
+  box-shadow: 0 0 0 3px var(--subscriptions-accent-soft), var(--subs-shadow);
+}
+
+.subs-sheet.is-paused { border-left: 4px solid var(--subs-paused); }
+.subs-sheet.is-cancelled { border-left: 4px solid var(--subs-cancelled); opacity: 0.72; }
+.subs-sheet.is-active { border-left: 4px solid var(--subs-savings); }
+
+.subs-sheet__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.subs-sheet__id {
+  margin: 0;
+  font-family: var(--subs-font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--subscriptions-accent-deep);
+}
+
+.subs-sheet__title {
+  margin: 3px 0 0;
+  font-family: var(--subs-font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.36;
+  color: var(--subs-ink);
+}
+
+/* Status pill, tinted per state. */
+.subs-statuspill {
+  flex: 0 0 auto;
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subs-statuspill.is-active { background: var(--subs-savings-soft); color: var(--subs-savings); }
+.subs-statuspill.is-paused { background: var(--subs-paused-soft); color: var(--subs-paused); }
+.subs-statuspill.is-cancelled { background: var(--subs-cancelled-soft); color: var(--subs-cancelled); }
+
+.subs-sheet__body { display: grid; gap: 9px; align-content: start; }
+
+.subs-sheet__spec {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+  margin: 0;
+  padding: 11px 0;
+  border-top: 1px solid var(--subs-rule-soft);
+  border-bottom: 1px solid var(--subs-rule-soft);
+}
+
+.subs-sheet__spec div { min-width: 0; }
+
+.subs-sheet__spec dt {
+  margin: 0 0 2px;
+  color: var(--subs-ink-3);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.subs-sheet__spec dd {
+  margin: 0;
+  font-family: var(--subs-font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--subs-ink);
+  overflow-wrap: anywhere;
+}
+
+.subs-sheet__next { margin: 0; color: var(--subs-ink-2); font-size: 0.8rem; line-height: 1.55; }
+.subs-sheet__next strong { font-family: var(--subs-font-mono); color: var(--subscriptions-accent-deep); }
+
+.subs-sheet__reason {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--subs-paused);
+  border-radius: 0 6px 6px 0;
+  background: var(--subs-paused-soft);
+  color: var(--subs-ink-2);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.subs-sheet__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.subs-sheet__foot .btn-subs { min-height: 38px; padding: 9px 16px; font-size: 0.72rem; }
+
+/* Selected-line inspector */
+.subs-inspector {
+  padding: 18px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.92);
+}
+
+.subs-inspector__none { margin: 0; color: var(--subs-ink-3); font-size: 0.86rem; line-height: 1.66; }
+
+.subs-inspector__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px 18px;
+  margin: 0;
+}
+
+.subs-inspector__grid dt {
+  margin: 0 0 3px;
+  color: var(--subs-ink-3);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.subs-inspector__grid dd { margin: 0; font-size: 0.9rem; font-weight: 500; color: var(--subs-ink); overflow-wrap: anywhere; }
+
+.subs-inspector__note {
+  margin: 12px 0 0;
+  padding: 9px 11px;
+  border-left: 3px solid var(--subs-paused);
+  border-radius: 0 6px 6px 0;
+  background: var(--subs-paused-soft);
+  color: var(--subs-ink-2);
+  font-size: 0.78rem;
+  line-height: 1.58;
+}
+
+/* ==========================================================================
+   7. Forms and fields
+   ========================================================================== */
+.subs-form {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: clamp(16px, 2.1vw, 22px);
+  border: 1px dashed var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(242, 246, 247, 0.72);
+}
+
+.subs-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.subs-form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.subs-form__meta { margin: 0; color: var(--subs-ink-3); font-size: 0.8rem; line-height: 1.58; }
+
+.subs-field { display: grid; gap: 6px; min-width: 0; }
+
+.subs-field[hidden] { display: none; }
+
+.subs-field label,
+.subs-actionbar__field label {
+  padding: 0;
+  color: var(--subs-ink-2);
+  font-family: var(--subs-font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.subs-field__hint { margin: 0; color: var(--subs-ink-3); font-size: 0.74rem; line-height: 1.56; }
+
+.subs-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 4px;
+  background-color: var(--subs-card) !important;
+  color: var(--subs-ink) !important;
+  font-family: var(--subs-font-body) !important;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.subs-input--num,
+.subs-input--mono { font-family: var(--subs-font-mono); font-weight: 500; }
+
+.subs-select,
+select.subs-input {
+  appearance: none;
+  padding-right: 36px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--subscriptions-accent-deep) 50%),
+    linear-gradient(135deg, var(--subscriptions-accent-deep) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 20px, calc(100% - 12px) 20px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+select.subs-input option { background-color: var(--subs-card); color: var(--subs-ink); }
+
+.subs-input:hover { border-color: var(--subscriptions-accent-line); }
+
+.subs-input:focus-visible {
+  outline: 2px solid var(--subs-ink) !important;
+  outline-offset: 2px !important;
+  border-color: var(--subs-ink) !important;
+  box-shadow: 0 0 0 4px rgba(0, 109, 119, 0.18);
+}
+
+.subs-input[aria-invalid="true"] { border-color: var(--subs-error); }
+
+/* Next-delivery readout */
+.subs-nextdelivery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--subscriptions-accent-line);
+  border-radius: 10px;
+  background: var(--subscriptions-accent-soft);
+}
+
+.subs-nextdelivery__label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--subs-ink-3);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-nextdelivery__value {
+  display: block;
+  font-size: clamp(1.25rem, 2.6vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--subscriptions-accent-deep);
+}
+
+.subs-nextdelivery__note { display: block; margin-top: 4px; color: var(--subs-ink-2); font-size: 0.79rem; line-height: 1.56; }
+
+.subs-nextdelivery__formula {
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px dashed var(--subscriptions-accent-line);
+  border-radius: 6px;
+  background: rgba(251, 253, 253, 0.7);
+  color: var(--subs-ink-2);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+
+/* Cadence preview list */
+.subs-cadence { margin-top: 18px; }
+
+.subs-cadence__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: subs-cadence;
+}
+
+.subs-cadence__item {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 6px;
+  background: rgba(251, 253, 253, 0.9);
+  counter-increment: subs-cadence;
+}
+
+.subs-cadence__item::before {
+  content: "C" counter(subs-cadence, decimal-leading-zero);
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-family: var(--subs-font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--subs-ink-3);
+}
+
+.subs-cadence__date {
+  font-family: var(--subs-font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--subs-ink);
+}
+
+.subs-cadence__label { color: var(--subs-ink-3); font-size: 0.7rem; line-height: 1.45; }
+
+/* ==========================================================================
+   8. Tier readout, ladder and forecast
+   ========================================================================== */
+.subs-tier-readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  margin-bottom: 20px;
+  border: 1px solid var(--subs-cyan-line);
+  background: var(--subs-cyan-line);
+}
+
+.subs-tier-readout > div { padding: 16px; background: rgba(7, 26, 38, 0.72); }
+
+.subs-tier-readout__label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--subs-on-dark-2);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-tier-readout__value {
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.06;
+  color: var(--subs-cyan);
+}
+
+.subs-tierladder {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.subs-tier {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 16px;
+  border: 1px solid var(--subs-cyan-line);
+  border-radius: 4px 4px 10px 10px;
+  background: rgba(7, 26, 38, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: subs-rise 0.45s ease both;
+}
+
+.subs-tier:hover { transform: translateY(-3px); border-color: var(--subs-cyan); }
+
+/* The stepped bar: the width of each rung is the discount it pays. */
+.subs-tier__bar {
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(143, 221, 230, 0.14);
+  overflow: hidden;
+}
+
+.subs-tier__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--subscriptions-accent), var(--subs-cyan));
+}
+
+.subs-tier__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.subs-tier__name {
+  font-family: var(--subs-font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--subs-on-dark);
+}
+
+.subs-tier__percent {
+  font-family: var(--subs-font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--subs-cyan);
+}
+
+.subs-tier__range {
+  color: var(--subs-on-dark-2);
+  font-family: var(--subs-font-mono);
+  font-size: 0.7rem;
+}
+
+.subs-tier__note { margin: 0; color: var(--subs-on-dark-2); font-size: 0.78rem; line-height: 1.56; }
+
+.subs-tier.is-current {
+  border-color: var(--subs-cyan);
+  box-shadow: 0 0 0 3px rgba(143, 221, 230, 0.14);
+}
+
+.subs-forecast__table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.subs-forecast__table th,
+.subs-forecast__table td {
+  padding: 9px 12px;
+  text-align: right;
+  border-bottom: 1px solid rgba(143, 221, 230, 0.16);
+}
+
+.subs-forecast__table th:first-child,
+.subs-forecast__table td:first-child { text-align: left; }
+
+.subs-forecast__table thead th {
+  color: var(--subs-on-dark-2);
+  font-family: var(--subs-font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.subs-forecast__table tbody td { color: var(--subs-on-dark); }
+.subs-forecast__table tbody td.is-discount { color: var(--subs-cyan); }
+.subs-forecast__table tfoot th,
+.subs-forecast__table tfoot td {
+  border-bottom: 0;
+  border-top: 2px solid var(--subs-cyan);
+  color: var(--subs-on-dark);
+  font-weight: 700;
+}
+
+.subs-forecast__note {
+  margin: 12px 0 0;
+  color: var(--subs-on-dark-2);
+  font-size: 0.76rem;
+  line-height: 1.62;
+}
+
+/* ==========================================================================
+   9. Product grid
+   ========================================================================== */
+.subs-productgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 16px;
+}
+
+.subs-product {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.92);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: subs-rise 0.45s ease both;
+}
+
+.subs-product:hover {
+  transform: translateY(-4px);
+  border-color: var(--subscriptions-accent-line);
+  box-shadow: var(--subs-shadow-lift);
+}
+
+.subs-product__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 118px;
+  border: 1px solid var(--subs-rule-soft);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 32% 18%, rgba(0, 109, 119, 0.14), transparent 62%),
+    linear-gradient(155deg, #F6FBFC, #E4EEF0);
+  overflow: hidden;
+}
+
+/* The recurring mark struck into the corner of every eligible sheet. */
+.subs-product__stamp {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border: 1px solid var(--subscriptions-accent-line);
+  border-radius: 3px;
+  background: rgba(251, 253, 253, 0.94);
+  color: var(--subscriptions-accent-deep);
+  font-family: var(--subs-font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.subs-product__body { display: grid; gap: 5px; align-content: start; min-width: 0; }
+
+.subs-product__brand {
+  color: var(--subs-ink-3);
+  font-family: var(--subs-font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subs-product h3 {
+  margin: 0;
+  font-family: var(--subs-font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.38;
+  color: var(--subs-ink);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.subs-product__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.subs-product__price strong {
+  font-family: var(--subs-font-mono);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--subs-ink);
+}
+
+.subs-product__save {
+  margin: 0;
+  padding-top: 9px;
+  border-top: 1px dashed var(--subs-rule);
+  color: var(--subs-ink-3);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.subs-product__save strong { font-family: var(--subs-font-mono); color: var(--subs-savings); }
+
+/* ==========================================================================
+   10. Pause / resume / cancel
+   ========================================================================== */
+.subs-actionbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.92);
+}
+
+.subs-actionbar__field { flex: 1 1 280px; display: grid; gap: 6px; min-width: 0; }
+.subs-actionbar__buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.subs-reasonforms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.subs-reasonform {
+  display: grid;
+  gap: 13px;
+  align-content: start;
+  padding: 18px;
+  border: 1px solid var(--subs-rule);
+  border-radius: 10px;
+  background: rgba(251, 253, 253, 0.9);
+}
+
+.subs-reasonform--danger {
+  border-color: rgba(163, 44, 44, 0.32);
+  background: rgba(163, 44, 44, 0.035);
+}
+
+.subs-reasonform .btn-subs { justify-self: start; }
+
+/* Revision / audit trail */
+.subs-audit {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subs-audit__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 13px;
+  border: 1px solid var(--subs-rule);
+  border-left: 3px solid var(--subscriptions-accent);
+  border-radius: 4px 8px 8px 4px;
+  background: rgba(242, 246, 247, 0.72);
+}
+
+.subs-audit__action {
+  font-family: var(--subs-font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--subscriptions-accent-deep);
+}
+
+.subs-audit__id {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--subs-font-mono);
+  font-size: 0.76rem;
+  color: var(--subs-ink-2);
+}
+
+.subs-audit__meta {
+  flex: 0 0 auto;
+  color: var(--subs-ink-3);
+  font-size: 0.74rem;
+  text-align: right;
+}
+
+/* ==========================================================================
+   11. CSS-art marks
+   ========================================================================== */
+.subs-art { position: relative; width: 40px; height: 40px; }
+.subs-art span { position: absolute; display: block; }
+
+/* Battery: a cell with a terminal, drawn as borders. */
+.subs-art--battery .art-cell {
+  inset: 9px 5px 9px 5px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 3px;
+  background: rgba(0, 109, 119, 0.12);
+}
+.subs-art--battery .art-cell::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 8px;
+  height: 3px;
+  transform: translateX(-50%);
+  background: var(--subscriptions-accent-deep);
+}
+/* Charge level, so the mark reads as a consumable to be replaced. */
+.subs-art--battery .art-cell::before {
+  content: "";
+  position: absolute;
+  inset: 3px 60% 3px 3px;
+  background: var(--subscriptions-accent);
+}
+
+/* Filter: a cartridge with pleats. */
+.subs-art--filter .art-cart {
+  inset: 7px 9px 7px 9px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 2px;
+  background: rgba(0, 109, 119, 0.10);
+}
+.subs-art--filter .art-cart::after {
+  content: "";
+  position: absolute;
+  inset: 4px 5px;
+  background: repeating-linear-gradient(90deg, var(--subscriptions-accent-deep) 0 1.5px, transparent 1.5px 5px);
+}
+
+/* Ink: a cartridge with a nozzle. */
+.subs-art--ink .art-nozzle {
+  inset: 12px 6px 12px 6px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 2px 2px 4px 4px;
+  background: rgba(0, 109, 119, 0.12);
+}
+.subs-art--ink .art-nozzle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 5px;
+  height: 6px;
+  transform: translateX(-50%);
+  background: var(--subscriptions-accent-deep);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* Cable: a coiled loop with two ends. */
+.subs-art--cable .art-coil {
+  inset: 10px 5px 10px 5px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 50% 50% 46% 46%;
+  background: none;
+}
+.subs-art--cable .art-coil::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 2px;
+  background: var(--subscriptions-accent-deep);
+}
+
+/* Generic consumable: a sealed sachet. */
+.subs-art--sachet .art-seal {
+  inset: 8px 8px 8px 8px;
+  border: 2px dashed var(--subscriptions-accent-deep);
+  border-radius: 4px;
+  background: rgba(0, 109, 119, 0.08);
+}
+
+/* Bulb: a circle on a screw base. */
+.subs-art--bulb .art-globe {
+  inset: 6px 11px 16px 11px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 50%;
+  background: rgba(0, 109, 119, 0.12);
+}
+.subs-art--bulb .art-globe::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 10px;
+  height: 8px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(180deg, var(--subscriptions-accent-deep) 0 1.5px, transparent 1.5px 3px);
+}
+
+/* A refill loop: the recurring symbol, two chasing arcs. */
+.subs-art--loop .art-loop {
+  inset: 8px;
+  border: 2px solid var(--subscriptions-accent-deep);
+  border-radius: 50%;
+  border-right-color: transparent;
+  background: none;
+  transform: rotate(-30deg);
+}
+.subs-art--loop .art-loop::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid var(--subscriptions-accent);
+  border-radius: 50%;
+  border-left-color: transparent;
+  transform: rotate(60deg);
+}
+
+/* ==========================================================================
+   12. Skeletons
+   ========================================================================== */
+.subs-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 16px;
+}
+
+.subs-skeleton[hidden] { display: none; }
+
+.subs-skeleton__sheet,
+.subs-skeleton__card {
+  height: 226px;
+  border-radius: 10px;
+  background: linear-gradient(100deg, rgba(10, 36, 52, 0.05) 30%, rgba(0, 109, 119, 0.10) 50%, rgba(10, 36, 52, 0.05) 70%);
+  background-size: 220% 100%;
+  animation: subs-shimmer 1.5s linear infinite;
+}
+
+.subs-skeleton__card { height: 258px; }
+
+@keyframes subs-shimmer {
+  from { background-position: 120% 0; }
+  to { background-position: -20% 0; }
+}
+
+/* ==========================================================================
+   13. Responsive
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .subs-hero__inner { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 780px) {
+  .subs-ledger-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .subs-hero__actions .btn-subs { width: 100%; }
+  .subs-section__head--split { flex-direction: column; align-items: stretch; }
+  .subs-actionbar { flex-direction: column; align-items: stretch; }
+  .subs-actionbar__buttons .btn-subs { flex: 1 1 160px; }
+  .subs-reasonform .btn-subs { justify-self: stretch; }
+  .subs-sheet__spec { grid-template-columns: minmax(0, 1fr); }
+  .subs-skeleton { grid-template-columns: minmax(0, 1fr); }
+  .subs-ruler__tick__date { font-size: 0.58rem; }
+  .subs-ruler__ticks { overflow-x: auto; grid-auto-columns: minmax(96px, 1fr); }
+  .subs-section__watermark { font-size: 5rem; }
+}
+
+@media (max-width: 480px) {
+  .subs-titleblock__grid { grid-template-columns: minmax(0, 1fr); }
+  .subs-summary { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   14. Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .subs-page *,
+  .subs-page *::before,
+  .subs-page *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .subs-section,
+  .subs-sheet,
+  .subs-tier,
+  .subs-product,
+  .subs-skeleton { animation: none; }
+}

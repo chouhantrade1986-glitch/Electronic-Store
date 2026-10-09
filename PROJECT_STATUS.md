@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 7 अक्टूबर 2026 (Phase 41 ElectroMart B2B Corporate Bulk Trade-In Hub Completed; 76 frontend suites + 105 backend unit tests = 181 total)
+**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 42 ElectroMart Loyalty & Rewards Marketplace Completed; 77 frontend suites + 105 backend unit tests = 182 total)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 20+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 76 / 76 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 77 / 77 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **लॉयल्टी एंड रिवॉर्ड्स मार्केटप्लेस टेस्ट** | `node scratch/test-amazon-loyalty.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
 | **कैम्पस स्टोर टेस्ट** | `node scratch/test-amazon-edu-store.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
 | **गेमिंग व ई-स्पोर्ट्स एरेना टेस्ट** | `node scratch/test-amazon-gaming-arena.js` | ✅ **PASS** | 8 / 8 स्तर उत्तीर्ण (100%) |
@@ -36,7 +37,7 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 105 / 105 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **181 / 181 (100% Pass Rate)** |
+| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **182 / 182 (100% Pass Rate)** |
 
 ---
 
@@ -547,15 +548,28 @@
 - **पीडीपी इंटीग्रेशन:** deterministic bulk trade-in callout (metadata → signal → category/price, कोई randomness नहीं) with honesty fine-print।
 - **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_TRADEIN_I18N` base (173 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
-- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-trade-in.js` PASS (13/13), 76/76 frontend suites PASS, 105/105 backend unit tests PASS (181/181 total)।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-trade-in.js` PASS (13/13), 77/77 frontend suites PASS, 105/105 backend unit tests PASS (182/182 total)।
+
+### X. ElectroMart Loyalty & Rewards Marketplace (Phase 42 Completed)
+- **समर्पित लॉयल्टी हब (`loyalty.html`, `loyalty.css`, `loyalty.js`):** "The Members' Ledger" aesthetic (`--loyalty-accent: #FF6B00`) layered on the shared storefront, with warm parchment/espresso palette, `Fraunces`/`Chivo`/`DM Mono` typography, CSS-art tier medallions, perforated ticket-stub reward cards, punch-card earn row, dark leather referral band।
+- **पॉइंट्स बैलेंस व रेडेम्पशन कैटलॉग:** live points balance display with ₹ conversion (100 points = ₹1); redemption catalog grid with products/offers purchasable with points; deterministic redemption value (100 points = ₹1); minimum redemption thresholds।
+- **टियर अपग्रेड्स व बेनिफिट्स:** four tiers — Bronze (0), Silver (5,000), Gold (20,000), Platinum (50,000) points; tier progress bar, points to next tier; tier benefits grid (free shipping, early access, bonus points multiplier, dedicated support); deterministic tier calculation。
+- **पार्टनर ऑफर्स मार्केटप्लेस:** curated partner offers redeemable with points or exclusive discounts; partner cards with logo, offer description, points cost / discount; categories: dining, travel, entertainment, services।
+- **रेफरल प्रोग्राम:** unique referral code per user (`EM-REF-XXXXXX`, FNV-1a hash); shareable referral link, copy-to-clipboard; referrer bonus: 1,000 points; referee welcome bonus: 500 points; referral history list with status; deterministic (same referrer+referee = same referral ID)।
+- **अर्न पॉइंट्स सेक्शन:** ways to earn — purchases (10 points per ₹100), reviews (50 points), social shares (25 points); bonus point events (double points weekends, birthday bonus)।
+- **कार्ट/चेकआउट पॉइंट्स इंटीग्रेशन:** apply points at checkout (100 points = ₹1 discount); max points per order = 50% of cart value; points deducted from balance, added to `electromart_loyalty_redemptions_v1`।
+- **पीडीपी इंटीग्रेशन:** deterministic loyalty callout (earn potential on product) with honesty fine-print।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_LOYALTY_I18N` base (229 keys) + per-language overrides (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
+- **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-loyalty.js` PASS (10/10), 77/77 frontend suites PASS, 105/105 backend unit tests PASS (182/182 total)।
 
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
 
-- `<Phase-41-commit-sha>`: feat(phase-41): add ElectroMart B2B Corporate Bulk Trade-In Hub with bulk valuation, GST credit, tax savings, pickup booking, enterprise vouchers and 11-language support
-- `<Phase-41-contract-sha>`: test(phase-41): add failing B2B corporate bulk trade-in contract
-- `59e63a6`: feat(phase-40): add ElectroMart Student & Educator Campus Store with student verification, discount estimator, faculty course lists and 11-language support
+- `0957d11`: feat(phase-42): complete loyalty and rewards marketplace hub
+- `d1aecc0`: feat(phase-41): add ElectroMart B2B Corporate Bulk Trade-In Hub with bulk valuation, GST credit, tax savings, pickup booking, enterprise vouchers and 11-language support
+- `9e04517`: test(phase-40): add failing student and educator campus store contract
 - `b6fac9c`: feat(phase-39): add ElectroMart Gaming and eSports Arena with rig configurator, deterministic FPS estimator, sponsorship portal and 11-language support
 - `9e04517`: test(phase-40): add failing student and educator campus store contract
 - `dd7fdfa`: feat(phase-38): checkpoint ElectroMart Launchpad hub
