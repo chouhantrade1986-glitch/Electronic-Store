@@ -8,12 +8,110 @@ const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
 const CHECKOUT_IDEMPOTENCY_STORAGE_KEY = "electromart_checkout_idempotency_v1";
+const CHECKOUT_CART_FINGERPRINT_STORAGE_KEY = "electromart_checkout_cart_fingerprint_v1";
+const EXCHANGE_IMEI_SESSION_PREFIX = "electromart_exchange_imei_v1:";
+
+function stableStringify(value) {
+  if (value === null || value === undefined) {
+    return "null";
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => stableStringify(entry)).join(",")}]`;
+  }
+  if (typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function buildCartFingerprint(cartState = {}) {
+  const normalizedRows = (Array.isArray(cartState.rows) ? cartState.rows : []).map((row) => ({
+    id: String(row && row.id ? row.id : ""),
+    quantity: Number(row && Number.isFinite(Number(row.quantity)) ? Number(row.quantity) : 0),
+    price: Number(row && Number.isFinite(Number(row.price)) ? Number(row.price) : 0),
+    name: String(row && row.name ? row.name : ""),
+    protectionPlan: row && row.protectionPlan ? {
+      name: String(row.protectionPlan.name || ""),
+      price: Number(Number.isFinite(Number(row.protectionPlan.price)) ? Number(row.protectionPlan.price) : 0)
+    } : null
+  })).sort((a, b) => a.id.localeCompare(b.id));
+
+  const normalizedExchangeQuotes = (Array.isArray(cartState.exchangeQuotes) ? cartState.exchangeQuotes : []).map((entry) => ({
+    targetProductId: String(entry && entry.targetProductId ? entry.targetProductId : ""),
+    quoteId: String(entry && entry.quoteId ? entry.quoteId : "")
+  })).sort((a, b) => a.targetProductId.localeCompare(b.targetProductId));
+
+  const payload = {
+    rows: normalizedRows,
+    paymentMethod: String(cartState.paymentMethod || ""),
+    couponCode: String(cartState.couponCode || ""),
+    exchangeQuotes: normalizedExchangeQuotes,
+    deliverySlot: cartState.deliverySlot && typeof cartState.deliverySlot === "object" ? {
+      id: String(cartState.deliverySlot.id || ""),
+      eta: String(cartState.deliverySlot.eta || "")
+    } : null,
+    orderSource: String(cartState.orderSource || "")
+  };
+
+  return stableStringify(payload);
+}
+
+function readCheckoutCartFingerprint() {
+  try {
+    const raw = localStorage.getItem(CHECKOUT_CART_FINGERPRINT_STORAGE_KEY);
+    return raw ? String(raw) : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function writeCheckoutCartFingerprint(value) {
+  try {
+    localStorage.setItem(CHECKOUT_CART_FINGERPRINT_STORAGE_KEY, String(value || ""));
+  } catch (error) {}
+}
+
+function clearCheckoutCartFingerprint() {
+  try {
+    localStorage.removeItem(CHECKOUT_CART_FINGERPRINT_STORAGE_KEY);
+  } catch (error) {}
+}
+
+function getCurrentCartFingerprint() {
+  const rows = getCartRows();
+  const exchangeSummary = getExchangeBreakdown(rows);
+  const deliverySlot = getSelectedDeliverySlot();
+  const pricing = getPricingBreakdown(rows);
+  return buildCartFingerprint({
+    rows: rows.map((row) => ({
+      id: row.id,
+      quantity: row.quantity,
+      price: row.price,
+      name: row.name,
+      protectionPlan: row.protectionPlan || null
+    })),
+    paymentMethod: getSelectedPaymentMethod(),
+    couponCode: pricing.coupon.code || "",
+    exchangeQuotes: exchangeSummary.quotes || [],
+    deliverySlot: deliverySlot || null,
+    orderSource: "checkout"
+  });
+}
 
 function createCheckoutIdempotencyKey() {
   if (window.crypto && typeof window.crypto.randomUUID === "function") {
     return window.crypto.randomUUID();
   }
   return `checkout-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function rotateCheckoutIdempotencyKey() {
+  const next = createCheckoutIdempotencyKey();
+  checkoutIdempotencyKey = next;
+  try {
+    localStorage.setItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY, next);
+  } catch (error) {}
+  return next;
 }
 
 function resolveCheckoutIdempotencyKey() {
@@ -30,12 +128,22 @@ function resolveCheckoutIdempotencyKey() {
   }
 }
 
-const checkoutIdempotencyKey = resolveCheckoutIdempotencyKey();
+let checkoutIdempotencyKey = resolveCheckoutIdempotencyKey();
 
 function clearCheckoutIdempotencyKey() {
   try {
     localStorage.removeItem(CHECKOUT_IDEMPOTENCY_STORAGE_KEY);
   } catch (error) {}
+}
+
+function getActiveCheckoutIdempotencyKey() {
+  const fingerprint = getCurrentCartFingerprint();
+  const previousFingerprint = readCheckoutCartFingerprint();
+  if (previousFingerprint && previousFingerprint !== fingerprint) {
+    checkoutIdempotencyKey = rotateCheckoutIdempotencyKey();
+    writeCheckoutCartFingerprint(fingerprint);
+  }
+  return checkoutIdempotencyKey;
 }
 
 function resolveRenewedTaxProfile(product) {
@@ -929,7 +1037,7 @@ function renderCheckoutItems(rows) {
     exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
   } catch (e) {}
 
-  const hasAnyExchange = rows.some((r) => exCart[String(r.id)] && exCart[String(r.id)].finalValue);
+  const hasAnyExchange = rows.some((r) => exCart[String(r.id)] && exCart[String(r.id)].quoteId);
 
   const doorstepNoticeHtml = hasAnyExchange ? `
     <div class="checkout-exchange-doorstep-notice" style="background:#fff8e7;border:1px solid #e77600;border-radius:6px;padding:8px 12px;margin:0 0 12px 0;font-size:12px;color:#0f1111;">
@@ -939,9 +1047,9 @@ function renderCheckoutItems(rows) {
 
   checkoutItemsEl.innerHTML = doorstepNoticeHtml + rows.map((row) => {
     const ex = exCart[String(row.id)];
-    const exchangeHtml = (ex && ex.finalValue) ? `
+    const exchangeHtml = (ex && ex.quoteId) ? `
       <div class="checkout-exchange-pill" style="display:inline-block;background:#e7f4f5;border:1px solid #007185;padding:2px 8px;border-radius:4px;font-size:12px;color:#007185;margin-top:4px;">
-        🔄 <strong>Exchange:</strong> ${ex.modelName || "Device"} (IMEI/SN: ${ex.imei || "Verified"}) · <strong style="color:#007600;">-${money(ex.finalValue)}</strong>
+        🔄 <strong>Exchange:</strong> ${ex.modelName || "Device"} · <strong style="color:#007600;">-${money(ex.discountAmount)}</strong>
       </div>
     ` : "";
     const renewedHtml = row.isRenewed ? `
@@ -972,6 +1080,42 @@ function renderCheckoutItems(rows) {
   placeOrderBtn.disabled = false;
 }
 
+function getExchangeBreakdown(rows) {
+  let exCart = {};
+  try {
+    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
+  } catch (e) {}
+
+  let exchangeDiscount = 0;
+  const quotes = [];
+  let hasUnissuedQuote = false;
+
+  rows.forEach((row) => {
+    const ex = exCart[String(row.id)];
+    if (!ex) {
+      return;
+    }
+    if (!ex.quoteId || !Number.isFinite(Number(ex.discountAmount)) || Number(ex.discountAmount) <= 0) {
+      hasUnissuedQuote = true;
+      return;
+    }
+    const discountAmount = Number(ex.discountAmount);
+    exchangeDiscount += discountAmount;
+    quotes.push({
+      targetProductId: String(row.id),
+      quoteId: String(ex.quoteId),
+      discountAmount,
+      modelName: String(ex.modelName || "Device")
+    });
+  });
+
+  return {
+    exchangeDiscount,
+    quotes,
+    hasUnissuedQuote
+  };
+}
+
 function getPricingBreakdown(rows) {
   const itemCount = rows.reduce((sum, row) => sum + row.quantity, 0);
   const subtotal = rows.reduce((sum, row) => sum + row.quantity * row.price + (row.protectionPlan ? row.quantity * row.protectionPlan.price : 0), 0);
@@ -998,17 +1142,8 @@ function getPricingBreakdown(rows) {
     });
   });
 
-  let totalExchangeDiscount = 0;
-  let exCart = {};
-  try {
-    exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
-  } catch (e) {}
-  rows.forEach((row) => {
-    const ex = exCart[String(row.id)];
-    if (ex && ex.finalValue) {
-      totalExchangeDiscount += Number(ex.finalValue);
-    }
-  });
+  const exchangeSummary = getExchangeBreakdown(rows);
+  const totalExchangeDiscount = Number(exchangeSummary.exchangeDiscount || 0);
 
   const roundedTax = Math.round(totalGst * 100) / 100;
   const roundedSubtotal = Math.round(subtotal * 100) / 100;
@@ -1361,17 +1496,43 @@ async function openRazorpayCheckout(payment) {
 }
 
 async function createOrReuseOnlineOrder(session, orderPayload) {
+  const currentFingerprint = getCurrentCartFingerprint();
+
   if (pendingGatewayOrderContext && pendingGatewayOrderContext.orderId) {
+    if (pendingGatewayOrderContext.fingerprint && pendingGatewayOrderContext.fingerprint !== currentFingerprint) {
+      pendingGatewayOrderContext = null;
+      clearCheckoutCartFingerprint();
+      writeCheckoutCartFingerprint(currentFingerprint);
+      return createOrReuseOnlineOrder(session, orderPayload);
+    }
+    if (!pendingGatewayOrderContext.fingerprint) {
+      pendingGatewayOrderContext.fingerprint = currentFingerprint;
+      writeCheckoutCartFingerprint(currentFingerprint);
+    }
     return {
       id: pendingGatewayOrderContext.orderId,
       reused: true
     };
   }
 
+  const previousFingerprint = readCheckoutCartFingerprint();
+  if (previousFingerprint && previousFingerprint !== currentFingerprint) {
+    rotateCheckoutIdempotencyKey();
+  }
+
+  const nextFingerprint = currentFingerprint;
+  const orderNonce = String(orderPayload.idempotencyKey || checkoutIdempotencyKey || "").trim();
+  if (orderNonce) {
+    writeCheckoutCartFingerprint(nextFingerprint);
+  }
+
   const order = await postAuthed("/orders", orderPayload, session.token);
   pendingGatewayOrderContext = {
-    orderId: order.id
+    orderId: order.id,
+    fingerprint: nextFingerprint,
+    idempotencyKey: orderPayload.idempotencyKey
   };
+  writeCheckoutCartFingerprint(nextFingerprint);
   return order;
 }
 
@@ -1588,19 +1749,38 @@ async function handlePlaceOrder() {
     saveCartMap({});
     clearCouponState();
     clearCheckoutIdempotencyKey();
+    clearCheckoutCartFingerprint();
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(offlineOrderId)}`;
     return;
   }
 
+  const exchangeSummary = getExchangeBreakdown(rows);
+  if (exchangeSummary.hasUnissuedQuote) {
+    showCheckoutToast({
+      title: "Exchange quote needs renewal",
+      message: "Remove the old exchange offer and request a new server quote before placing your order.",
+      tone: "warning"
+    });
+    return;
+  }
+  const activeIdempotencyKey = getActiveCheckoutIdempotencyKey();
+  const exchangeImeiByQuote = {};
+  try {
+    exchangeSummary.quotes.forEach((quote) => {
+      exchangeImeiByQuote[quote.quoteId] = sessionStorage.getItem(`${EXCHANGE_IMEI_SESSION_PREFIX}${quote.quoteId}`) || "";
+    });
+  } catch (error) {}
   const orderPayload = {
     items: rows.map((row) => ({ productId: String(row.id), quantity: row.quantity })),
-    expectedSubtotal: Number(rows.reduce((sum, row) => sum + Number(row.price || 0) * Number(row.quantity || 0), 0).toFixed(2)),
-    idempotencyKey: checkoutIdempotencyKey,
+    expectedSubtotal: Number((pricing.subtotal || rows.reduce((sum, row) => sum + Number(row.price || 0) * Number(row.quantity || 0), 0)).toFixed(2)),
+    idempotencyKey: activeIdempotencyKey,
     shippingAddress,
     paymentMethod,
     couponCode: pricing.coupon.code || undefined,
     deliverySlot,
-    reservationUntil: reservation.hasLowStock ? reservation.reservationUntil.toISOString() : ""
+    reservationUntil: reservation.hasLowStock ? reservation.reservationUntil.toISOString() : "",
+    exchangeQuoteIds: exchangeSummary.quotes.map((quote) => quote.quoteId),
+    exchangeImeiByQuote
   };
 
   setPlacingState(true);
@@ -1621,6 +1801,7 @@ async function handlePlaceOrder() {
           saveCartMap({});
           clearCouponState();
           clearCheckoutIdempotencyKey();
+          clearCheckoutCartFingerprint();
           pendingGatewayOrderContext = null;
           window.location.href = `thank-you.html?orderId=${encodeURIComponent(paidOrderId || "")}`;
           return;
@@ -1668,6 +1849,7 @@ async function handlePlaceOrder() {
     saveCartMap({});
     clearCouponState();
     clearCheckoutIdempotencyKey();
+    clearCheckoutCartFingerprint();
     try {
       localStorage.removeItem("electromart_exchange_cart_v1");
     } catch (e) {}
@@ -1692,6 +1874,7 @@ async function handlePlaceOrder() {
       : "";
     if (error.status === 402) {
       pendingGatewayOrderContext = null;
+      clearCheckoutCartFingerprint();
     }
     showCheckoutToast({
       title: "Order failed",

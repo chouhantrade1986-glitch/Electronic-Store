@@ -245,6 +245,10 @@ function ensureSeedData() {
     db.orders = [];
   }
 
+  if (!Array.isArray(db.exchangeQuotes)) {
+    db.exchangeQuotes = [];
+  }
+
   ensureAfterSalesCollections(db);
 
   if (!db.payments) {

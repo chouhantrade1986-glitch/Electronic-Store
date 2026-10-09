@@ -91,6 +91,15 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Run frontend scratch test suites
+        shell: pwsh
+        run: node scratch/run_all_tests.js
+
+      - name: Run backend unit tests
+        shell: pwsh
+        working-directory: backend
+        run: npm run test:unit
+
       - name: Run release preflight
         shell: pwsh
         run: |

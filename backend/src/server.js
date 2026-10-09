@@ -21,6 +21,7 @@ const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const exchangeRoutes = require("./routes/exchangeRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -53,6 +54,7 @@ app.get("/api/metrics", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/exchange", exchangeRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
 

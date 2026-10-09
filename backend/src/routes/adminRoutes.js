@@ -1,5 +1,5 @@
 const express = require("express");
-const { readDb, writeDb, withWriteLock } = require("../lib/db");
+const { readDb, writeDb } = require("../lib/db");
 const { requireAuth, requireAdmin } = require("../middleware/authMiddleware");
 const { isDriveConfigured, parseDataUrl, uploadBufferToDrive } = require("../lib/googleDrive");
 const {
@@ -10,6 +10,7 @@ const {
   listBackInStockRequests
 } = require("../lib/backInStock");
 const { appendOrderStatusEvent, withNormalizedOrderStatusHistory } = require("../lib/orderStatus");
+const { changeUserRole } = require("../lib/adminAccounts");
 const { dispatchOrderStatusNotification, listOrderNotifications, resendOrderNotification } = require("../lib/orderNotifications");
 const { phoneVerificationPublicView } = require("../lib/phoneVerification");
 const {
@@ -320,6 +321,36 @@ router.get("/users", (req, res) => {
     phoneVerification: phoneVerificationPublicView(user)
   }));
   return res.json({ count: users.length, users });
+});
+
+router.patch("/users/:id/role", (req, res) => {
+  const db = readDb();
+  const roleResult = changeUserRole(db, req.params.id, req.body && req.body.role, {
+    actorId: req.user && req.user.id,
+    actorEmail: req.user && req.user.email,
+    actorName: req.user && req.user.name,
+    requestId: req.requestId,
+    ip: req.ip,
+    source: "admin_api"
+  });
+
+  if (!roleResult.ok) {
+    return res.status(roleResult.status || 400).json({ message: roleResult.message });
+  }
+  if (roleResult.changed) {
+    writeDb(db);
+  }
+  return res.json({
+    changed: roleResult.changed,
+    previousRole: roleResult.previousRole,
+    role: roleResult.nextRole,
+    user: {
+      id: String(roleResult.user.id || ""),
+      name: String(roleResult.user.name || ""),
+      email: String(roleResult.user.email || ""),
+      role: String(roleResult.user.role || "")
+    }
+  });
 });
 
 router.get("/audit-trail", (req, res) => {

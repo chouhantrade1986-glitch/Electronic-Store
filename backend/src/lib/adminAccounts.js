@@ -57,6 +57,84 @@ function buildAdminDraft(input = {}) {
   };
 }
 
+function changeUserRole(db, userId, nextRole, auditContext = {}) {
+  const users = Array.isArray(db && db.users) ? db.users : [];
+  const targetId = String(userId || "").trim();
+  const normalizedNextRole = String(nextRole || "").trim().toLowerCase();
+  const actorId = String(auditContext.actorId || "").trim();
+  const actor = actorId ? users.find((item) => String(item && item.id ? item.id : "") === actorId) : null;
+  const user = users.find((item) => String(item && item.id ? item.id : "") === targetId);
+
+  if (actorId && (!actor || String(actor.role || "").trim().toLowerCase() !== "admin")) {
+    return { ok: false, status: 403, message: "An active admin account is required to change user roles." };
+  }
+  if (!user) {
+    return { ok: false, status: 404, message: "User not found." };
+  }
+  if (normalizedNextRole !== "admin" && normalizedNextRole !== "customer") {
+    return { ok: false, status: 400, message: "Role must be either admin or customer." };
+  }
+  if (user.seededDemoUser === true || findSeededDemoProfile(user)) {
+    return { ok: false, status: 409, message: "Seeded demo accounts cannot be assigned a different role." };
+  }
+
+  const previousRole = String(user.role || "").trim().toLowerCase();
+  if (previousRole === normalizedNextRole) {
+    return {
+      ok: true,
+      changed: false,
+      previousRole,
+      nextRole: normalizedNextRole,
+      user
+    };
+  }
+
+  if (previousRole === "admin" && normalizedNextRole !== "admin") {
+    const otherRealAdmins = users.filter((item) => item !== user
+      && String(item && item.role ? item.role : "").trim().toLowerCase() === "admin"
+      && item.seededDemoUser !== true
+      && !findSeededDemoProfile(item));
+    if (otherRealAdmins.length === 0) {
+      return {
+        ok: false,
+        status: 409,
+        message: "The last real admin cannot be demoted. Promote another real admin first."
+      };
+    }
+  }
+
+  user.role = normalizedNextRole;
+  user.sessionVersion = normalizeSessionVersion(user.sessionVersion) + 1;
+
+  appendAdminAuditEntry(db, {
+    category: "admin",
+    actionKey: "admin_role_changed",
+    actionLabel: "Admin account role changed",
+    actorId: String(auditContext.actorId || "").trim(),
+    actorEmail: normalizeEmail(auditContext.actorEmail),
+    actorName: String(auditContext.actorName || "").trim(),
+    requestId: String(auditContext.requestId || "").trim(),
+    ip: String(auditContext.ip || "").trim(),
+    entityType: "user",
+    entityId: targetId,
+    status: "success",
+    summary: `Changed user role from ${previousRole || "unknown"} to ${normalizedNextRole}.`,
+    details: {
+      previousRole: previousRole || "",
+      nextRole: normalizedNextRole,
+      source: String(auditContext.source || "admin_api").trim() || "admin_api"
+    }
+  });
+
+  return {
+    ok: true,
+    changed: true,
+    previousRole,
+    nextRole: normalizedNextRole,
+    user
+  };
+}
+
 function recordAdminProvisioningAudit(db, result, auditContext = {}) {
   if (!result || !result.ok || !result.user || !auditContext || typeof auditContext !== "object") {
     return null;
@@ -219,6 +297,7 @@ module.exports = {
   ADMIN_PASSWORD_MIN_LENGTH,
   adminPublicView,
   buildAdminDraft,
+  changeUserRole,
   createOrPromoteRealAdmin,
   hasRealAdminAccount,
   isStrongAdminPassword

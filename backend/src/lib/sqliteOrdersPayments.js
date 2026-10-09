@@ -120,6 +120,28 @@ function replaceOrdersTable(db, orders) {
   });
 }
 
+function replaceExchangeQuotesTable(db, quotes) {
+  db.exec("DELETE FROM exchange_quotes");
+  const statement = db.prepare(
+    "INSERT INTO exchange_quotes (id, ordinal, user_id, target_product_id, status, expires_at, created_at, used_at, order_id, json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+  );
+  quotes.forEach((quote, index) => {
+    const item = quote && typeof quote === "object" ? quote : {};
+    statement.run(
+      String(item.id || `exchange-quote-${index + 1}`),
+      index,
+      String(item.userId || ""),
+      String(item.targetProductId || ""),
+      String(item.status || "").toUpperCase(),
+      String(item.expiresAt || ""),
+      String(item.createdAt || ""),
+      String(item.usedAt || ""),
+      String(item.orderId || ""),
+      JSON.stringify(item)
+    );
+  });
+}
+
 function replacePaymentsTable(db, payments) {
   db.exec("DELETE FROM payments");
   const statement = db.prepare(
@@ -247,6 +269,7 @@ function replaceAdminAuditTrailTable(db, auditEntries) {
 
 const SQLITE_COLLECTION_WRITERS = {
   orders: replaceOrdersTable,
+  exchangeQuotes: replaceExchangeQuotesTable,
   payments: replacePaymentsTable,
   products: replaceProductsTable,
   orderNotifications: replaceOrderNotificationsTable,

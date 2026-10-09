@@ -53,6 +53,23 @@ const MANAGED_TABLES = {
       ];
     }
   },
+  exchangeQuotes: {
+    table: "exchange_quotes",
+    key: "exchangeQuotes",
+    kind: "collection",
+    columns: ["user_id", "target_product_id", "status", "expires_at", "created_at", "used_at", "order_id"],
+    values(item) {
+      return [
+        String(item && item.userId ? item.userId : ""),
+        String(item && item.targetProductId ? item.targetProductId : ""),
+        String(item && item.status ? item.status : "").toUpperCase(),
+        String(item && item.expiresAt ? item.expiresAt : ""),
+        String(item && item.createdAt ? item.createdAt : ""),
+        String(item && item.usedAt ? item.usedAt : ""),
+        String(item && item.orderId ? item.orderId : "")
+      ];
+    }
+  },
   payments: {
     table: "payments",
     key: "payments",
@@ -451,6 +468,21 @@ function ensureSchema(db) {
     );
     CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
     CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+
+    CREATE TABLE IF NOT EXISTS exchange_quotes (
+      id TEXT PRIMARY KEY,
+      ordinal INTEGER NOT NULL DEFAULT 0,
+      user_id TEXT NOT NULL,
+      target_product_id TEXT NOT NULL,
+      status TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      used_at TEXT,
+      order_id TEXT,
+      json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_exchange_quotes_user_status ON exchange_quotes(user_id, status);
+    CREATE INDEX IF NOT EXISTS idx_exchange_quotes_expiry ON exchange_quotes(expires_at);
 
     CREATE TABLE IF NOT EXISTS payments (
       id TEXT PRIMARY KEY,

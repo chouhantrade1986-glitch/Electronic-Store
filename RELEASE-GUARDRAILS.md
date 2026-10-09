@@ -1,6 +1,6 @@
 # Release Guardrails
 
-Last updated: April 6, 2026
+Last updated: October 2, 2026
 
 ## Goal
 
@@ -13,20 +13,30 @@ Provide a predictable release path with:
 
 ## Release Checklist
 
-1. Confirm target commit and deployment window.
-2. Run preflight from repository root:
+### Before deployment
+
+1. Confirm target commit, deployment window, deploy operator, rollback decision owner, and the last-known-good production commit/image digest.
+2. Review the change set for environment, security, datastore, and backward-compatibility risks. For schema/data changes, document the forward-recovery plan; code rollback alone may not undo data changes.
+3. Run the required frontend and backend tests: `node scratch/run_all_tests.js` and, from `backend/`, `npm run test:unit`.
+4. Run preflight from repository root:
    - `npm run release:preflight`
-3. If preflight passes, deploy the target commit.
-4. Verify deployed runtime health:
+5. Confirm a recent backup exists and its manifest/checksums are valid. For a risky datastore change, run `npm run job:backup` followed by `npm run job:restore:drill` from `backend/` before deployment.
+
+### Deploy and verify
+
+6. Deploy the exact target commit using the hosting provider. Record the deployed SHA/image digest. The repository's GitHub workflow runs guardrails and does not deploy production.
+7. Verify deployed runtime health:
    - `cd backend`
    - `npm run job:release:verify -- --api-base-url=https://api.example.com/api`
-5. If verification passes, announce release completion and attach evidence.
-6. If verification fails or incident thresholds trigger, execute rollback plan below.
+8. Run production smoke/critical-flow checks and attach health, smoke, and release evidence.
+9. If verification passes, announce release completion. If a rollback trigger fires, follow [ROLLBACK-RUNBOOK.md](./ROLLBACK-RUNBOOK.md); do not treat the dry-run helper as an actual deployment rollback.
 
 ## Pre-Deploy Gate
 
 - Command: `npm run release:preflight`
 - Included checks:
+  - Frontend scratch test suites (`node scratch/run_all_tests.js`)
+  - Backend unit tests (`npm run test:unit` from `backend/`)
   - Full smoke suite (`npm run smoke`)
   - Visual baseline verification (`npm run smoke:baseline:verify`)
 - Output:
@@ -61,11 +71,7 @@ Rollback is required if any of the following occur after deploy:
 
 ## Rollback Plan
 
-1. Identify last known good commit.
-2. Redeploy that commit using the deployment platform.
-3. Run post-deploy verification against the rolled-back environment.
-4. Announce rollback completion with evidence link.
-5. Open follow-up issue before retrying release.
+Follow [ROLLBACK-RUNBOOK.md](./ROLLBACK-RUNBOOK.md) for incident response, selecting an explicit known-good revision, provider-based redeployment, data/migration recovery, and post-rollback verification. Do not assume `HEAD~1` is the last production revision.
 
 Rollback dry-run helper:
 
@@ -94,7 +100,7 @@ Missed-cadence escalation path (if no successful weekly run within 7 days):
 
 Workflow jobs:
 
-1. `preflight` runs release preflight gate
+1. `preflight` runs frontend and backend unit tests, then the release preflight gate
 2. `postdeploy` optionally verifies deployed API URL
 3. `rollback-dry-run` records rollback evidence
 
@@ -104,7 +110,9 @@ Latest committed dry-run evidence:
 
 - `release-evidence/rollback-dry-run-*.json`
 
-Latest two cadence runs:
+Latest two cadence runs currently recorded in this document:
 
 1. [run 24003104432](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24003104432) - run number `4`, `success`, April 5, 2026
 2. [run 24001858163](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/24001858163) - run number `3`, `success`, April 5, 2026
+
+Cadence status as of October 2, 2026: the latest successful run recorded above is 180 days old, exceeding the 7-day cadence. Treat this as a missed cadence: trigger the workflow manually, add the resulting run URL to the weekly audit update and `PROJECT-AUDIT.md`, and escalate in `slack:#incident-ops` if the catch-up run is not completed within 24 hours. The run IDs above are historical evidence, not evidence of a current successful cadence.

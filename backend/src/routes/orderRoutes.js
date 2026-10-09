@@ -40,6 +40,7 @@ const {
 const { logInfo } = require("../lib/logger");
 
 const piiEncryption = require("../middleware/piiEncryption");
+const { encryptPiiValue } = piiEncryption;
 const router = express.Router();
 
 function createHttpError(status, message) {
@@ -56,7 +57,7 @@ function persistOrderRouteMutation(db, collections) {
   writeDb(db);
 }
 
-function buildOrderRequestFingerprint({ items, shippingAddress, paymentMethod, couponCode, deliverySlot, expectedSubtotal }) {
+function buildOrderRequestFingerprint({ items, shippingAddress, paymentMethod, couponCode, deliverySlot, expectedSubtotal, exchangeQuoteIds }) {
   const payload = {
     items: items.map((item) => ({
       productId: String(item && item.productId || "").trim(),
@@ -66,9 +67,40 @@ function buildOrderRequestFingerprint({ items, shippingAddress, paymentMethod, c
     paymentMethod: String(paymentMethod || "cod").trim().toLowerCase(),
     couponCode: String(couponCode || "").trim().toUpperCase(),
     deliverySlot: deliverySlot || null,
-    expectedSubtotal: expectedSubtotal === undefined || expectedSubtotal === null ? null : Number(expectedSubtotal)
+    expectedSubtotal: expectedSubtotal === undefined || expectedSubtotal === null ? null : Number(expectedSubtotal),
+    exchangeDiscount: 0,
+    exchangeDetails: [],
+    ...(exchangeQuoteIds.length ? { exchangeQuoteIds: [...exchangeQuoteIds].sort() } : {})
   };
   return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+}
+
+function normalizeExchangeDetails(rawDetails = []) {
+  if (!Array.isArray(rawDetails)) {
+    return [];
+  }
+
+  return rawDetails
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") {
+        return null;
+      }
+      const discountAmount = Number(entry.discountAmount || entry.finalValue || 0);
+      if (!Number.isFinite(discountAmount) || discountAmount <= 0) {
+        return null;
+      }
+      return {
+        targetProductId: String(entry.targetProductId || entry.productId || "").trim(),
+        targetProductName: String(entry.targetProductName || entry.productName || "").trim(),
+        exchangeDeviceName: String(entry.exchangeDeviceName || entry.deviceName || "").trim(),
+        category: String(entry.category || "").trim(),
+        brand: String(entry.brand || "").trim(),
+        imei: String(entry.imei || "").trim(),
+        discountAmount: Math.max(0, discountAmount),
+        status: String(entry.status || "pending_pickup").trim() || "pending_pickup"
+      };
+    })
+    .filter(Boolean);
 }
 
 function formatAfterSalesTypeLabel(type) {
@@ -123,6 +155,10 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     deliverySlot = null,
     reservationUntil = "",
     expectedSubtotal,
+    exchangeDiscount: rawExchangeDiscount,
+    exchangeDetails: rawExchangeDetails,
+    exchangeQuoteId: rawExchangeQuoteId,
+    exchangeQuoteIds: rawExchangeQuoteIds,
     idempotencyKey: bodyIdempotencyKey = ""
   } = req.body || {};
   if (!Array.isArray(items) || items.length === 0 || !shippingAddress) {
@@ -135,13 +171,27 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
   }
 
   const db = readDb();
+  if ((Number(rawExchangeDiscount || 0) > 0) || (Array.isArray(rawExchangeDetails) && rawExchangeDetails.length > 0)) {
+    return res.status(400).json({
+      message: "Client-supplied exchange discounts are not accepted. Provide server-issued exchange quote IDs."
+    });
+  }
+  const rawQuoteIds = Array.isArray(rawExchangeQuoteIds)
+    ? rawExchangeQuoteIds
+    : [rawExchangeQuoteId || rawExchangeQuoteIds];
+  const exchangeQuoteIds = rawQuoteIds.map((quoteId) => String(quoteId || "").trim()).filter(Boolean);
+  if (new Set(exchangeQuoteIds).size !== exchangeQuoteIds.length) {
+    return res.status(400).json({ message: "An exchange quote can only be used once per order." });
+  }
+
   const requestFingerprint = buildOrderRequestFingerprint({
     items,
     shippingAddress,
     paymentMethod,
     couponCode,
     deliverySlot,
-    expectedSubtotal
+    expectedSubtotal,
+    exchangeQuoteIds
   });
   if (idempotencyKey) {
     const existingOrder = (Array.isArray(db.orders) ? db.orders : []).find((item) =>
@@ -176,7 +226,69 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     }
   }
 
+  const orderProductIds = new Set(items.map((item) => String(item && item.productId || "").trim()));
+  const availableQuotes = Array.isArray(db.exchangeQuotes) ? db.exchangeQuotes : [];
+  const exchangeQuotes = [];
+  for (const quoteId of exchangeQuoteIds) {
+    const quote = availableQuotes.find((entry) => String(entry && entry.id || "") === quoteId);
+    if (!quote) {
+      return res.status(404).json({ message: "Exchange quote not found or expired. Request a new quote." });
+    }
+    if (quote.userId !== req.user.id) {
+      return res.status(403).json({ message: "This exchange quote belongs to another account." });
+    }
+    if (quote.status !== "PENDING" || !Number.isFinite(Date.parse(quote.expiresAt)) || Date.parse(quote.expiresAt) <= Date.now()) {
+      return res.status(409).json({ message: "This exchange quote is no longer available. Request a new quote." });
+    }
+    if (!orderProductIds.has(String(quote.targetProductId || ""))) {
+      return res.status(400).json({ message: "The product linked to this exchange quote must be in the order." });
+    }
+    const targetLine = pricing.items.find((item) => String(item.productId) === String(quote.targetProductId));
+    if (!targetLine || Number(quote.discountAmount || 0) > Number(targetLine.lineTotal || 0)) {
+      return res.status(409).json({ message: "The exchange quote exceeds the current target item price. Request a new quote." });
+    }
+    if (exchangeQuotes.some((entry) => String(entry.targetProductId) === String(quote.targetProductId))) {
+      return res.status(400).json({ message: "Only one exchange quote may be applied to each order item." });
+    }
+    exchangeQuotes.push(quote);
+  }
+
+  const rawExchangeImeiByQuote = req.body && req.body.exchangeImeiByQuote && typeof req.body.exchangeImeiByQuote === "object"
+    ? req.body.exchangeImeiByQuote
+    : {};
+  if (Object.keys(rawExchangeImeiByQuote).some((quoteId) => !exchangeQuoteIds.includes(quoteId))) {
+    return res.status(400).json({ message: "IMEI values may only be provided for exchange quotes in this order." });
+  }
+  const encryptedImeiByQuote = {};
+  for (const quote of exchangeQuotes) {
+    const imei = String(rawExchangeImeiByQuote[quote.id] || "").trim();
+    const validImei = quote.category === "smartphones"
+      ? /^\d{15}$/.test(imei)
+      : /^[A-Za-z0-9]{6,18}$/.test(imei);
+    if (!validImei) {
+      return res.status(400).json({ message: "Enter a valid device IMEI or serial number for each exchange quote." });
+    }
+    try {
+      encryptedImeiByQuote[quote.id] = encryptPiiValue(imei);
+    } catch (error) {
+      return res.status(503).json({ message: "Secure exchange identifier storage is not configured." });
+    }
+  }
+
   const createdAt = new Date().toISOString();
+  const effectiveExchangeDiscount = exchangeQuotes.reduce((sum, quote) => sum + Number(quote.discountAmount || 0), 0);
+  const finalOrderTotal = Math.max(0, Number(pricing.total || 0) - effectiveExchangeDiscount);
+  const exchangeDetails = exchangeQuotes.map((quote) => ({
+    targetProductId: String(quote.targetProductId),
+    targetProductName: pricing.items.find((item) => String(item.productId) === String(quote.targetProductId))?.name || "",
+    exchangeDeviceName: String(quote.modelName || "Device"),
+    category: String(quote.category || ""),
+    brand: String(quote.brand || ""),
+    discountAmount: Number(quote.discountAmount),
+    quoteId: String(quote.id),
+    imeiEncrypted: encryptedImeiByQuote[quote.id],
+    status: "pending_pickup"
+  }));
   const effectiveReservationUntil = buildReservationUntil(paymentMethod, reservationUntil, createdAt);
   const order = {
     id: randomUUID(),
@@ -193,7 +305,9 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     subtotal: pricing.subtotal,
     shipping: pricing.shipping,
     tax: pricing.tax,
-    total: pricing.total,
+    total: finalOrderTotal,
+    exchangeDiscount: effectiveExchangeDiscount,
+    exchangeDetails: exchangeDetails.length > 0 ? exchangeDetails : null,
     ...(idempotencyKey ? { idempotencyKey, idempotencyFingerprint: requestFingerprint } : {}),
     createdAt
   };
@@ -206,6 +320,11 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
     });
   }
 
+  exchangeQuotes.forEach((quote) => {
+    quote.status = "USED";
+    quote.usedAt = createdAt;
+    quote.orderId = order.id;
+  });
   db.orders.push(order);
   const notification = isOnlinePaymentMethod(paymentMethod)
     ? { skipped: true, reason: "awaiting-payment-confirmation" }
@@ -214,7 +333,7 @@ router.post("/", requireAuth, piiEncryption, async (req, res) => {
       triggeredBy: "order-create",
       triggeredFrom: "checkout"
     });
-  persistOrderRouteMutation(db, ["orders", "products", "orderNotifications"]);
+  persistOrderRouteMutation(db, ["orders", "products", "orderNotifications", ...(exchangeQuotes.length ? ["exchangeQuotes"] : [])]);
   logInfo("order_created", {
     orderId: order.id,
     userId: req.user.id,

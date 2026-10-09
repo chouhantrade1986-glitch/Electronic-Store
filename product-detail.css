@@ -2321,3 +2321,97 @@ a {
   display: none !important;
 }
 
+/* Phase 42: ElectroMart Loyalty & Rewards PDP callout */
+.pdp-loyalty-callout {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid #e8d6b8;
+  border-left: 4px solid #ff6b00;
+  border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(135deg, #fffdf8 0%, #fbf1e0 100%);
+}
+
+.pdp-loyalty-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pdp-loyalty-icon {
+  color: #ff6b00;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.pdp-loyalty-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pdp-loyalty-text strong {
+  color: #8a3100;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pdp-loyalty-subtext {
+  color: #5a4530;
+  font-size: 12px;
+}
+
+/* Mirrors the earn rate the loyalty hub would book for this buyer. Shown only
+   for a priced line, so a service never advertises points it cannot award. */
+.pdp-loyalty-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 10px;
+  border: 1px solid #eadcc6;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 12px;
+  color: #5a4530;
+}
+
+.pdp-loyalty-row strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2a1b0e;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-loyalty-row em {
+  color: #c24800;
+  font-style: normal;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdp-loyalty-note {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: #8a7359;
+}
+
+.pdp-loyalty-link {
+  align-self: flex-start;
+  margin-top: 9px;
+  color: #c24800;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdp-loyalty-link:hover,
+.pdp-loyalty-link:focus-visible {
+  text-decoration: underline;
+}
+
+.pdp-loyalty-callout[hidden] {
+  display: none !important;
+}
+

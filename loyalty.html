@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Loyalty &amp; Rewards - Earn Points, Climb Tiers, Redeem Benefits</title>
+  <meta name="description" content="The ElectroMart Loyalty and Rewards marketplace: earn points on every purchase, climb Bronze to Platinum, redeem rewards and partner offers, and invite friends with your referral code." />
+  <meta name="keywords" content="loyalty rewards, points redemption, tier benefits, referral program, partner offers, ElectroMart rewards" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/loyalty.html" />
+  <meta property="og:title" content="ElectroMart Loyalty &amp; Rewards - Earn, Climb, Redeem" />
+  <meta property="og:description" content="Earn points on every purchase, climb four member tiers, redeem rewards and partner offers, and invite friends with your referral code." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://electromart.in/loyalty.html" />
+  <meta property="twitter:title" content="ElectroMart Loyalty &amp; Rewards - Earn, Climb, Redeem" />
+  <meta property="twitter:description" content="Earn points on every purchase, climb four member tiers, redeem rewards and partner offers, and invite friends with your referral code." />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20261004a" />
+  <link rel="stylesheet" href="shared-search.css?v=20261004a" />
+  <link rel="stylesheet" href="loyalty.css?v=20261004a" />
+</head>
+<body class="loyalty-body">
+  <div id="headerContainer"></div>
+
+  <main class="loyalty-page">
+    <!-- ============ HERO — the members' ledger cover ============ -->
+    <section id="loyaltyHero" class="loyalty-hero" aria-labelledby="loyaltyHeroTitle">
+      <span class="loyalty-hero__grain" aria-hidden="true"></span>
+      <span class="loyalty-hero__rule" aria-hidden="true"></span>
+      <span class="loyalty-hero__seal" aria-hidden="true">
+        <span class="loyalty-seal__ring"></span>
+        <span class="loyalty-seal__disc"></span>
+        <span class="loyalty-seal__glyph">E</span>
+      </span>
+
+      <div class="loyalty-shell loyalty-hero__inner">
+        <div class="loyalty-hero__copy">
+          <p class="loyalty-eyebrow" data-i18n="loyalty_hub_eyebrow">The ElectroMart Members' Ledger</p>
+          <h1 id="loyaltyHeroTitle" data-i18n="loyalty_hub_title">Loyalty &amp; Rewards</h1>
+          <p class="loyalty-hero__lede" data-i18n="loyalty_hub_subtitle">Every rupee you spend is written into your ledger as points. Climb four member tiers, redeem what you have earned, and share the ledger with friends.</p>
+
+          <div class="loyalty-hero__actions">
+            <a href="#redemptionCatalogSection" class="btn-loyalty btn-loyalty--stamp" data-i18n="loyalty_hero_cta_redeem">Redeem my points</a>
+            <a href="#referralSection" class="btn-loyalty btn-loyalty--quiet" data-i18n="loyalty_hero_cta_referral">Invite a friend</a>
+          </div>
+
+          <dl class="loyalty-ledger-strip">
+            <div class="loyalty-ledger-strip__cell">
+              <dt data-i18n="loyalty_strip_balance_label">Points in hand</dt>
+              <dd id="heroPointsDisplay">0</dd>
+            </div>
+            <div class="loyalty-ledger-strip__cell">
+              <dt data-i18n="loyalty_strip_worth_label">Worth in vouchers</dt>
+              <dd id="heroPointsValueDisplay">₹0</dd>
+            </div>
+            <div class="loyalty-ledger-strip__cell">
+              <dt data-i18n="loyalty_strip_tier_label">Member tier</dt>
+              <dd id="heroTierDisplay">Bronze</dd>
+            </div>
+            <div class="loyalty-ledger-strip__cell">
+              <dt data-i18n="loyalty_strip_redemptions_label">Rewards claimed</dt>
+              <dd id="heroRedemptionCount">0</dd>
+            </div>
+          </dl>
+
+          <p class="loyalty-status" id="loyaltyStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+        </div>
+
+        <aside class="loyalty-rate-card" aria-labelledby="loyaltyRateTitle">
+          <h2 id="loyaltyRateTitle" data-i18n="loyalty_rate_card_title">How the arithmetic works</h2>
+          <ul class="loyalty-rate-card__list">
+            <li data-i18n="loyalty_rate_earn">Earn 10 points for every ₹100 you spend on ElectroMart.</li>
+            <li data-i18n="loyalty_rate_burn">Redeem at a flat rate: 100 points are worth exactly ₹1. The rate is the same in every tier, so a Platinum member and a Bronze member convert points identically.</li>
+            <li data-i18n="loyalty_rate_tiers">Tiers unlock at 5,000, 20,000 and 50,000 points and add shipping, early access and support benefits on top of the same conversion rate.</li>
+            <li data-i18n="loyalty_rate_cap">You can redeem up to half the value of an order, capped at 50,000 points per order.</li>
+          </ul>
+          <p class="loyalty-rate-card__foot" data-i18n="loyalty_rate_footnote">Points do not expire while your membership is active. Reward availability and partner terms are set by each partner and shown on each offer.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ BALANCE + TIER STATUS ============ -->
+    <section class="loyalty-section loyalty-status-section" aria-labelledby="loyaltyStatusSectionTitle">
+      <h2 id="loyaltyStatusSectionTitle" class="loyalty-visually-hidden" data-i18n="loyalty_status_section_title">Membership standing</h2>
+
+      <div class="loyalty-status-grid">
+        <!-- Points balance -->
+        <article id="pointsBalanceCard" class="loyalty-panel loyalty-balance-card" aria-labelledby="loyaltyBalanceTitle">
+          <header class="loyalty-panel__head">
+            <h3 id="loyaltyBalanceTitle" class="loyalty-panel__title" data-i18n="loyalty_points_balance_title">Points balance</h3>
+            <span class="loyalty-panel__stamp" data-i18n="loyalty_balance_stamp">Live ledger</span>
+          </header>
+
+          <p class="loyalty-balance__figure">
+            <span id="currentPointsDisplay">0</span>
+            <span class="loyalty-balance__unit" data-i18n="loyalty_points_unit">points</span>
+          </p>
+          <p class="loyalty-balance__conversion">
+            <span data-i18n="loyalty_points_value_label">Worth</span>
+            <strong id="pointsValueDisplay">₹0</strong>
+            <span data-i18n="loyalty_conversion_note">at 100 points = ₹1</span>
+          </p>
+
+          <div class="loyalty-balance__rule" aria-hidden="true"></div>
+
+          <dl class="loyalty-balance__facts">
+            <div>
+              <dt data-i18n="loyalty_member_since_label">Member since</dt>
+              <dd id="memberSinceDisplay">—</dd>
+            </div>
+            <div>
+              <dt data-i18n="loyalty_lifetime_points_label">Lifetime points earned</dt>
+              <dd id="lifetimePointsDisplay">0</dd>
+            </div>
+            <div>
+              <dt data-i18n="loyalty_points_redeemed_label">Points redeemed</dt>
+              <dd id="redeemedPointsDisplay">0</dd>
+            </div>
+            <div>
+              <dt data-i18n="loyalty_referral_code_own_label">Your referral code</dt>
+              <dd id="ownReferralCodeDisplay">—</dd>
+            </div>
+          </dl>
+
+          <!-- Points to checkout -->
+          <form id="pointsApplyForm" class="loyalty-apply" autocomplete="off" novalidate>
+            <h4 class="loyalty-subhead" data-i18n="loyalty_apply_points_title">Apply points to an order</h4>
+            <div class="loyalty-field-row">
+              <div class="loyalty-field">
+                <label for="applyPointsCartTotalInput" data-i18n="loyalty_order_value_label">Order value (₹)</label>
+                <input type="number" id="applyPointsCartTotalInput" name="cartTotal" class="loyalty-input loyalty-input--num" min="0" max="1000000" step="1" value="5000" required inputmode="numeric" />
+              </div>
+              <div class="loyalty-field">
+                <label for="applyPointsPointsInput" data-i18n="loyalty_points_to_apply_label">Points to apply</label>
+                <input type="number" id="applyPointsPointsInput" name="pointsToApply" class="loyalty-input loyalty-input--num" min="0" max="50000" step="1" required inputmode="numeric" />
+              </div>
+            </div>
+            <p class="loyalty-apply__hint" id="applyPointsHint" data-i18n="loyalty_apply_points_hint">Up to half the order value, capped at 50,000 points.</p>
+            <button type="submit" id="applyPointsBtn" form="pointsApplyForm" class="btn-loyalty btn-loyalty--stamp btn-loyalty--block" data-i18n="loyalty_apply_points_btn">Calculate redemption</button>
+            <div class="loyalty-apply__result" id="applyPointsResult" role="status" aria-live="polite" hidden></div>
+          </form>
+        </article>
+
+        <!-- Tier status -->
+        <article id="tierStatusCard" class="loyalty-panel loyalty-tier-card" aria-labelledby="loyaltyTierStatusTitle">
+          <header class="loyalty-panel__head">
+            <h3 id="loyaltyTierStatusTitle" class="loyalty-panel__title" data-i18n="loyalty_tier_title">Member tier</h3>
+            <span class="loyalty-panel__stamp" data-i18n="loyalty_tier_stamp">Standing</span>
+          </header>
+
+          <div class="loyalty-tier__row">
+            <div class="loyalty-tier__now">
+              <span class="loyalty-tier__label" data-i18n="loyalty_current_tier_label">Current tier</span>
+              <strong id="currentTierDisplay">Bronze</strong>
+              <span class="loyalty-tier__multiplier" id="currentTierMultiplierDisplay">1x earning</span>
+            </div>
+            <span class="loyalty-tier__arrow" aria-hidden="true">→</span>
+            <div class="loyalty-tier__next">
+              <span class="loyalty-tier__label" data-i18n="loyalty_next_tier_label">Next tier</span>
+              <strong id="nextTierDisplay">Silver</strong>
+              <span class="loyalty-tier__multiplier" id="nextTierMultiplierDisplay">1.25x earning</span>
+            </div>
+          </div>
+
+          <div class="loyalty-progress">
+            <div class="loyalty-progress__head">
+              <span data-i18n="loyalty_tier_progress_label">Progress to next tier</span>
+              <strong id="tierProgressPercentDisplay">0%</strong>
+            </div>
+            <div id="tierProgressBar" class="loyalty-progress__track" role="progressbar" aria-labelledby="loyaltyTierStatusTitle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="loyalty-progress__fill" id="tierProgressFill"></span>
+            </div>
+            <p class="loyalty-progress__foot">
+              <span data-i18n="loyalty_points_to_next_label">Points to next tier</span>
+              <strong id="pointsToNextTier">0</strong>
+            </p>
+          </div>
+
+          <!-- The four struck medallions -->
+          <ol class="loyalty-medallions" id="tierMedallionRow">
+            <li class="loyalty-medallion loyalty-medallion--bronze" data-tier="bronze">
+              <span class="loyalty-medallion__coin" aria-hidden="true"><span class="loyalty-medallion__glyph"></span></span>
+              <span class="loyalty-medallion__text">
+                <span class="loyalty-medallion__name" data-i18n="loyalty_tier_bronze">Bronze</span>
+                <span class="loyalty-medallion__threshold">0+</span>
+              </span>
+            </li>
+            <li class="loyalty-medallion loyalty-medallion--silver" data-tier="silver">
+              <span class="loyalty-medallion__coin" aria-hidden="true"><span class="loyalty-medallion__glyph"></span></span>
+              <span class="loyalty-medallion__text">
+                <span class="loyalty-medallion__name" data-i18n="loyalty_tier_silver">Silver</span>
+                <span class="loyalty-medallion__threshold">5,000+</span>
+              </span>
+            </li>
+            <li class="loyalty-medallion loyalty-medallion--gold" data-tier="gold">
+              <span class="loyalty-medallion__coin" aria-hidden="true"><span class="loyalty-medallion__glyph"></span></span>
+              <span class="loyalty-medallion__text">
+                <span class="loyalty-medallion__name" data-i18n="loyalty_tier_gold">Gold</span>
+                <span class="loyalty-medallion__threshold">20,000+</span>
+              </span>
+            </li>
+            <li class="loyalty-medallion loyalty-medallion--platinum" data-tier="platinum">
+              <span class="loyalty-medallion__coin" aria-hidden="true"><span class="loyalty-medallion__glyph"></span></span>
+              <span class="loyalty-medallion__text">
+                <span class="loyalty-medallion__name" data-i18n="loyalty_tier_platinum">Platinum</span>
+                <span class="loyalty-medallion__threshold">50,000+</span>
+              </span>
+            </li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ REDEMPTION CATALOG ============ -->
+    <section id="redemptionCatalogSection" class="loyalty-section" aria-labelledby="loyaltyRedemptionTitle">
+      <header class="loyalty-section__head loyalty-section__head--split">
+        <div>
+          <p class="loyalty-eyebrow" data-i18n="loyalty_redemption_eyebrow">Reward counter</p>
+          <h2 id="loyaltyRedemptionTitle" data-i18n="loyalty_redemption_title">Redemption catalogue</h2>
+          <p class="loyalty-section__lede" data-i18n="loyalty_redemption_subtitle">Every reward below is priced in points at the flat rate of 100 points to ₹1. Redeeming writes the claim into your ledger straight away.</p>
+        </div>
+        <p class="loyalty-section__meta" id="redemptionCatalogMeta" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="loyalty-skeleton" id="redemptionSkeleton" aria-hidden="true">
+        <div class="loyalty-skeleton__stub"></div>
+        <div class="loyalty-skeleton__stub"></div>
+        <div class="loyalty-skeleton__stub"></div>
+      </div>
+
+      <div class="loyalty-redemption-grid" id="redemptionGrid" aria-busy="false"></div>
+
+      <p class="loyalty-empty" id="redemptionGridEmpty" data-i18n="loyalty_redemption_empty" hidden>No rewards are available for redemption right now. Please check back soon.</p>
+
+      <p class="loyalty-section__note" data-i18n="loyalty_redemption_note">A voucher reward is applied as a store credit line in your cart rather than as cash back, so it settles at checkout alongside the rest of the order.</p>
+    </section>
+
+    <!-- ============ TIER BENEFITS ============ -->
+    <section id="tierBenefitsSection" class="loyalty-section loyalty-section--tinted" aria-labelledby="loyaltyTierBenefitsTitle">
+      <header class="loyalty-section__head">
+        <p class="loyalty-eyebrow" data-i18n="loyalty_tier_benefits_eyebrow">The standing order</p>
+        <h2 id="loyaltyTierBenefitsTitle" data-i18n="loyalty_tier_benefits_title">Tier benefits</h2>
+        <p class="loyalty-section__lede" data-i18n="loyalty_tier_benefits_subtitle">Each tier adds to the one before it. The conversion rate never changes — only what sits around it does.</p>
+      </header>
+
+      <div class="loyalty-benefits-grid" id="tierBenefitsGrid"></div>
+    </section>
+
+    <!-- ============ PARTNER OFFERS ============ -->
+    <section id="partnerOffersSection" class="loyalty-section" aria-labelledby="loyaltyPartnerOffersTitle">
+      <header class="loyalty-section__head loyalty-section__head--split">
+        <div>
+          <p class="loyalty-eyebrow" data-i18n="loyalty_partner_offers_eyebrow">The exchange desk</p>
+          <h2 id="loyaltyPartnerOffersTitle" data-i18n="loyalty_partner_offers_title">Partner offers marketplace</h2>
+          <p class="loyalty-section__lede" data-i18n="loyalty_partner_offers_subtitle">Curated offers from independent partners, redeemed with points or unlocked as a member rate. Each partner sets its own terms, which are printed on the slip.</p>
+        </div>
+        <div class="loyalty-partner-filter">
+          <label for="partnerCategorySelect" data-i18n="loyalty_partner_filter_label">Show category</label>
+          <select id="partnerCategorySelect" name="partnerCategory" class="loyalty-select"></select>
+        </div>
+      </header>
+
+      <div class="loyalty-skeleton" id="partnerOffersSkeleton" aria-hidden="true">
+        <div class="loyalty-skeleton__slip"></div>
+        <div class="loyalty-skeleton__slip"></div>
+        <div class="loyalty-skeleton__slip"></div>
+      </div>
+
+      <div class="loyalty-partner-grid" id="partnerOffersGrid" aria-busy="false"></div>
+
+      <p class="loyalty-empty" id="partnerOffersEmpty" data-i18n="loyalty_partner_empty" hidden>No partner offers match that category right now. Please choose another category.</p>
+
+      <p class="loyalty-section__note" data-i18n="loyalty_partner_note">Partner names shown here are independent businesses. ElectroMart settles the points on redemption; the goods and services are supplied and warranted by the named partner under its own terms.</p>
+    </section>
+
+    <!-- ============ REFERRAL PROGRAM ============ -->
+    <section id="referralSection" class="loyalty-section loyalty-section--dark" aria-labelledby="loyaltyReferralTitle">
+      <span class="loyalty-section__watermark" aria-hidden="true">REF</span>
+
+      <header class="loyalty-section__head loyalty-section__head--split">
+        <div>
+          <p class="loyalty-eyebrow loyalty-eyebrow--light" data-i18n="loyalty_referral_eyebrow">Introductions</p>
+          <h2 id="loyaltyReferralTitle" data-i18n="loyalty_referral_title">Referral programme</h2>
+          <p class="loyalty-section__lede loyalty-section__lede--light" data-i18n="loyalty_referral_subtitle">Give a friend your code and you both move up the ledger: 1,000 points to you once their first order ships, 500 points to them on joining.</p>
+        </div>
+      </header>
+
+      <div class="loyalty-referral-grid">
+        <div class="loyalty-referral-ledger">
+          <p class="loyalty-referral__label" data-i18n="loyalty_referral_code_label">Your referral code</p>
+          <p class="loyalty-referral__code" id="referralCodeDisplay">EM-REF-000000</p>
+
+          <div class="loyalty-referral__link">
+            <label for="referralLinkInput" data-i18n="loyalty_referral_link_label">Shareable link</label>
+            <input type="text" id="referralLinkInput" name="referralLink" class="loyalty-input loyalty-input--onDark" readonly spellcheck="false" aria-describedby="referralLinkHint" />
+            <p class="loyalty-referral__hint" id="referralLinkHint" data-i18n="loyalty_referral_link_hint">Generated and stored on this device. Anyone who signs up with it is attributed to your ledger.</p>
+          </div>
+
+          <form id="referralForm" class="loyalty-referral-form" autocomplete="off" novalidate>
+            <h3 class="loyalty-subhead loyalty-subhead--light" data-i18n="loyalty_referral_invite_title">Record an invitation you sent</h3>
+            <div class="loyalty-field">
+              <label for="referralName" data-i18n="loyalty_referee_name_label">Friend's name</label>
+              <input type="text" id="referralName" name="referralName" class="loyalty-input loyalty-input--onDark" required minlength="2" maxlength="60" autocomplete="off" aria-describedby="referralNameHint" />
+              <p class="loyalty-referral__hint" id="referralNameHint" data-i18n="loyalty_referee_name_hint">The name they gave you when they signed up.</p>
+            </div>
+            <div class="loyalty-field">
+              <label for="referralEmail" data-i18n="loyalty_referee_email_label">Friend's email</label>
+              <input type="email" id="referralEmail" name="referralEmail" class="loyalty-input loyalty-input--onDark" required maxlength="120" autocomplete="off" placeholder="friend@example.com" aria-describedby="referralEmailHint" />
+              <p class="loyalty-referral__hint" id="referralEmailHint" data-i18n="loyalty_referee_email_hint">Stored on this device so you can tell the two invitations apart.</p>
+            </div>
+            <div class="loyalty-referral-form__actions">
+              <button type="submit" id="submitReferralBtn" form="referralForm" class="btn-loyalty btn-loyalty--stamp" data-i18n="loyalty_record_referral_btn">Record invitation</button>
+              <button type="button" id="copyReferralBtn" form="referralForm" class="btn-loyalty btn-loyalty--outline-light" data-i18n="loyalty_copy_referral_btn">Copy referral link</button>
+            </div>
+            <p class="loyalty-status loyalty-status--dark" id="referralStatus" role="status" aria-live="polite" tabindex="-1" hidden></p>
+          </form>
+        </div>
+
+        <div class="loyalty-referral-stats">
+          <h3 class="loyalty-subhead loyalty-subhead--light" data-i18n="loyalty_referral_stats_title">Referral statistics</h3>
+          <dl class="loyalty-referral-stats__grid" id="referralStats"></dl>
+
+          <h3 class="loyalty-subhead loyalty-subhead--light" data-i18n="loyalty_referral_history_title">Referral history</h3>
+          <ol class="loyalty-referral-history" id="referralHistoryList"></ol>
+          <p class="loyalty-empty loyalty-empty--dark" id="referralHistoryEmpty" data-i18n="loyalty_referral_history_empty" hidden>No invitations recorded yet. Fill in the form to write the first line.</p>
+
+          <p class="loyalty-referral__fineprint" data-i18n="loyalty_referral_fineprint">Your bonus is credited only after your friend's first order has shipped, once per person and once per device. Self-referrals and bulk addresses do not qualify.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EARN POINTS ============ -->
+    <section id="earnPointsSection" class="loyalty-section loyalty-section--punchcard" aria-labelledby="loyaltyEarnPointsTitle">
+      <header class="loyalty-section__head">
+        <p class="loyalty-eyebrow" data-i18n="loyalty_earn_points_eyebrow">The earning side</p>
+        <h2 id="loyaltyEarnPointsTitle" data-i18n="loyalty_earn_points_title">Earn points</h2>
+        <p class="loyalty-section__lede" data-i18n="loyalty_earn_points_subtitle">Points land in your ledger as soon as the qualifying action is confirmed. Your tier multiplies the purchase rate — the flat action bonuses below are not multiplied.</p>
+      </header>
+
+      <div class="loyalty-earn-grid">
+        <ul class="loyalty-punchcard" id="earnPointsList"></ul>
+
+        <aside class="loyalty-events" aria-labelledby="loyaltyEventsTitle">
+          <h3 id="loyaltyEventsTitle" class="loyalty-subhead" data-i18n="loyalty_events_title">Bonus point events</h3>
+          <ul class="loyalty-events__list" id="bonusEventsList"></ul>
+          <p class="loyalty-events__note" data-i18n="loyalty_events_note">Promotional multipliers stack with your tier multiplier on the purchase rate only, and only during the window printed on the event.</p>
+        </aside>
+      </div>
+
+      <header class="loyalty-section__head loyalty-section__head--split loyalty-section__head--shelf">
+        <div>
+          <h3 class="loyalty-subhead" data-i18n="loyalty_earn_shelf_title">What you are earning on right now</h3>
+          <p class="loyalty-section__lede" data-i18n="loyalty_earn_shelf_subtitle">Points shown are what your current tier would earn on one unit of each item.</p>
+        </div>
+        <p class="loyalty-section__meta" id="loyaltyProductMeta" role="status" aria-live="polite"></p>
+      </header>
+
+      <div class="loyalty-skeleton" id="loyaltyProductSkeleton" aria-hidden="true">
+        <div class="loyalty-skeleton__card"></div>
+        <div class="loyalty-skeleton__card"></div>
+        <div class="loyalty-skeleton__card"></div>
+      </div>
+
+      <div class="loyalty-product-grid" id="loyaltyProductGrid" aria-busy="false"></div>
+
+      <p class="loyalty-empty" id="loyaltyProductEmpty" data-i18n="loyalty_earn_shelf_empty" hidden>No products are earning points right now. Please check back soon.</p>
+    </section>
+  </main>
+
+  <!-- Shared i18n, catalogue, header, authentication, and search infrastructure. -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="loyalty.js?v=20261004a"></script>
+</body>
+</html>

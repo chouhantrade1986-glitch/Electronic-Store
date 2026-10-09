@@ -2,6 +2,7 @@ const CART_STORAGE_KEY = "electromart_cart_v1";
 const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
+const EXCHANGE_IMEI_SESSION_PREFIX = "electromart_exchange_imei_v1:";
 
 function resolveRenewedTaxProfile(product) {
   const searchable = `${product.category || ""} ${product.name || ""}`.toLowerCase();
@@ -435,8 +436,8 @@ function getPricingBreakdown(rows) {
   } catch (e) {}
   selectedRows.forEach((row) => {
     const ex = exCart[String(row.id)];
-    if (ex && ex.finalValue) {
-      totalExchangeDiscount += Number(ex.finalValue);
+    if (ex && ex.quoteId) {
+      totalExchangeDiscount += Number(ex.discountAmount || 0);
     }
   });
 
@@ -540,9 +541,9 @@ function cartItemCard(row, currentLang) {
           let c = {};
           try { c = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}"); } catch (e) {}
           const ex = c[String(row.id)];
-          return (ex && ex.finalValue) ? `
+          return (ex && ex.quoteId) ? `
           <div class="cart-exchange-badge" style="display:inline-flex;align-items:center;gap:6px;background:#e7f4f5;border:1px solid #007185;padding:4px 8px;border-radius:4px;font-size:12px;color:#007185;margin:4px 0;">
-            <span>🔄 <strong>Exchange Applied:</strong> ${ex.modelName || "Device"} (-${money(ex.finalValue)})</span>
+            <span>🔄 <strong>Exchange Applied:</strong> ${ex.modelName || "Device"} (-${money(ex.discountAmount)})</span>
             <button type="button" class="btn-remove-cart-exchange" data-action="remove-exchange" data-id="${row.id}" aria-label="${removeLabel}: exchange for ${safeTitle}" style="background:none;border:none;color:#c40000;cursor:pointer;font-weight:600;font-size:11px;margin-left:4px;">✕ Remove</button>
           </div>` : '';
         })()}
@@ -857,6 +858,9 @@ function removeItem(productId) {
   try {
     const exCart = JSON.parse(localStorage.getItem("electromart_exchange_cart_v1") || "{}");
     if (exCart[key]) {
+      if (exCart[key].quoteId) {
+        sessionStorage.removeItem(`${EXCHANGE_IMEI_SESSION_PREFIX}${exCart[key].quoteId}`);
+      }
       delete exCart[key];
       localStorage.setItem("electromart_exchange_cart_v1", JSON.stringify(exCart));
     }

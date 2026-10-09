@@ -46,6 +46,7 @@ test("writeSqliteSnapshot and readSqliteSnapshot round-trip core entities", () =
       products: [{ id: "pr1", sku: "EM-PR1", name: "Widget", brand: "Acme", category: "laptop", status: "active", segment: "b2c", price: 999, stock: 12 }],
       users: [{ id: "u1", email: "user@example.com", role: "customer", name: "User" }],
       orders: [{ id: "o1", userId: "u1", status: "processing", paymentStatus: "paid" }],
+      exchangeQuotes: [{ id: "exq1", userId: "u1", targetProductId: "pr1", status: "PENDING", discountAmount: 250, expiresAt: "2026-10-02T01:00:00.000Z" }],
       payments: [{ id: "p1", orderId: "o1", status: "captured", provider: "razorpay" }],
       afterSalesCases: [{ id: "a1", orderId: "o1", userId: "u1", type: "refund", status: "requested" }],
       adminAuditTrail: [{ id: "t1", category: "catalog", actionKey: "product_created", actionLabel: "Product created" }],
@@ -68,6 +69,8 @@ test("writeSqliteSnapshot and readSqliteSnapshot round-trip core entities", () =
     assert.equal(restored.products[0].sku, "EM-PR1");
     assert.equal(restored.users[0].email, "user@example.com");
     assert.equal(restored.orders[0].id, "o1");
+    assert.equal(restored.exchangeQuotes[0].id, "exq1");
+    assert.equal(restored.exchangeQuotes[0].targetProductId, "pr1");
     assert.equal(restored.payments[0].provider, "razorpay");
     assert.equal(restored.afterSalesCases[0].type, "refund");
     assert.equal(restored.adminAuditTrail[0].actionKey, "product_created");

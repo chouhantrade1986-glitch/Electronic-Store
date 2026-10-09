@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const { spawnSync } = require("child_process");
 const { DatabaseSync } = require("node:sqlite");
 
 const { runDatastoreBackup } = require("../src/lib/dataBackup");
@@ -152,4 +153,21 @@ test("runRestoreDrill validates sqlite restore smoke checks", () => {
   } finally {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
+});
+
+test("backup restore drill job runs against isolated dummy data and cleans up", () => {
+  const scriptPath = path.join(__dirname, "..", "src", "jobs", "runBackupRestoreDrill.js");
+  const result = spawnSync(process.execPath, [scriptPath], {
+    encoding: "utf8",
+    timeout: 30000
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.ok, true);
+  assert.equal(report.mode, "isolated-dummy-data");
+  assert.equal(report.backup.ok, true);
+  assert.equal(report.restore.ok, true);
+  assert.equal(report.restore.smoke.passed, true);
+  assert.equal(fs.existsSync(report.temporaryRoot), false);
 });

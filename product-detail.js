@@ -3024,6 +3024,132 @@ window.calculatePdpTradeInUnitRate = calculatePdpTradeInUnitRate;
 window.renderPdpBulkTradeInCallout = renderPdpBulkTradeInCallout;
 
 // ==========================================
+// Phase 42: ElectroMart Loyalty & Rewards Callout
+// ==========================================
+// The PDP mirrors the loyalty hub exactly: same earn rate, same tier
+// multipliers, same flat 100-points-to-₹1 redemption rate. It reads the tier
+// the hub already stored rather than recomputing it from a different ladder,
+// so a member can never be quoted one earning rate on the hub and another
+// here. Nothing is sent anywhere and nothing is invented on the page.
+const PDP_LOYALTY_PROFILE_KEY = "electromart_loyalty_profile_v1";
+
+const PDP_LOYALTY_POINTS_PER_RUPEE = 100;
+const PDP_LOYALTY_EARN_POINTS_PER_100 = 10;
+
+// Held as integers over four so the earn figure never drifts through a float.
+// These are the hub's own multipliers: bronze 1x, silver 1.25x, gold 1.5x,
+// platinum 2x.
+const PDP_LOYALTY_MULTIPLIER_X4 = {
+  bronze: 4,
+  silver: 5,
+  gold: 6,
+  platinum: 8,
+};
+
+const PDP_LOYALTY_TIER_LABEL_KEY = {
+  bronze: "loyalty_tier_bronze",
+  silver: "loyalty_tier_silver",
+  gold: "loyalty_tier_gold",
+  platinum: "loyalty_tier_platinum",
+};
+
+function readLoyaltyProfile() {
+  try {
+    const raw = localStorage.getItem(PDP_LOYALTY_PROFILE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+  } catch (error) {
+    // A blocked or corrupted store simply means "no ledger on this device".
+    return null;
+  }
+}
+
+// Mirrors loyalty.js calculateTier exactly, so both surfaces agree even when
+// the hub script has not been loaded on this page.
+function resolveLoyaltyTier(points) {
+  const held = Math.max(0, Math.floor(Number(points) || 0));
+  if (held >= 50000) return "platinum";
+  if (held >= 20000) return "gold";
+  if (held >= 5000) return "silver";
+  return "bronze";
+}
+
+function resolveLoyaltyMultiplier(tier) {
+  const value = PDP_LOYALTY_MULTIPLIER_X4[tier];
+  return typeof value === "number" ? value : PDP_LOYALTY_MULTIPLIER_X4.bronze;
+}
+
+// Same integer-only arithmetic as the hub: multiply by ten, by the tier over
+// four, then divide by a hundred, and floor once at the end.
+function calculatePdpLoyaltyEarn(price, tier) {
+  const rupees = Math.max(0, Number(price) || 0);
+  if (rupees <= 0) return 0;
+  return Math.max(0, Math.floor((rupees * PDP_LOYALTY_EARN_POINTS_PER_100 * resolveLoyaltyMultiplier(tier)) / (PDP_LOYALTY_POINTS_PER_RUPEE * 4)));
+}
+
+function renderPdpLoyaltyCallout(product) {
+  const callout = document.getElementById("pdpLoyaltyCallout");
+  if (!callout || !product) return;
+
+  // Only priced goods earn points; a service or an unpriced line does not.
+  const price = Number(product.price) || 0;
+  if (price <= 0) {
+    callout.hidden = true;
+    return;
+  }
+  callout.hidden = false;
+
+  const profile = readLoyaltyProfile();
+  const points = profile ? Math.max(0, Math.floor(Number(profile.points) || 0)) : 0;
+  const tier = resolveLoyaltyTier(points);
+  const earnPoints = calculatePdpLoyaltyEarn(price, tier);
+  const redemptionValue = Math.round(earnPoints / PDP_LOYALTY_POINTS_PER_RUPEE);
+
+  const tierLabelEl = document.getElementById("pdpLoyaltyTierLabel");
+  if (tierLabelEl) {
+    const translated = window.EM_TRANSLATIONS;
+    const language = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const dictionary = (translated && (translated[language] || translated.en)) || {};
+    const key = PDP_LOYALTY_TIER_LABEL_KEY[tier] || PDP_LOYALTY_TIER_LABEL_KEY.bronze;
+    const label = dictionary[key] || (tier.charAt(0).toUpperCase() + tier.slice(1));
+    tierLabelEl.textContent = `${label} · ${(resolveLoyaltyMultiplier(tier) / 4).toFixed(2).replace(/\.?0+$/, "")}x`;
+  }
+
+  const earnPointsEl = document.getElementById("pdpLoyaltyEarnPoints");
+  if (earnPointsEl) earnPointsEl.textContent = `${earnPoints.toLocaleString("en-IN")} points`;
+
+  const noteEl = document.querySelector("#pdpLoyaltyEarnRow .pdp-loyalty-note");
+  if (noteEl && translatedHasKey("loyalty_pdp_earn_note")) {
+    const translated = window.EM_TRANSLATIONS;
+    const language = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const dictionary = (translated && (translated[language] || translated.en)) || {};
+    const template = dictionary.loyalty_pdp_earn_note || "Worth ₹{value} as store credit once redeemed at the flat rate of 100 points to ₹1. Your tier multiplies the purchase rate.";
+    noteEl.textContent = template
+      .replace("{value}", `₹${redemptionValue.toLocaleString("en-IN")}`)
+      .replace("{points}", earnPoints.toLocaleString("en-IN"));
+  } else if (noteEl) {
+    noteEl.textContent = `Worth ₹${redemptionValue.toLocaleString("en-IN")} as store credit once redeemed at the flat rate of 100 points to ₹1. Your tier multiplies the purchase rate.`;
+  }
+}
+
+function translatedHasKey(key) {
+  try {
+    const translated = window.EM_TRANSLATIONS;
+    const language = localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi";
+    const dictionary = (translated && (translated[language] || translated.en)) || {};
+    return Boolean(dictionary[key]);
+  } catch (error) {
+    return false;
+  }
+}
+
+window.readLoyaltyProfile = readLoyaltyProfile;
+window.resolveLoyaltyTier = resolveLoyaltyTier;
+window.calculatePdpLoyaltyEarn = calculatePdpLoyaltyEarn;
+window.renderPdpLoyaltyCallout = renderPdpLoyaltyCallout;
+
+// ==========================================
 // Phase 30: ElectroMart PDP Instant Exchange Flow
 // ==========================================
 const PDP_EXCHANGE_STORAGE_KEY = "electromart_exchange_cart_v1";
@@ -3798,6 +3924,7 @@ function renderStarCharacters(rating) {
   renderPdpGamingArenaCallout(product);
   renderPdpStudentDiscountCallout(product);
   renderPdpBulkTradeInCallout(product);
+  renderPdpLoyaltyCallout(product);
 
   renderRecentlyViewedDetailSection();
 

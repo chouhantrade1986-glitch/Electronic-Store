@@ -54,10 +54,44 @@ function decrypt(text) {
   return decrypted;
 }
 
+function resolvePiiEncryptionKey() {
+  const raw = String(process.env.PII_ENCRYPTION_KEY || "").trim();
+  if (raw.length < 32) {
+    throw new Error("PII_ENCRYPTION_KEY must be configured with at least 32 characters.");
+  }
+  return crypto.createHash("sha256").update(raw, "utf8").digest();
+}
+
+function encryptPiiValue(value) {
+  if (value === null || value === undefined || value === "") {
+    return "";
+  }
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", resolvePiiEncryptionKey(), iv);
+  const ciphertext = Buffer.concat([cipher.update(String(value), "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `v1:${iv.toString("hex")}:${tag.toString("hex")}:${ciphertext.toString("hex")}`;
+}
+
+function decryptPiiValue(value) {
+  const [version, ivHex, tagHex, ciphertextHex] = String(value || "").split(":");
+  if (version !== "v1" || !ivHex || !tagHex || !ciphertextHex) {
+    throw new Error("Encrypted PII value has an unsupported format.");
+  }
+  const decipher = crypto.createDecipheriv("aes-256-gcm", resolvePiiEncryptionKey(), Buffer.from(ivHex, "hex"));
+  decipher.setAuthTag(Buffer.from(tagHex, "hex"));
+  return Buffer.concat([
+    decipher.update(Buffer.from(ciphertextHex, "hex")),
+    decipher.final()
+  ]).toString("utf8");
+}
+
 // Express middleware: safe passthrough ensuring PII fields are intact
 function piiEncryption(req, res, next) {
   next();
 }
 
 module.exports = piiEncryption;
+module.exports.decryptPiiValue = decryptPiiValue;
+module.exports.encryptPiiValue = encryptPiiValue;
 
