@@ -1,3 +1,4 @@
+const { isIP } = require("net");
 const { assertJwtSecretConfigured } = require("./auth");
 const { hasValidAdminBootstrapSecret } = require("./adminProvisioningGuardrails");
 const { resolveRuntimeProfile } = require("./runtimeMode");
@@ -17,6 +18,7 @@ const VALID_EMAIL_MODES = new Set(["simulated", "smtp", "sendgrid"]);
 const VALID_MESSAGE_MODES = new Set(["simulated", "twilio", "disabled"]);
 const VALID_PHONE_VERIFICATION_MODES = new Set(["simulated", "twilio", "disabled"]);
 const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);
+const RESERVED_HOST_SUFFIXES = [".example", ".invalid", ".localhost", ".local", ".test"];
 const PLACEHOLDER_EMAILS = new Set([
   "service-account@project-id.iam.gserviceaccount.com"
 ]);
@@ -75,6 +77,55 @@ function parseUrl(value) {
   }
 }
 
+function resolveDevTunnelHost(env = process.env) {
+  return String(env.DEV_TUNNEL_HOST || "").trim().toLowerCase();
+}
+
+function isValidDevTunnelHostname(hostname) {
+  if (!hostname || hostname.length > 253 || !hostname.includes(".") || isIP(hostname)) {
+    return false;
+  }
+  if (hostname === "localhost" || RESERVED_HOST_SUFFIXES.some((suffix) => hostname.endsWith(suffix))) {
+    return false;
+  }
+  const labels = hostname.split(".");
+  if (!/^[a-z]{2,63}$/.test(labels[labels.length - 1])) {
+    return false;
+  }
+  return labels.every((label) =>
+    label.length <= 63 && /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(label)
+  );
+}
+
+function validateDevTunnelConfig(errors, env, runtimeProfile) {
+  const hostname = resolveDevTunnelHost(env);
+  if (!hostname) {
+    return;
+  }
+  if (!isValidDevTunnelHostname(hostname)) {
+    errors.push("DEV_TUNNEL_HOST must be a valid public-format DNS hostname without a scheme, port, path, query, or fragment.");
+    return;
+  }
+  if (isStrictRuntime(runtimeProfile)) {
+    errors.push("DEV_TUNNEL_HOST must not be configured in staging or production runtimes.");
+  }
+
+  const apiUrl = parseUrl(env.PUBLIC_API_BASE_URL);
+  if (!apiUrl) {
+    errors.push("PUBLIC_API_BASE_URL must be a valid URL when DEV_TUNNEL_HOST is configured.");
+    return;
+  }
+  if (apiUrl.hostname.toLowerCase() !== hostname) {
+    errors.push("PUBLIC_API_BASE_URL hostname must match DEV_TUNNEL_HOST.");
+  }
+  if (apiUrl.protocol !== "https:") {
+    errors.push("PUBLIC_API_BASE_URL must use https when DEV_TUNNEL_HOST is configured.");
+  }
+  if (apiUrl.username || apiUrl.password || apiUrl.port) {
+    errors.push("PUBLIC_API_BASE_URL must not include credentials or a non-standard port when DEV_TUNNEL_HOST is configured.");
+  }
+}
+
 function validateBaseUrl(errors, key, value, options = {}) {
   const required = options.required === true;
   const httpsOnly = options.httpsOnly === true;
@@ -130,6 +181,16 @@ function validateSecretValue(errors, key, value, options = {}) {
   }
   if (looksLikePlaceholderSecret(normalized)) {
     errors.push(`${key} must not use a placeholder or example value.`);
+  }
+}
+
+function validatePiiEncryptionConfig(errors, env, strictRuntime) {
+  const key = String(env.PII_ENCRYPTION_KEY || "").trim();
+  if (strictRuntime) {
+    validateSecretValue(errors, "PII_ENCRYPTION_KEY", key);
+  }
+  if (key && Buffer.byteLength(key, "utf8") < 32) {
+    errors.push("PII_ENCRYPTION_KEY must contain at least 32 bytes.");
   }
 }
 
@@ -321,6 +382,10 @@ function validateRuntimeEnvPolicy(env = process.env) {
   validateDatastoreConfig(errors, env, runtimeProfile);
 
   const strictRuntime = isStrictRuntime(runtimeProfile);
+  validatePiiEncryptionConfig(errors, env, strictRuntime);
+  const configuredTunnelHost = resolveDevTunnelHost(env);
+  const devTunnelHost = isValidDevTunnelHostname(configuredTunnelHost) ? configuredTunnelHost : "";
+  validateDevTunnelConfig(errors, env, runtimeProfile);
   if (strictRuntime) {
     validateBaseUrl(errors, "PUBLIC_STORE_BASE_URL", env.PUBLIC_STORE_BASE_URL, {
       required: true,
@@ -353,6 +418,7 @@ function validateRuntimeEnvPolicy(env = process.env) {
     ok: errors.length === 0,
     runtimeProfile,
     strictRuntime,
+    devTunnelHost,
     errors
   };
 }
@@ -378,5 +444,6 @@ function assertRuntimeEnvPolicyConfigured(env = process.env) {
 module.exports = {
   VALID_RUNTIME_PROFILES,
   assertRuntimeEnvPolicyConfigured,
+  resolveDevTunnelHost,
   validateRuntimeEnvPolicy
 };

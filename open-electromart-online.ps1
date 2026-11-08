@@ -9,6 +9,17 @@ $backendDir = Join-Path $root "backend"
 $onlinePort = 5555
 $onlineFrontendUrl = "http://127.0.0.1:$onlinePort/index.html"
 $backendHealthUrl = "http://127.0.0.1:4000/api/health"
+$devTunnelHost = ([string]$env:DEV_TUNNEL_HOST).Trim().ToLowerInvariant()
+$hostnamePattern = '^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$'
+$reservedSuffixes = @(".example", ".invalid", ".localhost", ".local", ".test")
+$hasReservedSuffix = $false
+foreach ($suffix in $reservedSuffixes) {
+  if ($devTunnelHost.EndsWith($suffix, [System.StringComparison]::OrdinalIgnoreCase)) {
+    $hasReservedSuffix = $true
+    break
+  }
+}
+$isValidTunnelHost = $devTunnelHost -match $hostnamePattern -and -not $hasReservedSuffix
 
 $tempRoot = if ([string]::IsNullOrWhiteSpace([string]$env:TEMP)) { $root } else { $env:TEMP }
 $frontendLog = Join-Path $tempRoot "electromart-frontend.log"
@@ -17,7 +28,6 @@ $backendLog = Join-Path $tempRoot "electromart-backend.log"
 $backendErrLog = Join-Path $tempRoot "electromart-backend-err.log"
 
 $frontendProcess = $null
-$tunnelProcess = $null
 
 function Test-UrlReady {
   param([string]$Url)
@@ -43,9 +53,22 @@ function Wait-UrlReady {
 
 Write-Host ""
 Write-Host "========================================================================" -ForegroundColor Cyan
-Write-Host "  ELECTROMART — 1-CLICK ONLINE LIVE LAUNCHER (10-15 मिनट लाइव लिंक)" -ForegroundColor Yellow
+Write-Host "  ELECTROMART — CONFIGURED PUBLIC HOST LAUNCHER" -ForegroundColor Yellow
 Write-Host "========================================================================" -ForegroundColor Cyan
 Write-Host ""
+
+if (-not $isValidTunnelHost) {
+  Write-Host "ERROR: Set DEV_TUNNEL_HOST to a public DNS hostname before launching." -ForegroundColor Red
+  Write-Host "Use the hostname only; do not include a scheme, port, path, or reserved local suffix." -ForegroundColor Red
+  exit 1
+}
+
+$liveUrl = "https://$devTunnelHost"
+
+if ($TestOnly) {
+  Write-Host "TestOnly mode requested: Validated configured public host ($liveUrl)." -ForegroundColor Green
+  exit 0
+}
 
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   Write-Host "ERROR: Node.js is not installed or not in PATH." -ForegroundColor Red
@@ -93,71 +116,8 @@ if (-not ($frontendReady -and $backendReady)) {
   exit 1
 }
 
-Write-Host "Generating secure public HTTPS link via Cloudflare Edge Network..." -ForegroundColor Cyan
-
-$tunnelOutLog = Join-Path $tempRoot "electromart-tunnel-out.log"
-$tunnelErrLog = Join-Path $tempRoot "electromart-tunnel-err.log"
-
-if (Test-Path $tunnelOutLog) { Remove-Item -Path $tunnelOutLog -Force -ErrorAction SilentlyContinue }
-if (Test-Path $tunnelErrLog) { Remove-Item -Path $tunnelErrLog -Force -ErrorAction SilentlyContinue }
-
-$tunnelProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npx -y cloudflared tunnel --url http://127.0.0.1:$onlinePort" -RedirectStandardOutput $tunnelOutLog -RedirectStandardError $tunnelErrLog -PassThru -WindowStyle Hidden
-
-$tunnelDeadline = (Get-Date).AddSeconds(30)
-$liveUrl = $null
-
-function Find-TunnelUrl {
-  foreach ($logPath in @($tunnelErrLog, $tunnelOutLog)) {
-    if (Test-Path $logPath) {
-      $txt = Get-Content -Path $logPath -Raw -ErrorAction SilentlyContinue
-      if ($txt -match '(https://[a-zA-Z0-9-]+\.trycloudflare\.com)') {
-        return $matches[1]
-      }
-      if ($txt -match '(https://[a-zA-Z0-9-]+\.loca\.lt)') {
-        return $matches[1]
-      }
-    }
-  }
-  return $null
-}
-
-while ((Get-Date) -lt $tunnelDeadline) {
-  $liveUrl = Find-TunnelUrl
-  if ($liveUrl) {
-    break
-  }
-  Start-Sleep -Milliseconds 400
-}
-
-# Fallback to localtunnel if Cloudflare timed out
-if (-not $liveUrl) {
-  Write-Host "Cloudflare tunnel timed out. Trying localtunnel as fallback..." -ForegroundColor Yellow
-  if ($tunnelProcess -and -not $tunnelProcess.HasExited) {
-    Stop-Process -Id $tunnelProcess.Id -Force -ErrorAction SilentlyContinue
-  }
-  if (Test-Path $tunnelOutLog) { Remove-Item -Path $tunnelOutLog -Force -ErrorAction SilentlyContinue }
-  if (Test-Path $tunnelErrLog) { Remove-Item -Path $tunnelErrLog -Force -ErrorAction SilentlyContinue }
-
-  $tunnelProcess = Start-Process -FilePath "cmd.exe" -ArgumentList "/c npx -y localtunnel --port $onlinePort" -RedirectStandardOutput $tunnelOutLog -RedirectStandardError $tunnelErrLog -PassThru -WindowStyle Hidden
-  $ltDeadline = (Get-Date).AddSeconds(20)
-  while ((Get-Date) -lt $ltDeadline) {
-    $liveUrl = Find-TunnelUrl
-    if ($liveUrl) {
-      break
-    }
-    Start-Sleep -Milliseconds 400
-  }
-}
-
-if (-not $liveUrl) {
-  Write-Host ""
-  Write-Host "ERROR: Could not establish a public tunnel link." -ForegroundColor Red
-  Write-Host "Check your internet connection or see logs at:" -ForegroundColor Red
-  Write-Host "  $tunnelErrLog" -ForegroundColor Yellow
-  Write-Host "  $tunnelOutLog" -ForegroundColor Yellow
-  Read-Host "Press Enter to close"
-  exit 1
-}
+Write-Host "Using the configured public HTTPS host: $liveUrl" -ForegroundColor Cyan
+Write-Host "DNS and tunnel ingress must be configured outside this launcher." -ForegroundColor Gray
 
 # Copy to Windows Clipboard
 try {
@@ -182,22 +142,12 @@ Write-Host "  📱 REMOTE ACCESS    : Anyone worldwide can open this link on Pho
 Write-Host "  ⚡ FULL STORE ACTIVE: 751 Products, Search, Cart, Wishlist, Checkout, Orders" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "  💡 किसी को चेक कराने के लिए निर्देश (How to share):" -ForegroundColor Yellow
+Write-Host "  💡 Share the configured host only while its DNS and ingress are active." -ForegroundColor Yellow
 Write-Host "  1. WhatsApp, Telegram, या Email में 'Ctrl + V' (Paste) करके लिंक भेज दें।" -ForegroundColor White
 Write-Host "  2. जब तक यह विंडो खुली है, आपकी वेबसाइट ऑनलाइन चलेगी।" -ForegroundColor White
-Write-Host "  3. 10-15 मिनट बाद जब काम हो जाए, तो इस विंडो को बंद (Close) कर दें" -ForegroundColor White
-Write-Host "     या नीचे 'q' दबाकर Enter करें — वेबसाइट तुरंत ऑफ़लाइन हो जाएगी।" -ForegroundColor White
+Write-Host "  3. 'q' दबाकर Enter करें — इस launcher द्वारा शुरू की गई frontend server बंद हो जाएगी।" -ForegroundColor White
 Write-Host "========================================================================" -ForegroundColor Green
 Write-Host ""
-
-if ($TestOnly) {
-  Write-Host "TestOnly mode requested: Verified live URL generation successfully ($liveUrl)." -ForegroundColor Green
-  Write-Host "Stopping tunnel and exiting cleanly." -ForegroundColor Gray
-  if ($tunnelProcess -and -not $tunnelProcess.HasExited) {
-    Stop-Process -Id $tunnelProcess.Id -Force -ErrorAction SilentlyContinue
-  }
-  exit 0
-}
 
 # Open in default browser
 Start-Process $liveUrl
@@ -217,10 +167,6 @@ try {
   }
 } finally {
   Write-Host ""
-  Write-Host "Stopping public tunnel..." -ForegroundColor Yellow
-  if ($tunnelProcess -and -not $tunnelProcess.HasExited) {
-    Stop-Process -Id $tunnelProcess.Id -Force -ErrorAction SilentlyContinue
-  }
   if ($frontendProcess -and -not $frontendProcess.HasExited) {
     Stop-Process -Id $frontendProcess.Id -Force -ErrorAction SilentlyContinue
   }

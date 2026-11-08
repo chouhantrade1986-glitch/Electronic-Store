@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const {
   assertRuntimeEnvPolicyConfigured,
+  resolveDevTunnelHost,
   validateRuntimeEnvPolicy
 } = require("../src/lib/envPolicy");
 
@@ -15,6 +16,7 @@ function buildStrictEnv(overrides = {}) {
     PUBLIC_STORE_BASE_URL: "https://store.electromart.in",
     PUBLIC_API_BASE_URL: "https://api.electromart.in/api",
     ALLOW_PASSWORD_AUTH_FALLBACK: "false",
+    PII_ENCRYPTION_KEY: "unit-test-pii-encryption-secret-32-bytes",
     PAYMENT_PROVIDER: "razorpay",
     RAZORPAY_KEY_ID: "rzp_live_unit_test_key",
     RAZORPAY_KEY_SECRET: "razorpay-live-secret",
@@ -47,6 +49,97 @@ test("validateRuntimeEnvPolicy allows local runtime with optional placeholder in
 
   assert.equal(report.ok, true);
   assert.equal(report.strictRuntime, false);
+  assert.equal(report.devTunnelHost, "");
+});
+
+test("resolveDevTunnelHost uses only the configured environment hostname", () => {
+  assert.equal(resolveDevTunnelHost({ DEV_TUNNEL_HOST: "QA-123.tunnel.electromart.com" }), "qa-123.tunnel.electromart.com");
+  assert.equal(resolveDevTunnelHost({}), "");
+});
+
+test("validateRuntimeEnvPolicy accepts a secure dynamic tunnel hostname in development", () => {
+  const report = validateRuntimeEnvPolicy({
+    APP_RUNTIME_ENV: "development",
+    JWT_SECRET: "development-unit-test-secret",
+    DEV_TUNNEL_HOST: "qa-123.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "https://qa-123.tunnel.electromart.com:443/api"
+  });
+
+  assert.equal(report.ok, true, report.errors.join("\n"));
+  assert.equal(report.devTunnelHost, "qa-123.tunnel.electromart.com");
+});
+
+test("validateRuntimeEnvPolicy rejects non-host values and unsafe tunnel endpoints", () => {
+  const invalidHosts = [
+    "https://qa.example.com",
+    "qa.example.com:443",
+    "qa.example.com/path",
+    "localhost",
+    "127.0.0.1",
+    "-bad.example.com",
+    "bad..example.com"
+  ];
+  for (const host of invalidHosts) {
+    const report = validateRuntimeEnvPolicy({
+      APP_RUNTIME_ENV: "development",
+      JWT_SECRET: "development-unit-test-secret",
+      DEV_TUNNEL_HOST: host,
+      PUBLIC_API_BASE_URL: `https://${host}/api`
+    });
+    assert.equal(report.ok, false, `Expected ${host} to be rejected`);
+    assert.match(report.errors.join("\n"), /DEV_TUNNEL_HOST must be a valid public-format DNS hostname/i);
+  }
+});
+
+test("validateRuntimeEnvPolicy requires tunnel and API host alignment and disallows tunnels in strict runtimes", () => {
+  const mismatch = validateRuntimeEnvPolicy({
+    APP_RUNTIME_ENV: "development",
+    JWT_SECRET: "development-unit-test-secret",
+    DEV_TUNNEL_HOST: "qa-123.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "https://api.electromart.in/api"
+  });
+  assert.equal(mismatch.ok, false);
+  assert.match(mismatch.errors.join("\n"), /PUBLIC_API_BASE_URL hostname must match DEV_TUNNEL_HOST/i);
+
+  const insecure = validateRuntimeEnvPolicy({
+    APP_RUNTIME_ENV: "development",
+    JWT_SECRET: "development-unit-test-secret",
+    DEV_TUNNEL_HOST: "qa-123.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "http://qa-123.tunnel.electromart.com/api"
+  });
+  assert.equal(insecure.ok, false);
+  assert.match(insecure.errors.join("\n"), /PUBLIC_API_BASE_URL must use https when DEV_TUNNEL_HOST is configured/i);
+
+  const nonstandardPort = validateRuntimeEnvPolicy({
+    APP_RUNTIME_ENV: "development",
+    JWT_SECRET: "development-unit-test-secret",
+    DEV_TUNNEL_HOST: "qa-123.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "https://qa-123.tunnel.electromart.com:8443/api"
+  });
+  assert.equal(nonstandardPort.ok, false);
+  assert.match(nonstandardPort.errors.join("\n"), /PUBLIC_API_BASE_URL must not include credentials or a non-standard port/i);
+
+  const production = validateRuntimeEnvPolicy(buildStrictEnv({
+    DEV_TUNNEL_HOST: "qa-123.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "https://qa-123.tunnel.electromart.com/api"
+  }));
+  assert.equal(production.ok, false);
+  assert.match(production.errors.join("\n"), /DEV_TUNNEL_HOST must not be configured in staging or production/i);
+});
+
+test("assertRuntimeEnvPolicyConfigured throws a structured error for invalid tunnel configuration", () => {
+  assert.throws(() => assertRuntimeEnvPolicyConfigured({
+    APP_RUNTIME_ENV: "development",
+    JWT_SECRET: "development-unit-test-secret",
+    DEV_TUNNEL_HOST: "https://qa.tunnel.electromart.com",
+    PUBLIC_API_BASE_URL: "https://qa.tunnel.electromart.com/api"
+  }), (error) => {
+    assert.equal(error.code, "ENV_POLICY_INVALID");
+    assert.equal(error.details.runtimeProfile, "development");
+    assert.ok(error.details.errors.some((entry) => /DEV_TUNNEL_HOST/.test(entry)));
+    assert.equal(error.message.includes("https://qa.tunnel.electromart.com"), false);
+    return true;
+  });
 });
 
 test("validateRuntimeEnvPolicy rejects localhost urls and password fallback in production", () => {
@@ -77,6 +170,20 @@ test("validateRuntimeEnvPolicy requires selected provider secrets in strict runt
   assert.match(report.errors.join("\n"), /SENDGRID_API_KEY is required/i);
   assert.match(report.errors.join("\n"), /TWILIO_AUTH_TOKEN is required/i);
   assert.match(report.errors.join("\n"), /TWILIO_SMS_FROM is required/i);
+});
+
+test("validateRuntimeEnvPolicy requires a strong PII encryption key in strict runtimes", () => {
+  const missingKeyReport = validateRuntimeEnvPolicy(buildStrictEnv({
+    PII_ENCRYPTION_KEY: ""
+  }));
+  const shortKeyReport = validateRuntimeEnvPolicy(buildStrictEnv({
+    PII_ENCRYPTION_KEY: "too-short"
+  }));
+
+  assert.equal(missingKeyReport.ok, false);
+  assert.match(missingKeyReport.errors.join("\n"), /PII_ENCRYPTION_KEY is required/i);
+  assert.equal(shortKeyReport.ok, false);
+  assert.match(shortKeyReport.errors.join("\n"), /PII_ENCRYPTION_KEY must contain at least 32 bytes/i);
 });
 
 test("validateRuntimeEnvPolicy rejects placeholder drive configuration in staging", () => {

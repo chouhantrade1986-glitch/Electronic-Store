@@ -1,8 +1,8 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 9 अक्टूबर 2026 (Phase 44 ElectroMart BNPL & EMI Hub Completed; 79 frontend suites + 105 backend unit tests = 184 total)
+**अंतिम अद्यतन (Last Updated):** 8 नवंबर 2026 (Corporate Registry Sync और DEV_TUNNEL_HOST validation hardening; 81 frontend suites + 135 backend unit tests = 216 total)
 **शाखा (Branch):** `main`  
-**वातावरण (Environment):** Windows / Node.js 20+
+**वातावरण (Environment):** Windows / Node.js 22+
 
 ---
 
@@ -10,8 +10,10 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 79 / 79 टेस्ट सूट्स उत्तीर्ण (100%) |
-| **बीएनपीएल एंड ईएमआई हब टेस्ट** | `node scratch/test-amazon-emi.js` | ✅ **PASS** | 12 / 12 स्तर उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 81 / 81 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **डिजिटल ई-गिफ्ट कार्ड्स हब टेस्ट** | `node scratch/test-amazon-gift-cards.js` | ✅ **PASS** | 9 / 9 लेयर्स उत्तीर्ण (100%) |
+| **कॉर्पोरेट गिफ्टिंग व बल्क ऑर्डर्स हब टेस्ट** | `node scratch/test-amazon-corporate-gifting.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
+| **बीएनપીએલ एंड ईएमआई हब टेस्ट** | `node scratch/test-amazon-emi.js` | ✅ **PASS** | 12 / 12 स्तर उत्तीर्ण (100%) |
 | **सब्सक्रिप्शन एंड रिकरिंग ऑर्डर्स टेस्ट** | `node scratch/test-amazon-subscriptions.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **लॉयल्टी एंड रिवॉर्ड्स मार्केटप्लेस टेस्ट** | `node scratch/test-amazon-loyalty.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
@@ -38,8 +40,22 @@
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
-| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 105 / 105 टेस्ट उत्तीर्ण (100%) |
-| **कुल टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **184 / 184 (100% Pass Rate)** |
+| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 135 / 135 टेस्ट उत्तीर्ण (100%) |
+| **API व ब्राउज़र smoke** | `npm run smoke` | ⚠️ **BLOCKED** | स्थानीय PII key अनुपस्थित और port 5500 पहले से उपयोग में; smoke सेवाएँ शुरू नहीं हो सकीं |
+| **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **216 / 216 (100% Pass Rate)** |
+
+### सुरक्षा रोडमैप स्थिति
+
+- **चरण 1 — PII encryption:** AES-256-GCM field encryption, environment-provided key policy और API-response decryption middleware implemented.
+- **चरण 2 — Gift Card redemption:** cryptographically generated claim codes captured online payment के बाद ही जारी होते हैं; authenticated backend APIs card ownership, single-use redemption और ₹10,000 redemption cap लागू करती हैं। Gift Card purchase amount denomination से server पर तय होता है और COD अस्वीकृत है।
+- **चरण 2 — आंशिक checkout:** checkout में claim code और वैकल्पिक wallet tender server को भेजे जाते हैं; balance तथा allocations server ledger से तय होते हैं। पूरा शेष server sources से cover होने पर gateway intent छोड़ा जाता है, अन्यथा gateway को केवल `amountDue` दिया जाता है। Failure/cancellation/expiry/refund paths reservation release या restore करते हैं।
+- **चरण 3 — PII production hardening:** structured logs/metrics में email, phone और names mask; address, GSTIN और IMEI redact; request query strings तथा raw error message/stack log नहीं होते। Staging/production में PII key अनिवार्य है।
+- **चरण 4 — Corporate registry sync:** authenticated registry create/read, organization-scope access, single-registry share capability, API-backed item updates और token rotation लागू। Recipient PII DB wrapper के AES-GCM field encryption से सुरक्षित है।
+- **चरण 4 — B2B invoice tracking:** `/api/orders` corporate details validate करता है और requested bulk invoices को order ID से `corporateInvoices` ledger collection में जोड़ता है। GSTIN की syntax validate होती है; वास्तविक GSTIN verification के लिए बाहरी provider/manual approval अभी आवश्यक है और status `pending_external_verification` रहता है।
+- **चरण 5 (भाग 1) — DEV_TUNNEL_HOST guardrails:** optional hostname केवल `process.env.DEV_TUNNEL_HOST` से resolve होता है; bare public-format DNS hostname, matching HTTPS `PUBLIC_API_BASE_URL`, no-local/IP rules enforce होते हैं। Staging/production में dev tunnel configuration startup validation रोकता है।
+- **चरण 5 — tunnel cleanup:** SEO sitemap/robots links canonical `electromart.in` पर हैं; `open-electromart-online.ps1` अब valid `DEV_TUNNEL_HOST` मांगता है और temporary quick-tunnel log discovery/fallback नहीं करता। Configured DNS/ingress बाहरी रूप से उपलब्ध होना चाहिए।
+- **चरण 5 (शेष):** Frontend API base URL का server-boundary config injection लंबित है।
 
 ---
 
@@ -243,8 +259,7 @@
   - **पासबुक व ट्रांजैक्शन हिस्ट्री:** विस्तृत ऑडिट ट्रेल विथ फ़िल्टर टैब्स (All, Added Money, Orders Paid, Cashback), रियल-टाइम मर्चेंट/रेफरेंस सर्च बार (`#statementSearchInput`), और 1-क्लिक "Download Statement" (`#downloadStatementBtn`)।
 - **चेकआउट रीयल-टाइम इंटीग्रेशन (`checkout.html`, `checkout.js`):**
   - स्टेप 2 में ElectroMart Pay Balance विकल्प (`#payWalletOption`, `value="wallet"`) विथ लाइव बैलेंस बैज (`#checkoutWalletBalanceBadge`)।
-  - **अपरियाप्त बैलेंस हैंडलिंग (Insufficient Balance Warning):** यदि कार्ट टोटल वॉलेट बैलेंस से अधिक हो, तो लाल चेतावनी बॉक्स (`#payInsufficientWarning`) में सटीक अंतर राशि (`Shortfall: ₹...`) प्रदर्शित होती है तथा UPI/Cards जैसे वैकल्पिक भुगतान का सुझाव दिखता है।
-  - **1-क्लिक इंसटेंट पेमेंट:** पर्याप्त बैलेंस होने पर बिना OTP या गेटवे रीडायरेक्ट के तुरंत 1-क्लिक पेमेंट, `electromart_pay_balance_v1` से राशि डिडक्शन, `electromart_pay_txns_v1` में डेबिट रिकॉर्ड, और 5% कैशबैक रिवार्ड का स्वतः क्रेडिट।
+  - **सर्वर-आधारित checkout allocation:** बैलेंस `/api/gift-cards/balance` से पढ़ा जाता है; `#checkoutGiftCardCode` और `#checkoutUseWalletBalance` केवल claim code व opt-in भेजते हैं, कोई client राशि नहीं। Server Gift Card/wallet रकम reserve करता है; पूरा भुगतान cover हो तो gateway intent नहीं बनता, अन्यथा केवल `paymentBreakdown.amountDue` gateway तक जाता है। Validation failure पर cart rows बने रहते हैं।
 - **क्रॉस-पेज स्टेट सिंक्रोनाइज़ेशन:** `storage` और `electromart_pay_balance_updated` इवेंट्स द्वारा `electromart-pay.html`, `checkout.html`, और `account.html` के बीच बिना पेज रिफ्रेश किए लाइव बैलेंस सिंक।
 - **100% ब्रांड व लीगल सुरक्षा:** केवल ElectroMart Pay (`electromart.in` / इलेक्ट्रोमार्ट पे); 0 ग्राहक-सामने "Amazon" / "अमेज़न" टेक्स्ट।
 - **11 भारतीय भाषाओं में अनुवाद एवं स्वचालित टेस्ट:** `translations.js` की सभी 11 भाषाओं में 36+ पे हब कीज और `scratch/test-amazon-pay-hub.js` (5/5 लेयर्स 100% पास)।
@@ -591,6 +606,25 @@
 - **एकीकरण:** canonical script order, shared storefront header, header navigation, sitemap entry।
 - **ब्रांड व QA:** 100% ElectroMart customer-facing branding; `scratch/test-amazon-emi.js` PASS (12/12), 79/79 frontend suites PASS, 105/105 backend unit tests PASS (184/184 total)।
 
+### AA. ElectroMart Digital Gift Cards Hub (Phase 46 Completed)
+- **समर्पित डिजिटल गिफ्ट कार्ड्स हब (`gift-cards.html`, `gift-cards.css`, `gift-cards.js`):** "Golden Foil & Shimmer" एस्थेटिक (`--gc-gold: #F59E0B`, `--gc-accent: #D97706`) विथ लाइव इंटरएक्टिव कार्ड प्रिव्यू, कस्टमाइजेशन और वॉलेट रिडेम्पशन।
+- **अवसर-वार थीम्स व कार्ड प्रिव्यू:** 5 उत्सव व सेलिब्रेशन श्रेणियां (Festival 🪔, Birthday 🎂, Anniversary 💐, Corporate 💼, Congratulations 🌟) विथ लाइव प्राप्तकर्ता नाम, व्यक्तिगत संदेश और डायनामिक ₹ डिनॉमिनेशन।
+- **फ्लेक्सिबल डिनॉमिनेशन पिल्स व कस्टम राशि:** त्वरित ₹250, ₹500, ₹1,000, ₹2,000, ₹5,000 पिल्स तथा ₹100 से ₹10,000 तक कस्टम इनपुट वैलिडेशन।
+- **सुरक्षित claim-code issuance:** captured online payment के बाद backend `crypto.randomBytes(12)` से unpredictable code (`EM-GC-XXXXXX-XXXXXX-XXXXXX-XXXXXX`) बनाता है; पुराने जारी code format की backward compatibility बनी रहती है।
+- **Server-authoritative redemption व ledger:** authenticated backend ownership, active status, single-use redemption और ₹10,000 cap जाँचता है; checkout reservation तथा settlement server ledger में atomically दर्ज होते हैं। `localStorage` केवल UI mirror है, balance authority नहीं।
+- **PDP व कार्ट एकीकरण:** `product-detail.html` में `#pdpGiftCardCallout` बैनर, `product-detail.js` में `renderPdpGiftCardCallout`, कार्ट में `giftcard-*` लाइन-आइटम और 1-क्लिक चेकआउट (`checkout.html`)।
+- **11 भारतीय भाषाएं:** `translations.js` में `ELECTROMART_GIFT_CARDS_I18N` डिक्शनरी (en, hi, ta, te, kn, ml, bn, mr, ur, pa, gu)।
+- **Checkout integration:** checkout accessible claim-code input, स्पष्ट wallet opt-in और 11 भाषाओं के अनुवाद देता है; validation errors पर cart कायम रहता है। Gift Card/wallet के बाद बची रकम ही gateway से ली जाती है।
+- **ब्रांड व QA:** 100% ElectroMart ग्राहक-सामने ब्रांडिंग; `scratch/test-amazon-gift-cards.js` PASS (9/9 लेयर्स), 81/81 फ्रंटएंड सूट्स PASS, 130/130 बैकएंड यूनिट टेस्ट्स PASS (कुल 211/211)। API smoke स्थानीय `PII_ENCRYPTION_KEY` अनुपलब्ध और port 5500 occupied होने से blocked; visual baseline verify 6/6 PASS।
+
+### AB. PII Encryption Security Roadmap — चरण 1 व 3
+- AES-256-GCM field encryption fresh 96-bit nonce और authentication tag के साथ; key केवल `PII_ENCRYPTION_KEY` environment/deployment secret से आती है, hardcoded fallback नहीं।
+- JSON/SQLite snapshot persistence boundary पर address, phone/mobile और GSTIN fields encrypt/decrypt होते हैं; API JSON responses routes तक पहुँचने से पहले decrypt होते हैं।
+- Order shipping addresses और exchange IMEI values database में encrypted रहते हैं; encryption configuration अनुपलब्ध हो तो checkout स्पष्ट server error के साथ रुकता है।
+- Staging/production runtime policy कम-से-कम 32-byte PII key मांगती है। `.env.example` में केवल placeholder दिया गया है; deployment में वास्तविक random key secret manager से दें।
+- Logging hardening: nested structured log fields में email/phone/name mask और address/GSTIN/IMEI redact होते हैं; request log path से query हटती है, IP anonymize होता है, और error handler raw message/stack नहीं लिखता।
+- सत्यापन: `node scratch/run_all_tests.js` 81/81 पास; `npm.cmd --prefix backend run test:unit` 130/130 पास; encryption/env/logging focused tests 18/18 पास। `npm run smoke` अभी स्थानीय PII key न होने और port 5500 occupied होने से blocked है।
+
 ---
 
 ## 3. हालिया कमिट्स (Recent Commits)
@@ -617,8 +651,15 @@
 
 ---
 
-## 4. Governance और Phase 35 checkpoint
+## 4. Governance और Phase 45 checkpoint
 
+- **Phase 45 Corporate Gifting & Bulk Orders Hub:** `corporate-gifting.html`, `corporate-gifting.css`, `corporate-gifting.js` और PDP callout (`#pdpCorporateGiftingCallout`, `renderPdpCorporateGiftingCallout`) पूरी तरह स्थापित हैं।
+- **Phase 45 Core Engines:** Festival & Seasonal Gifting Catalogs, GST/PO invoice preview, API-backed multi-user Corporate Gift Registry, और Procurement Team & Spend Analytics Dashboard।
+- **Registry security:** `POST /api/corporate/registry` authentication मांगता है; GET/PATCH registry owner/org membership या scoped share token से सुरक्षित हैं। Share token hash-only storage में है और owner/org सदस्य इसे rotate कर सकते हैं।
+- **B2B order ledger:** `corporateDetails` `/api/orders` पर validate होते हैं; GSTIN format और bulk invoice required fields server पर जाँचे जाते हैं तथा invoice request `corporateInvoices` में order ID से जुड़ती है। GSTIN status external verification तक pending रहता है।
+- **Phase 45 focused test:** `scratch/test-amazon-corporate-gifting.js` PASS; `backend/tests/corporate-registry.test.js` सहित focused backend tests 21/21 PASS।
+- **Environment policy:** `backend/tests/env-policy.test.js` में DEV_TUNNEL_HOST parsing, host alignment, HTTPS, strict-runtime rejection और startup error contract की coverage है।
+- **Brand & Legal Safety:** `scratch/test-brand-safety-and-legal-compliance.js` 100% शुद्ध ElectroMart।
 - **Phase 35 Live Shopping Hub:** `live-shopping.html`, `live-shopping.css`, `live-shopping.js` और PDP live callout implementation मुख्य repository में मौजूद हैं।
 - **Phase 35 focused test:** `scratch/test-amazon-live-shopping.js` पास।
 - **Privacy & Data Rights Hub:** `privacy.html` में consent preferences, local export, deletion request recording, retention notes और grievance contact disclosure जोड़े गए हैं। यह legal certification नहीं है; production launch से पहले qualified Indian legal counsel review आवश्यक है।

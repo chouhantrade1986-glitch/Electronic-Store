@@ -16,4 +16,4 @@ Disallow: /qa-reports/
 Disallow: /qa-baselines/
 
 # Sitemap location
-Sitemap: https://06037w7q-5500.inc1.devtunnels.ms/sitemap.xml
+Sitemap: https://electromart.in/sitemap.xml

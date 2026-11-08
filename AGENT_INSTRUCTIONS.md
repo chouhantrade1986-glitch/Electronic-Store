@@ -61,18 +61,18 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (75 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (81 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 75 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 40 ElectroMart Student & Educator Campus Store, desktops.html UI पॉलिश, Stage 1 static-server compression/caching परफॉरमेंस टेस्ट (`test-static-server-perf.js`) और सभी regression/guardrail सूट्स शामिल हैं।)*
+*(सभी 81 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (105 Unit Tests):
+### 2. बैकएंड यूनिट टेस्ट्स (135 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 105 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 180 / 180 टेस्ट उत्तीर्ण है।)*
+*(सभी 135 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 216 / 216 टेस्ट उत्तीर्ण है।)*
 
 ---
 
@@ -152,12 +152,19 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 37:** ElectroMart Global Store & Cross-Border Delivery Hub (`global.html`, `global.css`, `global.js`, `product-detail.html`, `product-detail.js`): 5% सीमा शुल्क व 18% IGST कैलकुलेटर, स्टैंडर्ड (₹499) व एक्सप्रेस (₹1,299) फ्रेट, पासपोर्ट/आधार/DL KYC सत्यापन पोर्टल विथ मास्किंग, 100% DDP गारंटी, पीडीपी बायबॉक्स एकीकरण, 11 भाषाएं और 71/71 टेस्ट सूट्स 100% उत्तीर्ण।
 - **चरण 38:** ElectroMart Launchpad & Innovative Tech Hub (`launchpad.html`, `launchpad.css`, `launchpad.js`, `product-detail.html`, `product-detail.js`, `product-detail.css`, `header.html`, `header.js`, `sitemap.xml`): उभरते भारतीय हार्डवेयर स्टार्टअप्स के लिए शोकेस, नामांकित ऑफर IDs, INR pricing/MRP/early-bird reservation flow, funding progress, category filters, product details modal, सुरक्षित application persistence, 11 भाषाएं और deterministic PDP callout; 71/71 frontend suites तथा 74/74 backend unit tests PASS।
 - **चरण 39:** ElectroMart Gaming & eSports Arena (`gaming.html`, `gaming.css`, `gaming.js`, `product-detail.html`, `product-detail.js`, `product-detail.css`): dark cyber/neon arena थीम, कस्टम रिग कॉन्फ़िग्युरेटर (CPU/GPU/RAM/storage/resolution), deterministic FPS अनुमानक (`window.ElectroMart.Gaming.calculateFpsEstimate`), ई-स्पोर्ट्स व क्रिएटर स्पॉन्सरशिप पोर्टल (bounded local persistence), namespaced `gaming-rig-*`/`gaming-gear-*` कार्ट इंटीग्रेशन, deterministic PDP callout, 11 भाषाएं; `scratch/test-amazon-gaming-arena.js` PASS (8/8), 73/73 frontend suites तथा 74/74 backend unit tests PASS (147/147 total)।
-- **चरण 40:** ElectroMart Student & Educator Campus Store (`edu-store.html`, `edu-store.css`, `edu-store.js`, `product-detail.html`, `product-detail.js`): midnight lecture-hall थीम, deterministic local student eligibility check (`.ac.in` domain + honesty disclaimer), सेमेस्टर कोर्स मटीरियल ग्रिड, deterministic discount estimator (`calculateStudentDiscount`/`calculateStudentPrice`), validated faculty course lists (`buildFacultyList`) विथ 1-क्लिक `edu-faculty-*` कार्ट इंटीग्रेशन, deterministic PDP callout, 11 भाषाएं (165 base keys); `scratch/test-amazon-edu-store.js` PASS (9/9), 73/73 frontend suites तथा 74/74 backend unit tests PASS (147/147 total)।
-- **desktops.html UI पॉलिश (Quick Fix):** Amazon-स्टाइल पॉलिश (`desktops.css`, `scratch/test-desktops-ui.js`): रिस्पॉन्सिव प्रोडक्ट ग्रिड 4/3/2/1 कॉलम (base / ≤1020 / ≤640 / ≤420), स्लिम hero पैडिंग, JS-रेंडर्ड कार्ड क्लासेस `.desktop-add-btn` (एम्बर pill, `cursor: pointer`) व `.current-price` (बोल्ड, प्रमुख प्राइस) को पेज-स्कोप्ड Amazon स्टाइल, ब्रांड-सेफ्टी व कैटलॉग इंटीग्रेशन अनलॉक्ड; TDD वर्कफ़्लो (पहले फेलिंग टेस्ट), `scratch/test-desktops-ui.js` PASS (6/6), 74/74 frontend suites तथा 74/74 backend unit tests PASS (148/148 total)।
+- **चरण 40:** ElectroMart Student & Educator Campus Store (`edu-store.html`, `edu-store.css`, `edu-store.js`)
+- **चरण 41:** ElectroMart B2B Corporate Bulk Trade-In Hub (`trade-in.html`, `trade-in.css`, `trade-in.js`)
+- **चरण 42:** ElectroMart Loyalty & Rewards Marketplace (`loyalty.html`, `loyalty.css`, `loyalty.js`)
+- **चरण 43:** ElectroMart Subscription & Recurring Orders Hub (`subscriptions.html`, `subscriptions.css`, `subscriptions.js`)
+- **चरण 44:** ElectroMart BNPL & EMI Hub (`emi.html`, `emi.css`, `emi.js`)
+- **चरण 45:** ElectroMart Corporate Gifting & Bulk Orders Hub (`corporate-gifting.html`, `corporate-gifting.css`, `corporate-gifting.js`)
+- Corporate registries backend `/api/corporate/registry` पर authenticated बनें; owner/organization authorization या scoped share token के बिना read/update न हों। Registry data localStorage में authoritative रूप से न रखें; GSTIN format validation को external GST registration verification न मानें।
+- **चरण 46–47:** ElectroMart Digital Gift Cards Hub (`gift-cards.html`, `gift-cards.css`, `gift-cards.js`): इंटरएक्टिव कार्ड प्रिव्यू और कस्टमाइजेशन; claim code केवल captured online payment के बाद backend `crypto.randomBytes(12).toString('hex')` से जारी करे। Redemption, balance और user identity server-authoritative हों; checkout में Gift Card तथा वैकल्पिक wallet रकम server पर reserve हों और केवल शेष `amountDue` payment gateway को भेजें। Client-supplied amount/user ID को भरोसेमंद न मानें।
+- **desktops.html UI पॉलिश (Quick Fix):** Amazon-स्टाइल पॉलिश (`desktops.css`, `scratch/test-desktops-ui.js`)
 - **ब्रांड सुरक्षा:** 100% शुद्ध ElectroMart ब्रांडिंग, 0 दृश्य third-party marketplace टेक्स्ट, स्थायी गार्डरेल टेस्ट (`scratch/test-brand-safety-and-legal-compliance.js`)।
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **अगला चरण:** अगले roadmap feature का स्कोप उपयोगकर्ता द्वारा निर्देशित किए जाने पर तय किया जाएगा; Phase 40 के बाद नया duplicate launcher या project folder नहीं बनाया जाएगा।
+- **अगला चरण (Phase 47):** Dedicated Coupons & Promo Deals Hub (`coupons.html`, `coupons.js`, `coupons.css`) — 1-क्लिक 'Clip Coupon' और चेकआउट ऑटो-अप्लाई।
 
 ---
 
@@ -231,6 +238,9 @@ git commit -m "feat(scope): your descriptive commit message"
 ## 8. Security Rules
 
 - **No secrets in code**: API keys, tokens, DB passwords, JWT secrets केवल `backend/.env` में (`.gitignore` में हों) — कभी repo में commit न हों।
+- **PII at rest**: `PII_ENCRYPTION_KEY` को `backend/.env` या deployment secret store में रखें; strict runtimes में यह आवश्यक है। JSON/SQLite snapshot writes पर address, phone/mobile और GSTIN fields AES-256-GCM से encrypt होते हैं; API responses में middleware इन्हें decrypt करता है। Key कभी hardcode या log न करें। Structured logs में email/phone/name mask, address/GSTIN/IMEI redact, request query हटाएं और client/error details को raw न लिखें।
+- **Dev tunnel configuration**: `DEV_TUNNEL_HOST` केवल development में optional bare DNS hostname है; scheme, port, path, query, local/IP hosts अस्वीकार हों। Tunnel configured हो तो `PUBLIC_API_BASE_URL` का hostname उसी से match हो और HTTPS हो। Staging/production में `DEV_TUNNEL_HOST` निषिद्ध है; कोई static tunnel hostname fallback न जोड़ें। `open-electromart-online.ps1` चलाने के लिए यह variable अनिवार्य है; script केवल configured host उपयोग करती है और temporary quick tunnels स्वतः नहीं बनाती।
+- Corporate registry recipient name/email, GSTIN और billing address भी persistence से पहले PII field encryption से गुजरें। Registry share token केवल एक बार client को दिया जाए; storage में केवल उसका SHA-256 hash रखें।
 - **Input validation**: Client + Server दोनों तरफ — shared Zod/JSON Schema schemas (`shared/schemas/`) से validate करें।
 - **XSS prevention**: `innerHTML` केवल trusted/sanitized data के लिए (DOMPurify), बाकी `textContent` या framework auto-escaping।
 - **CSP headers**: `Content-Security-Policy` header सख्त — `script-src 'self' 'nonce-...'`; inline scripts केवल `nonce` के साथ।
@@ -376,8 +386,8 @@ git commit -m "feat(scope): your descriptive commit message"
 ☐ Check alt/title/placeholder/aria-label attributes — ZERO Amazon
 ☐ Verify all badges say "ElectroMart's Choice" / "ElectroMart Prime"
 ☐ Verify all filters say "ElectroMart Filters" / "ElectroMart Deals"
-☐ Confirm `scratch/run_all_tests.js` = 75/75 PASS
-☐ Confirm `cd backend && npm run test:unit` = 105/105 PASS
+☐ Confirm `scratch/run_all_tests.js` = 81/81 PASS
+☐ Confirm `cd backend && npm run test:unit` = 135/135 PASS
 ☐ Legal sign-off documented (if available)
 ```
 
