@@ -82,6 +82,7 @@ Optional but important:
 - `SQLITE_NORMALIZATION_MODE=strict` for staging/production SQLite deployments so unmanaged fallback keys fail fast
 - `ALLOW_SEEDED_DEMO_USERS=true` only if you intentionally want seeded local demo accounts
 - `ALLOW_PASSWORD_AUTH_FALLBACK=true` only if you intentionally need legacy `/auth/login` or `/auth/register`
+- `CORS_ALLOWED_ORIGINS` (comma-separated) for extra browser origins; in `staging`/`production` CORS only allows `PUBLIC_STORE_BASE_URL` plus this list
 - `ADMIN_BOOTSTRAP_SECRET` if you want to create the first real admin over the API
 - `PAYMENT_PROVIDER=razorpay`
 - `RAZORPAY_KEY_ID`
