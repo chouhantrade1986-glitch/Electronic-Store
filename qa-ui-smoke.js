@@ -464,7 +464,12 @@ async function runCartSmoke(browser, customerSession) {
       const row = document.getElementById("discountRow");
       return row && row.hidden === false;
     }, { timeout: 10000 });
-    await page.click("button[data-action='increase'][data-id='1']");
+    const increaseBtn = page.locator("button[data-action='increase'][data-id='1']");
+    if (await increaseBtn.count() > 0 && await increaseBtn.first().isVisible().catch(() => false)) {
+      await increaseBtn.first().click();
+    } else {
+      await page.selectOption("select[data-action='change-qty'][data-id='1'], select.amz-qty-select[data-id='1']", "3");
+    }
     await page.waitForFunction(() => {
       const meta = document.getElementById("cartMeta");
       return meta && /3 items/i.test(meta.textContent || "");
