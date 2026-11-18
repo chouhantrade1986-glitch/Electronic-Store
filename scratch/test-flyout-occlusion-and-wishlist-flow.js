@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 const headerHtml = fs.readFileSync(path.join(projectDir, 'header.html'), 'utf8');
 const headerJs = fs.readFileSync(path.join(projectDir, 'header.js'), 'utf8');
 const prodHtml = fs.readFileSync(path.join(projectDir, 'products.html'), 'utf8');

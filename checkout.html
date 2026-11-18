@@ -92,6 +92,15 @@
           <button type="button" class="amz-step-change-btn" id="step2ChangeBtn" hidden data-i18n="change">Change</button>
         </div>
         <div id="step2Body" class="amz-step-body" hidden>
+          <div class="checkout-tender-options">
+            <label for="checkoutGiftCardCode" data-i18n="gc_claim_code_label">Gift Card claim code</label>
+            <input id="checkoutGiftCardCode" name="giftCardClaimCode" type="text" autocomplete="off" autocapitalize="characters" maxlength="33" placeholder="EM-GC-XXXXXX-XXXXXX-XXXXXX-XXXXXX" aria-describedby="checkoutGiftCardHelp" />
+            <p id="checkoutGiftCardHelp" class="payment-note" data-i18n="gc_checkout_help">The server verifies the claim code and balance before applying it to this order.</p>
+            <label class="wallet-tender-opt-in" for="checkoutUseWalletBalance">
+              <input id="checkoutUseWalletBalance" name="useWalletBalance" type="checkbox" />
+              <span data-i18n="gc_apply_wallet_balance">Apply available ElectroMart Pay balance before charging the remaining amount to the selected payment method.</span>
+            </label>
+          </div>
           <div class="payment-options">
             <label class="payment-option" id="payWalletOption">
               <input type="radio" name="paymentMethod" value="wallet" id="paymentMethodWallet" />
@@ -143,7 +152,7 @@
 
           <div id="walletDetails" class="payment-detail" hidden>
             <div class="wallet-checkout-note">
-              <p data-i18n="pay_checkout_wallet_info">Your ElectroMart Pay balance will be debited instantly on 1-Click place order. No OTP or bank redirect required.</p>
+              <p data-i18n="gc_wallet_full_payment_info">The server verifies your wallet balance. This option requires enough balance to cover the full remaining order amount.</p>
               <div class="wallet-balance-row">
                 <span data-i18n="current_balance">Current Balance</span>: <strong id="checkoutWalletDetailBalance">₹2,450.00</strong>
               </div>
@@ -325,6 +334,7 @@
   <script src="menu-manager.js"></script>
   <script src="auth-state.js"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="/api/config.js"></script>
   <script src="warranty.js"></script>
   <script src="checkout.js"></script>
 </body>

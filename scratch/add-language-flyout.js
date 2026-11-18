@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 
 // 1. Add CSS to amazon-theme.css
 const cssPath = path.join(projectDir, 'amazon-theme.css');

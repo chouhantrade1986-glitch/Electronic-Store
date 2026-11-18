@@ -162,4 +162,54 @@ assert(checkoutJs.includes('idempotencyKey: activeIdempotencyKey'), "checkout.js
 assert(checkoutJs.includes('function getActiveCheckoutIdempotencyKey'), "checkout.js rotates the idempotency key when the cart fingerprint changes");
 assert(checkoutJs.includes('e.key === CART_STORAGE_KEY || e.key === null'), "checkout.js refreshes after cross-tab cart changes");
 
+// 5. Check backend-injected API configuration across frontend clients
+const apiClientFiles = [
+  'checkout.js',
+  'auth.js',
+  'corporate-gifting.js',
+  'gift-cards.js',
+  'account.js',
+  'admin-shared.js',
+  'products.js'
+];
+for (const fileName of apiClientFiles) {
+  const source = fs.readFileSync(path.join(projectDir, fileName), 'utf8');
+  assert(source.includes('__ELECTROMART_CONFIG__'), `${fileName} reads the injected API configuration`);
+  assert(!source.includes('localhost:4000/api'), `${fileName} does not hardcode a localhost API host`);
+  assert(!source.includes('127.0.0.1:4000/api'), `${fileName} does not hardcode a loopback API host`);
+  assert(!source.includes('location.hostname'), `${fileName} does not derive API hosts from the browser location`);
+}
+
+const configPages = [
+  'checkout.html',
+  'auth.html',
+  'corporate-gifting.html',
+  'gift-cards.html',
+  'account.html',
+  'products.html',
+  'admin-after-sales.html',
+  'admin-analytics.html',
+  'admin-audit.html',
+  'admin-dashboard.html',
+  'admin-listing.html',
+  'admin-orders.html',
+  'admin-settings.html',
+  'admin-users.html'
+];
+for (const fileName of configPages) {
+  const html = fs.readFileSync(path.join(projectDir, fileName), 'utf8');
+  assert(html.includes('src="/api/config.js"'), `${fileName} loads the backend API configuration bootstrap`);
+  const bootstrapIndex = html.indexOf('src="/api/config.js"');
+  const clientName = fileName === 'account.html' ? 'account.js' : fileName === 'products.html' ? 'products.js' : fileName.startsWith('admin-') ? 'admin-shared.js' : '';
+  if (clientName) {
+    assert(
+      bootstrapIndex < html.indexOf(`src="${clientName}`),
+      `${fileName} loads the API configuration before ${clientName}`
+    );
+  }
+}
+
+const serverJs = fs.readFileSync(path.join(projectDir, 'backend', 'src', 'server.js'), 'utf8');
+assert(serverJs.includes('"/api/config.js"'), 'backend exposes the API configuration bootstrap route');
+
 console.log("ALL CHECKS PASSED: Amazon India 4-Step Accordion Flow verified successfully!");

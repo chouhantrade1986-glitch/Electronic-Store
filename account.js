@@ -10,14 +10,9 @@ const PHONE_VERIFICATION_RESEND_COOLDOWN_MS = 60 * 1000;
 const PHONE_VERIFICATION_MAX_ATTEMPTS = 5;
 const PHONE_VERIFICATION_LOCK_MS = 10 * 60 * 1000;
 const ACCOUNT_TOAST_STACK_ID = "accountToastStack";
-const API_BASE_URL = (() => {
-  const { protocol, hostname, port } = window.location;
-  if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
-    return "http://localhost:4000/api";
-  }
-  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
-  return `${origin}/api`;
-})();
+const API_BASE_URL = String(
+  window.__ELECTROMART_CONFIG__ && window.__ELECTROMART_CONFIG__.apiBaseUrl || "/api"
+).replace(/\/+$/, "");
 
 const menuButtons = document.querySelectorAll(".menu-btn");
 const panels = document.querySelectorAll(".panel");

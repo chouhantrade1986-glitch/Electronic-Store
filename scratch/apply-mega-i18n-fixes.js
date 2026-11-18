@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 
 // 1. ALL NEW AND REFINED TRANSLATION KEYS ACROSS ALL 11 LANGUAGES
 const MEGA_I18N = {

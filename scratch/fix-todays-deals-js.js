@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const target = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'todays-deals.js');
+const target = path.resolve(__dirname, '..', 'todays-deals.js');
 let raw = fs.readFileSync(target, 'utf8');
 
 // Normalize CRLF to LF

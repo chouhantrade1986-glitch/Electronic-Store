@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 
 const DRAWER_ITEMS_I18N = {
   en: {

@@ -32,6 +32,7 @@ const {
   writeSqliteSnapshot
 } = require("./sqliteStore");
 const { isProductionRuntime } = require("./runtimeMode");
+const { decryptPiiFields, encryptPiiFields } = require("../middleware/piiEncryption");
 
 const dbPath = path.join(__dirname, "..", "data", "db.json");
 const dbBackupPath = `${dbPath}.bak`;
@@ -112,28 +113,29 @@ const sampleProducts = [
 function readDb() {
   if (isSqliteProviderEnabled()) {
     bootstrapSqliteFromJsonFile(dbPath);
-    return readSqliteSnapshot();
+    return decryptPiiFields(readSqliteSnapshot());
   }
 
   const primary = readDbFile(dbPath);
   if (primary.ok) {
-    return primary.data;
+    return decryptPiiFields(primary.data);
   }
 
   const backup = readDbFile(dbBackupPath);
   if (backup.ok) {
-    return backup.data;
+    return decryptPiiFields(backup.data);
   }
 
   throw primary.error;
 }
 
 function writeDb(db) {
+  const encryptedDb = encryptPiiFields(db);
   if (isSqliteProviderEnabled()) {
-    writeSqliteSnapshot(db);
+    writeSqliteSnapshot(encryptedDb);
     return;
   }
-  persistSerializedDb(JSON.stringify(db, null, 2));
+  persistSerializedDb(JSON.stringify(encryptedDb, null, 2));
 }
 
 function readDbFile(filePath) {
@@ -166,7 +168,8 @@ function persistSerializedDb(serializedDb) {
   writeFileWithFsync(tempPath, serializedDb);
   try {
     if (fs.existsSync(dbPath)) {
-      fs.copyFileSync(dbPath, dbBackupPath);
+      const previousSnapshot = fs.readFileSync(dbPath, "utf8");
+      writeFileWithFsync(dbBackupPath, serializeEncryptedBackup(previousSnapshot));
     }
     fs.copyFileSync(tempPath, dbPath);
     const dbFd = fs.openSync(dbPath, "r+");
@@ -180,6 +183,11 @@ function persistSerializedDb(serializedDb) {
       fs.rmSync(tempPath, { force: true });
     }
   }
+}
+
+function serializeEncryptedBackup(snapshotContents) {
+  const snapshot = JSON.parse(String(snapshotContents || "{}"));
+  return JSON.stringify(encryptPiiFields(snapshot), null, 2);
 }
 
 async function acquireWriteLock() {
@@ -243,6 +251,14 @@ function ensureSeedData() {
 
   if (!db.orders) {
     db.orders = [];
+  }
+
+  if (!Array.isArray(db.corporateRegistries)) {
+    db.corporateRegistries = [];
+  }
+
+  if (!Array.isArray(db.corporateInvoices)) {
+    db.corporateInvoices = [];
   }
 
   if (!Array.isArray(db.exchangeQuotes)) {
@@ -351,6 +367,7 @@ module.exports = {
   getSqliteDbPath,
   isSqliteProviderEnabled,
   readDb,
+  serializeEncryptedBackup,
   shouldSeedDemoUsers,
   withWriteLock,
   writeDb,

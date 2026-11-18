@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 const transCode = fs.readFileSync(path.join(projectDir, 'translations.js'), 'utf8');
 const bshHtml = fs.readFileSync(path.join(projectDir, 'best-sellers.html'), 'utf8');
 const bsjCode = fs.readFileSync(path.join(projectDir, 'best-sellers.js'), 'utf8');

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store';
+const ROOT = path.resolve(__dirname, '..');
 
 // Load db.json
 const db = JSON.parse(fs.readFileSync(path.join(ROOT, 'backend', 'src', 'data', 'db.json'), 'utf8'));

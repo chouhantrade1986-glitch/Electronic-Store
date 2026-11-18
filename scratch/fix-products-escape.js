@@ -1,5 +1,5 @@
 const fs = require('fs');
-const file = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\products.js';
+const file = path.resolve(__dirname, '..', 'products.js');
 let content = fs.readFileSync(file, 'utf8');
 
 content = content.replace(

@@ -14,14 +14,9 @@
   const AUDIT_STORAGE_KEY = 'electromart_audit_trail_v1';
   const SETTINGS_STORAGE_KEY = 'electromart_store_settings_v1';
 
-  const API_BASE_URL = (() => {
-    const { protocol, hostname, port } = window.location;
-    if (protocol === 'file:' || hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:4000/api';
-    }
-    const origin = `${protocol}//${hostname}${port ? `:${port}` : ''}`;
-    return `${origin}/api`;
-  })();
+  const API_BASE_URL = String(
+    global.__ELECTROMART_CONFIG__ && global.__ELECTROMART_CONFIG__.apiBaseUrl || '/api'
+  ).replace(/\/+$/, '');
 
   const DEPARTMENTS = [
     { id: 'dashboard', file: 'admin-dashboard.html', icon: '🏠', key: 'dept_dashboard', label: 'Dashboard' },

@@ -67,12 +67,12 @@ node scratch/run_all_tests.js
 ```
 *(सभी 81 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (135 Unit Tests):
+### 2. बैकएंड यूनिट टेस्ट्स (150 Unit Tests):
 ```bash
 cd backend
 npm run test:unit
 ```
-*(सभी 135 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 216 / 216 टेस्ट उत्तीर्ण है।)*
+*(सभी 150 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 231 / 231 टेस्ट उत्तीर्ण है।)*
 
 ---
 
@@ -238,8 +238,8 @@ git commit -m "feat(scope): your descriptive commit message"
 ## 8. Security Rules
 
 - **No secrets in code**: API keys, tokens, DB passwords, JWT secrets केवल `backend/.env` में (`.gitignore` में हों) — कभी repo में commit न हों।
-- **PII at rest**: `PII_ENCRYPTION_KEY` को `backend/.env` या deployment secret store में रखें; strict runtimes में यह आवश्यक है। JSON/SQLite snapshot writes पर address, phone/mobile और GSTIN fields AES-256-GCM से encrypt होते हैं; API responses में middleware इन्हें decrypt करता है। Key कभी hardcode या log न करें। Structured logs में email/phone/name mask, address/GSTIN/IMEI redact, request query हटाएं और client/error details को raw न लिखें।
-- **Dev tunnel configuration**: `DEV_TUNNEL_HOST` केवल development में optional bare DNS hostname है; scheme, port, path, query, local/IP hosts अस्वीकार हों। Tunnel configured हो तो `PUBLIC_API_BASE_URL` का hostname उसी से match हो और HTTPS हो। Staging/production में `DEV_TUNNEL_HOST` निषिद्ध है; कोई static tunnel hostname fallback न जोड़ें। `open-electromart-online.ps1` चलाने के लिए यह variable अनिवार्य है; script केवल configured host उपयोग करती है और temporary quick tunnels स्वतः नहीं बनाती।
+- **PII at rest**: `PII_ENCRYPTION_KEY` को `backend/.env` या deployment secret store में रखें; strict runtimes में यह आवश्यक है। JSON/SQLite snapshot writes पर name, email, address, phone/mobile, GSTIN और order-notification destinations AES-256-GCM से encrypt होते हैं; API responses में middleware इन्हें decrypt करता है। SQLite corporate invoice/registry tables index केवल non-PII identifiers, status और dates; संवेदनशील fields encrypted JSON में रहें। Key कभी hardcode या log न करें। Structured logs में email/phone/name mask, address/GSTIN/IMEI redact, request query हटाएं और client/error details को raw न लिखें।
+- **Dev tunnel/API configuration**: `DEV_TUNNEL_HOST` केवल development में optional bare DNS hostname है; scheme, port, path, query, local/IP hosts अस्वीकार हों। Tunnel configured हो तो `PUBLIC_API_BASE_URL` का hostname उसी से match हो और HTTPS हो। Staging/production में `DEV_TUNNEL_HOST` निषिद्ध है; कोई static tunnel hostname fallback न जोड़ें। `open-electromart-online.ps1` चलाने के लिए यह variable अनिवार्य है; script केवल configured host उपयोग करती है और temporary quick tunnels स्वतः नहीं बनाती। Frontend API base URL `/api/config.js` से `window.__ELECTROMART_CONFIG__` में आता है; unset `PUBLIC_API_BASE_URL` पर same-origin `/api` proxy fallback रहता है।
 - Corporate registry recipient name/email, GSTIN और billing address भी persistence से पहले PII field encryption से गुजरें। Registry share token केवल एक बार client को दिया जाए; storage में केवल उसका SHA-256 hash रखें।
 - **Input validation**: Client + Server दोनों तरफ — shared Zod/JSON Schema schemas (`shared/schemas/`) से validate करें।
 - **XSS prevention**: `innerHTML` केवल trusted/sanitized data के लिए (DOMPurify), बाकी `textContent` या framework auto-escaping।
@@ -387,7 +387,7 @@ git commit -m "feat(scope): your descriptive commit message"
 ☐ Verify all badges say "ElectroMart's Choice" / "ElectroMart Prime"
 ☐ Verify all filters say "ElectroMart Filters" / "ElectroMart Deals"
 ☐ Confirm `scratch/run_all_tests.js` = 81/81 PASS
-☐ Confirm `cd backend && npm run test:unit` = 135/135 PASS
+☐ Confirm `cd backend && npm run test:unit` = 150/150 PASS
 ☐ Legal sign-off documented (if available)
 ```
 

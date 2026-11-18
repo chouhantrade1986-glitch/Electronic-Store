@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'index.html');
+const targetPath = path.resolve(__dirname, '..', 'index.html');
 let html = fs.readFileSync(targetPath, 'utf8');
 
 // 1. Hero slides

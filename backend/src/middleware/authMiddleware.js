@@ -35,6 +35,7 @@ function requireAuth(req, res, next) {
       role: user.role,
       email: user.email,
       name: user.name,
+      organizationId: user.organizationId || "",
       sessionVersion: expectedSessionVersion
     };
     return next();

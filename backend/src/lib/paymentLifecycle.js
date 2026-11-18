@@ -1,6 +1,12 @@
 const { randomUUID } = require("crypto");
 const { appendOrderStatusEvent } = require("./orderStatus");
 const { releaseInventoryForOrder } = require("./orderCommerce");
+const {
+  finalizeOrderPaymentSources,
+  releaseOrderPaymentSources,
+  refundOrderPaymentSources,
+  revokeGiftCardsForOrder
+} = require("./giftCards");
 
 const ONLINE_PAYMENT_METHODS = new Set(["upi", "card", "netbanking"]);
 const ACTIVE_PAYMENT_STATUSES = new Set(["pending", "requires_confirmation", "authorized"]);
@@ -290,12 +296,18 @@ function createPaymentIntent(db, order, user, options = {}) {
     method,
     provider: options.provider || (method === "cod" ? "offline" : "simulated"),
     status: method === "cod" ? "authorized" : "requires_confirmation",
-    amount: Number(order.total || 0),
+    amount: asMoney(order && order.paymentBreakdown && order.paymentBreakdown.amountDue !== undefined
+      ? order.paymentBreakdown.amountDue
+      : order.total || 0),
     attempt: Math.max(1, Number(latestPayment && latestPayment.attempt ? latestPayment.attempt : 0) + 1),
     createdAt,
     updatedAt: createdAt,
     authorizedAt: method === "cod" ? createdAt : "",
-    amountAuthorized: method === "cod" ? Number(order.total || 0) : 0,
+    amountAuthorized: method === "cod"
+      ? asMoney(order && order.paymentBreakdown && order.paymentBreakdown.amountDue !== undefined
+        ? order.paymentBreakdown.amountDue
+        : order.total || 0)
+      : 0,
     metadata: options.metadata && typeof options.metadata === "object" ? options.metadata : {},
     receiptId: `PAY-${String(order.id).slice(0, 8).toUpperCase()}-${Date.now()}`,
     lastMessage: method === "cod" ? "Cash on delivery order confirmed." : "Payment attempt created."
@@ -412,6 +424,7 @@ function confirmPayment(db, payment, order, options = {}) {
   }
 
   if (normalizedPayment.status === "captured") {
+    finalizeOrderPaymentSources(db, order.id, at);
     updateOrderPaymentState(order, "paid", {
       at,
       paymentId: normalizedPayment.id,
@@ -472,6 +485,7 @@ function confirmPayment(db, payment, order, options = {}) {
         at
       });
     }
+    releaseOrderPaymentSources(db, order.id, at);
 
     return {
       ok: false,
@@ -495,6 +509,7 @@ function confirmPayment(db, payment, order, options = {}) {
     paymentId: normalizedPayment.id,
     clearFailure: true
   });
+  finalizeOrderPaymentSources(db, order.id, at);
 
   return {
     ok: true,
@@ -512,6 +527,8 @@ function refundPayment(db, payment, order, options = {}) {
   applyGatewayMetadata(normalizedPayment, gatewayResult);
 
   if (normalizedPayment.status === "refunded") {
+    refundOrderPaymentSources(db, order.id, at);
+    revokeGiftCardsForOrder(db, order.id, at);
     updateOrderPaymentState(order, "refunded", {
       at,
       paymentId: normalizedPayment.id,
@@ -575,6 +592,10 @@ function refundPayment(db, payment, order, options = {}) {
     paymentId: normalizedPayment.id,
     clearFailure: true
   });
+  if (!pendingRefund) {
+    refundOrderPaymentSources(db, order.id, at);
+    revokeGiftCardsForOrder(db, order.id, at);
+  }
 
   return {
     ok: true,
@@ -603,6 +624,13 @@ function cancelOrderPayments(db, order, options = {}) {
     updateOrderPaymentState(order, order.paymentMethod === "cod" ? "cancelled" : String(order.paymentStatus || "cancelled").toLowerCase() === "failed" ? "failed" : "cancelled", {
       at
     });
+    const sourceReservation = (Array.isArray(db.paymentSourceReservations) ? db.paymentSourceReservations : [])
+      .find((entry) => entry.orderId === String(order.id || ""));
+    if (sourceReservation && sourceReservation.status === "captured") {
+      refundOrderPaymentSources(db, order.id, at);
+    } else {
+      releaseOrderPaymentSources(db, order.id, at);
+    }
     return {
       ok: true,
       payment: null,
@@ -640,6 +668,7 @@ function cancelOrderPayments(db, order, options = {}) {
         paymentId: latestPayment.id
       }
     });
+    releaseOrderPaymentSources(db, order.id, at);
     return {
       ok: true,
       payment: latestPayment,
@@ -667,6 +696,13 @@ function cancelOrderPayments(db, order, options = {}) {
     paymentId: latestPayment.id,
     clearFailure: latestPayment.status !== "failed"
   });
+  const sourceReservation = (Array.isArray(db.paymentSourceReservations) ? db.paymentSourceReservations : [])
+    .find((entry) => entry.orderId === String(order.id || ""));
+  if (sourceReservation && sourceReservation.status === "captured") {
+    refundOrderPaymentSources(db, order.id, at);
+  } else {
+    releaseOrderPaymentSources(db, order.id, at);
+  }
 
   return {
     ok: true,

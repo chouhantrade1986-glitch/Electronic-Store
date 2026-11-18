@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+const repoRoot = path.resolve(__dirname, '..');
 
 // 1. Refine translations.js Hindi exact strings
 const transPath = path.join(repoRoot, 'translations.js');

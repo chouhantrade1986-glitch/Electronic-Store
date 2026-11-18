@@ -100,6 +100,36 @@ const MANAGED_TABLES = {
       ];
     }
   },
+  corporateInvoices: {
+    table: "corporate_invoices",
+    key: "corporateInvoices",
+    kind: "collection",
+    columns: ["order_id", "user_id", "status", "requested_at"],
+    values(item) {
+      return [
+        String(item && item.orderId ? item.orderId : ""),
+        String(item && item.userId ? item.userId : ""),
+        String(item && item.status ? item.status : "").toLowerCase(),
+        String(item && item.requestedAt ? item.requestedAt : "")
+      ];
+    }
+  },
+  corporateRegistries: {
+    table: "corporate_registries",
+    key: "corporateRegistries",
+    kind: "collection",
+    columns: ["created_by", "organization_id", "occasion", "event_date", "created_at", "updated_at"],
+    values(item) {
+      return [
+        String(item && item.createdBy ? item.createdBy : ""),
+        String(item && item.organizationId ? item.organizationId : ""),
+        String(item && item.occasion ? item.occasion : "").toLowerCase(),
+        String(item && item.eventDate ? item.eventDate : ""),
+        String(item && item.createdAt ? item.createdAt : ""),
+        String(item && item.updatedAt ? item.updatedAt : "")
+      ];
+    }
+  },
   adminAuditTrail: {
     table: "admin_audit_trail",
     key: "adminAuditTrail",
@@ -507,6 +537,32 @@ function ensureSchema(db) {
       json TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_after_sales_order_id ON after_sales_cases(order_id);
+
+    CREATE TABLE IF NOT EXISTS corporate_invoices (
+      id TEXT PRIMARY KEY,
+      ordinal INTEGER NOT NULL DEFAULT 0,
+      order_id TEXT,
+      user_id TEXT,
+      status TEXT,
+      requested_at TEXT,
+      json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_corporate_invoices_order_id ON corporate_invoices(order_id);
+    CREATE INDEX IF NOT EXISTS idx_corporate_invoices_status ON corporate_invoices(status);
+
+    CREATE TABLE IF NOT EXISTS corporate_registries (
+      id TEXT PRIMARY KEY,
+      ordinal INTEGER NOT NULL DEFAULT 0,
+      created_by TEXT,
+      organization_id TEXT,
+      occasion TEXT,
+      event_date TEXT,
+      created_at TEXT,
+      updated_at TEXT,
+      json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_corporate_registries_created_by ON corporate_registries(created_by);
+    CREATE INDEX IF NOT EXISTS idx_corporate_registries_organization_id ON corporate_registries(organization_id);
 
     CREATE TABLE IF NOT EXISTS admin_audit_trail (
       id TEXT PRIMARY KEY,

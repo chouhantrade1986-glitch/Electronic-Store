@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 
 let trans = fs.readFileSync(path.join(projectDir, 'translations.js'), 'utf8');
 trans = trans.replace(

@@ -1,4 +1,5 @@
 const { getSqliteDb, isSqliteProviderEnabled } = require("./sqliteStore");
+const { decryptPiiFields, encryptPiiFields } = require("../middleware/piiEncryption");
 
 function isSqliteOrderPaymentQueriesEnabled() {
   return isSqliteProviderEnabled();
@@ -8,7 +9,7 @@ function parseRow(row) {
   if (!row || !row.json) {
     return null;
   }
-  return JSON.parse(String(row.json || "{}"));
+  return decryptPiiFields(JSON.parse(String(row.json || "{}")));
 }
 
 function listSqliteOrders(filters = {}) {
@@ -115,7 +116,7 @@ function replaceOrdersTable(db, orders) {
       String(item.paymentStatus || "").toLowerCase(),
       String(item.createdAt || ""),
       String(item.updatedAt || item.paymentUpdatedAt || item.createdAt || ""),
-      JSON.stringify(item)
+      JSON.stringify(encryptPiiFields(item))
     );
   });
 }

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const repoRoot = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const repoRoot = path.resolve(__dirname, '..');
 const targetId = 'product_faadad46-7286-8744-5d9a-1263da26d23c';
 
 // 1. UPDATE backend/src/data/db.json and db.json.bak

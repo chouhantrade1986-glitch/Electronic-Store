@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+const repoRoot = path.resolve(__dirname, '..');
 
 console.log("==================================================");
 console.log("TEST SUITE: Product Detail Quick Fixes Verification");

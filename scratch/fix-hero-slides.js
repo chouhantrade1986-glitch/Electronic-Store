@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const target = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'script.js');
+const target = path.resolve(__dirname, '..', 'script.js');
 let raw = fs.readFileSync(target, 'utf8');
 const isCrlf = raw.includes('\r\n');
 let code = raw.replace(/\r\n/g, '\n');

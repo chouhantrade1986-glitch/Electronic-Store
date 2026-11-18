@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const file = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'translations.js');
+const file = path.resolve(__dirname, '..', 'translations.js');
 let content = fs.readFileSync(file, 'utf8');
 
 content = content.split('"in_stock": "स्टॉक में है"').join('"in_stock": "स्टॉक में उपलब्ध"');

@@ -1,0 +1,631 @@
+/* ==========================================================================
+   ElectroMart Digital Gift Cards Hub Stylesheet (Phase 46)
+   ========================================================================== */
+
+:root {
+  --gc-gold: #F59E0B;
+  --gc-accent: #D97706;
+  --gc-gold-dark: #B45309;
+  --gc-gold-light: #FEF3C7;
+  --gc-navy: #0F172A;
+  --gc-navy-surface: #1E293B;
+  --gc-navy-card: #334155;
+  --gc-text-light: #F8FAFC;
+  --gc-text-muted: #94A3B8;
+  --gc-border: #E2E8F0;
+  --gc-success: #059669;
+  --gc-danger: #DC2626;
+  --gc-radius-sm: 6px;
+  --gc-radius-md: 10px;
+  --gc-radius-lg: 16px;
+  --gc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --gc-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --gc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.gc-page {
+  background-color: #F8FAFC;
+  color: #1E293B;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+.gc-main {
+  min-height: calc(100vh - 120px);
+}
+
+/* ==========================================================================
+   1. Hero Section (#gcHero)
+   ========================================================================== */
+.gc-hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #312E81 100%);
+  color: #FFFFFF;
+  padding: 48px 24px 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gc-hero::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.gc-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.gc-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #FDE68A;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+.gc-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+}
+
+.gc-hero-subtitle {
+  font-size: 1.15rem;
+  color: #CBD5E1;
+  max-width: 680px;
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+
+.gc-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.gc-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+  color: #0F172A;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gc-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.45);
+}
+
+.gc-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.gc-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   2. Main Container & Section Layout
+   ========================================================================== */
+.gc-container {
+  max-width: 1200px;
+  margin: -24px auto 48px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 3;
+}
+
+.gc-section {
+  background: #FFFFFF;
+  border-radius: var(--gc-radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: var(--gc-shadow-md);
+  border: 1px solid var(--gc-border);
+}
+
+.gc-section-header {
+  margin-bottom: 24px;
+  border-bottom: 2px solid #F1F5F9;
+  padding-bottom: 16px;
+}
+
+.gc-section-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 6px;
+}
+
+.gc-section-header p {
+  font-size: 0.95rem;
+  color: #64748B;
+  margin: 0;
+}
+
+/* ==========================================================================
+   3. Card Preview & Interactive Design Studio
+   ========================================================================== */
+.gc-studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .gc-studio-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gc-preview-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 90px;
+}
+
+.gc-card-preview {
+  width: 100%;
+  max-width: 380px;
+  height: 220px;
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gc-card-preview.template-birthday {
+  background: linear-gradient(135deg, #4338CA 0%, #6366F1 50%, #EC4899 100%);
+}
+
+.gc-card-preview.template-festival {
+  background: linear-gradient(135deg, #991B1B 0%, #D97706 60%, #F59E0B 100%);
+}
+
+.gc-card-preview.template-anniversary {
+  background: linear-gradient(135deg, #831843 0%, #BE185D 60%, #F472B6 100%);
+}
+
+.gc-card-preview.template-corporate {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 60%, #3B82F6 100%);
+}
+
+.gc-card-preview.template-celebration {
+  background: linear-gradient(135deg, #065F46 0%, #059669 60%, #10B981 100%);
+}
+
+.gc-card-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gc-preview-brand {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gc-preview-chip {
+  width: 34px;
+  height: 24px;
+  background: linear-gradient(135deg, #FDE68A 0%, #D97706 100%);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gc-preview-center {
+  margin: 10px 0;
+}
+
+.gc-preview-recipient {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  word-break: break-word;
+}
+
+.gc-preview-message {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gc-preview-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.gc-preview-amount {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FDE68A;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.gc-preview-design-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   4. Template Selector Grid (#gcTemplateGrid)
+   ========================================================================== */
+.gc-template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.gc-template-card {
+  border: 2px solid var(--gc-border);
+  border-radius: var(--gc-radius-md);
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.gc-template-card:hover {
+  border-color: var(--gc-gold);
+  transform: translateY(-2px);
+}
+
+.gc-template-card.active {
+  border-color: var(--gc-accent);
+  background: var(--gc-gold-light);
+  box-shadow: 0 0 0 1px var(--gc-accent);
+}
+
+.gc-template-thumbnail {
+  height: 48px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.gc-template-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+/* ==========================================================================
+   5. Denomination & Form Fields
+   ========================================================================== */
+.gc-amount-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.gc-amount-pill {
+  padding: 10px 18px;
+  border: 2px solid var(--gc-border);
+  border-radius: 9999px;
+  background: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1E293B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gc-amount-pill:hover {
+  border-color: var(--gc-gold);
+  color: var(--gc-accent);
+}
+
+.gc-amount-pill.active {
+  background: #FFFBEB;
+  border-color: var(--gc-accent);
+  color: var(--gc-accent);
+  box-shadow: 0 0 0 1px var(--gc-accent);
+}
+
+.gc-form-group {
+  margin-bottom: 18px;
+}
+
+.gc-form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #1E293B;
+  margin-bottom: 6px;
+}
+
+.gc-form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #CBD5E1;
+  border-radius: var(--gc-radius-sm);
+  font-size: 0.95rem;
+  color: #0F172A;
+  background: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.gc-form-control:focus {
+  outline: none;
+  border-color: var(--gc-gold);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.gc-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .gc-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gc-actions-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.gc-btn-cart {
+  flex: 1;
+  padding: 12px;
+  background: #FFD814;
+  border: 1px solid #FCD200;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0F1111;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  transition: background 0.15s ease;
+}
+
+.gc-btn-cart:hover {
+  background: #F7CA00;
+}
+
+.gc-btn-buy {
+  flex: 1;
+  padding: 12px;
+  background: #FFA41C;
+  border: 1px solid #FF8F00;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #0F1111;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(213, 217, 217, 0.5);
+  transition: background 0.15s ease;
+}
+
+.gc-btn-buy:hover {
+  background: #FA8900;
+}
+
+/* ==========================================================================
+   6. Redeem Section & Wallet Sync
+   ========================================================================== */
+.gc-redeem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .gc-redeem-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gc-claim-input-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.gc-claim-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.15rem;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 2px dashed #94A3B8;
+  border-radius: var(--gc-radius-md);
+  box-sizing: border-box;
+  text-align: center;
+  background: #F8FAFC;
+}
+
+.gc-claim-input:focus {
+  outline: none;
+  border-color: var(--gc-accent);
+  border-style: solid;
+  background: #FFFFFF;
+}
+
+.gc-wallet-status-card {
+  background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 100%);
+  border: 1px solid var(--gc-border);
+  border-radius: var(--gc-radius-md);
+  padding: 24px;
+  text-align: center;
+}
+
+.gc-wallet-balance-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.gc-wallet-balance-amount {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #059669;
+  margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   7. Tables & Lists
+   ========================================================================== */
+.gc-table-responsive {
+  overflow-x: auto;
+}
+
+.gc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.gc-table th {
+  background: #F1F5F9;
+  color: #334155;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--gc-border);
+}
+
+.gc-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #1E293B;
+}
+
+.gc-table tr:hover {
+  background: #F8FAFC;
+}
+
+.gc-badge-success {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   8. FAQ Section (#gcFaqSection)
+   ========================================================================== */
+.gc-faq-item {
+  border-bottom: 1px solid #E2E8F0;
+  padding: 16px 0;
+}
+
+.gc-faq-item:last-child {
+  border-bottom: none;
+}
+
+.gc-faq-question {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0F172A;
+  margin-bottom: 6px;
+}
+
+.gc-faq-answer {
+  font-size: 0.92rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================================
+   9. Accessibility: Reduced Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

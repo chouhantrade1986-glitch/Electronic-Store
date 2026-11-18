@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'language-settings.html');
+const targetPath = path.resolve(__dirname, '..', 'language-settings.html');
 
 const htmlContent = `<!DOCTYPE html>
 <html lang="en">

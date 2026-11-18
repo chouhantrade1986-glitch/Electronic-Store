@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 const prodHtml = fs.readFileSync(path.join(projectDir, 'products.html'), 'utf8');
 const prodJs = fs.readFileSync(path.join(projectDir, 'products.js'), 'utf8');
 const amazonCss = fs.readFileSync(path.join(projectDir, 'amazon-theme.css'), 'utf8');

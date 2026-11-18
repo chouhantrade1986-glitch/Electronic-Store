@@ -14,6 +14,7 @@ test("should bypass global lock for drive upload and admin/customer cancellation
   assert.equal(shouldBypassGlobalWriteLock("POST", "/api/admin/media/upload-drive"), true);
   assert.equal(shouldBypassGlobalWriteLock("PATCH", "/api/admin/orders/order-1/status"), true);
   assert.equal(shouldBypassGlobalWriteLock("PATCH", "/api/orders/order-1/cancel"), true);
+  assert.equal(shouldBypassGlobalWriteLock("POST", "/api/gift-cards/redeem"), true);
 });
 
 test("should keep global lock for unrelated mutating routes", () => {

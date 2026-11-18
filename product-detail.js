@@ -4666,7 +4666,31 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof localizeBatterySpecs === "function") {
     localizeBatterySpecs();
   }
+  if (typeof renderPdpCorporateGiftingCallout === "function") {
+    renderPdpCorporateGiftingCallout(window.currentLoadedProduct || activeRenderedProduct);
+  }
+  if (typeof renderPdpGiftCardCallout === "function") {
+    renderPdpGiftCardCallout(window.currentLoadedProduct || activeRenderedProduct);
+  }
 });
+
+function renderPdpCorporateGiftingCallout(product) {
+  const callout = document.getElementById("pdpCorporateGiftingCallout");
+  if (!callout) return;
+  callout.style.display = "block";
+}
+window.renderPdpCorporateGiftingCallout = renderPdpCorporateGiftingCallout;
+
+function renderPdpGiftCardCallout(product) {
+  const callout = document.getElementById("pdpGiftCardCallout");
+  if (!callout) return;
+  callout.style.display = "block";
+  const link = document.getElementById("pdpGiftCardLink");
+  if (link && product && product.id) {
+    link.href = "gift-cards.html?ref=pdp&productId=" + encodeURIComponent(product.id);
+  }
+}
+window.renderPdpGiftCardCallout = renderPdpGiftCardCallout;
 
 window.addEventListener("languageChanged", () => {
   const currentProd = window.currentLoadedProduct || (typeof activeRenderedProduct !== "undefined" ? activeRenderedProduct : null);

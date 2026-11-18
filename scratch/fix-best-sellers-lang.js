@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const file = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\best-sellers.js';
+const file = path.resolve(__dirname, '..', 'best-sellers.js');
 let content = fs.readFileSync(file, 'utf8');
 
 content = content.replace(

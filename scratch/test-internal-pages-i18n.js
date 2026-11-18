@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 const transCode = fs.readFileSync(path.join(projectDir, 'translations.js'), 'utf8');
 
 console.log("=== Testing Internal Pages i18n & Multi-Language Coverage ===");

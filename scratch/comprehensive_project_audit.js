@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const PROJECT_ROOT = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store';
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 console.log('=== STARTING COMPREHENSIVE PROJECT AUDIT ===\n');
 

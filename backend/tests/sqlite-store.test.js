@@ -5,6 +5,7 @@ const path = require("path");
 const os = require("os");
 
 const sqliteStore = require("../src/lib/sqliteStore");
+const { encryptPiiFields } = require("../src/middleware/piiEncryption");
 
 function withTempEnv(fileName) {
   const previousProvider = process.env.DB_PROVIDER;
@@ -85,6 +86,66 @@ test("writeSqliteSnapshot and readSqliteSnapshot round-trip core entities", () =
     assert.equal(restored.automationSettings.phoneVerificationReminder.limit, 10);
     assert.equal(restored.automationRunHistory.phoneVerificationReminder[0].id, "run1");
   } finally {
+    restore();
+  }
+});
+
+test("corporate collections normalize into SQLite without exposing encrypted PII", () => {
+  const restore = withTempEnv("corporate-collections.sqlite");
+  const previousEncryptionKey = process.env.PII_ENCRYPTION_KEY;
+  process.env.PII_ENCRYPTION_KEY = "sqlite-corporate-pii-test-key-32-bytes";
+  try {
+    const snapshot = encryptPiiFields({
+      corporateInvoices: [{
+        id: "invoice-1",
+        orderId: "order-1",
+        userId: "user-1",
+        status: "requested",
+        companyGstin: "27ABCDE1234F1Z5",
+        billingAddress: "1 Example Street",
+        createdAt: "2026-11-17T00:00:00.000Z"
+      }],
+      corporateRegistries: [{
+        id: "registry-1",
+        createdBy: "user-1",
+        organizationId: "org-1",
+        registryName: "Team Celebration",
+        occasion: "festival",
+        eventDate: "2026-12-01",
+        recipients: [{ recipientName: "Test Recipient", recipientEmail: "recipient@example.test" }],
+        shareTokenHash: "a".repeat(64),
+        createdAt: "2026-11-17T00:00:00.000Z",
+        updatedAt: "2026-11-17T00:00:00.000Z"
+      }]
+    });
+
+    assert.equal(sqliteStore.summarizeNormalizationCoverage(snapshot).fullyNormalized, true);
+    sqliteStore.writeSqliteSnapshot(snapshot);
+    const db = sqliteStore.getSqliteDb();
+    const invoiceColumns = db.prepare("PRAGMA table_info(corporate_invoices)").all().map((column) => column.name);
+    const registryColumns = db.prepare("PRAGMA table_info(corporate_registries)").all().map((column) => column.name);
+    const piiColumnPattern = /email|phone|mobile|address|gstin|recipient|share_token|registry_name/i;
+
+    assert.ok(invoiceColumns.length > 0);
+    assert.ok(registryColumns.length > 0);
+    assert.equal(invoiceColumns.some((column) => piiColumnPattern.test(column)), false);
+    assert.equal(registryColumns.some((column) => piiColumnPattern.test(column)), false);
+
+    const invoiceJson = JSON.parse(db.prepare("SELECT json FROM corporate_invoices WHERE id = ?").get("invoice-1").json);
+    const registryJson = JSON.parse(db.prepare("SELECT json FROM corporate_registries WHERE id = ?").get("registry-1").json);
+    assert.match(invoiceJson.companyGstin, /^v1:/);
+    assert.match(invoiceJson.billingAddress, /^v1:/);
+    assert.match(registryJson.recipients[0].recipientName, /^v1:/);
+    assert.match(registryJson.recipients[0].recipientEmail, /^v1:/);
+    const restored = sqliteStore.readSqliteSnapshot();
+    assert.deepEqual(restored.corporateInvoices, snapshot.corporateInvoices);
+    assert.deepEqual(restored.corporateRegistries, snapshot.corporateRegistries);
+  } finally {
+    if (previousEncryptionKey === undefined) {
+      delete process.env.PII_ENCRYPTION_KEY;
+    } else {
+      process.env.PII_ENCRYPTION_KEY = previousEncryptionKey;
+    }
     restore();
   }
 });

@@ -17,6 +17,18 @@ const LOCK_BYPASS_RULES = [
   {
     method: "PATCH",
     pattern: /^\/api\/orders\/[^/]+\/cancel\/?$/i
+  },
+  {
+    method: "POST",
+    pattern: /^\/api\/corporate\/registry(?:\/[^/]+\/share-token)?\/?$/i
+  },
+  {
+    method: "POST",
+    pattern: /^\/api\/gift-cards\/redeem\/?$/i
+  },
+  {
+    method: "PATCH",
+    pattern: /^\/api\/corporate\/registry\/[^/]+\/items\/?$/i
   }
 ];
 

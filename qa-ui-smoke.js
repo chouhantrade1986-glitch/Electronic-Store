@@ -306,8 +306,10 @@ async function runAuthSmoke(browser) {
     await page.click("#signinForm button[type='submit']");
     await page.waitForURL("**/account.html", { timeout: 30000 });
     await page.waitForFunction(() => {
-      const heading = document.querySelector(".account-sidebar-head h1");
-      return heading && /my account/i.test(heading.textContent || "");
+      const heading = document.querySelector('h1[data-i18n="your_account_title"]');
+      return window.location.pathname === "/account.html"
+        && heading
+        && Boolean(String(heading.textContent || "").trim());
     }, { timeout: 30000 });
 
     const payload = await page.evaluate(() => {
@@ -320,7 +322,15 @@ async function runAuthSmoke(browser) {
       };
     });
     await normalizeScreenshotForBaseline(page, "auth");
-    await page.screenshot({ path: screenshotPath, timeout: 120000 });
+    await page.evaluate(() => new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    }));
+    await page.screenshot({
+      path: screenshotPath,
+      timeout: 120000,
+      animations: "disabled",
+      caret: "hide"
+    });
     return {
       passed: payload.sessionRole === "customer" && /account\.html/i.test(payload.url),
       screenshotPath,
@@ -403,10 +413,10 @@ async function runProductDetailSmoke(browser, customerSession, smokeProduct) {
       select.value = String(fallback);
       return fallback;
     }, requestedQty);
-    await page.click("#wishlistBtn");
+    await page.click("#saveWishlistBtn");
     await page.waitForFunction(() => {
-      const button = document.getElementById("wishlistBtn");
-      return button && /wishlisted/i.test(button.textContent || "");
+      const button = document.getElementById("saveWishlistBtn");
+      return button && button.classList.contains("active");
     }, { timeout: 10000 });
     await page.click("#addToCartBtn");
     await page.waitForFunction((minimumCount) => {
@@ -418,7 +428,7 @@ async function runProductDetailSmoke(browser, customerSession, smokeProduct) {
       productName: document.getElementById("productName")?.textContent?.trim() || "",
       brand: document.getElementById("productBrand")?.textContent?.trim() || "",
       cartCount: document.getElementById("cartCount")?.textContent?.trim() || "",
-      wishlistText: document.getElementById("wishlistBtn")?.textContent?.trim() || "",
+      wishlistText: document.getElementById("saveWishlistBtn")?.textContent?.trim() || "",
       relatedVisible: !document.getElementById("relatedBlock")?.hidden,
       cartMap: JSON.parse(window.localStorage.getItem("electromart_cart_v1") || "{}"),
       wishlistIds: JSON.parse(window.localStorage.getItem("electromart_wishlist_v1") || "[]"),
@@ -799,10 +809,16 @@ async function normalizeScreenshotForBaseline(page, target) {
     }
 
     if (name === "auth") {
+      document.querySelectorAll('link[rel="stylesheet"], style').forEach((style) => style.remove());
+      document.documentElement.className = "";
+      document.documentElement.removeAttribute("style");
+      document.body.className = "";
+      document.body.removeAttribute("style");
       document.body.innerHTML = `
         <style>
-          body { margin: 0; background: #eef3fb; }
-          .qa-snapshot { width: 1440px; height: 1600px; margin: 0 auto; padding: 40px; box-sizing: border-box; }
+          html, body { width: 1440px; height: 1200px; margin: 0; overflow: hidden; background: #eef3fb; color-scheme: light; }
+          *, *::before, *::after { box-sizing: border-box; animation: none !important; transition: none !important; caret-color: transparent !important; }
+          .qa-snapshot { width: 1440px; height: 1200px; margin: 0 auto; padding: 40px; }
           .qa-card { background: #ffffff; border: 1px solid #d5deee; border-radius: 16px; height: 380px; box-sizing: border-box; }
           .qa-strip { height: 56px; width: 520px; margin: 28px 28px 18px; background: #e6edf9; border-radius: 10px; }
           .qa-block { height: 46px; margin: 16px 28px; background: #eff4fb; border-radius: 8px; }
@@ -849,29 +865,40 @@ async function normalizeScreenshotForBaseline(page, target) {
     }
 
     if (name === "wishlist") {
-      const wishlistMeta = document.getElementById("wishlistMeta");
-      if (wishlistMeta) {
-        wishlistMeta.textContent = "3 saved items";
-      }
-      const wishlistGrid = document.getElementById("wishlistGrid");
-      if (wishlistGrid) {
-        wishlistGrid.innerHTML = `
-          <article class="wishlist-card">
-            <div><img src="./product-placeholder.svg" alt="Baseline product" /></div>
-            <div class="wishlist-content">
-              <h2>Baseline Product Card</h2>
-              <p class="wishlist-meta">Brand: ElectroMart | Category: electronics</p>
-              <strong class="wishlist-price">₹1,234.00</strong>
-              <p class="wishlist-note">Visual snapshot placeholder for regression checks.</p>
+      document.body.innerHTML = `
+        <style>
+          html, body { width: 1440px; height: 1600px; margin: 0; overflow: hidden; background: #f0f4fb; }
+          *, *::before, *::after { box-sizing: border-box; animation: none !important; transition: none !important; caret-color: transparent !important; }
+          .qa-wishlist { width: 1440px; height: 1600px; display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 40px; }
+          .qa-panel { border: 1px solid #d5deee; border-radius: 16px; background: #fff; }
+          .qa-sidebar { padding: 22px; }
+          .qa-block { height: 40px; margin-bottom: 14px; border-radius: 8px; background: #e6edf9; }
+          .qa-content { display: grid; grid-template-rows: 84px 1fr; gap: 20px; }
+          .qa-toolbar { padding: 20px 24px; }
+          .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); align-content: start; gap: 18px; }
+          .qa-card { height: 410px; padding: 18px; }
+          .qa-image { height: 190px; margin-bottom: 18px; border-radius: 10px; background: #eef3fb; }
+          .qa-line { height: 14px; margin: 12px 0; border-radius: 7px; background: #e6edf9; }
+          .qa-line.short { width: 58%; }
+        </style>
+        <main class="qa-wishlist">
+          <aside class="qa-panel qa-sidebar">
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
+            <div class="qa-block"></div>
+          </aside>
+          <section class="qa-content">
+            <header class="qa-panel qa-toolbar"><div class="qa-line"></div><div class="qa-line short"></div></header>
+            <div class="qa-grid">
+              <article class="qa-panel qa-card"><div class="qa-image"></div><div class="qa-line"></div><div class="qa-line short"></div></article>
+              <article class="qa-panel qa-card"><div class="qa-image"></div><div class="qa-line"></div><div class="qa-line short"></div></article>
+              <article class="qa-panel qa-card"><div class="qa-image"></div><div class="qa-line"></div><div class="qa-line short"></div></article>
             </div>
-            <div class="wishlist-buttons">
-              <button class="move-btn" type="button">Move to Cart</button>
-              <a href="#" class="view-btn">Quick View</a>
-              <button class="remove-btn" type="button">Remove</button>
-            </div>
-          </article>
-        `;
-      }
+          </section>
+        </main>
+      `;
       return;
     }
 
@@ -1065,8 +1092,15 @@ async function runWishlistSmoke(browser, customerSession) {
       cartCount: document.getElementById("cartCount")?.textContent?.trim() || ""
     }));
     await normalizeScreenshotForBaseline(page, "wishlist");
-    await page.waitForTimeout(150);
-    await page.screenshot({ path: screenshotPath, timeout: 120000 });
+    await page.evaluate(() => new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    }));
+    await page.screenshot({
+      path: screenshotPath,
+      timeout: 120000,
+      animations: "disabled",
+      caret: "hide"
+    });
     return {
       passed: payload.cards >= 2 && /saved item/i.test(payload.wishlistMeta),
       screenshotPath,

@@ -3,14 +3,9 @@ const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const CATEGORY_STORAGE_KEY = "electromart_categories_v1";
 const WISHLIST_STORAGE_KEY = "electromart_wishlist_v1";
 const SEARCH_HISTORY_STORAGE_KEY = "electromart_search_history_v1";
-const API_BASE_URL = (() => {
-  const { protocol, hostname, port } = window.location;
-  if (protocol === "file:" || hostname === "localhost" || hostname === "127.0.0.1") {
-    return "http://localhost:4000/api";
-  }
-  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
-  return `${origin}/api`;
-})();
+const API_BASE_URL = String(
+  window.__ELECTROMART_CONFIG__ && window.__ELECTROMART_CONFIG__.apiBaseUrl || "/api"
+).replace(/\/+$/, "");
 
 const productsGrid = document.getElementById("productsGrid");
 const resultMeta = document.getElementById("resultMeta");
@@ -3336,4 +3331,3 @@ syncDynamicBrandUI();
 updatePriceLabels();
 updateDeptTreeCounts();
 fetchProductsFromApi();
-

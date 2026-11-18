@@ -107,6 +107,39 @@ test("sqliteOrdersPayments partial write helper updates only requested collectio
       ]
     });
 
+    test("partial SQLite order writes encrypt corporate GSTIN and billing address", () => {
+      const restore = withTempEnv("corporate-order-pii.sqlite");
+      const previousEncryptionKey = process.env.PII_ENCRYPTION_KEY;
+      process.env.PII_ENCRYPTION_KEY = "sqlite-corporate-pii-test-key-32-bytes";
+      try {
+        sqliteStore.writeSqliteSnapshot({
+          orders: [{ id: "corporate-order", userId: "u1", status: "processing", paymentStatus: "pending" }],
+          payments: []
+        });
+        const snapshot = sqliteStore.readSqliteSnapshot();
+        snapshot.orders[0].corporateDetails = {
+          companyName: "Example Corp",
+          gstin: "27ABCDE1234F1Z5",
+          billingAddress: "12 Example Road"
+        };
+
+        writeSqliteOrderPaymentCollections(snapshot, ["orders"]);
+
+        const storedOrder = JSON.parse(sqliteStore.getSqliteDb().prepare("SELECT json FROM orders WHERE id = ?").get("corporate-order").json);
+        assert.match(storedOrder.corporateDetails.gstin, /^v1:/);
+        assert.match(storedOrder.corporateDetails.billingAddress, /^v1:/);
+        assert.equal(getSqliteOrderById("corporate-order").corporateDetails.gstin, "27ABCDE1234F1Z5");
+        assert.equal(getSqliteOrderById("corporate-order").corporateDetails.billingAddress, "12 Example Road");
+      } finally {
+        if (previousEncryptionKey === undefined) {
+          delete process.env.PII_ENCRYPTION_KEY;
+        } else {
+          process.env.PII_ENCRYPTION_KEY = previousEncryptionKey;
+        }
+        restore();
+      }
+    });
+
     const snapshot = sqliteStore.readSqliteSnapshot();
     snapshot.orders[0].status = "cancelled";
     snapshot.orders[0].paymentStatus = "failed";

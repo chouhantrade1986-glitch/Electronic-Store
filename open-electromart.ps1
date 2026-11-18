@@ -12,6 +12,17 @@ $frontendErrLog = Join-Path $tempRoot "electromart-frontend-err.log"
 $backendLog = Join-Path $tempRoot "electromart-backend.log"
 $backendErrLog = Join-Path $tempRoot "electromart-backend-err.log"
 
+# Disable WPAD proxy lookup for localhost so health probes respond instantaneously
+try { [System.Net.WebRequest]::DefaultWebProxy = $null } catch {}
+
+# Ensure Node.js in AppData is discovered even if shell has stale PATH
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  $nodePath = Join-Path $env:LOCALAPPDATA "Programs\nodejs"
+  if (Test-Path (Join-Path $nodePath "node.exe")) {
+    $env:PATH = "$nodePath;$env:PATH"
+  }
+}
+
 function Test-UrlReady {
   param(
     [Parameter(Mandatory = $true)]
@@ -19,7 +30,7 @@ function Test-UrlReady {
   )
 
   try {
-    $response = Invoke-WebRequest -UseBasicParsing -Uri $Url -TimeoutSec 2
+    $response = Invoke-WebRequest -UseBasicParsing -Uri $Url -TimeoutSec 5
     return [int]$response.StatusCode -eq 200
   } catch {
     return $false

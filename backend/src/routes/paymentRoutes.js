@@ -23,6 +23,7 @@ const {
 } = require("../lib/paymentLifecycle");
 const { appendOrderStatusEvent, withNormalizedOrderStatusHistory } = require("../lib/orderStatus");
 const { releaseInventoryForOrder } = require("../lib/orderCommerce");
+const { issueGiftCardsForOrder } = require("../lib/giftCards");
 const {
   buildRazorpayCheckoutPayload,
   captureRazorpayPayment,
@@ -93,6 +94,10 @@ function clearGatewayProvisioning(payment) {
 
 function persistPaymentRouteMutation(db, collections) {
   if (isSqliteOrderPaymentQueriesEnabled()) {
+    if (collections.some((collection) => ["users", "giftCards", "giftCardRedemptions", "paymentSourceReservations"].includes(collection))) {
+      writeDb(db);
+      return;
+    }
     writeSqliteOrderPaymentCollections(db, collections);
     return;
   }
@@ -438,6 +443,7 @@ router.post("/webhooks/razorpay", piiEncryption, paymentWebhookLimiter, async (r
           const notification = result.ok
             ? await notifyIfPaymentCaptured(db, payment, order, result, "payment-webhook", "razorpay")
             : await notifyIfPaymentFailed(db, order, result, "payment-webhook-failed", "razorpay");
+          const issuedGiftCards = result.ok ? issueGiftCardsForOrder(db, order, { payment }) : [];
 
           markWebhookEvent(webhookEvent, {
             status: "processed",
@@ -449,7 +455,17 @@ router.post("/webhooks/razorpay", piiEncryption, paymentWebhookLimiter, async (r
             processedAt: new Date().toISOString()
           });
 
-          persistPaymentRouteMutation(db, ["orders", "payments", "products", "orderNotifications", "paymentWebhookEvents"]);
+          persistPaymentRouteMutation(db, [
+            "orders",
+            "payments",
+            "products",
+            "orderNotifications",
+            "paymentWebhookEvents",
+            ...(issuedGiftCards.length ? ["giftCards"] : []),
+            "users",
+            "giftCardRedemptions",
+            "paymentSourceReservations"
+          ]);
           return {
             statusCode: 200,
             body: {
@@ -521,7 +537,15 @@ router.post("/webhooks/razorpay", piiEncryption, paymentWebhookLimiter, async (r
             orderId: order.id,
             processedAt: new Date().toISOString()
           });
-          persistPaymentRouteMutation(db, ["orders", "payments", "paymentWebhookEvents"]);
+          persistPaymentRouteMutation(db, [
+            "orders",
+            "payments",
+            "paymentWebhookEvents",
+            "users",
+            "giftCards",
+            "giftCardRedemptions",
+            "paymentSourceReservations"
+          ]);
           return {
             statusCode: 200,
             body: {
@@ -912,11 +936,22 @@ router.post("/:paymentId/confirm", requireAuth, piiEncryption, paymentConfirmLim
       const notification = result.ok
         ? await notifyIfPaymentCaptured(currentDb, currentPayment, currentOrder, result, "payment-confirm", "checkout")
         : await notifyIfPaymentFailed(currentDb, currentOrder, result, "payment-confirm-failed", "checkout");
+      const issuedGiftCards = result.ok ? issueGiftCardsForOrder(currentDb, currentOrder, { payment: currentPayment }) : [];
 
-      persistPaymentRouteMutation(currentDb, ["orders", "payments", "products", "orderNotifications"]);
+      persistPaymentRouteMutation(currentDb, [
+        "orders",
+        "payments",
+        "products",
+        "orderNotifications",
+        ...(issuedGiftCards.length ? ["giftCards"] : []),
+        "users",
+        "giftCardRedemptions",
+        "paymentSourceReservations"
+      ]);
 
       return {
         result,
+        issuedGiftCards,
         payment: {
           ...currentPayment
         },
@@ -945,6 +980,7 @@ router.post("/:paymentId/confirm", requireAuth, piiEncryption, paymentConfirmLim
   return res.json({
     ...committed.payment,
     order: committed.order,
+    giftCards: committed.issuedGiftCards,
     notification: committed.notification
   });
 });
@@ -1038,7 +1074,14 @@ router.post("/:paymentId/refund", requireAuth, piiEncryption, async (req, res) =
         };
       }
 
-      persistPaymentRouteMutation(currentDb, ["orders", "payments"]);
+      persistPaymentRouteMutation(currentDb, [
+        "orders",
+        "payments",
+        "users",
+        "giftCards",
+        "giftCardRedemptions",
+        "paymentSourceReservations"
+      ]);
       return {
         ok: true,
         status: 200,
@@ -1195,7 +1238,16 @@ router.post("/:paymentId/cancel", requireAuth, piiEncryption, async (req, res) =
         triggeredFrom: "checkout"
       });
 
-      persistPaymentRouteMutation(currentDb, ["orders", "payments", "products", "orderNotifications"]);
+      persistPaymentRouteMutation(currentDb, [
+        "orders",
+        "payments",
+        "products",
+        "orderNotifications",
+        "users",
+        "giftCards",
+        "giftCardRedemptions",
+        "paymentSourceReservations"
+      ]);
       return {
         ok: true,
         status: 200,

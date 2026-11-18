@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store';
+const ROOT = path.resolve(__dirname, '..');
 
 function scanFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');

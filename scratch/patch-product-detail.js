@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'product-detail.js');
+const filePath = path.resolve(__dirname, '..', 'product-detail.js');
 let code = fs.readFileSync(filePath, 'utf8');
 
 // Detect line ending

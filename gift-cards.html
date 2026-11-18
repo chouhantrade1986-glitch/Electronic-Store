@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital E-Gift Cards Store - ElectroMart | Instant Gift Cards for Celebrations &amp; Festivals</title>
+  <meta name="description" content="ElectroMart Digital E-Gift Cards Store: Send personalized gift cards instantly via email or WhatsApp for birthdays, anniversaries, Diwali, Eid, and corporate milestones." />
+  <meta name="keywords" content="digital gift cards, e-gift card, festival gift cards, birthday vouchers, wedding gifts, ElectroMart vouchers, online electronics gift card" />
+  <meta name="author" content="ElectroMart" />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="amazon-theme.css" />
+  <link rel="stylesheet" href="shared-search.css" />
+  <link rel="stylesheet" href="gift-cards.css" />
+</head>
+<body class="gc-page">
+  <!-- Global Shared Header -->
+  <div id="headerContainer"></div>
+
+  <main class="gc-main">
+    <!-- ====================================================================
+         1. Hero Section (#gcHero)
+         ==================================================================== -->
+    <section id="gcHero" class="gc-hero" aria-labelledby="gcHeroTitle">
+      <div class="gc-hero-content">
+        <div class="gc-hero-pill">
+          <span>🎁</span>
+          <span>ElectroMart Digital Gifting</span>
+        </div>
+        <h1 id="gcHeroTitle" data-i18n="gc_hub_title">ElectroMart E-Gift Cards Store</h1>
+        <p class="gc-hero-subtitle" data-i18n="gc_hub_subtitle">The gift of choice. Send digital gift cards instantly for birthdays, anniversaries, festivals &amp; celebrations.</p>
+
+        <div class="gc-hero-ctas">
+          <a href="#gcPurchaseSection" class="gc-btn-primary">
+            <span>✨</span>
+            <span>Send a Gift Card</span>
+          </a>
+          <a href="#gcRedeemSection" class="gc-btn-secondary">
+            <span>💳</span>
+            <span>Redeem a Gift Card</span>
+          </a>
+          <a href="#gcBalanceStatusCard" class="gc-btn-secondary">
+            <span>💰</span>
+            <span>Check Wallet Balance</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="gc-container">
+      <!-- ====================================================================
+           2. Interactive Studio & Purchase Section (#gcPurchaseSection)
+           ==================================================================== -->
+      <section id="gcPurchaseSection" class="gc-section">
+        <div class="gc-section-header">
+          <h2 data-i18n="gc_design_title">Choose a Gift Card Design &amp; Personalize</h2>
+          <p data-i18n="gc_design_subtitle">Select from festive hampers, birthday celebrations, corporate awards, and milestones.</p>
+        </div>
+
+        <div class="gc-studio-layout">
+          <!-- Left Column: Interactive Live Card Preview -->
+          <div class="gc-preview-col">
+            <div id="gcCardPreview" class="gc-card-preview template-festival">
+              <div class="gc-card-preview-header">
+                <div class="gc-preview-brand">
+                  <span>⚡</span>
+                  <span>ElectroMart</span>
+                </div>
+                <div class="gc-preview-chip"></div>
+              </div>
+
+              <div class="gc-preview-center">
+                <div id="gcCardPreviewRecipient" class="gc-preview-recipient">For: Loved One</div>
+                <div id="gcCardPreviewMessage" class="gc-preview-message">Wishing you endless joy &amp; prosperity from ElectroMart!</div>
+              </div>
+
+              <div class="gc-preview-footer">
+                <div>
+                  <div class="gc-preview-design-label" id="gcCardPreviewDesign">Festive Celebration</div>
+                  <small style="opacity: 0.8; font-size: 0.7rem;">E-GIFT CARD</small>
+                </div>
+                <div id="gcCardPreviewAmount" class="gc-preview-amount">₹1,000</div>
+              </div>
+            </div>
+
+            <!-- Template Selector (#gcDesignSection) -->
+            <div id="gcDesignSection" style="width: 100%; margin-top: 24px;">
+              <label style="font-weight: 700; font-size: 0.9rem; color: #1E293B;">Select Card Occasion</label>
+              <div id="gcTemplateGrid" class="gc-template-grid">
+                <div class="gc-template-card active" data-template-id="festival" data-template-name="Festive Celebration">
+                  <div class="gc-template-thumbnail" style="background: linear-gradient(135deg, #991B1B, #D97706);">🪔</div>
+                  <div class="gc-template-name">Festival</div>
+                </div>
+                <div class="gc-template-card" data-template-id="birthday" data-template-name="Happy Birthday">
+                  <div class="gc-template-thumbnail" style="background: linear-gradient(135deg, #4338CA, #EC4899);">🎂</div>
+                  <div class="gc-template-name">Birthday</div>
+                </div>
+                <div class="gc-template-card" data-template-id="anniversary" data-template-name="Happy Anniversary">
+                  <div class="gc-template-thumbnail" style="background: linear-gradient(135deg, #831843, #F472B6);">💐</div>
+                  <div class="gc-template-name">Anniversary</div>
+                </div>
+                <div class="gc-template-card" data-template-id="corporate" data-template-name="Corporate Excellence">
+                  <div class="gc-template-thumbnail" style="background: linear-gradient(135deg, #0F172A, #3B82F6);">💼</div>
+                  <div class="gc-template-name">Corporate</div>
+                </div>
+                <div class="gc-template-card" data-template-id="celebration" data-template-name="Congratulations">
+                  <div class="gc-template-thumbnail" style="background: linear-gradient(135deg, #065F46, #10B981);">🌟</div>
+                  <div class="gc-template-name">Congrats</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Personalization Form (#gcPurchaseForm) -->
+          <div class="gc-form-col">
+            <form id="gcPurchaseForm">
+              <!-- Hidden form inputs for contract -->
+              <input type="hidden" name="templateId" id="gcSelectedTemplateInput" value="festival" />
+              <input type="hidden" name="amount" id="gcSelectedAmountInput" value="1000" />
+
+              <div class="gc-form-group">
+                <label data-i18n="gc_amount_label">Select Gift Card Amount (₹)</label>
+                <div id="gcAmountPillsContainer" class="gc-amount-pills">
+                  <button type="button" class="gc-amount-pill" data-amount="250">₹250</button>
+                  <button type="button" class="gc-amount-pill" data-amount="500">₹500</button>
+                  <button type="button" class="gc-amount-pill active" data-amount="1000">₹1,000</button>
+                  <button type="button" class="gc-amount-pill" data-amount="2000">₹2,000</button>
+                  <button type="button" class="gc-amount-pill" data-amount="5000">₹5,000</button>
+                </div>
+                <input type="number" id="gcCustomAmountInput" name="customAmount" class="gc-form-control" placeholder="Or enter custom amount (₹100 - ₹10,000)" min="100" max="10000" />
+              </div>
+
+              <div class="gc-form-row">
+                <div class="gc-form-group">
+                  <label for="gcRecipientNameInput" data-i18n="gc_recipient_name_label">Recipient Name</label>
+                  <input type="text" id="gcRecipientNameInput" name="recipientName" class="gc-form-control" placeholder="e.g. Rahul Sharma" required />
+                </div>
+                <div class="gc-form-group">
+                  <label for="gcRecipientEmailInput" data-i18n="gc_recipient_email_label">Recipient Email Address</label>
+                  <input type="email" id="gcRecipientEmailInput" name="recipientEmail" class="gc-form-control" placeholder="e.g. rahul@example.com" required />
+                </div>
+              </div>
+
+              <div class="gc-form-row">
+                <div class="gc-form-group">
+                  <label for="gcSenderNameInput" data-i18n="gc_sender_name_label">Your Name</label>
+                  <input type="text" id="gcSenderNameInput" name="senderName" class="gc-form-control" placeholder="e.g. Priya" required />
+                </div>
+                <div class="gc-form-group">
+                  <label for="gcDeliveryDateInput" data-i18n="gc_delivery_date_label">Delivery Date</label>
+                  <input type="date" id="gcDeliveryDateInput" name="deliveryDate" class="gc-form-control" />
+                </div>
+              </div>
+
+              <div class="gc-form-group">
+                <label for="gcGiftMessageInput" data-i18n="gc_gift_message_label">Personal Gift Message (Optional)</label>
+                <textarea id="gcGiftMessageInput" name="giftMessage" class="gc-form-control" rows="3" placeholder="Write a heartwarming message for your recipient..."></textarea>
+              </div>
+
+              <div class="gc-actions-row">
+                <button type="button" id="gcAddToCartBtn" class="gc-btn-cart" data-i18n="gc_add_to_cart_btn">
+                  🛒 Add Gift Card to Cart
+                </button>
+                <button type="button" id="gcBuyNowBtn" class="gc-btn-buy" data-i18n="gc_buy_now_btn">
+                  ⚡ Buy Gift Card Now
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           3. Redeem Gift Card Section (#gcRedeemSection)
+           ==================================================================== -->
+      <section id="gcRedeemSection" class="gc-section">
+        <div class="gc-section-header">
+          <h2 data-i18n="gc_redeem_title">Redeem an ElectroMart Gift Card</h2>
+          <p data-i18n="gc_redeem_subtitle">Add funds directly to your ElectroMart Pay wallet balance for instant checkout.</p>
+        </div>
+
+        <div class="gc-redeem-grid">
+          <div>
+            <form id="gcRedeemForm">
+              <div class="gc-claim-input-wrap">
+                <label for="gcClaimCodeInput" style="display: block; font-weight: 600; margin-bottom: 8px;" data-i18n="gc_claim_code_label">
+                  Enter Gift Card Claim Code
+                </label>
+                <input type="text" id="gcClaimCodeInput" name="claimCode" class="gc-claim-input" placeholder="EM-GC-XXXXXX-XXXXXX-XXXXXX-XXXXXX" maxlength="33" required />
+              </div>
+              <button type="submit" id="gcRedeemBtn" class="gc-btn-primary" style="width: 100%; justify-content: center;" data-i18n="gc_redeem_btn">
+                <span>💳</span>
+                <span>Apply to ElectroMart Pay Balance</span>
+              </button>
+            </form>
+          </div>
+
+          <div>
+            <div id="gcBalanceStatusCard" class="gc-wallet-status-card">
+              <div class="gc-wallet-balance-label" data-i18n="gc_balance_title">Current ElectroMart Pay Balance</div>
+              <div id="gcWalletBalanceDisplay" class="gc-wallet-balance-amount">Sign in to view</div>
+              <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 16px;">
+                Your balance is stored securely in your ElectroMart account.
+              </p>
+              <a href="electromart-pay.html" class="gc-btn-secondary" style="display: inline-block; color: #0F172A; border-color: #CBD5E1;">
+                View ElectroMart Pay Wallet ›
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           4. Recent Gift Cards Table (#gcRecentGCTable)
+           ==================================================================== -->
+      <section class="gc-section">
+        <div class="gc-section-header">
+          <h2 data-i18n="gc_recent_title">Recent Gift Cards &amp; Redemptions</h2>
+          <p>Track your issued digital gift cards and recent wallet credit transactions.</p>
+        </div>
+
+        <div class="gc-table-responsive">
+          <table id="gcRecentGCTable" class="gc-table">
+            <thead>
+              <tr>
+                <th>Reference ID</th>
+                <th>Claim Code</th>
+                <th>Recipient / User</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rendered dynamically by controller -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5. FAQ Section (#gcFaqSection)
+           ==================================================================== -->
+      <section id="gcFaqSection" class="gc-section">
+        <div class="gc-section-header">
+          <h2 data-i18n="gc_faq_title">Frequently Asked Questions</h2>
+          <p>Everything you need to know about ElectroMart E-Gift Cards.</p>
+        </div>
+
+        <div class="gc-faq-item">
+          <div class="gc-faq-question">How does the recipient receive their ElectroMart Gift Card?</div>
+          <div class="gc-faq-answer">
+            After confirmed online payment, your claim code appears in your ElectroMart account under gift cards. Codes use the format <code>EM-GC-XXXXXX-XXXXXX-XXXXXX-XXXXXX</code>.
+          </div>
+        </div>
+
+        <div class="gc-faq-item">
+          <div class="gc-faq-question">What is the validity of ElectroMart Gift Cards?</div>
+          <div class="gc-faq-answer">
+            The remaining balance and redemption status are shown in your ElectroMart account.
+          </div>
+        </div>
+
+        <div class="gc-faq-item">
+          <div class="gc-faq-question">Can I use multiple gift cards on a single purchase?</div>
+          <div class="gc-faq-answer">
+            Yes! When you redeem your gift cards, the full amount is added to your ElectroMart Pay wallet balance. You can stack as many gift cards as you want and combine them with UPI, debit/credit cards or net banking at checkout.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Canonical Script Loading Sequence -->
+  <!-- 1. Multilingual Dictionary -->
+  <script src="translations.js"></script>
+  <!-- 2. 751 Products Catalog -->
+  <script src="products-data.js"></script>
+  <!-- 3. Universal i18n Bus -->
+  <script src="universal-i18n-bus.js"></script>
+  <!-- 4. Global Header & Dependencies -->
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="/api/config.js"></script>
+  <!-- 5. Page Specific Script -->
+  <script src="gift-cards.js"></script>
+</body>
+</html>

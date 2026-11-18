@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corporate Gifting &amp; Bulk Orders - ElectroMart | Festival Catalogs, GST Invoicing &amp; Registries</title>
+  <meta name="description" content="ElectroMart Corporate Gifting &amp; Bulk Orders Hub: Festival hampers, tiered bulk pricing, commercial GST invoices, corporate gift registries, and team spend management." />
+  <meta name="keywords" content="corporate gifting, bulk orders, festival hampers, GST invoice, Diwali gifts, corporate registry, bulk electronics, employee rewards" />
+  <meta name="author" content="ElectroMart" />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="amazon-theme.css" />
+  <link rel="stylesheet" href="shared-search.css" />
+  <link rel="stylesheet" href="corporate-gifting.css" />
+</head>
+<body class="cg-page">
+  <!-- Global Shared Header -->
+  <div id="headerContainer"></div>
+
+  <main class="cg-main">
+    <!-- ====================================================================
+         1. Hero Section (#cgHero)
+         ==================================================================== -->
+    <section id="cgHero" class="cg-hero" aria-labelledby="cgHeroTitle">
+      <div class="cg-hero-content">
+        <div class="cg-hero-pill">
+          <span>🏢</span>
+          <span>ElectroMart B2B &amp; Enterprise</span>
+        </div>
+        <h1 id="cgHeroTitle" data-i18n="cg_hub_title">Corporate Gifting &amp; Bulk Orders Hub</h1>
+        <p class="cg-hero-subtitle" data-i18n="cg_hub_subtitle">Curated electronics, festive hampers, seamless GST invoicing, and corporate registries for enterprises.</p>
+
+        <div class="cg-hero-ctas">
+          <a href="#bulkOrderSection" class="cg-btn-primary">
+            <span>📦</span>
+            <span>Place Bulk Order</span>
+          </a>
+          <a href="#festivalCatalogSection" class="cg-btn-secondary">
+            <span>🎉</span>
+            <span>View Festival Catalogs</span>
+          </a>
+          <a href="#giftRegistrySection" class="cg-btn-gold">
+            <span>🎁</span>
+            <span>Create Gift Registry</span>
+          </a>
+          <a href="#corporateDashboardSection" class="cg-btn-secondary" id="cgDashboardLink">
+            <span>📊</span>
+            <span>Corporate Dashboard</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="cg-container">
+      <!-- ==================================================================
+           2. Festival Catalog Engine (#festivalCatalogSection)
+           ================================================================== -->
+      <section id="festivalCatalogSection" class="cg-section">
+        <div class="cg-section-header">
+          <h2 data-i18n="cg_festival_catalog_title">Festival &amp; Seasonal Gifting Catalogs</h2>
+          <p>Handpicked premium electronics and curated gift hampers tailored for employee rewards, clients, and partners.</p>
+        </div>
+
+        <div class="cg-card">
+          <!-- Hidden form input to provide name="festival" contract -->
+          <input type="hidden" name="festival" id="activeFestivalInput" value="diwali" />
+
+          <div id="festivalTabs" role="tablist">
+            <button type="button" class="cg-tab-btn active" data-festival="diwali" role="tab">🪔 Diwali Tech Hampers</button>
+            <button type="button" class="cg-tab-btn" data-festival="new_year" role="tab">🎊 New Year &amp; Annual Kickoff</button>
+            <button type="button" class="cg-tab-btn" data-festival="rewards" role="tab">🏆 Leadership &amp; Achiever Awards</button>
+          </div>
+
+          <div id="festivalCatalogGrid">
+            <!-- Dynamic product cards populated via script -->
+          </div>
+
+          <!-- Secondary Grid for specific contract checking -->
+          <div id="cgProductGrid" style="display: none;" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           3. Bulk Order & GST Invoicing Engine (#bulkOrderSection)
+           ================================================================== -->
+      <section id="bulkOrderSection" class="cg-section">
+        <div class="cg-section-header">
+          <h2 data-i18n="cg_bulk_order_title">Bulk Procurement &amp; GST Invoicing</h2>
+          <p>Submit purchase orders, calculate tiered discounts, and generate instant GST-compliant commercial invoices.</p>
+        </div>
+
+        <div class="cg-card">
+          <div class="cg-grid-2col">
+            <!-- Left Column: Form -->
+            <div>
+              <form id="bulkOrderForm">
+                <div class="cg-form-row">
+                  <div class="cg-form-group">
+                    <label for="poNumberInput" class="cg-form-label" data-i18n="cg_po_number_label">Purchase Order (PO) Number</label>
+                    <input type="text" id="poNumberInput" name="poNumber" class="cg-input" placeholder="e.g. PO-2026-CORP-882" required />
+                  </div>
+                  <div class="cg-form-group">
+                    <label for="companyNameInput" class="cg-form-label" data-i18n="cg_company_name_label">Registered Company Name</label>
+                    <input type="text" id="companyNameInput" name="companyName" class="cg-input" placeholder="e.g. Horizon Enterprises Pvt Ltd" required />
+                  </div>
+                </div>
+
+                <div class="cg-form-group">
+                  <label for="gstinInput" class="cg-form-label" data-i18n="cg_gstin_label">GST Identification Number (GSTIN)</label>
+                  <input type="text" id="gstinInput" name="gstin" class="cg-input" placeholder="e.g. 27AAACA1234A1Z5" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$" required />
+                </div>
+
+                <div class="cg-form-row">
+                  <div class="cg-form-group">
+                    <label for="billingAddressInput" class="cg-form-label" data-i18n="cg_billing_address_label">Corporate Billing Address</label>
+                    <textarea id="billingAddressInput" name="billingAddress" class="cg-textarea" placeholder="Registered office address..." required></textarea>
+                  </div>
+                  <div class="cg-form-group">
+                    <label for="shippingAddressInput" class="cg-form-label" data-i18n="cg_shipping_address_label">Consolidated Shipping Address</label>
+                    <textarea id="shippingAddressInput" name="shippingAddress" class="cg-textarea" placeholder="Warehouse / office delivery address..." required></textarea>
+                  </div>
+                </div>
+
+                <div class="cg-form-group">
+                  <label class="cg-form-label">Add Products to Bulk Order</label>
+                  <div class="cg-form-row" style="grid-template-columns: 2fr 1fr 1fr auto; align-items: flex-end;">
+                    <div>
+                      <select id="bulkItemProductSelect" name="productId" class="cg-select">
+                        <option value="">Select a corporate product...</option>
+                      </select>
+                    </div>
+                    <div>
+                      <input type="number" id="bulkItemQuantityInput" name="quantity" class="cg-input" min="1" value="25" placeholder="Qty" />
+                    </div>
+                    <div>
+                      <input type="number" id="bulkItemUnitPriceInput" class="cg-input" readonly placeholder="Unit ₹" />
+                    </div>
+                    <div>
+                      <button type="button" id="addBulkItemBtn" class="cg-btn-secondary" style="padding: 0.65rem 1rem; color:#fff !important;">+ Add</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="bulkItemsContainer">
+                  <!-- Selected items rows rendered here -->
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                  <button type="submit" id="generateInvoiceBtn" form="bulkOrderForm" class="cg-btn-primary" style="width: 100%; justify-content: center;" data-i18n="cg_generate_invoice_btn">
+                    Generate GST Bulk Invoice
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right Column: Commercial Invoice Preview -->
+            <div>
+              <div class="cg-section-header" style="margin-bottom: 1rem;">
+                <h3 data-i18n="cg_invoice_preview_title" style="margin:0; font-size:1.15rem; color:var(--cg-accent);">Commercial Bulk Invoice Preview</h3>
+                <p style="margin:4px 0; font-size:0.85rem;">Deterministic GST invoice calculation with verified totals.</p>
+              </div>
+
+              <div id="bulkInvoicePreview">
+                <div style="text-align: center; color: var(--cg-text-muted); padding: 3rem 1rem;">
+                  <span>📄 Complete the form and click "Generate GST Bulk Invoice" to render the legal invoice.</span>
+                </div>
+              </div>
+
+              <div style="margin-top: 1rem; text-align: right; font-size: 1.1rem;">
+                <span>Estimated Bulk Total: </span>
+                <span id="bulkInvoiceTotal" style="font-weight: 800; color: var(--cg-accent);">₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           4. Corporate Gift Registry Engine (#giftRegistrySection)
+           ================================================================== -->
+      <section id="giftRegistrySection" class="cg-section">
+        <div class="cg-section-header">
+          <h2 data-i18n="cg_gift_registry_title">Corporate Gift Registry</h2>
+          <p>Create occasion-based gift lists, add multiple employees or client recipients, and generate shareable celebration portals.</p>
+        </div>
+
+        <div class="cg-card">
+          <form id="giftRegistryForm">
+            <div class="cg-form-row">
+              <div class="cg-form-group">
+                <label for="registryNameInput" class="cg-form-label" data-i18n="cg_registry_name_label">Gift Registry Name</label>
+                <input type="text" id="registryNameInput" name="registryName" class="cg-input" placeholder="e.g. Diwali Corporate Gifts 2026" required />
+              </div>
+              <div class="cg-form-group">
+                <label for="occasionSelect" class="cg-form-label" data-i18n="cg_occasion_label">Corporate Occasion</label>
+                <select id="occasionSelect" name="occasion" class="cg-select">
+                  <option value="diwali">Diwali Celebration</option>
+                  <option value="new_year">New Year &amp; Annual Kickoff</option>
+                  <option value="rewards">Annual Achievers Awards</option>
+                  <option value="milestone">Company Milestone / Anniversary</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="cg-form-row">
+              <div class="cg-form-group">
+                <label for="eventDateInput" class="cg-form-label" data-i18n="cg_event_date_label">Target Event Date</label>
+                <input type="date" id="eventDateInput" name="eventDate" class="cg-input" required />
+              </div>
+              <div class="cg-form-group">
+                <label for="recipientNameInput" class="cg-form-label" data-i18n="cg_recipient_name_label">Primary Recipient Name</label>
+                <input type="text" id="recipientNameInput" name="recipientName" class="cg-input" placeholder="e.g. Rajesh Kumar" />
+              </div>
+            </div>
+
+            <div class="cg-form-group">
+              <label for="recipientEmailInput" class="cg-form-label" data-i18n="cg_recipient_email_label">Recipient Official Email</label>
+              <input type="email" id="recipientEmailInput" name="recipientEmail" class="cg-input" placeholder="e.g. rajesh@client.com" />
+            </div>
+
+            <div style="margin: 1.5rem 0;">
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--cg-text-primary);">Curated Registry Items</h4>
+              <div id="registryItemsContainer" class="cg-registry-items" aria-live="polite">
+                <span>No products added to this registry yet.</span>
+              </div>
+              <div class="cg-form-row" style="grid-template-columns: 2fr 1fr auto; align-items: flex-end;">
+                <div>
+                  <label for="registryItemProductSelect" class="cg-form-label">Corporate product</label>
+                  <select id="registryItemProductSelect" class="cg-select" aria-label="Corporate product for registry">
+                    <option value="">Select a corporate product...</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="registryItemQuantityInput" class="cg-form-label">Quantity</label>
+                  <input type="number" id="registryItemQuantityInput" class="cg-input" min="1" max="999" value="1" />
+                </div>
+                <div>
+                  <button type="button" id="addRegistryItemBtn" class="cg-btn-secondary" style="padding: 0.5rem 1rem; color:#fff !important;">
+                    + Add Item to Registry
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+              <button type="submit" id="createRegistryBtn" form="giftRegistryForm" class="cg-btn-gold" data-i18n="cg_create_registry_btn">
+                Create Corporate Registry
+              </button>
+              <button type="button" id="shareRegistryBtn" class="cg-btn-secondary" style="color:#fff !important;" data-i18n="cg_share_registry_btn">
+                Share Registry Link
+              </button>
+            </div>
+          </form>
+
+          <div style="margin-top: 1.5rem;">
+            <div id="registryShareLink">
+              <span>Registry Portal Link will appear here once created.</span>
+            </div>
+            <p id="registryStatus" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           5. Corporate Procurement Dashboard (#corporateDashboardSection)
+           ================================================================== -->
+      <section id="corporateDashboardSection" class="cg-section">
+        <div class="cg-section-header">
+          <h2 data-i18n="cg_dashboard_title">Corporate Procurement Dashboard</h2>
+          <p>Real-time analytics, historical bulk invoices, and procurement department user authorization.</p>
+        </div>
+
+        <div class="cg-card">
+          <!-- Spending Analytics Chart -->
+          <div id="spendingAnalyticsChart">
+            <!-- Dynamic spending bars rendered via JS -->
+          </div>
+
+          <h3 style="margin: 1.5rem 0 0.75rem 0; color: var(--cg-accent);">Recent Bulk Orders</h3>
+          <div class="cg-table-responsive">
+            <table id="ordersHistoryTable">
+              <!-- Populated by JS -->
+            </table>
+          </div>
+
+          <div style="margin-top: 2.5rem;">
+            <div class="cg-section-header" style="margin-bottom: 1rem;">
+              <h3 data-i18n="cg_team_management_title" style="margin:0; font-size:1.25rem; color:var(--cg-accent);">Procurement Team &amp; Budget Management</h3>
+              <p style="margin:4px 0; font-size:0.875rem;">Authorize procurement officers and set strictly enforced expenditure caps.</p>
+            </div>
+
+            <div class="cg-table-responsive">
+              <table id="teamManagementTable">
+                <!-- Populated by JS -->
+              </table>
+            </div>
+
+            <!-- Add Team Member Form -->
+            <div style="background: var(--cg-surface-muted); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--cg-border); margin-top: 1.25rem;">
+              <h4 style="margin:0 0 1rem 0; color:var(--cg-text-primary);">Authorize New Procurement Member</h4>
+              <form id="addTeamMemberForm">
+                <div class="cg-form-row">
+                  <div class="cg-form-group">
+                    <label for="teamMemberNameInput" class="cg-form-label" data-i18n="cg_team_member_name_label">Member Full Name</label>
+                    <input type="text" id="teamMemberNameInput" name="teamMemberName" class="cg-input" placeholder="e.g. Amit Patel" required />
+                  </div>
+                  <div class="cg-form-group">
+                    <label for="teamMemberEmailInput" class="cg-form-label" data-i18n="cg_team_member_email_label">Work Email Address</label>
+                    <input type="email" id="teamMemberEmailInput" name="teamMemberEmail" class="cg-input" placeholder="e.g. amit@company.com" required />
+                  </div>
+                </div>
+
+                <div class="cg-form-row">
+                  <div class="cg-form-group">
+                    <label for="teamMemberRoleSelect" class="cg-form-label" data-i18n="cg_team_member_role_label">Designation &amp; Role</label>
+                    <select id="teamMemberRoleSelect" name="teamMemberRole" class="cg-select">
+                      <option value="procurement_manager">Procurement Manager</option>
+                      <option value="finance_approver">Finance Approver</option>
+                      <option value="dept_head">Department Head</option>
+                    </select>
+                  </div>
+                  <div class="cg-form-group">
+                    <label for="teamMemberBudgetInput" class="cg-form-label" data-i18n="cg_team_member_budget_label">Authorized Budget Limit (₹)</label>
+                    <input type="number" id="teamMemberBudgetInput" name="teamMemberBudget" class="cg-input" placeholder="e.g. 500000" min="10000" required />
+                  </div>
+                </div>
+
+                <button type="submit" id="addTeamMemberBtn" form="addTeamMemberForm" class="cg-btn-primary" data-i18n="cg_add_team_member_btn">
+                  Add Team Member
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Canonical Script Sequence as defined in AGENTS.md & test suite -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="/api/config.js"></script>
+  <script src="corporate-gifting.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const target = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\products-data.js';
+const target = path.resolve(__dirname, '..', 'products-data.js');
 let content = fs.readFileSync(target, 'utf8');
 
 // Replace all 6.7" with 6.7″

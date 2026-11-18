@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const target = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'todays-deals.html');
+const target = path.resolve(__dirname, '..', 'todays-deals.html');
 
 const content = `<!DOCTYPE html>
 <html lang="en">

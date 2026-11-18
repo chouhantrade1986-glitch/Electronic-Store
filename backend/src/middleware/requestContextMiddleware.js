@@ -1,5 +1,5 @@
 const { randomUUID } = require("crypto");
-const { logError, logInfo } = require("../lib/logger");
+const { logError, logInfo, sanitizeLogValue } = require("../lib/logger");
 const { recordHttpRequest } = require("../lib/monitoring");
 
 function normalizeRequestId(value) {
@@ -19,7 +19,7 @@ function attachRequestContext(req, res, next) {
 }
 
 function buildRequestLogPayload(req, res, durationMs) {
-  return {
+  return sanitizeLogValue({
     event: "http_request",
     requestId: String(req.requestId || ""),
     method: String(req.method || ""),
@@ -29,7 +29,7 @@ function buildRequestLogPayload(req, res, durationMs) {
     ip: String(req.ip || req.headers["x-forwarded-for"] || "").split(",")[0].trim(),
     userId: String(req.user && req.user.id ? req.user.id : ""),
     userRole: String(req.user && req.user.role ? req.user.role : "")
-  };
+  });
 }
 
 function requestLogger(req, res, next) {
@@ -52,11 +52,11 @@ function errorHandler(error, req, res, next) {
     requestId: String(req && req.requestId ? req.requestId : ""),
     method: String(req && req.method ? req.method : ""),
     path: String(req && (req.originalUrl || req.url) ? (req.originalUrl || req.url) : ""),
-    message: String(error && error.message ? error.message : "Unhandled error")
+    errorType: String(error && error.name ? error.name : "Error"),
+    errorCode: /^[a-z0-9_-]{1,64}$/i.test(String(error && error.code || ""))
+      ? String(error.code)
+      : ""
   };
-  if (error && error.stack) {
-    payload.stack = error.stack;
-  }
 
   logError(payload.event, payload, { requestId: payload.requestId });
   return res.status(500).json({

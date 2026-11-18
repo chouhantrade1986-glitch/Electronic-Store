@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = 'C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store';
+const ROOT = path.resolve(__dirname, '..');
 const targetFiles = [
   'brands.html',
   'faq.html',

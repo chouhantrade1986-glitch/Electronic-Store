@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'translations.js');
+const targetPath = path.resolve(__dirname, '..', 'translations.js');
 let code = fs.readFileSync(targetPath, 'utf8');
 
 const FOOTER_TRANSLATIONS = {

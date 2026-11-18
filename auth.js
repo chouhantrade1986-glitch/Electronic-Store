@@ -2,7 +2,6 @@ const AUTH_STORAGE_KEY = "electromart_auth_v1";
 const PROFILE_STORAGE_KEY = "electromart_profile_v1";
 const LANGUAGE_STORAGE_KEY = "electromart_lang_v1";
 const LOCAL_USERS_KEY = "electromart_local_users_v1";
-const API_BASE_OVERRIDE_KEY = "electromart_api_base_url";
 const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const OFFLINE_ADMIN_EMAIL = "admin@electromart.com";
 const OFFLINE_ADMIN_MOBILE = "9999999999";
@@ -721,23 +720,10 @@ async function ensureOfflineSeedUsers() {
 }
 
 function getApiCandidates() {
-  const candidates = [];
-  const fromWindow = String(window.ELECTROMART_API_BASE_URL || "").trim();
-  const fromStorage = String(localStorage.getItem(API_BASE_OVERRIDE_KEY) || "").trim();
-  if (fromWindow) {
-    candidates.push(fromWindow);
-  }
-  if (fromStorage) {
-    candidates.push(fromStorage);
-  }
-
-  const { protocol, hostname, port } = window.location;
-  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
-  candidates.push(`${origin}/api`);
-  candidates.push("http://localhost:4000/api");
-  candidates.push("http://127.0.0.1:4000/api");
-
-  return Array.from(new Set(candidates.map((item) => item.replace(/\/+$/, ""))));
+  const configuredBase = String(
+    window.__ELECTROMART_CONFIG__ && window.__ELECTROMART_CONFIG__.apiBaseUrl || ""
+  ).trim();
+  return [(configuredBase || "/api").replace(/\/+$/, "")];
 }
 
 async function probeApi(baseUrl) {

@@ -29,6 +29,8 @@ function buildSummary(snapshot) {
     orders: Array.isArray(safe.orders) ? safe.orders.length : 0,
     payments: Array.isArray(safe.payments) ? safe.payments.length : 0,
     afterSalesCases: Array.isArray(safe.afterSalesCases) ? safe.afterSalesCases.length : 0,
+    corporateInvoices: Array.isArray(safe.corporateInvoices) ? safe.corporateInvoices.length : 0,
+    corporateRegistries: Array.isArray(safe.corporateRegistries) ? safe.corporateRegistries.length : 0,
     adminAuditTrail: Array.isArray(safe.adminAuditTrail) ? safe.adminAuditTrail.length : 0,
     orderNotifications: Array.isArray(safe.orderNotifications) ? safe.orderNotifications.length : 0,
     paymentWebhookEvents: Array.isArray(safe.paymentWebhookEvents) ? safe.paymentWebhookEvents.length : 0,

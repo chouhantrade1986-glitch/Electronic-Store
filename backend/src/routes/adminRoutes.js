@@ -1,5 +1,5 @@
 const express = require("express");
-const { readDb, writeDb } = require("../lib/db");
+const { readDb, writeDb, withWriteLock } = require("../lib/db");
 const { requireAuth, requireAdmin } = require("../middleware/authMiddleware");
 const { isDriveConfigured, parseDataUrl, uploadBufferToDrive } = require("../lib/googleDrive");
 const {
@@ -100,6 +100,10 @@ function asNumber(value) {
 
 function persistAdminMutation(db, collections) {
   if (isSqliteOrderPaymentQueriesEnabled()) {
+    if (collections.some((collection) => ["users", "giftCards", "giftCardRedemptions", "paymentSourceReservations"].includes(collection))) {
+      writeDb(db);
+      return;
+    }
     writeSqliteOrderPaymentCollections(db, collections);
     return;
   }
@@ -596,7 +600,16 @@ router.patch("/after-sales/:id", piiEncryption, async (req, res) => {
         });
       }
 
-      persistAdminMutation(currentDb, ["orders", "payments", "afterSalesCases", "adminAuditTrail"]);
+      persistAdminMutation(currentDb, [
+        "orders",
+        "payments",
+        "afterSalesCases",
+        "adminAuditTrail",
+        "users",
+        "giftCards",
+        "giftCardRedemptions",
+        "paymentSourceReservations"
+      ]);
       return {
         status: 200,
         body: {
@@ -1174,7 +1187,17 @@ router.patch("/orders/:id/status", piiEncryption, async (req, res) => {
           });
         }
       }
-      persistAdminMutation(currentDb, ["orders", "payments", "products", "orderNotifications", "adminAuditTrail"]);
+      persistAdminMutation(currentDb, [
+        "orders",
+        "payments",
+        "products",
+        "orderNotifications",
+        "adminAuditTrail",
+        "users",
+        "giftCards",
+        "giftCardRedemptions",
+        "paymentSourceReservations"
+      ]);
       return {
         status: 200,
         body: {

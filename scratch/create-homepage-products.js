@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'homepage-products.js');
+const targetPath = path.resolve(__dirname, '..', 'homepage-products.js');
 
 const content = `/**
  * ElectroMart Dynamic Homepage Product Models & Multilingual Renderer

@@ -3,7 +3,7 @@ const path = require('path');
 const assert = require('assert');
 const vm = require('vm');
 
-const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+const repoRoot = path.resolve(__dirname, '..');
 
 console.log("==================================================");
 console.log("TEST SUITE: Universal Multilingual Catalog Engine");

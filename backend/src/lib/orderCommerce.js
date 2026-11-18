@@ -47,6 +47,53 @@ function normalizeStock(value) {
   return Math.max(0, Math.floor(parsed));
 }
 
+function normalizeCorporateOrderDetails(value) {
+  if (value === undefined || value === null) {
+    return { ok: true, details: null };
+  }
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return { ok: false, status: 400, message: "Corporate order details are invalid." };
+  }
+
+  const companyName = String(value.companyName || "").trim();
+  const poNumber = String(value.poNumber || "").trim();
+  const gstin = String(value.gstin || "").trim().toUpperCase();
+  const billingAddress = String(value.billingAddress || "").trim();
+  const requestBulkInvoice = value.requestBulkInvoice === true;
+
+  if (companyName.length > 160 || poNumber.length > 80 || billingAddress.length > 500) {
+    return { ok: false, status: 400, message: "Corporate order details exceed the allowed length." };
+  }
+  if ([companyName, poNumber, billingAddress].some((field) => /[\u0000-\u001f\u007f]/.test(field))) {
+    return { ok: false, status: 400, message: "Corporate order details contain invalid characters." };
+  }
+  if (gstin && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(gstin)) {
+    return { ok: false, status: 400, message: "Enter a valid GSTIN format." };
+  }
+  if (requestBulkInvoice && (!companyName || !poNumber || !gstin || !billingAddress)) {
+    return {
+      ok: false,
+      status: 400,
+      message: "Company name, PO number, GSTIN, and billing address are required for a bulk invoice request."
+    };
+  }
+  if (!companyName && !poNumber && !gstin && !billingAddress && !requestBulkInvoice) {
+    return { ok: true, details: null };
+  }
+
+  return {
+    ok: true,
+    details: {
+      companyName,
+      poNumber,
+      gstin,
+      gstinVerificationStatus: gstin ? "pending_external_verification" : "not_provided",
+      billingAddress,
+      requestBulkInvoice
+    }
+  };
+}
+
 function isPurchasableProduct(product) {
   const status = String(product && product.status ? product.status : "active").trim().toLowerCase();
   return status === "active";
@@ -256,6 +303,9 @@ function reserveInventoryForOrder(db, order, options = {}) {
 
   const adjustments = [];
   for (const item of Array.isArray(order && order.items) ? order.items : []) {
+    if (item && item.isGiftCard === true) {
+      continue;
+    }
     const product = (db.products || []).find((entry) => String(entry && entry.id ? entry.id : "") === String(item.productId || ""));
     if (!product) {
       return {
@@ -304,6 +354,9 @@ function releaseInventoryForOrder(db, order, options = {}) {
   }
 
   for (const item of Array.isArray(order && order.items) ? order.items : []) {
+    if (item && item.isGiftCard === true) {
+      continue;
+    }
     const product = (db.products || []).find((entry) => String(entry && entry.id ? entry.id : "") === String(item.productId || ""));
     if (!product) {
       continue;
@@ -380,6 +433,7 @@ module.exports = {
   buildOrderPricing,
   ensureInventoryReservation,
   evaluateCoupon,
+  normalizeCorporateOrderDetails,
   normalizeCouponCode,
   normalizeInventoryReservation,
   normalizeStock,

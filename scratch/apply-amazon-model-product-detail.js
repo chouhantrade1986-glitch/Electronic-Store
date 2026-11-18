@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectDir = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store');
+const projectDir = path.resolve(__dirname, '..');
 
 // 1. ALL AMAZON MODEL KEYS ACROSS ALL 11 LANGUAGES
 const AMAZON_DETAIL_I18N = {

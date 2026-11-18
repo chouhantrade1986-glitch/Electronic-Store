@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('C:', 'Users', 'Admin', 'Documents', 'GitHub', 'Electronic-Store', 'translations.js');
+const targetPath = path.resolve(__dirname, '..', 'translations.js');
 
 const fileContent = `/**
  * ElectroMart i18n Translation Dictionary & Engine

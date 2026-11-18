@@ -3,7 +3,6 @@ const CATALOG_STORAGE_KEY = "electromart_catalog_v1";
 const AUTH_STORAGE_KEY = "electromart_auth_v1";
 const OFFLINE_ORDERS_KEY = "electromart_offline_orders_v1";
 const ORDER_NOTIFICATIONS_STORAGE_KEY = "electromart_order_notifications_v1";
-const API_BASE_OVERRIDE_KEY = "electromart_api_base_url";
 const OFFLINE_DEMO_STORAGE_KEY = "electromart_allow_offline_demo";
 const COUPON_STORAGE_KEY = "electromart_coupon_v1";
 const DELIVERY_SLOT_STORAGE_KEY = "electromart_delivery_slot_v1";
@@ -27,6 +26,14 @@ function stableStringify(value) {
 function buildCartFingerprint(cartState = {}) {
   const normalizedRows = (Array.isArray(cartState.rows) ? cartState.rows : []).map((row) => ({
     id: String(row && row.id ? row.id : ""),
+    productId: String(row && row.productId ? row.productId : ""),
+    giftCard: row && row.giftCard ? {
+      recipientName: String(row.giftCard.recipientName || ""),
+      recipientEmail: String(row.giftCard.recipientEmail || ""),
+      senderName: String(row.giftCard.senderName || ""),
+      giftMessage: String(row.giftCard.giftMessage || ""),
+      deliveryDate: String(row.giftCard.deliveryDate || "")
+    } : null,
     quantity: Number(row && Number.isFinite(Number(row.quantity)) ? Number(row.quantity) : 0),
     price: Number(row && Number.isFinite(Number(row.price)) ? Number(row.price) : 0),
     name: String(row && row.name ? row.name : ""),
@@ -85,9 +92,11 @@ function getCurrentCartFingerprint() {
   return buildCartFingerprint({
     rows: rows.map((row) => ({
       id: row.id,
+      productId: row.productId || row.id,
       quantity: row.quantity,
       price: row.price,
       name: row.name,
+      giftCard: row.giftCard || null,
       protectionPlan: row.protectionPlan || null
     })),
     paymentMethod: getSelectedPaymentMethod(),
@@ -175,11 +184,20 @@ const checkoutWalletDetailBalance = document.getElementById("checkoutWalletDetai
 const payInsufficientWarning = document.getElementById("payInsufficientWarning");
 const payInsufficientMsg = document.getElementById("payInsufficientMsg");
 const paymentMethodWallet = document.getElementById("paymentMethodWallet");
+const checkoutGiftCardCode = document.getElementById("checkoutGiftCardCode");
+const checkoutUseWalletBalance = document.getElementById("checkoutUseWalletBalance");
 
 const PAY_BALANCE_KEY = "electromart_pay_balance_v1";
 const PAY_TXNS_KEY = "electromart_pay_txns_v1";
+let authoritativeWalletBalance = null;
 
 function getWalletBalance() {
+  if (Number.isFinite(authoritativeWalletBalance)) {
+    return authoritativeWalletBalance;
+  }
+  if (apiAvailable) {
+    return 0;
+  }
   const stored = localStorage.getItem(PAY_BALANCE_KEY);
   if (stored !== null && !isNaN(parseFloat(stored))) {
     return parseFloat(stored);
@@ -212,21 +230,37 @@ function syncWalletBalanceState() {
     checkoutWalletDetailBalance.textContent = formattedBal;
   }
 
-  const rows = getCartRows();
-  const pricing = getPricingBreakdown(rows);
-  const cartTotal = Number(pricing.total || 0);
-
   if (payInsufficientWarning) {
-    if (cartTotal > bal) {
-      const shortfall = cartTotal - bal;
-      payInsufficientWarning.hidden = false;
-      if (payInsufficientMsg) {
-        payInsufficientMsg.textContent = `Insufficient balance (Shortfall: ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}). Please select an alternative payment method (e.g. UPI or Cards) or add money to your balance.`;
-      }
-    } else {
-      payInsufficientWarning.hidden = true;
-    }
+    payInsufficientWarning.hidden = true;
   }
+}
+
+function updateWalletBalanceFromOrder(order) {
+  const balance = Number(order && order.paymentBreakdown && order.paymentBreakdown.walletBalanceRemaining);
+  if (!Number.isFinite(balance) || balance < 0) {
+    return;
+  }
+  authoritativeWalletBalance = balance;
+  saveWalletBalance(balance);
+  syncWalletBalanceState();
+}
+
+async function fetchAuthoritativeWalletBalance(token) {
+  if (!apiAvailable) {
+    return;
+  }
+  const apiBaseUrl = await resolveApiBaseUrl();
+  const response = await fetch(`${apiBaseUrl}/gift-cards/balance`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await response.json().catch(() => ({}));
+  const balance = Number(data.balance);
+  if (!response.ok || !Number.isFinite(balance) || balance < 0) {
+    throw new Error(data.message || "Unable to load your server-verified ElectroMart Pay balance.");
+  }
+  authoritativeWalletBalance = balance;
+  saveWalletBalance(balance);
+  syncWalletBalanceState();
 }
 
 const upiDetails = document.getElementById("upiDetails");
@@ -558,7 +592,11 @@ function syncUnavailableCartItems(validIds) {
   if (safeValidIds.size === 0) {
     return [];
   }
-  const staleIds = Object.keys(loadCartMap()).filter((productId) => !safeValidIds.has(String(productId || "").trim()));
+  const cachedCatalog = loadCatalogMap();
+  const staleIds = Object.keys(loadCartMap()).filter((productId) => {
+    const key = String(productId || "").trim();
+    return !safeValidIds.has(key) && !(cachedCatalog[key] && cachedCatalog[key].isGiftCard);
+  });
   if (!staleIds.length) {
     return [];
   }
@@ -732,23 +770,10 @@ function appendOfflineOrderNotification(orderId, createdAt, eventKey, eventLabel
 }
 
 function getApiCandidates() {
-  const candidates = [];
-  const fromWindow = String(window.ELECTROMART_API_BASE_URL || "").trim();
-  const fromStorage = String(localStorage.getItem(API_BASE_OVERRIDE_KEY) || "").trim();
-  if (fromWindow) {
-    candidates.push(fromWindow);
-  }
-  if (fromStorage) {
-    candidates.push(fromStorage);
-  }
-
-  const { protocol, hostname, port } = window.location;
-  const origin = `${protocol}//${hostname}${port ? `:${port}` : ""}`;
-  candidates.push(`${origin}/api`);
-  candidates.push("http://localhost:4000/api");
-  candidates.push("http://127.0.0.1:4000/api");
-
-  return Array.from(new Set(candidates.map((item) => item.replace(/\/+$/, ""))));
+  const configuredBase = String(
+    window.__ELECTROMART_CONFIG__ && window.__ELECTROMART_CONFIG__.apiBaseUrl || ""
+  ).trim();
+  return [(configuredBase || "/api").replace(/\/+$/, "")];
 }
 
 async function probeApi(baseUrl) {
@@ -781,7 +806,7 @@ async function resolveApiBaseUrl() {
     }
     apiAvailable = false;
     setApiStatus("disconnected", "Backend API unavailable. Start backend on port 4000.");
-    throw new Error("Unable to connect to backend API. Start backend on port 4000 or set ELECTROMART_API_BASE_URL.");
+    throw new Error("Unable to connect to the backend API. Check the configured API service and try again.");
   })();
 
   try {
@@ -925,11 +950,14 @@ function getCartRows() {
       }
       return {
         id: String(product.id),
+        productId: String(product.productId || product.id || id),
         name: product.name,
         price: Number(product.price || 0),
         image: product.image || fallbackImage(),
         stock: Number(product.stock),
         quantity: Number(qty),
+        isGiftCard: Boolean(product.isGiftCard),
+        giftCard: product.giftCard && typeof product.giftCard === "object" ? product.giftCard : null,
         category: product.category || "",
         hsnCode: product.hsnCode || (String(product.category || "").toLowerCase().includes("battery") ? "85076000" : "84713010"),
         gstRate: typeof product.gstRate === "number" ? product.gstRate : 0.18,
@@ -1323,10 +1351,7 @@ function isPaymentValid() {
   const method = getSelectedPaymentMethod();
 
   if (method === "wallet") {
-    const pricing = getPricingBreakdown(getCartRows());
-    const cartTotal = Number(pricing.total || 0);
-    const bal = getWalletBalance();
-    return bal >= cartTotal;
+    return true;
   }
 
   if (method === "upi") {
@@ -1824,6 +1849,14 @@ async function handlePlaceOrder() {
       });
       return;
     }
+    if (rows.some((row) => row.isGiftCard)) {
+      showCheckoutToast({
+        title: "Gift card checkout unavailable",
+        message: "Gift cards require confirmed online payment and cannot be purchased in offline demo mode.",
+        tone: "error"
+      });
+      return;
+    }
     const offlineOrderId = createOfflineOrder(rows, paymentMethod, shippingAddress);
     saveCartMap({});
     clearCouponState();
@@ -1850,11 +1883,17 @@ async function handlePlaceOrder() {
     });
   } catch (error) {}
   const orderPayload = {
-    items: rows.map((row) => ({ productId: String(row.id), quantity: row.quantity })),
+    items: rows.map((row) => ({
+      productId: String(row.productId || row.id),
+      quantity: row.quantity,
+      ...(row.isGiftCard && row.giftCard ? { giftCard: row.giftCard } : {})
+    })),
     expectedSubtotal: Number((pricing.subtotal || rows.reduce((sum, row) => sum + Number(row.price || 0) * Number(row.quantity || 0), 0)).toFixed(2)),
     idempotencyKey: activeIdempotencyKey,
     shippingAddress,
     paymentMethod,
+    giftCardClaimCode: String(checkoutGiftCardCode && checkoutGiftCardCode.value || "").trim().toUpperCase(),
+    useWalletBalance: Boolean((checkoutUseWalletBalance && checkoutUseWalletBalance.checked) || paymentMethod === "wallet"),
     couponCode: pricing.coupon.code || undefined,
     deliverySlot,
     reservationUntil: reservation.hasLowStock ? reservation.reservationUntil.toISOString() : "",
@@ -1868,10 +1907,35 @@ async function handlePlaceOrder() {
     let payment;
     if (paymentMethod === "cod") {
       order = await postAuthed("/orders", orderPayload, session.token);
-      payment = await postAuthed("/payments/intent", { orderId: order.id, method: paymentMethod }, session.token);
     } else {
       try {
         order = await createOrReuseOnlineOrder(session, orderPayload);
+      } catch (error) {
+        const lowerMessage = String(error.message || "").toLowerCase();
+        if (pendingGatewayOrderContext?.orderId && error.status === 409 && lowerMessage.includes("already paid")) {
+          const paidOrderId = order?.id || pendingGatewayOrderContext.orderId;
+          saveCartMap({});
+          clearCouponState();
+          clearCheckoutIdempotencyKey();
+          clearCheckoutCartFingerprint();
+          pendingGatewayOrderContext = null;
+          window.location.href = `thank-you.html?orderId=${encodeURIComponent(paidOrderId || "")}`;
+          return;
+        }
+        if (pendingGatewayOrderContext?.orderId && (error.status === 404 || (error.status === 409 && lowerMessage.includes("cancelled")))) {
+          pendingGatewayOrderContext = null;
+          order = await createOrReuseOnlineOrder(session, orderPayload);
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    updateWalletBalanceFromOrder(order);
+    const amountDue = Number(order && order.paymentBreakdown && order.paymentBreakdown.amountDue);
+    const fullyCoveredByServerValidatedSources = Number.isFinite(amountDue) && amountDue <= 0;
+    if (!fullyCoveredByServerValidatedSources) {
+      try {
         payment = await postAuthed("/payments/intent", { orderId: order.id, method: paymentMethod }, session.token);
       } catch (error) {
         const lowerMessage = String(error.message || "").toLowerCase();
@@ -1888,14 +1952,18 @@ async function handlePlaceOrder() {
         if (pendingGatewayOrderContext?.orderId && (error.status === 404 || (error.status === 409 && lowerMessage.includes("cancelled")))) {
           pendingGatewayOrderContext = null;
           order = await createOrReuseOnlineOrder(session, orderPayload);
-          payment = await postAuthed("/payments/intent", { orderId: order.id, method: paymentMethod }, session.token);
+          updateWalletBalanceFromOrder(order);
+          const retryAmountDue = Number(order && order.paymentBreakdown && order.paymentBreakdown.amountDue);
+          if (!Number.isFinite(retryAmountDue) || retryAmountDue > 0) {
+            payment = await postAuthed("/payments/intent", { orderId: order.id, method: paymentMethod }, session.token);
+          }
         } else {
           throw error;
         }
       }
     }
 
-    if (paymentMethod !== "cod") {
+    if (paymentMethod !== "cod" && payment) {
       if (payment.checkoutProvider === "razorpay") {
         const checkoutOutcome = await openRazorpayCheckout(payment);
         if (checkoutOutcome.success) {
@@ -1934,6 +2002,7 @@ async function handlePlaceOrder() {
     } catch (e) {}
     window.location.href = `thank-you.html?orderId=${encodeURIComponent(order.id)}`;
   } catch (error) {
+    updateWalletBalanceFromOrder(error && error.payload && error.payload.order);
     const missingProductIds = extractMissingProductIdsFromError(error);
     if (missingProductIds.length > 0) {
       removeCartEntries(missingProductIds);
@@ -2268,21 +2337,7 @@ function setupAccordionFlow() {
 
   if (usePaymentBtn) {
     usePaymentBtn.addEventListener("click", () => {
-      const method = getSelectedPaymentMethod();
-      if (method === "wallet") {
-        const pricing = getPricingBreakdown(getCartRows());
-        const cartTotal = Number(pricing.total || 0);
-        const bal = getWalletBalance();
-        if (cartTotal > bal) {
-          const shortfall = cartTotal - bal;
-          showCheckoutToast({
-            title: "Insufficient ElectroMart Pay Balance",
-            message: `Shortfall of ₹${shortfall.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}. Please select another payment method (e.g. UPI or Cards) or add money.`,
-            tone: "warning"
-          });
-          return;
-        }
-      } else if (!isPaymentValid()) {
+      if (!isPaymentValid()) {
         showCheckoutToast({
           title: "Payment details required",
           message: "Please complete valid payment details for the selected method.",
@@ -2373,6 +2428,17 @@ async function initCheckout() {
         ? "Backend offline: local demo checkout enabled."
         : `Backend offline: checkout disabled. ${getOfflineDemoHelpText()}`
     );
+  }
+  if (apiAvailable) {
+    try {
+      await fetchAuthoritativeWalletBalance(session.token);
+    } catch (error) {
+      showCheckoutToast({
+        title: "Wallet balance unavailable",
+        message: error.message || "The server-verified wallet balance could not be loaded. You can continue without applying wallet funds.",
+        tone: "warning"
+      });
+    }
   }
   await fetchPaymentGatewayConfig();
 

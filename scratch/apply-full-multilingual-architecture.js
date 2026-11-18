@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+const repoRoot = path.resolve(__dirname, '..');
 
 console.log("Applying full-tier Amazon India multilingual catalog architecture...");
 

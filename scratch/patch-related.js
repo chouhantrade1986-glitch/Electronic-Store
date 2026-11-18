@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const repoRoot = "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store";
+const repoRoot = path.resolve(__dirname, '..');
 const prodDetailPath = path.join(repoRoot, 'product-detail.js');
 let content = fs.readFileSync(prodDetailPath, 'utf8').replace(/\r\n/g, '\n');
 
