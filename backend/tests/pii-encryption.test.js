@@ -171,3 +171,17 @@ test("previous JSON snapshots are encrypted before becoming the persisted backup
   assert.match(backup.orders[0].corporateDetails.gstin, /^v1:/);
   assert.deepEqual(decryptPiiFields(backup), previousSnapshot);
 });
+
+test("previous JSON snapshots with UTF-8 BOM can be serialized and encrypted safely", () => {
+  const { serializeEncryptedBackup } = require("../src/lib/db");
+  const previousSnapshot = {
+    orders: [{ shippingAddress: "12 Example Road", corporateDetails: { gstin: "27ABCDE1234F1Z5" } }]
+  };
+  const bomString = "\uFEFF" + JSON.stringify(previousSnapshot);
+
+  const backup = JSON.parse(serializeEncryptedBackup(bomString));
+
+  assert.match(backup.orders[0].shippingAddress, /^v1:/);
+  assert.match(backup.orders[0].corporateDetails.gstin, /^v1:/);
+  assert.deepEqual(decryptPiiFields(backup), previousSnapshot);
+});

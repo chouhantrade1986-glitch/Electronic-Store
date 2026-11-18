@@ -141,9 +141,10 @@ function writeDb(db) {
 function readDbFile(filePath) {
   try {
     const raw = fs.readFileSync(filePath, "utf8");
+    const cleanRaw = raw ? raw.replace(/^\uFEFF/, "") : "{}";
     return {
       ok: true,
-      data: JSON.parse(raw)
+      data: JSON.parse(cleanRaw)
     };
   } catch (error) {
     return {
@@ -186,7 +187,8 @@ function persistSerializedDb(serializedDb) {
 }
 
 function serializeEncryptedBackup(snapshotContents) {
-  const snapshot = JSON.parse(String(snapshotContents || "{}"));
+  const cleanSnapshot = String(snapshotContents || "{}").replace(/^\uFEFF/, "");
+  const snapshot = JSON.parse(cleanSnapshot);
   return JSON.stringify(encryptPiiFields(snapshot), null, 2);
 }
 

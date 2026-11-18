@@ -940,7 +940,8 @@ function bootstrapSqliteFromJsonFile(jsonFilePath) {
     return false;
   }
   const raw = fs.readFileSync(jsonFilePath, "utf8");
-  const snapshot = JSON.parse(raw);
+  const cleanRaw = raw ? raw.replace(/^\uFEFF/, "") : "{}";
+  const snapshot = JSON.parse(cleanRaw);
   importJsonSnapshotToSqlite(snapshot);
   return true;
 }

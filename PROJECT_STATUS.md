@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 17 नवंबर 2026 (SQLite corporate collection normalization और encrypted PII coverage; 81 frontend suites + 150 backend unit tests = 231 total)
+**अंतिम अद्यतन (Last Updated):** 19 नवंबर 2026 (CI Smoke lockfile fix push `ecda254` सत्यापित; Smoke run #580 UTF-8 BOM JSON parsing diagnosis & fix; 81 frontend suites + 151 backend unit tests = 232 total)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -40,13 +40,14 @@
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
-| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 150 / 150 टेस्ट उत्तीर्ण (100%) |
-| **API व ब्राउज़र smoke** | `npm run smoke:ui` | ⚠️ **BLOCKED** | account heading wait पर रुकता है; wishlist screenshot तक smoke flow नहीं पहुंचा |
+| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 151 / 151 टेस्ट उत्तीर्ण (100%) |
+| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #580) | ⚠️ **DIAGNOSED** | Run #580 (`ecda254`) में dependency install PASS; smoke suite step पर UTF-8 BOM के कारण backend crash हुआ। BOM fix implement व verify किया गया। |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **231 / 231 (100% Pass Rate)** |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **232 / 232 (100% Pass Rate)** |
 
 ### सुरक्षा रोडमैप स्थिति
 
+- **CI / Smoke Suite:** Commit `ecda254` pushed to `origin/main`. Run #580 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/44374376874)) confirmed root lockfile resolution (`npm ci` succeeded). Smoke execution failed due to Windows PowerShell UTF-8 BOM injection into `db.json` in `qa-smoke.ps1`, causing `serializeEncryptedBackup` in `backend/src/lib/db.js` to fail on `JSON.parse`. Defensive BOM stripping added to backend and `qa-smoke.ps1`, unit tested and passed locally.
 - **चरण 1 — PII encryption:** AES-256-GCM field encryption, environment-provided key policy और API-response decryption middleware implemented. दोनों database snapshots में sensitive fields encrypted हैं और expired OTP challenges हटाए गए हैं।
 - **चरण 2 — Gift Card redemption:** cryptographically generated claim codes captured online payment के बाद ही जारी होते हैं; authenticated backend APIs card ownership, single-use redemption और ₹10,000 redemption cap लागू करती हैं। Gift Card purchase amount denomination से server पर तय होता है और COD अस्वीकृत है।
 - **चरण 2 — आंशिक checkout:** checkout में claim code और वैकल्पिक wallet tender server को भेजे जाते हैं; balance तथा allocations server ledger से तय होते हैं। पूरा शेष server sources से cover होने पर gateway intent छोड़ा जाता है, अन्यथा gateway को केवल `amountDue` दिया जाता है। Failure/cancellation/expiry/refund paths reservation release या restore करते हैं।
@@ -55,7 +56,7 @@
 - **चरण 4 — B2B invoice tracking:** `/api/orders` corporate details validate करता है और requested bulk invoices को order ID से `corporateInvoices` ledger collection में जोड़ता है। SQLite normalization में `corporateInvoices` और `corporateRegistries` dedicated tables हैं; indexed columns में PII नहीं है और संवेदनशील JSON fields encrypted रहते हैं। GSTIN की syntax validate होती है; वास्तविक GSTIN verification के लिए बाहरी provider/manual approval अभी आवश्यक है और status `pending_external_verification` रहता है।
 - **चरण 5 — Environment/tunnel guardrails:** optional hostname केवल `process.env.DEV_TUNNEL_HOST` से resolve होता है; bare public-format DNS hostname, matching HTTPS `PUBLIC_API_BASE_URL`, no-local/IP rules enforce होते हैं। Staging/production में dev tunnel configuration startup validation रोकता है। SEO sitemap/robots links canonical `electromart.in` पर हैं; `open-electromart-online.ps1` valid `DEV_TUNNEL_HOST` मांगता है और temporary quick-tunnel discovery नहीं करता।
 - **चरण 5 — Frontend API configuration:** backend `/api/config.js` verified `PUBLIC_API_BASE_URL` को `window.__ELECTROMART_CONFIG__` में inject करता है। Checkout, auth, corporate gifting, gift-card, account, admin और product clients injected value पढ़ते हैं तथा अनुपस्थित होने पर same-origin `/api` proxy उपयोग करते हैं।
-- **Test baseline:** 81 frontend suites + 150 backend unit tests = 231 passing.
+- **Test baseline:** 81 frontend suites + 151 backend unit tests = 232 passing.
 
 ---
 

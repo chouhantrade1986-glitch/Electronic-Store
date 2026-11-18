@@ -268,9 +268,14 @@ function Set-ContentWithRetry {
   )
 
   $attempt = 0
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
   while ($true) {
     try {
-      Set-Content -Path $Path -Value $Value -Encoding $Encoding
+      if ($Encoding -ieq "UTF8" -or $Encoding -ieq "utf8NoBOM") {
+        [System.IO.File]::WriteAllText($Path, $Value, $utf8NoBom)
+      } else {
+        Set-Content -Path $Path -Value $Value -Encoding $Encoding
+      }
       return
     }
     catch {

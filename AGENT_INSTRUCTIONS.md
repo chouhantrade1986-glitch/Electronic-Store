@@ -6,6 +6,8 @@
 > 2. **सख्त ब्रांड व कानूनी सुरक्षा नियम (Strict Legal & Brand Safety Rule):** वेबसाइट (`electromart.in`) के किसी भी customer-facing text, badge, dictionary value, alt/title/placeholder/aria label, tooltip, generated label या नए documentation content में किसी third-party marketplace का नाम नहीं आना चाहिए। वेबसाइट का नाम केवल **ElectroMart (`electromart.in` / इलेक्ट्रोमार्ट)** है।
 > 3. किसी भी नए फीचर को जोड़ने या बग फिक्स करने से पहले इस दस्तावेज़ को पूरा पढ़ें ताकि पिछला कोई भी काम प्रभावित न हो।
 
+> **Current handover:** Before continuing project work, read [`PROJECT_HANDOVER_ROADMAP.md`](./PROJECT_HANDOVER_ROADMAP.md) for verified commits, local encrypted-data protections, CI state, and the ordered next steps. Its data-preservation rules are mandatory.
+
 ---
 
 ## 1. प्रोजेक्ट आर्किटेक्चर (Core Architecture Overview)
@@ -67,12 +69,11 @@ node scratch/run_all_tests.js
 ```
 *(सभी 81 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (150 Unit Tests):
+### 2. बैकएंड यूनिट टेस्ट्स (151 Unit Tests):
 ```bash
-cd backend
-npm run test:unit
+npm --prefix backend run test:unit
 ```
-*(सभी 150 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 231 / 231 टेस्ट उत्तीर्ण है।)*
+*(सभी 151 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य कुल 232 / 232 टेस्ट उत्तीर्ण है।)*
 
 ---
 
@@ -171,8 +172,8 @@ git commit -m "feat(scope): your descriptive commit message"
 ## Universal Agent Rules & Execution Guidelines Framework
 
 ### 1. Workspace and directory integrity
-- The single source of truth is `C:\Users\Admin\Documents\GitHub\Electronic-Store`.
-- All agents and tools must work inside this project directory only.
+- The single source of truth is the repository root opened in the active workspace.
+- All agents and tools must work inside that project directory only; use workspace-relative paths instead of machine-specific absolute paths.
 - Do not create parallel project folders, copied worktrees, or duplicate project directories.
 - Do not create duplicate source files such as `product-detail-v2.html`, `copy_cart.js`, or `test_new.js`; edit the owning project files directly.
 
@@ -184,7 +185,7 @@ git commit -m "feat(scope): your descriptive commit message"
 - Put new globals under the approved `window.ElectroMart` namespace or keep them inside a local scope; avoid unrelated global variables and function collisions.
 
 ### 2A. Single website and canonical launch policy
-- The only canonical application root is `C:\Users\Admin\Documents\GitHub\Electronic-Store`.
+- The only canonical application root is the repository root opened in the active workspace.
 - The only canonical launch command is `npm start`, which runs `launch-electromart.js`.
 - `launch-electromart.js` is the single owner of local service startup: frontend `http://127.0.0.1:5500/index.html` and backend API `http://127.0.0.1:4000/api`.
 - Existing `.bat`, `.ps1`, QA, smoke, and release scripts are wrappers or verification tools; they must not be treated as separate website entry points.
@@ -204,14 +205,19 @@ git commit -m "feat(scope): your descriptive commit message"
 - Preserve the dual-write language storage convention for `electromart_lang_v1` and `electromart_lang`.
 
 ### 5. TDD and quality gates
-- Before changing code, run the existing frontend and backend pre-flight suites when the environment permits.
+- Before changing code, run the existing frontend and backend pre-flight suites when the environment permits. For verified baseline, current expected counts are 81 frontend suites and 151 backend tests; check `PROJECT_HANDOVER_ROADMAP.md` for the latest recorded results.
 - For every new feature, create and run a focused failing test before implementation.
-- After implementation, run the focused test first, then `node scratch/run_all_tests.js`, then `cd backend; npm run test:unit`.
+- After implementation, run the focused test first, then `node scratch/run_all_tests.js`, then `npm --prefix backend run test:unit`.
 - Work is not complete until the focused suite and both regression suites pass, or a blocker is explicitly documented.
+
+### 5A. Sensitive snapshot preservation — mandatory
+- Never restore `backend/src/data/db.json` or `backend/src/data/db.json.bak` from `HEAD` or a remote; committed historical snapshots contain plaintext PII/OTP data.
+- Never commit or push `backend/.env` or the local encrypted JSON snapshots. The local snapshots use a local-only `PII_ENCRYPTION_KEY`; check the handover for their last verified state.
+- Do not expose PII or secrets while checking snapshots. Preserve `stash@{0}` unless the user explicitly authorizes changing it.
 
 ### Mandatory agent directive
 
-> सभी AI एजेंट ध्यान दें: प्रत्येक कार्रवाई मुख्य प्रोजेक्ट डायरेक्टरी `C:\Users\Admin\Documents\GitHub\Electronic-Store` में ही करें। नई duplicate files या project copies न बनाएं, पुराने working code और script order को सुरक्षित रखें, और काम समाप्त करने से पहले focused तथा full regression tests चलाकर परिणाम दर्ज करें।
+> सभी AI एजेंट ध्यान दें: प्रत्येक कार्रवाई active workspace में खुले मुख्य project repository के अंदर ही करें। नई duplicate files या project copies न बनाएं, पुराने working code और script order को सुरक्षित रखें, और काम समाप्त करने से पहले focused तथा full regression tests चलाकर परिणाम दर्ज करें।
 >
 > वेबसाइट launch करने के लिए केवल `npm start` और `launch-electromart.js` का उपयोग करें। नया launcher, alternate frontend root, duplicate `index.html`, parallel server या दूसरा project folder बनाना निषिद्ध है।
 ---
