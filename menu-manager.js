@@ -33,7 +33,6 @@
     return "";
   }
 
-  
   function syncDrawerMenuItems() {
     const drawer = document.getElementById("deptSidebar") || document.querySelector(".dept-sidebar");
     if (!drawer) return;
@@ -42,7 +41,7 @@
     const subTitleEl = drawer.querySelector('#deptSubTitle') || drawer.querySelector('.drawer-subcategory-title');
     if (subTitleEl) {
       subTitleEl.setAttribute('data-i18n', 'drawer_subcategory');
-      if (dict['drawer_subcategory']) {
+      if (dict && dict['drawer_subcategory']) {
         subTitleEl.textContent = dict['drawer_subcategory'];
       }
     }
@@ -72,7 +71,7 @@
     linkMap.forEach(({ selector, key }) => {
       drawer.querySelectorAll(selector).forEach((el) => {
         el.setAttribute('data-i18n', key);
-        if (dict[key]) {
+        if (dict && dict[key]) {
           el.textContent = dict[key];
         }
       });
@@ -130,12 +129,12 @@
     document.addEventListener("DOMContentLoaded", () => {
       injectMenu(document.querySelector(".category-nav"));
       injectMenu(document.querySelector(".sub-nav"));
-  syncDrawerMenuItems();
+      syncDrawerMenuItems();
     });
     return;
   }
   injectMenu(document.querySelector(".category-nav"));
   injectMenu(document.querySelector(".sub-nav"));
+  syncDrawerMenuItems();
+  window.syncDrawerMenuItems = syncDrawerMenuItems;
 })();
-
-window.syncDrawerMenuItems = syncDrawerMenuItems;

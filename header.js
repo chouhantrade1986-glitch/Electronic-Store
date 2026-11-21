@@ -863,6 +863,14 @@
     return { city: "New Delhi", postal: "110001" };
   }
 
+  function updateHeaderLocationText(city, postal) {
+    const locEl = document.getElementById("deliveryLocationText");
+    if (locEl) {
+      locEl.textContent = `${city || "New Delhi"} ${postal || "110001"}`;
+    }
+  }
+  window.updateHeaderLocationText = updateHeaderLocationText;
+
   function saveDeliveryLocation(city, postal) {
     const pref = { city: city || "New Delhi", postal: postal || "110001" };
     try {
