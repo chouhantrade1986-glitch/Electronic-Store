@@ -2046,7 +2046,7 @@ function readProfile() {
   }
 }
 
-function saveProfile(profile) {
+function saveLocalProfileData(profile) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   } catch (err) {
@@ -2082,7 +2082,7 @@ function saveSavedAddresses(addresses) {
       profile.pincode = defaultAddr.pincode;
       profile.phone = defaultAddr.phone;
       if (defaultAddr.name) profile.fullName = defaultAddr.name;
-      saveProfile(profile);
+      saveLocalProfileData(profile);
     }
   } catch (err) {
     console.error("Failed to save addresses:", err);

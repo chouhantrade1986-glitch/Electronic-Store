@@ -552,6 +552,14 @@ async function runAccountSmoke(browser, customerSession) {
       return panel && panel.classList.contains("active");
     }, { timeout: 10000 });
     await page.fill("#fullName", "Demo Customer Browser Smoke");
+    const currentEmail = await page.inputValue("#email").catch(() => "");
+    if (!currentEmail) {
+      await page.fill("#email", "customer@electromart.com");
+    }
+    const currentPhone = await page.inputValue("#phone").catch(() => "");
+    if (!currentPhone) {
+      await page.fill("#phone", "9876543210");
+    }
     await page.click("#profileForm button[type='submit']");
     await waitFor(
       async () => hasDialogOrToastMessage(/profile saved/i),
