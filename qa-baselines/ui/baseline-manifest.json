@@ -1,8 +1,8 @@
-﻿{
+{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-10-02T14:43:45Z",
-    "sourceDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
-    "destinationDir":  "C:\\Users\\Admin\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
+    "generatedAt":  "2026-11-24T14:34:57Z",
+    "sourceDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
+    "destinationDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
                   {
                       "name":  "qa-auth-browser.png",
@@ -11,23 +11,23 @@
                   },
                   {
                       "name":  "qa-account-browser.png",
-                      "bytes":  13702,
-                      "sha256":  "DFB869552D9F87251F193A6627364A6289FA728DF19B23278A938462E3EB2A18"
+                      "bytes":  13718,
+                      "sha256":  "767B7B4CF35960310BD9B49F3445B0D6B0AE3C55A1CDB505463C763BB5F7A966"
                   },
                   {
                       "name":  "qa-invoice-browser.png",
-                      "bytes":  173366,
-                      "sha256":  "5468F0762996D7E28C5DFF31F18393D774C683BB0B3BE82833ADF7FB2B49AE23"
+                      "bytes":  125035,
+                      "sha256":  "FE96F22675F212646813A5D79B3F911A795CA300E936B6EF1481866E74108F65"
                   },
                   {
                       "name":  "qa-checkout-browser.png",
-                      "bytes":  13546,
-                      "sha256":  "971DBE0A21CE7533A4B440396A886F966FCAF48E400A9C9B2EF39A4509AEC79E"
+                      "bytes":  13610,
+                      "sha256":  "FD4A215A4D598B50BA1421A22283EFBBC3A5A1EE0B6CFA4049D0446D9799289C"
                   },
                   {
                       "name":  "qa-orders-browser.png",
-                      "bytes":  11236,
-                      "sha256":  "AB02563069D1457CD88DEFCB0F5454CBE56AE6340F9E9D2DEBCC93DAD61656A2"
+                      "bytes":  11312,
+                      "sha256":  "2C4A8FF7A298DD4392D96DF7CF50BC164275CCB177560F11E89A9C58B48249CE"
                   },
                   {
                       "name":  "qa-wishlist-browser.png",
