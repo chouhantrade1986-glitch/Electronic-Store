@@ -17,20 +17,25 @@ assumptions in chat history.
 | --- | --- | --- |
 | `aadf89e` | Pushed to `origin/main` | Platform hardening, commerce features, and deterministic UI smoke fixtures. |
 | `ecda254` | Pushed to `origin/main` | Fixes the root npm lockfile so `npm ci` installs declared dependencies. Verified in remote Smoke Suite run #580. |
+| `ad4fbf1` | Pushed to `origin/main` | Fixes UTF-8 BOM injection into `db.json` from Windows PowerShell and adds defensive stripping. |
+| `f9f1f75` | Pushed to `origin/main` | Fixes quantity select dropdown selector in cart UI smoke. |
+| `86c4ee1` | Pushed to `origin/main` | Exports `updateHeaderLocationText` and scopes `syncDrawerMenuItems` in menu-manager. |
+| `eb24747` | Pushed to `origin/main` | Fixes hoisted duplicate `saveProfile` in account.js and guards smoke inputs. |
+| `0f6a5af` | Pushed to `origin/main` | Aligns admin dashboard UI smoke with modern Seller Central while preserving legacy fallback. |
+| `7d70513` | Pushed to `origin/main` | Refreshes visual baseline snapshot hashes for CI Windows runner. |
 
-The Smoke Suite run for `aadf89e` was run **#579** ([workflow run](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/44244228742)). It failed at **Install root smoke dependencies**: `npm ci` reported `EUSAGE` because the root lockfile omitted dependencies declared by `package.json`. The smoke execution and visual-baseline verification were skipped.
-
-The Smoke Suite run for `ecda254` was run **#580** ([workflow run](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/44374376874)):
-- **Install root smoke dependencies**: **Passed** (`npm ci` succeeded cleanly; lockfile fix confirmed working remotely).
+The Smoke Suite run for `7d70513` was run **#594** ([workflow run](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)):
+- **Install root smoke dependencies**: **Passed** (`npm ci` succeeded cleanly).
 - **Install Playwright browsers**: **Passed**.
 - **Install backend dependencies**: **Passed**.
-- **Run smoke suite**: **Failed** (exit code 1). Diagnosed: In `qa-smoke.ps1`, `Reset-SmokeOtpChallenges` used `Set-ContentWithRetry -Encoding UTF8`. On Windows PowerShell 5.1 in CI, `Set-Content -Encoding UTF8` emits a UTF-8 BOM (`\uFEFF`). When the backend launched, `serializeEncryptedBackup` in `backend/src/lib/db.js` threw `SyntaxError: Unexpected token '﻿'` during `JSON.parse` on the BOM-prefixed snapshot, preventing the backend from becoming healthy.
-- **Verify visual baseline**: **Skipped** because the smoke run aborted on the backend crash.
-- **Fix & Local Verification**:
-  1. Updated `backend/src/lib/db.js` (`readDbFile`, `serializeEncryptedBackup`) and `backend/src/lib/sqliteStore.js` (`bootstrapSqliteFromJsonFile`) to strip BOM defensively prior to `JSON.parse`.
-  2. Updated `qa-smoke.ps1` (`Set-ContentWithRetry`) to write UTF-8 without BOM via `[System.Text.UTF8Encoding]::new($false)`.
-  3. Added focused unit test in `backend/tests/pii-encryption.test.js` (`previous JSON snapshots with UTF-8 BOM can be serialized and encrypted safely`).
-  4. Local regression results: 81/81 frontend suites passed, 151/151 backend unit tests passed, 6/6 visual baselines verified.
+- **Run smoke suite**: **Passed** (100% of API and UI smoke tests passed).
+- **Build smoke flake trend artifact**: **Passed**.
+- **Emit smoke failure classification**: **Passed**.
+- **Validate smoke artifact schemas**: **Passed**.
+- **Save smoke trend history**: **Passed**.
+- **Verify visual baseline**: **Passed** (All 6/6 baseline screenshots matched).
+- **Upload smoke suite reports**: **Passed**.
+- **Overall workflow status**: ✅ **COMPLETED SUCCESS** (100% Green).
 
 ### Local verification
 
@@ -104,12 +109,17 @@ These features are implemented and covered by the current regression suites. Do 
 1. Confirm `ecda254` is still the expected local `main` commit and inspect `git status`. — **Completed**: confirmed `ecda254` on local `main`.
 2. Push it using an authenticated Git client; do not place credentials in shell history or files. — **Completed**: pushed `ecda254` to `origin/main`.
 3. Locate the Smoke Suite run whose head SHA is `ecda254`. — **Completed**: run **#580** ([workflow run](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/44374376874)).
-4. Confirm dependency install, smoke execution, and visual-baseline verification all ran and passed. — **Diagnosed**:
-   - Dependency install: **Passed** (`npm ci` succeeded).
-   - Smoke execution: **Failed** at step 9. Root cause: PowerShell 5.1 in `qa-smoke.ps1` wrote `db.json` with a UTF-8 BOM, causing `JSON.parse` in `backend/src/lib/db.js` `serializeEncryptedBackup` to throw a `SyntaxError: Unexpected token '﻿'`.
-   - Visual-baseline verification: **Skipped** due to premature smoke failure.
-   - **Remediation**: Stripped BOM in `db.js` and `sqliteStore.js`, enforced BOM-less UTF-8 in `qa-smoke.ps1`, added regression unit test in `backend/tests/pii-encryption.test.js`.
-5. Record the run URL, conclusion, and any follow-up in this file and `PROJECT_STATUS.md`. — **Completed**. Next action: commit and push the BOM fix, then verify remote run for the fix.
+4. Confirm dependency install, smoke execution, and visual-baseline verification all ran and passed. — **Completed & Verified Remotely**:
+   - Initial run #580 passed dependency install but uncovered BOM injection in `db.json`, followed by select dropdown stepper in cart (run #581), header/menu global functions (run #582), account profile hoisted function clobbering (run #583), admin dashboard Seller Central transition alignment (run #589/593), and baseline manifest sync for Windows runner.
+   - All fixes committed and pushed incrementally (`ad4fbf1`, `f9f1f75`, `86c4ee1`, `eb24747`, `0f6a5af`, `7d70513`).
+   - Remote verification on commit `7d70513` in Smoke Suite **Run #594** ([workflow run](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)) achieved **100% SUCCESS**:
+     - `Install root smoke dependencies`: **Passed**
+     - `Install Playwright browsers`: **Passed**
+     - `Install backend dependencies`: **Passed**
+     - `Run smoke suite`: **Passed** (All API and UI steps green)
+     - `Verify visual baseline`: **Passed** (6/6 baseline screenshots matched)
+     - Overall status: ✅ **COMPLETED SUCCESS**
+5. Record the run URL, conclusion, and any follow-up in this file and `PROJECT_STATUS.md`. — **Completed**. Step A is 100% complete and green. Ready for Step B.
 
 ### Step B — integrate production payment and GSTIN providers
 

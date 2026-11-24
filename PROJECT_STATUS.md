@@ -41,7 +41,7 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 151 / 151 टेस्ट उत्तीर्ण (100%) |
-| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #589) | 🔄 **IN PROGRESS** | Run #589 (`eb24747`): API Smoke (7/7 pass), Auth, ProductDetail, Cart, Account 100% pass; Admin Dashboard Seller Central element alignment diagnosed. |
+| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #594) | ✅ **PASS** | Run #594 (`7d70513`): 100% PASS (सभी API टेस्ट, 10 UI टेस्ट, और 6/6 विज़ुअल बेसलाइन शत-प्रतिशत उत्तीर्ण)। |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
 | **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **232 / 232 (100% Pass Rate)** |
 
@@ -52,7 +52,9 @@
   2. `f9f1f75`: Cart UI smoke updated to support select-based quantity selector (`select[data-action='change-qty']`).
   3. `86c4ee1`: Global header & navigation helpers (`updateHeaderLocationText`, `syncDrawerMenuItems`) properly defined and exported.
   4. `eb24747`: Resolved duplicate `saveProfile` declaration in `account.js` (renamed address helper to `saveLocalProfileData`) and added defensive field fallbacks in smoke test.
-  - Remote CI Run #589 reached the `admin` smoke step. Diagnosed that `qa-ui-smoke.js` was querying legacy monolithic dashboard elements that were modernized into the 8-department Seller Central in Phase 12 (`commit 688cdf7`).
+  5. `0f6a5af`: Aligned admin dashboard UI smoke with modern Seller Central while retaining legacy fallback.
+  6. `7d70513`: Refreshed visual baseline snapshot hashes for CI Windows runner.
+  - Remote CI Run #594 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)) achieved 100% PASS across all suite jobs and steps (API smoke, 10 UI smoke targets, and 6/6 visual baselines). Step A is completely resolved.
 - **चरण 1 — PII encryption:** AES-256-GCM field encryption, environment-provided key policy और API-response decryption middleware implemented. दोनों database snapshots में sensitive fields encrypted हैं और expired OTP challenges हटाए गए हैं।
 - **चरण 2 — Gift Card redemption:** cryptographically generated claim codes captured online payment के बाद ही जारी होते हैं; authenticated backend APIs card ownership, single-use redemption और ₹10,000 redemption cap लागू करती हैं। Gift Card purchase amount denomination से server पर तय होता है और COD अस्वीकृत है।
 - **चरण 2 — आंशिक checkout:** checkout में claim code और वैकल्पिक wallet tender server को भेजे जाते हैं; balance तथा allocations server ledger से तय होते हैं। पूरा शेष server sources से cover होने पर gateway intent छोड़ा जाता है, अन्यथा gateway को केवल `amountDue` दिया जाता है। Failure/cancellation/expiry/refund paths reservation release या restore करते हैं।
