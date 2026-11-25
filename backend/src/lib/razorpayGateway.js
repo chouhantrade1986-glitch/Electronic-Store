@@ -23,6 +23,94 @@ function resolveRazorpayConfig() {
   };
 }
 
+function maskKey(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (raw.length <= 8) {
+    return `${raw.slice(0, 2)}***${raw.slice(-2)}`;
+  }
+  return `${raw.slice(0, 8)}...${raw.slice(-4)}`;
+}
+
+function validateRazorpayConfig(config = resolveRazorpayConfig()) {
+  const provider = String(config.provider || "simulated").trim().toLowerCase();
+  const issues = [];
+
+  if (provider !== "razorpay") {
+    return {
+      valid: true,
+      provider: "simulated",
+      mode: "simulated",
+      keyIdMasked: "",
+      hasKeySecret: Boolean(config.keySecret),
+      hasWebhookSecret: Boolean(config.webhookSecret),
+      issues: []
+    };
+  }
+
+  const keyId = String(config.keyId || "").trim();
+  const keySecret = String(config.keySecret || "").trim();
+  const webhookSecret = String(config.webhookSecret || "").trim();
+
+  let mode = "unknown";
+  if (keyId.startsWith("rzp_live_")) {
+    mode = "live";
+  } else if (keyId.startsWith("rzp_test_")) {
+    mode = "test";
+  }
+
+  if (!keyId) {
+    issues.push("RAZORPAY_KEY_ID is missing.");
+  } else if (mode === "unknown") {
+    issues.push("RAZORPAY_KEY_ID should start with 'rzp_live_' or 'rzp_test_'.");
+  }
+
+  if (!keySecret) {
+    issues.push("RAZORPAY_KEY_SECRET is missing.");
+  } else if (keySecret.length < 8) {
+    issues.push("RAZORPAY_KEY_SECRET appears too short.");
+  }
+
+  if (!webhookSecret) {
+    issues.push("RAZORPAY_WEBHOOK_SECRET is unconfigured (webhook verification will be disabled).");
+  }
+
+  const valid = Boolean(keyId && keySecret && mode !== "unknown");
+
+  return {
+    valid,
+    provider: "razorpay",
+    mode,
+    keyIdMasked: maskKey(keyId),
+    hasKeySecret: Boolean(keySecret),
+    hasWebhookSecret: Boolean(webhookSecret),
+    issues
+  };
+}
+
+function getValidatedRazorpayConfig(overrides = {}) {
+  const base = resolveRazorpayConfig();
+  const merged = { ...base, ...overrides };
+  const validation = validateRazorpayConfig(merged);
+  return {
+    config: merged,
+    validation
+  };
+}
+
+function getPaymentGatewayConfig() {
+  const config = resolveRazorpayConfig();
+  const validation = validateRazorpayConfig(config);
+  const enabled = isRazorpayEnabled() && validation.valid;
+  return {
+    provider: enabled ? "razorpay" : "simulated",
+    keyId: enabled ? config.keyId : "",
+    razorpayEnabled: enabled,
+    mode: enabled ? validation.mode : "simulated",
+    onlineCheckoutLabel: enabled ? "Razorpay Secure Checkout" : "Built-in payment flow"
+  };
+}
+
 function isRazorpayEnabled() {
   const config = resolveRazorpayConfig();
   return config.provider === "razorpay" && Boolean(config.keyId && config.keySecret);
@@ -103,6 +191,31 @@ async function createRazorpayOrder(payment, order, user) {
   });
 
   return payload;
+}
+
+async function createPaymentGatewayOrder(payment, order, user) {
+  if (isRazorpayEnabled()) {
+    return createRazorpayOrder(payment, order, user);
+  }
+  const receipt = (payment && payment.receiptId) || `PAY-${String(payment && payment.id ? payment.id : "").slice(0, 8).toUpperCase()}`;
+  const amountSubunits = toSubunits((payment && payment.amount) || (order && order.total) || 0);
+  return {
+    id: `order_sim_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    entity: "order",
+    amount: amountSubunits,
+    amount_paid: 0,
+    amount_due: amountSubunits,
+    currency: String((payment && payment.currency) || "INR").trim().toUpperCase() || "INR",
+    receipt: receipt.slice(0, 40),
+    status: "created",
+    attempts: 0,
+    notes: {
+      simulated: "true",
+      internalOrderId: String(order && order.id ? order.id : "").slice(0, 40),
+      internalPaymentId: String(payment && payment.id ? payment.id : "").slice(0, 40)
+    },
+    created_at: Math.floor(Date.now() / 1000)
+  };
 }
 
 async function fetchRazorpayPayment(paymentId) {
@@ -283,15 +396,19 @@ function mapRazorpayRefundEntity(entity = {}) {
 module.exports = {
   buildRazorpayCheckoutPayload,
   captureRazorpayPayment,
+  createPaymentGatewayOrder,
   createRazorpayOrder,
   createRazorpayRefund,
   fetchRazorpayPayment,
   fromSubunits,
+  getPaymentGatewayConfig,
+  getValidatedRazorpayConfig,
   isRazorpayEnabled,
   mapRazorpayPaymentEntity,
   mapRazorpayRefundEntity,
   resolveRazorpayConfig,
   toSubunits,
+  validateRazorpayConfig,
   verifyRazorpayCheckoutSignature,
   verifyRazorpayWebhookSignature
 };

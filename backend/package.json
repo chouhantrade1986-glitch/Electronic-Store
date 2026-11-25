@@ -23,6 +23,8 @@
     "job:release:verify": "node src/jobs/runReleaseVerification.js",
     "job:sanitize:wix-media": "node src/jobs/sanitizeWixMediaUrls.js",
     "job:sanitize:wix-media:dry": "node src/jobs/sanitizeWixMediaUrls.js --dry-run",
+    "job:rotate-pii": "node src/jobs/rotatePiiKey.js",
+    "job:rotate-pii:dry": "node src/jobs/rotatePiiKey.js --dry-run",
     "smoke:razorpay": "node src/jobs/runRazorpaySmokeTest.js",
     "verify:razorpay-resume": "node src/jobs/verifyRazorpayResumeFlow.js"
   },

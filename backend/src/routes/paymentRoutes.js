@@ -30,6 +30,7 @@ const {
   createRazorpayOrder,
   createRazorpayRefund,
   fetchRazorpayPayment,
+  getPaymentGatewayConfig,
   isRazorpayEnabled,
   mapRazorpayPaymentEntity,
   mapRazorpayRefundEntity,
@@ -105,12 +106,7 @@ function persistPaymentRouteMutation(db, collections) {
 }
 
 router.get("/config", (req, res) => {
-  const razorpayEnabled = isRazorpayEnabled();
-  return res.json({
-    provider: razorpayEnabled ? "razorpay" : "simulated",
-    razorpayEnabled,
-    onlineCheckoutLabel: razorpayEnabled ? "Razorpay Secure Checkout" : "Built-in payment flow"
-  });
+  return res.json(getPaymentGatewayConfig());
 });
 
 function ensureWebhookEventCollection(db) {

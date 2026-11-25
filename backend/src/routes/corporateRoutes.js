@@ -226,4 +226,24 @@ router.patch("/registry/:id/items", optionalAuth, async (req, res, next) => {
   return res.status(responseStatus).json(responseBody);
 });
 
+const { verifyGstin } = require("../lib/gstinVerification");
+
+router.post("/gstin/verify", optionalAuth, async (req, res, next) => {
+  const body = req.body && typeof req.body === "object" ? req.body : {};
+  const gstin = String(body.gstin || "").trim();
+  if (!gstin) {
+    return res.status(400).json({ ok: false, status: "missing_input", message: "GSTIN is required." });
+  }
+
+  try {
+    const result = await verifyGstin(gstin);
+    const httpStatus = result.status === "invalid_format"
+      ? 400
+      : (result.status === "verification_failed" ? 502 : 200);
+    return res.status(httpStatus).json(result);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = router;

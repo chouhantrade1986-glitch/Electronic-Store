@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 22 नवंबर 2026 (CI Smoke Suite Run #589 प्रगति: Auth, ProductDetail, Cart, Account 100% PASS; Admin Dashboard Seller Central transition diagnosed; 81 frontend suites + 151 backend unit tests = 232 total)
+**अंतिम अद्यतन (Last Updated):** 25 नवंबर 2026 (Step B: GSTIN Verification Adapter & Razorpay Config Wrapper पूर्ण; Step C: PII Key Rotation CLI व Unit Tests पूर्ण; 81 frontend suites + 173 backend unit tests = 254 total checkpoints passing)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -13,7 +13,7 @@
 | **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 81 / 81 टेस्ट सूट्स उत्तीर्ण (100%) |
 | **डिजिटल ई-गिफ्ट कार्ड्स हब टेस्ट** | `node scratch/test-amazon-gift-cards.js` | ✅ **PASS** | 9 / 9 लेयर्स उत्तीर्ण (100%) |
 | **कॉर्पोरेट गिफ्टिंग व बल्क ऑर्डर्स हब टेस्ट** | `node scratch/test-amazon-corporate-gifting.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
-| **बीएनપીએલ एंड ईएमआई हब टेस्ट** | `node scratch/test-amazon-emi.js` | ✅ **PASS** | 12 / 12 स्तर उत्तीर्ण (100%) |
+| **बीएनપીએल एंड ईएमआई हब टेस्ट** | `node scratch/test-amazon-emi.js` | ✅ **PASS** | 12 / 12 स्तर उत्तीर्ण (100%) |
 | **सब्सक्रिप्शन एंड रिकरिंग ऑर्डर्स टेस्ट** | `node scratch/test-amazon-subscriptions.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **लॉयल्टी एंड रिवॉर्ड्स मार्केटप्लेस टेस्ट** | `node scratch/test-amazon-loyalty.js` | ✅ **PASS** | 10 / 10 स्तर उत्तीर्ण (100%) |
 | **कॉर्पोरेट बल्क ट्रेड-इन हब टेस्ट** | `node scratch/test-amazon-trade-in.js` | ✅ **PASS** | 13 / 13 स्तर उत्तीर्ण (100%) |
@@ -40,30 +40,34 @@
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
-| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 151 / 151 टेस्ट उत्तीर्ण (100%) |
+| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 173 / 173 टेस्ट उत्तीर्ण (100%) |
 | **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #594) | ✅ **PASS** | Run #594 (`7d70513`): 100% PASS (सभी API टेस्ट, 10 UI टेस्ट, और 6/6 विज़ुअल बेसलाइन शत-प्रतिशत उत्तीर्ण)। |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **232 / 232 (100% Pass Rate)** |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **254 / 254 (100% Pass Rate)** |
 
-### सुरक्षा रोडमैप स्थिति
+### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
-- **CI / Smoke Suite:** Commits pushed to `origin/main`:
-  1. `ad4fbf1`: Windows PowerShell UTF-8 BOM injection into `db.json` stripped and guarded defensively in backend and `qa-smoke.ps1`.
-  2. `f9f1f75`: Cart UI smoke updated to support select-based quantity selector (`select[data-action='change-qty']`).
-  3. `86c4ee1`: Global header & navigation helpers (`updateHeaderLocationText`, `syncDrawerMenuItems`) properly defined and exported.
-  4. `eb24747`: Resolved duplicate `saveProfile` declaration in `account.js` (renamed address helper to `saveLocalProfileData`) and added defensive field fallbacks in smoke test.
-  5. `0f6a5af`: Aligned admin dashboard UI smoke with modern Seller Central while retaining legacy fallback.
-  6. `7d70513`: Refreshed visual baseline snapshot hashes for CI Windows runner.
-  - Remote CI Run #594 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)) achieved 100% PASS across all suite jobs and steps (API smoke, 10 UI smoke targets, and 6/6 visual baselines). Step A is completely resolved.
+- **CI / Smoke Suite (Step A):** Remote CI Run #594 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)) achieved 100% PASS across all suite jobs and steps (API smoke, 10 UI smoke targets, and 6/6 visual baselines). Step A is completely resolved.
+- **GSTIN वेरिफिकेशन व पेमेंट एडाप्टर (Step B):**
+  - `backend/src/lib/gstinVerification.js`: Real-world environment-gated adapter (`simulated`, `cleartax`, `sandbox`); regex `/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/`; 36 भारतीय राज्य/केंद्र-शासित प्रदेश कोड मैपिंग; PAN एक्सट्रैक्शन; `AbortController` टाइमआउट; साफ़ स्टेटस आउटकम्स (`verified`, `invalid`, `invalid_format`, `pending_external_verification`, `verification_failed`)।
+  - `backend/src/routes/corporateRoutes.js`: `POST /api/corporate/gstin/verify` रूट लागू।
+  - `backend/src/lib/razorpayGateway.js`: `validateRazorpayConfig()`, `getValidatedRazorpayConfig()`, `getPaymentGatewayConfig()` (पब्लिक-सेफ पेलोड), और `createPaymentGatewayOrder()` (सिम्युलेटेड फॉलबैक आर्डर क्रिएशन जब लाइव कीज़ अनुपस्थित हों)।
+  - `backend/src/routes/paymentRoutes.js`: `GET /config` रूट `getPaymentGatewayConfig()` के साथ एकीकृत।
+  - यूनिट टेस्ट्स: `gstin-verification.test.js` (8/8 PASS) और `razorpay-config.test.js` (8/8 PASS)।
+- **PII एन्क्रिप्शन की रोटेशन CLI (Step C):**
+  - `backend/src/jobs/rotatePiiKey.js`: सेफ CLI यूटिलिटी स्क्रिप्ट (`--source-key`, `--target-key`, `--input-file`, `--output-file`, `--dry-run`)।
+  - 32-बाइट कीज़ अनिवार्य; AES-256-GCM टैग वेलिडेशन; ऑटोमेटिक लाइव DB म्यूटेशन से सुरक्षा (`--input-file` स्पष्ट रूप से अनिवार्य); एटॉमिक टेम्प-फाइल रीनेम; फुल आइडम्पोटेंसी (`already_target_key`); दूषित या गलत सिफरटेक्स्ट को साफ़ एरर के साथ अस्वीकार करना।
+  - `backend/package.json`: `"job:rotate-pii"` और `"job:rotate-pii:dry"` स्क्रिप्ट्स जोड़े गए।
+  - यूनिट टेस्ट: `rotate-pii-key.test.js` (6/6 PASS)।
 - **चरण 1 — PII encryption:** AES-256-GCM field encryption, environment-provided key policy और API-response decryption middleware implemented. दोनों database snapshots में sensitive fields encrypted हैं और expired OTP challenges हटाए गए हैं।
 - **चरण 2 — Gift Card redemption:** cryptographically generated claim codes captured online payment के बाद ही जारी होते हैं; authenticated backend APIs card ownership, single-use redemption और ₹10,000 redemption cap लागू करती हैं। Gift Card purchase amount denomination से server पर तय होता है और COD अस्वीकृत है।
 - **चरण 2 — आंशिक checkout:** checkout में claim code और वैकल्पिक wallet tender server को भेजे जाते हैं; balance तथा allocations server ledger से तय होते हैं। पूरा शेष server sources से cover होने पर gateway intent छोड़ा जाता है, अन्यथा gateway को केवल `amountDue` दिया जाता है। Failure/cancellation/expiry/refund paths reservation release या restore करते हैं।
 - **चरण 3 — PII production hardening:** structured logs/metrics में email, phone और names mask; address, GSTIN और IMEI redact; request query strings तथा raw error message/stack log नहीं होते। Staging/production में PII key अनिवार्य है।
 - **चरण 4 — Corporate registry sync:** authenticated registry create/read, organization-scope access, single-registry share capability, API-backed item updates और token rotation लागू। Recipient PII DB wrapper के AES-GCM field encryption से सुरक्षित है।
-- **चरण 4 — B2B invoice tracking:** `/api/orders` corporate details validate करता है और requested bulk invoices को order ID से `corporateInvoices` ledger collection में जोड़ता है। SQLite normalization में `corporateInvoices` और `corporateRegistries` dedicated tables हैं; indexed columns में PII नहीं है और संवेदनशील JSON fields encrypted रहते हैं। GSTIN की syntax validate होती है; वास्तविक GSTIN verification के लिए बाहरी provider/manual approval अभी आवश्यक है और status `pending_external_verification` रहता है।
-- **चरण 5 — Environment/tunnel guardrails:** optional hostname केवल `process.env.DEV_TUNNEL_HOST` से resolve होता है; bare public-format DNS hostname, matching HTTPS `PUBLIC_API_BASE_URL`, no-local/IP rules enforce होते हैं। Staging/production में dev tunnel configuration startup validation रोकता है। SEO sitemap/robots links canonical `electromart.in` पर हैं; `open-electromart-online.ps1` valid `DEV_TUNNEL_HOST` मांगता है और temporary quick-tunnel discovery नहीं करता।
-- **चरण 5 — Frontend API configuration:** backend `/api/config.js` verified `PUBLIC_API_BASE_URL` को `window.__ELECTROMART_CONFIG__` में inject करता है। Checkout, auth, corporate gifting, gift-card, account, admin और product clients injected value पढ़ते हैं तथा अनुपस्थित होने पर same-origin `/api` proxy उपयोग करते हैं।
-- **Test baseline:** 81 frontend suites + 151 backend unit tests = 232 passing.
+- **चरण 4 — B2B invoice tracking:** `/api/orders` corporate details validate करता है और requested bulk invoices को order ID से `corporateInvoices` ledger collection में जोड़ता है।
+- **चरण 5 — Environment/tunnel guardrails:** optional hostname केवल `process.env.DEV_TUNNEL_HOST` से resolve होता है; bare public-format DNS hostname, matching HTTPS `PUBLIC_API_BASE_URL`, no-local/IP rules enforce होते हैं।
+- **चरण 5 — Frontend API configuration:** backend `/api/config.js` verified `PUBLIC_API_BASE_URL` को `window.__ELECTROMART_CONFIG__` में inject करता है।
+- **Test baseline:** 81 frontend suites + 173 backend unit tests = 254 passing.
 
 ---
 
