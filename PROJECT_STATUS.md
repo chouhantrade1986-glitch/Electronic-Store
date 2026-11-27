@@ -47,13 +47,13 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 175 / 175 टेस्ट उत्तीर्ण (100%) |
-| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Historical Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
+| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #607) | ✅ **PASS** | Commit `26b3505`: smoke suite, Phase 52 capture, and all 13/13 visual baseline hashes passed. |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 13 / 13 screenshots सत्यापित locally |
 | **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **262 / 262 (100% Pass Rate)** |
 
 ### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
-- **CI / Smoke Suite (Step A, historical):** Remote CI Run #600 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/46018413743)) on commit `1122e6c` completed successfully with 6/6 visual baselines. The current Phase 52 local visual baseline contains 13 images; latest remote verification must be recorded separately after push.
+- **CI / Smoke Suite:** Historical six-image verification passed in Run #600 (`1122e6c`); the current 13-image baseline is verified remotely in Run #607 (`26b3505`).
 - **कूपन्स व प्रोमो डील्स हब (Phase 47):**
   - `coupons.html`, `coupons.js`, `coupons.css`: Amazon Coupons Hub स्टाइल का टीयर-टिकट कूपन कार्ड्स इंटरफ़ेस, ग्रीन 'Clip Coupon' / 'Clipped ✓' इंटरेक्टिव बैज, लाइव सर्च व कैटेगरी फ़िल्टर पिल्स (Laptops, Audio, Accessories, All Deals), 1-क्लिक कोड कॉपी, टर्म्स एंड कंडीशंस मोडल और स्टिकी क्लिप्ड कूपन्स समरी बार।
   - `checkout.html` व `checkout.js`: `electromart_clipped_coupons_v1` से जुड़ा ऑटो-अप्लाई चिप्स बार व सिंक।
@@ -729,6 +729,6 @@
 ## Phase 53 — CI Visual Baseline Capture & Offline Cart Illustration
 
 - GitHub Actions now runs the Phase 52 visual-only capture after the regular UI smoke suite and before visual-baseline verification. The visual-only path writes the seven Phase 52 screenshots and preserves the six real screenshots from the regular smoke journey.
-- Aligned all 13 tracked hashes to the screenshots produced by the Windows CI runner in Smoke Suite Run #607, including the refreshed invoice fixture and all seven Phase 52 captures. Run #607 exercised the new generator but exposed the prior local-versus-runner hash mismatch; a repeat remote verification is pending.
+- Aligned all 13 tracked hashes to screenshots produced by the Windows CI runner in Smoke Suite Run #606, including the refreshed invoice fixture and all seven Phase 52 captures. The follow-up [Smoke Suite Run #607](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/46077594026) passed on commit `26b3505e7f8e70f09b85d4d1a48e8f2963f9e563`, including the full smoke suite, Phase 52 capture, and 13/13 visual baseline verification.
 - Replaced the cart empty-state remote image with an accessible decorative inline SVG, removing that external asset request.
-- Added regression assertions for CI capture ordering and the self-contained cart illustration. Local verification: 87/87 frontend suites, 175/175 backend tests, 13/13 visual baselines, and brand safety pass. The corrected 13-image fixture set awaits verification in a new GitHub Actions run.
+- Added regression assertions for CI capture ordering and the self-contained cart illustration. Local verification: 87/87 frontend suites, 175/175 backend tests, 13/13 visual baselines, and brand safety pass. The corrected fixtures are also verified by remote Smoke Suite Run #607.
