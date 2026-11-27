@@ -4,6 +4,9 @@ const { execSync } = require('child_process');
 
 const scratchDir = __dirname;
 const files = fs.readdirSync(scratchDir).filter(f => f.startsWith('test-') && f.endsWith('.js'));
+if (!files.includes('test-amazon-phase48.js')) {
+  throw new Error('Phase 48 Buy Again contract must be registered in the frontend regression run.');
+}
 
 console.log(`Running ${files.length} test suites...`);
 let passed = 0;

@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 27 नवंबर 2026 (Phase 47: ElectroMart Dedicated Coupons & Promo Deals Hub पूर्ण; 82 frontend suites + 173 backend unit tests = 255 total checkpoints passing)
+**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 48: ElectroMart Buy Again & Fast Reorder Hub पूर्ण; 83 frontend suites + 173 backend unit tests = 256 total checkpoints passing)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 82 / 82 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 83 / 83 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **Buy Again & Fast Reorder Hub टेस्ट** | `scratch/test-amazon-phase48.js` | ✅ **PASS** | Phase 48 contract checks उत्तीर्ण |
 | **कूपन्स व प्रोमो डील्स हब टेस्ट** | `node scratch/test-amazon-coupons.js` | ✅ **PASS** | 8 / 8 लेयर्स उत्तीर्ण (100%) |
 | **डिजिटल ई-गिफ्ट कार्ड्स हब टेस्ट** | `node scratch/test-amazon-gift-cards.js` | ✅ **PASS** | 9 / 9 लेयर्स उत्तीर्ण (100%) |
 | **कॉर्पोरेट गिफ्टिंग व बल्क ऑर्डर्स हब टेस्ट** | `node scratch/test-amazon-corporate-gifting.js` | ✅ **PASS** | 9 / 9 स्तर उत्तीर्ण (100%) |
@@ -42,13 +43,13 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 173 / 173 टेस्ट उत्तीर्ण (100%) |
-| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #594) | ✅ **PASS** | Run #594 (`7d70513`): 100% PASS (सभी API टेस्ट, 10 UI टेस्ट, और 6/6 विज़ुअल बेसलाइन शत-प्रतिशत उत्तीर्ण)। |
+| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **255 / 255 (100% Pass Rate)** |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **256 / 256 (100% Pass Rate)** |
 
 ### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
-- **CI / Smoke Suite (Step A):** Remote CI Run #594 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/45416557294)) achieved 100% PASS across all suite jobs and steps (API smoke, 10 UI smoke targets, and 6/6 visual baselines). Step A is completely resolved.
+- **CI / Smoke Suite (Step A):** Remote CI Run #600 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/46018413743)) on current `main` commit `1122e6c` completed successfully: dependency installs, API/browser smoke, and 6/6 visual baselines passed. Step A remains resolved.
 - **कूपन्स व प्रोमो डील्स हब (Phase 47):**
   - `coupons.html`, `coupons.js`, `coupons.css`: Amazon Coupons Hub स्टाइल का टीयर-टिकट कूपन कार्ड्स इंटरफ़ेस, ग्रीन 'Clip Coupon' / 'Clipped ✓' इंटरेक्टिव बैज, लाइव सर्च व कैटेगरी फ़िल्टर पिल्स (Laptops, Audio, Accessories, All Deals), 1-क्लिक कोड कॉपी, टर्म्स एंड कंडीशंस मोडल और स्टिकी क्लिप्ड कूपन्स समरी बार।
   - `checkout.html` व `checkout.js`: `electromart_clipped_coupons_v1` से जुड़ा ऑटो-अप्लाई चिप्स बार व सिंक।
@@ -74,7 +75,10 @@
 - **चरण 4 — B2B invoice tracking:** `/api/orders` corporate details validate करता है और requested bulk invoices को order ID से `corporateInvoices` ledger collection में जोड़ता है।
 - **चरण 5 — Environment/tunnel guardrails:** optional hostname केवल `process.env.DEV_TUNNEL_HOST` से resolve होता है; bare public-format DNS hostname, matching HTTPS `PUBLIC_API_BASE_URL`, no-local/IP rules enforce होते हैं।
 - **चरण 5 — Frontend API configuration:** backend `/api/config.js` verified `PUBLIC_API_BASE_URL` को `window.__ELECTROMART_CONFIG__` में inject करता है।
-- **Test baseline:** 82 frontend suites + 173 backend unit tests = 255 passing.
+- **Test baseline before Phase 48:** 82 frontend suites + 173 backend unit tests = 255 passing.
+
+- **Buy Again & Fast Reorder Hub (Phase 48):** `buy-again.html`, `buy-again.js`, and `buy-again.css` provide a dedicated responsive reorder page using the existing ElectroMart shell and styling tokens. Signed-in customers load history through authenticated `GET /api/orders/my`; the page aggregates unit purchase counts by product, records the latest order date and unit price, and compares that price with the current catalog. Guests, unavailable order history, and accounts without purchases see a clearly labeled sample catalog. Search, purchase period, category, quantity, Add to Cart, and Buy It Now controls are available. The shared header, Orders page tab, 11-language translations, and sitemap include the hub. `scratch/test-amazon-phase48.js` is automatically discovered and explicitly required by `scratch/run_all_tests.js`.
+- **Test baseline after Phase 48:** 83 frontend suites + 173 backend unit tests = 256 passing checks; brand safety passes separately.
 
 ---
 

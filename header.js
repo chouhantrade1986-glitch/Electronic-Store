@@ -218,6 +218,7 @@
           <a href="todays-deals.html" class="category-quick-link" data-i18n="todays_deals">Today's Deals</a>
           <a href="coupons.html" class="category-quick-link" data-i18n="nav_coupons">Coupons</a>
           <a href="gift-cards.html" class="category-quick-link" data-i18n="nav_gift_cards">Gift Cards</a>
+          <a href="buy-again.html" class="category-quick-link" data-i18n="buy_again_nav_label">Buy Again</a>
           <a href="prime.html" class="category-quick-link nav-prime-link" data-i18n="prime_nav_link" style="color: #00a8e1; font-weight: 700;">👑 Prime</a>
           <a href="best-sellers.html" class="category-quick-link" data-i18n="best_sellers">Best Sellers</a>
           <a href="products.html" class="category-quick-link" data-i18n="all_products">All Products</a>

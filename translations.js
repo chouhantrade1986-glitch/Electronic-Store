@@ -30852,3 +30852,129 @@ couponTargets.forEach((dictionarySet) => {
     Object.assign(dictionarySet[lang], ELECTROMART_COUPONS_I18N, ELECTROMART_COUPONS_OVERRIDES[lang] || {});
   });
 });
+
+const ELECTROMART_BUY_AGAIN_I18N = {
+  en: {
+    buy_again_nav_label: "Buy Again", buy_again_eyebrow: "Your past purchases, ready when you are", buy_again_hero_title: "Buy Again",
+    buy_again_hero_subtitle: "Find a familiar favorite and add it to your cart in a few clicks.", buy_again_search_placeholder: "Search your past purchases",
+    buy_again_filter_time: "Time period", buy_again_time_all: "All time", buy_again_time_30_days: "Last 30 days", buy_again_time_3_months: "Past 3 months", buy_again_time_2026: "2026",
+    buy_again_filter_category: "Category", buy_again_category_all: "All Categories", buy_again_category_computers: "Computers", buy_again_category_laptops: "Laptops", buy_again_category_mobiles: "Mobiles & tablets", buy_again_category_audio: "Audio", buy_again_category_accessories: "Accessories", buy_again_category_printers: "Printers",
+    buy_again_guest_notice: "You are viewing sample products. Sign in to see your own order history.", buy_again_results_title: "Your past purchases", buy_again_loading: "Loading purchases…", buy_again_results: "{count} products",
+    buy_again_purchased_times: "Purchased {count} times", buy_again_last_ordered: "Last ordered on {date}", buy_again_price_dropped: "Price dropped since last order", buy_again_quantity: "Quantity", buy_again_quantity_for: "Quantity for {name}", buy_again_add_to_cart: "Add to Cart", buy_again_buy_now: "Buy It Now", buy_again_added: "Added to Cart", buy_again_empty: "No matching purchases found", buy_again_empty_hint: "Try another search or choose a different filter."
+  },
+  hi: {
+    buy_again_nav_label: "फिर से खरीदें", buy_again_eyebrow: "आपकी पिछली खरीदारी, जब चाहें उपलब्ध", buy_again_hero_title: "फिर से खरीदें",
+    buy_again_hero_subtitle: "अपने पसंदीदा उत्पाद को खोजें और कुछ क्लिक में कार्ट में जोड़ें।", buy_again_search_placeholder: "पिछली खरीदारी खोजें",
+    buy_again_filter_time: "समय अवधि", buy_again_time_all: "सभी समय", buy_again_time_30_days: "पिछले 30 दिन", buy_again_time_3_months: "पिछले 3 महीने", buy_again_time_2026: "2026",
+    buy_again_filter_category: "श्रेणी", buy_again_category_all: "सभी श्रेणियां", buy_again_category_computers: "कंप्यूटर", buy_again_category_laptops: "लैपटॉप", buy_again_category_mobiles: "मोबाइल और टैबलेट", buy_again_category_audio: "ऑडियो", buy_again_category_accessories: "एक्सेसरीज़", buy_again_category_printers: "प्रिंटर",
+    buy_again_guest_notice: "आप नमूना उत्पाद देख रहे हैं। अपना ऑर्डर इतिहास देखने के लिए साइन इन करें।", buy_again_results_title: "आपकी पिछली खरीदारी", buy_again_loading: "खरीदारी लोड हो रही है…", buy_again_results: "{count} उत्पाद",
+    buy_again_purchased_times: "{count} बार खरीदा", buy_again_last_ordered: "पिछली बार {date} को ऑर्डर किया", buy_again_price_dropped: "पिछले ऑर्डर के बाद कीमत घटी", buy_again_quantity: "मात्रा", buy_again_quantity_for: "{name} की मात्रा", buy_again_add_to_cart: "कार्ट में जोड़ें", buy_again_buy_now: "अभी खरीदें", buy_again_added: "कार्ट में जोड़ा गया", buy_again_empty: "कोई मेल खाती खरीदारी नहीं मिली", buy_again_empty_hint: "दूसरी खोज करें या कोई अलग फ़िल्टर चुनें।"
+  },
+  ta: {
+    buy_again_nav_label: "மீண்டும் வாங்குங்கள்", buy_again_eyebrow: "உங்கள் முந்தைய வாங்கல்கள், மீண்டும் பெறத் தயார்", buy_again_hero_title: "மீண்டும் வாங்குங்கள்",
+    buy_again_hero_subtitle: "உங்களுக்கு பிடித்த பொருளைக் கண்டுபிடித்து சில கிளிக்குகளில் கார்ட்டில் சேர்க்கவும்.", buy_again_search_placeholder: "முந்தைய வாங்கல்களைத் தேடுங்கள்",
+    buy_again_filter_time: "கால அளவு", buy_again_time_all: "எல்லா காலமும்", buy_again_time_30_days: "கடந்த 30 நாட்கள்", buy_again_time_3_months: "கடந்த 3 மாதங்கள்", buy_again_time_2026: "2026",
+    buy_again_filter_category: "வகை", buy_again_category_all: "அனைத்து வகைகளும்", buy_again_category_computers: "கணினிகள்", buy_again_category_laptops: "மடிக்கணினிகள்", buy_again_category_mobiles: "மொபைல்கள் மற்றும் டேப்லெட்டுகள்", buy_again_category_audio: "ஆடியோ", buy_again_category_accessories: "துணைக்கருவிகள்", buy_again_category_printers: "அச்சுப்பொறிகள்",
+    buy_again_guest_notice: "நீங்கள் மாதிரி தயாரிப்புகளைப் பார்க்கிறீர்கள். உங்கள் ஆர்டர் வரலாற்றைக் காண உள்நுழையவும்.", buy_again_results_title: "உங்கள் முந்தைய வாங்கல்கள்", buy_again_loading: "வாங்கல்கள் ஏற்றப்படுகின்றன…", buy_again_results: "{count} தயாரிப்புகள்",
+    buy_again_purchased_times: "{count} முறை வாங்கப்பட்டது", buy_again_last_ordered: "கடைசியாக {date} அன்று ஆர்டர் செய்தீர்கள்", buy_again_price_dropped: "கடைசி ஆர்டருக்குப் பிறகு விலை குறைந்தது", buy_again_quantity: "அளவு", buy_again_quantity_for: "{name} அளவு", buy_again_add_to_cart: "கார்ட்டில் சேர்க்கவும்", buy_again_buy_now: "இப்போது வாங்கவும்", buy_again_added: "கார்ட்டில் சேர்க்கப்பட்டது", buy_again_empty: "பொருந்தும் வாங்கல்கள் இல்லை", buy_again_empty_hint: "வேறு தேடலை முயற்சிக்கவும் அல்லது வேறு வடிகட்டியைத் தேர்ந்தெடுக்கவும்."
+  },
+  te: {
+    buy_again_nav_label: "మళ్లీ కొనండి", buy_again_eyebrow: "మీ గత కొనుగోళ్లు, మళ్లీ పొందడానికి సిద్ధంగా ఉన్నాయి", buy_again_hero_title: "మళ్లీ కొనండి",
+    buy_again_hero_subtitle: "మీకు నచ్చిన వస్తువును కనుగొని కొన్ని క్లిక్‌లలో కార్ట్‌కు జోడించండి.", buy_again_search_placeholder: "మీ గత కొనుగోళ్లను వెతకండి",
+    buy_again_filter_time: "కాల వ్యవధి", buy_again_time_all: "అన్ని సమయాలు", buy_again_time_30_days: "గత 30 రోజులు", buy_again_time_3_months: "గత 3 నెలలు", buy_again_time_2026: "2026",
+    buy_again_filter_category: "వర్గం", buy_again_category_all: "అన్ని వర్గాలు", buy_again_category_computers: "కంప్యూటర్లు", buy_again_category_laptops: "ల్యాప్‌టాప్‌లు", buy_again_category_mobiles: "మొబైళ్లు & టాబ్లెట్‌లు", buy_again_category_audio: "ఆడియో", buy_again_category_accessories: "అనుబంధ పరికరాలు", buy_again_category_printers: "ప్రింటర్లు",
+    buy_again_guest_notice: "మీరు నమూనా ఉత్పత్తులను చూస్తున్నారు. మీ ఆర్డర్ చరిత్ర కోసం సైన్ ఇన్ చేయండి.", buy_again_results_title: "మీ గత కొనుగోళ్లు", buy_again_loading: "కొనుగోళ్లు లోడ్ అవుతున్నాయి…", buy_again_results: "{count} ఉత్పత్తులు",
+    buy_again_purchased_times: "{count} సార్లు కొనుగోలు చేశారు", buy_again_last_ordered: "చివరిగా {date}న ఆర్డర్ చేశారు", buy_again_price_dropped: "చివరి ఆర్డర్ తర్వాత ధర తగ్గింది", buy_again_quantity: "పరిమాణం", buy_again_quantity_for: "{name} పరిమాణం", buy_again_add_to_cart: "కార్ట్‌కు జోడించండి", buy_again_buy_now: "ఇప్పుడే కొనండి", buy_again_added: "కార్ట్‌కు జోడించబడింది", buy_again_empty: "సరిపోలే కొనుగోళ్లు కనబడలేదు", buy_again_empty_hint: "మరో పదంతో వెతకండి లేదా వేరే ఫిల్టర్ ఎంచుకోండి."
+  },
+  kn: {
+    buy_again_nav_label: "ಮತ್ತೆ ಖರೀದಿಸಿ", buy_again_eyebrow: "ನಿಮ್ಮ ಹಿಂದಿನ ಖರೀದಿಗಳು, ಮತ್ತೆ ಪಡೆಯಲು ಸಿದ್ಧ", buy_again_hero_title: "ಮತ್ತೆ ಖರೀದಿಸಿ",
+    buy_again_hero_subtitle: "ನಿಮಗೆ ಇಷ್ಟವಾದ ಉತ್ಪನ್ನವನ್ನು ಹುಡುಕಿ ಕೆಲವು ಕ್ಲಿಕ್‌ಗಳಲ್ಲಿ ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ.", buy_again_search_placeholder: "ನಿಮ್ಮ ಹಿಂದಿನ ಖರೀದಿಗಳನ್ನು ಹುಡುಕಿ",
+    buy_again_filter_time: "ಕಾಲಾವಧಿ", buy_again_time_all: "ಎಲ್ಲಾ ಸಮಯ", buy_again_time_30_days: "ಕಳೆದ 30 ದಿನಗಳು", buy_again_time_3_months: "ಕಳೆದ 3 ತಿಂಗಳು", buy_again_time_2026: "2026",
+    buy_again_filter_category: "ವರ್ಗ", buy_again_category_all: "ಎಲ್ಲಾ ವರ್ಗಗಳು", buy_again_category_computers: "ಕಂಪ್ಯೂಟರ್‌ಗಳು", buy_again_category_laptops: "ಲ್ಯಾಪ್‌ಟಾಪ್‌ಗಳು", buy_again_category_mobiles: "ಮೊಬೈಲ್‌ಗಳು ಮತ್ತು ಟ್ಯಾಬ್ಲೆಟ್‌ಗಳು", buy_again_category_audio: "ಆಡಿಯೋ", buy_again_category_accessories: "ಪರಿಕರಗಳು", buy_again_category_printers: "ಪ್ರಿಂಟರ್‌ಗಳು",
+    buy_again_guest_notice: "ನೀವು ಮಾದರಿ ಉತ್ಪನ್ನಗಳನ್ನು ನೋಡುತ್ತಿದ್ದೀರಿ. ನಿಮ್ಮ ಆರ್ಡರ್ ಇತಿಹಾಸಕ್ಕಾಗಿ ಸೈನ್ ಇನ್ ಮಾಡಿ.", buy_again_results_title: "ನಿಮ್ಮ ಹಿಂದಿನ ಖರೀದಿಗಳು", buy_again_loading: "ಖರೀದಿಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…", buy_again_results: "{count} ಉತ್ಪನ್ನಗಳು",
+    buy_again_purchased_times: "{count} ಬಾರಿ ಖರೀದಿಸಲಾಗಿದೆ", buy_again_last_ordered: "ಕೊನೆಯದಾಗಿ {date}ರಂದು ಆರ್ಡರ್ ಮಾಡಲಾಗಿದೆ", buy_again_price_dropped: "ಕೊನೆಯ ಆರ್ಡರ್‌ನಿಂದ ಬೆಲೆ ಇಳಿದಿದೆ", buy_again_quantity: "ಪ್ರಮಾಣ", buy_again_quantity_for: "{name} ಪ್ರಮಾಣ", buy_again_add_to_cart: "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ", buy_again_buy_now: "ಈಗ ಖರೀದಿಸಿ", buy_again_added: "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ", buy_again_empty: "ಹೊಂದುವ ಖರೀದಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ", buy_again_empty_hint: "ಬೇರೆ ಹುಡುಕಾಟ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಬೇರೆ ಫಿಲ್ಟರ್ ಆಯ್ಕೆಮಾಡಿ."
+  },
+  ml: {
+    buy_again_nav_label: "വീണ്ടും വാങ്ങൂ", buy_again_eyebrow: "നിങ്ങളുടെ പഴയ വാങ്ങലുകൾ വീണ്ടും ലഭിക്കാൻ തയ്യാറാണ്", buy_again_hero_title: "വീണ്ടും വാങ്ങൂ",
+    buy_again_hero_subtitle: "ഇഷ്ടപ്പെട്ട ഉൽപ്പന്നം കണ്ടെത്തി ഏതാനും ക്ലിക്കുകളിൽ കാർട്ടിൽ ചേർക്കൂ.", buy_again_search_placeholder: "പഴയ വാങ്ങലുകൾ തിരയൂ",
+    buy_again_filter_time: "കാലയളവ്", buy_again_time_all: "എല്ലാ സമയവും", buy_again_time_30_days: "കഴിഞ്ഞ 30 ദിവസം", buy_again_time_3_months: "കഴിഞ്ഞ 3 മാസം", buy_again_time_2026: "2026",
+    buy_again_filter_category: "വിഭാഗം", buy_again_category_all: "എല്ലാ വിഭാഗങ്ങളും", buy_again_category_computers: "കമ്പ്യൂട്ടറുകൾ", buy_again_category_laptops: "ലാപ്‌ടോപ്പുകൾ", buy_again_category_mobiles: "മൊബൈലുകളും ടാബ്‌ലെറ്റുകളും", buy_again_category_audio: "ഓഡിയോ", buy_again_category_accessories: "ആക്സസറികൾ", buy_again_category_printers: "പ്രിന്ററുകൾ",
+    buy_again_guest_notice: "നിങ്ങൾ മാതൃകാ ഉൽപ്പന്നങ്ങളാണ് കാണുന്നത്. നിങ്ങളുടെ ഓർഡർ ചരിത്രം കാണാൻ സൈൻ ഇൻ ചെയ്യൂ.", buy_again_results_title: "നിങ്ങളുടെ പഴയ വാങ്ങലുകൾ", buy_again_loading: "വാങ്ങലുകൾ ലോഡ് ചെയ്യുന്നു…", buy_again_results: "{count} ഉൽപ്പന്നങ്ങൾ",
+    buy_again_purchased_times: "{count} തവണ വാങ്ങി", buy_again_last_ordered: "അവസാനം {date}ന് ഓർഡർ ചെയ്തു", buy_again_price_dropped: "കഴിഞ്ഞ ഓർഡറിന് ശേഷം വില കുറഞ്ഞു", buy_again_quantity: "എണ്ണം", buy_again_quantity_for: "{name} എണ്ണം", buy_again_add_to_cart: "കാർട്ടിൽ ചേർക്കൂ", buy_again_buy_now: "ഇപ്പോൾ വാങ്ങൂ", buy_again_added: "കാർട്ടിൽ ചേർത്തു", buy_again_empty: "പൊരുത്തപ്പെടുന്ന വാങ്ങലുകൾ കണ്ടെത്തിയില്ല", buy_again_empty_hint: "മറ്റൊരു തിരയൽ ശ്രമിക്കൂ അല്ലെങ്കിൽ മറ്റൊരു ഫിൽട്ടർ തിരഞ്ഞെടുക്കൂ."
+  },
+  bn: {
+    buy_again_nav_label: "আবার কিনুন", buy_again_eyebrow: "আপনার আগের কেনাকাটা, আবার অর্ডারের জন্য প্রস্তুত", buy_again_hero_title: "আবার কিনুন",
+    buy_again_hero_subtitle: "পছন্দের পণ্য খুঁজে কয়েক ক্লিকেই কার্টে যোগ করুন।", buy_again_search_placeholder: "আগের কেনাকাটা খুঁজুন",
+    buy_again_filter_time: "সময়সীমা", buy_again_time_all: "সব সময়", buy_again_time_30_days: "গত ৩০ দিন", buy_again_time_3_months: "গত ৩ মাস", buy_again_time_2026: "২০২৬",
+    buy_again_filter_category: "বিভাগ", buy_again_category_all: "সব বিভাগ", buy_again_category_computers: "কম্পিউটার", buy_again_category_laptops: "ল্যাপটপ", buy_again_category_mobiles: "মোবাইল ও ট্যাবলেট", buy_again_category_audio: "অডিও", buy_again_category_accessories: "আনুষাঙ্গিক", buy_again_category_printers: "প্রিন্টার",
+    buy_again_guest_notice: "আপনি নমুনা পণ্য দেখছেন। নিজের অর্ডার ইতিহাস দেখতে সাইন ইন করুন।", buy_again_results_title: "আপনার আগের কেনাকাটা", buy_again_loading: "কেনাকাটা লোড হচ্ছে…", buy_again_results: "{count}টি পণ্য",
+    buy_again_purchased_times: "{count} বার কেনা হয়েছে", buy_again_last_ordered: "শেষ অর্ডার {date} তারিখে", buy_again_price_dropped: "শেষ অর্ডারের পর দাম কমেছে", buy_again_quantity: "পরিমাণ", buy_again_quantity_for: "{name}-এর পরিমাণ", buy_again_add_to_cart: "কার্টে যোগ করুন", buy_again_buy_now: "এখনই কিনুন", buy_again_added: "কার্টে যোগ হয়েছে", buy_again_empty: "মিলযুক্ত কেনাকাটা পাওয়া যায়নি", buy_again_empty_hint: "অন্য কিছু খুঁজুন বা ভিন্ন ফিল্টার বেছে নিন।"
+  },
+  mr: {
+    buy_again_nav_label: "पुन्हा खरेदी करा", buy_again_eyebrow: "तुमची मागील खरेदी, पुन्हा ऑर्डरसाठी तयार", buy_again_hero_title: "पुन्हा खरेदी करा",
+    buy_again_hero_subtitle: "आवडते उत्पादन शोधा आणि काही क्लिकमध्ये कार्टमध्ये जोडा.", buy_again_search_placeholder: "तुमची मागील खरेदी शोधा",
+    buy_again_filter_time: "कालावधी", buy_again_time_all: "सर्व वेळ", buy_again_time_30_days: "मागील ३० दिवस", buy_again_time_3_months: "मागील ३ महिने", buy_again_time_2026: "२०२६",
+    buy_again_filter_category: "वर्ग", buy_again_category_all: "सर्व वर्ग", buy_again_category_computers: "संगणक", buy_again_category_laptops: "लॅपटॉप", buy_again_category_mobiles: "मोबाइल आणि टॅब्लेट", buy_again_category_audio: "ऑडिओ", buy_again_category_accessories: "अॅक्सेसरीज", buy_again_category_printers: "प्रिंटर",
+    buy_again_guest_notice: "तुम्ही नमुना उत्पादने पाहत आहात. तुमचा ऑर्डर इतिहास पाहण्यासाठी साइन इन करा.", buy_again_results_title: "तुमची मागील खरेदी", buy_again_loading: "खरेदी लोड होत आहे…", buy_again_results: "{count} उत्पादने",
+    buy_again_purchased_times: "{count} वेळा खरेदी केले", buy_again_last_ordered: "शेवटची ऑर्डर {date} रोजी", buy_again_price_dropped: "शेवटच्या ऑर्डरनंतर किंमत कमी झाली", buy_again_quantity: "प्रमाण", buy_again_quantity_for: "{name}चे प्रमाण", buy_again_add_to_cart: "कार्टमध्ये जोडा", buy_again_buy_now: "आत्ताच खरेदी करा", buy_again_added: "कार्टमध्ये जोडले", buy_again_empty: "जुळणारी खरेदी सापडली नाही", buy_again_empty_hint: "दुसरा शोध वापरा किंवा वेगळा फिल्टर निवडा."
+  },
+  ur: {
+    buy_again_nav_label: "دوبارہ خریدیں", buy_again_eyebrow: "آپ کی پچھلی خریداریاں، دوبارہ آرڈر کے لیے تیار", buy_again_hero_title: "دوبارہ خریدیں",
+    buy_again_hero_subtitle: "اپنی پسندیدہ چیز تلاش کریں اور چند کلکس میں کارٹ میں شامل کریں۔", buy_again_search_placeholder: "اپنی پچھلی خریداریاں تلاش کریں",
+    buy_again_filter_time: "مدت", buy_again_time_all: "تمام وقت", buy_again_time_30_days: "گزشتہ 30 دن", buy_again_time_3_months: "گزشتہ 3 ماہ", buy_again_time_2026: "2026",
+    buy_again_filter_category: "قسم", buy_again_category_all: "تمام اقسام", buy_again_category_computers: "کمپیوٹر", buy_again_category_laptops: "لیپ ٹاپ", buy_again_category_mobiles: "موبائل اور ٹیبلٹ", buy_again_category_audio: "آڈیو", buy_again_category_accessories: "لوازمات", buy_again_category_printers: "پرنٹر",
+    buy_again_guest_notice: "آپ نمونہ مصنوعات دیکھ رہے ہیں۔ اپنی آرڈر ہسٹری دیکھنے کے لیے سائن اِن کریں۔", buy_again_results_title: "آپ کی پچھلی خریداریاں", buy_again_loading: "خریداریاں لوڈ ہو رہی ہیں…", buy_again_results: "{count} مصنوعات",
+    buy_again_purchased_times: "{count} بار خریدا", buy_again_last_ordered: "آخری آرڈر {date} کو دیا گیا", buy_again_price_dropped: "آخری آرڈر کے بعد قیمت کم ہوئی", buy_again_quantity: "مقدار", buy_again_quantity_for: "{name} کی مقدار", buy_again_add_to_cart: "کارٹ میں شامل کریں", buy_again_buy_now: "ابھی خریدیں", buy_again_added: "کارٹ میں شامل ہوگیا", buy_again_empty: "مماثل خریداری نہیں ملی", buy_again_empty_hint: "دوسری تلاش کریں یا مختلف فلٹر منتخب کریں۔"
+  },
+  pa: {
+    buy_again_nav_label: "ਦੁਬਾਰਾ ਖਰੀਦੋ", buy_again_eyebrow: "ਤੁਹਾਡੀਆਂ ਪਿਛਲੀਆਂ ਖਰੀਦਾਂ, ਮੁੜ ਆਰਡਰ ਲਈ ਤਿਆਰ", buy_again_hero_title: "ਦੁਬਾਰਾ ਖਰੀਦੋ",
+    buy_again_hero_subtitle: "ਆਪਣਾ ਮਨਪਸੰਦ ਉਤਪਾਦ ਲੱਭੋ ਅਤੇ ਕੁਝ ਕਲਿੱਕਾਂ ਵਿੱਚ ਕਾਰਟ ਵਿੱਚ ਪਾਓ।", buy_again_search_placeholder: "ਆਪਣੀਆਂ ਪਿਛਲੀਆਂ ਖਰੀਦਾਂ ਖੋਜੋ",
+    buy_again_filter_time: "ਸਮਾਂ ਮਿਆਦ", buy_again_time_all: "ਹਰ ਸਮੇਂ", buy_again_time_30_days: "ਪਿਛਲੇ 30 ਦਿਨ", buy_again_time_3_months: "ਪਿਛਲੇ 3 ਮਹੀਨੇ", buy_again_time_2026: "2026",
+    buy_again_filter_category: "ਸ਼੍ਰੇਣੀ", buy_again_category_all: "ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ", buy_again_category_computers: "ਕੰਪਿਊਟਰ", buy_again_category_laptops: "ਲੈਪਟਾਪ", buy_again_category_mobiles: "ਮੋਬਾਈਲ ਅਤੇ ਟੈਬਲੇਟ", buy_again_category_audio: "ਆਡੀਓ", buy_again_category_accessories: "ਸਹਾਇਕ ਉਪਕਰਣ", buy_again_category_printers: "ਪ੍ਰਿੰਟਰ",
+    buy_again_guest_notice: "ਤੁਸੀਂ ਨਮੂਨਾ ਉਤਪਾਦ ਦੇਖ ਰਹੇ ਹੋ। ਆਪਣਾ ਆਰਡਰ ਇਤਿਹਾਸ ਵੇਖਣ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ।", buy_again_results_title: "ਤੁਹਾਡੀਆਂ ਪਿਛਲੀਆਂ ਖਰੀਦਾਂ", buy_again_loading: "ਖਰੀਦਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ…", buy_again_results: "{count} ਉਤਪਾਦ",
+    buy_again_purchased_times: "{count} ਵਾਰ ਖਰੀਦਿਆ", buy_again_last_ordered: "ਆਖਰੀ ਆਰਡਰ {date} ਨੂੰ ਸੀ", buy_again_price_dropped: "ਪਿਛਲੇ ਆਰਡਰ ਤੋਂ ਕੀਮਤ ਘਟੀ", buy_again_quantity: "ਮਾਤਰਾ", buy_again_quantity_for: "{name} ਦੀ ਮਾਤਰਾ", buy_again_add_to_cart: "ਕਾਰਟ ਵਿੱਚ ਪਾਓ", buy_again_buy_now: "ਹੁਣੇ ਖਰੀਦੋ", buy_again_added: "ਕਾਰਟ ਵਿੱਚ ਪਾ ਦਿੱਤਾ", buy_again_empty: "ਕੋਈ ਮਿਲਦੀ ਖਰੀਦ ਨਹੀਂ ਮਿਲੀ", buy_again_empty_hint: "ਹੋਰ ਖੋਜ ਕਰੋ ਜਾਂ ਵੱਖਰਾ ਫਿਲਟਰ ਚੁਣੋ।"
+  },
+  gu: {
+    buy_again_nav_label: "ફરીથી ખરીદો", buy_again_eyebrow: "તમારી અગાઉની ખરીદી, ફરી ઓર્ડર માટે તૈયાર", buy_again_hero_title: "ફરીથી ખરીદો",
+    buy_again_hero_subtitle: "તમારું મનપસંદ ઉત્પાદન શોધો અને થોડા ક્લિકમાં કાર્ટમાં ઉમેરો.", buy_again_search_placeholder: "તમારી અગાઉની ખરીદી શોધો",
+    buy_again_filter_time: "સમયગાળો", buy_again_time_all: "બધો સમય", buy_again_time_30_days: "છેલ્લા 30 દિવસ", buy_again_time_3_months: "છેલ્લા 3 મહિના", buy_again_time_2026: "2026",
+    buy_again_filter_category: "શ્રેણી", buy_again_category_all: "બધી શ્રેણીઓ", buy_again_category_computers: "કમ્પ્યુટર", buy_again_category_laptops: "લેપટોપ", buy_again_category_mobiles: "મોબાઇલ અને ટેબ્લેટ", buy_again_category_audio: "ઑડિયો", buy_again_category_accessories: "ઍક્સેસરીઝ", buy_again_category_printers: "પ્રિન્ટર",
+    buy_again_guest_notice: "તમે નમૂનાનાં ઉત્પાદનો જોઈ રહ્યા છો. તમારો ઓર્ડર ઇતિહાસ જોવા માટે સાઇન ઇન કરો.", buy_again_results_title: "તમારી અગાઉની ખરીદી", buy_again_loading: "ખરીદી લોડ થઈ રહી છે…", buy_again_results: "{count} ઉત્પાદનો",
+    buy_again_purchased_times: "{count} વાર ખરીદ્યું", buy_again_last_ordered: "છેલ્લો ઓર્ડર {date}ના રોજ", buy_again_price_dropped: "છેલ્લા ઓર્ડર પછી કિંમત ઘટી", buy_again_quantity: "જથ્થો", buy_again_quantity_for: "{name}નો જથ્થો", buy_again_add_to_cart: "કાર્ટમાં ઉમેરો", buy_again_buy_now: "હમણાં ખરીદો", buy_again_added: "કાર્ટમાં ઉમેર્યું", buy_again_empty: "મેળ ખાતી ખરીદી મળી નથી", buy_again_empty_hint: "બીજી શોધ અજમાવો અથવા અલગ ફિલ્ટર પસંદ કરો."
+  }
+};
+
+if (typeof window !== "undefined") {
+  window.ELECTROMART_BUY_AGAIN_I18N = ELECTROMART_BUY_AGAIN_I18N;
+}
+const buyAgainTargets = typeof window !== "undefined"
+  ? [window.EM_TRANSLATIONS, window.TRANSLATIONS]
+  : (typeof global !== "undefined" ? [global.EM_TRANSLATIONS, global.TRANSLATIONS] : []);
+buyAgainTargets.forEach((dictionarySet) => {
+  if (!dictionarySet) return;
+  Object.keys(ELECTROMART_BUY_AGAIN_I18N).forEach((lang) => {
+    dictionarySet[lang] = dictionarySet[lang] || {};
+    Object.assign(dictionarySet[lang], ELECTROMART_BUY_AGAIN_I18N[lang]);
+  });
+});
+
+const ELECTROMART_BUY_AGAIN_FALLBACK_I18N = {
+  en: "Your order history is unavailable right now, so these sample products are shown as a preview.",
+  hi: "अभी आपका ऑर्डर इतिहास उपलब्ध नहीं है, इसलिए पूर्वावलोकन के लिए नमूना उत्पाद दिखाए जा रहे हैं।",
+  ta: "உங்கள் ஆர்டர் வரலாறு இப்போது கிடைக்கவில்லை; முன்னோட்டமாக மாதிரி தயாரிப்புகள் காட்டப்படுகின்றன.",
+  te: "ప్రస్తుతం మీ ఆర్డర్ చరిత్ర అందుబాటులో లేదు; నమూనా ఉత్పత్తులు ప్రివ్యూగా చూపబడుతున్నాయి.",
+  kn: "ನಿಮ್ಮ ಆರ್ಡರ್ ಇತಿಹಾಸ ಈಗ ಲಭ್ಯವಿಲ್ಲ; ಮಾದರಿ ಉತ್ಪನ್ನಗಳನ್ನು ಪೂರ್ವವೀಕ್ಷಣೆಯಾಗಿ ತೋರಿಸಲಾಗಿದೆ.",
+  ml: "നിങ്ങളുടെ ഓർഡർ ചരിത്രം ഇപ്പോൾ ലഭ്യമല്ല; പ്രിവ്യൂവിനായി മാതൃകാ ഉൽപ്പന്നങ്ങൾ കാണിക്കുന്നു.",
+  bn: "এখন আপনার অর্ডার ইতিহাস পাওয়া যাচ্ছে না, তাই নমুনা পণ্য পূর্বরূপ হিসেবে দেখানো হচ্ছে।",
+  mr: "तुमचा ऑर्डर इतिहास सध्या उपलब्ध नाही, त्यामुळे पूर्वावलोकनासाठी नमुना उत्पादने दाखवली आहेत.",
+  ur: "آپ کی آرڈر ہسٹری اس وقت دستیاب نہیں، اس لیے نمونہ مصنوعات پیش منظر کے طور پر دکھائی جا رہی ہیں۔",
+  pa: "ਤੁਹਾਡਾ ਆਰਡਰ ਇਤਿਹਾਸ ਇਸ ਵੇਲੇ ਉਪਲਬਧ ਨਹੀਂ, ਇਸ ਲਈ ਨਮੂਨਾ ਉਤਪਾਦ ਪੂਰਵਦਰਸ਼ਨ ਵਜੋਂ ਦਿਖਾਏ ਜਾ ਰਹੇ ਹਨ।",
+  gu: "તમારો ઓર્ડર ઇતિહાસ અત્યારે ઉપલબ્ધ નથી, તેથી પૂર્વાવલોકન તરીકે નમૂનાનાં ઉત્પાદનો બતાવાય છે."
+};
+Object.keys(ELECTROMART_BUY_AGAIN_FALLBACK_I18N).forEach((lang) => {
+  const fallbackValue = ELECTROMART_BUY_AGAIN_FALLBACK_I18N[lang];
+  ELECTROMART_BUY_AGAIN_I18N[lang].buy_again_history_fallback = fallbackValue;
+  buyAgainTargets.forEach((dictionarySet) => {
+    if (dictionarySet && dictionarySet[lang]) dictionarySet[lang].buy_again_history_fallback = fallbackValue;
+  });
+});

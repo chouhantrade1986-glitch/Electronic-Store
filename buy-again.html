@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buy Again &amp; Fast Reorder | ElectroMart</title>
+  <meta name="description" content="Find products you have purchased before and reorder them quickly from ElectroMart." />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700;800&family=DM+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css" />
+  <link rel="stylesheet" href="shared-search.css" />
+  <link rel="stylesheet" href="buy-again.css" />
+</head>
+<body class="buy-again-page-body">
+  <div id="headerContainer"></div>
+  <main class="buy-again-shell">
+    <nav class="buy-again-breadcrumb" aria-label="Breadcrumb">
+      <a href="account.html" data-i18n="footer.yourAccount">Your Account</a>
+      <span aria-hidden="true">›</span>
+      <a href="orders.html" data-i18n="nav.orders">Your Orders</a>
+      <span aria-hidden="true">›</span>
+      <span data-i18n="buy_again_nav_label">Buy Again</span>
+    </nav>
+
+    <section class="buy-again-hero" aria-labelledby="buyAgainHeroTitle">
+      <div class="buy-again-hero-copy">
+        <p class="buy-again-eyebrow" data-i18n="buy_again_eyebrow">Your past purchases, ready when you are</p>
+        <h1 id="buyAgainHeroTitle" data-i18n="buy_again_hero_title">Buy Again</h1>
+        <p data-i18n="buy_again_hero_subtitle">Find a familiar favorite and add it to your cart in a few clicks.</p>
+      </div>
+      <div class="buy-again-hero-mark" aria-hidden="true">
+        <span class="buy-again-hero-ring"></span>
+        <span class="buy-again-hero-check">↻</span>
+      </div>
+    </section>
+
+    <section class="buy-again-controls" aria-label="Buy Again filters">
+      <label class="buy-again-search">
+        <span class="buy-again-search-icon" aria-hidden="true">⌕</span>
+        <input id="buyAgainSearch" type="search" data-i18n-placeholder="buy_again_search_placeholder" placeholder="Search your past purchases" aria-label="Search your past purchases" autocomplete="off" />
+      </label>
+      <div class="buy-again-filter-block">
+        <span class="buy-again-filter-label" data-i18n="buy_again_filter_time">Time period</span>
+        <div id="buyAgainTimeFilters" class="buy-again-pills" role="group" aria-label="Filter by purchase date">
+          <button type="button" class="buy-again-pill active" data-time="all" aria-pressed="true" data-i18n="buy_again_time_all">All time</button>
+          <button type="button" class="buy-again-pill" data-time="last_30_days" aria-pressed="false" data-i18n="buy_again_time_30_days">Last 30 days</button>
+          <button type="button" class="buy-again-pill" data-time="past_3_months" aria-pressed="false" data-i18n="buy_again_time_3_months">Past 3 months</button>
+          <button type="button" class="buy-again-pill" data-time="2026" aria-pressed="false" data-i18n="buy_again_time_2026">2026</button>
+        </div>
+      </div>
+      <div class="buy-again-filter-block">
+        <span class="buy-again-filter-label" data-i18n="buy_again_filter_category">Category</span>
+        <div id="buyAgainCategoryFilters" class="buy-again-pills" role="group" aria-label="Filter by product category">
+          <button type="button" class="buy-again-pill active" data-category="all" aria-pressed="true" data-i18n="buy_again_category_all">All Categories</button>
+          <button type="button" class="buy-again-pill" data-category="computer" aria-pressed="false" data-i18n="buy_again_category_computers">Computers</button>
+          <button type="button" class="buy-again-pill" data-category="laptop" aria-pressed="false" data-i18n="buy_again_category_laptops">Laptops</button>
+          <button type="button" class="buy-again-pill" data-category="mobile" aria-pressed="false" data-i18n="buy_again_category_mobiles">Mobiles &amp; tablets</button>
+          <button type="button" class="buy-again-pill" data-category="audio" aria-pressed="false" data-i18n="buy_again_category_audio">Audio</button>
+          <button type="button" class="buy-again-pill" data-category="accessories" aria-pressed="false" data-i18n="buy_again_category_accessories">Accessories</button>
+          <button type="button" class="buy-again-pill" data-category="printer" aria-pressed="false" data-i18n="buy_again_category_printers">Printers</button>
+        </div>
+      </div>
+    </section>
+
+    <p id="buyAgainGuestNotice" class="buy-again-guest-notice" role="status" aria-live="polite" hidden data-i18n="buy_again_guest_notice">You are viewing sample products. Sign in to see your own order history.</p>
+
+    <section class="buy-again-results" aria-labelledby="buyAgainResultsTitle">
+      <div class="buy-again-results-head">
+        <h2 id="buyAgainResultsTitle" data-i18n="buy_again_results_title">Your past purchases</h2>
+        <p id="buyAgainMeta" role="status" aria-live="polite" aria-atomic="true" data-i18n="buy_again_loading">Loading purchases…</p>
+      </div>
+      <div id="buyAgainGrid" class="buy-again-grid" aria-live="polite"></div>
+      <div id="buyAgainEmptyState" class="buy-again-empty" hidden>
+        <span aria-hidden="true">⌕</span>
+        <h3 data-i18n="buy_again_empty">No matching purchases found</h3>
+        <p data-i18n="buy_again_empty_hint">Try another search or choose a different filter.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="buy-again.js"></script>
+</body>
+</html>
