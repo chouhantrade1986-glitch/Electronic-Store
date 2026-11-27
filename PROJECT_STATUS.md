@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 51: Secure Auth, Server Ratings & Community Q&A पूर्ण; 86 frontend suites + 175 backend unit tests = 261 passing checks)
+**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 52: Storefront Theme & Locale Visual Baselines पूर्ण; 87 frontend suites + 175 backend unit tests = 262 passing checks)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 86 / 86 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 87 / 87 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **Phase 52 थीम व विज़ुअल बेसलाइन टेस्ट** | `scratch/test-amazon-phase52.js` / visual-only Playwright | ✅ **PASS** | 13 baseline captures; Hindi/Urdu mobile & desktop checks; no console errors or content overflow |
 | **Phase 51 सिक्योरिटी, रेटिंग्स व Q&A टेस्ट** | `scratch/test-amazon-phase51.js` / backend review and SQLite tests | ✅ **PASS** | DTO redaction, auth session, server filters, Q&A and PII normalization |
 | **Customer Reviews & Q&A API टेस्ट** | `scratch/test-amazon-phase50.js` / `backend/tests/product-reviews.test.js` | ✅ **PASS** | API contract, verified purchase, encrypted reviewer identity, rating summary, helpful vote |
 | **Personalized Recommendations Engine टेस्ट** | `scratch/test-amazon-phase49.js` | ✅ **PASS** | Phase 49 contract checks उत्तीर्ण |
@@ -46,13 +47,13 @@
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 175 / 175 टेस्ट उत्तीर्ण (100%) |
-| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
-| **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **261 / 261 (100% Pass Rate)** |
+| **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Historical Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
+| **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 13 / 13 screenshots सत्यापित locally |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **262 / 262 (100% Pass Rate)** |
 
 ### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
-- **CI / Smoke Suite (Step A):** Remote CI Run #600 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/46018413743)) on current `main` commit `1122e6c` completed successfully: dependency installs, API/browser smoke, and 6/6 visual baselines passed. Step A remains resolved.
+- **CI / Smoke Suite (Step A, historical):** Remote CI Run #600 ([link](https://github.com/chouhantrade1986-glitch/Electronic-Store/actions/runs/46018413743)) on commit `1122e6c` completed successfully with 6/6 visual baselines. The current Phase 52 local visual baseline contains 13 images; latest remote verification must be recorded separately after push.
 - **कूपन्स व प्रोमो डील्स हब (Phase 47):**
   - `coupons.html`, `coupons.js`, `coupons.css`: Amazon Coupons Hub स्टाइल का टीयर-टिकट कूपन कार्ड्स इंटरफ़ेस, ग्रीन 'Clip Coupon' / 'Clipped ✓' इंटरेक्टिव बैज, लाइव सर्च व कैटेगरी फ़िल्टर पिल्स (Laptops, Audio, Accessories, All Deals), 1-क्लिक कोड कॉपी, टर्म्स एंड कंडीशंस मोडल और स्टिकी क्लिप्ड कूपन्स समरी बार।
   - `checkout.html` व `checkout.js`: `electromart_clipped_coupons_v1` से जुड़ा ऑटो-अप्लाई चिप्स बार व सिंक।
@@ -715,4 +716,12 @@
 - Public product reviews use a strict display DTO with no account IDs or internal moderation fields. PDP rating count, average, histogram, star filter, and four sorting modes consume server responses.
 - Community questions, answers, and helpful/unhelpful votes use authenticated writes and public reads. Offline read fallback remains available; local storage is no longer the write source.
 - SQLite manages question, answer, and vote collections. Reviewer names, review text, question/answer names, and user-submitted question/answer content receive contextual encryption at rest.
-- Phase 51 verification target: 86 frontend suites + 175 backend unit tests = 261 passing checks; run the brand-safety suite separately.
+- Phase 51 historical verification: 86 frontend suites + 175 backend unit tests = 261 passing checks.
+
+## Phase 52 — Storefront Theme, CSS/Script Discipline & Multi-Locale Visual Baselines
+
+- Shared design tokens in `amazon-theme.css` now drive typography, card shadows, spacing, and yellow/orange purchase actions across coupons, Buy Again, gift card, and corporate gifting hubs.
+- Homepage inline style declarations were externalized into `index-inline.css` with stable per-element classes; existing layout hooks remain in place. Products now loads `shared-search.css` and `shared-search.js` after the shared header dependencies, and `reviews.css` remains in the PDP document head.
+- Fixed the coupons terms dialog hidden-state rule and the Buy Again product-image fallback path; removed the deprecated `unload` listener while retaining video cleanup on `beforeunload`.
+- `qa-ui-smoke.js --visual-only` uses only the static frontend, deterministic local fixtures, and mocked review/Q&A responses; it does not start the backend or touch protected local database snapshots. It produced 7 Phase 52 page/locale checks with no console errors or content overflow and refreshed all 13 screenshot baselines.
+- Focused test: `scratch/test-amazon-phase52.js`. Phase 52 verification target: 87 frontend suites + 175 backend unit tests = 262 passing checks, plus 13/13 visual baselines and brand-safety verification.

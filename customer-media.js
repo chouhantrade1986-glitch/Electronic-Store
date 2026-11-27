@@ -933,9 +933,8 @@
       });
     }
 
-    // Stop videos on page unload
+    // Stop videos before navigation; the unload event is restricted by browsers.
     window.addEventListener("beforeunload", stopActiveVideoPlayback);
-    window.addEventListener("unload", stopActiveVideoPlayback);
   }
 
   function renderUploadPreviews() {

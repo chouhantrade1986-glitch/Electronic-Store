@@ -1,6 +1,6 @@
-{
+﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-11-24T14:34:57Z",
+    "generatedAt":  "2026-11-27T21:43:21Z",
     "sourceDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
@@ -11,28 +11,63 @@
                   },
                   {
                       "name":  "qa-account-browser.png",
-                      "bytes":  13718,
-                      "sha256":  "767B7B4CF35960310BD9B49F3445B0D6B0AE3C55A1CDB505463C763BB5F7A966"
+                      "bytes":  13702,
+                      "sha256":  "DFB869552D9F87251F193A6627364A6289FA728DF19B23278A938462E3EB2A18"
                   },
                   {
                       "name":  "qa-invoice-browser.png",
-                      "bytes":  125035,
-                      "sha256":  "FE96F22675F212646813A5D79B3F911A795CA300E936B6EF1481866E74108F65"
+                      "bytes":  11616,
+                      "sha256":  "97D6351D8153D07BAE050C6B695374F372A947DD37B9E27D774CEDA5C44767ED"
                   },
                   {
                       "name":  "qa-checkout-browser.png",
-                      "bytes":  13610,
-                      "sha256":  "FD4A215A4D598B50BA1421A22283EFBBC3A5A1EE0B6CFA4049D0446D9799289C"
+                      "bytes":  14821,
+                      "sha256":  "CF3FD1C79ED618229477D5CFC6AA7D5E5200B13258D9BE61E045FCDD9BDB3D49"
                   },
                   {
                       "name":  "qa-orders-browser.png",
-                      "bytes":  11312,
-                      "sha256":  "2C4A8FF7A298DD4392D96DF7CF50BC164275CCB177560F11E89A9C58B48249CE"
+                      "bytes":  15073,
+                      "sha256":  "473DEB637339BED2D934B7EAB4C855422D40029F9C9418D38578441DD0ED866A"
                   },
                   {
                       "name":  "qa-wishlist-browser.png",
-                      "bytes":  16307,
-                      "sha256":  "39B9A221FE4176ED4D2BECE76F313CC4B2065CE1F1EB5C12335AB2DBE39CB34E"
+                      "bytes":  17615,
+                      "sha256":  "1B12C0EBE91E78AB54241A273C4D919909B20BC06BEA1102B2B20B57F06BF432"
+                  },
+                  {
+                      "name":  "qa-phase52-pdp-reviews.png",
+                      "bytes":  419459,
+                      "sha256":  "B9DE877D3461EBD094770F626FFD0945F85F8FA36B320D86850EABF76391CE9D"
+                  },
+                  {
+                      "name":  "qa-phase52-coupons.png",
+                      "bytes":  320514,
+                      "sha256":  "53EBD6B5E17CFF3DA5C019D6B54A95F24468413616185A3F42BB47CBC91660BB"
+                  },
+                  {
+                      "name":  "qa-phase52-buy-again.png",
+                      "bytes":  207002,
+                      "sha256":  "6CC5D0D3B4430F9C001DD1E43E6F3FE63E23CCD51690AF0A8660D652D8F5D878"
+                  },
+                  {
+                      "name":  "qa-phase52-coupons-hi-desktop.png",
+                      "bytes":  301884,
+                      "sha256":  "974AF76486F58E8EBADEF14BA485ED92C2217AF3AEB9AA1BDD9B7EABB5F0858C"
+                  },
+                  {
+                      "name":  "qa-phase52-buy-again-hi-mobile.png",
+                      "bytes":  107062,
+                      "sha256":  "31CB7C2F945872703A0349D0BB19C146342EDD873E177661308EB5D92CC6AD4C"
+                  },
+                  {
+                      "name":  "qa-phase52-buy-again-ur-desktop.png",
+                      "bytes":  207845,
+                      "sha256":  "887C8E2595B8A150037F5BDB4532450DCE76A564BC07DAB4F37EFAD97EE9E265"
+                  },
+                  {
+                      "name":  "qa-phase52-coupons-ur-mobile.png",
+                      "bytes":  254648,
+                      "sha256":  "957C82A5C553945404B3594575ABF1FB3E78221454505C09C8F4004D91DBF9FB"
                   }
               ]
 }

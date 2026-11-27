@@ -63,17 +63,17 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (86 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (87 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 86 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 51 secure auth, server ratings & Q&A, Phase 50 Reviews, Phase 49 Recommendations, Phase 48 Buy Again, और सभी regression/guardrail suites शामिल हैं।)*
+*(सभी 87 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 52 theme, CSS/script, locale visual contract; Phase 51 secure auth, server ratings & Q&A; Phase 50 Reviews; Phase 49 Recommendations; Phase 48 Buy Again; और सभी regression/guardrail suites शामिल हैं।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (175 Unit Tests):
 ```bash
 npm --prefix backend run test:unit
 ```
-*(सभी 175 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 86 frontend suites + 175 backend unit tests = 261 total passing checks है।)*
+*(सभी 175 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 87 frontend suites + 175 backend unit tests = 262 total passing checks है।)*
 
 ---
 
@@ -171,6 +171,7 @@ git commit -m "feat(scope): your descriptive commit message"
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
 - **Phase 50 Customer Reviews, Verified Ratings & Community Q&A:** `productReviewRoutes.js` provides public review listing plus authenticated submission and idempotent helpful votes. Verified purchase status comes from the signed-in user's paid/delivered order; reviewer names use contextual PII encryption. `reviews.js` is the shared API client, while the existing product detail review and Q&A experience remains the canonical UI. `scratch/test-amazon-phase50.js` verifies page wiring, filters, API contract, PII rule, i18n, and branding; backend integration coverage lives in `backend/tests/product-reviews.test.js`.
 - **Phase 51 Secure Auth, Server Ratings & Community Q&A:** Backend-issued JWTs are retained in the existing session shape; local preview sessions do not contain pretend credentials. Public review and question responses use display DTOs, rating summaries and filters come from the review API, and Q&A writes use authenticated endpoints. Review text, question/answer content, and display names are contextually encrypted at rest; SQLite collections are normalized. Focused contracts: `scratch/test-amazon-phase51.js`, `backend/tests/product-reviews.test.js`, and `backend/tests/sqlite-store.test.js`.
+- **Phase 52 Storefront Theme, CSS/Script Discipline & Visual Baselines:** Shared storefront typography, card shadows, spacing, and CTA tokens are defined in `amazon-theme.css` and consumed by coupons, Buy Again, gift card, and corporate gifting hubs. Homepage inline presentation declarations live in `index-inline.css`; `products.html` loads the shared search module in canonical order, while PDP review styles load from `<head>`. `qa-ui-smoke.js --visual-only` refreshes deterministic screenshots without starting the backend or touching local data. The 13-image baseline covers PDP reviews/Q&A, both hubs, Hindi desktop/mobile, and Urdu RTL desktop/mobile. Focused coverage: `scratch/test-amazon-phase52.js`; current verification target is 87 frontend suites + 175 backend unit tests = 262 passing checks, plus visual baseline and brand-safety verification.
 
 ---
 

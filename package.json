@@ -11,6 +11,7 @@
     "csv:convert:project": "node tools/convert-wix-catalog-csv.js",
     "smoke": "node qa-full-smoke.js --reports-dir=qa-reports",
     "smoke:ui": "node qa-ui-smoke.js --artifacts-dir=qa-reports/ui",
+    "smoke:ui:visual": "node qa-ui-smoke.js --artifacts-dir=qa-reports/ui --visual-only",
     "smoke:baseline:lock": "powershell -ExecutionPolicy Bypass -File .\\lock-visual-baseline.ps1",
     "smoke:baseline:verify": "powershell -ExecutionPolicy Bypass -File .\\verify-visual-baseline.ps1",
     "smoke:install-browsers": "npx playwright install chromium",

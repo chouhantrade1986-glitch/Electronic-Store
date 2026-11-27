@@ -202,7 +202,7 @@
     if (emptyState) emptyState.hidden = true;
     if (meta) meta.textContent = translate("buy_again_results", { count: purchases.length });
     grid.innerHTML = purchases.map((purchase) => {
-      const image = purchase.image || "images/product-placeholder.svg";
+      const image = purchase.image || "product-placeholder.svg";
       const priceDrop = purchase.priceDropped
         ? `<span class="buy-again-price-drop">${escapeHtml(translate("buy_again_price_dropped"))}</span>`
         : "";

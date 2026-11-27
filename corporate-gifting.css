@@ -5,28 +5,28 @@
 :root {
   --cg-accent: #1E3A8A;
   --cg-accent-hover: #172554;
-  --cg-accent-light: #3B82F6;
-  --cg-accent-subtle: rgba(30, 58, 138, 0.08);
-  --cg-gold: #D97706;
+  --cg-accent-light: #ffa41c;
+  --cg-accent-subtle: rgba(35, 47, 62, 0.08);
+  --cg-gold: var(--em-market-cta-secondary);
   --cg-gold-light: #FDE68A;
   --cg-surface: #FFFFFF;
   --cg-surface-muted: #F8FAFC;
   --cg-border: #E2E8F0;
-  --cg-border-focus: #1E3A8A;
-  --cg-text-primary: #0F172A;
+  --cg-border-focus: #ffa41c;
+  --cg-text-primary: #0f1111;
   --cg-text-secondary: #475569;
   --cg-text-muted: #64748B;
   --cg-success: #15803D;
-  --cg-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --cg-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
-  --cg-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --cg-shadow-sm: var(--em-market-shadow-card);
+  --cg-shadow-md: var(--em-market-shadow-raised);
+  --cg-shadow-lg: var(--em-market-shadow-raised);
 }
 
 /* Reset & Container */
 .cg-page {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--em-market-font);
   color: var(--cg-text-primary);
-  background-color: #F1F5F9;
+  background-color: var(--em-market-page);
   min-height: 100vh;
 }
 
@@ -40,7 +40,7 @@
    Hero Section (#cgHero)
    ========================================================================== */
 #cgHero {
-  background: linear-gradient(135deg, #0F172A 0%, var(--cg-accent) 60%, #1E40AF 100%);
+  background: linear-gradient(135deg, #232f3e 0%, #131921 100%);
   color: #FFFFFF;
   padding: 4rem 1.5rem;
   position: relative;
@@ -115,13 +115,13 @@
 
 /* Call To Action Buttons */
 .cg-btn-primary {
-  background-color: var(--cg-accent);
-  color: #ffffff !important;
+  background-color: var(--em-market-cta-primary);
+  color: var(--em-market-text) !important;
   font-weight: 700 !important;
   padding: 0.85rem 1.75rem;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+  box-shadow: var(--em-market-shadow-card);
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
@@ -131,9 +131,9 @@
 }
 
 .cg-btn-primary:hover {
-  background-color: var(--cg-accent-hover);
+  background-color: var(--em-market-cta-primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.45);
+  box-shadow: var(--em-market-shadow-raised);
 }
 
 .cg-btn-secondary {
@@ -159,19 +159,19 @@
 }
 
 .cg-btn-gold {
-  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
-  color: #ffffff !important;
+  background: var(--em-market-cta-secondary);
+  color: var(--em-market-text) !important;
   font-weight: 700 !important;
   padding: 0.85rem 1.75rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+  box-shadow: var(--em-market-shadow-card);
   transition: all 0.2s ease;
 }
 
 .cg-btn-gold:hover {
-  background: linear-gradient(135deg, #B45309 0%, #92400E 100%);
+  background: var(--em-market-cta-secondary-hover);
   transform: translateY(-1px);
 }
 

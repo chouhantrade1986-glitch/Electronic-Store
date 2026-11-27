@@ -1,5 +1,25 @@
-/* Amazon theme styles - Enhanced for better UX */
+/* ElectroMart marketplace theme styles */
 @import url('variables.css');
+
+/* Shared storefront design tokens. Page-specific styles should consume these
+   values so marketplace hubs stay visually consistent with the main shell. */
+:root {
+  --em-market-font: "Barlow", "Segoe UI", Arial, sans-serif;
+  --em-market-text: #0f1111;
+  --em-market-muted: #565959;
+  --em-market-surface: #ffffff;
+  --em-market-page: #f3f3f3;
+  --em-market-border: #d5d9d9;
+  --em-market-shadow-card: 0 2px 7px rgba(15, 17, 17, 0.08);
+  --em-market-shadow-raised: 0 6px 18px rgba(15, 17, 17, 0.12);
+  --em-market-space-1: 0.5rem;
+  --em-market-space-2: 1rem;
+  --em-market-space-3: 1.5rem;
+  --em-market-cta-primary: #ffd814;
+  --em-market-cta-primary-hover: #f7ca00;
+  --em-market-cta-secondary: #ffa41c;
+  --em-market-cta-secondary-hover: #fa8900;
+}
 
 html {
   scroll-behavior: smooth !important;
@@ -7,7 +27,7 @@ html {
 
 body, button, input, select, textarea {
   background-color: var(--amazon-light);
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
   line-height: 1.6;
 }
 
@@ -15,7 +35,7 @@ h1, h2, h3, h4, h5, h6,
 .section-heading,
 .hero-content h1,
 .amz-quad-card h3 {
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
   font-weight: 700 !important;
   letter-spacing: normal !important;
 }
@@ -2189,7 +2209,7 @@ body.dark-mode .dept-menu-divider {
 
 /* ===== AMAZON EMBER FONT & COMPACT SPACING ===== */
 body {
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
   background-color: #e3e6e6 !important;
   color: #0f1111;
 }
@@ -2698,7 +2718,7 @@ select:focus-visible {
   display: flex !important;
   align-items: flex-start !important;
   color: #0f1111 !important;
-  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .buybox-currency {
@@ -2914,7 +2934,7 @@ body.cart-page,
 body:has(.cart-main) {
   background-color: #eaeded !important;
   color: #0f1111 !important;
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .cart-main {
@@ -3495,7 +3515,7 @@ body:has(.cart-main) {
   background: #ffffff !important;
   border-right: 1px solid #e7e7e7 !important;
   padding: 16px 14px !important;
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .refine-panel .panel-head h2 {
@@ -3905,7 +3925,7 @@ body:has(.cart-main) {
   display: flex !important;
   flex-direction: column !important;
   transition: box-shadow 0.15s ease !important;
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .product-card:hover {
@@ -4880,7 +4900,7 @@ body.orders-page,
 body:has(.orders-main) {
   background-color: #eaeded !important;
   color: #0f1111 !important;
-  font-family: "Amazon Ember", Arial, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .orders-main {
@@ -6636,7 +6656,7 @@ body:has(.orders-main) {
   max-width: 1000px !important;
   margin: 20px auto 50px auto !important;
   padding: 0 18px !important;
-  font-family: "Amazon Ember", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: var(--em-market-font) !important;
   color: #0f1111 !important;
   box-sizing: border-box !important;
 }
@@ -7330,7 +7350,7 @@ body:has(.orders-main) {
   border-radius: 8px !important;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25) !important;
   padding: 20px 24px !important;
-  font-family: var(--amazon-font-modern), system-ui, -apple-system, sans-serif !important;
+  font-family: var(--em-market-font) !important;
   animation: amzSlideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   margin: 0 !important;
   border: 1px solid #d5d9d9 !important;
@@ -8166,7 +8186,7 @@ body.checkout-page .checkout-flow > h1 {
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
-  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-family: var(--em-market-font) !important;
 }
 
 .cart-flyout-drawer.open,
@@ -8495,7 +8515,7 @@ body.cart-flyout-open {
 .amz-thankyou-main {
   width: min(1080px, 94vw);
   margin: 20px auto 40px;
-  font-family: "Amazon Ember", Arial, sans-serif;
+  font-family: var(--em-market-font) !important;
   color: #0f1111;
 }
 

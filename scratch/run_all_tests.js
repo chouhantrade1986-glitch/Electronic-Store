@@ -16,6 +16,9 @@ if (!files.includes('test-amazon-phase50.js')) {
 if (!files.includes('test-amazon-phase51.js')) {
   throw new Error('Phase 51 security, ratings, and community contract must be registered in the frontend regression run.');
 }
+if (!files.includes('test-amazon-phase52.js')) {
+  throw new Error('Phase 52 storefront theme and visual baseline contract must be registered in the frontend regression run.');
+}
 
 console.log(`Running ${files.length} test suites...`);
 let passed = 0;

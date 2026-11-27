@@ -7,7 +7,14 @@ param(
     "qa-invoice-browser.png",
     "qa-checkout-browser.png",
     "qa-orders-browser.png",
-    "qa-wishlist-browser.png"
+    "qa-wishlist-browser.png",
+    "qa-phase52-pdp-reviews.png",
+    "qa-phase52-coupons.png",
+    "qa-phase52-buy-again.png",
+    "qa-phase52-coupons-hi-desktop.png",
+    "qa-phase52-buy-again-hi-mobile.png",
+    "qa-phase52-buy-again-ur-desktop.png",
+    "qa-phase52-coupons-ur-mobile.png"
   )
 )
 

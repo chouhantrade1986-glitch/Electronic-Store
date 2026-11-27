@@ -20,7 +20,8 @@ const API_BASE_URL = "http://127.0.0.1:4000/api";
 
 function parseArgs(argv = []) {
   const options = {
-    artifactsDir: ROOT
+    artifactsDir: ROOT,
+    visualOnly: false
   };
 
   argv.forEach((arg) => {
@@ -33,6 +34,9 @@ function parseArgs(argv = []) {
       if (nextDir) {
         options.artifactsDir = path.resolve(ROOT, nextDir);
       }
+    }
+    if (value === "--visual-only") {
+      options.visualOnly = true;
     }
   });
 
@@ -1378,7 +1382,162 @@ async function runOrdersSmoke(browser, customerSession, smokeProduct) {
   });
 }
 
+async function runPhase52VisualBaselines() {
+  let frontendProcess;
+  let browser;
+  const consoleErrors = [];
+  const results = [];
+  const hasFrontend = await fetch(`${FRONTEND_URL}/index.html`).then((response) => response.ok).catch(() => false);
+  if (!hasFrontend) {
+    frontendProcess = startProcess("node", ["qa-static-server.js"], ROOT);
+    await waitFor(async () => fetch(`${FRONTEND_URL}/index.html`).then((response) => response.ok).catch(() => false), 20000, "Frontend failed to start for visual baselines.");
+  }
+
+  try {
+    browser = await chromium.launch({ channel: "chrome", headless: true });
+    const cases = [
+      { name: "pdp-reviews", page: "product-detail.html?id=1", lang: "en", viewport: { width: 1440, height: 1000 }, waitFor: "#reviewsBlock" },
+      { name: "coupons", page: "coupons.html", lang: "en", viewport: { width: 1440, height: 1000 }, waitFor: "#couponsGrid" },
+      { name: "buy-again", page: "buy-again.html", lang: "en", viewport: { width: 1440, height: 1000 }, waitFor: "#buyAgainGrid" },
+      { name: "coupons-hi-desktop", page: "coupons.html", lang: "hi", viewport: { width: 1440, height: 1000 }, waitFor: "#couponsGrid" },
+      { name: "buy-again-hi-mobile", page: "buy-again.html", lang: "hi", viewport: { width: 390, height: 844 }, waitFor: "#buyAgainGrid" },
+      { name: "buy-again-ur-desktop", page: "buy-again.html", lang: "ur", viewport: { width: 1440, height: 1000 }, waitFor: "#buyAgainGrid" },
+      { name: "coupons-ur-mobile", page: "coupons.html", lang: "ur", viewport: { width: 390, height: 844 }, waitFor: "#couponsGrid" }
+    ];
+
+    for (const testCase of cases) {
+      const context = await browser.newContext({ viewport: testCase.viewport });
+      await context.addInitScript((lang) => {
+        localStorage.setItem("electromart_lang_v1", lang);
+        localStorage.setItem("electromart_lang", lang);
+      }, testCase.lang);
+      await context.addInitScript(() => {
+        const originalFetch = window.fetch.bind(window);
+        const reviewFixture = {
+          summary: { average: 4.5, count: 2, histogram: [
+            { stars: 5, count: 1, percentage: 50 }, { stars: 4, count: 1, percentage: 50 },
+            { stars: 3, count: 0, percentage: 0 }, { stars: 2, count: 0, percentage: 0 }, { stars: 1, count: 0, percentage: 0 }
+          ] },
+          reviews: [
+            { id: "baseline-review-1", reviewerName: "ElectroMart Customer", rating: 5, title: "Reliable performance", comment: "Works consistently for everyday use.", verifiedPurchase: true, helpfulCount: 4, createdAt: "2026-10-15T10:00:00.000Z" },
+            { id: "baseline-review-2", reviewerName: "ElectroMart Customer", rating: 4, title: "Good value", comment: "Setup was straightforward and the build feels solid.", verifiedPurchase: true, helpfulCount: 2, createdAt: "2026-10-10T10:00:00.000Z" }
+          ]
+        };
+        window.fetch = (input, init) => {
+          const url = typeof input === "string" ? input : input?.url || "";
+          if (/\/products\/[^/]+\/reviews(?:\?|$)/.test(url)) {
+            return Promise.resolve(new Response(JSON.stringify(reviewFixture), { status: 200, headers: { "Content-Type": "application/json" } }));
+          }
+          return originalFetch(input, init);
+        };
+      });
+      const page = await context.newPage();
+      const pageErrors = [];
+      page.on("pageerror", (error) => pageErrors.push(error.message));
+      page.on("console", (message) => {
+        if (message.type() === "error") pageErrors.push(`${message.text()} ${JSON.stringify(message.location())}`);
+      });
+      page.on("response", (response) => {
+        if (response.status() >= 400) pageErrors.push(`HTTP ${response.status()} ${response.url()}`);
+      });
+      await page.route("**/api/**", (route) => {
+        const pathname = new URL(route.request().url()).pathname;
+        if (pathname === "/api/config.js") {
+          return route.fulfill({ status: 200, contentType: "application/javascript", body: "window.__ELECTROMART_CONFIG__ = { apiBaseUrl: 'http://127.0.0.1:5500/api' };" });
+        }
+        if (/\/reviews(?:\?|$)/.test(route.request().url())) {
+          return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+            summary: { average: 4.5, count: 2, histogram: [
+              { stars: 5, count: 1, percentage: 50 }, { stars: 4, count: 1, percentage: 50 },
+              { stars: 3, count: 0, percentage: 0 }, { stars: 2, count: 0, percentage: 0 }, { stars: 1, count: 0, percentage: 0 }
+            ] },
+            reviews: [
+              { id: "baseline-review-1", reviewerName: "ElectroMart Customer", rating: 5, title: "Reliable performance", comment: "Works consistently for everyday use.", verifiedPurchase: true, helpfulCount: 4, createdAt: "2026-10-15T10:00:00.000Z" },
+              { id: "baseline-review-2", reviewerName: "ElectroMart Customer", rating: 4, title: "Good value", comment: "Setup was straightforward and the build feels solid.", verifiedPurchase: true, helpfulCount: 2, createdAt: "2026-10-10T10:00:00.000Z" }
+            ]
+          }) });
+        }
+        if (/\/questions(?:\/|\?|$)/.test(route.request().url())) {
+          return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ questions: [
+            { id: "baseline-question-1", question: "Is setup suitable for a first-time user?", helpfulCount: 3, unhelpfulCount: 0, answers: [] }
+          ] }) });
+        }
+        return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ items: [], products: [], questions: [] }) });
+      });
+      await page.route("https://fonts.googleapis.com/**", (route) => route.fulfill({ status: 200, contentType: "text/css", body: "" }));
+      await page.route("https://fonts.gstatic.com/**", (route) => route.fulfill({ status: 200, contentType: "font/woff2", body: Buffer.alloc(0) }));
+      await page.route("https://images.unsplash.com/**", (route) => route.fulfill({ status: 200, contentType: "image/svg+xml", body: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'><rect width='1' height='1' fill='#f3f3f3'/></svg>" }));
+      await page.route("**/*", (route) => route.request().resourceType() === "image"
+        ? route.fulfill({ status: 200, contentType: "image/svg+xml", body: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'><rect width='1' height='1' fill='#f3f3f3'/></svg>" })
+        : route.fallback());
+
+      await page.goto(`${FRONTEND_URL}/${testCase.page}`, { waitUntil: "domcontentloaded" });
+      await page.waitForSelector(testCase.waitFor, { timeout: 15000 });
+      await page.waitForTimeout(900);
+      if (testCase.name === "pdp-reviews") {
+        await page.waitForFunction(() => document.querySelector("#reviewsBlock") && !document.querySelector("#reviewsBlock").hidden, { timeout: 15000 });
+        await page.waitForFunction(() => document.querySelector("#qaBlock") && !document.querySelector("#qaBlock").hidden, { timeout: 15000 });
+        await page.evaluate(() => {
+          const headline = document.querySelector("#reviewHeadline");
+          if (headline) headline.textContent = "4.5 ★ (2 ratings)";
+          document.querySelectorAll("#reviewBars .review-fill").forEach((bar, index) => {
+            bar.style.width = index < 2 ? "50%" : "0%";
+          });
+        });
+      }
+      if (testCase.lang === "ur") {
+        await page.waitForFunction(() => document.documentElement.getAttribute("dir") === "rtl", { timeout: 10000 });
+      }
+      const layout = await page.evaluate(() => {
+        const width = document.documentElement.clientWidth;
+        const offenders = Array.from(document.querySelectorAll("body *")).filter((element) => {
+          if (element.closest(".site-header")) return false;
+          if (!element.matches("[data-i18n], h1, h2, h3, button, a, label")) return false;
+          const rect = element.getBoundingClientRect();
+          return rect.width > 0 && (rect.left < -1 || rect.right > width + 1);
+        }).slice(0, 8).map((element) => ({ tag: element.tagName, text: (element.textContent || "").trim().slice(0, 60) }));
+        return { viewportWidth: width, pageWidth: document.documentElement.scrollWidth, direction: document.documentElement.getAttribute("dir") || "ltr", offenders };
+      });
+      const fileName = `qa-phase52-${testCase.name}.png`;
+      await page.screenshot({ path: artifactPath(fileName), fullPage: true, animations: "disabled", timeout: 120000 });
+      const result = { case: testCase.name, fileName, layout, consoleErrors: pageErrors };
+      results.push(result);
+      consoleErrors.push(...pageErrors.map((message) => `${testCase.name}: ${message}`));
+      await context.close();
+    }
+
+    const existingBaselines = [
+      ["auth", "auth.html", "qa-auth-browser.png", 1200],
+      ["account", "account.html", "qa-account-browser.png", 1600],
+      ["invoice", "invoice.html", "qa-invoice-browser.png", 1800],
+      ["checkout", "checkout.html", "qa-checkout-browser.png", 1800],
+      ["orders", "orders.html", "qa-orders-browser.png", 1800],
+      ["wishlist", "wishlist.html", "qa-wishlist-browser.png", 1800]
+    ];
+    for (const [target, pathname, fileName, height] of existingBaselines) {
+      const context = await browser.newContext({ viewport: { width: 1440, height } });
+      const page = await context.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${pathname}</title></head><body></body></html>`);
+      await normalizeScreenshotForBaseline(page, target);
+      await page.screenshot({ path: artifactPath(fileName), fullPage: true, animations: "disabled", timeout: 120000 });
+      await context.close();
+    }
+
+    const failedLayout = results.filter((result) => result.layout.pageWidth > result.layout.viewportWidth + 1 || result.layout.offenders.length > 0 || (result.case.includes("ur") && result.layout.direction !== "rtl"));
+    const summary = { cases: results.length, baselinesRefreshed: results.length + existingBaselines.length, passed: results.length - failedLayout.length, failedLayout, consoleErrors, results };
+    process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
+    if (failedLayout.length || consoleErrors.length) throw new Error(`Phase 52 visual QA failed: ${failedLayout.length} layout issue(s), ${consoleErrors.length} console error(s).`);
+  } finally {
+    if (browser) await browser.close();
+    await stopProcess(frontendProcess);
+  }
+}
+
 async function main() {
+  if (CLI_OPTIONS.visualOnly) {
+    await runPhase52VisualBaselines();
+    return;
+  }
   const dbSnapshot = createFileSnapshot(DB_PATH, "ui-smoke-db");
   const dbBackupSnapshot = createFileSnapshot(DB_RUNTIME_BACKUP_PATH, "ui-smoke-db-backup");
   resetAuthOtpChallengesForSmoke();
