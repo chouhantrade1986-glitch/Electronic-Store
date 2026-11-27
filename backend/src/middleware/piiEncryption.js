@@ -20,6 +20,7 @@ const PII_FIELD_NAMES = new Set([
   "shippingAddress"
 ]);
 const CONTEXTUAL_PII_FIELD_NAMES = new Map([
+  ["reviewerName", new Set(["productReviews"])],
   ["name", new Set(["users", "pendingUser"])],
   ["code", new Set(["authOtpChallenges"])],
   ["destination", new Set(["authOtpChallenges", "orderNotifications"])],

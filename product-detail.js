@@ -616,7 +616,7 @@ function renderServices(product, isInStock) {
 
 let activeReviewStarFilter = null;
 
-function renderReviewSummary(product) {
+function renderReviewSummary(product, skipHydrate = false) {
   if (!reviewsBlock || !reviewHeadline || !reviewBars) {
     return;
   }
@@ -671,7 +671,7 @@ function renderReviewSummary(product) {
   const defaultReviews = [
     {
       author: "Rahul S.",
-      verified: t.verified_purchase || "Verified Purchase",
+      verified: false,
       stars: "★★★★★",
       ratingNum: 5,
       title: t.val_top_review_title || "Excellent quality and fast delivery",
@@ -682,7 +682,7 @@ function renderReviewSummary(product) {
     },
     {
       author: "Priya Sharma",
-      verified: t.verified_purchase || "Verified Purchase",
+      verified: false,
       stars: "★★★★★",
       ratingNum: 5,
       title: currentLang === "hi" ? "बेहतरीन प्रदर्शन और असली वारंटी" : "Top notch performance and genuine warranty",
@@ -693,7 +693,7 @@ function renderReviewSummary(product) {
     },
     {
       author: "Vikram Malhotra",
-      verified: t.verified_purchase || "Verified Purchase",
+      verified: false,
       stars: "★★★★☆",
       ratingNum: 4,
       title: currentLang === "hi" ? "पैसा वसूल सौदा" : "Value for money purchase",
@@ -708,8 +708,10 @@ function renderReviewSummary(product) {
   const mappedCustom = customReviews.map(r => {
     const rNum = Number(r.rating) || 5;
     return {
+      id: r.id || "",
+      createdAt: r.createdAt || "",
       author: r.reviewerName || "ElectroMart Customer",
-      verified: t.verified_purchase || "Verified Purchase",
+      verified: r.verifiedPurchase === true,
       stars: "★".repeat(rNum) + "☆".repeat(5 - rNum),
       ratingNum: rNum,
       title: r.headline || "Verified Customer Review",
@@ -814,14 +816,14 @@ function renderReviewSummary(product) {
       <article class="amazon-review-item sample-review-item">
         <div class="review-author-row">
           <div class="review-avatar">${rev.author.charAt(0)}</div>
-          <span class="review-author-name">${rev.author}</span>
+          <span class="review-author-name">${escapeHtml(rev.author)}</span>
         </div>
         <div class="review-rating-row">
           <span class="review-stars-amber">${rev.stars}</span>
           <strong class="review-title-bold">${escapeHtml(rev.title)}</strong>
         </div>
         <div class="review-date-muted">${rev.date}</div>
-        <div class="review-verified-badge">
+        <div class="review-verified-badge" ${rev.verified ? "" : "hidden"}>
           <span>${rev.verified}</span>
         </div>
         <p class="review-body-text">${escapeHtml(rev.body)}</p>
@@ -831,7 +833,7 @@ function renderReviewSummary(product) {
           </div>
         ` : ""}
         <div class="review-helpful-action">
-          <button type="button" class="helpful-pill-btn" id="helpfulBtn_${idx}">
+        <button type="button" class="helpful-pill-btn" id="helpfulBtn_${idx}" data-review-id="${escapeHtml(rev.id || "")}">
             ${t.helpful_button || "Helpful"} (<span class="helpful-count">${rev.helpfulCount}</span>)
           </button>
           <span class="report-abuse-link">Report</span>
@@ -840,12 +842,17 @@ function renderReviewSummary(product) {
     `).join("");
 
     reviewsList.querySelectorAll(".helpful-pill-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         if (btn._voted) return;
         btn._voted = true;
         const countSpan = btn.querySelector(".helpful-count");
         if (countSpan) {
-          countSpan.textContent = String(Number(countSpan.textContent) + 1);
+          let nextCount = Number(countSpan.textContent) + 1;
+          const reviewId = btn.dataset.reviewId;
+          if (reviewId && window.ElectroMart?.Reviews) {
+            try { nextCount = (await window.ElectroMart.Reviews.helpful(product.id, reviewId)).helpfulCount; } catch (_) {}
+          }
+          countSpan.textContent = String(nextCount);
         }
         btn.classList.add("voted");
       });
@@ -872,8 +879,24 @@ function renderReviewSummary(product) {
     };
   }
 
+  const sortSelect = document.getElementById("reviewSort");
+  if (sortSelect) sortSelect.onchange = () => {
+    allReviews.sort(sortSelect.value === "recent"
+      ? (a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || ""))
+      : (a, b) => Number(b.helpfulCount || 0) - Number(a.helpfulCount || 0));
+    renderFilteredReviews();
+  };
+
   renderFilteredReviews();
   reviewsBlock.hidden = false;
+  if (!skipHydrate && window.ElectroMart && window.ElectroMart.Reviews) {
+    window.ElectroMart.Reviews.list(product.id).then(({ reviews }) => {
+      const old = JSON.parse(localStorage.getItem("electromart_reviews_v1") || "[]").filter(r => String(r.productId) !== String(product.id));
+      const saved = reviews.map(r => ({ ...r, date: String(r.createdAt || "").slice(0, 10) }));
+      localStorage.setItem("electromart_reviews_v1", JSON.stringify([...old, ...saved]));
+      renderReviewSummary(product, true);
+    }).catch(() => {});
+  }
 }
 
 const QA_STORAGE_KEY = "electromart_qa_v1";

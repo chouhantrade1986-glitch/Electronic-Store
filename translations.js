@@ -31003,3 +31003,15 @@ phase49Targets.forEach((dictionarySet) => {
     Object.assign(dictionarySet[lang], ELECTROMART_PHASE49_RECOMMENDATIONS_I18N[lang]);
   });
 });
+const phase50ReviewWords = {
+  en: ["Sort reviews", "Top Reviews", "Most Recent"], hi: ["समीक्षाएँ क्रमबद्ध करें", "शीर्ष समीक्षाएँ", "नवीनतम"],
+  ta: ["மதிப்புரைகளை வரிசைப்படுத்து", "சிறந்த மதிப்புரைகள்", "சமீபத்தியவை"], te: ["సమీక్షలను క్రమబద్ధీకరించండి", "అగ్ర సమీక్షలు", "ఇటీవలి"],
+  kn: ["ವಿಮರ್ಶೆಗಳನ್ನು ವಿಂಗಡಿಸಿ", "ಉತ್ತಮ ವಿಮರ್ಶೆಗಳು", "ಇತ್ತೀಚಿನವು"], ml: ["അവലോകനങ്ങൾ ക്രമീകരിക്കുക", "മികച്ച അവലോകനങ്ങൾ", "ഏറ്റവും പുതിയത്"],
+  bn: ["পর্যালোচনা সাজান", "শীর্ষ পর্যালোচনা", "সাম্প্রতিক"], mr: ["अभिप्राय क्रमवारी लावा", "उत्तम अभिप्राय", "अलीकडील"],
+  ur: ["جائزے ترتیب دیں", "نمایاں جائزے", "تازہ ترین"], pa: ["ਸਮੀਖਿਆਵਾਂ ਕ੍ਰਮਬੱਧ ਕਰੋ", "ਚੋਟੀ ਦੀਆਂ ਸਮੀਖਿਆਵਾਂ", "ਸਭ ਤੋਂ ਨਵੀਆਂ"],
+  gu: ["સમીક્ષાઓ ગોઠવો", "ટોચની સમીક્ષાઓ", "તાજેતરની"]
+};
+const phase50Targets = typeof window !== "undefined" ? [window.EM_TRANSLATIONS, window.TRANSLATIONS] : [];
+phase50Targets.forEach((set) => Object.entries(phase50ReviewWords).forEach(([lang, words]) => {
+  if (set && set[lang]) Object.assign(set[lang], { review_sort_label: words[0], review_sort_top: words[1], review_sort_recent: words[2] });
+}));

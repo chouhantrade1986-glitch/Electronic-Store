@@ -63,17 +63,17 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (84 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (85 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 84 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 49 Recommendations Engine, Phase 48 Buy Again Hub, Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
+*(सभी 85 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 50 Reviews & Q&A, Phase 49 Recommendations Engine, Phase 48 Buy Again Hub, Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
 
-### 2. बैकएंड यूनिट टेस्ट्स (173 Unit Tests):
+### 2. बैकएंड यूनिट टेस्ट्स (174 Unit Tests):
 ```bash
 npm --prefix backend run test:unit
 ```
-*(सभी 173 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 84 frontend suites + 173 backend unit tests = 257 total passing checks है।)*
+*(सभी 174 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 85 frontend suites + 174 backend unit tests = 259 total passing checks है।)*
 
 ---
 
@@ -169,7 +169,7 @@ git commit -m "feat(scope): your descriptive commit message"
 - **चरण 49:** ElectroMart Personalized Recommendations & Frequently Viewed Together Engine (`recommendations.js`, `recommendations.css`, `index.html`, `product-detail.html`, `product-detail.js`): deterministic, local browsing-affinity ranking with an in-stock catalog fallback, bounded on-device co-view signals, homepage and product-detail carousels, 11-language customer copy, and `scratch/test-amazon-phase49.js` contract coverage.
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **अगला चरण (Phase 50):** Prioritize after the next roadmap review.
+- **Phase 50 Customer Reviews, Verified Ratings & Community Q&A:** `productReviewRoutes.js` provides public review listing plus authenticated submission and idempotent helpful votes. Verified purchase status comes from the signed-in user's paid/delivered order; reviewer names use contextual PII encryption. `reviews.js` is the shared API client, while the existing product detail review and Q&A experience remains the canonical UI. `scratch/test-amazon-phase50.js` verifies page wiring, filters, API contract, PII rule, i18n, and branding; backend integration coverage lives in `backend/tests/product-reviews.test.js`.
 
 ---
 

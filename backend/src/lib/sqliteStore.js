@@ -6,6 +6,16 @@ const SQLITE_FILENAME = "electromart.sqlite";
 const VALID_SQLITE_NORMALIZATION_MODES = new Set(["compat", "strict"]);
 
 const MANAGED_TABLES = {
+  productReviews: {
+    table: "product_reviews", key: "productReviews", kind: "collection",
+    columns: ["product_id", "user_id", "rating", "status", "created_at"],
+    values(item) { return [String(item && item.productId || ""), String(item && item.userId || ""), Number(item && item.rating || 0), String(item && item.status || ""), String(item && item.createdAt || "")]; }
+  },
+  productReviewVotes: {
+    table: "product_review_votes", key: "productReviewVotes", kind: "collection",
+    columns: ["review_id", "user_id"],
+    values(item) { return [String(item && item.reviewId || ""), String(item && item.userId || "")]; }
+  },
   products: {
     table: "products",
     key: "products",
@@ -457,6 +467,15 @@ function getSqliteDb() {
 
 function ensureSchema(db) {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS product_reviews (
+      id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, product_id TEXT, user_id TEXT,
+      rating INTEGER, status TEXT, created_at TEXT, json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_reviews_product ON product_reviews(product_id, status);
+    CREATE TABLE IF NOT EXISTS product_review_votes (
+      id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, review_id TEXT, user_id TEXT, json TEXT NOT NULL
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_product_review_votes_unique ON product_review_votes(review_id, user_id);
     CREATE TABLE IF NOT EXISTS products (
       id TEXT PRIMARY KEY,
       ordinal INTEGER NOT NULL DEFAULT 0,

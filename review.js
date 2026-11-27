@@ -350,7 +350,7 @@ function escapeHtml(str) {
  * Handle Review Form Submission
  */
 if (reviewForm) {
-  reviewForm.addEventListener("submit", (event) => {
+  reviewForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const product = currentProduct ? currentProduct.name : (reviewProduct ? reviewProduct.value.trim() : "ElectroMart Product");
@@ -365,7 +365,7 @@ if (reviewForm) {
       return;
     }
 
-    const newReview = {
+    let newReview = {
       id: "rev_" + Date.now(),
       productId: pId,
       product: product,
@@ -373,11 +373,23 @@ if (reviewForm) {
       headline: headline || "Verified Product Review",
       text: text,
       reviewerName: name,
-      verified: true,
+      verifiedPurchase: false,
       date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
       images: [...uploadedImages],
       helpfulCount: 0
     };
+
+    if (window.ElectroMart && window.ElectroMart.Reviews) {
+      try {
+        const saved = await window.ElectroMart.Reviews.submit(pId, { rating, headline: newReview.headline, text });
+        newReview = { ...saved.review, product, images: [...uploadedImages], date: new Date(saved.review.createdAt).toLocaleDateString("en-IN") };
+      } catch (error) {
+        if (error.message !== "Sign in to submit a review.") {
+          alert(error.message || "Review could not be submitted. Please try again.");
+          return;
+        }
+      }
+    }
 
     const existing = loadReviews();
     existing.unshift(newReview);

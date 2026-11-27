@@ -21,6 +21,7 @@ const piiEncryption = require("./middleware/piiEncryption");
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const productReviewRoutes = require("./routes/productReviewRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -67,6 +68,7 @@ app.get("/api/metrics", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/products", productReviewRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/exchange", exchangeRoutes);
 app.use("/api/gift-cards", giftCardRoutes);
