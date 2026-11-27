@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 48: ElectroMart Buy Again & Fast Reorder Hub पूर्ण; 83 frontend suites + 173 backend unit tests = 256 total checkpoints passing)
+**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 49: ElectroMart Recommendations Engine पूर्ण; 84 frontend suites + 173 backend unit tests = 257 total checkpoints passing)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 83 / 83 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 84 / 84 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **Personalized Recommendations Engine टेस्ट** | `scratch/test-amazon-phase49.js` | ✅ **PASS** | Phase 49 contract checks उत्तीर्ण |
 | **Buy Again & Fast Reorder Hub टेस्ट** | `scratch/test-amazon-phase48.js` | ✅ **PASS** | Phase 48 contract checks उत्तीर्ण |
 | **कूपन्स व प्रोमो डील्स हब टेस्ट** | `node scratch/test-amazon-coupons.js` | ✅ **PASS** | 8 / 8 लेयर्स उत्तीर्ण (100%) |
 | **डिजिटल ई-गिफ्ट कार्ड्स हब टेस्ट** | `node scratch/test-amazon-gift-cards.js` | ✅ **PASS** | 9 / 9 लेयर्स उत्तीर्ण (100%) |
@@ -45,7 +46,7 @@
 | **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 173 / 173 टेस्ट उत्तीर्ण (100%) |
 | **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **256 / 256 (100% Pass Rate)** |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **257 / 257 (100% Pass Rate)** |
 
 ### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
@@ -79,6 +80,9 @@
 
 - **Buy Again & Fast Reorder Hub (Phase 48):** `buy-again.html`, `buy-again.js`, and `buy-again.css` provide a dedicated responsive reorder page using the existing ElectroMart shell and styling tokens. Signed-in customers load history through authenticated `GET /api/orders/my`; the page aggregates unit purchase counts by product, records the latest order date and unit price, and compares that price with the current catalog. Guests, unavailable order history, and accounts without purchases see a clearly labeled sample catalog. Search, purchase period, category, quantity, Add to Cart, and Buy It Now controls are available. The shared header, Orders page tab, 11-language translations, and sitemap include the hub. `scratch/test-amazon-phase48.js` is automatically discovered and explicitly required by `scratch/run_all_tests.js`.
 - **Test baseline after Phase 48:** 83 frontend suites + 173 backend unit tests = 256 passing checks; brand safety passes separately.
+
+- **Personalized Recommendations & Frequently Viewed Together Engine (Phase 49):** `recommendations.js` ranks in-stock B2C catalog items deterministically from bounded recent browsing history (category, brand, and keyword affinity), with a featured/rating fallback for new visitors. The homepage recommendation shelf now reflects that ranking. The product detail page records bounded, non-identifying product/time co-view events in `electromart_view_events_v1` and shows co-view-ranked products; when local co-view evidence is sparse it falls back to related catalog picks. Both surfaces use text-safe DOM rendering and the new 11-language keys in `translations.js`. Shared script order was corrected on the homepage and product detail page, with all executable scripts in the body. `scratch/test-amazon-phase49.js` covers deterministic ranking, exclusions, co-view frequency, page wiring, i18n, and branding.
+- **Test baseline after Phase 49:** 84 frontend suites + 173 backend unit tests = 257 passing checks; brand safety passes separately.
 
 ---
 

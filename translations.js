@@ -30978,3 +30978,28 @@ Object.keys(ELECTROMART_BUY_AGAIN_FALLBACK_I18N).forEach((lang) => {
     if (dictionarySet && dictionarySet[lang]) dictionarySet[lang].buy_again_history_fallback = fallbackValue;
   });
 });
+
+const ELECTROMART_PHASE49_RECOMMENDATIONS_I18N = {
+  en: { recommendation_reason_personalized: "Picked for your browsing interests", recommendation_reason_fallback: "Popular picks from the ElectroMart catalog", fvt_title: "Frequently viewed together", fvt_subtitle: "Related products selected from category and browsing signals." },
+  hi: { recommendation_reason_personalized: "आपकी ब्राउज़िंग रुचि के अनुसार चुना गया", recommendation_reason_fallback: "इलेक्ट्रोमार्ट कैटलॉग से लोकप्रिय सुझाव", fvt_title: "अक्सर साथ देखे गए उत्पाद", fvt_subtitle: "श्रेणी और ब्राउज़िंग संकेतों से चुने गए संबंधित उत्पाद।" },
+  ta: { recommendation_reason_personalized: "உங்கள் உலாவல் விருப்பங்களுக்கு ஏற்ப தேர்வு", recommendation_reason_fallback: "எலக்ட்ரோமார்ட் பட்டியலிலிருந்து பிரபலமான தேர்வுகள்", fvt_title: "அடிக்கடி ஒன்றாகப் பார்க்கப்படும் பொருட்கள்", fvt_subtitle: "வகை மற்றும் உலாவல் அடிப்படையில் தேர்ந்தெடுக்கப்பட்ட தொடர்புடைய பொருட்கள்." },
+  te: { recommendation_reason_personalized: "మీ బ్రౌజింగ్ ఆసక్తులకు అనుగుణంగా ఎంపిక", recommendation_reason_fallback: "ఎలక్ట్రోమార్ట్ కేటలాగ్‌లోని ప్రజాదరణ పొందిన ఎంపికలు", fvt_title: "తరచుగా కలిసి చూసే ఉత్పత్తులు", fvt_subtitle: "వర్గం మరియు బ్రౌజింగ్ సంకేతాల ఆధారంగా ఎంచుకున్న సంబంధిత ఉత్పత్తులు." },
+  kn: { recommendation_reason_personalized: "ನಿಮ್ಮ ಬ್ರೌಸಿಂಗ್ ಆಸಕ್ತಿಗೆ ತಕ್ಕ ಆಯ್ಕೆ", recommendation_reason_fallback: "ಎಲೆಕ್ಟ್ರೋಮಾರ್ಟ್ ಕ್ಯಾಟಲಾಗ್‌ನ ಜನಪ್ರಿಯ ಆಯ್ಕೆಗಳು", fvt_title: "ಹೆಚ್ಚಾಗಿ ಜೊತೆಯಾಗಿ ವೀಕ್ಷಿಸಿದ ಉತ್ಪನ್ನಗಳು", fvt_subtitle: "ವರ್ಗ ಮತ್ತು ಬ್ರೌಸಿಂಗ್ ಸೂಚನೆಗಳಿಂದ ಆಯ್ದ ಸಂಬಂಧಿತ ಉತ್ಪನ್ನಗಳು." },
+  ml: { recommendation_reason_personalized: "നിങ്ങളുടെ ബ്രൗസിംഗ് താൽപ്പര്യങ്ങൾക്കനുസരിച്ചുള്ള തിരഞ്ഞെടുപ്പ്", recommendation_reason_fallback: "ഇലക്ട്രോമാർട്ട് കാറ്റലോഗിലെ ജനപ്രിയ തിരഞ്ഞെടുപ്പുകൾ", fvt_title: "പതിവായി ഒരുമിച്ച് കാണുന്ന ഉൽപ്പന്നങ്ങൾ", fvt_subtitle: "വിഭാഗവും ബ്രൗസിംഗ് സൂചനകളും അടിസ്ഥാനമാക്കി തിരഞ്ഞെടുത്ത ബന്ധപ്പെട്ട ഉൽപ്പന്നങ്ങൾ." },
+  bn: { recommendation_reason_personalized: "আপনার ব্রাউজিং আগ্রহ অনুযায়ী বাছাই", recommendation_reason_fallback: "ইলেক্ট্রোমার্ট ক্যাটালগের জনপ্রিয় পছন্দ", fvt_title: "প্রায়ই একসঙ্গে দেখা পণ্য", fvt_subtitle: "বিভাগ ও ব্রাউজিং সংকেত থেকে বাছাই করা সম্পর্কিত পণ্য।" },
+  mr: { recommendation_reason_personalized: "तुमच्या ब्राउझिंग आवडीनुसार निवडलेले", recommendation_reason_fallback: "इलेक्ट्रोमार्ट कॅटलॉगमधील लोकप्रिय निवडी", fvt_title: "वारंवार एकत्र पाहिली जाणारी उत्पादने", fvt_subtitle: "श्रेणी आणि ब्राउझिंग संकेतांवरून निवडलेली संबंधित उत्पादने." },
+  ur: { recommendation_reason_personalized: "آپ کی براؤزنگ دلچسپی کے مطابق منتخب", recommendation_reason_fallback: "الیکٹرو مارٹ کیٹلاگ سے مقبول انتخاب", fvt_title: "اکثر ساتھ دیکھی جانے والی مصنوعات", fvt_subtitle: "قسم اور براؤزنگ اشاروں کی بنیاد پر منتخب متعلقہ مصنوعات۔" },
+  pa: { recommendation_reason_personalized: "ਤੁਹਾਡੀਆਂ ਬ੍ਰਾਊਜ਼ਿੰਗ ਰੁਚੀਆਂ ਮੁਤਾਬਕ ਚੁਣਿਆ", recommendation_reason_fallback: "ਇਲੈਕਟ੍ਰੋਮਾਰਟ ਕੈਟਾਲਾਗ ਵਿੱਚੋਂ ਪ੍ਰਸਿੱਧ ਚੋਣਾਂ", fvt_title: "ਅਕਸਰ ਇਕੱਠੇ ਵੇਖੇ ਜਾਂਦੇ ਉਤਪਾਦ", fvt_subtitle: "ਸ਼੍ਰੇਣੀ ਅਤੇ ਬ੍ਰਾਊਜ਼ਿੰਗ ਸੰਕੇਤਾਂ ਤੋਂ ਚੁਣੇ ਸੰਬੰਧਿਤ ਉਤਪਾਦ।" },
+  gu: { recommendation_reason_personalized: "તમારી બ્રાઉઝિંગ રુચિ મુજબ પસંદ કરેલું", recommendation_reason_fallback: "ઇલેક્ટ્રોમાર્ટ કેટલોગની લોકપ્રિય પસંદગીઓ", fvt_title: "વારંવાર સાથે જોવાતાં ઉત્પાદનો", fvt_subtitle: "શ્રેણી અને બ્રાઉઝિંગ સંકેતો પરથી પસંદ કરેલા સંબંધિત ઉત્પાદનો." }
+};
+if (typeof window !== "undefined") window.ELECTROMART_PHASE49_RECOMMENDATIONS_I18N = ELECTROMART_PHASE49_RECOMMENDATIONS_I18N;
+const phase49Targets = typeof window !== "undefined"
+  ? [window.EM_TRANSLATIONS, window.TRANSLATIONS]
+  : (typeof global !== "undefined" ? [global.EM_TRANSLATIONS, global.TRANSLATIONS] : []);
+phase49Targets.forEach((dictionarySet) => {
+  if (!dictionarySet) return;
+  Object.keys(ELECTROMART_PHASE49_RECOMMENDATIONS_I18N).forEach((lang) => {
+    dictionarySet[lang] = dictionarySet[lang] || {};
+    Object.assign(dictionarySet[lang], ELECTROMART_PHASE49_RECOMMENDATIONS_I18N[lang]);
+  });
+});

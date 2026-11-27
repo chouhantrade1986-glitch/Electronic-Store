@@ -10,9 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="product-detail.css?v=20260305c" />
   <link rel="stylesheet" href="customer-media.css?v=20260412a" />
+  <link rel="stylesheet" href="recommendations.css" />
   <link rel="stylesheet" href="shared-search.css?v=20260314g" />
   <link rel="stylesheet" href="amazon-theme.css?v=20260411a" />
-  <script src="android-compat.js?v=20260410a"></script>
 </head>
 <body>
   <div id="headerContainer"></div>
@@ -462,6 +462,14 @@
 
     <section id="frequentlyBoughtContainer" class="detail-card frequently-bought-card" hidden></section>
 
+    <section id="frequentlyViewedTogether" class="phase49-fvt detail-card" aria-labelledby="fvtTitle" hidden>
+      <div class="phase49-fvt__heading">
+        <h2 id="fvtTitle" data-i18n="fvt_title">Frequently viewed together</h2>
+        <p data-i18n="fvt_subtitle">Related picks based on product category and browsing activity.</p>
+      </div>
+      <div class="phase49-fvt__rail" data-fvt-items aria-live="polite"></div>
+    </section>
+
     <section id="relatedBlock" class="related-block" hidden>
       <h2 data-i18n="related_products">Related products</h2>
       <div id="relatedGrid" class="related-grid"></div>
@@ -837,15 +845,17 @@
 
   <script src="translations.js"></script>
   <script src="products-data.js"></script>
-  <script src="bundle-engine.js"></script>
   <script src="universal-i18n-bus.js"></script>
   <script src="header.js"></script>
   <script src="menu-manager.js?v=20260313b"></script>
   <script src="auth-state.js?v=20260313b"></script>
   <script src="shared-search.js?v=20260314g"></script>
+  <script src="android-compat.js?v=20260410a"></script>
+  <script src="bundle-engine.js"></script>
   <script src="customer-media.js?v=20260412a"></script>
   <script src="renewed.js"></script>
   <script src="warranty.js"></script>
+  <script src="recommendations.js"></script>
   <script src="product-detail.js?v=20260315b"></script>
 </body>
 </html>

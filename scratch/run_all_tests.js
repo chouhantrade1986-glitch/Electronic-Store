@@ -7,6 +7,9 @@ const files = fs.readdirSync(scratchDir).filter(f => f.startsWith('test-') && f.
 if (!files.includes('test-amazon-phase48.js')) {
   throw new Error('Phase 48 Buy Again contract must be registered in the frontend regression run.');
 }
+if (!files.includes('test-amazon-phase49.js')) {
+  throw new Error('Phase 49 recommendations contract must be registered in the frontend regression run.');
+}
 
 console.log(`Running ${files.length} test suites...`);
 let passed = 0;

@@ -4182,6 +4182,9 @@ function renderStarCharacters(rating) {
   renderPdpEMICallout(product);
 
   renderRecentlyViewedDetailSection();
+  if (window.ElectroMart && window.ElectroMart.Recommendations && typeof window.ElectroMart.Recommendations.renderProduct === "function") {
+    window.ElectroMart.Recommendations.renderProduct(product);
+  }
 
   const isBattery = /\b(battery|बैटरी)\b/i.test(String(product.name || "") + " " + String(product.title || "") + " " + String(product.category || "") + " " + String(product.sku || ""));
   

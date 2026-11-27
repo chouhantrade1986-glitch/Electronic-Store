@@ -63,17 +63,17 @@
 
 किसी भी फाइल में बदलाव करने से पहले और बाद में निम्नलिखित दोनों कमांड चलाएं:
 
-### 1. फ्रंटएंड व i18n टेस्ट (83 Test Suites):
+### 1. फ्रंटएंड व i18n टेस्ट (84 Test Suites):
 ```bash
 node scratch/run_all_tests.js
 ```
-*(सभी 83 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 48 Buy Again Hub, Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
+*(सभी 84 टेस्ट सूट्स PASS होने चाहिए, जिसमें Phase 49 Recommendations Engine, Phase 48 Buy Again Hub, Phase 46 Digital Gift Cards Hub, Phase 45 Corporate Gifting Hub, और सभी regression/guardrail सूट्स शामिल हैं।)*
 
 ### 2. बैकएंड यूनिट टेस्ट्स (173 Unit Tests):
 ```bash
 npm --prefix backend run test:unit
 ```
-*(सभी 173 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 83 frontend suites + 173 backend unit tests = 256 total passing checks है।)*
+*(सभी 173 टेस्ट PASS होने चाहिए। वर्तमान लक्ष्य 84 frontend suites + 173 backend unit tests = 257 total passing checks है।)*
 
 ---
 
@@ -166,9 +166,10 @@ git commit -m "feat(scope): your descriptive commit message"
 
 - **चरण 47:** ElectroMart Dedicated Coupons & Promo Deals Hub (`coupons.html`, `coupons.js`, `coupons.css`, `checkout.js`, `orderCommerce.js`): Amazon Coupons Hub स्तर का टीयर-टिकट कूपन कार्ड्स इंटरफ़ेस, 1-क्लिक 'Clip Coupon' / 'Clipped ✓' इंटरेक्टिव बैज, `electromart_clipped_coupons_v1` लोकल सिंक, चेकआउट ऑटो-अप्लाई चिप्स बार, सर्वर-ऑथॉरिटेटिव डिस्काउंट वैलिडेशन (`GET /api/orders/coupons`, `POST /api/orders/coupons/validate`), 11 भाषाएं और 82/82 टेस्ट सूट्स 100% उत्तीर्ण।
 - **चरण 48:** ElectroMart Buy Again & Fast Reorder Hub (`buy-again.html`, `buy-again.js`, `buy-again.css`): authenticated `/api/orders/my` history aggregation, स्पष्ट sample catalog fallback, purchase frequency and last-order badges, catalog price-drop comparison, quantity-aware cart/checkout actions, date/category filters, shared navigation, sitemap entry, 11-language dictionary, and `scratch/test-amazon-phase48.js` regression coverage.
+- **चरण 49:** ElectroMart Personalized Recommendations & Frequently Viewed Together Engine (`recommendations.js`, `recommendations.css`, `index.html`, `product-detail.html`, `product-detail.js`): deterministic, local browsing-affinity ranking with an in-stock catalog fallback, bounded on-device co-view signals, homepage and product-detail carousels, 11-language customer copy, and `scratch/test-amazon-phase49.js` contract coverage.
 
 ### B. आगामी चरण (Next Recommended Phases for Future Agents):
-- **अगला चरण (Phase 49):** ElectroMart Personalized Product Recommendations & "Frequently Viewed Together" AI Carousel Engine (`recommendations.js`, `index.html`, `product-detail.html`).
+- **अगला चरण (Phase 50):** Prioritize after the next roadmap review.
 
 ---
 
