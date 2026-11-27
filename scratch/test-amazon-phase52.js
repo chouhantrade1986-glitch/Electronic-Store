@@ -48,6 +48,7 @@ for (const visualCase of [
 assert.match(smoke, /--visual-only/);
 assert.match(smoke, /message\.text\(\)/);
 assert.match(smoke, /document\.documentElement\.scrollWidth/);
+assert.match(smoke, /window\._emPdpTimerInterval[\s\S]*?5h 59m 59s/, 'PDP visual capture must freeze the live deal countdown for deterministic screenshots');
 assert.doesNotMatch(smoke, /const existingBaselines =/, 'Phase 52 visual refresh must preserve the six legacy smoke captures');
 const smokeWorkflow = read('.github/workflows/smoke-suite.yml');
 const smokeRunPosition = smokeWorkflow.indexOf('- name: Run smoke suite');

@@ -1483,6 +1483,12 @@ async function runPhase52VisualBaselines() {
           document.querySelectorAll("#reviewBars .review-fill").forEach((bar, index) => {
             bar.style.width = index < 2 ? "50%" : "0%";
           });
+          if (window._emPdpTimerInterval) {
+            window.clearInterval(window._emPdpTimerInterval);
+            window._emPdpTimerInterval = null;
+          }
+          const dealTimer = document.querySelector("#pdpLightningTimer");
+          if (dealTimer) dealTimer.textContent = "5h 59m 59s";
         });
       }
       if (testCase.lang === "ur") {
