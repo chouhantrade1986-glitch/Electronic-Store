@@ -7,6 +7,9 @@ console.log("=== Testing Amazon India Shopping Cart (Step 1) ===");
 
 // 1. Verify cart.html structure & required elements
 const cartHtml = fs.readFileSync(path.join(projectDir, 'cart.html'), 'utf8');
+const cartJsSource = fs.readFileSync(path.join(projectDir, 'cart.js'), 'utf8');
+assert.match(cartJsSource, /<svg\b[^>]*class="amz-empty-cart-img"/, 'Empty cart illustration must be self-contained SVG');
+assert.doesNotMatch(cartJsSource, /m\.media-amazon\.com/i, 'Cart must not depend on an externally hosted empty-state image');
 
 // Preservation of existing test-critical IDs and data-i18n attributes
 const criticalAttributes = [

@@ -343,13 +343,16 @@ Full smoke suite from repository root:
 npm run smoke
 ```
 
-UI visual baseline lock (checkout/orders/wishlist):
+UI visual baseline capture and verification:
 
 ```powershell
 npm run smoke:ui
+npm run smoke:ui:visual
 npm run smoke:baseline:lock
 npm run smoke:baseline:verify
 ```
+
+The smoke suite captures the six core storefront screenshots. The Phase 52 visual-only run adds seven PDP, hub, Hindi, and Urdu captures while preserving those six core screenshots. CI runs both capture steps before verifying the complete 13-image manifest.
 
 Baseline outputs:
 
@@ -359,6 +362,13 @@ Baseline outputs:
 - `qa-baselines/ui/qa-checkout-browser.png`
 - `qa-baselines/ui/qa-orders-browser.png`
 - `qa-baselines/ui/qa-wishlist-browser.png`
+- `qa-baselines/ui/qa-phase52-pdp-reviews.png`
+- `qa-baselines/ui/qa-phase52-coupons.png`
+- `qa-baselines/ui/qa-phase52-buy-again.png`
+- `qa-baselines/ui/qa-phase52-coupons-hi-desktop.png`
+- `qa-baselines/ui/qa-phase52-buy-again-hi-mobile.png`
+- `qa-baselines/ui/qa-phase52-buy-again-ur-desktop.png`
+- `qa-baselines/ui/qa-phase52-coupons-ur-mobile.png`
 - `qa-baselines/ui/baseline-manifest.json`
 
 Generated smoke/browser artifacts cleanup:

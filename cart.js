@@ -772,7 +772,11 @@ function renderCart() {
     const emptyMsg = t.cart_empty || "Your ElectroMart Cart is empty.";
     cartItemsEl.innerHTML = `
       <div class="amz-empty-cart-wrap">
-        <img class="amz-empty-cart-img" src="https://m.media-amazon.com/images/G/31/cart/empty/kettle-desaturated._CB424694257_.svg" alt="Empty Cart" onerror="this.style.display='none'" />
+        <svg class="amz-empty-cart-img" viewBox="0 0 120 100" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 12h12l10 51a8 8 0 0 0 8 6h48a8 8 0 0 0 8-6l8-35H26" fill="none" stroke="#687078" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" />
+          <path d="M42 81a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm38 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" fill="#687078" />
+          <path d="M52 20h22m-11-11v22" stroke="#ffa41c" stroke-linecap="round" stroke-width="5" />
+        </svg>
         <div class="amz-empty-cart-content">
           <h2 data-i18n="cart_empty">${emptyMsg}</h2>
           <p style="color:#565959;font-size:14px;margin:0 0 10px;">Check your Saved for later items below or discover great deals across all categories.</p>

@@ -1506,25 +1506,8 @@ async function runPhase52VisualBaselines() {
       await context.close();
     }
 
-    const existingBaselines = [
-      ["auth", "auth.html", "qa-auth-browser.png", 1200],
-      ["account", "account.html", "qa-account-browser.png", 1600],
-      ["invoice", "invoice.html", "qa-invoice-browser.png", 1800],
-      ["checkout", "checkout.html", "qa-checkout-browser.png", 1800],
-      ["orders", "orders.html", "qa-orders-browser.png", 1800],
-      ["wishlist", "wishlist.html", "qa-wishlist-browser.png", 1800]
-    ];
-    for (const [target, pathname, fileName, height] of existingBaselines) {
-      const context = await browser.newContext({ viewport: { width: 1440, height } });
-      const page = await context.newPage();
-      await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${pathname}</title></head><body></body></html>`);
-      await normalizeScreenshotForBaseline(page, target);
-      await page.screenshot({ path: artifactPath(fileName), fullPage: true, animations: "disabled", timeout: 120000 });
-      await context.close();
-    }
-
     const failedLayout = results.filter((result) => result.layout.pageWidth > result.layout.viewportWidth + 1 || result.layout.offenders.length > 0 || (result.case.includes("ur") && result.layout.direction !== "rtl"));
-    const summary = { cases: results.length, baselinesRefreshed: results.length + existingBaselines.length, passed: results.length - failedLayout.length, failedLayout, consoleErrors, results };
+    const summary = { cases: results.length, baselinesRefreshed: results.length, passed: results.length - failedLayout.length, failedLayout, consoleErrors, results };
     process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
     if (failedLayout.length || consoleErrors.length) throw new Error(`Phase 52 visual QA failed: ${failedLayout.length} layout issue(s), ${consoleErrors.length} console error(s).`);
   } finally {

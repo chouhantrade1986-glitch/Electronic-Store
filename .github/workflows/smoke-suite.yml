@@ -218,6 +218,11 @@ jobs:
             exit $exitCode
           }
 
+      - name: Capture Phase 52 visual baselines
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        run: npm run smoke:ui:visual
+
       - name: Build smoke flake trend artifact
         if: always()
         shell: pwsh

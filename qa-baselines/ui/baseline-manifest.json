@@ -1,6 +1,6 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-11-27T21:43:21Z",
+    "generatedAt":  "2026-11-27T22:20:43Z",
     "sourceDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
@@ -11,28 +11,28 @@
                   },
                   {
                       "name":  "qa-account-browser.png",
-                      "bytes":  13702,
-                      "sha256":  "DFB869552D9F87251F193A6627364A6289FA728DF19B23278A938462E3EB2A18"
+                      "bytes":  13718,
+                      "sha256":  "767B7B4CF35960310BD9B49F3445B0D6B0AE3C55A1CDB505463C763BB5F7A966"
                   },
                   {
                       "name":  "qa-invoice-browser.png",
-                      "bytes":  11616,
-                      "sha256":  "97D6351D8153D07BAE050C6B695374F372A947DD37B9E27D774CEDA5C44767ED"
+                      "bytes":  125035,
+                      "sha256":  "FE96F22675F212646813A5D79B3F911A795CA300E936B6EF1481866E74108F65"
                   },
                   {
                       "name":  "qa-checkout-browser.png",
-                      "bytes":  14821,
-                      "sha256":  "CF3FD1C79ED618229477D5CFC6AA7D5E5200B13258D9BE61E045FCDD9BDB3D49"
+                      "bytes":  13610,
+                      "sha256":  "FD4A215A4D598B50BA1421A22283EFBBC3A5A1EE0B6CFA4049D0446D9799289C"
                   },
                   {
                       "name":  "qa-orders-browser.png",
-                      "bytes":  15073,
-                      "sha256":  "473DEB637339BED2D934B7EAB4C855422D40029F9C9418D38578441DD0ED866A"
+                      "bytes":  11312,
+                      "sha256":  "2C4A8FF7A298DD4392D96DF7CF50BC164275CCB177560F11E89A9C58B48249CE"
                   },
                   {
                       "name":  "qa-wishlist-browser.png",
-                      "bytes":  17615,
-                      "sha256":  "1B12C0EBE91E78AB54241A273C4D919909B20BC06BEA1102B2B20B57F06BF432"
+                      "bytes":  16307,
+                      "sha256":  "39B9A221FE4176ED4D2BECE76F313CC4B2065CE1F1EB5C12335AB2DBE39CB34E"
                   },
                   {
                       "name":  "qa-phase52-pdp-reviews.png",

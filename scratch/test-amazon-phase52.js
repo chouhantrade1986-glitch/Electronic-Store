@@ -48,6 +48,14 @@ for (const visualCase of [
 assert.match(smoke, /--visual-only/);
 assert.match(smoke, /message\.text\(\)/);
 assert.match(smoke, /document\.documentElement\.scrollWidth/);
+assert.doesNotMatch(smoke, /const existingBaselines =/, 'Phase 52 visual refresh must preserve the six legacy smoke captures');
+const smokeWorkflow = read('.github/workflows/smoke-suite.yml');
+const smokeRunPosition = smokeWorkflow.indexOf('- name: Run smoke suite');
+const phase52CapturePosition = smokeWorkflow.indexOf('- name: Capture Phase 52 visual baselines');
+const verifyBaselinePosition = smokeWorkflow.indexOf('- name: Verify visual baseline');
+assert.ok(smokeRunPosition >= 0 && phase52CapturePosition > smokeRunPosition && verifyBaselinePosition > phase52CapturePosition,
+  'CI must generate Phase 52 captures after smoke screenshots and before baseline verification');
+assert.match(smokeWorkflow.slice(phase52CapturePosition, verifyBaselinePosition), /npm run smoke:ui:visual/);
 assert.match(read('coupons.css'), /\.coupon-modal-backdrop\[hidden\]\s*\{\s*display:\s*none\s*!important/s);
 
 const lockScript = read('lock-visual-baseline.ps1');
