@@ -7,21 +7,81 @@ const COUPONS = {
     type: "percent",
     value: 10,
     maxDiscount: 500,
-    minSubtotal: 500
+    minSubtotal: 500,
+    category: "all",
+    description: "Get 10% instant discount up to Rs 500 on all electronics orders above Rs 500."
   },
   FREESHIP: {
-    label: "Free shipping",
+    label: "Free standard shipping",
     type: "shipping",
     value: BASE_SHIPPING_CHARGE,
-    minSubtotal: 0
+    minSubtotal: 0,
+    category: "all",
+    description: "Enjoy zero shipping charges on your order with no minimum spend."
   },
   WELCOME250: {
     label: "Rs 250 off on orders above Rs 2,000",
     type: "flat",
     value: 250,
-    minSubtotal: 2000
+    minSubtotal: 2000,
+    category: "all",
+    description: "Flat Rs 250 discount on your purchase of Rs 2,000 or more."
+  },
+  ELECTRO500: {
+    label: "Rs 500 off on orders above Rs 5,000",
+    type: "flat",
+    value: 500,
+    minSubtotal: 5000,
+    category: "all",
+    description: "Mega savings: flat Rs 500 off on orders of Rs 5,000 and above."
+  },
+  AUDIO15: {
+    label: "15% off audio gear up to Rs 750",
+    type: "percent",
+    value: 15,
+    maxDiscount: 750,
+    minSubtotal: 1500,
+    category: "audio",
+    description: "Save 15% up to Rs 750 on premium headphones, earbuds, and speakers."
+  },
+  LAPTOP1000: {
+    label: "Rs 1,000 flat discount on laptops & computers",
+    type: "flat",
+    value: 1000,
+    minSubtotal: 25000,
+    category: "laptops",
+    description: "Flat Rs 1,000 discount on flagship laptops, desktops, and computing rigs."
+  },
+  TECH100: {
+    label: "Rs 100 off on tech accessories",
+    type: "flat",
+    value: 100,
+    minSubtotal: 999,
+    category: "accessories",
+    description: "Save Rs 100 on cables, chargers, cases, and tech peripherals above Rs 999."
+  },
+  PRIMEEXTRA: {
+    label: "Extra Rs 300 off on orders above Rs 3,500",
+    type: "flat",
+    value: 300,
+    minSubtotal: 3500,
+    category: "all",
+    description: "Special savings bonus: Rs 300 off on carts over Rs 3,500."
   }
 };
+
+function listPublicCoupons() {
+  return Object.entries(COUPONS).map(([code, c]) => ({
+    code,
+    label: c.label,
+    type: c.type,
+    value: c.value,
+    maxDiscount: c.maxDiscount || null,
+    minSubtotal: c.minSubtotal || 0,
+    category: c.category || "all",
+    description: c.description || c.label
+  }));
+}
 
 function roundCurrency(value) {
   return Number((Number(value || 0) + Number.EPSILON).toFixed(2));
@@ -433,6 +493,7 @@ module.exports = {
   buildOrderPricing,
   ensureInventoryReservation,
   evaluateCoupon,
+  listPublicCoupons,
   normalizeCorporateOrderDetails,
   normalizeCouponCode,
   normalizeInventoryReservation,

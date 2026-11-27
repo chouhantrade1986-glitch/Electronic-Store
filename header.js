@@ -216,6 +216,8 @@
         </button>
         <div class="category-quick-links">
           <a href="todays-deals.html" class="category-quick-link" data-i18n="todays_deals">Today's Deals</a>
+          <a href="coupons.html" class="category-quick-link" data-i18n="nav_coupons">Coupons</a>
+          <a href="gift-cards.html" class="category-quick-link" data-i18n="nav_gift_cards">Gift Cards</a>
           <a href="prime.html" class="category-quick-link nav-prime-link" data-i18n="prime_nav_link" style="color: #00a8e1; font-weight: 700;">👑 Prime</a>
           <a href="best-sellers.html" class="category-quick-link" data-i18n="best_sellers">Best Sellers</a>
           <a href="products.html" class="category-quick-link" data-i18n="all_products">All Products</a>
@@ -256,6 +258,7 @@
             <div class="dept-section-title" data-i18n="menu_trending">Trending</div>
             <a class="dept-menu-item" href="best-sellers.html" data-i18n="best_sellers">Best Sellers</a>
             <a class="dept-menu-item" href="todays-deals.html" data-i18n="todays_deals">Today's Deals</a>
+            <a class="dept-menu-item" href="coupons.html" data-i18n="nav_coupons">Coupons</a>
             <a class="dept-menu-item" href="products.html?filter=new" data-i18n="new_arrivals">New Arrivals</a>
 
             <hr class="dept-menu-divider" />

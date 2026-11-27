@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ElectroMart Coupons &amp; Promo Deals Hub - Clip &amp; Save on Electronics</title>
+  <meta name="description" content="Discover verified ElectroMart coupons, promotional codes, and instant discounts. Clip coupons with 1 click to save automatically at checkout on laptops, smartphones, audio gear, and accessories." />
+  <meta name="keywords" content="ElectroMart coupons, promo deals, discount coupons, clip coupon, electronics coupons, coupon codes" />
+  <meta name="author" content="ElectroMart" />
+  <meta name="robots" content="index, follow" />
+  <meta name="language" content="English" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://electromart.in/coupons.html" />
+  <meta property="og:title" content="ElectroMart Coupons &amp; Promo Deals Hub" />
+  <meta property="og:description" content="Clip 1-click coupons and save instantly on top electronics at ElectroMart." />
+  <meta property="og:site_name" content="ElectroMart" />
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;700;800&family=DM+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="amazon-theme.css?v=20261004a" />
+  <link rel="stylesheet" href="shared-search.css?v=20261004a" />
+  <link rel="stylesheet" href="coupons.css?v=20261004a" />
+</head>
+<body class="coupons-page-body">
+  <div id="headerContainer"></div>
+
+  <main class="coupons-shell">
+    <!-- ============ HERO SECTION ============ -->
+    <section id="couponsHero" class="coupons-hero" aria-labelledby="couponsHeroTitle">
+      <div class="coupons-hero-eyebrow">
+        <span>⚡</span> <span data-i18n="coupons_hero_eyebrow">Verified Savings &amp; Instant Promo Hub</span>
+      </div>
+      <h1 id="couponsHeroTitle" class="coupons-hero-title" data-i18n="coupons_hero_title">ElectroMart Coupons &amp; Promo Hub</h1>
+      <p class="coupons-hero-subtitle" data-i18n="coupons_hero_subtitle">
+        Clip your favorite coupons with one click. They are automatically saved to your account and applied at checkout for seamless instant savings.
+      </p>
+
+      <div class="coupons-hero-stats">
+        <div class="coupons-stat-card">
+          <span class="coupons-stat-num" id="totalCouponsCount">8</span>
+          <span class="coupons-stat-label" data-i18n="coupons_stat_active">Active Coupons</span>
+        </div>
+        <div class="coupons-stat-card">
+          <span class="coupons-stat-num" id="clippedCouponsStat">0</span>
+          <span class="coupons-stat-label" data-i18n="coupons_stat_clipped">Clipped by You</span>
+        </div>
+        <div class="coupons-stat-card">
+          <span class="coupons-stat-num" id="potentialSavingsStat">₹3,450+</span>
+          <span class="coupons-stat-label" data-i18n="coupons_stat_potential">Max Potential Savings</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLIPPED COUPONS STICKY BANNER ============ -->
+    <section id="clippedSummaryBanner" class="clipped-summary-banner" hidden>
+      <div class="clipped-summary-info">
+        <span class="clipped-badge-pill">✓ <span data-i18n="coupons_clipped_badge">Clipped</span></span>
+        <span class="clipped-summary-text" id="clippedSummaryText">You have 1 coupon clipped. It will be automatically applied at checkout!</span>
+      </div>
+      <div class="clipped-summary-actions">
+        <a href="checkout.html" class="btn-goto-checkout" data-i18n="coupons_btn_use_checkout">Go to Checkout &rarr;</a>
+        <button id="btnClearAllClipped" class="btn-clear-clipped" type="button" data-i18n="coupons_btn_clear_clipped">Clear all</button>
+      </div>
+    </section>
+
+    <!-- ============ CONTROLS: SEARCH & CATEGORY PILLS ============ -->
+    <section class="coupons-controls" aria-label="Coupons filters">
+      <div class="coupons-search-bar">
+        <span class="coupons-search-icon" aria-hidden="true">&#128269;</span>
+        <input
+          type="text"
+          id="couponsSearchInput"
+          class="coupons-search-input"
+          placeholder="Search coupons (e.g. SAVE10, audio, 500)..."
+          data-i18n-placeholder="coupons_search_placeholder"
+          aria-label="Search coupons"
+        />
+      </div>
+
+      <div class="category-pills-row" id="categoryPillsRow" role="tablist">
+        <button type="button" class="category-pill active" data-category="all" role="tab" aria-selected="true" data-i18n="coupons_tab_all">All Offers</button>
+        <button type="button" class="category-pill" data-category="laptops" role="tab" aria-selected="false" data-i18n="coupons_tab_laptops">Laptops &amp; PCs</button>
+        <button type="button" class="category-pill" data-category="audio" role="tab" aria-selected="false" data-i18n="coupons_tab_audio">Audio &amp; Sound</button>
+        <button type="button" class="category-pill" data-category="accessories" role="tab" aria-selected="false" data-i18n="coupons_tab_accessories">Accessories</button>
+      </div>
+    </section>
+
+    <!-- ============ COUPONS GRID ============ -->
+    <section aria-label="Available Coupons">
+      <div class="coupons-grid" id="couponsGrid" aria-live="polite">
+        <!-- Coupon cards injected dynamically -->
+      </div>
+      <div class="coupons-empty" id="couponsEmptyState" hidden>
+        <div class="coupons-empty-icon">&#127915;</div>
+        <h3 data-i18n="coupons_empty_title">No coupons found</h3>
+        <p data-i18n="coupons_empty_subtitle">Try a different search term or category filter.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ TERMS & CONDITIONS MODAL ============ -->
+  <div id="couponTermsModal" class="coupon-modal-backdrop" hidden>
+    <div class="coupon-modal" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+      <button type="button" class="coupon-modal-close" id="btnCloseTermsModal" aria-label="Close terms modal">&times;</button>
+      <h3 id="termsModalTitle" class="coupon-modal-title">Coupon Terms &amp; Conditions</h3>
+      <div id="termsModalBody">
+        <p><strong>Code:</strong> <span id="termsCouponCode">SAVE10</span></p>
+        <p><strong>Description:</strong> <span id="termsCouponDesc">10% off up to ₹500</span></p>
+        <ul class="coupon-modal-list">
+          <li data-i18n="coupons_term_1">Coupons are valid exclusively on purchases made at electromart.in.</li>
+          <li data-i18n="coupons_term_2">Each coupon code can be applied only once per order and cannot be combined with conflicting promotional discounts.</li>
+          <li data-i18n="coupons_term_3">Minimum order value criteria must be satisfied after deducting trade-in exchange quotes.</li>
+          <li data-i18n="coupons_term_4">Clipped coupons are stored securely on your browser device and automatically verified server-side at checkout.</li>
+          <li data-i18n="coupons_term_5">ElectroMart reserves the right to modify or cancel coupon promotions at any time.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TOAST NOTIFICATION ============ -->
+  <div id="couponToast" class="coupon-toast" role="status" aria-live="polite">
+    <span id="couponToastIcon">✓</span>
+    <span id="couponToastMsg">Coupon clipped!</span>
+  </div>
+
+  <!-- Mandatory Script Loading Sequence -->
+  <script src="translations.js"></script>
+  <script src="products-data.js"></script>
+  <script src="universal-i18n-bus.js"></script>
+  <script src="header.js"></script>
+  <script src="menu-manager.js"></script>
+  <script src="auth-state.js"></script>
+  <script src="shared-search.js"></script>
+  <script src="coupons.js?v=20261004a"></script>
+</body>
+</html>

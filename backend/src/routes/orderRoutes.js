@@ -13,6 +13,8 @@ const {
 } = require("../lib/sqliteOrdersPayments");
 const {
   buildOrderPricing,
+  evaluateCoupon,
+  listPublicCoupons,
   normalizeCorporateOrderDetails,
   releaseInventoryForOrder,
   reserveInventoryForOrder
@@ -619,6 +621,27 @@ router.get("/notifications", requireAuth, (req, res) => {
     count: notifications.length,
     counts,
     notifications
+  });
+});
+
+router.get("/coupons", (req, res) => {
+  const coupons = listPublicCoupons();
+  return res.json({
+    ok: true,
+    count: coupons.length,
+    coupons
+  });
+});
+
+router.post("/coupons/validate", (req, res) => {
+  const body = req.body && typeof req.body === "object" ? req.body : {};
+  const code = String(body.code || "").trim();
+  const subtotal = Number(body.subtotal || 0);
+  const shipping = Number(body.shipping !== undefined ? body.shipping : 19);
+  const result = evaluateCoupon(code, subtotal, shipping);
+  return res.json({
+    ok: result.valid,
+    ...result
   });
 });
 

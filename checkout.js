@@ -312,21 +312,52 @@ const COUPONS = {
   SAVE10: {
     type: "percent",
     value: 10,
-    minSubtotal: 1000,
+    minSubtotal: 500,
     maxDiscount: 500,
     label: "10% off up to ₹500"
   },
   FREESHIP: {
     type: "shipping",
     value: 19,
-    minSubtotal: 499,
+    minSubtotal: 0,
     label: "Free standard shipping"
   },
   WELCOME250: {
     type: "flat",
     value: 250,
-    minSubtotal: 3000,
-    label: "₹250 off on orders above ₹3,000"
+    minSubtotal: 2000,
+    label: "₹250 off on orders above ₹2,000"
+  },
+  ELECTRO500: {
+    type: "flat",
+    value: 500,
+    minSubtotal: 5000,
+    label: "₹500 off on orders above ₹5,000"
+  },
+  AUDIO15: {
+    type: "percent",
+    value: 15,
+    minSubtotal: 1500,
+    maxDiscount: 750,
+    label: "15% off audio gear up to ₹750"
+  },
+  LAPTOP1000: {
+    type: "flat",
+    value: 1000,
+    minSubtotal: 25000,
+    label: "₹1,000 off on orders above ₹25,000"
+  },
+  TECH100: {
+    type: "flat",
+    value: 100,
+    minSubtotal: 999,
+    label: "₹100 off on tech essentials above ₹999"
+  },
+  PRIMEEXTRA: {
+    type: "flat",
+    value: 300,
+    minSubtotal: 3500,
+    label: "Extra ₹300 off on orders above ₹3,500"
   }
 };
 
@@ -842,19 +873,41 @@ function normalizeCouponCode(value) {
   return String(value || "").trim().toUpperCase();
 }
 
+const CLIPPED_COUPONS_STORAGE_KEY = "electromart_clipped_coupons_v1";
+
 function loadCouponState() {
   try {
     const raw = localStorage.getItem(COUPON_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && typeof parsed === "object" ? parsed : null;
+    if (parsed && typeof parsed === "object" && parsed.code) {
+      return parsed;
+    }
   } catch (error) {
-    return null;
+    // ignore
   }
+
+  try {
+    if (sessionStorage.getItem("electromart_coupon_dismissed_v1") !== "true") {
+      const rawClipped = localStorage.getItem(CLIPPED_COUPONS_STORAGE_KEY);
+      const clipped = rawClipped ? JSON.parse(rawClipped) : [];
+      if (Array.isArray(clipped) && clipped.length > 0) {
+        const firstValid = clipped.find((c) => Boolean(COUPONS[normalizeCouponCode(c)]));
+        if (firstValid) {
+          return { code: normalizeCouponCode(firstValid), isClippedAuto: true };
+        }
+      }
+    }
+  } catch (err) {
+    // ignore
+  }
+
+  return null;
 }
 
 function saveCouponState(state) {
   try {
     localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(state));
+    sessionStorage.removeItem("electromart_coupon_dismissed_v1");
   } catch (error) {
     return;
   }
@@ -863,6 +916,7 @@ function saveCouponState(state) {
 function clearCouponState() {
   try {
     localStorage.removeItem(COUPON_STORAGE_KEY);
+    sessionStorage.setItem("electromart_coupon_dismissed_v1", "true");
   } catch (error) {
     return;
   }
@@ -1205,6 +1259,54 @@ function getPricingBreakdown(rows) {
   };
 }
 
+function renderClippedCouponsChips(rows) {
+  const container = document.getElementById("clippedCouponsBox");
+  const list = document.getElementById("clippedCouponsList");
+  if (!container || !list) return;
+
+  let clipped = [];
+  try {
+    const rawClipped = localStorage.getItem(CLIPPED_COUPONS_STORAGE_KEY);
+    clipped = rawClipped ? JSON.parse(rawClipped) : [];
+  } catch (e) {
+    clipped = [];
+  }
+
+  if (!Array.isArray(clipped) || clipped.length === 0) {
+    container.hidden = true;
+    return;
+  }
+
+  const currentCoupon = normalizeCouponCode(loadCouponState()?.code || "");
+  list.innerHTML = "";
+  let visibleCount = 0;
+
+  clipped.forEach((code) => {
+    const normalized = normalizeCouponCode(code);
+    const def = COUPONS[normalized];
+    if (!def) return;
+    visibleCount++;
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = `clipped-coupon-chip ${normalized === currentCoupon ? "active" : ""}`;
+    chip.style.cssText = "display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 0.78rem; border-radius: 12px; border: 1px dashed #007600; background: #f0fdf4; color: #007600; cursor: pointer;";
+    if (normalized === currentCoupon) {
+      chip.style.background = "#007600";
+      chip.style.color = "#ffffff";
+      chip.style.borderStyle = "solid";
+    }
+    chip.innerHTML = `<strong>${normalized}</strong> <span>(${def.label})</span>`;
+    chip.title = `Click to apply ${normalized}`;
+    chip.addEventListener("click", () => {
+      saveCouponState({ code: normalized });
+      renderSummary(rows);
+    });
+    list.appendChild(chip);
+  });
+
+  container.hidden = visibleCount === 0;
+}
+
 function renderSummary(rows) {
   currentCheckoutRows = rows.slice();
   const breakdown = getPricingBreakdown(rows);
@@ -1255,6 +1357,7 @@ function renderSummary(rows) {
   if (removeCouponBtn) {
     removeCouponBtn.hidden = !coupon.code;
   }
+  renderClippedCouponsChips(rows);
   const freeShippingTagRow = document.getElementById("freeShippingTagRow");
   if (freeShippingTagRow) {
     freeShippingTagRow.hidden = !(shipping === 0 && itemCount > 0);
