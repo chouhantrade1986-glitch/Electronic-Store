@@ -1,6 +1,6 @@
 ﻿{
     "baselineType":  "ui-visual",
-    "generatedAt":  "2026-11-27T22:32:50Z",
+    "generatedAt":  "2026-11-27T22:54:55Z",
     "sourceDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-reports\\ui",
     "destinationDir":  "C:\\Users\\Lenovo E530\\Documents\\GitHub\\Electronic-Store\\qa-baselines\\ui",
     "files":  [
@@ -36,8 +36,8 @@
                   },
                   {
                       "name":  "qa-phase52-pdp-reviews.png",
-                      "bytes":  419814,
-                      "sha256":  "DF641B12ABBA7234591377027A6FFD7E5CD4695B6E9E15E4A7E984DA4EFC0A6F"
+                      "bytes":  419818,
+                      "sha256":  "EFD833A2133321D63C94B3D61BA1569F7A799E523636ADB9614B69E779AF280C"
                   },
                   {
                       "name":  "qa-phase52-coupons.png",
