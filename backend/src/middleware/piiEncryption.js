@@ -21,6 +21,12 @@ const PII_FIELD_NAMES = new Set([
 ]);
 const CONTEXTUAL_PII_FIELD_NAMES = new Map([
   ["reviewerName", new Set(["productReviews"])],
+  ["headline", new Set(["productReviews"])],
+  ["text", new Set(["productReviews"])],
+  ["askerName", new Set(["productQuestions"])],
+  ["question", new Set(["productQuestions"])],
+  ["answererName", new Set(["productAnswers"])],
+  ["answer", new Set(["productAnswers"])],
   ["name", new Set(["users", "pendingUser"])],
   ["code", new Set(["authOtpChallenges"])],
   ["destination", new Set(["authOtpChallenges", "orderNotifications"])],

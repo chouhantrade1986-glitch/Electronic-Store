@@ -7,6 +7,7 @@
   const registerName = document.getElementById("registerName");
   const registerMobile = document.getElementById("registerMobile");
   const registerEmail = document.getElementById("registerEmail");
+  const registerAddress = document.getElementById("registerAddress");
   const registerPassword = document.getElementById("registerPassword");
   const registerOtpSection = document.getElementById("registerOtpSection");
   const registerOtp = document.getElementById("registerOtp");
@@ -56,6 +57,7 @@
 
   let otpRequested = false;
   let simulatedOtp = "123456";
+  let backendRegisterChallengeId = "";
 
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
@@ -65,6 +67,7 @@
       const name = String(registerName.value || "").trim();
       const mobile = String(registerMobile.value || "").replace(/\D/g, "");
       const email = String(registerEmail.value || "").trim();
+      const address = String(registerAddress && registerAddress.value || "").trim();
       const password = String(registerPassword.value || "");
 
       if (!name) {
@@ -85,6 +88,18 @@
         return;
       }
 
+      if (!email) {
+        setMessage("Enter your email address", true);
+        registerEmail.focus();
+        return;
+      }
+
+      if (!address) {
+        setMessage("Enter your delivery address", true);
+        if (registerAddress) registerAddress.focus();
+        return;
+      }
+
       if (!password || password.length < 6) {
         setMessage("Passwords must be at least 6 characters", true);
         registerPassword.focus();
@@ -93,6 +108,34 @@
 
       // Step 1: Request OTP
       if (!otpRequested) {
+        try {
+          const response = await fetch("/api/auth/otp/request", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ purpose: "register", channel: "email", name, email, mobile, password, address })
+          });
+          const payload = await response.json();
+          if (response.ok && payload.challengeId) {
+            backendRegisterChallengeId = payload.challengeId;
+            otpRequested = true;
+            registerOtpSection.style.display = "block";
+            registerOtpAssist.textContent = payload.otpPreview
+              ? `Verification code: ${payload.otpPreview}`
+              : `A verification code was sent to ${payload.destinationMasked || email}.`;
+            registerSubmitBtn.textContent = "Create your ElectroMart account";
+            setMessage("Enter the verification code to finish creating your account");
+            setTimeout(() => registerOtp.focus(), 100);
+            return;
+          }
+          if (response.status !== 404 && response.status !== 503) {
+            throw new Error(payload.message || "Account creation could not be started.");
+          }
+        } catch (error) {
+          if (!(error instanceof TypeError)) {
+            setMessage(error.message || "Account creation could not be started.", true);
+            return;
+          }
+          // Network unavailable: retain the local preview registration flow.
+        }
         otpRequested = true;
         simulatedOtp = String(Math.floor(100000 + Math.random() * 900000));
         registerOtpSection.style.display = "block";
@@ -123,6 +166,21 @@
       registerSubmitBtn.textContent = "Creating account...";
 
       try {
+        if (backendRegisterChallengeId) {
+          const response = await fetch("/api/auth/otp/verify", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ purpose: "register", challengeId: backendRegisterChallengeId, code: enteredOtp })
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.message || "The verification code could not be confirmed.");
+          const session = window.ElectroMartAuth.createSession(payload, email || mobile, false);
+          window.ElectroMartAuth.persistSession(session);
+          const profile = { name: payload.user.name, email: payload.user.email, phone: payload.user.mobile, address };
+          localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+          setMessage("Account created successfully! Redirecting...", false);
+          setTimeout(() => { window.location.href = redirectTarget; }, 400);
+          return;
+        }
         // Save to local storage users
         const localUsers = JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || "[]");
         const existing = localUsers.find(u => u.mobile === mobile || (email && u.email && u.email.toLowerCase() === email.toLowerCase()));
@@ -150,8 +208,9 @@
         // Create active session
         const session = {
           authenticated: true,
-          token: `em_token_${Date.now()}`,
+          id: newUser.id,
           role: "customer",
+          authMode: "local-preview",
           user: {
             name: newUser.name,
             email: newUser.email,
@@ -165,7 +224,8 @@
         const profile = {
           name: newUser.name,
           email: newUser.email,
-          phone: newUser.mobile
+          phone: newUser.mobile,
+          address
         };
         localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
 

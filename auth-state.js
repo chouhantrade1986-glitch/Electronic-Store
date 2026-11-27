@@ -5,10 +5,56 @@ function readAuthSession() {
   try {
     const raw = localStorage.getItem(AUTH_SESSION_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && typeof parsed === "object" ? parsed : null;
+    if (!parsed || typeof parsed !== "object") return null;
+    if (typeof parsed.token === "string" && parsed.token.startsWith("em_token_")) {
+      delete parsed.token;
+      parsed.authMode = parsed.authMode || "local-preview";
+      localStorage.setItem(AUTH_SESSION_STORAGE_KEY, JSON.stringify(parsed));
+    }
+    return parsed;
   } catch (error) {
     return null;
   }
+}
+
+function persistElectroMartAuthSession(session) {
+  if (!session || typeof session !== "object") throw new Error("Invalid sign-in session.");
+  localStorage.setItem(AUTH_SESSION_STORAGE_KEY, JSON.stringify(session));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new CustomEvent("electromart:auth-changed", { detail: session }));
+  }
+  return session;
+}
+
+function createElectroMartSessionFromAuthResponse(payload, identifier = "", keepSignedIn = false) {
+  const user = payload && payload.user && typeof payload.user === "object" ? payload.user : {};
+  const token = String(payload && (payload.token || payload.accessToken) || "").trim();
+  if (!token || !user.id) throw new Error("The sign-in response did not include a valid session.");
+  return {
+    authenticated: true,
+    token,
+    id: user.id,
+    name: user.name || "Customer",
+    email: user.email || (String(identifier).includes("@") ? identifier : ""),
+    mobile: user.mobile || (String(identifier).includes("@") ? "" : identifier),
+    role: user.role || "customer",
+    user,
+    expiresAt: Date.now() + (keepSignedIn ? 30 : 1) * 86400000
+  };
+}
+
+if (typeof window !== "undefined") {
+  window.ElectroMartAuth = {
+    readSession: readAuthSession,
+    persistSession: persistElectroMartAuthSession,
+    createSession: createElectroMartSessionFromAuthResponse,
+    getToken() {
+      const session = readAuthSession() || {};
+      const token = String(session.token || session.accessToken || session.credentials?.token || "");
+      return token.startsWith("em_token_") ? "" : token;
+    }
+  };
 }
 
 function clearAuthSession() {

@@ -15,16 +15,33 @@ function summarize(reviews) {
   return { count, average: count ? reviews.reduce((sum, r) => sum + Number(r.rating), 0) / count : 0,
     histogram: counts.map((value, i) => ({ stars: 5 - i, count: value, percentage: count ? Math.round(value * 100 / count) : 0 })) };
 }
+function reviewDto(review) {
+  return {
+    id: String(review.id || ""),
+    reviewerName: String(review.reviewerName || "ElectroMart Customer"),
+    rating: Number(review.rating || 0),
+    title: String(review.title || review.headline || ""),
+    comment: String(review.comment || review.text || ""),
+    verifiedPurchase: review.verifiedPurchase === true,
+    helpfulCount: Number(review.helpfulCount || 0),
+    createdAt: String(review.createdAt || "")
+  };
+}
 router.get("/:id/reviews", (req, res) => {
   const db = readDb(); ensure(db);
   const id = String(req.params.id);
   let reviews = db.productReviews.filter(r => String(r.productId) === id && r.status !== "hidden");
   const star = Number(req.query.stars);
   if (star >= 1 && star <= 5) reviews = reviews.filter(r => Number(r.rating) === star);
-  reviews.sort(req.query.sort === "recent"
+  const sort = String(req.query.sort || "top");
+  reviews.sort(sort === "recent"
     ? (a, b) => String(b.createdAt).localeCompare(String(a.createdAt))
-    : (a, b) => Number(b.helpfulCount || 0) - Number(a.helpfulCount || 0) || String(b.createdAt).localeCompare(String(a.createdAt)));
-  res.json({ reviews, summary: summarize(db.productReviews.filter(r => String(r.productId) === id && r.status !== "hidden")) });
+    : sort === "highest"
+      ? (a, b) => Number(b.rating) - Number(a.rating) || String(b.createdAt).localeCompare(String(a.createdAt))
+      : sort === "lowest"
+        ? (a, b) => Number(a.rating) - Number(b.rating) || String(b.createdAt).localeCompare(String(a.createdAt))
+        : (a, b) => Number(b.helpfulCount || 0) - Number(a.helpfulCount || 0) || String(b.createdAt).localeCompare(String(a.createdAt)));
+  return res.json({ reviews: reviews.map(reviewDto), summary: summarize(db.productReviews.filter(r => String(r.productId) === id && r.status !== "hidden")) });
 });
 router.post("/:id/reviews", requireAuth, (req, res) => {
   const rating = Number(req.body && req.body.rating);
@@ -42,7 +59,7 @@ router.post("/:id/reviews", requireAuth, (req, res) => {
   const review = { id: randomUUID(), productId, userId: req.user.id, reviewerName: clean(req.user.name, 80) || "ElectroMart Customer",
     rating, headline, text, verifiedPurchase: ownsPurchase, helpfulCount: 0, status: "published", createdAt: new Date().toISOString() };
   db.productReviews.push(review); writeDb(db);
-  return res.status(201).json({ review, summary: summarize(db.productReviews.filter(r => String(r.productId) === productId)) });
+  return res.status(201).json({ review: reviewDto(review), summary: summarize(db.productReviews.filter(r => String(r.productId) === productId)) });
 });
 router.post("/:id/reviews/:reviewId/helpful", requireAuth, (req, res) => {
   const db = readDb(); ensure(db);

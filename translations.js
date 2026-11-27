@@ -31015,3 +31015,33 @@ const phase50Targets = typeof window !== "undefined" ? [window.EM_TRANSLATIONS, 
 phase50Targets.forEach((set) => Object.entries(phase50ReviewWords).forEach(([lang, words]) => {
   if (set && set[lang]) Object.assign(set[lang], { review_sort_label: words[0], review_sort_top: words[1], review_sort_recent: words[2] });
 }));
+const phase51ReviewQaWords = {
+  en: ["Highest Rated", "Lowest Rated", "Was this question helpful?", "No answer yet. Share what you know.", "Add an answer", "Your answer", "Post answer", "Sign in to contribute."],
+  hi: ["सबसे अधिक रेटिंग", "सबसे कम रेटिंग", "क्या यह प्रश्न उपयोगी था?", "अभी उत्तर नहीं है। अपना अनुभव साझा करें।", "उत्तर जोड़ें", "आपका उत्तर", "उत्तर पोस्ट करें", "योगदान देने के लिए साइन इन करें।"],
+  ta: ["அதிக மதிப்பீடு", "குறைந்த மதிப்பீடு", "இந்தக் கேள்வி பயனுள்ளதாக இருந்ததா?", "இன்னும் பதில் இல்லை. உங்கள் அனுபவத்தைப் பகிரவும்.", "பதில் சேர்க்கவும்", "உங்கள் பதில்", "பதிலைப் பதிவிடவும்", "பங்களிக்க உள்நுழையவும்."],
+  te: ["అత్యధిక రేటింగ్", "అత్యల్ప రేటింగ్", "ఈ ప్రశ్న ఉపయోగకరంగా ఉందా?", "ఇంకా సమాధానం లేదు. మీ అనుభవాన్ని పంచుకోండి.", "సమాధానం జోడించండి", "మీ సమాధానం", "సమాధానం పోస్ట్ చేయండి", "సహకరించడానికి సైన్ ఇన్ చేయండి."],
+  kn: ["ಅತ್ಯಧಿಕ ರೇಟಿಂಗ್", "ಕಡಿಮೆ ರೇಟಿಂಗ್", "ಈ ಪ್ರಶ್ನೆ ಉಪಯುಕ್ತವಾಗಿತ್ತೇ?", "ಇನ್ನೂ ಉತ್ತರ ಇಲ್ಲ. ನಿಮ್ಮ ಅನುಭವ ಹಂಚಿಕೊಳ್ಳಿ.", "ಉತ್ತರ ಸೇರಿಸಿ", "ನಿಮ್ಮ ಉತ್ತರ", "ಉತ್ತರ ಪ್ರಕಟಿಸಿ", "ಕೊಡುಗೆ ನೀಡಲು ಸೈನ್ ಇನ್ ಮಾಡಿ."],
+  ml: ["ഏറ്റവും ഉയർന്ന റേറ്റിംഗ്", "ഏറ്റവും കുറഞ്ഞ റേറ്റിംഗ്", "ഈ ചോദ്യം സഹായകരമായിരുന്നോ?", "ഇതുവരെ മറുപടിയില്ല. നിങ്ങളുടെ അനുഭവം പങ്കിടുക.", "മറുപടി ചേർക്കുക", "നിങ്ങളുടെ മറുപടി", "മറുപടി പോസ്റ്റ് ചെയ്യുക", "സംഭാവന ചെയ്യാൻ സൈൻ ഇൻ ചെയ്യുക."],
+  bn: ["সর্বোচ্চ রেটিং", "সর্বনিম্ন রেটিং", "এই প্রশ্নটি কি সহায়ক ছিল?", "এখনও উত্তর নেই। আপনার অভিজ্ঞতা জানান।", "উত্তর যোগ করুন", "আপনার উত্তর", "উত্তর পোস্ট করুন", "অংশ নিতে সাইন ইন করুন।"],
+  mr: ["सर्वाधिक रेटिंग", "सर्वात कमी रेटिंग", "हा प्रश्न उपयुक्त होता का?", "अजून उत्तर नाही. तुमचा अनुभव सांगा.", "उत्तर जोडा", "तुमचे उत्तर", "उत्तर पोस्ट करा", "योगदान देण्यासाठी साइन इन करा."],
+  ur: ["سب سے زیادہ درجہ بندی", "سب سے کم درجہ بندی", "کیا یہ سوال مددگار تھا؟", "ابھی جواب نہیں۔ اپنا تجربہ بتائیں۔", "جواب شامل کریں", "آپ کا جواب", "جواب پوسٹ کریں", "تعاون کے لیے سائن اِن کریں۔"],
+  pa: ["ਸਭ ਤੋਂ ਵੱਧ ਰੇਟਿੰਗ", "ਸਭ ਤੋਂ ਘੱਟ ਰੇਟਿੰਗ", "ਕੀ ਇਹ ਸਵਾਲ ਮਦਦਗਾਰ ਸੀ?", "ਹਾਲੇ ਜਵਾਬ ਨਹੀਂ। ਆਪਣਾ ਤਜਰਬਾ ਸਾਂਝਾ ਕਰੋ।", "ਜਵਾਬ ਜੋੜੋ", "ਤੁਹਾਡਾ ਜਵਾਬ", "ਜਵਾਬ ਪੋਸਟ ਕਰੋ", "ਯੋਗਦਾਨ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ।"],
+  gu: ["સૌથી વધુ રેટિંગ", "સૌથી ઓછું રેટિંગ", "શું આ પ્રશ્ન ઉપયોગી હતો?", "હજુ જવાબ નથી. તમારો અનુભવ જણાવો.", "જવાબ ઉમેરો", "તમારો જવાબ", "જવાબ પોસ્ટ કરો", "યોગદાન આપવા સાઇન ઇન કરો."]
+};
+const phase51Keys = ["review_sort_highest", "review_sort_lowest", "qa_helpful_prompt", "qa_no_answer_yet", "qa_answer_action", "qa_answer_label", "qa_answer_submit", "qa_signin_required"];
+if (typeof window !== "undefined") [window.EM_TRANSLATIONS, window.TRANSLATIONS].forEach(set => {
+  if (!set) return;
+  Object.entries(phase51ReviewQaWords).forEach(([lang, values]) => {
+    if (set[lang]) Object.assign(set[lang], Object.fromEntries(phase51Keys.map((key, index) => [key, values[index]])));
+  });
+});
+const phase51RegisterEmailLabels = {
+  en: "Email address", hi: "ईमेल पता", ta: "மின்னஞ்சல் முகவரி", te: "ఈమెయిల్ చిరునామా", kn: "ಇಮೇಲ್ ವಿಳಾಸ",
+  ml: "ഇമെയിൽ വിലാസം", bn: "ইমেল ঠিকানা", mr: "ईमेल पत्ता", ur: "ای میل پتہ", pa: "ਈਮੇਲ ਪਤਾ", gu: "ઇમેઇલ સરનામું"
+};
+if (typeof window !== "undefined") [window.EM_TRANSLATIONS, window.TRANSLATIONS].forEach(set => {
+  if (!set) return;
+  Object.entries(phase51RegisterEmailLabels).forEach(([lang, value]) => {
+    if (set[lang]) set[lang].register_email_required = value;
+  });
+});

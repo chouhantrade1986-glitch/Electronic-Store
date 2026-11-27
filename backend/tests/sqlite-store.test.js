@@ -96,6 +96,9 @@ test("corporate collections normalize into SQLite without exposing encrypted PII
   process.env.PII_ENCRYPTION_KEY = "sqlite-corporate-pii-test-key-32-bytes";
   try {
     const snapshot = encryptPiiFields({
+      productQuestions: [{ id: "question-1", productId: "product-1", userId: "user-1", askerName: "Question Author", question: "Is this compatible?", status: "published", createdAt: "2026-11-17T00:00:00.000Z" }],
+      productAnswers: [{ id: "answer-1", productId: "product-1", questionId: "question-1", userId: "user-2", answererName: "Answer Author", answer: "Yes, it is compatible.", status: "published", createdAt: "2026-11-17T00:01:00.000Z" }],
+      productQuestionVotes: [{ id: "vote-1", questionId: "question-1", userId: "user-2", helpful: true }],
       corporateInvoices: [{
         id: "invoice-1",
         orderId: "order-1",
@@ -138,6 +141,15 @@ test("corporate collections normalize into SQLite without exposing encrypted PII
     assert.match(registryJson.recipients[0].recipientName, /^v1:/);
     assert.match(registryJson.recipients[0].recipientEmail, /^v1:/);
     const restored = sqliteStore.readSqliteSnapshot();
+    const questionJson = JSON.parse(db.prepare("SELECT json FROM product_questions WHERE id = ?").get("question-1").json);
+    const answerJson = JSON.parse(db.prepare("SELECT json FROM product_answers WHERE id = ?").get("answer-1").json);
+    assert.match(questionJson.askerName, /^v1:/);
+    assert.match(questionJson.question, /^v1:/);
+    assert.match(answerJson.answererName, /^v1:/);
+    assert.match(answerJson.answer, /^v1:/);
+    assert.deepEqual(restored.productQuestions, snapshot.productQuestions);
+    assert.deepEqual(restored.productAnswers, snapshot.productAnswers);
+    assert.deepEqual(restored.productQuestionVotes, snapshot.productQuestionVotes);
     assert.deepEqual(restored.corporateInvoices, snapshot.corporateInvoices);
     assert.deepEqual(restored.corporateRegistries, snapshot.corporateRegistries);
   } finally {

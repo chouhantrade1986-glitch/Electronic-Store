@@ -382,7 +382,7 @@ if (reviewForm) {
     if (window.ElectroMart && window.ElectroMart.Reviews) {
       try {
         const saved = await window.ElectroMart.Reviews.submit(pId, { rating, headline: newReview.headline, text });
-        newReview = { ...saved.review, product, images: [...uploadedImages], date: new Date(saved.review.createdAt).toLocaleDateString("en-IN") };
+        newReview = { ...saved.review, headline: saved.review.title, text: saved.review.comment, product, images: [...uploadedImages], date: new Date(saved.review.createdAt).toLocaleDateString("en-IN") };
       } catch (error) {
         if (error.message !== "Sign in to submit a review.") {
           alert(error.message || "Review could not be submitted. Please try again.");

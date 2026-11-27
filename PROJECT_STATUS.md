@@ -1,6 +1,6 @@
 # ElectroMart — Project Status (परियोजना की वर्तमान स्थिति)
 
-**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 50: Customer Reviews & Community Q&A पूर्ण; 85 frontend suites + 174 backend unit tests = 259 passing checks)
+**अंतिम अद्यतन (Last Updated):** 28 नवंबर 2026 (Phase 51: Secure Auth, Server Ratings & Community Q&A पूर्ण; 86 frontend suites + 175 backend unit tests = 261 passing checks)
 **शाखा (Branch):** `main`  
 **वातावरण (Environment):** Windows / Node.js 22+
 
@@ -10,7 +10,8 @@
 
 | **घटक** | **टेस्ट सूट** | **स्थिति** | **परिणाम** |
 | --- | --- | --- | --- |
-| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 85 / 85 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **फ्रंटएंड व i18n रिग्रेशन टेस्ट्स** | `node scratch/run_all_tests.js` | ✅ **PASS** | 86 / 86 टेस्ट सूट्स उत्तीर्ण (100%) |
+| **Phase 51 सिक्योरिटी, रेटिंग्स व Q&A टेस्ट** | `scratch/test-amazon-phase51.js` / backend review and SQLite tests | ✅ **PASS** | DTO redaction, auth session, server filters, Q&A and PII normalization |
 | **Customer Reviews & Q&A API टेस्ट** | `scratch/test-amazon-phase50.js` / `backend/tests/product-reviews.test.js` | ✅ **PASS** | API contract, verified purchase, encrypted reviewer identity, rating summary, helpful vote |
 | **Personalized Recommendations Engine टेस्ट** | `scratch/test-amazon-phase49.js` | ✅ **PASS** | Phase 49 contract checks उत्तीर्ण |
 | **Buy Again & Fast Reorder Hub टेस्ट** | `scratch/test-amazon-phase48.js` | ✅ **PASS** | Phase 48 contract checks उत्तीर्ण |
@@ -44,10 +45,10 @@
 | **ब्रांड व लीगल सुरक्षा टेस्ट** | `node scratch/test-brand-safety-and-legal-compliance.js` | ✅ **PASS** | 100% शुद्ध ElectroMart (0 Amazon टेक्स्ट) |
 | **Desktops UI पॉलिश टेस्ट** | `node scratch/test-desktops-ui.js` | ✅ **PASS** | 6 / 6 लेयर्स उत्तीर्ण (100%) |
 | **स्टैटिक सर्वर परफॉरमेंस टेस्ट** | `node scratch/test-static-server-perf.js` | ✅ **PASS** | gzip/brotli compression + ETag/304 caching सत्यापित |
-| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 174 / 174 टेस्ट उत्तीर्ण (100%) |
+| **बैकएंड यूनिट टेस्ट्स** | `npm run test:unit` (in `backend/`) | ✅ **PASS** | 175 / 175 टेस्ट उत्तीर्ण (100%) |
 | **API व ब्राउज़र smoke** | GitHub Actions Smoke Suite (Run #600) | ✅ **PASS** | Run #600 (`1122e6c`): dependency installs, smoke suite, and 6/6 visual baselines passed. |
 | **विज़ुअल baseline सत्यापन** | `npm run smoke:baseline:verify` | ✅ **PASS** | 6 / 6 screenshots सत्यापित |
-| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **259 / 259 (100% Pass Rate)** |
+| **कुल यूनिट/फ्रंटएंड टेस्ट पास स्कोर** | संपूर्ण सिस्टम | ✅ **PASS** | **261 / 261 (100% Pass Rate)** |
 
 ### सुरक्षा व प्रोडक्शन रोडमैप स्थिति
 
@@ -83,7 +84,7 @@
 - **Test baseline after Phase 48:** 83 frontend suites + 173 backend unit tests = 256 passing checks; brand safety passes separately.
 
 - **Personalized Recommendations & Frequently Viewed Together Engine (Phase 49):** `recommendations.js` ranks in-stock B2C catalog items deterministically from bounded recent browsing history (category, brand, and keyword affinity), with a featured/rating fallback for new visitors. The homepage recommendation shelf now reflects that ranking. The product detail page records bounded, non-identifying product/time co-view events in `electromart_view_events_v1` and shows co-view-ranked products; when local co-view evidence is sparse it falls back to related catalog picks. Both surfaces use text-safe DOM rendering and the new 11-language keys in `translations.js`. Shared script order was corrected on the homepage and product detail page, with all executable scripts in the body. `scratch/test-amazon-phase49.js` covers deterministic ranking, exclusions, co-view frequency, page wiring, i18n, and branding.
-- **Test baseline after Phase 49:** 84 frontend suites + 173 backend unit tests = 257 passing checks; brand safety passes separately.
+- **Historical Phase 49 checkpoint:** 84 frontend suites + 173 backend unit tests = 257 passing checks at that phase; later phase totals are listed at the top.
 
 ---
 
@@ -707,3 +708,11 @@
 - The server derives verified purchase status from a customer's paid or fulfilled order. Reviewer names use contextual PII encryption at rest. `reviews.js` provides the shared API client while the existing product detail and review submission pages remain canonical.
 - Focused coverage: `scratch/test-amazon-phase50.js` and `backend/tests/product-reviews.test.js`; translations for review sorting cover all 11 supported languages.
 - Phase 50 verification: 85 frontend suites + 174 backend unit tests = 259 passing checks; brand-safety suite passes separately.
+
+## Phase 51 — Secure Auth, Server Ratings & Community Q&A
+
+- Login and registration retain backend-issued credentials from the existing OTP endpoints; local offline preview sessions are explicitly tokenless. The shared auth helper preserves compatibility with legacy token-bearing session objects.
+- Public product reviews use a strict display DTO with no account IDs or internal moderation fields. PDP rating count, average, histogram, star filter, and four sorting modes consume server responses.
+- Community questions, answers, and helpful/unhelpful votes use authenticated writes and public reads. Offline read fallback remains available; local storage is no longer the write source.
+- SQLite manages question, answer, and vote collections. Reviewer names, review text, question/answer names, and user-submitted question/answer content receive contextual encryption at rest.
+- Phase 51 verification target: 86 frontend suites + 175 backend unit tests = 261 passing checks; run the brand-safety suite separately.

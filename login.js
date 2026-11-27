@@ -148,6 +148,8 @@
 
   // OTP Login Option
   let simulatedOtp = "123456";
+  let backendLoginChallengeId = "";
+  let pendingLoginPassword = "";
   if (loginOtpOptionBtn && loginOtpSection) {
     loginOtpOptionBtn.addEventListener("click", () => {
       loginOtpSection.style.display = "block";
@@ -159,10 +161,27 @@
   }
 
   if (loginOtpSubmitBtn) {
-    loginOtpSubmitBtn.addEventListener("click", () => {
+    loginOtpSubmitBtn.addEventListener("click", async () => {
       const enteredOtp = String(loginOtpInput.value || "").trim();
       if (!enteredOtp) {
         setMessage("Please enter the 6-digit OTP", true);
+        return;
+      }
+      if (backendLoginChallengeId) {
+        loginOtpSubmitBtn.disabled = true;
+        try {
+          const response = await fetch("/api/auth/otp/verify", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ purpose: "login", challengeId: backendLoginChallengeId, code: enteredOtp,
+              emailOrMobile: loginIdentifier.value.trim(), password: pendingLoginPassword })
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.message || "The verification code could not be confirmed.");
+          completeSignIn(loginIdentifier.value.trim(), payload.user && payload.user.name, payload.user && payload.user.role, payload);
+        } catch (error) {
+          setMessage(error.message || "The verification code could not be confirmed.", true);
+          loginOtpSubmitBtn.disabled = false;
+        }
         return;
       }
       if (enteredOtp !== simulatedOtp && enteredOtp !== "123456") {
@@ -197,29 +216,37 @@
       loginSubmitBtn.textContent = "Signing in...";
 
       try {
-        // Try backend API if reachable
-        let authenticated = false;
-        let userData = null;
-
         try {
-          const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ identifier, password })
+          const response = await fetch("/api/auth/otp/request", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ purpose: "login", channel: identifier.includes("@") ? "email" : "sms", emailOrMobile: identifier, password })
           });
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.user) {
-              authenticated = true;
-              userData = data.user;
-            }
+          const payload = await response.json();
+          if (response.ok && payload.challengeId) {
+            backendLoginChallengeId = payload.challengeId;
+            pendingLoginPassword = password;
+            if (loginOtpSection) loginOtpSection.style.display = "block";
+            if (loginOtpOptionBtn) loginOtpOptionBtn.style.display = "none";
+            if (loginOtpInput) loginOtpInput.focus();
+            loginSubmitBtn.disabled = false;
+            loginSubmitBtn.textContent = "Sign in";
+            setMessage(payload.otpPreview ? `Verification code: ${payload.otpPreview}` : `A verification code was sent to ${payload.destinationMasked || identifier}.`);
+            return;
           }
-        } catch {
-          // Backend offline - use safe client/local demo fallback
+          if (response.status !== 404 && response.status !== 503) {
+            throw new Error(payload.message || "Sign-in could not be started.");
+          }
+        } catch (error) {
+          if (error instanceof TypeError) {
+            // Network unavailable: use the existing local preview sign-in below.
+          } else {
+            throw error;
+          }
         }
 
-        // Local & Demo User Fallback
-        if (!authenticated) {
+        let authenticated = false;
+        let userData = null;
+        {
           const idLower = identifier.toLowerCase();
           const cleanPhone = identifier.replace(/\D/g, "");
 
@@ -265,20 +292,21 @@
     });
   }
 
-  function completeSignIn(identifier, name, role = "customer") {
-    const session = {
+  function completeSignIn(identifier, name, role = "customer", serverPayload = null) {
+    const serverAuth = serverPayload && window.ElectroMartAuth
+      ? window.ElectroMartAuth.createSession(serverPayload, identifier, Boolean(keepSignedInCheckbox && keepSignedInCheckbox.checked))
+      : null;
+    const session = serverAuth || {
       authenticated: true,
-      token: `em_token_${Date.now()}`,
+      id: "",
       role: role || "customer",
-      user: {
-        name: name || "Customer",
-        email: identifier.includes("@") ? identifier : `${identifier}@electromart.local`,
-        mobile: identifier.includes("@") ? "" : identifier
-      },
-      expiresAt: Date.now() + (keepSignedInCheckbox && keepSignedInCheckbox.checked ? 30 * 86400000 : 86400000)
+      user: { name: name || "Customer", email: identifier.includes("@") ? identifier : `${identifier}@electromart.local`, mobile: identifier.includes("@") ? "" : identifier },
+      expiresAt: Date.now() + (keepSignedInCheckbox && keepSignedInCheckbox.checked ? 30 * 86400000 : 86400000),
+      authMode: "local-preview"
     };
 
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+    if (window.ElectroMartAuth) window.ElectroMartAuth.persistSession(session);
+    else localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
 
     // Save profile for address & order pre-filling
     const existingProfile = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || "{}");
@@ -296,8 +324,10 @@
     setMessage("Sign in successful! Redirecting...", false);
 
     // Notify listeners
-    window.dispatchEvent(new Event("storage"));
-    window.dispatchEvent(new CustomEvent("electromart:auth-changed", { detail: session }));
+    if (!window.ElectroMartAuth) {
+      window.dispatchEvent(new Event("storage"));
+      window.dispatchEvent(new CustomEvent("electromart:auth-changed", { detail: session }));
+    }
 
     setTimeout(() => {
       window.location.href = redirectTarget;

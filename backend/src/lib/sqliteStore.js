@@ -6,6 +6,21 @@ const SQLITE_FILENAME = "electromart.sqlite";
 const VALID_SQLITE_NORMALIZATION_MODES = new Set(["compat", "strict"]);
 
 const MANAGED_TABLES = {
+  productQuestions: {
+    table: "product_questions", key: "productQuestions", kind: "collection",
+    columns: ["product_id", "user_id", "status", "created_at"],
+    values(item) { return [String(item && item.productId || ""), String(item && item.userId || ""), String(item && item.status || ""), String(item && item.createdAt || "")]; }
+  },
+  productAnswers: {
+    table: "product_answers", key: "productAnswers", kind: "collection",
+    columns: ["product_id", "question_id", "user_id", "status", "created_at"],
+    values(item) { return [String(item && item.productId || ""), String(item && item.questionId || ""), String(item && item.userId || ""), String(item && item.status || ""), String(item && item.createdAt || "")]; }
+  },
+  productQuestionVotes: {
+    table: "product_question_votes", key: "productQuestionVotes", kind: "collection",
+    columns: ["question_id", "user_id", "helpful_flag"],
+    values(item) { return [String(item && item.questionId || ""), String(item && item.userId || ""), item && item.helpful === false ? "0" : "1"]; }
+  },
   productReviews: {
     table: "product_reviews", key: "productReviews", kind: "collection",
     columns: ["product_id", "user_id", "rating", "status", "created_at"],
@@ -467,6 +482,21 @@ function getSqliteDb() {
 
 function ensureSchema(db) {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS product_questions (
+      id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, product_id TEXT, user_id TEXT,
+      status TEXT, created_at TEXT, json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_questions_product ON product_questions(product_id, status);
+    CREATE TABLE IF NOT EXISTS product_answers (
+      id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, product_id TEXT, question_id TEXT,
+      user_id TEXT, status TEXT, created_at TEXT, json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_answers_question ON product_answers(question_id, status);
+    CREATE TABLE IF NOT EXISTS product_question_votes (
+      id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, question_id TEXT, user_id TEXT,
+      helpful_flag TEXT, json TEXT NOT NULL
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_product_question_votes_unique ON product_question_votes(question_id, user_id);
     CREATE TABLE IF NOT EXISTS product_reviews (
       id TEXT PRIMARY KEY, ordinal INTEGER NOT NULL DEFAULT 0, product_id TEXT, user_id TEXT,
       rating INTEGER, status TEXT, created_at TEXT, json TEXT NOT NULL

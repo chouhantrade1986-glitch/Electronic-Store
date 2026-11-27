@@ -42,8 +42,13 @@
         </label>
 
         <label for="registerEmail">
-          <span data-i18n="email_optional_label">Email (optional)</span>
-          <input id="registerEmail" type="email" placeholder="name@example.com" autocomplete="email" />
+          <span data-i18n="register_email_required">Email address</span>
+          <input id="registerEmail" type="email" required placeholder="name@example.com" autocomplete="email" />
+        </label>
+
+        <label for="registerAddress">
+          <span data-i18n="shipping_address_label">Delivery address</span>
+          <input id="registerAddress" type="text" required autocomplete="street-address" />
         </label>
 
         <div>
@@ -118,6 +123,7 @@
   <!-- Script Sequence -->
   <script src="translations.js"></script>
   <script src="universal-i18n-bus.js"></script>
+  <script src="auth-state.js"></script>
   <script src="register.js"></script>
 </body>
 </html>

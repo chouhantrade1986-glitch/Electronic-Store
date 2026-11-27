@@ -615,8 +615,9 @@ function renderServices(product, isInStock) {
 }
 
 let activeReviewStarFilter = null;
+let activeReviewSort = "top";
 
-function renderReviewSummary(product, skipHydrate = false) {
+function renderReviewSummary(product, serverPayload = null, skipHydrate = false) {
   if (!reviewsBlock || !reviewHeadline || !reviewBars) {
     return;
   }
@@ -630,24 +631,20 @@ function renderReviewSummary(product, skipHydrate = false) {
     };
   }
 
-  const rating = Math.max(0, Math.min(5, Number(product.rating || 0)));
-  const totalReviews = Math.max(8, Math.round(42 + (rating * 37)));
-  reviewHeadline.innerHTML = `${rating.toFixed(1)} &#9733; (${totalReviews.toLocaleString("en-IN")} ${t.global_ratings || t.ratings_label || "रेटिंग"})`;
+  const summary = serverPayload && serverPayload.summary ? serverPayload.summary : null;
+  const rating = Math.max(0, Math.min(5, Number(summary ? summary.average : product.rating || 0)));
+  const totalReviews = Math.max(0, Number(summary ? summary.count : product.reviewCount || 0));
+  reviewHeadline.textContent = `${rating.toFixed(1)} ★ (${totalReviews.toLocaleString("en-IN")} ${t.global_ratings || t.ratings_label || "ratings"})`;
 
-  const base = Math.max(20, Math.round((rating / 5) * 100));
-  const distribution = [
-    { stars: 5, value: Math.min(92, base + 20) },
-    { stars: 4, value: Math.min(80, Math.max(5, base - 5)) },
-    { stars: 3, value: Math.min(60, Math.max(4, base - 25)) },
-    { stars: 2, value: Math.min(35, Math.max(3, base - 45)) },
-    { stars: 1, value: Math.min(22, Math.max(2, base - 60)) }
-  ];
+  const distribution = summary && Array.isArray(summary.histogram)
+    ? summary.histogram
+    : [5, 4, 3, 2, 1].map(stars => ({ stars, percentage: 0 }));
   const starWord = t.tbl_rating || "स्टार";
   reviewBars.innerHTML = distribution.map((item) => `
     <div class="review-bar" data-star-filter="${item.stars}" title="Filter by ${item.stars} star reviews">
       <span>${item.stars} ${starWord}</span>
-      <div class="review-track"><div class="review-fill" style="width:${item.value}%"></div></div>
-      <span>${item.value}%</span>
+      <div class="review-track"><div class="review-fill" style="width:${Math.max(0, Math.min(100, Number(item.percentage || 0)))}%"></div></div>
+      <span>${Math.max(0, Math.min(100, Number(item.percentage || 0)))}%</span>
     </div>
   `).join("");
 
@@ -656,10 +653,10 @@ function renderReviewSummary(product, skipHydrate = false) {
     translateBtn.textContent = t.translate_reviews_btn || "Translate all reviews";
   }
 
-  // Load custom reviews from localStorage for this product
-  let customReviews = [];
+  // Use the server response as the source of truth. Local data is a display fallback only.
+  let customReviews = Array.isArray(serverPayload && serverPayload.reviews) ? serverPayload.reviews : [];
   try {
-    const raw = localStorage.getItem("electromart_reviews_v1");
+    const raw = !Array.isArray(serverPayload && serverPayload.reviews) && localStorage.getItem("electromart_reviews_v1");
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
@@ -714,15 +711,15 @@ function renderReviewSummary(product, skipHydrate = false) {
       verified: r.verifiedPurchase === true,
       stars: "★".repeat(rNum) + "☆".repeat(5 - rNum),
       ratingNum: rNum,
-      title: r.headline || "Verified Customer Review",
-      date: r.date ? `Reviewed in India on ${r.date}` : "Reviewed in India on August 2026",
-      body: r.text || "",
+      title: r.title || r.headline || "Customer Review",
+      date: r.createdAt ? new Date(r.createdAt).toLocaleDateString(currentLang) : (r.date ? `Reviewed on ${r.date}` : ""),
+      body: r.comment || r.text || "",
       helpfulCount: Number(r.helpfulCount || 0),
       images: Array.isArray(r.images) ? r.images : []
     };
   });
 
-  const allReviews = [...mappedCustom, ...defaultReviews];
+  const allReviews = Array.isArray(serverPayload && serverPayload.reviews) ? mappedCustom : [...mappedCustom, ...defaultReviews];
 
   // Render Customer Media Gallery
   const customerGallery = document.getElementById("customerMediaGallery");
@@ -815,16 +812,16 @@ function renderReviewSummary(product, skipHydrate = false) {
     reviewsList.innerHTML = displayReviews.map((rev, idx) => `
       <article class="amazon-review-item sample-review-item">
         <div class="review-author-row">
-          <div class="review-avatar">${rev.author.charAt(0)}</div>
+          <div class="review-avatar">${escapeHtml(rev.author.charAt(0))}</div>
           <span class="review-author-name">${escapeHtml(rev.author)}</span>
         </div>
         <div class="review-rating-row">
           <span class="review-stars-amber">${rev.stars}</span>
           <strong class="review-title-bold">${escapeHtml(rev.title)}</strong>
         </div>
-        <div class="review-date-muted">${rev.date}</div>
+        <div class="review-date-muted">${escapeHtml(rev.date)}</div>
         <div class="review-verified-badge" ${rev.verified ? "" : "hidden"}>
-          <span>${rev.verified}</span>
+          <span>${escapeHtml(t.verified_purchase || "Verified Purchase")}</span>
         </div>
         <p class="review-body-text">${escapeHtml(rev.body)}</p>
         ${Array.isArray(rev.images) && rev.images.length > 0 ? `
@@ -868,50 +865,63 @@ function renderReviewSummary(product, skipHydrate = false) {
       } else {
         activeReviewStarFilter = star;
       }
-      renderFilteredReviews();
+      refreshServerReviews(product);
     });
   });
 
   if (clearFilterBtn) {
     clearFilterBtn.onclick = () => {
       activeReviewStarFilter = null;
-      renderFilteredReviews();
+      refreshServerReviews(product);
     };
   }
 
   const sortSelect = document.getElementById("reviewSort");
   if (sortSelect) sortSelect.onchange = () => {
-    allReviews.sort(sortSelect.value === "recent"
-      ? (a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || ""))
-      : (a, b) => Number(b.helpfulCount || 0) - Number(a.helpfulCount || 0));
-    renderFilteredReviews();
+    activeReviewSort = sortSelect.value;
+    refreshServerReviews(product);
   };
 
   renderFilteredReviews();
   reviewsBlock.hidden = false;
-  if (!skipHydrate && window.ElectroMart && window.ElectroMart.Reviews) {
-    window.ElectroMart.Reviews.list(product.id).then(({ reviews }) => {
-      const old = JSON.parse(localStorage.getItem("electromart_reviews_v1") || "[]").filter(r => String(r.productId) !== String(product.id));
-      const saved = reviews.map(r => ({ ...r, date: String(r.createdAt || "").slice(0, 10) }));
-      localStorage.setItem("electromart_reviews_v1", JSON.stringify([...old, ...saved]));
-      renderReviewSummary(product, true);
-    }).catch(() => {});
-  }
+  if (!skipHydrate) refreshServerReviews(product);
+}
+
+function refreshServerReviews(product) {
+  if (!product || !window.ElectroMart?.Reviews) return;
+  window.ElectroMart.Reviews.list(product.id, { stars: activeReviewStarFilter, sort: activeReviewSort })
+    .then(payload => {
+      renderReviewSummary(product, payload, true);
+      const rating = Math.max(0, Math.min(5, Number(payload.summary && payload.summary.average || 0)));
+      const count = Math.max(0, Number(payload.summary && payload.summary.count || 0));
+      const ratingRoot = document.getElementById("productRating");
+      if (ratingRoot) {
+        const stars = ratingRoot.querySelector(".rating-stars-display");
+        const value = ratingRoot.querySelector(".rating-value-text");
+        const countLink = ratingRoot.querySelector(".rating-count-link");
+        if (stars) stars.textContent = renderStarCharacters(rating);
+        if (value) value.textContent = rating.toFixed(1);
+        if (countLink) countLink.textContent = `${count.toLocaleString("en-IN")} ${window.EM_TRANSLATIONS?.[(localStorage.getItem("electromart_lang_v1") || "en")]?.ratings_label || "ratings"}`;
+      }
+    })
+    .catch(() => renderReviewSummary(product, null, true));
 }
 
 const QA_STORAGE_KEY = "electromart_qa_v1";
 
-function renderQa(product) {
+function renderQa(product, apiPayload = null, skipApi = false) {
   if (!qaBlock || !qaList) {
     return;
   }
   const currentLang = (localStorage.getItem("electromart_lang_v1") || localStorage.getItem("electromart_lang") || "hi").toLowerCase();
   const t = (window.EM_TRANSLATIONS && window.EM_TRANSLATIONS[currentLang]) ? window.EM_TRANSLATIONS[currentLang] : (window.EM_TRANSLATIONS ? window.EM_TRANSLATIONS.en : {});
 
-  // Load community Q&A from localStorage
-  let communityQuestions = [];
+  // Server questions are authoritative. Cached local questions are a clean offline fallback.
+  let communityQuestions = Array.isArray(apiPayload && apiPayload.questions)
+    ? apiPayload.questions.map(item => ({ ...item, q: item.question, a: "", helpful: Number(item.helpfulCount || 0), unhelpful: Number(item.unhelpfulCount || 0) }))
+    : [];
   try {
-    const raw = localStorage.getItem(QA_STORAGE_KEY);
+    const raw = !Array.isArray(apiPayload && apiPayload.questions) && localStorage.getItem(QA_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
@@ -944,7 +954,7 @@ function renderQa(product) {
     }
   ];
 
-  const allQa = [...communityQuestions, ...defaultQa];
+  const allQa = Array.isArray(apiPayload && apiPayload.questions) ? communityQuestions : [...communityQuestions, ...defaultQa];
 
   function renderQaItems(items) {
     if (items.length === 0) {
@@ -958,40 +968,52 @@ function renderQa(product) {
           <span class="qa-q-badge">${t.qa_q_prefix || "Q:"}</span>
           <span>${escapeHtml(item.q)}</span>
         </div>
-        <div class="qa-a-row">
-          <span class="qa-a-badge">${t.qa_a_prefix || "A:"}</span>
-          <span>${escapeHtml(item.a)}</span>
-        </div>
+        ${Array.isArray(item.answers) && item.answers.length
+          ? item.answers.map(answer => `<div class="qa-a-row"><span class="qa-a-badge">${t.qa_a_prefix || "A:"}</span><span>${escapeHtml(answer.answer)}</span><small>${escapeHtml(answer.answererName || "ElectroMart Customer")}</small></div>`).join("")
+          : item.a ? `<div class="qa-a-row"><span class="qa-a-badge">${t.qa_a_prefix || "A:"}</span><span>${escapeHtml(item.a)}</span></div>` : `<div class="qa-a-row qa-unanswered"><span>${escapeHtml(t.qa_no_answer_yet || "No answer yet. Share what you know.")}</span></div>`}
         <div class="qa-vote-row">
-          <span>Do you find this helpful?</span>
-          <button type="button" class="qa-vote-btn qa-vote-up" data-qa-id="${item.id || idx}">
+          <span>${t.qa_helpful_prompt || "Was this question helpful?"}</span>
+          <button type="button" class="qa-vote-btn qa-vote-up" data-qa-id="${item.id || idx}" data-api-backed="${Array.isArray(apiPayload && apiPayload.questions) ? "true" : "false"}">
             ▲ ${t.qa_helpful_vote || "Helpful"} (<span class="vote-up-count">${item.helpful || 0}</span>)
           </button>
-          <button type="button" class="qa-vote-btn qa-vote-down" data-qa-id="${item.id || idx}">
+          <button type="button" class="qa-vote-btn qa-vote-down" data-qa-id="${item.id || idx}" data-api-backed="${Array.isArray(apiPayload && apiPayload.questions) ? "true" : "false"}">
             ▼ ${t.qa_unhelpful_vote || "Unhelpful"} (<span class="vote-down-count">${item.unhelpful || 0}</span>)
           </button>
+          ${item.id && Array.isArray(apiPayload && apiPayload.questions) ? `<details class="qa-answer-details"><summary>${escapeHtml(t.qa_answer_action || "Add an answer")}</summary><form class="qa-answer-form" data-qa-id="${escapeHtml(item.id)}"><label><span>${escapeHtml(t.qa_answer_label || "Your answer")}</span><textarea name="answer" maxlength="2000" required></textarea></label><button type="submit" class="amazon-secondary-btn">${escapeHtml(t.qa_answer_submit || "Post answer")}</button></form></details>` : ""}
         </div>
       </article>
     `).join("");
 
     // Wire voting listeners
     qaList.querySelectorAll(".qa-vote-up").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         if (btn._voted) return;
         btn._voted = true;
         btn.classList.add("voted");
         const countSpan = btn.querySelector(".vote-up-count");
-        if (countSpan) countSpan.textContent = String(Number(countSpan.textContent) + 1);
+        if (countSpan) {
+          let count = Number(countSpan.textContent) + 1;
+          if (btn.dataset.apiBacked === "true" && window.ElectroMart?.Reviews && btn.dataset.qaId) {
+            try { count = (await window.ElectroMart.Reviews.questionHelpful(product.id, btn.dataset.qaId, true)).helpfulCount; } catch (error) { btn._voted = false; btn.classList.remove("voted"); return; }
+          }
+          countSpan.textContent = String(count);
+        }
       });
     });
 
     qaList.querySelectorAll(".qa-vote-down").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         if (btn._voted) return;
         btn._voted = true;
         btn.classList.add("voted");
         const countSpan = btn.querySelector(".vote-down-count");
-        if (countSpan) countSpan.textContent = String(Number(countSpan.textContent) + 1);
+        if (countSpan) {
+          let count = Number(countSpan.textContent) + 1;
+          if (btn.dataset.apiBacked === "true" && window.ElectroMart?.Reviews && btn.dataset.qaId) {
+            try { count = (await window.ElectroMart.Reviews.questionHelpful(product.id, btn.dataset.qaId, false)).unhelpfulCount; } catch (error) { btn._voted = false; btn.classList.remove("voted"); return; }
+          }
+          countSpan.textContent = String(count);
+        }
       });
     });
   }
@@ -1003,6 +1025,10 @@ function renderQa(product) {
     qaSearchInput.oninput = () => {
       const query = qaSearchInput.value.trim().toLowerCase();
       if (qaSearchClearBtn) qaSearchClearBtn.hidden = !query;
+      if (window.ElectroMart?.Reviews && Array.isArray(apiPayload && apiPayload.questions)) {
+        window.ElectroMart.Reviews.questions(product.id, { q: query }).then(payload => renderQa(product, payload, true)).catch(() => {});
+        return;
+      }
       if (!query) {
         renderQaItems(allQa);
         return;
@@ -1019,6 +1045,10 @@ function renderQa(product) {
     qaSearchClearBtn.onclick = () => {
       if (qaSearchInput) qaSearchInput.value = "";
       qaSearchClearBtn.hidden = true;
+      if (window.ElectroMart?.Reviews) {
+        window.ElectroMart.Reviews.questions(product.id).then(payload => renderQa(product, payload, true)).catch(() => renderQa(product, null, true));
+        return;
+      }
       renderQaItems(allQa);
     };
   }
@@ -1044,37 +1074,43 @@ function renderQa(product) {
   }
 
   if (askForm) {
-    askForm.onsubmit = (e) => {
+    askForm.onsubmit = async (e) => {
       e.preventDefault();
       const questionText = askInput ? askInput.value.trim() : "";
       if (!questionText) return;
 
-      const newQa = {
-        id: "qa_comm_" + Date.now(),
-        productId: String(product.id),
-        q: questionText,
-        a: "Thank you for asking! ElectroMart specialists and community members verify questions regularly. Compatible with standard specifications.",
-        helpful: 1,
-        unhelpful: 0
-      };
-
+      if (!window.ElectroMart?.Reviews || !window.ElectroMartAuth?.getToken()) {
+        alert(t.qa_signin_required || "Sign in to post a question.");
+        return;
+      }
       try {
-        const raw = localStorage.getItem(QA_STORAGE_KEY);
-        const stored = raw ? JSON.parse(raw) : [];
-        stored.unshift(newQa);
-        localStorage.setItem(QA_STORAGE_KEY, JSON.stringify(stored));
-      } catch (err) {}
-
-      allQa.unshift(newQa);
-      if (askInput) askInput.value = "";
-      if (askFormWrap) askFormWrap.hidden = true;
-      renderQaItems(allQa);
-      alert(t.qa_submitted_toast || "Your question has been posted to the ElectroMart community!");
+        await window.ElectroMart.Reviews.submitQuestion(product.id, questionText);
+        const payload = await window.ElectroMart.Reviews.questions(product.id);
+        if (askInput) askInput.value = "";
+        if (askFormWrap) askFormWrap.hidden = true;
+        renderQa(product, payload, true);
+        alert(t.qa_submitted_toast || "Your question has been posted to the ElectroMart community!");
+      } catch (error) {
+        alert(error.message || t.qa_submit_error || "Your question could not be posted. Please try again.");
+      }
     };
   }
 
+  qaList.querySelectorAll(".qa-answer-form").forEach(form => form.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!window.ElectroMart?.Reviews || !window.ElectroMartAuth?.getToken()) { alert(t.qa_signin_required || "Sign in to post an answer."); return; }
+    const answer = String(new FormData(form).get("answer") || "").trim();
+    try {
+      await window.ElectroMart.Reviews.submitAnswer(product.id, form.dataset.qaId, answer);
+      renderQa(product, await window.ElectroMart.Reviews.questions(product.id), true);
+    } catch (error) { alert(error.message || t.qa_submit_error || "Your answer could not be posted. Please try again."); }
+  }));
+
   renderQaItems(allQa);
   qaBlock.hidden = false;
+  if (!skipApi && window.ElectroMart?.Reviews) {
+    window.ElectroMart.Reviews.questions(product.id).then(payload => renderQa(product, payload, true)).catch(() => renderQa(product, null, true));
+  }
 }
 
 function loadCartMap() {
@@ -4026,7 +4062,7 @@ function renderStarCharacters(rating) {
 }
 
   const starChars = renderStarCharacters(product.rating);
-  const reviewCount = Number(product.reviewCount || 480);
+  const reviewCount = Number(product.reviewCount || 0);
   productRating.innerHTML = `
     <span class="rating-stars-display" style="color: #de7921; font-size: 1.1rem; letter-spacing: 1px;">${starChars}</span>
     <span class="rating-value-text" style="font-weight: 700; margin: 0 6px; color: #0f1111;">${Number(product.rating || 0).toFixed(1)}</span>
